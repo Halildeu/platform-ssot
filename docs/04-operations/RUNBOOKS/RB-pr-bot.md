@@ -23,7 +23,7 @@ Owner: @team/platform
   - push: `fix/**`, `wip/**`, `docs/**`, `ops/**`
   - manuel: `workflow_dispatch`
 - SSOT:
-  - Kurallar: `docs/04-operations/PR-BOT-RULES.json`
+  - Kurallar: `docs-ssot/04-operations/PR-BOT-RULES.json`
   - Template’ler: `docs/04-operations/pr-bot-templates/*.md`
   - Marker: `<!-- pr-bot:rules -->`
   - Merge gate label: `pr-bot/ready-to-merge`
@@ -110,6 +110,6 @@ Owner: @team/platform
 - Doğal akış: docs/04-operations/RUNBOOKS/RB-insansiz-flow.md
 - Workflow: .github/workflows/pr-bot.yml
 - Workflow: .github/workflows/pr-merge.yml
-- SSOT: docs/04-operations/PR-BOT-RULES.json
+- SSOT: docs-ssot/04-operations/PR-BOT-RULES.json
 - Templates: docs/04-operations/pr-bot-templates/
 - SLO/SLA: docs/04-operations/SLO-SLA.md

@@ -1,0 +1,58 @@
+name: Release
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.releases_created == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:design-system
+      - run: pnpm build:x-suite
+      - name: Publish packages
+        run: |
+          echo "=== Release Summary ==="
+          echo "Packages are internal-platform (private: true)"
+          echo "Version bumps and changelogs created by release-please"
+          echo "No npm publish for internal packages"
+          echo ""
+          echo "To publish design-system (the only public package):"
+          echo "  cd packages/design-system && npm publish"
+      - name: Create Sentry release
+        if: steps.release.outputs.release_created
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          npx @sentry/cli releases new ${{ steps.release.outputs.tag_name }} || true
+          npx @sentry/cli releases set-commits ${{ steps.release.outputs.tag_name }} --auto || true
+          npx @sentry/cli releases finalize ${{ steps.release.outputs.tag_name }} || true

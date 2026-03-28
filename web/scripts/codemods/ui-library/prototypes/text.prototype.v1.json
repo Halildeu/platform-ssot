@@ -1,0 +1,56 @@
+{
+  "version": "1.0",
+  "candidateId": "text-mfe-shell-codemod",
+  "component": "Text",
+  "strategyId": "text-typography-codemod-candidate",
+  "transformKind": "typography-prop-normalization",
+  "reviewMode": "illustrative-dry-run",
+  "sourcePath": "web/scripts/codemods/ui-library/prototypes/text.prototype.ts",
+  "rewriteRule": "Variant/preset semantigi canonical duzene alinip truncate-wrap gibi opsiyonel typography prop'lari explicitlestirilir; metin icerigi korunur.",
+  "rewritePreview": {
+    "kind": "illustrative",
+    "before": "<Text variant=\"secondary\">Tema registry yukleniyor…</Text>",
+    "after": "<Text preset=\"body\" variant=\"secondary\" wrap>Tema registry yukleniyor…</Text>"
+  },
+  "matchStrategy": {
+    "requiredSelectors": [
+      "import { Text } from '@mfe/design-system'",
+      "<Text"
+    ],
+    "dryRunSignals": [
+      "variant",
+      "preset"
+    ],
+    "astTargets": [
+      "JSXOpeningElement[name=Text]",
+      "JSXAttribute[name=variant]",
+      "JSXAttribute[name=preset]",
+      "JSXAttribute[name=wrap]"
+    ],
+    "stopConditions": [
+      "truncate/clampLines birlikte kullaniliyorsa rewrite atlanir",
+      "as prop'u farkli semantic elemente geciyorsa manuel review gerekir"
+    ]
+  },
+  "manualValidation": {
+    "storybook": [
+      "StableSurfacePatterns",
+      "ThemePresetFoundations"
+    ],
+    "designLab": [
+      "semantic scale",
+      "pretty wrap and tabular nums"
+    ],
+    "smoke": [
+      "theme admin page success/error notices",
+      "theme matrix info banner"
+    ]
+  },
+  "rollbackPlan": [
+    "readability veya clamp davranisi bozulursa visual diff ile rollback yapilir",
+    "preset inject edilen satir semantic hierarchy'yi bozarsa patch geri alinir"
+  ],
+  "notes": [
+    "Text rewrite'i birden fazla dosyaya dokunabilecegi icin dry-run sonucu owner review ile degerlendirilir."
+  ]
+}

@@ -1,4 +1,10 @@
-# AGENT-CODEX.backend – Backend Görevleri (Compact)
+# Backend Görevleri (Compact)
+
+> Transition Durumu: Bu dosya transition-active rehber katmanındadır.
+> Canonical kaynaklar:
+> `standards.lock`,
+> `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md`,
+> `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`.
 
 Bu dosya, [BE] (Backend) tipindeki görevlerde agent’ın nasıl davranacağını tanımlar.
 Amaç: Tüm Spring Boot mikroservis geliştirmelerinde tutarlı, öngörülebilir ve
@@ -24,7 +30,8 @@ izlenebilir bir çalışma modeli oluşturmaktır.
 - Repository / query / transaction tasarımı
 - Exception ve security davranışlarının düzenlenmesi
 
-Saf SQL/rapor/ETL işleri ağırlıklı ise ek olarak AGENT-CODEX.data.md dikkate alınmalıdır.
+Saf SQL/rapor/ETL işleri ağırlıklı ise ek olarak data transition rehberi
+dikkate alınmalıdır.
 
 -------------------------------------------------------------------------------
 3. ZORUNLU OKUMA
@@ -33,14 +40,14 @@ Saf SQL/rapor/ETL işleri ağırlıklı ise ek olarak AGENT-CODEX.data.md dikkat
 [BE] işi alındığında agent aşağıdaki dokümanları dikkate almalıdır:
 
 1. ÇEKİRDEK DAVRANIŞ
-   - AGENT-CODEX.core.md
+   - Çekirdek transition rehberi
    - AGENTS.md
 
 2. BACKEND LAYOUT
-   - docs/00-handbook/BACKEND-PROJECT-LAYOUT.md
+   - BACKEND-PROJECT-LAYOUT.md
 
 3. BACKEND STİL
-   - docs/00-handbook/STYLE-BE-001.md
+   - STYLE-BE-001.md
 
 4. ÜRÜN VE MİMARİ DOKÜMANLAR (VARSA)
    - docs/01-product/PRD/PRD-*.md

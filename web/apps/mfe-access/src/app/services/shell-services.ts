@@ -6,6 +6,7 @@ import {
 } from '@mfe/shared-http';
 import type { ApiInstance } from '@mfe/shared-http';
 import type { ShellNotificationEntry, ShellTelemetryEvent } from 'mfe_shell/services';
+import { isRuntimeDev } from '../runtime/env';
 
 export type RemoteShellServices = {
   notify: { push: (entry: ShellNotificationEntry) => void };
@@ -20,14 +21,14 @@ export type RemoteShellServices = {
 const createNoopServices = (): RemoteShellServices => ({
   notify: {
     push: (entry: ShellNotificationEntry) => {
-      if (process.env.NODE_ENV !== 'production') {
+      if (isRuntimeDev()) {
         console.info('[mfe-access] noop notify', entry);
       }
     },
   },
   telemetry: {
     emit: (event: ShellTelemetryEvent) => {
-      if (process.env.NODE_ENV !== 'production') {
+      if (isRuntimeDev()) {
         console.info('[mfe-access] noop telemetry', event);
       }
     },
@@ -57,14 +58,14 @@ export const configureShellServices = (services: Partial<RemoteShellServices>): 
   });
   // Unauthorized durumda shell tarafı zaten 401'leri yönetecek; access MFE tarafında ekstra redirect yok
   registerUnauthorizedHandler(() => undefined);
-  if (process.env.NODE_ENV !== 'production') {
+  if (isRuntimeDev()) {
     console.debug('[mfe-access] shell services configured');
   }
 };
 
 export const getShellServices = (): RemoteShellServices => {
   if (!currentServices) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (isRuntimeDev()) {
       console.warn('[mfe-access] Shell servisleri henüz konfigüre edilmedi; noop kullanılacak.');
       return fallbackServices;
     }

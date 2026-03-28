@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "candidateId": "themepreviewcard-mfe-shell-codemod",
+  "component": "ThemePreviewCard",
+  "strategyId": "theme-preview-card-codemod-candidate",
+  "transformKind": "selection-state-normalization",
+  "reviewMode": "illustrative-dry-run",
+  "sourcePath": "web/scripts/codemods/ui-library/prototypes/theme-preview-card.prototype.ts",
+  "rewriteRule": "Selected state ve width sinyalleri canonical siraya alinip preview card secim vurgusu tek pattern altina getirilir.",
+  "rewritePreview": {
+    "kind": "illustrative",
+    "before": "<ThemePreviewCard selected className=\"w-28 shrink-0\" />",
+    "after": "<ThemePreviewCard selected={true} className=\"w-28 shrink-0\" />"
+  },
+  "matchStrategy": {
+    "requiredSelectors": [
+      "import { ThemePreviewCard } from '@mfe/design-system'",
+      "<ThemePreviewCard"
+    ],
+    "dryRunSignals": [
+      "selected"
+    ],
+    "astTargets": [
+      "JSXOpeningElement[name=ThemePreviewCard]",
+      "JSXAttribute[name=selected]",
+      "JSXAttribute[name=className]"
+    ],
+    "stopConditions": [
+      "selected prop'u hesaplanmis complex expression ise rewrite atlanir",
+      "className icinde width util yoksa preview parity manuel kontrol ister"
+    ]
+  },
+  "manualValidation": {
+    "storybook": [
+      "ThemePresetFoundations",
+      "UiKitReleaseMatrix"
+    ],
+    "designLab": [
+      "selected preset emphasis",
+      "gallery embedding"
+    ],
+    "smoke": [
+      "theme admin preview panel",
+      "shell theme switcher"
+    ]
+  },
+  "rollbackPlan": [
+    "selection border veya check parity bozulursa patch rollback edilir",
+    "gallery embedding spacing bozulursa source diff reject edilir"
+  ],
+  "notes": [
+    "ThemePreviewCard rewrite'i sadece selected state normalization hedefler; layout contract degismez."
+  ]
+}

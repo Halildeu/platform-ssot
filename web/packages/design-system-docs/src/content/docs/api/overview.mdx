@@ -1,0 +1,157 @@
+---
+title: API Referans — Genel Bakış
+description: Bileşen API'leri, hook'lar, tipler ve yardımcı fonksiyonlar
+---
+
+## Genel Bakış
+
+Bu bölüm, design system'deki tüm bileşenlerin, hook'ların ve yardımcı fonksiyonların API referansını içerir. Her bileşen için prop tipleri, varsayılan değerler ve kullanım örnekleri sunulur.
+
+## Import Yolları
+
+Tüm bileşenler ve hook'lar ana paket üzerinden import edilir:
+
+```tsx
+// Bileşenler
+import { Button, Input, Select, DataGrid } from '@mfe/design-system';
+
+// Hook'lar
+import { useTheme, useToast, usePermission, useFormContext } from '@mfe/design-system';
+
+// Tipler
+import type { ButtonProps, InputProps, DataGridColumn } from '@mfe/design-system';
+
+// Token'lar
+import '@mfe/design-system/tokens/build/tokens.css';
+import '@mfe/design-system/tokens/build/dark-mode.css';
+```
+
+## Bileşen Kategorileri
+
+### Primitives
+
+| Bileşen | Import | Açıklama |
+|---------|--------|----------|
+| `Button` | `import { Button }` | Buton bileşeni — variant, size, loading, icon desteği |
+| `Input` | `import { Input }` | Metin girişi — label, error, success, addon desteği |
+| `Select` | `import { Select }` | Seçim kutusu — multiple, searchable, grouped desteği |
+| `Checkbox` | `import { Checkbox }` | Onay kutusu — indeterminate desteği |
+| `RadioGroup` | `import { RadioGroup }` | Radyo buton grubu |
+| `Switch` | `import { Switch }` | Açma/kapama |
+| `Badge` | `import { Badge }` | Durum etiketi |
+| `Avatar` | `import { Avatar }` | Kullanıcı avatarı |
+| `Tooltip` | `import { Tooltip }` | İpucu balonu |
+| `Popover` | `import { Popover }` | Açılır panel |
+| `Modal` | `import { Modal }` | Modal dialog |
+| `Tabs` | `import { Tabs }` | Sekme bileşeni |
+| `Accordion` | `import { Accordion }` | Akordiyon |
+| `Breadcrumb` | `import { Breadcrumb }` | Ekmek kırıntısı navigasyonu |
+| `Skeleton` | `import { Skeleton }` | Yükleme iskeleti |
+| `Spinner` | `import { Spinner }` | Yükleme animasyonu |
+| `Tag` | `import { Tag }` | Etiket |
+| `Progress` | `import { Progress }` | İlerleme çubuğu |
+| `Pagination` | `import { Pagination }` | Sayfalama |
+| `Divider` | `import { Divider }` | Ayırıcı çizgi |
+
+### Enterprise
+
+| Bileşen | Import | Açıklama |
+|---------|--------|----------|
+| `ExecutiveKPIStrip` | `import { ExecutiveKPIStrip }` | KPI metrik şeridi |
+| `DataGrid` | `import { DataGrid }` | Yüksek performanslı tablo |
+| `PivotTable` | `import { PivotTable }` | Çok boyutlu analiz tablosu |
+| `ProcessFlow` | `import { ProcessFlow }` | BPMN süreç diyagramı |
+| `FineKinney` | `import { FineKinney }` | Risk değerlendirme |
+| `KanbanBoard` | `import { KanbanBoard }` | Kanban panosu |
+| `Scheduler` | `import { Scheduler }` | Takvim/zamanlama |
+| `GanttChart` | `import { GanttChart }` | Gantt diyagramı |
+| `AdaptiveForm` | `import { AdaptiveForm }` | Form yönetimi |
+| `CommandPalette` | `import { CommandPalette }` | Komut paleti |
+| `AuditLog` | `import { AuditLog }` | Denetim günlüğü |
+| `PermissionMatrix` | `import { PermissionMatrix }` | İzin matrisi |
+| `RichTextEditor` | `import { RichTextEditor }` | Zengin metin editörü |
+| `ApprovalFlow` | `import { ApprovalFlow }` | Onay iş akışı |
+
+### Charts
+
+| Bileşen | Import | Açıklama |
+|---------|--------|----------|
+| `BarChart` | `import { BarChart }` | Çubuk grafik |
+| `LineChart` | `import { LineChart }` | Çizgi grafik |
+| `PieChart` | `import { PieChart }` | Pasta grafik |
+| `AreaChart` | `import { AreaChart }` | Alan grafik |
+| `ScatterChart` | `import { ScatterChart }` | Dağılım grafik |
+| `RadarChart` | `import { RadarChart }` | Radar grafik |
+| `HeatmapChart` | `import { HeatmapChart }` | Isı haritası |
+
+## Hook'lar
+
+| Hook | Import | Açıklama |
+|------|--------|----------|
+| `useTheme` | `import { useTheme }` | Tema eksenleri okuma/yazma |
+| `useToast` | `import { useToast }` | Toast bildirimleri gösterme |
+| `usePermission` | `import { usePermission }` | İzin kontrolü |
+| `useRole` | `import { useRole }` | Rol bilgisi okuma |
+| `useFormContext` | `import { useFormContext }` | Form state erişimi |
+| `useBreakpoint` | `import { useBreakpoint }` | Responsive breakpoint kontrolü |
+| `useMediaQuery` | `import { useMediaQuery }` | CSS media query dinleme |
+| `useLocalStorage` | `import { useLocalStorage }` | Local storage okuma/yazma |
+| `useDebounce` | `import { useDebounce }` | Debounce hook |
+| `useClickOutside` | `import { useClickOutside }` | Dış tıklama algılama |
+
+## Tip Tanımları
+
+Tüm bileşen prop tipleri `Props` son ekiyle export edilir:
+
+```tsx
+import type {
+  ButtonProps,
+  InputProps,
+  SelectProps,
+  DataGridProps,
+  DataGridColumn,
+  ThemeAxes,
+  Permission,
+  Role,
+} from '@mfe/design-system';
+```
+
+### Ortak Tipler
+
+```tsx
+// Tema eksenleri
+interface ThemeAxes {
+  appearance: 'light' | 'dark' | 'high-contrast' | 'system';
+  density: 'compact' | 'comfortable' | 'spacious';
+  radius: 'sharp' | 'rounded';
+  elevation: 'flat' | 'raised';
+}
+
+// Boyut
+type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
+// Durum
+type Status = 'info' | 'success' | 'warning' | 'danger' | 'neutral';
+
+// İzin
+type Permission = `${string}:${string}`;
+```
+
+## TypeDoc ile Oluşturulan Dokümantasyon
+
+Detaylı API referansı için TypeDoc ile oluşturulan otomatik dokümantasyonu kullanabilirsiniz:
+
+```bash
+# TypeDoc çıktısını oluşturmak için
+cd packages/design-system
+npx typedoc --out docs/api src/index.ts
+```
+
+## Versiyon Uyumluluğu
+
+| Paket | Desteklenen Versiyonlar |
+|-------|------------------------|
+| React | ^18.2.0 |
+| React DOM | ^18.2.0 |
+| TypeScript | ^5.0.0 |
+| Node.js | ^18.0.0 \|\| ^20.0.0 |

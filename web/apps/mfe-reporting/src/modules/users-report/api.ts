@@ -76,7 +76,7 @@ export const fetchUsersReport = async (
       rows: items,
       total: typeof data?.total === 'number' ? data.total : items.length,
     };
-  } catch (error) {
+  } catch (error: unknown) {
     if (isAxiosError(error)) {
       const status = error.response?.status;
       if (status === 401 || status === 403) {

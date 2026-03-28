@@ -63,7 +63,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p artifacts
-          python3 scripts/pr_bot.py --rules-path docs/04-operations/PR-BOT-RULES.json 2>&1 | tee artifacts/pr-bot.log
+          python3 scripts/pr_bot.py --rules-path docs-ssot/04-operations/PR-BOT-RULES.json 2>&1 | tee artifacts/pr-bot.log
 
       - name: PR Bot failure summary
         if: failure()

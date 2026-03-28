@@ -1,6 +1,6 @@
 import React from 'react';
-import { Badge, Button, Empty, Select, Tag, Text } from 'mfe-ui-kit';
-import type { ThemeDensity, AccessLevel } from 'mfe-ui-kit';
+import { Badge, Button, Empty, Select, Tag, Text } from '@mfe/design-system';
+import type { ThemeDensity, AccessLevel } from '@mfe/design-system';
 import {
   RUNTIME_THEME_MATRIX_THEMES,
   RUNTIME_THEME_MATRIX_DENSITIES,
@@ -17,7 +17,7 @@ const moduleOptions = [
 ];
 
 const LoginPreview = () => (
-  <div className="rounded-2xl border border-border-subtle bg-surface p-4 shadow-sm">
+  <div className="rounded-2xl border border-border-subtle bg-surface p-4 shadow-xs">
     <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-text-secondary">
       Login
     </div>
@@ -25,14 +25,14 @@ const LoginPreview = () => (
       <label className="text-[11px] font-semibold text-text-secondary">
         E-posta
         <input
-          className="mt-1 h-8 w-full rounded-md border border-border-default bg-surface-panel px-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
+          className="mt-1 h-8 w-full rounded-md border border-border-default bg-surface-panel px-2 text-sm text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
           placeholder="kullanici@example.com"
         />
       </label>
       <label className="text-[11px] font-semibold text-text-secondary">
         Parola
         <input
-          className="mt-1 h-8 w-full rounded-md border border-border-default bg-surface-panel px-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
+          className="mt-1 h-8 w-full rounded-md border border-border-default bg-surface-panel px-2 text-sm text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
           placeholder="••••••"
           type="password"
         />
@@ -48,7 +48,7 @@ const LoginPreview = () => (
 );
 
 const UnauthorizedPreview = () => (
-  <div className="rounded-2xl border border-border-subtle bg-surface p-4 shadow-sm">
+  <div className="rounded-2xl border border-border-subtle bg-surface p-4 shadow-xs">
     <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-secondary">
       Unauthorized
     </div>
@@ -65,7 +65,7 @@ const AppShellPreview = () => (
   <div className="rounded-2xl border border-border-subtle bg-surface p-4">
     <div className="mb-3 flex items-center justify-between">
       <span className="text-sm font-semibold text-text-primary">Shell Header</span>
-      <Badge tone="info">AppShell</Badge>
+      <Badge variant="info">AppShell</Badge>
     </div>
     <div className="flex flex-wrap gap-2">
       {['Dashboard', 'Users', 'Access', 'Audit', 'Reports'].map((item, index) => (
@@ -94,7 +94,7 @@ const AppShellPreview = () => (
 
 const DetailDrawerPreview = () => (
   <div
-    className="rounded-2xl border border-border-subtle bg-surface shadow-sm"
+    className="rounded-2xl border border-border-subtle bg-surface shadow-xs"
     data-testid="detail-drawer-preview"
   >
     <div className="border-b border-border-subtle px-4 py-3">
@@ -104,13 +104,13 @@ const DetailDrawerPreview = () => (
     <div className="flex flex-col gap-3 px-4 py-4 text-sm text-text-primary">
       <div className="flex items-center justify-between">
         <span>Durum</span>
-        <Tag access="readonly" accessReason="Audit kaydı">
+        <Tag variant="info" access="readonly" accessReason="Audit kaydı">
           Readonly
         </Tag>
       </div>
       <div className="flex items-center justify-between">
         <span>Yetki</span>
-        <Badge tone="warning">Onay bekliyor</Badge>
+        <Badge variant="warning">Onay bekliyor</Badge>
       </div>
       <div className="flex flex-col gap-1 text-xs text-text-secondary">
         <span>Değişiklik Notu</span>
@@ -122,7 +122,7 @@ const DetailDrawerPreview = () => (
 
 const FormDrawerPreview = () => (
   <div
-    className="rounded-2xl border border-border-subtle bg-surface shadow-sm"
+    className="rounded-2xl border border-border-subtle bg-surface shadow-xs"
     data-testid="form-drawer-preview"
   >
     <div className="border-b border-border-subtle px-4 py-3">
@@ -154,7 +154,7 @@ const FormDrawerPreview = () => (
 
 const AccessDrawerPreview = () => (
   <div
-    className="rounded-2xl border border-border-subtle bg-surface shadow-sm"
+    className="rounded-2xl border border-border-subtle bg-surface shadow-xs"
     data-testid="access-drawer-preview"
   >
     <div className="border-b border-border-subtle px-4 py-3">
@@ -164,7 +164,7 @@ const AccessDrawerPreview = () => (
     <div className="flex flex-col gap-3 px-4 py-4 text-sm text-text-primary">
       <div className="flex items-center justify-between">
         <span>Modül</span>
-        <Tag tone="info">USER_MANAGEMENT</Tag>
+        <Tag variant="info">USER_MANAGEMENT</Tag>
       </div>
       <div className="flex items-center gap-2">
         <Button access="readonly" className="flex-1" variant="secondary" accessReason="Sadece izle">
@@ -183,7 +183,7 @@ const AccessDrawerPreview = () => (
 
 const NotificationPreview = () => (
   <div
-    className="rounded-2xl border border-border-subtle bg-surface shadow-sm"
+    className="rounded-2xl border border-border-subtle bg-surface shadow-xs"
     data-testid="notification-preview"
   >
     <div className="border-b border-border-subtle px-4 py-3">
@@ -206,12 +206,12 @@ const NotificationPreview = () => (
 
 const ReportingPreview = () => (
   <div
-    className="rounded-2xl border border-border-subtle bg-surface-panel p-4 shadow-sm"
+    className="rounded-2xl border border-border-subtle bg-surface-panel p-4 shadow-xs"
     data-testid="reporting-preview-item"
   >
     <div className="mb-3 flex items-center justify-between text-xs font-semibold text-text-secondary">
       <span>Reporting Toolbar</span>
-      <Badge tone="info">Reporting</Badge>
+      <Badge variant="info">Reporting</Badge>
     </div>
     <div className="grid gap-3 md:grid-cols-2">
       <label className="text-xs font-semibold text-text-secondary">
@@ -303,7 +303,7 @@ const ThemeScopeCard = ({
       <div className="rounded-2xl border border-border-subtle bg-surface p-4">
         <div className="flex items-center justify-between text-xs font-semibold text-text-secondary">
           <span>Users/Entity Grid Önizleme</span>
-          <Badge tone="muted">Grid</Badge>
+          <Badge variant="muted">Grid</Badge>
         </div>
         <div className="mt-3 rounded-xl border border-border-subtle">
           <div className="flex items-center justify-between border-b border-border-subtle bg-surface-muted px-3 py-2 text-xs font-medium text-text-secondary">
@@ -330,7 +330,7 @@ const ThemeScopeCard = ({
       <ReportingPreview />
       <NotificationPreview />
       <div className="flex items-center gap-3">
-        <Badge tone="muted">Tema</Badge>
+        <Badge variant="muted">Tema</Badge>
         <Text variant="secondary">Semantic token zinciri tüm bileşenlerde etkin.</Text>
       </div>
       <Empty description="Boş durum örneği" access="readonly" accessReason="Yalnız görüntüleme" />

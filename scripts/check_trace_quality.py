@@ -14,7 +14,7 @@ import os
 import sys
 from pathlib import Path
 
-POLICY_PATH = Path("docs/03-delivery/SPECS/trace-quality-policy.v1.json")
+POLICY_PATH = Path("docs-ssot/03-delivery/SPECS/trace-quality-policy.v1.json")
 
 
 def append_github_step_summary(markdown: str) -> None:

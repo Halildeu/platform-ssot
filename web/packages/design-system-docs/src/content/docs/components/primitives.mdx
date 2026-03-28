@@ -1,0 +1,237 @@
+---
+title: Primitive Bileşenler
+description: Temel UI bileşenleri — Button, Input, Select ve daha fazlası
+---
+
+Primitive bileşenler, design system'in temel yapı taşlarıdır. Tüm enterprise ve pattern bileşenleri bu primitifler üzerine inşa edilmiştir.
+
+## Button
+
+```tsx
+import { Button } from '@mfe/design-system';
+
+<Button variant="primary">Kaydet</Button>
+<Button variant="secondary">İptal</Button>
+<Button variant="ghost">Detay</Button>
+<Button variant="danger">Sil</Button>
+<Button variant="primary" size="sm">Küçük</Button>
+<Button variant="primary" size="lg">Büyük</Button>
+<Button variant="primary" loading>Yükleniyor...</Button>
+<Button variant="primary" disabled>Devre Dışı</Button>
+<Button variant="primary" leftIcon={<PlusIcon />}>Ekle</Button>
+```
+
+## Input
+
+```tsx
+import { Input } from '@mfe/design-system';
+
+<Input label="Ad Soyad" placeholder="İsminizi girin" />
+<Input label="E-posta" type="email" required />
+<Input label="Şifre" type="password" />
+<Input label="Arama" leftIcon={<SearchIcon />} />
+<Input label="Fiyat" rightAddon="TL" />
+<Input label="Açıklama" error="Bu alan zorunludur" />
+<Input label="Onaylı" success="Geçerli e-posta" />
+```
+
+## Select
+
+```tsx
+import { Select } from '@mfe/design-system';
+
+<Select
+  label="Departman"
+  options={[
+    { value: 'engineering', label: 'Mühendislik' },
+    { value: 'design', label: 'Tasarım' },
+    { value: 'product', label: 'Ürün' },
+  ]}
+  placeholder="Seçiniz..."
+/>
+
+<Select label="Çoklu Seçim" multiple options={roles} />
+<Select label="Aranabilir" searchable options={countries} />
+```
+
+## Checkbox & Radio
+
+```tsx
+import { Checkbox, RadioGroup } from '@mfe/design-system';
+
+<Checkbox label="Kullanım koşullarını kabul ediyorum" />
+<Checkbox label="Tümünü seç" indeterminate />
+
+<RadioGroup
+  label="Bildirim Tercihi"
+  options={[
+    { value: 'email', label: 'E-posta' },
+    { value: 'sms', label: 'SMS' },
+    { value: 'push', label: 'Push Bildirim' },
+  ]}
+  value={preference}
+  onChange={setPreference}
+/>
+```
+
+## Switch
+
+```tsx
+import { Switch } from '@mfe/design-system';
+
+<Switch label="Dark Mode" checked={isDark} onChange={setIsDark} />
+<Switch label="Bildirimleri Aç" size="sm" />
+```
+
+## Badge
+
+```tsx
+import { Badge } from '@mfe/design-system';
+
+<Badge variant="info">Bilgi</Badge>
+<Badge variant="success">Başarılı</Badge>
+<Badge variant="warning">Uyarı</Badge>
+<Badge variant="danger">Hata</Badge>
+<Badge variant="neutral">Taslak</Badge>
+<Badge dot>Yeni</Badge>
+```
+
+## Avatar
+
+```tsx
+import { Avatar, AvatarGroup } from '@mfe/design-system';
+
+<Avatar src="/user.jpg" name="Ahmet Yılmaz" size="md" />
+<Avatar name="AY" size="lg" />
+<AvatarGroup max={3}>
+  <Avatar name="Ahmet Yılmaz" />
+  <Avatar name="Elif Kaya" />
+  <Avatar name="Mehmet Demir" />
+  <Avatar name="Ayşe Çelik" />
+</AvatarGroup>
+```
+
+## Tooltip & Popover
+
+```tsx
+import { Tooltip, Popover } from '@mfe/design-system';
+
+<Tooltip content="Düzenle">
+  <Button variant="ghost" icon={<EditIcon />} />
+</Tooltip>
+
+<Popover
+  trigger={<Button>Filtreler</Button>}
+  content={<FilterPanel />}
+  placement="bottom-start"
+/>
+```
+
+## Modal & Dialog
+
+```tsx
+import { Modal } from '@mfe/design-system';
+
+<Modal
+  open={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="Onay"
+  size="md"
+>
+  <p>Bu işlemi onaylıyor musunuz?</p>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setIsOpen(false)}>İptal</Button>
+    <Button variant="primary" onClick={handleConfirm}>Onayla</Button>
+  </Modal.Footer>
+</Modal>
+```
+
+## Toast & Notification
+
+```tsx
+import { useToast } from '@mfe/design-system';
+
+function SaveButton() {
+  const toast = useToast();
+
+  return (
+    <Button onClick={() => {
+      save();
+      toast.success('Kayıt başarılı');
+    }}>
+      Kaydet
+    </Button>
+  );
+}
+```
+
+## Skeleton
+
+```tsx
+import { Skeleton } from '@mfe/design-system';
+
+<Skeleton width={200} height={20} />
+<Skeleton variant="circle" size={40} />
+<Skeleton variant="rect" width="100%" height={120} />
+```
+
+## Tabs
+
+```tsx
+import { Tabs } from '@mfe/design-system';
+
+<Tabs defaultValue="genel">
+  <Tabs.List>
+    <Tabs.Tab value="genel">Genel</Tabs.Tab>
+    <Tabs.Tab value="detay">Detay</Tabs.Tab>
+    <Tabs.Tab value="tarihce">Tarihçe</Tabs.Tab>
+  </Tabs.List>
+  <Tabs.Panel value="genel">Genel içerik</Tabs.Panel>
+  <Tabs.Panel value="detay">Detay içerik</Tabs.Panel>
+  <Tabs.Panel value="tarihce">Tarihçe içerik</Tabs.Panel>
+</Tabs>
+```
+
+## Accordion
+
+```tsx
+import { Accordion } from '@mfe/design-system';
+
+<Accordion>
+  <Accordion.Item value="faq1" title="Nasıl kurulur?">
+    npm install @mfe/design-system komutu ile kurulur.
+  </Accordion.Item>
+  <Accordion.Item value="faq2" title="Dark mode nasıl aktif edilir?">
+    DesignSystemProvider üzerinden tema ekseni değiştirilerek aktif edilir.
+  </Accordion.Item>
+</Accordion>
+```
+
+## Breadcrumb
+
+```tsx
+import { Breadcrumb } from '@mfe/design-system';
+
+<Breadcrumb
+  items={[
+    { label: 'Ana Sayfa', href: '/' },
+    { label: 'Ayarlar', href: '/settings' },
+    { label: 'Profil' },
+  ]}
+/>
+```
+
+## Diğer Primitifler
+
+| Bileşen | Açıklama |
+|---------|----------|
+| `Divider` | Yatay/dikey ayırıcı çizgi |
+| `Spinner` | Yükleme animasyonu |
+| `Tag` | Etiket bileşeni |
+| `Progress` | İlerleme çubuğu |
+| `Pagination` | Sayfalama bileşeni |
+| `EmptyState` | Boş durum gösterimi |
+| `ErrorBoundary` | Hata yakalama sınırı |
+| `Portal` | React portal wrapper |
+| `VisuallyHidden` | Erişilebilirlik için gizli metin |
+| `FocusTrap` | Fokus tuzağı (modal, dialog) |

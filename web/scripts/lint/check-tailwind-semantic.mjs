@@ -56,7 +56,10 @@ function checkFile(filePath) {
       }
     }
     arbitraryPattern.lastIndex = 0;
-    if (hasViolation || line.includes('bg-[#') || line.includes('text-[#')) {
+    // Quick check: bg-[#hex] or text-[#hex] without var() wrapper
+    const hasBareLiteral = (line.includes('bg-[#') || line.includes('text-[#')) &&
+      !line.match(/(?:bg|text)-\[var\(--/);
+    if (hasViolation || hasBareLiteral) {
       violations.push({ file: filePath, line: index + 1, sample: line });
     }
   });
@@ -65,6 +68,10 @@ function checkFile(filePath) {
 function containsRawColor(value) {
   const normalized = value.trim().toLowerCase();
   if (!normalized) {
+    return false;
+  }
+  // Allow var(--token, #fallback) — CSS variable with hardcoded fallback is valid
+  if (normalized.startsWith('var(--')) {
     return false;
   }
   if (normalized.includes('#')) {

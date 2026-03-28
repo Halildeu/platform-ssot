@@ -27,3 +27,4 @@ export { I18nManager } from './I18nManager';
 export type { Dictionary, LoadDictionaryFn, LoadDictionaryResult, FallbackInfo } from './I18nManager';
 export { I18nProvider, useI18nManager } from './I18nProvider';
 export { useShellCommonI18n } from './useShellCommonI18n';
+export { useShellNamespaceI18n } from './useShellNamespaceI18n';

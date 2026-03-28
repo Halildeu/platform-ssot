@@ -180,7 +180,7 @@ import sys
 from pathlib import Path
 
 branch = sys.argv[1]
-path = Path("docs/04-operations/PR-BOT-RULES.json")
+path = Path("docs-ssot/04-operations/PR-BOT-RULES.json")
 if not path.exists():
     print("unknown")
     raise SystemExit(0)

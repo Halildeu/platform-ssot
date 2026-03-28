@@ -1,0 +1,255 @@
+{
+  "items": [
+    {
+      "name": "Popover",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Popover } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/layout/DesignLabHeaderMenu.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "PromptComposer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { PromptComposer } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildConfidencePromptLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildConfidencePromptShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "QRCode",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { QRCode } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "Radio",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Radio } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildFormControlLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildFormControlShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "RadioGroup",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { RadioGroup } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts"
+      ]
+    },
+    {
+      "name": "Rating",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Rating } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "RecommendationCard",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { RecommendationCard } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAiGovernanceShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "RenderWhenVisible",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { RenderWhenVisible } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "ReportFilterPanel",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { ReportFilterPanel } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
+        "web/apps/mfe-reporting/src/modules/dynamic-report/DynamicReportPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/docs/guideRegistry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildSearchFilterShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "SearchFilterListing",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { SearchFilterListing } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/docs/guideRegistry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildSearchFilterShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "SearchInput",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { SearchInput } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "Segmented",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Segmented } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-access/src/widgets/access-management/ui/AccessFilterBar.ui.tsx",
+        "web/apps/mfe-access/src/widgets/access-management/ui/BulkPermissionModal.ui.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPreviewPanel.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildActionDataEntryShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "Select",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Select } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-access/src/widgets/access-management/ui/AccessFilterBar.ui.tsx",
+        "web/apps/mfe-access/src/widgets/access-management/ui/AccessVariantToolbar.ui.tsx",
+        "web/apps/mfe-access/src/widgets/access-management/ui/BulkPermissionModal.ui.tsx",
+        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildActionDataEntryShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildSearchFilterShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "Skeleton",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Skeleton } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationDisabledShowcase.tsx"
+      ]
+    },
+    {
+      "name": "Slider",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Slider } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAdvancedInputLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAdvancedInputShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "SmartDashboard",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { SmartDashboard } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "Spinner",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Spinner } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
+      ]
+    },
+    {
+      "name": "Stack",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Stack } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/demos/admin/main.tsx",
+        "web/apps/demos/crud/main.tsx",
+        "web/apps/demos/dashboard/main.tsx"
+      ]
+    },
+    {
+      "name": "Steps",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Steps } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabStepsShowcase.tsx"
+      ]
+    },
+    {
+      "name": "SummaryStrip",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { SummaryStrip } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerDefaultShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationUnknownTotalStreamShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAiGovernanceShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildCollectionGridShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildDataDisplayAnalyticsShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildSearchFilterShowcaseSections.tsx"
+      ]
+    }
+  ]
+}

@@ -1,5 +1,11 @@
 # DOCS-PROJECT-LAYOUT
 
+> Transition Durumu: Bu dosya transition-active rehber katmanındadır.
+> Canonical OPO authority için
+> `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`,
+> `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md` ve
+> `standards.lock` kullanılır.
+
 Bu doküman, `docs/` klasörü içindeki tüm dokümanların nasıl yapılandırılacağını
 ve hangi kategoride hangi tür içeriklerin bulunacağını tanımlar. Amaç: İnsanlar
 ve AI agent’ların tüm proje dokümantasyonunu kolayca bulabileceği, okunabilir ve

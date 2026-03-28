@@ -1,0 +1,61 @@
+---
+title: Getting Started
+description: Quick start guide for @mfe/design-system
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Installation
+
+<Tabs>
+  <TabItem label="pnpm">
+    ```bash
+    pnpm add @mfe/design-system
+    ```
+  </TabItem>
+  <TabItem label="npm">
+    ```bash
+    npm install @mfe/design-system
+    ```
+  </TabItem>
+</Tabs>
+
+## Quick Setup
+
+<Steps>
+1. Import components
+   ```tsx
+   import { Button, Input, Select } from '@mfe/design-system';
+   ```
+
+2. Wrap your app with the provider
+   ```tsx
+   import { DesignSystemProvider } from '@mfe/design-system';
+
+   function App() {
+     return (
+       <DesignSystemProvider>
+         <YourApp />
+       </DesignSystemProvider>
+     );
+   }
+   ```
+
+3. Use components
+   ```tsx
+   <Button variant="primary" size="md">
+     Click me
+   </Button>
+   ```
+</Steps>
+
+## What's Included
+
+- **40+ Primitives** — Button, Input, Select, Checkbox, Dialog, etc.
+- **60+ Components** — Tabs, Accordion, DataGrid, Charts, etc.
+- **38 Enterprise** — ProcessFlow, RiskMatrix, FineKinney, PivotTable, etc.
+- **Design Tokens** — Color, spacing, typography, motion, elevation
+- **Dark Mode** — Full semantic token support
+- **RTL** — Logical CSS properties
+- **Access Control** — Per-component visibility/interaction control
+- **AI Intelligence** — MCP tools, predictive engine, a11y guardian

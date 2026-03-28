@@ -1,0 +1,2550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Diff Report</title>
+<style>
+  :root { --bg: #f8fafc; --card: #fff; --border: #e2e8f0; --text: #1e293b; --muted: #64748b; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); padding: 2rem; }
+  h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .badges { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .badge { padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #fff; }
+  .badge.in-sync { background: #22c55e; }
+  .badge.figma-ahead { background: #3b82f6; }
+  .badge.code-ahead { background: #f97316; }
+  .badge.conflict { background: #ef4444; }
+  .badge.figma-only { background: #8b5cf6; }
+  .badge.code-only { background: #06b6d4; }
+  .controls { display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+  .controls input { padding: 0.4rem 0.75rem; border: 1px solid var(--border); border-radius: 0.375rem; font-size: 0.85rem; min-width: 240px; }
+  .controls select { padding: 0.4rem 0.75rem; border: 1px solid var(--border); border-radius: 0.375rem; font-size: 0.85rem; }
+  .controls button { padding: 0.4rem 0.75rem; border: 1px solid var(--border); border-radius: 0.375rem; font-size: 0.85rem; background: var(--card); cursor: pointer; }
+  .controls button:hover { background: #f1f5f9; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 0.5rem; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  th { background: #f1f5f9; text-align: left; padding: 0.6rem 0.75rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); border-bottom: 2px solid var(--border); position: sticky; top: 0; }
+  td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: middle; }
+  .path { font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.8rem; }
+  .swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.15); margin-right: 6px; vertical-align: middle; }
+  tr.in-sync td:first-child { border-left: 3px solid #22c55e; }
+  tr.figma-ahead td:first-child { border-left: 3px solid #3b82f6; }
+  tr.code-ahead td:first-child { border-left: 3px solid #f97316; }
+  tr.conflict td:first-child { border-left: 3px solid #ef4444; }
+  tr.figma-only td:first-child { border-left: 3px solid #8b5cf6; }
+  tr.code-only td:first-child { border-left: 3px solid #06b6d4; }
+  tr.hidden { display: none; }
+  .resolution { font-weight: 600; }
+  tr.conflict .resolution { color: #ef4444; }
+  tr.figma-ahead .resolution { color: #3b82f6; }
+  tr.code-ahead .resolution { color: #f97316; }
+  tr.in-sync .resolution { color: #22c55e; }
+  tr.figma-only .resolution { color: #8b5cf6; }
+  tr.code-only .resolution { color: #06b6d4; }
+  .export-bar { margin-top: 1rem; display: flex; gap: 0.5rem; }
+  .export-bar button { padding: 0.4rem 0.75rem; border: 1px solid var(--border); border-radius: 0.375rem; font-size: 0.85rem; background: var(--card); cursor: pointer; }
+</style>
+</head>
+<body>
+<h1>Token Diff Report</h1>
+<p class="meta">Generated 2026-03-25T01:24:15.292Z</p>
+
+<div class="badges">
+  <span class="badge in-sync">In Sync: 21</span>
+  <span class="badge figma-ahead">Figma Ahead: 93</span>
+  <span class="badge code-ahead">Code Ahead: 188</span>
+  <span class="badge conflict">Conflicts: 0</span>
+</div>
+
+<div class="controls">
+  <input type="text" id="search" placeholder="Filter by token path..." />
+  <select id="filterResolution">
+    <option value="all">All statuses</option>
+    <option value="in-sync">In Sync</option>
+    <option value="figma-ahead">Figma Ahead</option>
+    <option value="code-ahead">Code Ahead</option>
+    <option value="conflict">Conflict</option>
+    <option value="figma-only">Figma Only</option>
+    <option value="code-only">Code Only</option>
+  </select>
+  <select id="filterCategory">
+    <option value="all">All categories</option>
+  </select>
+</div>
+
+<table>
+<thead>
+  <tr><th>Token Path</th><th>Category</th><th>Figma Value</th><th>Code Value</th><th>Resolution</th><th>Winner</th></tr>
+</thead>
+<tbody id="tbody">
+<tr class="figma-only">
+  <td class="path">color.black</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#000000"></span>#000000</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.brand.primary.100</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#dbeafe"></span>#dbeafe</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.brand.primary.200</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#bfdbfe"></span>#bfdbfe</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.brand.primary.300</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#93c5fd"></span>#93c5fd</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.brand.primary.400</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#60a5fa"></span>#60a5fa</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.brand.primary.50</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#eff6ff"></span>#eff6ff</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.brand.primary.500</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#3b82f6"></span>#3b82f6</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.brand.primary.600</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#2563eb"></span>#2563eb</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.brand.primary.700</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#1d4ed8"></span>#1d4ed8</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.brand.primary.800</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#1e40af"></span>#1e40af</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.brand.primary.900</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#1e3a8a"></span>#1e3a8a</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.danger.50</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#fef2f2"></span>#fef2f2</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.danger.500</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#ef4444"></span>#ef4444</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.danger.700</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#b91c1c"></span>#b91c1c</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.info.50</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#eff6ff"></span>#eff6ff</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.info.500</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#3b82f6"></span>#3b82f6</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.info.700</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#1d4ed8"></span>#1d4ed8</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.neutral.0</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#ffffff"></span>#ffffff</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.neutral.100</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#f3f4f6"></span>#f3f4f6</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.neutral.200</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#e5e7eb"></span>#e5e7eb</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.neutral.300</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#d1d5db"></span>#d1d5db</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.neutral.400</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#9ca3af"></span>#9ca3af</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.neutral.50</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#f9fafb"></span>#f9fafb</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.neutral.500</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#6b7280"></span>#6b7280</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.neutral.600</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#4b5563"></span>#4b5563</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.neutral.700</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#374151"></span>#374151</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.neutral.800</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#1f2937"></span>#1f2937</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.neutral.900</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#111827"></span>#111827</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.neutral.950</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#030712"></span>#030712</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.success.50</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#f0fdf4"></span>#f0fdf4</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.success.500</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#22c55e"></span>#22c55e</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.success.700</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#15803d"></span>#15803d</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.warning.50</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#fffbeb"></span>#fffbeb</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.warning.500</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#f59e0b"></span>#f59e0b</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">color.warning.700</td>
+  <td>color</td>
+  <td><span class="swatch" style="background:#b45309"></span>#b45309</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">motion.duration.medium</td>
+  <td>motion</td>
+  <td>200ms</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">motion.easing.enter</td>
+  <td>motion</td>
+  <td>cubic-bezier(0,0,.2,1)</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">motion.easing.exit</td>
+  <td>motion</td>
+  <td>cubic-bezier(.4,0,1,1)</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">motion.easing.standard</td>
+  <td>motion</td>
+  <td>cubic-bezier(.2,0,.2,1)</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">radius.2xl</td>
+  <td>radius</td>
+  <td>20px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">radius.3xl</td>
+  <td>radius</td>
+  <td>24px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">radius.full</td>
+  <td>radius</td>
+  <td>9999px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">radius.lg</td>
+  <td>radius</td>
+  <td>12px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">radius.md</td>
+  <td>radius</td>
+  <td>8px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">radius.none</td>
+  <td>radius</td>
+  <td>0px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">radius.sm</td>
+  <td>radius</td>
+  <td>4px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">radius.xl</td>
+  <td>radius</td>
+  <td>16px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">shadow.2xl</td>
+  <td>elevation</td>
+  <td>0 16px 48px rgba(15, 23, 42, 0.28)</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">shadow.inner</td>
+  <td>elevation</td>
+  <td>inset 0 2px 4px rgba(15, 23, 42, 0.06)</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">shadow.lg</td>
+  <td>elevation</td>
+  <td>0 8px 24px rgba(15, 23, 42, 0.18)</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">shadow.md</td>
+  <td>elevation</td>
+  <td>0 4px 12px rgba(15, 23, 42, 0.12)</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">shadow.none</td>
+  <td>elevation</td>
+  <td>none</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">shadow.sm</td>
+  <td>elevation</td>
+  <td>0 1px 2px rgba(15, 23, 42, 0.08)</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">shadow.xl</td>
+  <td>elevation</td>
+  <td>0 12px 32px rgba(15, 23, 42, 0.22)</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">shadow.xs</td>
+  <td>elevation</td>
+  <td>0 1px 2px rgba(15, 23, 42, 0.04)</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.0</td>
+  <td>_default</td>
+  <td>0px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.0.5</td>
+  <td>_default</td>
+  <td>2px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.1</td>
+  <td>_default</td>
+  <td>4px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.1.5</td>
+  <td>_default</td>
+  <td>6px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.10</td>
+  <td>_default</td>
+  <td>40px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.11</td>
+  <td>_default</td>
+  <td>44px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.12</td>
+  <td>_default</td>
+  <td>48px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.14</td>
+  <td>_default</td>
+  <td>56px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.16</td>
+  <td>_default</td>
+  <td>64px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.2</td>
+  <td>_default</td>
+  <td>8px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.2.5</td>
+  <td>_default</td>
+  <td>10px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.20</td>
+  <td>_default</td>
+  <td>80px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.24</td>
+  <td>_default</td>
+  <td>96px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.28</td>
+  <td>_default</td>
+  <td>112px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.3</td>
+  <td>_default</td>
+  <td>12px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.3.5</td>
+  <td>_default</td>
+  <td>14px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.32</td>
+  <td>_default</td>
+  <td>128px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.4</td>
+  <td>_default</td>
+  <td>16px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.5</td>
+  <td>_default</td>
+  <td>20px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.6</td>
+  <td>_default</td>
+  <td>24px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.7</td>
+  <td>_default</td>
+  <td>28px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.8</td>
+  <td>_default</td>
+  <td>32px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">space.9</td>
+  <td>_default</td>
+  <td>36px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.family.base</td>
+  <td>_default</td>
+  <td>'inter', -apple-system, 'blinkmacsystemfont', 'segoe ui', sans-serif</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.family.mono</td>
+  <td>_default</td>
+  <td>'jetbrains mono', 'fira code', 'cascadia code', monospace</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.family.sans</td>
+  <td>_default</td>
+  <td>'inter', -apple-system, blinkmacsystemfont, 'segoe ui', sans-serif</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.size.2xl</td>
+  <td>_default</td>
+  <td>24px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.size.3xl</td>
+  <td>_default</td>
+  <td>30px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.size.4xl</td>
+  <td>_default</td>
+  <td>36px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.size.base</td>
+  <td>_default</td>
+  <td>16px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.size.lg</td>
+  <td>_default</td>
+  <td>18px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.size.sm</td>
+  <td>_default</td>
+  <td>14px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.size.xl</td>
+  <td>_default</td>
+  <td>20px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.size.xs</td>
+  <td>_default</td>
+  <td>12px</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.weight.bold</td>
+  <td>_default</td>
+  <td>700</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.weight.medium</td>
+  <td>_default</td>
+  <td>500</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.weight.normal</td>
+  <td>_default</td>
+  <td>400</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="figma-only">
+  <td class="path">typography.font.weight.semibold</td>
+  <td>_default</td>
+  <td>600</td>
+  <td><em>--</em></td>
+  <td class="resolution">figma-only</td>
+  <td>figma</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.amber50</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#fffbeb"></span>#fffbeb</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.amber500</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#f59e0b"></span>#f59e0b</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.amber700</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#b45309"></span>#b45309</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.black</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#000000"></span>#000000</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.blue50</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#eff6ff"></span>#eff6ff</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.blue500</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#3b82f6"></span>#3b82f6</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.blue700</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#1d4ed8"></span>#1d4ed8</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.gray100</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#f3f4f6"></span>#f3f4f6</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.gray200</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#e5e7eb"></span>#e5e7eb</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.gray300</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#d1d5db"></span>#d1d5db</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.gray400</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#9ca3af"></span>#9ca3af</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.gray50</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#f9fafb"></span>#f9fafb</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.gray500</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#6b7280"></span>#6b7280</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.gray600</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#4b5563"></span>#4b5563</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.gray700</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#374151"></span>#374151</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.gray800</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#1f2937"></span>#1f2937</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.gray900</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#111827"></span>#111827</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.green50</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#f0fdf4"></span>#f0fdf4</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.green500</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#22c55e"></span>#22c55e</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.green700</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#15803d"></span>#15803d</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.primary100</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#dbeafe"></span>#dbeafe</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.primary200</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#bfdbfe"></span>#bfdbfe</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.primary300</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#93c5fd"></span>#93c5fd</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.primary400</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#60a5fa"></span>#60a5fa</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.primary50</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#eff6ff"></span>#eff6ff</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.primary500</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#3b82f6"></span>#3b82f6</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.primary600</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#2563eb"></span>#2563eb</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.primary700</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#1d4ed8"></span>#1d4ed8</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.primary800</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#1e40af"></span>#1e40af</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.primary900</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#1e3a8a"></span>#1e3a8a</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.red50</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#fef2f2"></span>#fef2f2</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.red500</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#ef4444"></span>#ef4444</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.red700</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#b91c1c"></span>#b91c1c</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.palette.white</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td><span class="swatch" style="background:#ffffff"></span>#ffffff</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.action-primary</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--action-primary</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.action-primary-active</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--action-primary-active</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.action-primary-hover</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--action-primary-hover</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.action-secondary</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--action-secondary</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.border-default</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--border-default</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.border-strong</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--border-strong</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.border-subtle</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--border-subtle</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.state-error-bg</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--state-error-bg</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.state-error-text</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--state-error-text</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.state-info-bg</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--state-info-bg</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.state-info-text</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--state-info-text</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.state-success-bg</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--state-success-bg</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.state-success-text</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--state-success-text</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.state-warning-bg</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--state-warning-bg</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.state-warning-text</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--state-warning-text</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.surface-canvas</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--surface-canvas</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.surface-default</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--surface-default</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.surface-muted</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--surface-muted</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.surface-raised</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--surface-raised</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.text-disabled</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--text-disabled</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.text-inverse</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--text-inverse</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.text-primary</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--text-primary</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">color.semanticColorTokens.text-secondary</td>
+  <td>color</td>
+  <td><em>--</em></td>
+  <td>--text-secondary</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.controlHeight.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>40</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.controlHeight.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>32</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.controlHeight.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>28</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.fontSize.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>14</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.fontSize.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>13</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.fontSize.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>12</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.fontSize.xs</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>11</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.gap.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>12</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.gap.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>8</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.gap.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>6</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.gap.xs</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>4</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.iconSize.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>20</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.iconSize.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>16</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.iconSize.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>14</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.padding.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>16</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.padding.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>12</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.padding.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>8</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.comfortable.padding.xs</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>6</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.controlHeight.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>32</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.controlHeight.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>28</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.controlHeight.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>24</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.fontSize.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>13</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.fontSize.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>12</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.fontSize.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>11</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.fontSize.xs</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>10</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.gap.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>8</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.gap.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>6</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.gap.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>4</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.gap.xs</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>2</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.iconSize.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>16</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.iconSize.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>14</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.iconSize.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>12</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.padding.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>10</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.padding.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>8</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.padding.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>6</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.compact.padding.xs</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>4</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.controlHeight.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>48</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.controlHeight.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>40</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.controlHeight.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>32</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.fontSize.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>16</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.fontSize.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>14</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.fontSize.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>13</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.fontSize.xs</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>12</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.gap.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>16</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.gap.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>12</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.gap.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>8</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.gap.xs</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>6</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.iconSize.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>24</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.iconSize.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>20</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.iconSize.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>16</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.padding.lg</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>20</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.padding.md</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>16</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.padding.sm</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>12</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">density.density.spacious.padding.xs</td>
+  <td>density</td>
+  <td><em>--</em></td>
+  <td>8</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">elevation.elevation.2xl</td>
+  <td>elevation</td>
+  <td><em>--</em></td>
+  <td>0 25px 50px -12px rgba(0,0,0,0.25)</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">elevation.elevation.inner</td>
+  <td>elevation</td>
+  <td><em>--</em></td>
+  <td>inset 0 2px 4px rgba(0,0,0,0.05)</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">elevation.elevation.lg</td>
+  <td>elevation</td>
+  <td><em>--</em></td>
+  <td>0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">elevation.elevation.md</td>
+  <td>elevation</td>
+  <td><em>--</em></td>
+  <td>0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">elevation.elevation.none</td>
+  <td>elevation</td>
+  <td><em>--</em></td>
+  <td>none</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">elevation.elevation.sm</td>
+  <td>elevation</td>
+  <td><em>--</em></td>
+  <td>0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06)</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">elevation.elevation.xl</td>
+  <td>elevation</td>
+  <td><em>--</em></td>
+  <td>0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">elevation.elevation.xs</td>
+  <td>elevation</td>
+  <td><em>--</em></td>
+  <td>0 1px 2px rgba(0,0,0,0.05)</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">focusRing.focusRing.class</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]/30 focus-visible:ring-offset-2</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">focusRing.focusRing.color</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>var(--focus-ring, var(--focus-outline, #2c5282))</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">focusRing.focusRing.offset</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>2</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">focusRing.focusRing.style</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>solid</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">focusRing.focusRing.width</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>2</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">opacity.opacity.active</td>
+  <td>opacity</td>
+  <td><em>--</em></td>
+  <td>0.9</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">opacity.opacity.disabled</td>
+  <td>opacity</td>
+  <td><em>--</em></td>
+  <td>0.5</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">opacity.opacity.hover</td>
+  <td>opacity</td>
+  <td><em>--</em></td>
+  <td>0.8</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">opacity.opacity.overlay</td>
+  <td>opacity</td>
+  <td><em>--</em></td>
+  <td>0.6</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">opacity.opacity.overlayHeavy</td>
+  <td>opacity</td>
+  <td><em>--</em></td>
+  <td>0.2</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">opacity.opacity.overlayLight</td>
+  <td>opacity</td>
+  <td><em>--</em></td>
+  <td>0.05</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">opacity.opacity.overlayMedium</td>
+  <td>opacity</td>
+  <td><em>--</em></td>
+  <td>0.1</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">opacity.opacity.placeholder</td>
+  <td>opacity</td>
+  <td><em>--</em></td>
+  <td>0.5</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">opacity.opacity.readonly</td>
+  <td>opacity</td>
+  <td><em>--</em></td>
+  <td>0.7</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">radius.radius.2xl</td>
+  <td>radius</td>
+  <td><em>--</em></td>
+  <td>20px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">radius.radius.3xl</td>
+  <td>radius</td>
+  <td><em>--</em></td>
+  <td>24px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">radius.radius.full</td>
+  <td>radius</td>
+  <td><em>--</em></td>
+  <td>9999px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">radius.radius.lg</td>
+  <td>radius</td>
+  <td><em>--</em></td>
+  <td>12px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">radius.radius.md</td>
+  <td>radius</td>
+  <td><em>--</em></td>
+  <td>8px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">radius.radius.none</td>
+  <td>radius</td>
+  <td><em>--</em></td>
+  <td>0px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">radius.radius.sm</td>
+  <td>radius</td>
+  <td><em>--</em></td>
+  <td>4px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">radius.radius.xl</td>
+  <td>radius</td>
+  <td><em>--</em></td>
+  <td>16px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.0</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>0px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.0.5</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>2px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.1</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>4px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.1.5</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>6px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.10</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>40px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.11</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>44px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.12</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>48px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.14</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>56px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.16</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>64px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.2</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>8px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.2.5</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>10px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.20</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>80px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.24</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>96px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.28</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>112px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.3</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>12px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.3.5</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>14px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.32</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>128px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.4</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>16px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.5</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>20px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.6</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>24px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.7</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>28px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.8</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>32px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">spacing.spacing.9</td>
+  <td>spacing</td>
+  <td><em>--</em></td>
+  <td>36px</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontFamily.mono</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>'jetbrains mono', 'fira code', 'consolas', monospace</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontFamily.sans</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>'inter', -apple-system, blinkmacsystemfont, 'segoe ui', roboto, sans-serif</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontSize.2xl</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1.5rem</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontSize.3xl</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1.875rem</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontSize.4xl</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>2.25rem</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontSize.base</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1rem</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontSize.lg</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1.125rem</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontSize.sm</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>0.875rem</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontSize.xl</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1.25rem</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontSize.xs</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>0.75rem</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontWeight.bold</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>700</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontWeight.medium</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>500</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontWeight.normal</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>400</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">typography.fontWeight.semibold</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>600</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">zIndex.zIndex.backdrop</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1300</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">zIndex.zIndex.base</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>0</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">zIndex.zIndex.commandPalette</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1800</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">zIndex.zIndex.dropdown</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1000</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">zIndex.zIndex.fixed</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1200</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">zIndex.zIndex.modal</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1400</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">zIndex.zIndex.popover</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1500</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">zIndex.zIndex.sticky</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1100</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">zIndex.zIndex.toast</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1700</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="code-only">
+  <td class="path">zIndex.zIndex.tooltip</td>
+  <td>_default</td>
+  <td><em>--</em></td>
+  <td>1600</td>
+  <td class="resolution">code-only</td>
+  <td>code</td>
+</tr>
+<tr class="in-sync">
+  <td class="path">motion.duration.fast</td>
+  <td>motion</td>
+  <td>100ms</td>
+  <td>100ms</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">motion.duration.instant</td>
+  <td>motion</td>
+  <td>0ms</td>
+  <td>0ms</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">motion.duration.normal</td>
+  <td>motion</td>
+  <td>200ms</td>
+  <td>200ms</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">motion.duration.slow</td>
+  <td>motion</td>
+  <td>300ms</td>
+  <td>300ms</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">motion.duration.slower</td>
+  <td>motion</td>
+  <td>500ms</td>
+  <td>500ms</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">motion.easing.default</td>
+  <td>motion</td>
+  <td>cubic-bezier(0.4, 0, 0.2, 1)</td>
+  <td>cubic-bezier(0.4, 0, 0.2, 1)</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">motion.easing.in</td>
+  <td>motion</td>
+  <td>cubic-bezier(0.4, 0, 1, 1)</td>
+  <td>cubic-bezier(0.4, 0, 1, 1)</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">motion.easing.inOut</td>
+  <td>motion</td>
+  <td>cubic-bezier(0.4, 0, 0.2, 1)</td>
+  <td>cubic-bezier(0.4, 0, 0.2, 1)</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">motion.easing.out</td>
+  <td>motion</td>
+  <td>cubic-bezier(0, 0, 0.2, 1)</td>
+  <td>cubic-bezier(0, 0, 0.2, 1)</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">motion.easing.spring</td>
+  <td>motion</td>
+  <td>cubic-bezier(0.175, 0.885, 0.32, 1.275)</td>
+  <td>cubic-bezier(0.175, 0.885, 0.32, 1.275)</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">typography.letterSpacing.normal</td>
+  <td>_default</td>
+  <td>0em</td>
+  <td>0em</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">typography.letterSpacing.tight</td>
+  <td>_default</td>
+  <td>-0.025em</td>
+  <td>-0.025em</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">typography.letterSpacing.tighter</td>
+  <td>_default</td>
+  <td>-0.05em</td>
+  <td>-0.05em</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">typography.letterSpacing.wide</td>
+  <td>_default</td>
+  <td>0.025em</td>
+  <td>0.025em</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">typography.letterSpacing.wider</td>
+  <td>_default</td>
+  <td>0.05em</td>
+  <td>0.05em</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">typography.letterSpacing.widest</td>
+  <td>_default</td>
+  <td>0.1em</td>
+  <td>0.1em</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">typography.lineHeight.loose</td>
+  <td>_default</td>
+  <td>2</td>
+  <td>2</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">typography.lineHeight.normal</td>
+  <td>_default</td>
+  <td>1.5</td>
+  <td>1.5</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">typography.lineHeight.relaxed</td>
+  <td>_default</td>
+  <td>1.625</td>
+  <td>1.625</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">typography.lineHeight.snug</td>
+  <td>_default</td>
+  <td>1.375</td>
+  <td>1.375</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+<tr class="in-sync">
+  <td class="path">typography.lineHeight.tight</td>
+  <td>_default</td>
+  <td>1.25</td>
+  <td>1.25</td>
+  <td class="resolution">in-sync</td>
+  <td><em>--</em></td>
+</tr>
+</tbody>
+</table>
+
+<div class="export-bar">
+  <button onclick="copyJson()">Copy JSON</button>
+  <button onclick="downloadCsv()">Download CSV</button>
+</div>
+
+<script>
+const REPORT_JSON = {"generatedAt":"2026-03-25T01:24:15.292Z","summary":{"total":302,"inSync":21,"figmaAhead":0,"codeAhead":0,"conflicts":0,"figmaOnly":93,"codeOnly":188},"tokens":[{"path":"color.black","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#000000","codeValue":null,"resolvedValue":"#000000"},{"path":"color.brand.primary.100","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#dbeafe","codeValue":null,"resolvedValue":"#dbeafe"},{"path":"color.brand.primary.200","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#bfdbfe","codeValue":null,"resolvedValue":"#bfdbfe"},{"path":"color.brand.primary.300","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#93c5fd","codeValue":null,"resolvedValue":"#93c5fd"},{"path":"color.brand.primary.400","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#60a5fa","codeValue":null,"resolvedValue":"#60a5fa"},{"path":"color.brand.primary.50","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#eff6ff","codeValue":null,"resolvedValue":"#eff6ff"},{"path":"color.brand.primary.500","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#3b82f6","codeValue":null,"resolvedValue":"#3b82f6"},{"path":"color.brand.primary.600","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#2563eb","codeValue":null,"resolvedValue":"#2563eb"},{"path":"color.brand.primary.700","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#1d4ed8","codeValue":null,"resolvedValue":"#1d4ed8"},{"path":"color.brand.primary.800","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#1e40af","codeValue":null,"resolvedValue":"#1e40af"},{"path":"color.brand.primary.900","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#1e3a8a","codeValue":null,"resolvedValue":"#1e3a8a"},{"path":"color.danger.50","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#fef2f2","codeValue":null,"resolvedValue":"#fef2f2"},{"path":"color.danger.500","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#ef4444","codeValue":null,"resolvedValue":"#ef4444"},{"path":"color.danger.700","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#b91c1c","codeValue":null,"resolvedValue":"#b91c1c"},{"path":"color.info.50","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#eff6ff","codeValue":null,"resolvedValue":"#eff6ff"},{"path":"color.info.500","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#3b82f6","codeValue":null,"resolvedValue":"#3b82f6"},{"path":"color.info.700","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#1d4ed8","codeValue":null,"resolvedValue":"#1d4ed8"},{"path":"color.neutral.0","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#ffffff","codeValue":null,"resolvedValue":"#ffffff"},{"path":"color.neutral.100","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#f3f4f6","codeValue":null,"resolvedValue":"#f3f4f6"},{"path":"color.neutral.200","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#e5e7eb","codeValue":null,"resolvedValue":"#e5e7eb"},{"path":"color.neutral.300","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#d1d5db","codeValue":null,"resolvedValue":"#d1d5db"},{"path":"color.neutral.400","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#9ca3af","codeValue":null,"resolvedValue":"#9ca3af"},{"path":"color.neutral.50","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#f9fafb","codeValue":null,"resolvedValue":"#f9fafb"},{"path":"color.neutral.500","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#6b7280","codeValue":null,"resolvedValue":"#6b7280"},{"path":"color.neutral.600","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#4b5563","codeValue":null,"resolvedValue":"#4b5563"},{"path":"color.neutral.700","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#374151","codeValue":null,"resolvedValue":"#374151"},{"path":"color.neutral.800","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#1f2937","codeValue":null,"resolvedValue":"#1f2937"},{"path":"color.neutral.900","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#111827","codeValue":null,"resolvedValue":"#111827"},{"path":"color.neutral.950","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#030712","codeValue":null,"resolvedValue":"#030712"},{"path":"color.success.50","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#f0fdf4","codeValue":null,"resolvedValue":"#f0fdf4"},{"path":"color.success.500","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#22c55e","codeValue":null,"resolvedValue":"#22c55e"},{"path":"color.success.700","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#15803d","codeValue":null,"resolvedValue":"#15803d"},{"path":"color.warning.50","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#fffbeb","codeValue":null,"resolvedValue":"#fffbeb"},{"path":"color.warning.500","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#f59e0b","codeValue":null,"resolvedValue":"#f59e0b"},{"path":"color.warning.700","category":"color","resolution":"figma-only","winner":"figma","figmaValue":"#b45309","codeValue":null,"resolvedValue":"#b45309"},{"path":"motion.duration.medium","category":"motion","resolution":"figma-only","winner":"figma","figmaValue":"200ms","codeValue":null,"resolvedValue":"200ms"},{"path":"motion.easing.enter","category":"motion","resolution":"figma-only","winner":"figma","figmaValue":"cubic-bezier(0,0,.2,1)","codeValue":null,"resolvedValue":"cubic-bezier(0,0,.2,1)"},{"path":"motion.easing.exit","category":"motion","resolution":"figma-only","winner":"figma","figmaValue":"cubic-bezier(.4,0,1,1)","codeValue":null,"resolvedValue":"cubic-bezier(.4,0,1,1)"},{"path":"motion.easing.standard","category":"motion","resolution":"figma-only","winner":"figma","figmaValue":"cubic-bezier(.2,0,.2,1)","codeValue":null,"resolvedValue":"cubic-bezier(.2,0,.2,1)"},{"path":"radius.2xl","category":"radius","resolution":"figma-only","winner":"figma","figmaValue":"20px","codeValue":null,"resolvedValue":"20px"},{"path":"radius.3xl","category":"radius","resolution":"figma-only","winner":"figma","figmaValue":"24px","codeValue":null,"resolvedValue":"24px"},{"path":"radius.full","category":"radius","resolution":"figma-only","winner":"figma","figmaValue":"9999px","codeValue":null,"resolvedValue":"9999px"},{"path":"radius.lg","category":"radius","resolution":"figma-only","winner":"figma","figmaValue":"12px","codeValue":null,"resolvedValue":"12px"},{"path":"radius.md","category":"radius","resolution":"figma-only","winner":"figma","figmaValue":"8px","codeValue":null,"resolvedValue":"8px"},{"path":"radius.none","category":"radius","resolution":"figma-only","winner":"figma","figmaValue":"0px","codeValue":null,"resolvedValue":"0px"},{"path":"radius.sm","category":"radius","resolution":"figma-only","winner":"figma","figmaValue":"4px","codeValue":null,"resolvedValue":"4px"},{"path":"radius.xl","category":"radius","resolution":"figma-only","winner":"figma","figmaValue":"16px","codeValue":null,"resolvedValue":"16px"},{"path":"shadow.2xl","category":"elevation","resolution":"figma-only","winner":"figma","figmaValue":"0 16px 48px rgba(15, 23, 42, 0.28)","codeValue":null,"resolvedValue":"0 16px 48px rgba(15, 23, 42, 0.28)"},{"path":"shadow.inner","category":"elevation","resolution":"figma-only","winner":"figma","figmaValue":"inset 0 2px 4px rgba(15, 23, 42, 0.06)","codeValue":null,"resolvedValue":"inset 0 2px 4px rgba(15, 23, 42, 0.06)"},{"path":"shadow.lg","category":"elevation","resolution":"figma-only","winner":"figma","figmaValue":"0 8px 24px rgba(15, 23, 42, 0.18)","codeValue":null,"resolvedValue":"0 8px 24px rgba(15, 23, 42, 0.18)"},{"path":"shadow.md","category":"elevation","resolution":"figma-only","winner":"figma","figmaValue":"0 4px 12px rgba(15, 23, 42, 0.12)","codeValue":null,"resolvedValue":"0 4px 12px rgba(15, 23, 42, 0.12)"},{"path":"shadow.none","category":"elevation","resolution":"figma-only","winner":"figma","figmaValue":"none","codeValue":null,"resolvedValue":"none"},{"path":"shadow.sm","category":"elevation","resolution":"figma-only","winner":"figma","figmaValue":"0 1px 2px rgba(15, 23, 42, 0.08)","codeValue":null,"resolvedValue":"0 1px 2px rgba(15, 23, 42, 0.08)"},{"path":"shadow.xl","category":"elevation","resolution":"figma-only","winner":"figma","figmaValue":"0 12px 32px rgba(15, 23, 42, 0.22)","codeValue":null,"resolvedValue":"0 12px 32px rgba(15, 23, 42, 0.22)"},{"path":"shadow.xs","category":"elevation","resolution":"figma-only","winner":"figma","figmaValue":"0 1px 2px rgba(15, 23, 42, 0.04)","codeValue":null,"resolvedValue":"0 1px 2px rgba(15, 23, 42, 0.04)"},{"path":"space.0","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"0px","codeValue":null,"resolvedValue":"0px"},{"path":"space.0.5","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"2px","codeValue":null,"resolvedValue":"2px"},{"path":"space.1","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"4px","codeValue":null,"resolvedValue":"4px"},{"path":"space.1.5","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"6px","codeValue":null,"resolvedValue":"6px"},{"path":"space.10","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"40px","codeValue":null,"resolvedValue":"40px"},{"path":"space.11","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"44px","codeValue":null,"resolvedValue":"44px"},{"path":"space.12","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"48px","codeValue":null,"resolvedValue":"48px"},{"path":"space.14","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"56px","codeValue":null,"resolvedValue":"56px"},{"path":"space.16","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"64px","codeValue":null,"resolvedValue":"64px"},{"path":"space.2","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"8px","codeValue":null,"resolvedValue":"8px"},{"path":"space.2.5","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"10px","codeValue":null,"resolvedValue":"10px"},{"path":"space.20","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"80px","codeValue":null,"resolvedValue":"80px"},{"path":"space.24","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"96px","codeValue":null,"resolvedValue":"96px"},{"path":"space.28","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"112px","codeValue":null,"resolvedValue":"112px"},{"path":"space.3","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"12px","codeValue":null,"resolvedValue":"12px"},{"path":"space.3.5","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"14px","codeValue":null,"resolvedValue":"14px"},{"path":"space.32","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"128px","codeValue":null,"resolvedValue":"128px"},{"path":"space.4","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"16px","codeValue":null,"resolvedValue":"16px"},{"path":"space.5","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"20px","codeValue":null,"resolvedValue":"20px"},{"path":"space.6","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"24px","codeValue":null,"resolvedValue":"24px"},{"path":"space.7","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"28px","codeValue":null,"resolvedValue":"28px"},{"path":"space.8","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"32px","codeValue":null,"resolvedValue":"32px"},{"path":"space.9","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"36px","codeValue":null,"resolvedValue":"36px"},{"path":"typography.font.family.base","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"'inter', -apple-system, 'blinkmacsystemfont', 'segoe ui', sans-serif","codeValue":null,"resolvedValue":"'inter', -apple-system, 'blinkmacsystemfont', 'segoe ui', sans-serif"},{"path":"typography.font.family.mono","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"'jetbrains mono', 'fira code', 'cascadia code', monospace","codeValue":null,"resolvedValue":"'jetbrains mono', 'fira code', 'cascadia code', monospace"},{"path":"typography.font.family.sans","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"'inter', -apple-system, blinkmacsystemfont, 'segoe ui', sans-serif","codeValue":null,"resolvedValue":"'inter', -apple-system, blinkmacsystemfont, 'segoe ui', sans-serif"},{"path":"typography.font.size.2xl","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"24px","codeValue":null,"resolvedValue":"24px"},{"path":"typography.font.size.3xl","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"30px","codeValue":null,"resolvedValue":"30px"},{"path":"typography.font.size.4xl","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"36px","codeValue":null,"resolvedValue":"36px"},{"path":"typography.font.size.base","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"16px","codeValue":null,"resolvedValue":"16px"},{"path":"typography.font.size.lg","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"18px","codeValue":null,"resolvedValue":"18px"},{"path":"typography.font.size.sm","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"14px","codeValue":null,"resolvedValue":"14px"},{"path":"typography.font.size.xl","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"20px","codeValue":null,"resolvedValue":"20px"},{"path":"typography.font.size.xs","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"12px","codeValue":null,"resolvedValue":"12px"},{"path":"typography.font.weight.bold","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"700","codeValue":null,"resolvedValue":"700"},{"path":"typography.font.weight.medium","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"500","codeValue":null,"resolvedValue":"500"},{"path":"typography.font.weight.normal","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"400","codeValue":null,"resolvedValue":"400"},{"path":"typography.font.weight.semibold","category":"_default","resolution":"figma-only","winner":"figma","figmaValue":"600","codeValue":null,"resolvedValue":"600"},{"path":"color.palette.amber50","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#fffbeb","resolvedValue":"#fffbeb"},{"path":"color.palette.amber500","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#f59e0b","resolvedValue":"#f59e0b"},{"path":"color.palette.amber700","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#b45309","resolvedValue":"#b45309"},{"path":"color.palette.black","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#000000","resolvedValue":"#000000"},{"path":"color.palette.blue50","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#eff6ff","resolvedValue":"#eff6ff"},{"path":"color.palette.blue500","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#3b82f6","resolvedValue":"#3b82f6"},{"path":"color.palette.blue700","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#1d4ed8","resolvedValue":"#1d4ed8"},{"path":"color.palette.gray100","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#f3f4f6","resolvedValue":"#f3f4f6"},{"path":"color.palette.gray200","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#e5e7eb","resolvedValue":"#e5e7eb"},{"path":"color.palette.gray300","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#d1d5db","resolvedValue":"#d1d5db"},{"path":"color.palette.gray400","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#9ca3af","resolvedValue":"#9ca3af"},{"path":"color.palette.gray50","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#f9fafb","resolvedValue":"#f9fafb"},{"path":"color.palette.gray500","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#6b7280","resolvedValue":"#6b7280"},{"path":"color.palette.gray600","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#4b5563","resolvedValue":"#4b5563"},{"path":"color.palette.gray700","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#374151","resolvedValue":"#374151"},{"path":"color.palette.gray800","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#1f2937","resolvedValue":"#1f2937"},{"path":"color.palette.gray900","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#111827","resolvedValue":"#111827"},{"path":"color.palette.green50","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#f0fdf4","resolvedValue":"#f0fdf4"},{"path":"color.palette.green500","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#22c55e","resolvedValue":"#22c55e"},{"path":"color.palette.green700","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#15803d","resolvedValue":"#15803d"},{"path":"color.palette.primary100","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#dbeafe","resolvedValue":"#dbeafe"},{"path":"color.palette.primary200","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#bfdbfe","resolvedValue":"#bfdbfe"},{"path":"color.palette.primary300","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#93c5fd","resolvedValue":"#93c5fd"},{"path":"color.palette.primary400","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#60a5fa","resolvedValue":"#60a5fa"},{"path":"color.palette.primary50","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#eff6ff","resolvedValue":"#eff6ff"},{"path":"color.palette.primary500","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#3b82f6","resolvedValue":"#3b82f6"},{"path":"color.palette.primary600","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#2563eb","resolvedValue":"#2563eb"},{"path":"color.palette.primary700","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#1d4ed8","resolvedValue":"#1d4ed8"},{"path":"color.palette.primary800","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#1e40af","resolvedValue":"#1e40af"},{"path":"color.palette.primary900","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#1e3a8a","resolvedValue":"#1e3a8a"},{"path":"color.palette.red50","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#fef2f2","resolvedValue":"#fef2f2"},{"path":"color.palette.red500","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#ef4444","resolvedValue":"#ef4444"},{"path":"color.palette.red700","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#b91c1c","resolvedValue":"#b91c1c"},{"path":"color.palette.white","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"#ffffff","resolvedValue":"#ffffff"},{"path":"color.semanticColorTokens.action-primary","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--action-primary","resolvedValue":"--action-primary"},{"path":"color.semanticColorTokens.action-primary-active","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--action-primary-active","resolvedValue":"--action-primary-active"},{"path":"color.semanticColorTokens.action-primary-hover","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--action-primary-hover","resolvedValue":"--action-primary-hover"},{"path":"color.semanticColorTokens.action-secondary","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--action-secondary","resolvedValue":"--action-secondary"},{"path":"color.semanticColorTokens.border-default","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--border-default","resolvedValue":"--border-default"},{"path":"color.semanticColorTokens.border-strong","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--border-strong","resolvedValue":"--border-strong"},{"path":"color.semanticColorTokens.border-subtle","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--border-subtle","resolvedValue":"--border-subtle"},{"path":"color.semanticColorTokens.state-error-bg","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--state-error-bg","resolvedValue":"--state-error-bg"},{"path":"color.semanticColorTokens.state-error-text","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--state-error-text","resolvedValue":"--state-error-text"},{"path":"color.semanticColorTokens.state-info-bg","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--state-info-bg","resolvedValue":"--state-info-bg"},{"path":"color.semanticColorTokens.state-info-text","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--state-info-text","resolvedValue":"--state-info-text"},{"path":"color.semanticColorTokens.state-success-bg","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--state-success-bg","resolvedValue":"--state-success-bg"},{"path":"color.semanticColorTokens.state-success-text","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--state-success-text","resolvedValue":"--state-success-text"},{"path":"color.semanticColorTokens.state-warning-bg","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--state-warning-bg","resolvedValue":"--state-warning-bg"},{"path":"color.semanticColorTokens.state-warning-text","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--state-warning-text","resolvedValue":"--state-warning-text"},{"path":"color.semanticColorTokens.surface-canvas","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--surface-canvas","resolvedValue":"--surface-canvas"},{"path":"color.semanticColorTokens.surface-default","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--surface-default","resolvedValue":"--surface-default"},{"path":"color.semanticColorTokens.surface-muted","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--surface-muted","resolvedValue":"--surface-muted"},{"path":"color.semanticColorTokens.surface-raised","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--surface-raised","resolvedValue":"--surface-raised"},{"path":"color.semanticColorTokens.text-disabled","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--text-disabled","resolvedValue":"--text-disabled"},{"path":"color.semanticColorTokens.text-inverse","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--text-inverse","resolvedValue":"--text-inverse"},{"path":"color.semanticColorTokens.text-primary","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--text-primary","resolvedValue":"--text-primary"},{"path":"color.semanticColorTokens.text-secondary","category":"color","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"--text-secondary","resolvedValue":"--text-secondary"},{"path":"density.density.comfortable.controlHeight.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"40","resolvedValue":"40"},{"path":"density.density.comfortable.controlHeight.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"32","resolvedValue":"32"},{"path":"density.density.comfortable.controlHeight.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"28","resolvedValue":"28"},{"path":"density.density.comfortable.fontSize.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"14","resolvedValue":"14"},{"path":"density.density.comfortable.fontSize.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"13","resolvedValue":"13"},{"path":"density.density.comfortable.fontSize.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"12","resolvedValue":"12"},{"path":"density.density.comfortable.fontSize.xs","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"11","resolvedValue":"11"},{"path":"density.density.comfortable.gap.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"12","resolvedValue":"12"},{"path":"density.density.comfortable.gap.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"8","resolvedValue":"8"},{"path":"density.density.comfortable.gap.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"6","resolvedValue":"6"},{"path":"density.density.comfortable.gap.xs","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"4","resolvedValue":"4"},{"path":"density.density.comfortable.iconSize.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"20","resolvedValue":"20"},{"path":"density.density.comfortable.iconSize.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"16","resolvedValue":"16"},{"path":"density.density.comfortable.iconSize.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"14","resolvedValue":"14"},{"path":"density.density.comfortable.padding.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"16","resolvedValue":"16"},{"path":"density.density.comfortable.padding.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"12","resolvedValue":"12"},{"path":"density.density.comfortable.padding.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"8","resolvedValue":"8"},{"path":"density.density.comfortable.padding.xs","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"6","resolvedValue":"6"},{"path":"density.density.compact.controlHeight.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"32","resolvedValue":"32"},{"path":"density.density.compact.controlHeight.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"28","resolvedValue":"28"},{"path":"density.density.compact.controlHeight.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"24","resolvedValue":"24"},{"path":"density.density.compact.fontSize.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"13","resolvedValue":"13"},{"path":"density.density.compact.fontSize.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"12","resolvedValue":"12"},{"path":"density.density.compact.fontSize.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"11","resolvedValue":"11"},{"path":"density.density.compact.fontSize.xs","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"10","resolvedValue":"10"},{"path":"density.density.compact.gap.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"8","resolvedValue":"8"},{"path":"density.density.compact.gap.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"6","resolvedValue":"6"},{"path":"density.density.compact.gap.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"4","resolvedValue":"4"},{"path":"density.density.compact.gap.xs","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"2","resolvedValue":"2"},{"path":"density.density.compact.iconSize.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"16","resolvedValue":"16"},{"path":"density.density.compact.iconSize.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"14","resolvedValue":"14"},{"path":"density.density.compact.iconSize.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"12","resolvedValue":"12"},{"path":"density.density.compact.padding.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"10","resolvedValue":"10"},{"path":"density.density.compact.padding.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"8","resolvedValue":"8"},{"path":"density.density.compact.padding.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"6","resolvedValue":"6"},{"path":"density.density.compact.padding.xs","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"4","resolvedValue":"4"},{"path":"density.density.spacious.controlHeight.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"48","resolvedValue":"48"},{"path":"density.density.spacious.controlHeight.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"40","resolvedValue":"40"},{"path":"density.density.spacious.controlHeight.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"32","resolvedValue":"32"},{"path":"density.density.spacious.fontSize.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"16","resolvedValue":"16"},{"path":"density.density.spacious.fontSize.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"14","resolvedValue":"14"},{"path":"density.density.spacious.fontSize.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"13","resolvedValue":"13"},{"path":"density.density.spacious.fontSize.xs","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"12","resolvedValue":"12"},{"path":"density.density.spacious.gap.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"16","resolvedValue":"16"},{"path":"density.density.spacious.gap.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"12","resolvedValue":"12"},{"path":"density.density.spacious.gap.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"8","resolvedValue":"8"},{"path":"density.density.spacious.gap.xs","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"6","resolvedValue":"6"},{"path":"density.density.spacious.iconSize.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"24","resolvedValue":"24"},{"path":"density.density.spacious.iconSize.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"20","resolvedValue":"20"},{"path":"density.density.spacious.iconSize.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"16","resolvedValue":"16"},{"path":"density.density.spacious.padding.lg","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"20","resolvedValue":"20"},{"path":"density.density.spacious.padding.md","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"16","resolvedValue":"16"},{"path":"density.density.spacious.padding.sm","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"12","resolvedValue":"12"},{"path":"density.density.spacious.padding.xs","category":"density","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"8","resolvedValue":"8"},{"path":"elevation.elevation.2xl","category":"elevation","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0 25px 50px -12px rgba(0,0,0,0.25)","resolvedValue":"0 25px 50px -12px rgba(0,0,0,0.25)"},{"path":"elevation.elevation.inner","category":"elevation","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"inset 0 2px 4px rgba(0,0,0,0.05)","resolvedValue":"inset 0 2px 4px rgba(0,0,0,0.05)"},{"path":"elevation.elevation.lg","category":"elevation","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)","resolvedValue":"0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)"},{"path":"elevation.elevation.md","category":"elevation","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)","resolvedValue":"0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)"},{"path":"elevation.elevation.none","category":"elevation","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"none","resolvedValue":"none"},{"path":"elevation.elevation.sm","category":"elevation","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06)","resolvedValue":"0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06)"},{"path":"elevation.elevation.xl","category":"elevation","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)","resolvedValue":"0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)"},{"path":"elevation.elevation.xs","category":"elevation","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0 1px 2px rgba(0,0,0,0.05)","resolvedValue":"0 1px 2px rgba(0,0,0,0.05)"},{"path":"focusRing.focusRing.class","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]/30 focus-visible:ring-offset-2","resolvedValue":"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]/30 focus-visible:ring-offset-2"},{"path":"focusRing.focusRing.color","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"var(--focus-ring, var(--focus-outline, #2c5282))","resolvedValue":"var(--focus-ring, var(--focus-outline, #2c5282))"},{"path":"focusRing.focusRing.offset","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"2","resolvedValue":"2"},{"path":"focusRing.focusRing.style","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"solid","resolvedValue":"solid"},{"path":"focusRing.focusRing.width","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"2","resolvedValue":"2"},{"path":"opacity.opacity.active","category":"opacity","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0.9","resolvedValue":"0.9"},{"path":"opacity.opacity.disabled","category":"opacity","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0.5","resolvedValue":"0.5"},{"path":"opacity.opacity.hover","category":"opacity","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0.8","resolvedValue":"0.8"},{"path":"opacity.opacity.overlay","category":"opacity","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0.6","resolvedValue":"0.6"},{"path":"opacity.opacity.overlayHeavy","category":"opacity","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0.2","resolvedValue":"0.2"},{"path":"opacity.opacity.overlayLight","category":"opacity","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0.05","resolvedValue":"0.05"},{"path":"opacity.opacity.overlayMedium","category":"opacity","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0.1","resolvedValue":"0.1"},{"path":"opacity.opacity.placeholder","category":"opacity","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0.5","resolvedValue":"0.5"},{"path":"opacity.opacity.readonly","category":"opacity","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0.7","resolvedValue":"0.7"},{"path":"radius.radius.2xl","category":"radius","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"20px","resolvedValue":"20px"},{"path":"radius.radius.3xl","category":"radius","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"24px","resolvedValue":"24px"},{"path":"radius.radius.full","category":"radius","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"9999px","resolvedValue":"9999px"},{"path":"radius.radius.lg","category":"radius","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"12px","resolvedValue":"12px"},{"path":"radius.radius.md","category":"radius","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"8px","resolvedValue":"8px"},{"path":"radius.radius.none","category":"radius","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0px","resolvedValue":"0px"},{"path":"radius.radius.sm","category":"radius","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"4px","resolvedValue":"4px"},{"path":"radius.radius.xl","category":"radius","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"16px","resolvedValue":"16px"},{"path":"spacing.spacing.0","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0px","resolvedValue":"0px"},{"path":"spacing.spacing.0.5","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"2px","resolvedValue":"2px"},{"path":"spacing.spacing.1","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"4px","resolvedValue":"4px"},{"path":"spacing.spacing.1.5","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"6px","resolvedValue":"6px"},{"path":"spacing.spacing.10","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"40px","resolvedValue":"40px"},{"path":"spacing.spacing.11","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"44px","resolvedValue":"44px"},{"path":"spacing.spacing.12","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"48px","resolvedValue":"48px"},{"path":"spacing.spacing.14","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"56px","resolvedValue":"56px"},{"path":"spacing.spacing.16","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"64px","resolvedValue":"64px"},{"path":"spacing.spacing.2","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"8px","resolvedValue":"8px"},{"path":"spacing.spacing.2.5","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"10px","resolvedValue":"10px"},{"path":"spacing.spacing.20","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"80px","resolvedValue":"80px"},{"path":"spacing.spacing.24","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"96px","resolvedValue":"96px"},{"path":"spacing.spacing.28","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"112px","resolvedValue":"112px"},{"path":"spacing.spacing.3","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"12px","resolvedValue":"12px"},{"path":"spacing.spacing.3.5","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"14px","resolvedValue":"14px"},{"path":"spacing.spacing.32","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"128px","resolvedValue":"128px"},{"path":"spacing.spacing.4","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"16px","resolvedValue":"16px"},{"path":"spacing.spacing.5","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"20px","resolvedValue":"20px"},{"path":"spacing.spacing.6","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"24px","resolvedValue":"24px"},{"path":"spacing.spacing.7","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"28px","resolvedValue":"28px"},{"path":"spacing.spacing.8","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"32px","resolvedValue":"32px"},{"path":"spacing.spacing.9","category":"spacing","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"36px","resolvedValue":"36px"},{"path":"typography.fontFamily.mono","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"'jetbrains mono', 'fira code', 'consolas', monospace","resolvedValue":"'jetbrains mono', 'fira code', 'consolas', monospace"},{"path":"typography.fontFamily.sans","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"'inter', -apple-system, blinkmacsystemfont, 'segoe ui', roboto, sans-serif","resolvedValue":"'inter', -apple-system, blinkmacsystemfont, 'segoe ui', roboto, sans-serif"},{"path":"typography.fontSize.2xl","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1.5rem","resolvedValue":"1.5rem"},{"path":"typography.fontSize.3xl","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1.875rem","resolvedValue":"1.875rem"},{"path":"typography.fontSize.4xl","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"2.25rem","resolvedValue":"2.25rem"},{"path":"typography.fontSize.base","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1rem","resolvedValue":"1rem"},{"path":"typography.fontSize.lg","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1.125rem","resolvedValue":"1.125rem"},{"path":"typography.fontSize.sm","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0.875rem","resolvedValue":"0.875rem"},{"path":"typography.fontSize.xl","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1.25rem","resolvedValue":"1.25rem"},{"path":"typography.fontSize.xs","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0.75rem","resolvedValue":"0.75rem"},{"path":"typography.fontWeight.bold","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"700","resolvedValue":"700"},{"path":"typography.fontWeight.medium","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"500","resolvedValue":"500"},{"path":"typography.fontWeight.normal","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"400","resolvedValue":"400"},{"path":"typography.fontWeight.semibold","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"600","resolvedValue":"600"},{"path":"zIndex.zIndex.backdrop","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1300","resolvedValue":"1300"},{"path":"zIndex.zIndex.base","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"0","resolvedValue":"0"},{"path":"zIndex.zIndex.commandPalette","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1800","resolvedValue":"1800"},{"path":"zIndex.zIndex.dropdown","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1000","resolvedValue":"1000"},{"path":"zIndex.zIndex.fixed","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1200","resolvedValue":"1200"},{"path":"zIndex.zIndex.modal","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1400","resolvedValue":"1400"},{"path":"zIndex.zIndex.popover","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1500","resolvedValue":"1500"},{"path":"zIndex.zIndex.sticky","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1100","resolvedValue":"1100"},{"path":"zIndex.zIndex.toast","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1700","resolvedValue":"1700"},{"path":"zIndex.zIndex.tooltip","category":"_default","resolution":"code-only","winner":"code","figmaValue":null,"codeValue":"1600","resolvedValue":"1600"},{"path":"motion.duration.fast","category":"motion","resolution":"in-sync","winner":null,"figmaValue":"100ms","codeValue":"100ms","resolvedValue":"100ms"},{"path":"motion.duration.instant","category":"motion","resolution":"in-sync","winner":null,"figmaValue":"0ms","codeValue":"0ms","resolvedValue":"0ms"},{"path":"motion.duration.normal","category":"motion","resolution":"in-sync","winner":null,"figmaValue":"200ms","codeValue":"200ms","resolvedValue":"200ms"},{"path":"motion.duration.slow","category":"motion","resolution":"in-sync","winner":null,"figmaValue":"300ms","codeValue":"300ms","resolvedValue":"300ms"},{"path":"motion.duration.slower","category":"motion","resolution":"in-sync","winner":null,"figmaValue":"500ms","codeValue":"500ms","resolvedValue":"500ms"},{"path":"motion.easing.default","category":"motion","resolution":"in-sync","winner":null,"figmaValue":"cubic-bezier(0.4, 0, 0.2, 1)","codeValue":"cubic-bezier(0.4, 0, 0.2, 1)","resolvedValue":"cubic-bezier(0.4, 0, 0.2, 1)"},{"path":"motion.easing.in","category":"motion","resolution":"in-sync","winner":null,"figmaValue":"cubic-bezier(0.4, 0, 1, 1)","codeValue":"cubic-bezier(0.4, 0, 1, 1)","resolvedValue":"cubic-bezier(0.4, 0, 1, 1)"},{"path":"motion.easing.inOut","category":"motion","resolution":"in-sync","winner":null,"figmaValue":"cubic-bezier(0.4, 0, 0.2, 1)","codeValue":"cubic-bezier(0.4, 0, 0.2, 1)","resolvedValue":"cubic-bezier(0.4, 0, 0.2, 1)"},{"path":"motion.easing.out","category":"motion","resolution":"in-sync","winner":null,"figmaValue":"cubic-bezier(0, 0, 0.2, 1)","codeValue":"cubic-bezier(0, 0, 0.2, 1)","resolvedValue":"cubic-bezier(0, 0, 0.2, 1)"},{"path":"motion.easing.spring","category":"motion","resolution":"in-sync","winner":null,"figmaValue":"cubic-bezier(0.175, 0.885, 0.32, 1.275)","codeValue":"cubic-bezier(0.175, 0.885, 0.32, 1.275)","resolvedValue":"cubic-bezier(0.175, 0.885, 0.32, 1.275)"},{"path":"typography.letterSpacing.normal","category":"_default","resolution":"in-sync","winner":null,"figmaValue":"0em","codeValue":"0em","resolvedValue":"0em"},{"path":"typography.letterSpacing.tight","category":"_default","resolution":"in-sync","winner":null,"figmaValue":"-0.025em","codeValue":"-0.025em","resolvedValue":"-0.025em"},{"path":"typography.letterSpacing.tighter","category":"_default","resolution":"in-sync","winner":null,"figmaValue":"-0.05em","codeValue":"-0.05em","resolvedValue":"-0.05em"},{"path":"typography.letterSpacing.wide","category":"_default","resolution":"in-sync","winner":null,"figmaValue":"0.025em","codeValue":"0.025em","resolvedValue":"0.025em"},{"path":"typography.letterSpacing.wider","category":"_default","resolution":"in-sync","winner":null,"figmaValue":"0.05em","codeValue":"0.05em","resolvedValue":"0.05em"},{"path":"typography.letterSpacing.widest","category":"_default","resolution":"in-sync","winner":null,"figmaValue":"0.1em","codeValue":"0.1em","resolvedValue":"0.1em"},{"path":"typography.lineHeight.loose","category":"_default","resolution":"in-sync","winner":null,"figmaValue":"2","codeValue":"2","resolvedValue":"2"},{"path":"typography.lineHeight.normal","category":"_default","resolution":"in-sync","winner":null,"figmaValue":"1.5","codeValue":"1.5","resolvedValue":"1.5"},{"path":"typography.lineHeight.relaxed","category":"_default","resolution":"in-sync","winner":null,"figmaValue":"1.625","codeValue":"1.625","resolvedValue":"1.625"},{"path":"typography.lineHeight.snug","category":"_default","resolution":"in-sync","winner":null,"figmaValue":"1.375","codeValue":"1.375","resolvedValue":"1.375"},{"path":"typography.lineHeight.tight","category":"_default","resolution":"in-sync","winner":null,"figmaValue":"1.25","codeValue":"1.25","resolvedValue":"1.25"}]};
+
+// Populate category filter
+const cats = [...new Set(REPORT_JSON.tokens.map(t => t.category))].sort();
+const catSel = document.getElementById('filterCategory');
+cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; catSel.appendChild(o); });
+
+function applyFilters() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const res = document.getElementById('filterResolution').value;
+  const cat = document.getElementById('filterCategory').value;
+  const rows = document.querySelectorAll('#tbody tr');
+  rows.forEach((row, i) => {
+    const token = REPORT_JSON.tokens[i];
+    if (!token) { row.classList.add('hidden'); return; }
+    const matchPath = !q || token.path.toLowerCase().includes(q);
+    const matchRes = res === 'all' || token.resolution === res;
+    const matchCat = cat === 'all' || token.category === cat;
+    row.classList.toggle('hidden', !(matchPath && matchRes && matchCat));
+  });
+}
+
+document.getElementById('search').addEventListener('input', applyFilters);
+document.getElementById('filterResolution').addEventListener('change', applyFilters);
+document.getElementById('filterCategory').addEventListener('change', applyFilters);
+
+function copyJson() {
+  navigator.clipboard.writeText(JSON.stringify(REPORT_JSON, null, 2)).then(() => alert('Copied!'));
+}
+
+function downloadCsv() {
+  const header = 'Path,Category,Figma Value,Code Value,Resolution,Winner';
+  const lines = REPORT_JSON.tokens.map(t =>
+    [t.path, t.category, t.figmaValue ?? '', t.codeValue ?? '', t.resolution, t.winner ?? ''].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')
+  );
+  const csv = [header, ...lines].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'token-diff-report.csv';
+  a.click();
+}
+</script>
+</body>
+</html>

@@ -30,14 +30,13 @@ Authorization: Bearer eyJ...
 - docs/03-delivery/api/users.api.md  
 - docs/03-delivery/api/auth.api.md  
 - docs/03-delivery/api/permission.api.md  
-- backend/docs/legacy/root/01-architecture/03-services/01-user-service.md  
-- backend/docs/legacy/root/01-architecture/03-services/02-permission-service.md  
+- İlgili user-service current mimari dokümanları  
+- İlgili permission-service current mimari dokümanları  
 
 -------------------------------------------------------------------------------
 3) Notlar
 -------------------------------------------------------------------------------
 
 - Header isimleri ve güvenlik beklentileri
-  `docs/00-handbook/STYLE-API-001.md` altında tanımlanan genel API güvenlik
+  `STYLE-API-001.md` altında tanımlanan genel API güvenlik
   standartları ile uyumludur.
-

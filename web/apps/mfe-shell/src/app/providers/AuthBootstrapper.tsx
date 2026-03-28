@@ -1,0 +1,213 @@
+import React, { useEffect, useRef } from "react";
+import { useAppDispatch, useAppSelector } from "../store/store.hooks";
+import keycloak from "../auth/keycloakClient";
+import { authConfig, isKeycloakMode } from "../auth/auth-config";
+import {
+  logout,
+  setKeycloakSession,
+  setAuthInitialized,
+} from "../../features/auth/model/auth.slice";
+import {
+  subscribeAuthState,
+  withSuppressedAuthBroadcast,
+} from "../auth/auth-sync";
+import { createFakeAuthSession, createDevAuthSession, mapKeycloakProfile } from "../config/auth-helpers";
+import { api } from "@mfe/shared-http";
+
+/* ------------------------------------------------------------------ */
+/*  Fetch real application permissions from permission-service          */
+/* ------------------------------------------------------------------ */
+
+async function fetchAppPermissions(token: string): Promise<string[]> {
+  try {
+    const res = await api.get("/v1/authz/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = res.data as { permissions?: string[] };
+    return Array.isArray(data?.permissions) ? data.permissions : [];
+  } catch (err: unknown) {
+    console.warn("AuthBootstrapper: /v1/authz/me failed, falling back to JWT roles", err);
+    return [];
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  AuthBootstrapper — Keycloak initialization & token management      */
+/* ------------------------------------------------------------------ */
+
+export const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth.token);
+  const tokenRef = useRef<string | null>(null);
+  const shouldUseKeycloak = isKeycloakMode();
+
+  useEffect(() => {
+    tokenRef.current = token ?? null;
+  }, [token]);
+
+  /* Cross-window auth state subscription */
+  useEffect(() => {
+    if (!shouldUseKeycloak) {
+      dispatch(setAuthInitialized(true));
+      return () => undefined;
+    }
+    const unsubscribe = subscribeAuthState((payload) => {
+      withSuppressedAuthBroadcast(() => {
+        if (!payload?.token) {
+          dispatch(logout());
+          dispatch(setAuthInitialized(true));
+          return;
+        }
+        dispatch(
+          setKeycloakSession({
+            token: payload.token,
+            profile: payload.profile ?? undefined,
+            expiresAt: payload.expiresAt ?? null,
+          }),
+        );
+        dispatch(setAuthInitialized(true));
+      });
+    });
+    return unsubscribe;
+  }, [dispatch, shouldUseKeycloak]);
+
+  /* Keycloak bootstrap */
+  useEffect(() => {
+    if (!shouldUseKeycloak) {
+      if (authConfig.enableFakeAuth) {
+        // Try real Keycloak token first (async), fallback to fake JWT
+        createDevAuthSession().then((session) => {
+          dispatch(
+            setKeycloakSession({
+              token: session.token,
+              profile: session.profile ?? undefined,
+              expiresAt: session.expiresAt,
+            }),
+          );
+          dispatch(setAuthInitialized(true));
+        });
+        return;
+      } else {
+        dispatch(setKeycloakSession({ token: null }));
+      }
+      dispatch(setAuthInitialized(true));
+      return;
+    }
+    let mounted = true;
+
+    const bootstrap = async () => {
+      try {
+        const isLoginRoute =
+          typeof window !== "undefined" &&
+          window.location?.pathname?.startsWith("/login");
+        // Detect auth code in URL (from Keycloak redirect after login)
+        const urlHasAuthCode =
+          typeof window !== "undefined" &&
+          (window.location?.hash?.includes("code=") ||
+           window.location?.search?.includes("code="));
+        const initOptions: {
+          pkceMethod: "S256";
+          checkLoginIframe: false;
+          onLoad?: "check-sso";
+          silentCheckSsoRedirectUri?: string;
+        } = {
+          pkceMethod: "S256",
+          checkLoginIframe: false,
+        };
+        // If URL has auth code, always use check-sso so keycloak.init()
+        // processes the code and exchanges it for a token via PKCE.
+        // Without onLoad, keycloak-js ignores the code in the URL.
+        if (urlHasAuthCode) {
+          initOptions.onLoad = "check-sso";
+        } else if (!isLoginRoute && authConfig.keycloak.enableSilentCheckSso) {
+          initOptions.onLoad = "check-sso";
+          initOptions.silentCheckSsoRedirectUri =
+            authConfig.keycloak.silentCheckSsoRedirectUri;
+        }
+        await keycloak.init(initOptions);
+        if (!mounted) return;
+        const kcToken = keycloak.token ?? null;
+        if (kcToken) {
+          const profile = mapKeycloakProfile(kcToken);
+          // Fetch real application permissions from permission-service
+          const appPermissions = await fetchAppPermissions(kcToken);
+          const mergedProfile = profile
+            ? {
+                ...profile,
+                permissions: appPermissions.length > 0
+                  ? appPermissions
+                  : profile.permissions,
+                role: appPermissions.length > 0
+                  ? (appPermissions.find((p) => p === "ADMIN") ?? appPermissions[0] ?? profile.role)
+                  : profile.role,
+              }
+            : undefined;
+          dispatch(
+            setKeycloakSession({
+              token: kcToken,
+              profile: mergedProfile,
+              expiresAt: keycloak.tokenParsed?.exp
+                ? keycloak.tokenParsed.exp * 1000
+                : null,
+            }),
+          );
+        } else {
+          if (!tokenRef.current) {
+            dispatch(setKeycloakSession({ token: null }));
+          }
+        }
+      } catch (err: unknown) {
+        console.error('[AuthBootstrapper] keycloak.init() failed:', err);
+        if (mounted && !tokenRef.current) {
+          dispatch(setKeycloakSession({ token: null }));
+        }
+      } finally {
+        if (mounted) {
+          dispatch(setAuthInitialized(true));
+        }
+      }
+    };
+
+    bootstrap();
+
+    keycloak.onTokenExpired = async () => {
+      try {
+        const refreshed = await keycloak.updateToken(60);
+        if (refreshed && keycloak.token) {
+          const profile = mapKeycloakProfile(keycloak.token);
+          const appPermissions = await fetchAppPermissions(keycloak.token);
+          const mergedProfile = profile
+            ? {
+                ...profile,
+                permissions: appPermissions.length > 0
+                  ? appPermissions
+                  : profile.permissions,
+                role: appPermissions.length > 0
+                  ? (appPermissions.find((p) => p === "ADMIN") ?? appPermissions[0] ?? profile.role)
+                  : profile.role,
+              }
+            : undefined;
+          dispatch(
+            setKeycloakSession({
+              token: keycloak.token,
+              profile: mergedProfile,
+              expiresAt: keycloak.tokenParsed?.exp
+                ? keycloak.tokenParsed.exp * 1000
+                : null,
+            }),
+          );
+        }
+      } catch {
+        dispatch(logout());
+      }
+    };
+
+    return () => {
+      mounted = false;
+    };
+  }, [dispatch, shouldUseKeycloak]);
+
+  return <>{children}</>;
+};

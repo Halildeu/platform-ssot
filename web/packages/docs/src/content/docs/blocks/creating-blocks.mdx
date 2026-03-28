@@ -1,0 +1,293 @@
+---
+title: "Creating Blocks"
+description: "How to build a new block from scratch, test it, and register it in the block registry."
+---
+
+## Block Anatomy
+
+A block is a self-contained UI section composed of design-system components and
+x-suite widgets. Every block consists of two parts:
+
+1. **Component** -- the React component that renders the block
+2. **Registry entry** -- metadata that describes the block for the catalog
+
+### File Structure
+
+```
+packages/blocks/src/
+  blocks/
+    invoice-list/
+      InvoiceListBlock.tsx        # Component
+      InvoiceListBlock.test.tsx   # Tests
+      InvoiceListBlock.stories.tsx # Storybook story
+      index.ts                    # Re-export
+  registry.ts                     # Block registry
+  index.ts                        # Package entry
+```
+
+### Component Template
+
+```tsx
+// packages/blocks/src/blocks/invoice-list/InvoiceListBlock.tsx
+
+import { Card, Stack, Text } from '@mfe/design-system';
+import { EntityGridTemplate } from '@mfe/x-data-grid';
+import type { BlockSlots, BlockSlotProps } from '../../types';
+
+export interface InvoiceListBlockProps {
+  /** Page title */
+  title?: string;
+  /** Number of rows per page */
+  pageSize?: number;
+  /** Columns to display */
+  columns?: string[];
+  /** Callback when a row is clicked */
+  onRowClick?: (row: InvoiceRow) => void;
+  /** Custom empty state component */
+  emptyState?: React.ReactNode;
+  /** Slot overrides */
+  slots?: BlockSlots<'header' | 'toolbar' | 'content' | 'footer'>;
+  /** Props forwarded to slot components */
+  slotProps?: BlockSlotProps<'header' | 'toolbar' | 'content' | 'footer'>;
+}
+
+const defaultColumns = ['number', 'customer', 'amount', 'status', 'date'];
+
+export function InvoiceListBlock({
+  title = 'Invoices',
+  pageSize = 20,
+  columns = defaultColumns,
+  onRowClick,
+  emptyState,
+  slots = {},
+  slotProps = {},
+}: InvoiceListBlockProps) {
+  const Header = slots.header ?? (
+    <Text variant="h5" {...slotProps.header}>
+      {title}
+    </Text>
+  );
+
+  return (
+    <Card>
+      <Stack spacing={2} padding={3}>
+        {Header}
+        {slots.toolbar !== null && (slots.toolbar ?? <DefaultToolbar {...slotProps.toolbar} />)}
+        <EntityGridTemplate
+          columns={buildColumnDefs(columns)}
+          pageSize={pageSize}
+          onRowClick={onRowClick}
+          emptyOverlay={emptyState}
+        />
+        {slots.footer !== null && (slots.footer ?? <DefaultFooter {...slotProps.footer} />)}
+      </Stack>
+    </Card>
+  );
+}
+```
+
+## Data Requirements
+
+Blocks are **data-agnostic** by default. They accept data via props or fetch it
+through a data hook. Follow these patterns:
+
+### Props-Driven (Simple)
+
+The consumer fetches data and passes it in:
+
+```tsx
+<InvoiceListBlock rows={invoices} loading={isLoading} />
+```
+
+### Hook-Driven (Self-Contained)
+
+The block fetches its own data using a provided hook:
+
+```tsx
+export function InvoiceListBlock({ useData = useInvoiceData, ...props }) {
+  const { data, isLoading, error } = useData();
+
+  if (error) return <ErrorState error={error} />;
+
+  return (
+    <EntityGridTemplate
+      rows={data}
+      loading={isLoading}
+      {...props}
+    />
+  );
+}
+```
+
+The `useData` prop allows consumers to swap the data source without modifying the
+block itself. The default hook provides a sensible out-of-the-box experience.
+
+### Data Contract
+
+Document the expected data shape with a TypeScript interface:
+
+```tsx
+export interface InvoiceRow {
+  id: string;
+  number: string;
+  customer: { id: string; name: string };
+  amount: number;
+  currency: string;
+  status: 'draft' | 'sent' | 'paid' | 'overdue';
+  date: string; // ISO 8601
+}
+```
+
+## Testing Blocks
+
+### Unit Tests
+
+Test the block in isolation with mock data:
+
+```tsx
+// InvoiceListBlock.test.tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { InvoiceListBlock } from './InvoiceListBlock';
+import { mockInvoices } from '../../../test/fixtures';
+
+describe('InvoiceListBlock', () => {
+  it('renders the title', () => {
+    render(<InvoiceListBlock title="My Invoices" rows={mockInvoices} />);
+    expect(screen.getByText('My Invoices')).toBeInTheDocument();
+  });
+
+  it('calls onRowClick when a row is clicked', async () => {
+    const onRowClick = vi.fn();
+    render(<InvoiceListBlock rows={mockInvoices} onRowClick={onRowClick} />);
+
+    await userEvent.click(screen.getByText('INV-001'));
+    expect(onRowClick).toHaveBeenCalledWith(
+      expect.objectContaining({ number: 'INV-001' }),
+    );
+  });
+
+  it('renders empty state when no rows', () => {
+    render(
+      <InvoiceListBlock
+        rows={[]}
+        emptyState={<div>No invoices found</div>}
+      />,
+    );
+    expect(screen.getByText('No invoices found')).toBeInTheDocument();
+  });
+
+  it('respects slot overrides', () => {
+    render(
+      <InvoiceListBlock
+        rows={mockInvoices}
+        slots={{ header: <h1>Custom Header</h1>, footer: null }}
+      />,
+    );
+    expect(screen.getByText('Custom Header')).toBeInTheDocument();
+    expect(screen.queryByTestId('block-footer')).not.toBeInTheDocument();
+  });
+});
+```
+
+### Storybook Stories
+
+Create stories for visual testing and Chromatic snapshots:
+
+```tsx
+// InvoiceListBlock.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import { InvoiceListBlock } from './InvoiceListBlock';
+import { mockInvoices } from '../../../test/fixtures';
+
+const meta: Meta<typeof InvoiceListBlock> = {
+  title: 'Blocks/InvoiceListBlock',
+  component: InvoiceListBlock,
+  args: { rows: mockInvoices },
+};
+
+export default meta;
+type Story = StoryObj<typeof InvoiceListBlock>;
+
+export const Default: Story = {};
+
+export const Empty: Story = {
+  args: { rows: [], emptyState: <div>No invoices yet</div> },
+};
+
+export const CustomColumns: Story = {
+  args: { columns: ['number', 'customer', 'amount'] },
+};
+```
+
+### Run Tests
+
+```bash
+# Unit tests for blocks package
+pnpm --filter @mfe/blocks test
+
+# Storybook visual check
+pnpm storybook
+```
+
+## Registering in the Block Registry
+
+Add your block to the central registry so it appears in the Design Lab catalog
+and can be discovered programmatically:
+
+```tsx
+// packages/blocks/src/registry.ts
+
+import { InvoiceListBlock } from './blocks/invoice-list';
+
+export const blockRegistry = {
+  // ... existing blocks
+  'invoice-list': {
+    component: InvoiceListBlock,
+    meta: {
+      name: 'Invoice List',
+      description: 'Paginated invoice table with filtering and status badges.',
+      category: 'finance',
+      tags: ['invoice', 'table', 'finance'],
+      slots: ['header', 'toolbar', 'content', 'footer'],
+      dataContract: 'InvoiceRow[]',
+    },
+  },
+} as const;
+```
+
+### Registry Fields
+
+| Field          | Required | Description                                      |
+|----------------|----------|--------------------------------------------------|
+| `component`    | Yes      | The React component                              |
+| `meta.name`    | Yes      | Human-readable name for the catalog              |
+| `meta.description` | Yes  | One-line summary                                 |
+| `meta.category`| Yes      | Grouping key (finance, crm, common, etc.)        |
+| `meta.tags`    | No       | Search keywords                                  |
+| `meta.slots`   | No       | List of available slot names                      |
+| `meta.dataContract` | No  | TypeScript type name for expected data shape      |
+
+### Export from Package Entry
+
+```tsx
+// packages/blocks/src/index.ts
+export { InvoiceListBlock } from './blocks/invoice-list';
+export { blockRegistry } from './registry';
+```
+
+After adding the registry entry, the block automatically appears in the Design
+Lab component catalog under its category, with its slots and data contract
+documented in the quality tab.
+
+## Checklist
+
+Before submitting your block PR, verify:
+
+- Component renders correctly with default props
+- All slots work (override, remove via `null`, and default)
+- TypeScript interface exported and documented with JSDoc
+- Unit tests cover default, empty, and slot-override scenarios
+- Storybook story exists with at least Default and Empty variants
+- Registry entry added with complete metadata
+- Re-exported from `packages/blocks/src/index.ts`

@@ -4,4 +4,4 @@ export {
   buildEntityGridQueryParams,
   type EntityGridQueryParams,
   type MapAdvancedFilter,
-} from 'mfe-ui-kit';
+} from '@mfe/design-system';

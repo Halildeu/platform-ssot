@@ -80,11 +80,11 @@ const UsersFilterPanel: React.FC<UsersFilterPanelProps> = ({ filters, onChange, 
             value={localFilters.search}
             onChange={(event) => updateField('search', event.target.value)}
             placeholder={t('users.filters.search.placeholder')}
-            className="w-56 rounded-lg border border-border-subtle px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-selection-outline"
+            className="w-56 rounded-lg border border-border-subtle px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
           />
           <button
             type="submit"
-            className="rounded-lg bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow hover:opacity-90"
+            className="rounded-lg bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-xs hover:opacity-90"
             disabled={loading}
           >
             {t('users.filters.search.button')}
@@ -94,7 +94,7 @@ const UsersFilterPanel: React.FC<UsersFilterPanelProps> = ({ filters, onChange, 
       <label className="flex flex-col text-xs font-semibold text-text-secondary">
         <span>{t('users.filters.status.label')}</span>
         <select
-          className="min-w-[160px] rounded-lg border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
+          className="min-w-[160px] rounded-lg border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
           value={localFilters.status}
           onChange={(event) => updateField('status', event.target.value as UsersFilters['status'])}
         >
@@ -108,7 +108,7 @@ const UsersFilterPanel: React.FC<UsersFilterPanelProps> = ({ filters, onChange, 
       <label className="flex flex-col text-xs font-semibold text-text-secondary">
         <span>{t('users.filters.role.label')}</span>
         <select
-          className="min-w-[160px] rounded-lg border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
+          className="min-w-[160px] rounded-lg border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
           value={localFilters.role}
           onChange={(event) => updateField('role', event.target.value as UsersFilters['role'])}
         >
@@ -123,7 +123,7 @@ const UsersFilterPanel: React.FC<UsersFilterPanelProps> = ({ filters, onChange, 
         <span>{t('users.filters.moduleKey.label')}</span>
         <input
           type="text"
-          className="min-w-[180px] rounded-lg border border-border-subtle px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
+          className="min-w-[180px] rounded-lg border border-border-subtle px-3 py-2 text-sm text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
           value={localFilters.moduleKey}
           onChange={(event) => updateField('moduleKey', event.target.value)}
           placeholder={t('users.filters.moduleKey.placeholder')}
@@ -132,7 +132,7 @@ const UsersFilterPanel: React.FC<UsersFilterPanelProps> = ({ filters, onChange, 
       <label className="flex flex-col text-xs font-semibold text-text-secondary">
         <span>{t('users.filters.moduleLevel.label')}</span>
         <select
-          className="min-w-[160px] rounded-lg border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
+          className="min-w-[160px] rounded-lg border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
           value={localFilters.moduleLevel}
           onChange={(event) => updateField('moduleLevel', event.target.value as UsersFilters['moduleLevel'])}
         >
@@ -146,7 +146,7 @@ const UsersFilterPanel: React.FC<UsersFilterPanelProps> = ({ filters, onChange, 
       <div className="ml-auto flex flex-wrap gap-2">
         <button
           type="submit"
-          className="rounded-lg bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow hover:opacity-90 disabled:opacity-50"
+          className="rounded-lg bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-xs hover:opacity-90 disabled:opacity-50"
           disabled={loading}
         >
           {t('users.filters.apply')}

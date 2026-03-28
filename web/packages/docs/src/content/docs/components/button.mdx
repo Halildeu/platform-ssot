@@ -1,0 +1,125 @@
+---
+title: Button
+description: 'Temel etkilesim butonu — variant, size, loading, icon destegi.'
+---
+
+import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+import Playground from '../../../components/Playground.astro';
+import PropsTable from '../../../components/PropsTable.astro';
+
+## Import
+
+```tsx
+import { Button } from '@mfe/design-system';
+```
+
+## Kullanim
+
+```tsx
+<Button variant="primary">Kaydet</Button>
+<Button variant="secondary">Iptal</Button>
+<Button variant="danger" size="sm">Sil</Button>
+```
+
+## Variants
+
+```tsx
+<Button variant="primary">Primary</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="danger">Danger</Button>
+<Button variant="ghost">Ghost</Button>
+```
+
+## Boyutlar
+
+```tsx
+<Button size="sm">Kucuk</Button>
+<Button size="md">Orta</Button>
+<Button size="lg">Buyuk</Button>
+```
+
+## Loading Durumu
+
+```tsx
+<Button loading>Kaydediliyor...</Button>
+```
+
+Loading durumunda buton otomatik olarak `disabled` olur ve bir spinner gosterir.
+
+## Ikon Destegi
+
+```tsx
+import { IconPlus, IconSave } from '@mfe/design-system/icons';
+
+<Button icon={<IconPlus />}>Yeni Ekle</Button>
+<Button icon={<IconSave />} variant="primary">Kaydet</Button>
+```
+
+## Canli Playground
+
+<Playground
+  code={`<Button variant="primary">Kaydet</Button>\n<Button variant="secondary">Iptal</Button>\n<Button variant="danger" size="sm">Sil</Button>`}
+  componentName="Button"
+  height="120px"
+/>
+
+## Props
+
+<PropsTable props={[
+  { name: 'variant', type: "'primary' | 'secondary' | 'danger' | 'ghost'", default: "'primary'", description: 'Gorsel stil' },
+  { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Boyut' },
+  { name: 'loading', type: 'boolean', default: 'false', description: 'Yukleniyor durumu' },
+  { name: 'disabled', type: 'boolean', default: 'false', description: 'Devre disi' },
+  { name: 'icon', type: 'ReactNode', description: 'Sol ikon' },
+  { name: 'iconPosition', type: "'left' | 'right'", default: "'left'", description: 'Ikon konumu' },
+  { name: 'fullWidth', type: 'boolean', default: 'false', description: 'Tam genislik' },
+  { name: 'type', type: "'button' | 'submit' | 'reset'", default: "'button'", description: 'HTML button type' },
+  { name: 'onClick', type: '(e: MouseEvent) => void', description: 'Tiklama handler\'i' },
+]} />
+
+## Erisilebilirlik
+
+- **Keyboard**: `Enter` / `Space` ile aktivasyon
+- **ARIA**: `role="button"`, `aria-disabled` otomatik
+- **Focus**: `:focus-visible` ring ile gorsel geri bildirim
+- **Loading**: `aria-busy="true"` ve spinner `aria-label` ile duyurulur
+- **Kontrast**: Tum variant'lar WCAG AA minimum 4.5:1 kontrast oranini karsilar
+
+<Aside type="tip">
+  Buton icinde sadece ikon kullaniyorsaniz, `aria-label` prop'unu mutlaka ekleyin.
+</Aside>
+
+## Ornekler
+
+### Form Gonderimi
+
+```tsx
+<form onSubmit={handleSubmit}>
+  <Button type="submit" loading={isSubmitting}>
+    Formu Gonder
+  </Button>
+</form>
+```
+
+### Buton Grubu
+
+```tsx
+import { ButtonGroup } from '@mfe/design-system';
+
+<ButtonGroup>
+  <Button variant="primary">Kaydet</Button>
+  <Button variant="secondary">Taslak</Button>
+  <Button variant="ghost">Iptal</Button>
+</ButtonGroup>
+```
+
+### Tehlikeli Islem
+
+```tsx
+<Button
+  variant="danger"
+  onClick={() => confirm('Silmek istediginize emin misiniz?')}
+>
+  Kaydi Sil
+</Button>
+```

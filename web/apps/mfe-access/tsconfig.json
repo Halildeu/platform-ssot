@@ -13,7 +13,9 @@
     "baseUrl": ".",
     "paths": {
       "mfe_shell/i18n": ["../mfe-shell/src/app/i18n/index.ts"],
-      "mfe_shell/*": ["../mfe-shell/src/*"]
+      "mfe_shell/*": ["../mfe-shell/src/*"],
+      "@mfe/design-system": ["../../packages/design-system/src"],
+      "@mfe/design-system/*": ["../../packages/design-system/src/*"]
     },
     "resolveJsonModule": true,
     "isolatedModules": true,

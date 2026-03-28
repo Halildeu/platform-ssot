@@ -10,7 +10,7 @@ Goal:
   - at least one repo-internal docs reference in links
 
 Policy:
-- docs/03-delivery/SPECS/prd-content-policy.v1.json
+- docs-ssot/03-delivery/SPECS/prd-content-policy.v1.json
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-POLICY_PATH = Path("docs/03-delivery/SPECS/prd-content-policy.v1.json")
+POLICY_PATH = Path("docs-ssot/03-delivery/SPECS/prd-content-policy.v1.json")
 PRD_ROOT = Path("docs/01-product/PRD")
 OUT_REPORT = Path(".autopilot-tmp/flow-mining/prd-content-report.md")
 

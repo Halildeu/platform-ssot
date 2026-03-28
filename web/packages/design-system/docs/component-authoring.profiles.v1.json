@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "description": "Machine-readable authoring profiles for @mfe/design-system component scaffolding.",
+  "defaults": {
+    "primitive": "interactive-access",
+    "component": "composed"
+  },
+  "profiles": {
+    "display": {
+      "label": "Display",
+      "summary": "Non-interactive or display-first surfaces with minimal behavioral wiring.",
+      "allowedTypes": ["primitive", "component"],
+      "clientDirective": "omit",
+      "usesAccessControl": false,
+      "usesFieldShell": false,
+      "usesOverlayEngine": false,
+      "usesForwardRef": "optional",
+      "hiddenBehavior": "not-applicable",
+      "storyCategory": "Components/{bucket}",
+      "testPreset": "display",
+      "artifacts": {
+        "metadata": true,
+        "nextSteps": true,
+        "story": true,
+        "unitTest": true,
+        "contractTest": false,
+        "docStub": false,
+        "apiReference": true
+      },
+      "references": [
+        "docs/COMPONENT-AUTHORING.md",
+        "STANDARDS.md"
+      ]
+    },
+    "interactive-access": {
+      "label": "Interactive + Access-aware",
+      "summary": "Interactive components that participate in access control and event guarding.",
+      "allowedTypes": ["primitive", "component"],
+      "clientDirective": "omit",
+      "usesAccessControl": true,
+      "usesFieldShell": false,
+      "usesOverlayEngine": false,
+      "usesForwardRef": "required",
+      "hiddenBehavior": "return-null-default",
+      "storyCategory": "Components/{bucket}",
+      "testPreset": "interactive-access",
+      "artifacts": {
+        "metadata": true,
+        "nextSteps": true,
+        "story": true,
+        "unitTest": true,
+        "contractTest": false,
+        "docStub": false,
+        "apiReference": true
+      },
+      "references": [
+        "docs/COMPONENT-AUTHORING.md",
+        "docs/COMPONENT-CONTRACT.md",
+        "STANDARDS.md"
+      ]
+    },
+    "field-shell": {
+      "label": "Field Shell",
+      "summary": "Input-like controls with label, description, hint, error and controlled/uncontrolled state.",
+      "allowedTypes": ["primitive", "component"],
+      "clientDirective": "omit",
+      "usesAccessControl": true,
+      "usesFieldShell": true,
+      "usesOverlayEngine": false,
+      "usesForwardRef": "required",
+      "hiddenBehavior": "return-null-default",
+      "storyCategory": "Components/{bucket}",
+      "testPreset": "field-shell",
+      "artifacts": {
+        "metadata": true,
+        "nextSteps": true,
+        "story": true,
+        "unitTest": true,
+        "contractTest": false,
+        "docStub": false,
+        "apiReference": true
+      },
+      "references": [
+        "docs/COMPONENT-AUTHORING.md",
+        "docs/COMPONENT-CONTRACT.md",
+        "STANDARDS.md"
+      ]
+    },
+    "composed": {
+      "label": "Composed",
+      "summary": "Higher-level components that compose existing primitives and may optionally be access-aware.",
+      "allowedTypes": ["component"],
+      "clientDirective": "omit",
+      "usesAccessControl": true,
+      "usesFieldShell": false,
+      "usesOverlayEngine": false,
+      "usesForwardRef": "recommended",
+      "hiddenBehavior": "return-null-default",
+      "storyCategory": "Components/{bucket}",
+      "testPreset": "composed",
+      "artifacts": {
+        "metadata": true,
+        "nextSteps": true,
+        "story": true,
+        "unitTest": true,
+        "contractTest": false,
+        "docStub": false,
+        "apiReference": true
+      },
+      "references": [
+        "docs/COMPONENT-AUTHORING.md",
+        "docs/COMPONENT-CONTRACT.md"
+      ]
+    },
+    "overlay-modal": {
+      "label": "Overlay Modal",
+      "summary": "Modal overlays. Prefer native dialog semantics where possible; avoid automatic focus trap layering.",
+      "allowedTypes": ["primitive", "component"],
+      "clientDirective": "always",
+      "usesAccessControl": false,
+      "usesFieldShell": false,
+      "usesOverlayEngine": true,
+      "usesForwardRef": "optional",
+      "hiddenBehavior": "not-applicable",
+      "storyCategory": "Components/{bucket}",
+      "testPreset": "overlay-modal",
+      "artifacts": {
+        "metadata": true,
+        "nextSteps": true,
+        "story": true,
+        "unitTest": true,
+        "contractTest": false,
+        "docStub": false,
+        "apiReference": true
+      },
+      "references": [
+        "docs/COMPONENT-AUTHORING.md",
+        "docs/OVERLAY-DECISIONS.md",
+        "docs/SSR-RSC-BOUNDARY.md"
+      ]
+    },
+    "overlay-nonmodal": {
+      "label": "Overlay Non-Modal",
+      "summary": "Popover, dropdown and tooltip-like overlays with selective hook adoption.",
+      "allowedTypes": ["primitive", "component"],
+      "clientDirective": "always",
+      "usesAccessControl": false,
+      "usesFieldShell": false,
+      "usesOverlayEngine": true,
+      "usesForwardRef": "optional",
+      "hiddenBehavior": "not-applicable",
+      "storyCategory": "Components/{bucket}",
+      "testPreset": "overlay-nonmodal",
+      "artifacts": {
+        "metadata": true,
+        "nextSteps": true,
+        "story": true,
+        "unitTest": true,
+        "contractTest": false,
+        "docStub": false,
+        "apiReference": true
+      },
+      "references": [
+        "docs/COMPONENT-AUTHORING.md",
+        "docs/OVERLAY-DECISIONS.md",
+        "docs/PORTAL-BEHAVIOR.md"
+      ]
+    }
+  }
+}

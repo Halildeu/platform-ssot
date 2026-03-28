@@ -1,1030 +1,463 @@
 {
   "version": 1,
-  "generatedAt": "2025-12-18T23:49:21+03:00",
-  "generatedAtUtc": "2025-12-18T20:49:21+00:00",
-  "source": {
-    "package": "mfe-ui-kit",
-    "index": "packages/ui-kit/src/index.ts",
-    "groups": "apps/mfe-shell/src/pages/admin/design-lab.groups.json",
-    "overrides": "apps/mfe-shell/src/pages/admin/design-lab.overrides.json"
-  },
-  "items": [
-    {
-      "name": "AgGridServer",
-      "kind": "component",
-      "importStatement": "import { AgGridServer } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "data-grid",
-      "subgroup": "ag-grid-server",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "grid"
-    },
-    {
-      "name": "AnchorToc",
-      "kind": "component",
-      "importStatement": "import { AnchorToc } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+  "release": {
+    "packageName": "@mfe/design-system",
+    "packageVersion": "1.1.0",
+    "packageJsonPath": "web/packages/design-system/package.json",
+    "contractId": "ui-library-package-release-contract-v1",
+    "contractPath": "docs/02-architecture/context/ui-library-package-release.contract.v1.json",
+    "releaseNotesPath": "docs/04-operations/RELEASE-NOTES/RELEASE-NOTES-ui-library.md",
+    "versionScheme": "semver",
+    "requiredScripts": [
+      "build:ui-kit",
+      "build-storybook",
+      "chromatic",
+      "publish:bundle",
+      "release:ui-library:manifest",
+      "audit:ui-library-upgrade-recipes",
+      "audit:ui-library-codemod-candidates",
+      "run:ui-library-codemod-dry-run",
+      "audit:ui-library-codemod-dry-run",
+      "run:ui-library-codemod-apply",
+      "audit:ui-library-codemod-apply",
+      "run:ui-library-codemod-manual-review",
+      "audit:ui-library-codemod-manual-review",
+      "run:ui-library-codemod-manual-review-decisions",
+      "audit:ui-library-codemod-manual-review-decisions",
+      "run:ui-library-codemod-apply-preview",
+      "audit:ui-library-codemod-apply-preview",
+      "audit:ui-library-codemod-prototypes",
+      "gate:ui-library-i18n-coverage",
+      "gate:ui-library-i18n-pseudo",
+      "gate:ui-library-i18n",
+      "gate:ui-library-visual",
+      "doctor:frontend",
+      "gate:ui-library-wave",
+      "gate:ui-library-release",
+      "release:ui-library"
+    ],
+    "stableReleaseRequires": [
+      "doctor frontend PASS",
+      "release gate PASS",
+      "release notes entry",
+      "ui-library release manifest",
+      "release runbook linki"
+    ],
+    "distributionTargets": [
+      {
+        "targetId": "module_federation_remote",
+        "channel": "internal-web-runtime",
+        "buildCommand": "npm -C web run build:design-system",
+        "artifactCount": 1,
+        "artifactPresentCount": 0,
+        "artifacts": [
+          "web/packages/dist/design-system/remoteEntry.js"
+        ]
+      },
+      {
+        "targetId": "publish_bundle",
+        "channel": "bundle-drop",
+        "buildCommand": "npm -C web run publish:bundle",
+        "artifactCount": 1,
+        "artifactPresentCount": 0,
+        "artifacts": [
+          "web/dist/design-system/remoteEntry.js"
+        ]
+      },
+      {
+        "targetId": "storybook_static",
+        "channel": "docs-static",
+        "buildCommand": "npm -C web run build-storybook",
+        "artifactCount": 1,
+        "artifactPresentCount": 0,
+        "artifacts": [
+          "web/storybook-static/index.html"
+        ]
+      },
+      {
+        "targetId": "chromatic",
+        "channel": "hosted-docs-review",
+        "buildCommand": "npm -C web run chromatic",
+        "artifactCount": 0,
+        "artifactPresentCount": 0,
+        "artifacts": []
+      },
+      {
+        "targetId": "release_manifest",
+        "channel": "release-evidence",
+        "buildCommand": "npm -C web run release:ui-library:manifest",
+        "artifactCount": 2,
+        "artifactPresentCount": 0,
+        "artifacts": [
+          "web/dist/design-system/ui-library-release-manifest.v1.json",
+          "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+        ]
+      }
+    ],
+    "latestRelease": {
+      "version": "1.1.0",
+      "date": "2026-03-08",
+      "changedComponents": [
+        "overlay_extensions",
+        "release_pipeline_hardening",
+        "package_release_manifest",
+        "publish_workflow"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "Badge",
-      "kind": "component",
-      "importStatement": "import { Badge } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
-        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
-        "web/apps/mfe-users/src/widgets/user-management/ui/UsersGrid.ui.tsx"
+      "lifecycleChanges": "exported=232, planned=0; stable=232, beta=0; apiCatalog=132/232; liveDemo=0; visualHarness=14; storyCovered=74; wideAdoptionReady=132; adopted=84 across 7 apps; singleApp=67; crossApp=17; manualReview=84; recipes=67; codemodCandidates=70; codemodApply=3; codemodManualReview=3; codemodPrototypes=5",
+      "breakingChanges": "none",
+      "migrationNotes": "module federation kullanan tuketiciler './library' expose yuzeyini referans alabilir; mevcut package importlari degismedi",
+      "evidenceRefs": [
+        "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
+        "web/test-results/diagnostics/frontend-doctor/**/frontend-doctor.summary.v1.json",
+        "web/test-results/diagnostics/ui-library-wave-gate/**/ui-library-wave-gate.summary.v1.json",
+        "web/test-results/diagnostics/ui-library-release-gate/**/ui-library-release-gate.summary.v1.json",
+        "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
+        "web/test-results/releases/ui-library/latest/ui-library-release.summary.v1.json",
+        "docs/04-operations/RUNBOOKS/RB-ui-library-package-release.md",
+        "docs/03-delivery/TEST-PLANS/TP-0302-release-deploy-e2e-v0-1.md"
       ],
-      "group": "feedback",
-      "subgroup": "badges",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "Breadcrumb",
-      "kind": "component",
-      "importStatement": "import { Breadcrumb } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "Button",
-      "kind": "component",
-      "importStatement": "import { Button } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
-        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/ApprovalsInboxPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/InvoiceApprovalPage.tsx",
-        "web/apps/mfe-shell/src/pages/login/LoginPage.ui.tsx",
-        "web/apps/mfe-shell/src/pages/register/RegisterPage.ui.tsx",
-        "web/apps/mfe-shell/src/pages/unauthorized/UnauthorizedPage.ui.tsx",
-        "web/apps/mfe-shell/src/widgets/app-shell/ui/LoginPopover.ui.tsx",
-        "web/apps/mfe-suggestions/src/App.tsx"
-      ],
-      "group": "actions",
-      "subgroup": "buttons",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "Checkbox",
-      "kind": "component",
-      "importStatement": "import { Checkbox } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "forms",
-      "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
-    },
-    {
-      "name": "CommandPalette",
-      "kind": "component",
-      "importStatement": "import { CommandPalette } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "ContextMenu",
-      "kind": "component",
-      "importStatement": "import { ContextMenu } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "DatePicker",
-      "kind": "component",
-      "importStatement": "import { DatePicker } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "forms",
-      "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
-    },
-    {
-      "name": "Descriptions",
-      "kind": "component",
-      "importStatement": "import { Descriptions } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "DetailDrawer",
-      "kind": "component",
-      "importStatement": "import { DetailDrawer } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
-        "web/apps/mfe-audit/src/app/components/AuditDetailDrawer.tsx",
-        "web/apps/mfe-users/src/widgets/user-management/ui/UserDetailDrawer.ui.tsx"
-      ],
-      "group": "overlays",
-      "subgroup": "drawers",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "Dropdown",
-      "kind": "component",
-      "importStatement": "import { Dropdown } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "forms",
-      "subgroup": "dropdown",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
-    },
-    {
-      "name": "Empty",
-      "kind": "component",
-      "importStatement": "import { Empty } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
-      ],
-      "group": "empty-states",
-      "subgroup": "empty",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "EntityGridTemplate",
-      "kind": "component",
-      "importStatement": "import { EntityGridTemplate } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-      ],
-      "group": "data-grid",
-      "subgroup": "entity-grid",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "grid"
-    },
-    {
-      "name": "FilterBar",
-      "kind": "component",
-      "importStatement": "import { FilterBar } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "layout",
-      "subgroup": "filters",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "FormDrawer",
-      "kind": "component",
-      "importStatement": "import { FormDrawer } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "overlays",
-      "subgroup": "drawers",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "JsonViewer",
-      "kind": "component",
-      "importStatement": "import { JsonViewer } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "List",
-      "kind": "component",
-      "importStatement": "import { List } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "Modal",
-      "kind": "component",
-      "importStatement": "import { Modal } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-      ],
-      "group": "overlays",
-      "subgroup": "modal",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "PageLayout",
-      "kind": "component",
-      "importStatement": "import { PageLayout } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-access/src/pages/access/AccessPage.ui.tsx",
-        "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
-        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/ApprovalsInboxPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/InvoiceApprovalPage.tsx",
-        "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx",
-        "web/apps/mfe-users/src/pages/users/UsersPage.ui.tsx"
-      ],
-      "group": "layout",
-      "subgroup": "page",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "Pagination",
-      "kind": "component",
-      "importStatement": "import { Pagination } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "Popover",
-      "kind": "component",
-      "importStatement": "import { Popover } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "Radio",
-      "kind": "component",
-      "importStatement": "import { Radio } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "forms",
-      "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
-    },
-    {
-      "name": "ReportFilterPanel",
-      "kind": "component",
-      "importStatement": "import { ReportFilterPanel } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx"
-      ],
-      "group": "layout",
-      "subgroup": "filters",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "Select",
-      "kind": "component",
-      "importStatement": "import { Select } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
-        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-      ],
-      "group": "forms",
-      "subgroup": "select",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
-    },
-    {
-      "name": "Slider",
-      "kind": "component",
-      "importStatement": "import { Slider } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "forms",
-      "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
-    },
-    {
-      "name": "Steps",
-      "kind": "component",
-      "importStatement": "import { Steps } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "Switch",
-      "kind": "component",
-      "importStatement": "import { Switch } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "forms",
-      "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
-    },
-    {
-      "name": "THEME_APPEARANCE_OPTIONS",
-      "kind": "const",
-      "importStatement": "import { THEME_APPEARANCE_OPTIONS } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "theme",
-      "subgroup": "options",
-      "tags": [
-        "advanced"
-      ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "THEME_DENSITY_OPTIONS",
-      "kind": "const",
-      "importStatement": "import { THEME_DENSITY_OPTIONS } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "theme",
-      "subgroup": "options",
-      "tags": [
-        "advanced"
-      ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "THEME_ELEVATION_OPTIONS",
-      "kind": "const",
-      "importStatement": "import { THEME_ELEVATION_OPTIONS } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "theme",
-      "subgroup": "options",
-      "tags": [
-        "advanced"
-      ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "THEME_MOTION_OPTIONS",
-      "kind": "const",
-      "importStatement": "import { THEME_MOTION_OPTIONS } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "theme",
-      "subgroup": "options",
-      "tags": [
-        "advanced"
-      ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "THEME_RADIUS_OPTIONS",
-      "kind": "const",
-      "importStatement": "import { THEME_RADIUS_OPTIONS } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "theme",
-      "subgroup": "options",
-      "tags": [
-        "advanced"
-      ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "TableSimple",
-      "kind": "component",
-      "importStatement": "import { TableSimple } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "Tabs",
-      "kind": "component",
-      "importStatement": "import { Tabs } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "Tag",
-      "kind": "component",
-      "importStatement": "import { Tag } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/ApprovalsInboxPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/InvoiceApprovalPage.tsx"
-      ],
-      "group": "feedback",
-      "subgroup": "tags",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "Text",
-      "kind": "component",
-      "importStatement": "import { Text } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
-        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
-        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/ApprovalsInboxPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/InvoiceApprovalPage.tsx",
-        "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
-      ],
-      "group": "content",
-      "subgroup": "text",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "TextArea",
-      "kind": "component",
-      "importStatement": "import { TextArea } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "forms",
-      "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
-    },
-    {
-      "name": "TextInput",
-      "kind": "component",
-      "importStatement": "import { TextInput } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "forms",
-      "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
-    },
-    {
-      "name": "ThemePreviewCard",
-      "kind": "component",
-      "importStatement": "import { ThemePreviewCard } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-        "web/apps/mfe-shell/src/widgets/shell/ShellRuntimePanel.tsx"
-      ],
-      "group": "theme",
-      "subgroup": "preview",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "TimePicker",
-      "kind": "component",
-      "importStatement": "import { TimePicker } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "forms",
-      "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
-    },
-    {
-      "name": "Tooltip",
-      "kind": "component",
-      "importStatement": "import { Tooltip } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "feedback",
-      "subgroup": "tooltips",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
-    },
-    {
-      "name": "Tree",
-      "kind": "component",
-      "importStatement": "import { Tree } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "TreeTable",
-      "kind": "component",
-      "importStatement": "import { TreeTable } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
-      ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
-    },
-    {
-      "name": "Upload",
-      "kind": "component",
-      "importStatement": "import { Upload } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "forms",
-      "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
-    },
-    {
-      "name": "buildAuthHeaders",
-      "kind": "function",
-      "importStatement": "import { buildAuthHeaders } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "auth",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "buildEntityGridQueryParams",
-      "kind": "function",
-      "importStatement": "import { buildEntityGridQueryParams } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "data-grid",
-      "subgroup": "entity-grid",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "getResolvedToken",
-      "kind": "function",
-      "importStatement": "import { getResolvedToken } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "auth",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "getThemeAxes",
-      "kind": "function",
-      "importStatement": "import { getThemeAxes } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
-      ],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [
-        "advanced"
-      ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "getThemeContract",
-      "kind": "function",
-      "importStatement": "import { getThemeContract } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
-        "web/apps/mfe-shell/src/features/theme/theme-matrix.constants.ts"
-      ],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "registerTokenResolver",
-      "kind": "function",
-      "importStatement": "import { registerTokenResolver } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "auth",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "resetTokenResolver",
-      "kind": "function",
-      "importStatement": "import { resetTokenResolver } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "auth",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "resolveAccessState",
-      "kind": "function",
-      "importStatement": "import { resolveAccessState } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "access",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "resolveThemeModeKey",
-      "kind": "function",
-      "importStatement": "import { resolveThemeModeKey } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
-        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-        "web/apps/mfe-shell/src/widgets/shell/ShellRuntimePanel.tsx"
-      ],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "setAppearance",
-      "kind": "function",
-      "importStatement": "import { setAppearance } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [
-        "advanced"
-      ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "setDensity",
-      "kind": "function",
-      "importStatement": "import { setDensity } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [
-        "advanced"
-      ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "setElevation",
-      "kind": "function",
-      "importStatement": "import { setElevation } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [
-        "advanced"
-      ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "setMotion",
-      "kind": "function",
-      "importStatement": "import { setMotion } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [
-        "advanced"
-      ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "setOverlayIntensity",
-      "kind": "function",
-      "importStatement": "import { setOverlayIntensity } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
-      ],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "setOverlayOpacity",
-      "kind": "function",
-      "importStatement": "import { setOverlayOpacity } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "setRadius",
-      "kind": "function",
-      "importStatement": "import { setRadius } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [
-        "advanced"
-      ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "setSurfaceTone",
-      "kind": "function",
-      "importStatement": "import { setSurfaceTone } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [
-        "advanced"
-      ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "setTableSurfaceTone",
-      "kind": "function",
-      "importStatement": "import { setTableSurfaceTone } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
-      ],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "shouldBlockInteraction",
-      "kind": "function",
-      "importStatement": "import { shouldBlockInteraction } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "access",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "subscribeThemeAxes",
-      "kind": "function",
-      "importStatement": "import { subscribeThemeAxes } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
-      ],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "toggleVariantDefault",
-      "kind": "function",
-      "importStatement": "import { toggleVariantDefault } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "data-grid",
-      "subgroup": "variants",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "updateThemeAxes",
-      "kind": "function",
-      "importStatement": "import { updateThemeAxes } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
-      ],
-      "group": "theme",
-      "subgroup": "runtime",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "useGridVariants",
-      "kind": "hook",
-      "importStatement": "import { useGridVariants } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "data-grid",
-      "subgroup": "variants",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
-    },
-    {
-      "name": "withAccessGuard",
-      "kind": "function",
-      "importStatement": "import { withAccessGuard } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "access",
-      "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "catalogMetrics": {
+        "exported": 248,
+        "planned": 0,
+        "stable": 248,
+        "beta": 0,
+        "liveDemo": 0,
+        "apiCatalogItems": 132,
+        "apiCoveragePercent": 57,
+        "wideAdoptionReady": 132,
+        "requiredVisualHarnesses": 14,
+        "storyCoveredComponents": 74,
+        "adoptedOutsideLab": 84,
+        "consumerAppsCount": 7,
+        "adoptedStoryCoveragePercent": 88,
+        "singleAppBlastRadiusCount": 67,
+        "crossAppReviewComponents": 17,
+        "manualReviewRequiredComponents": 84,
+        "upgradeRecipes": 67,
+        "codemodCandidateCount": 70,
+        "codemodApplyCount": 3,
+        "codemodManualReviewCount": 3,
+        "codemodPrototypeCount": 5
+      }
+    },
+    "registrySummary": {
+      "stable": 248,
+      "beta": 0,
+      "apiCatalogItems": 132
     }
-  ]
+  },
+  "themePresets": {
+    "catalogId": "ui-library-theme-preset-catalog-v1",
+    "sourceOfTruth": "web/design-tokens/generated/theme-contract.json",
+    "defaultMode": "serban-light",
+    "compareAxes": [
+      "appearance",
+      "density",
+      "intent",
+      "contrast"
+    ],
+    "presets": [
+      {
+        "presetId": "enterprise_light_default",
+        "themeMode": "serban-light",
+        "label": "Light",
+        "appearance": "light",
+        "density": "comfortable",
+        "intent": "varsayilan kurumsal is akislarinda dengeli gorunum",
+        "isHighContrast": false,
+        "isDefaultMode": true
+      },
+      {
+        "presetId": "operator_dark_focus",
+        "themeMode": "serban-dark",
+        "label": "Dark",
+        "appearance": "dark",
+        "density": "comfortable",
+        "intent": "uzun sureli operasyon ekranlarinda odak ve dusuk parazit",
+        "isHighContrast": false,
+        "isDefaultMode": false
+      },
+      {
+        "presetId": "accessibility_high_contrast",
+        "themeMode": "serban-hc",
+        "label": "High Contrast",
+        "appearance": "high-contrast",
+        "density": "comfortable",
+        "intent": "kontrast, focus ve readability oncelikli erisilebilir preset",
+        "isHighContrast": true,
+        "isDefaultMode": false
+      },
+      {
+        "presetId": "compact_workspace",
+        "themeMode": "serban-compact",
+        "label": "Compact",
+        "appearance": "light",
+        "density": "compact",
+        "intent": "yuksek bilgi yogunlugu ve operasyonel tablo/grid agir ekranlar",
+        "isHighContrast": false,
+        "isDefaultMode": false
+      }
+    ],
+    "rules": [
+      "Resmi presetler theme-contract allowedModes disina cikamaz.",
+      "Yeni preset eklenirse docs, preview, release notes ve Theme Admin ayni patch icinde guncellenir.",
+      "Preset adi docs ve runtime tarafinda ayni semantic kimlikle kullanilir."
+    ],
+    "successCriteria": [
+      "UI library docs portali resmi preset ailesini tek katalogdan okur.",
+      "Theme ve density kararlari daginik local toggle'lar yerine resmi preset isimleriyle ifade edilir."
+    ]
+  },
+  "recipes": {
+    "contractId": "ui-library-recipe-system-contract-v1",
+    "currentFamilies": [
+      {
+        "recipeId": "search_filter_listing",
+        "title": "Search Filter Listing",
+        "clusterTitle": "Search & Listing",
+        "clusterDescription": "Arama, filtreleme ve sonuc listeleme akislari",
+        "ownerBlocks": [
+          "PageLayout",
+          "FilterBar",
+          "AgGridServer",
+          "TableSimple",
+          "List",
+          "Empty"
+        ],
+        "intent": "liste, filtre ve sonuc yuzeylerini ayni shell altinda toplamak"
+      },
+      {
+        "recipeId": "detail_summary",
+        "title": "Detail Summary",
+        "clusterTitle": "Review & Approval",
+        "clusterDescription": "Detay, karar ve inspector odakli inceleme akisleri",
+        "ownerBlocks": [
+          "PageHeader",
+          "SummaryStrip",
+          "EntitySummaryBlock",
+          "Descriptions",
+          "JsonViewer"
+        ],
+        "intent": "detay ekranlarinda ozet + meta + yan panel kurgusunu ortaklastirmak"
+      },
+      {
+        "recipeId": "dashboard_template",
+        "title": "Dashboard Template",
+        "clusterTitle": "Analytics Pages",
+        "clusterDescription": "Dashboard, KPI ve insight odakli tam sayfa yuzeyleri",
+        "ownerBlocks": [
+          "PageLayout",
+          "SummaryStrip",
+          "Descriptions",
+          "Tabs",
+          "Badge"
+        ],
+        "intent": "dashboard tipi tam sayfa shell, KPI ozetleri ve ust seviye karar bloklarini tek template altinda toplamak"
+      },
+      {
+        "recipeId": "crud_template",
+        "title": "CRUD Template",
+        "clusterTitle": "Operational Pages",
+        "clusterDescription": "Listeleme, command ve detay odakli operasyon sayfalari",
+        "ownerBlocks": [
+          "PageLayout",
+          "FilterBar",
+          "TableSimple",
+          "SummaryStrip",
+          "TextInput",
+          "Select"
+        ],
+        "intent": "listeleme, filtreleme, tablo ve hizli aksiyonlari canonical yonetim sayfasi template'i olarak sunmak"
+      },
+      {
+        "recipeId": "detail_template",
+        "title": "Detail Template",
+        "clusterTitle": "Operational Pages",
+        "clusterDescription": "Listeleme, command ve detay odakli operasyon sayfalari",
+        "ownerBlocks": [
+          "PageLayout",
+          "EntitySummaryBlock",
+          "Descriptions",
+          "Badge",
+          "Button"
+        ],
+        "intent": "detay ve inspector rail odakli tam sayfa inceleme shell'ini tekrar kullanilabilir template olarak sunmak"
+      },
+      {
+        "recipeId": "approval_review",
+        "title": "Approval Review",
+        "clusterTitle": "Review & Approval",
+        "clusterDescription": "Detay, karar ve inspector odakli inceleme akisleri",
+        "ownerBlocks": [
+          "ApprovalCheckpoint",
+          "CitationPanel",
+          "AIActionAuditTimeline",
+          "Modal",
+          "DetailDrawer"
+        ],
+        "intent": "onay, karar ve audit akisini tutarli bir review recipe'si ile sunmak"
+      },
+      {
+        "recipeId": "empty_error_loading",
+        "title": "Empty Error Loading",
+        "clusterTitle": "State & Feedback",
+        "clusterDescription": "Bos, hata, loading ve fallback dilini standardize eden recipe’ler",
+        "ownerBlocks": [
+          "Empty",
+          "Skeleton",
+          "Spinner",
+          "Tooltip"
+        ],
+        "intent": "bos, hata ve yukleniyor durumlarini tutarli geri bildirim diliyle vermek"
+      },
+      {
+        "recipeId": "ai_guided_authoring",
+        "title": "AI Guided Authoring",
+        "clusterTitle": "AI Workflows",
+        "clusterDescription": "AI destekli yazim, karar ve command odakli workflow recipe’leri",
+        "ownerBlocks": [
+          "PromptComposer",
+          "RecommendationCard",
+          "ConfidenceBadge",
+          "TextArea",
+          "CommandPalette"
+        ],
+        "intent": "AI destekli yazim ve karar yuzeylerini reusable recipe olarak kurmak"
+      },
+      {
+        "recipeId": "app_header",
+        "title": "App Header",
+        "clusterTitle": "Navigation Patterns",
+        "clusterDescription": "Ust tabaka app shell, marka ve utility dengelemesi",
+        "ownerBlocks": [
+          "App Header",
+          "MenuBar",
+          "Button",
+          "Navigation Menu",
+          "CommandPalette"
+        ],
+        "intent": "app shell icin responsive, dengeleyici ve hızlı aksiyon odakli ust header yolunu standartlasitmak"
+      },
+      {
+        "recipeId": "navigation_menu",
+        "title": "Navigation Menu",
+        "clusterTitle": "Navigation Patterns",
+        "clusterDescription": "Buyuk yol haritalari icin route-first navigasyon davranisi",
+        "ownerBlocks": [
+          "Navigation Menu",
+          "MenuBar",
+          "Tabs",
+          "LinkInline"
+        ],
+        "intent": "top-level route prioritesi, overflow ve aktif rota vurgusunu tek kalipta toplamak"
+      },
+      {
+        "recipeId": "search_command_header",
+        "title": "Search / Command Header",
+        "clusterTitle": "Navigation Patterns",
+        "clusterDescription": "Komut, arama ve handoff’li header deneyimi",
+        "ownerBlocks": [
+          "Search / Command Header",
+          "MenuBar",
+          "CommandPalette",
+          "Command Workspace",
+          "SearchFilterListing"
+        ],
+        "intent": "search handoff, recents ve favorites ile menu discovery akisini hizli hale getirmek"
+      },
+      {
+        "recipeId": "action_header",
+        "title": "Action Header",
+        "clusterTitle": "Action Patterns",
+        "clusterDescription": "Toplu islemler, onayli aksiyonlar ve operasyonel toolbar davranisi",
+        "ownerBlocks": [
+          "Action Header",
+          "MenuBar",
+          "Button",
+          "Badge",
+          "SummaryStrip"
+        ],
+        "intent": "selection odakli operasyon ve aksiyon akisini tek header kalıbında standardize etmek"
+      },
+      {
+        "recipeId": "desktop_menubar",
+        "title": "Desktop Menubar",
+        "clusterTitle": "Navigation Patterns",
+        "clusterDescription": "Desktop odakli menubar ritmi ve typed submenu davranisi",
+        "ownerBlocks": [
+          "Desktop Menubar",
+          "MenuBar",
+          "Navigation Menu",
+          "Popover"
+        ],
+        "intent": "masaüstü usulundeki file/view/tools menu davranisini modern, stabil ve denetlenebilir kılmak"
+      },
+      {
+        "recipeId": "command_workspace",
+        "title": "Command Workspace",
+        "clusterTitle": "Operational Pages",
+        "clusterDescription": "Listeleme, command ve detay odakli operasyon sayfalari",
+        "ownerBlocks": [
+          "PageLayout",
+          "FilterBar",
+          "TableSimple",
+          "SummaryStrip",
+          "Tabs",
+          "TextInput",
+          "Select"
+        ],
+        "intent": "arama, komut, recent queue ve sonuclari ayni command-first workspace template icinde toplamak"
+      },
+      {
+        "recipeId": "settings_template",
+        "title": "Settings Template",
+        "clusterTitle": "Configuration Pages",
+        "clusterDescription": "Ayar, policy ve configuration odakli sayfa template'leri",
+        "ownerBlocks": [
+          "PageLayout",
+          "Tabs",
+          "Descriptions",
+          "Badge"
+        ],
+        "intent": "section tabs, guardrails ve configuration summary alanlarini ayarlar sayfasi template'i olarak toplamak"
+      }
+    ],
+    "plannedFamilies": [
+      "dashboard_kpi_analytics",
+      "table_to_chart_review",
+      "multi_step_submission"
+    ],
+    "rules": [
+      "Yeni page veya panel ilk once uygun recipe var mi diye kontrol edilir.",
+      "Ayni davranisi tekrar eden route-level layout recipe owner API'sine tasinir.",
+      "Recipe aileleri component, block, UX alignment ve release notu bagiyla birlikte yonetilir."
+    ],
+    "successCriteria": [
+      "Sadece component degil, ekran kaliplari da standart ve tekrar kullanilir hale gelir.",
+      "Sayfalar minimum UI kodu ile veri/config doldurarak recipe tuketebilir."
+    ]
+  },
+  "source": {
+    "package": "@mfe/design-system",
+    "index": "packages/design-system/src/index.ts",
+    "registry": "packages/design-system/src/catalog/component-registry.v1.json",
+    "apiCatalog": "packages/design-system/src/catalog/component-api-catalog.v1.json",
+    "manifest": "packages/design-system/src/catalog/component-manifest.v1.json",
+    "curatedAuthority": "apps/mfe-shell/src/pages/admin/design-lab.curated.v1.json",
+    "generatedMetaAuthority": "apps/mfe-shell/src/pages/admin/design-lab.generated-meta.v1.json",
+    "itemsAuthority": [
+      "apps/mfe-shell/src/pages/admin/design-lab.items.part-01.v1.json",
+      "apps/mfe-shell/src/pages/admin/design-lab.items.part-02.v1.json",
+      "apps/mfe-shell/src/pages/admin/design-lab.items.part-03.v1.json",
+      "apps/mfe-shell/src/pages/admin/design-lab.items.part-04.v1.json",
+      "apps/mfe-shell/src/pages/admin/design-lab.items.part-05.v1.json",
+      "apps/mfe-shell/src/pages/admin/design-lab.items.part-06.v1.json",
+      "apps/mfe-shell/src/pages/admin/design-lab.items.part-07.v1.json",
+      "apps/mfe-shell/src/pages/admin/design-lab.items.part-08.v1.json",
+      "apps/mfe-shell/src/pages/admin/design-lab.items.part-09.v1.json",
+      "apps/mfe-shell/src/pages/admin/design-lab.items.part-10.v1.json",
+      "apps/mfe-shell/src/pages/admin/design-lab.items.part-11.v1.json",
+      "apps/mfe-shell/src/pages/admin/design-lab.items.part-12.v1.json"
+    ]
+  }
 }

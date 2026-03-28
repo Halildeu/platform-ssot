@@ -1,0 +1,207 @@
+{
+  "items": [
+    {
+      "name": "createAccordionItemsFromSections",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createAccordionItemsFromSections } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "createAccordionPreset",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createAccordionPreset } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminRegistryEditor.tsx"
+      ]
+    },
+    {
+      "name": "createGridVariant",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createGridVariant } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "createLazyComponent",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createLazyComponent } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "createMenuBarItemsFromRoutes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createMenuBarItemsFromRoutes } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/layout/ShellHeaderNavbar.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/menu-bar/menuBarShared.tsx"
+      ]
+    },
+    {
+      "name": "createMenuBarPreset",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createMenuBarPreset } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/layout/ShellHeaderNavbar.tsx"
+      ]
+    },
+    {
+      "name": "createNavigationDestinationItems",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createNavigationDestinationItems } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/layout/Sidebar.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/shared/DesignLabTaxonomyNavigator.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/navigation-rail/index.tsx"
+      ]
+    },
+    {
+      "name": "createNavigationRailPreset",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createNavigationRailPreset } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/layout/Sidebar.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/navigation-rail/index.tsx"
+      ]
+    },
+    {
+      "name": "createPageHeaderStatItems",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createPageHeaderStatItems } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "createPageHeaderTagItems",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createPageHeaderTagItems } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "createPageLayoutBreadcrumbItems",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createPageLayoutBreadcrumbItems } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-access/src/pages/access/AccessPage.ui.tsx",
+        "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
+        "web/apps/mfe-reporting/src/modules/dynamic-report/DynamicReportPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx",
+        "web/apps/mfe-users/src/pages/users/UsersPage.ui.tsx"
+      ]
+    },
+    {
+      "name": "createPageLayoutPreset",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createPageLayoutPreset } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-access/src/pages/access/AccessPage.ui.tsx",
+        "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
+        "web/apps/mfe-reporting/src/modules/dynamic-report/DynamicReportPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx",
+        "web/apps/mfe-users/src/pages/users/UsersPage.ui.tsx"
+      ]
+    },
+    {
+      "name": "createSegmentedPreset",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { createSegmentedPreset } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-access/src/widgets/access-management/ui/AccessFilterBar.ui.tsx",
+        "web/apps/mfe-access/src/widgets/access-management/ui/BulkPermissionModal.ui.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPreviewPanel.tsx"
+      ]
+    },
+    {
+      "name": "darkTheme",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { darkTheme } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "deleteGridVariant",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { deleteGridVariant } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "density",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { density } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "duration",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { duration } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "easing",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { easing } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "elevation",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { elevation } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "fetchGridVariants",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { fetchGridVariants } from '@mfe/design-system';",
+      "whereUsed": []
+    }
+  ]
+}

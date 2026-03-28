@@ -15,7 +15,9 @@ const repoRoot = path.resolve(__dirname, '..', '..');
 
 const TOKEN_FILE = path.resolve(repoRoot, 'design-tokens/figma.tokens.json');
 const OUTPUT_CSS = path.resolve(repoRoot, 'apps/mfe-shell/src/styles/theme.css');
+const OUTPUT_THEME_INLINE = path.resolve(repoRoot, 'apps/mfe-shell/src/styles/generated-theme-inline.css');
 const OUTPUT_CONTRACT = path.resolve(repoRoot, 'design-tokens/generated/theme-contract.json');
+const OUTPUT_TOKEN_TYPES = path.resolve(repoRoot, 'design-tokens/generated/token-types.ts');
 
 const isCheckMode = process.argv.includes('--check');
 
@@ -80,10 +82,22 @@ for (const [axis, entries] of Object.entries(axisTokens)) {
 
 if (Object.keys(surfaceTones).length > 0) {
   for (const [toneKey, toneEntry] of Object.entries(surfaceTones)) {
+    /* Resolve the default (light) tone value for duplicate detection */
+    const defaultToneResolved = resolveValue(toneEntry?.modes?.[defaultAppearance]?.value);
+
     for (const theme of appearanceThemes) {
       const toneMode = toneEntry?.modes?.[theme];
       if (!toneMode) continue;
       const resolved = resolveValue(toneMode.value);
+
+      /* Skip if dark/hc tone value is identical to the light default — the
+         Figma token source hasn't defined a mode-specific dark tone yet, so
+         emitting an override here would clobber the dark surface colors with
+         light values. Let the base dark mode block win instead. */
+      const modeInfo = themeContract.modes?.[theme];
+      const isDark = modeInfo?.appearance === 'dark' || modeInfo?.isHighContrast;
+      if (isDark && defaultToneResolved && resolved === defaultToneResolved) continue;
+
       const selector = `:root[data-theme="${theme}"][data-surface-tone="${toneKey}"], [data-theme-scope][data-theme="${theme}"][data-surface-tone="${toneKey}"]`;
       pushBlock(selector, [
         `  --surface-default-bg: ${resolved};`,
@@ -94,6 +108,160 @@ if (Object.keys(surfaceTones).length > 0) {
       ]);
     }
   }
+}
+
+/* ---- Token Bridge: component-level aliases ---- */
+/* Components use short names (--action-primary) set by ThemeProvider at runtime.
+   These aliases bridge theme.css names (--action-primary-bg) to component names
+   so components render correctly before ThemeProvider mounts. */
+
+/**
+ * Bridge alias definitions: [aliasVar, varExpression, ...semanticTokenPaths]
+ * semanticTokenPaths are used to resolve the dark-mode value from the token tree.
+ * The first resolvable path wins.
+ */
+const bridgeAliases = [
+  // Action
+  ['--action-primary', 'var(--action-primary-bg, var(--accent-primary))', ['color.action.primary.bg']],
+  ['--action-primary-hover', 'var(--accent-primary-hover)', ['color.action.primary.hover.bg']],
+  ['--action-primary-active', 'var(--accent-primary-hover)', ['color.action.primary.hover.bg']],
+  ['--action-primary-soft', 'var(--accent-soft)', ['color.action.primary.soft.bg']],
+  ['--action-secondary', 'var(--action-secondary-bg)', ['color.action.secondary.bg']],
+  // Surface
+  ['--surface-canvas', 'var(--surface-default-bg)', ['color.surface.default.bg']],
+  ['--surface-raised', 'var(--surface-raised-bg)', ['color.surface.raised.bg']],
+  ['--surface-page', 'var(--surface-page-bg, var(--surface-default-bg))', ['color.surface.default.bg']],
+  ['--surface-overlay', 'var(--surface-overlay-bg)', ['color.surface.overlay.bg']],
+  ['--surface-primary', 'var(--action-primary-bg, var(--accent-primary))', ['color.action.primary.bg']],
+  ['--surface-accent', 'var(--accent-soft)', ['color.action.primary.soft.bg']],
+  ['--surface-active', 'var(--selection-bg)', ['color.selection.bg']],
+  ['--surface-inverse', 'var(--surface-overlay-bg)', ['color.surface.overlay.bg']],
+  // Text
+  ['--text-disabled', 'var(--text-subtle)', ['color.text.subtle']],
+  ['--text-tertiary', 'var(--text-subtle)', ['color.text.subtle']],
+  ['--text-placeholder', 'var(--text-subtle)', ['color.text.subtle']],
+  ['--text-danger', 'var(--state-danger-text)', ['color.state.danger.text']],
+  // Border
+  ['--border-strong', 'var(--border-bold)', ['color.border.bold']],
+  ['--border-active', 'var(--selection-outline)', ['color.selection.outline']],
+  ['--border-hover', 'var(--border-default)', ['color.border.default']],
+  ['--border-error', 'var(--state-danger-border)', ['color.state.danger.border']],
+  ['--border-danger', 'var(--state-danger-border)', ['color.state.danger.border']],
+  // Focus
+  ['--focus-ring', 'var(--focus-outline)', ['color.focus.outline']],
+  // State error → danger bridge
+  ['--state-error-bg', 'var(--state-danger-bg)', ['color.state.danger.bg']],
+  ['--state-error-text', 'var(--state-danger-text)', ['color.state.danger.text']],
+  ['--state-error-border', 'var(--state-danger-border)', ['color.state.danger.border']],
+  // State short aliases
+  ['--state-danger', 'var(--state-danger-text)', ['color.state.danger.text']],
+  ['--state-success', 'var(--state-success-text)', ['color.state.success.text']],
+  ['--state-warning', 'var(--state-warning-text)', ['color.state.warning.text']],
+  ['--state-info', 'var(--state-info-text)', ['color.state.info.text']],
+  // Feedback aliases
+  ['--feedback-error', 'var(--state-danger-text)', ['color.state.danger.text']],
+  ['--feedback-success', 'var(--state-success-text)', ['color.state.success.text']],
+  ['--feedback-warning', 'var(--state-warning-text)', ['color.state.warning.text']],
+  ['--feedback-info', 'var(--state-info-text)', ['color.state.info.text']],
+  // Legacy
+  ['--danger-color', 'var(--state-danger-text)', ['color.state.danger.text']],
+  ['--success-color', 'var(--state-success-text)', ['color.state.success.text']],
+  ['--warning-color', 'var(--state-warning-text)', ['color.state.warning.text']],
+  ['--info-color', 'var(--state-info-text)', ['color.state.info.text']],
+  ['--bg-primary', 'var(--action-primary-bg, var(--accent-primary))', ['color.action.primary.bg']],
+  ['--ring-primary', 'var(--action-primary-bg, var(--accent-primary))', ['color.action.primary.bg']],
+  ['--ring-focus', 'var(--focus-outline)', ['color.focus.outline']],
+  ['--ring-error', 'var(--state-danger-border)', ['color.state.danger.border']],
+  ['--ring-color', 'var(--focus-outline)', ['color.focus.outline']],
+  ['--accent-primary-muted', 'var(--accent-soft)', ['color.action.primary.soft.bg']],
+];
+
+/* Group aliases by category for readability in output */
+const bridgeCategoryBreaks = {
+  '--action-primary': '/* Action */',
+  '--surface-canvas': '/* Surface */',
+  '--text-disabled': '/* Text */',
+  '--border-strong': '/* Border */',
+  '--focus-ring': '/* Focus */',
+  '--state-error-bg': '/* State error → danger bridge */',
+  '--state-danger': '/* State short aliases */',
+  '--feedback-error': '/* Feedback aliases */',
+  '--danger-color': '/* Legacy */',
+};
+
+/* Build :root bridge block (no terminal hex fallbacks) */
+const bridgeLines = ['/* Token Bridge — component-level aliases (Faz 0A.1) */'];
+bridgeLines.push(':root {');
+for (const [alias, expr] of bridgeAliases) {
+  if (bridgeCategoryBreaks[alias]) {
+    bridgeLines.push(`  ${bridgeCategoryBreaks[alias]}`);
+  }
+  bridgeLines.push(`  ${alias}: ${expr};`);
+}
+bridgeLines.push('}');
+
+cssChunks.push('');
+cssChunks.push(...bridgeLines);
+cssChunks.push('');
+
+/* Build [data-mode="dark"] bridge overrides from token tree */
+const darkAppearanceKey = Object.entries(themeContract.modes || {})
+  .find(([, info]) => info.appearance === 'dark')?.[0];
+
+if (darkAppearanceKey) {
+  const darkBridgeLines = [];
+  darkBridgeLines.push('/* Dark mode bridge overrides */');
+  darkBridgeLines.push('[data-mode="dark"] {');
+
+  for (const [alias, , tokenPaths] of bridgeAliases) {
+    if (!tokenPaths || tokenPaths.length === 0) continue;
+    let resolved = null;
+    for (const tokenPath of tokenPaths) {
+      const segments = ['semantic'].concat(tokenPath.split('.'));
+      let node = tokens;
+      let valid = true;
+      for (const seg of segments) {
+        if (node && typeof node === 'object' && seg in node) {
+          node = node[seg];
+        } else {
+          valid = false;
+          break;
+        }
+      }
+      if (valid && node?.modes?.[darkAppearanceKey]) {
+        try {
+          resolved = resolveValue(node.modes[darkAppearanceKey].value);
+        } catch {
+          resolved = null;
+        }
+        if (resolved) break;
+      }
+    }
+    if (resolved) {
+      darkBridgeLines.push(`  ${alias}: ${resolved};`);
+    }
+  }
+
+  darkBridgeLines.push('  color-scheme: dark;');
+  darkBridgeLines.push('}');
+  cssChunks.push(...darkBridgeLines);
+  cssChunks.push('');
+
+  /* System preference fallback: when data-mode="system", use OS preference */
+  const systemLines = [];
+  systemLines.push('/* System preference fallback (prefers-color-scheme) */');
+  systemLines.push('@media (prefers-color-scheme: dark) {');
+  systemLines.push('  [data-mode="system"] {');
+  for (const line of darkBridgeLines) {
+    if (line.startsWith('  ') && line.includes(':') && !line.startsWith('/*') && !line.startsWith('[') && !line.startsWith('}')) {
+      systemLines.push(`  ${line}`);
+    }
+  }
+  systemLines.push('    color-scheme: dark;');
+  systemLines.push('  }');
+  systemLines.push('}');
+  cssChunks.push(...systemLines);
+  cssChunks.push('');
 }
 
 while (cssChunks.at(-1) === '') {
@@ -137,24 +305,26 @@ const cssOutput = cssChunks.filter((line, index) => !(line === '' && cssChunks[i
 const cssWithEol = `${cssOutput}\n`;
 const contractWithEol = `${JSON.stringify(themeContract, null, 2)}\n`;
 
+/* ---- Build @theme inline block for TW4 utility generation ---- */
+const themeInlineOutput = buildThemeInlineBlock(colorTokens, bridgeAliases);
+const tokenTypesOutput = buildTokenTypes(themeInlineOutput);
+
 if (isCheckMode) {
   const errors = [];
-  try {
-    const existingCss = fs.readFileSync(OUTPUT_CSS, 'utf8');
-    if (existingCss !== cssWithEol) {
-      errors.push(`- Drift: ${path.relative(repoRoot, OUTPUT_CSS)} generated output is not up to date.`);
+  for (const [label, outputPath, content] of [
+    ['theme.css', OUTPUT_CSS, cssWithEol],
+    ['theme-contract.json', OUTPUT_CONTRACT, contractWithEol],
+    ['generated-theme-inline.css', OUTPUT_THEME_INLINE, themeInlineOutput],
+    ['token-types.ts', OUTPUT_TOKEN_TYPES, tokenTypesOutput],
+  ]) {
+    try {
+      const existing = fs.readFileSync(outputPath, 'utf8');
+      if (existing !== content) {
+        errors.push(`- Drift: ${path.relative(repoRoot, outputPath)} generated output is not up to date.`);
+      }
+    } catch {
+      errors.push(`- Missing: ${path.relative(repoRoot, outputPath)} does not exist.`);
     }
-  } catch {
-    errors.push(`- Missing: ${path.relative(repoRoot, OUTPUT_CSS)} does not exist.`);
-  }
-
-  try {
-    const existingContract = fs.readFileSync(OUTPUT_CONTRACT, 'utf8');
-    if (existingContract !== contractWithEol) {
-      errors.push(`- Drift: ${path.relative(repoRoot, OUTPUT_CONTRACT)} generated output is not up to date.`);
-    }
-  } catch {
-    errors.push(`- Missing: ${path.relative(repoRoot, OUTPUT_CONTRACT)} does not exist.`);
   }
 
   if (errors.length > 0) {
@@ -163,13 +333,17 @@ if (isCheckMode) {
     process.exit(1);
   }
 
-  console.log(`✅ tokens:build --check OK (${path.relative(repoRoot, OUTPUT_CSS)}, ${path.relative(repoRoot, OUTPUT_CONTRACT)})`);
+  console.log(`✅ tokens:build --check OK (4 files)`);
 } else {
   fs.mkdirSync(path.dirname(OUTPUT_CONTRACT), { recursive: true });
   fs.writeFileSync(OUTPUT_CONTRACT, contractWithEol);
   fs.writeFileSync(OUTPUT_CSS, cssWithEol);
+  fs.writeFileSync(OUTPUT_THEME_INLINE, themeInlineOutput);
+  fs.writeFileSync(OUTPUT_TOKEN_TYPES, tokenTypesOutput);
   console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_CSS)} from ${path.relative(repoRoot, TOKEN_FILE)}`);
-  console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_CONTRACT)} from ${path.relative(repoRoot, TOKEN_FILE)}`);
+  console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_CONTRACT)}`);
+  console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_THEME_INLINE)} (@theme inline)`);
+  console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_TOKEN_TYPES)} (TypeScript types)`);
 }
 
 function flattenSemantic(node, pathSegments = [], acc = []) {
@@ -374,17 +548,257 @@ function hexToColor(hex) {
   return formatColor(r, g, b, 1);
 }
 
+/**
+ * Build @theme inline CSS block for TW4 utility generation.
+ * Maps runtime CSS variables to TW4 --color-* / --radius-* / --shadow-* namespaces
+ * so that utilities like bg-surface-default resolve to var(--surface-default-bg).
+ */
+function buildThemeInlineBlock(colorEntries, aliases) {
+  const lines = [];
+  lines.push('/* ⚠️ Auto-generated via scripts/theme/generate-theme-css.mjs. Do NOT edit manually. */');
+  lines.push('/* Run: npm run tokens:build:theme to regenerate. */');
+  lines.push('');
+  lines.push('@theme inline {');
+
+  /* --- Surface colors --- */
+  lines.push('  /* Surface colors */');
+  const surfaceTokens = colorEntries.filter(e => e.path[1] === 'surface' && e.path.at(-1) === 'bg' && e.path[2] !== 'table' && e.path[2] !== 'tones');
+  for (const entry of surfaceTokens) {
+    const varName = toVarName(entry.path);
+    const segments = entry.path.slice(1); // drop 'color'
+    const twName = segments.slice(0, -1).join('-'); // drop 'bg' suffix
+    lines.push(`  --color-${twName}: var(${varName});`);
+  }
+  // surface-page and surface-canvas are bridge aliases, not in semantic tree directly
+  lines.push('  --color-surface-page: var(--surface-page-bg);');
+  lines.push('  --color-surface-canvas: var(--surface-canvas-bg);');
+
+  /* --- Text colors --- */
+  lines.push('');
+  lines.push('  /* Text colors */');
+  const textTokens = colorEntries.filter(e => e.path[1] === 'text');
+  for (const entry of textTokens) {
+    const varName = toVarName(entry.path);
+    const twName = entry.path.slice(1).join('-');
+    lines.push(`  --color-${twName}: var(${varName});`);
+  }
+  // Bridge aliases for text
+  lines.push('  --color-text-tertiary: var(--text-tertiary);');
+  lines.push('  --color-text-disabled: var(--text-disabled);');
+
+  /* --- Border colors --- */
+  lines.push('');
+  lines.push('  /* Border colors */');
+  lines.push('  --color-border: var(--border-default);');
+  const borderTokens = colorEntries.filter(e => e.path[1] === 'border');
+  for (const entry of borderTokens) {
+    const varName = toVarName(entry.path);
+    const twName = entry.path.slice(1).join('-');
+    lines.push(`  --color-${twName}: var(${varName});`);
+  }
+  lines.push('  --color-border-strong: var(--border-bold);');
+
+  /* --- Selection --- */
+  lines.push('');
+  lines.push('  /* Selection */');
+  lines.push('  --color-selection: var(--selection-bg);');
+  lines.push('  --color-selection-outline: var(--selection-outline);');
+
+  /* --- Action colors (use short names matching component usage) --- */
+  lines.push('');
+  lines.push('  /* Action Primary */');
+  lines.push('  --color-action-primary: var(--action-primary-bg);');
+  lines.push('  --color-action-primary-text: var(--action-primary-text);');
+  lines.push('  --color-action-primary-border: var(--action-primary-border);');
+  lines.push('  --color-action-primary-soft: var(--accent-soft);');
+  lines.push('');
+  lines.push('  /* Action Secondary */');
+  lines.push('  --color-action-secondary: var(--action-secondary-bg);');
+  lines.push('  --color-action-secondary-text: var(--action-secondary-text);');
+  lines.push('  --color-action-secondary-border: var(--action-secondary-border);');
+  lines.push('');
+  lines.push('  /* Action Ghost */');
+  lines.push('  --color-action-ghost: var(--action-ghost-bg);');
+  lines.push('  --color-action-ghost-text: var(--action-ghost-text);');
+  lines.push('  --color-action-ghost-border: var(--action-ghost-border);');
+
+  /* --- Accent colors --- */
+  lines.push('');
+  lines.push('  /* Accent */');
+  lines.push('  --color-accent-primary: var(--accent-primary);');
+  lines.push('  --color-accent-primary-hover: var(--accent-primary-hover);');
+  lines.push('  --color-accent-focus: var(--accent-focus);');
+  lines.push('  --color-accent-soft: var(--accent-soft);');
+  lines.push('  --color-accent: var(--accent-primary);');
+
+  /* --- State colors --- */
+  for (const state of ['info', 'success', 'warning', 'danger']) {
+    lines.push('');
+    lines.push(`  /* State ${state[0].toUpperCase()}${state.slice(1)} */`);
+    lines.push(`  --color-state-${state}: var(--state-${state}-bg);`);
+    lines.push(`  --color-state-${state}-bg: var(--state-${state}-bg);`);
+    lines.push(`  --color-state-${state}-text: var(--state-${state}-text);`);
+    lines.push(`  --color-state-${state}-border: var(--state-${state}-border);`);
+    if (state !== 'danger') {
+      lines.push(`  --color-state-${state}-surface: var(--state-${state}-bg);`);
+    }
+  }
+
+  /* --- State error (alias for danger) --- */
+  lines.push('');
+  lines.push('  /* State Error (alias) */');
+  lines.push('  --color-state-error-bg: var(--state-danger-bg);');
+  lines.push('  --color-state-error-text: var(--state-danger-text);');
+
+  /* --- Status (alias for state — reuse same runtime vars) --- */
+  lines.push('');
+  lines.push('  /* Status (alias for state — reuse same runtime vars) */');
+  for (const state of ['info', 'success', 'warning', 'danger']) {
+    lines.push(`  --color-status-${state}: var(--state-${state}-bg);`);
+    lines.push(`  --color-status-${state}-bg: var(--state-${state}-bg);`);
+    lines.push(`  --color-status-${state}-text: var(--state-${state}-text);`);
+    lines.push(`  --color-status-${state}-border: var(--state-${state}-border);`);
+  }
+
+  /* --- Data Table --- */
+  lines.push('');
+  lines.push('  /* Data Table */');
+  lines.push('  --color-data-table-header: var(--data-table-header-bg);');
+  lines.push('  --color-data-table-header-text: var(--data-table-header-text);');
+  lines.push('  --color-data-table-header-divider: var(--data-table-header-divider);');
+  lines.push('  --color-data-table-row-hover: var(--data-table-row-hover);');
+  lines.push('  --color-data-table-row-selected: var(--data-table-row-selected);');
+  lines.push('  --color-data-table-row-border: var(--data-table-row-border);');
+
+  /* --- Menu --- */
+  lines.push('');
+  lines.push('  /* Menu */');
+  lines.push('  --color-menu-action-trigger: var(--action-primary-bg);');
+  lines.push('  --color-menu-surface-trigger: var(--surface-muted-bg);');
+
+  /* --- Misc --- */
+  lines.push('');
+  lines.push('  /* Misc */');
+  lines.push('  --color-t-action-primary: var(--action-primary-text);');
+  lines.push('  --color-on-elevated: var(--text-primary);');
+  lines.push('  --color-hover: var(--surface-muted-bg);');
+
+  /* --- Non-color tokens --- */
+  lines.push('');
+  lines.push('  /* Border Radius */');
+  lines.push('  --radius-control: 0.375rem;');
+  lines.push('  --radius-surface: 0.75rem;');
+
+  lines.push('');
+  lines.push('  /* Shadows */');
+  lines.push('  --shadow-surface: var(--elevation-surface);');
+  lines.push('  --shadow-overlay: var(--elevation-overlay);');
+
+  lines.push('');
+  lines.push('  /* Spacing */');
+  lines.push('  --spacing-density: 0.5rem;');
+
+  lines.push('');
+  lines.push('  /* Ring */');
+  lines.push('  --ring-color: var(--focus-outline);');
+
+  lines.push('}');
+  lines.push('');
+
+  return lines.join('\n') + '\n';
+}
+
+/**
+ * Build TypeScript type definitions from @theme inline block.
+ * Extracts all token names and creates branded union types.
+ */
+function buildTokenTypes(themeInlineCss) {
+  const lines = [];
+  lines.push('/* ⚠️ Auto-generated via scripts/theme/generate-theme-css.mjs. Do NOT edit manually. */');
+  lines.push('/* Run: npm run tokens:build:theme to regenerate. */');
+  lines.push('');
+
+  const colorTokens = [];
+  const radiusTokens = [];
+  const shadowTokens = [];
+  const spacingTokens = [];
+  const ringTokens = [];
+
+  for (const line of themeInlineCss.split('\n')) {
+    const m = line.match(/^\s+--([\w-]+):/);
+    if (!m) continue;
+    const name = m[1];
+    if (name.startsWith('color-')) colorTokens.push(name.slice(6)); // strip 'color-' prefix
+    else if (name.startsWith('radius-')) radiusTokens.push(name);
+    else if (name.startsWith('shadow-')) shadowTokens.push(name);
+    else if (name.startsWith('spacing-')) spacingTokens.push(name);
+    else if (name.startsWith('ring-')) ringTokens.push(name);
+  }
+
+  const toUnion = (arr) => arr.map(t => `  | '${t}'`).join('\n');
+
+  lines.push('/** Semantic color token names available as TW4 utilities (bg-*, text-*, border-*) */');
+  lines.push('export type TokenColor =');
+  lines.push(toUnion(colorTokens) + ';');
+  lines.push('');
+
+  lines.push('/** Radius token names (rounded-*) */');
+  lines.push('export type TokenRadius =');
+  lines.push(toUnion(radiusTokens) + ';');
+  lines.push('');
+
+  lines.push('/** Shadow token names (shadow-*) */');
+  lines.push('export type TokenShadow =');
+  lines.push(toUnion(shadowTokens) + ';');
+  lines.push('');
+
+  lines.push('/** All design token names */');
+  lines.push('export type DesignToken = TokenColor | TokenRadius | TokenShadow;');
+  lines.push('');
+
+  lines.push(`/** Total token count: ${colorTokens.length} colors, ${radiusTokens.length} radius, ${shadowTokens.length} shadows */`);
+  lines.push(`export const TOKEN_COUNT = { color: ${colorTokens.length}, radius: ${radiusTokens.length}, shadow: ${shadowTokens.length} } as const;`);
+  lines.push('');
+
+  return lines.join('\n');
+}
+
+/**
+ * Convert RGB (0-255) to OKLCH color string.
+ * Uses the sRGB → Linear RGB → OKLab → OKLCH pipeline.
+ * TW4 recommends OKLCH for perceptually uniform, wide-gamut colors.
+ */
 function formatColor(r, g, b, a = 1) {
-  const toUnit = (component) => {
-    const clamped = Math.max(0, Math.min(255, component));
-    const unit = clamped / 255;
-    return unit === 0 ? '0' : unit === 1 ? '1' : unit.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
-  };
   const alpha = Math.max(0, Math.min(1, Number.isFinite(a) ? a : 1));
-  const parts = [toUnit(r), toUnit(g), toUnit(b)];
-  const alphaPart =
-    alpha >= 1
-      ? ''
-      : ` / ${Math.round(alpha * 10000) / 100}%`;
-  return `color(srgb ${parts.join(' ')}${alphaPart})`;
+
+  /* sRGB (0-255) → linear RGB (0-1) */
+  const linearize = (c) => {
+    const s = Math.max(0, Math.min(255, c)) / 255;
+    return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  };
+  const lr = linearize(r);
+  const lg = linearize(g);
+  const lb = linearize(b);
+
+  /* Linear RGB → OKLab (Björn Ottosson's method) */
+  const l_ = Math.cbrt(0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb);
+  const m_ = Math.cbrt(0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb);
+  const s_ = Math.cbrt(0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb);
+
+  const L = 0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_;
+  const A = 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_;
+  const B = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_;
+
+  /* OKLab → OKLCH */
+  const C = Math.sqrt(A * A + B * B);
+  let H = (Math.atan2(B, A) * 180) / Math.PI;
+  if (H < 0) H += 360;
+
+  /* Format with appropriate precision */
+  const fmtL = L <= 0 ? '0%' : L >= 1 ? '100%' : `${(L * 100).toFixed(2).replace(/\.?0+$/, '')}%`;
+  const fmtC = C < 0.0005 ? '0' : C.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+  const fmtH = C < 0.0005 ? '0' : H.toFixed(2).replace(/\.?0+$/, '');
+  const alphaPart = alpha >= 1 ? '' : ` / ${(alpha * 100).toFixed(2).replace(/\.?0+$/, '')}%`;
+
+  return `oklch(${fmtL} ${fmtC} ${fmtH}${alphaPart})`;
 }

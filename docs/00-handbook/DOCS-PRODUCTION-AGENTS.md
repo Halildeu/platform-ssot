@@ -6,7 +6,7 @@ standartlaştırır. `PROJECT-FLOW` tablosu bu dokümanın konusu değildir.
 ## 1. SSOT Referansları
 
 - Üretim kontratı: `docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md`
-- Template map: `docs/00-handbook/DOC-TEMPLATE-MAP-SSOT.json`
+- Template map: `docs-ssot/00-handbook/DOC-TEMPLATE-MAP-SSOT.json`
 - Şablonlar: `docs/99-templates/*.template.md`
 
 ## 2. Üretim Kontratı (Girdi → Çıktı)
@@ -223,6 +223,13 @@ Opsiyonel deterministik alanlar:
 - `story_ids`: `{ "web": "0310", "backend": "0311" }` (stream split varsa)
 - `spec`: `0013` veya `SPEC-0013` (item bazlı SPEC override)
 - `risk_level`: `low|medium|high` (item bazlı override)
+
+İdempotency / drift kuralı:
+- İlk üretimden sonra `story_id` / `story_ids` pinlenmelidir (SSOT stabilitesi için).
+- Generator, `story_id/story_ids` yoksa önce slug’dan mevcut dosyayı arar: `STORY-????-<story-slug>.md`.
+  - Bulursa aynı ID’yi reuse eder (idempotent).
+  - Bulamazsa yeni STORY ID allocate eder (duplicate riski).
+- `slug` değişirse arama eşleşmeyebilir → duplicate STORY üretimini engellemek için pinleme zorunludur.
 
 Generator:
 - `python3 scripts/doc_production_generate.py delivery-items-pack --prd <0004> --spec <0013> --dry-run`

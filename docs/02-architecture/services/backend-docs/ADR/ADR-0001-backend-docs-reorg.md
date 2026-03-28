@@ -10,11 +10,11 @@ Sahip: Halil K.
 Backend’e ait dokümantasyon tarihsel olarak `backend/docs` altında tutulmaktaydı.
 Bu yapı:
 - Tek bir standarda bağlı değildi,
-- Agent-Codex ve yeni doküman mimarisi (docs/00–05) ile uyumlu değildi,
+- transition agent rehberleri ve yeni doküman mimarisi (docs/01–05) ile uyumlu değildi,
 - Yeni gelenler için “hangi dosya doğru?” sorusunu artırıyordu.
 
 Bu sırada yeni dokümantasyon yapısı aşağıdaki gibi tanımlandı:
-- Genel kurallar ve layout/stil → docs/00-handbook
+- Genel kurallar ve layout/stil → transition handbook katmanı
 - Ürün/iş gereksinimleri → docs/01-product
 - Teknik mimari → docs/02-architecture
 - Story/Acceptance/Test → docs/03-delivery
@@ -27,8 +27,8 @@ Bu sırada yeni dokümantasyon yapısı aşağıdaki gibi tanımlandı:
 Backend’e özgü dokümantasyonun tek doğruluk kaynağı artık `docs/` ağacıdır.
 
 - Genel backend kuralları, layout ve stil:
-  - docs/00-handbook/BACKEND-PROJECT-LAYOUT.md
-  - docs/00-handbook/STYLE-BE-001.md
+  - BACKEND-PROJECT-LAYOUT.md
+  - STYLE-BE-001.md
 - Servis bazlı mimari:
   - docs/02-architecture/services/<servis>/TECH-DESIGN-*.md
   - docs/02-architecture/services/<servis>/DATA-MODEL-*.md
@@ -42,7 +42,7 @@ Backend’e özgü dokümantasyonun tek doğruluk kaynağı artık `docs/` ağac
 
 `backend/docs` altındaki mevcut dokümanlar:
 - İçeriklerine göre yukarıdaki lokasyonlara özetlenerek taşınacaktır.
-- Eski dosyalar silinmeyecek, `backend/docs/legacy` altında arşivlenecektir.
+- Eski dosyalar silinmeyecek, archive-reference backend docs alanında arşivlenecektir.
 - Yeni doküman üretimi sadece `docs/` hiyerarşisi üzerinden yapılacaktır.
 
 ## Consequences
@@ -51,12 +51,12 @@ Artılar:
 - Tek ve tutarlı doküman mimarisi.
 - Hem insanlar hem AI agent’lar için “tek kaynak” (SSOT) oluşur.
 - Yeni dokümanlar için nereye yazılacağı netleşir.
-- PROJECT-FLOW ve AGENT-CODEX dokümanları ile tam uyum sağlanır.
+- PROJECT-FLOW ve transition agent rehberleri ile tam uyum sağlanır.
 
 Eksiler:
 - İlk taşıma sırasında ek emek gerekir (envanter + mapping + taşıma).
 - Kısa bir süre “eski backend/docs” ve “yeni docs/” birlikte var olmaya devam eder;
-  bu süre sonunda backend/docs yalnızca legacy arşivi olarak kullanılmalıdır.
+  bu süre sonunda backend/docs yalnızca archive-reference alanı olarak kullanılmalıdır.
 
 ## Linkler
 

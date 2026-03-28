@@ -1,4 +1,10 @@
-# AGENT-CODEX.mobile – Mobil Frontend Görevleri
+# Mobil Frontend Görevleri
+
+> Transition Durumu: Bu dosya transition-active rehber katmanındadır.
+> Canonical kaynaklar:
+> `standards.lock`,
+> `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md`,
+> `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`.
 
 Bu dosya, [MOB] (Mobil) tipindeki görevler için geçerlidir.
 
@@ -31,14 +37,14 @@ Bu kurallar aşağıdaki görevler için uygulanır:
 [MOB] işi alındığında agent aşağıdaki dokümanları dikkate almalıdır:
 
 1. KÖK DAVRANIŞ
-   - AGENT-CODEX.core.md
+   - Çekirdek transition rehberi
    - AGENTS.md
 
 2. MOBİL LAYOUT
-   - docs/00-handbook/MOBILE-PROJECT-LAYOUT.md
+   - MOBILE-PROJECT-LAYOUT.md
 
 3. MOBİL STİL
-   - docs/00-handbook/STYLE-MOB-001.md
+   - STYLE-MOB-001.md
 
 4. MİMARİ (VARSA)
    - docs/02-architecture/clients/MOBILE-ARCH.md

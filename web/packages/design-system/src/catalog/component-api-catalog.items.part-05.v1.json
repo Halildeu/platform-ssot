@@ -1,0 +1,104 @@
+{
+  "items": [
+    {
+      "name": "Popover",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "PromptComposer",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "QRCode",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Radio",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "RadioGroup",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Rating",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "RecommendationCard",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "RenderWhenVisible",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "ReportFilterPanel",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "SearchFilterListing",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "SearchInput",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Segmented",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Select",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Skeleton",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Slider",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "SmartDashboard",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Spinner",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Stack",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Steps",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "SummaryStrip",
+      "props": [],
+      "slots": []
+    }
+  ]
+}

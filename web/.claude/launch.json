@@ -1,0 +1,60 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mfe-shell",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start", "--prefix", "apps/mfe-shell"],
+      "port": 3000
+    },
+    {
+      "name": "mfe-shell-vite",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "--config", "apps/mfe-shell/vite.config.ts"],
+      "port": 3000,
+      "env": {
+        "SHELL_ENABLE_SUGGESTIONS_REMOTE": "false",
+        "SHELL_ENABLE_ETHIC_REMOTE": "false",
+        "SHELL_ENABLE_ACCESS_REMOTE": "false",
+        "SHELL_ENABLE_AUDIT_REMOTE": "false",
+        "SHELL_ENABLE_USERS_REMOTE": "false"
+      }
+    },
+    {
+      "name": "mfe-suggestions",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start", "--prefix", "apps/mfe-suggestions"],
+      "port": 3001
+    },
+    {
+      "name": "mfe-ethic",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start", "--prefix", "apps/mfe-ethic"],
+      "port": 3002
+    },
+    {
+      "name": "mfe-users",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start", "--prefix", "apps/mfe-users"],
+      "port": 3004
+    },
+    {
+      "name": "mfe-access",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start", "--prefix", "apps/mfe-access"],
+      "port": 3005
+    },
+    {
+      "name": "mfe-audit",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start", "--prefix", "apps/mfe-audit"],
+      "port": 3006
+    },
+    {
+      "name": "mfe-reporting",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start", "--prefix", "apps/mfe-reporting"],
+      "port": 3007
+    }
+  ]
+}

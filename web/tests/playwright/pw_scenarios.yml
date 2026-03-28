@@ -23,6 +23,20 @@ scenarios:
   - name: shell_login
     level: 1
     auth_required: false
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
       - goto: /login
       - expectVisible: '[data-testid="login-title"]'
@@ -30,6 +44,20 @@ scenarios:
   - name: runtime_theme_matrix
     level: 1
     auth_required: false
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
       - goto: /runtime/theme-matrix
       - expectVisible: '[data-testid="runtime-theme-matrix-root"]'
@@ -50,49 +78,826 @@ scenarios:
     auth_required: true
     permissions:
       - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
       - goto: /admin/themes
       - expectVisible: '[data-testid="theme-admin-page"]'
+      - expectVisible: '[data-testid="theme-admin-editor-theme-select"]'
+      - expectVisible: '[data-testid="theme-admin-preview-section"]'
 
-  - name: design_lab_page
+  - name: theme_admin_navigation_walk
     level: 1
     auth_required: true
     permissions:
       - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/themes
+      - expectVisible: '[data-testid="theme-admin-page"]'
+      - expectVisible: '[data-testid="theme-admin-properties-section"]'
+      - expectVisible: '[data-testid="theme-admin-registry-section"]'
+      - click: '[data-testid="theme-admin-preview-theme-pw-ocean"]'
+      - waitForLoadState: networkidle
+      - select:
+          selector: '[data-testid="theme-admin-editor-theme-select"]'
+          value: pw-graphite
+      - click: '[data-testid="theme-admin-preview-theme-pw-graphite"]'
+      - waitForLoadState: networkidle
+      - expectVisible: '[data-testid="theme-admin-preview-palette"]'
+      - select:
+          selector: '[data-testid="theme-admin-editor-theme-select"]'
+          value: pw-light
+      - click: '[data-testid="theme-admin-preview-theme-pw-light"]'
+      - waitForLoadState: networkidle
+
+  - name: ui_library_page
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
       - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
-      - expectVisible: '[data-testid="nav-design-lab"]'
-      - expectVisible: '[data-testid="design-lab-tree"]'
-      - expectVisible: '[data-testid="design-lab-demo"]'
-      - expectVisible: '[data-testid="design-lab-usage"]'
+      - expectVisible: '[data-testid="design-lab-sidebar"]'
+      - expectVisible: '[data-testid="design-lab-track-new_packages"]'
+      - expectVisible: '[data-testid="design-lab-track-section"]'
+      - expectVisible: '[data-testid="design-lab-group-section"]'
+      - expectVisible: '[data-testid="design-lab-tree-section"]'
+      - expectVisible: '[data-testid="design-lab-detail-hero"]'
+      - expectVisible: '[data-testid="design-lab-detail-tabs"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+
+  - name: ui_library_navigation_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - expectVisible: '[data-testid="design-lab-search"]'
+      - click: '[data-testid="design-lab-group-navigation"]'
+      - click: '[data-testid="design-lab-item-breadcrumb"]'
+      - expectVisible: '[data-testid="design-lab-detail-hero"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-item-tabs"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+
+  - name: ui_library_foundation_wave_1_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Button
+      - expectVisible: '[data-testid="design-lab-item-button"]'
+      - click: '[data-testid="design-lab-item-button"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-section-foundations"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Text
+      - expectVisible: '[data-testid="design-lab-item-text"]'
+      - click: '[data-testid="design-lab-item-text"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: LinkInline
+      - expectVisible: '[data-testid="design-lab-item-linkinline"]'
+      - click: '[data-testid="design-lab-item-linkinline"]'
+      - click: '[data-testid="design-lab-tab-ux"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-section-components"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: IconButton
+      - expectVisible: '[data-testid="design-lab-item-iconbutton"]'
+      - click: '[data-testid="design-lab-item-iconbutton"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+
+  - name: ui_library_navigation_wave_2_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - click: '[data-testid="design-lab-group-navigation"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Pagination
+      - expectVisible: '[data-testid="design-lab-item-pagination"]'
+      - click: '[data-testid="design-lab-item-pagination"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+
+  - name: ui_library_forms_wave_3_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: TextInput
+      - expectVisible: '[data-testid="design-lab-item-textinput"]'
+      - click: '[data-testid="design-lab-item-textinput"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: TextArea
+      - expectVisible: '[data-testid="design-lab-item-textarea"]'
+      - click: '[data-testid="design-lab-item-textarea"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Checkbox
+      - expectVisible: '[data-testid="design-lab-item-checkbox"]'
+      - click: '[data-testid="design-lab-item-checkbox"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Radio
+      - expectVisible: '[data-testid="design-lab-item-radio"]'
+      - click: '[data-testid="design-lab-item-radio"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Switch
+      - expectVisible: '[data-testid="design-lab-item-switch"]'
+      - click: '[data-testid="design-lab-item-switch"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Slider
+      - expectVisible: '[data-testid="design-lab-item-slider"]'
+      - click: '[data-testid="design-lab-item-slider"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: DatePicker
+      - expectVisible: '[data-testid="design-lab-item-datepicker"]'
+      - click: '[data-testid="design-lab-item-datepicker"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: TimePicker
+      - expectVisible: '[data-testid="design-lab-item-timepicker"]'
+      - click: '[data-testid="design-lab-item-timepicker"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Upload
+      - expectVisible: '[data-testid="design-lab-item-upload"]'
+      - click: '[data-testid="design-lab-item-upload"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+
+  - name: ui_library_data_display_wave_4_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - click: '[data-testid="design-lab-section-templates"]'
+      - expectVisible: '[data-testid="design-lab-group-data_display"]'
+      - click: '[data-testid="design-lab-group-data_display"]'
+      - expectVisible: '[data-testid="design-lab-item-tablesimple"]'
+      - click: '[data-testid="design-lab-item-tablesimple"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Descriptions
+      - expectVisible: '[data-testid="design-lab-item-descriptions"]'
+      - click: '[data-testid="design-lab-item-descriptions"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: AgGridServer
+      - expectVisible: '[data-testid="design-lab-item-aggridserver"]'
+      - click: '[data-testid="design-lab-item-aggridserver"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: EntityGridTemplate
+      - expectVisible: '[data-testid="design-lab-item-entitygridtemplate"]'
+      - click: '[data-testid="design-lab-item-entitygridtemplate"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: badge/meta/selection
+      - expectVisible: '[data-testid="design-lab-item-list"]'
+      - click: '[data-testid="design-lab-item-list"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: JsonViewer
+      - expectVisible: '[data-testid="design-lab-item-jsonviewer"]'
+      - click: '[data-testid="design-lab-item-jsonviewer"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Tree
+      - expectVisible: '[data-testid="design-lab-item-tree"]'
+      - click: '[data-testid="design-lab-item-tree"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: TreeTable
+      - expectVisible: '[data-testid="design-lab-item-treetable"]'
+      - click: '[data-testid="design-lab-item-treetable"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+
+  - name: ui_library_overlay_wave_5_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Modal
+      - expectVisible: '[data-testid="design-lab-item-modal"]'
+      - click: '[data-testid="design-lab-item-modal"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: 'button:has-text("Modal aç")'
+      - expectVisible: '[role="dialog"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Dropdown
+      - expectVisible: '[data-testid="design-lab-item-dropdown"]'
+      - click: '[data-testid="design-lab-item-dropdown"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-demo-card-dropdown-action-menu"] button:has-text("Aksiyon Menüsü")'
+      - expectVisible: '[role="menuitem"]:has-text("Yayinla")'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Tooltip
+      - expectVisible: '[data-testid="design-lab-item-tooltip"]'
+      - click: '[data-testid="design-lab-item-tooltip"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: FormDrawer
+      - expectVisible: '[data-testid="design-lab-item-formdrawer"]'
+      - click: '[data-testid="design-lab-item-formdrawer"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-demo-card-form-drawer-create-flow"] button:has-text("Yeni kayıt drawer")'
+      - expectVisible: '[role="dialog"]:has-text("Yeni kayıt") button:has-text("Kaydet")'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: DetailDrawer
+      - expectVisible: '[data-testid="design-lab-item-detaildrawer"]'
+      - click: '[data-testid="design-lab-item-detaildrawer"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-demo-card-detail-drawer-tabbed-review"] button:has-text("Detay drawer")'
+      - expectVisible: '[role="dialog"]:has-text("Rollout detay") button:has-text("Ozet")'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Popover
+      - expectVisible: '[data-testid="design-lab-item-popover"]'
+      - click: '[data-testid="design-lab-item-popover"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[role="tablist"][aria-label="Bileşen önizleme panelleri"] [role="tab"]:has-text("Referans")'
+      - click: '[data-testid="design-lab-demo-card-popover-rich-guidance"] button:has-text("Popover aç")'
+      - expectVisible: '[role="dialog"]:has-text("Politika notu")'
+
+  - name: ui_library_ai_native_wave_6_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - click: '[data-testid="design-lab-section-ai_ux"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: CommandPalette
+      - expectVisible: '[data-testid="design-lab-item-commandpalette"]'
+      - click: '[data-testid="design-lab-item-commandpalette"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: 'button:has-text("Komut paletini aç")'
+      - expectVisible: '[role="dialog"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: RecommendationCard
+      - expectVisible: '[data-testid="design-lab-item-recommendationcard"]'
+      - click: '[data-testid="design-lab-item-recommendationcard"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ConfidenceBadge
+      - expectVisible: '[data-testid="design-lab-item-confidencebadge"]'
+      - click: '[data-testid="design-lab-item-confidencebadge"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ApprovalCheckpoint
+      - expectVisible: '[data-testid="design-lab-item-approvalcheckpoint"]'
+      - click: '[data-testid="design-lab-item-approvalcheckpoint"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: CitationPanel
+      - expectVisible: '[data-testid="design-lab-item-citationpanel"]'
+      - click: '[data-testid="design-lab-item-citationpanel"]'
+      - click: '[data-testid="design-lab-tab-ux"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: AIActionAuditTimeline
+      - expectVisible: '[data-testid="design-lab-item-aiactionaudittimeline"]'
+      - click: '[data-testid="design-lab-item-aiactionaudittimeline"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: PromptComposer
+      - expectVisible: '[data-testid="design-lab-item-promptcomposer"]'
+      - click: '[data-testid="design-lab-item-promptcomposer"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+  - name: shell_public_route_walk
+    level: 1
+    auth_required: false
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /login
+      - expectVisible: '[data-testid="login-title"]'
+      - goto: /runtime/theme-matrix
+      - expectVisible: '[data-testid="runtime-theme-matrix-root"]'
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - click: '[data-testid="design-lab-group-navigation"]'
+      - click: '[data-testid="design-lab-subgroup-anchor_table_of_contents"]'
+      - click: '[data-testid="design-lab-item-anchortoc"]'
+      - click: '[data-testid="design-lab-tab-overview"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+
+  - name: ui_library_page_blocks_wave_7_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - click: '[data-testid="design-lab-section-templates"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: PageLayout
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: PageHeader
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: FilterBar
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ReportFilterPanel
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: SummaryStrip
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: EntitySummaryBlock
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
 
   - name: access_roles_page
     level: 1
     auth_required: true
     permissions:
       - access-read
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
       - goto: /access/roles
+      - expectVisible: '[data-testid="access-roles-page"]'
+      - expectVisible: '[data-testid="access-grid"]'
       - waitForSelector: '.ag-center-cols-container'
+
+  - name: access_roles_navigation_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - access-read
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /access/roles
+      - expectVisible: '[data-testid="access-roles-page"]'
+      - expectVisible: '[data-testid="access-filter-bar"]'
+      - fill:
+          selector: '[data-testid="access-filter-search"]'
+          value: Operasyon
+      - click: '[data-testid="access-filter-apply"]'
+      - expectVisible: '[data-testid="access-grid"]'
+      - clickFirst: '[data-testid="access-grid"] .ag-center-cols-container [row-index="0"]'
+      - expectVisible: '[data-testid="access-role-drawer-content"]'
+      - expectVisible: '[data-testid="access-permission-registry"]'
+      - click: 'button[aria-label="Kapat"]'
 
   - name: audit_events_page
     level: 1
     auth_required: true
     permissions:
       - audit-read
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
       - goto: /audit/events
+      - expectVisible: '[data-testid="audit-events-page"]'
+      - expectVisible: '[data-testid="audit-grid"]'
       - waitForSelector: '.ag-center-cols-container'
+
+  - name: audit_events_navigation_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - audit-read
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /audit/events
+      - expectVisible: '[data-testid="audit-events-page"]'
+      - expectVisible: '[data-testid="audit-filter-bar"]'
+      - fill:
+          selector: '[data-testid="audit-filter-user-email"]'
+          value: user1@example.com
+      - click: '[data-testid="audit-filter-apply"]'
+      - expectVisible: '[data-testid="audit-grid"]'
+      - clickFirst: '[data-testid="audit-grid"] .ag-center-cols-container [row-index="0"]'
+      - expectVisible: '[data-testid="audit-detail-summary"]'
+      - click: 'text=Raw JSON'
+      - expectVisible: '[data-testid="audit-detail-raw"]'
+      - click: 'button[aria-label="Kapat"]'
 
   - name: reporting_users_page
     level: 1
     auth_required: true
     permissions:
       - VIEW_REPORTS
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
       - goto: /admin/reports/users
+      - expectVisible: '[data-testid="report-page-users"]'
       - waitForSelector: '[data-theme-scope="entity-grid"]'
+
+  - name: reporting_users_navigation_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - VIEW_REPORTS
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/reports/users
+      - expectVisible: '[data-testid="report-page-users"]'
+      - expectVisible: '[data-testid="report-filter-panel"]'
+      - fill:
+          selector: '[data-testid="report-filter-search"]'
+          value: Ayse
+      - select:
+          selector: '[data-testid="report-filter-status"]'
+          value: ACTIVE
+      - click: '[data-testid="report-filter-submit"]'
+      - expectVisible: '[data-theme-scope="entity-grid"]'
+      - clickFirst: '[data-theme-scope="entity-grid"] .ag-center-cols-container [row-index="0"]'
+      - expectVisible: '[data-theme-scope="entity-grid"] .ag-center-cols-container [row-index="0"]'
 
   - name: story_0050_locale_switch_propagation
     level: 1
@@ -110,3 +915,154 @@ scenarios:
           selector: 'select[aria-label="Dil seçimi"]'
           value: en
       - expectVisible: 'text=Refresh users'
+
+  - name: ui_library_overlay_extensions_wave_8_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ContextMenu
+      - expectVisible: '[data-testid="design-lab-item-contextmenu"]'
+      - click: '[data-testid="design-lab-item-contextmenu"]'
+      - expectVisible: '[data-testid="design-lab-contextmenu-trigger"]'
+      - click: '[data-testid="design-lab-contextmenu-trigger"]'
+      - expectVisible: '[data-testid="design-lab-contextmenu-menu"]'
+      - click: '[data-testid="design-lab-contextmenu-item-review"]'
+      - expectVisible: '[data-testid="design-lab-contextmenu-result"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: TourCoachmarks
+      - expectVisible: '[data-testid="design-lab-item-tourcoachmarks"]'
+      - click: '[data-testid="design-lab-item-tourcoachmarks"]'
+      - expectVisible: '[data-testid="design-lab-tour-open"]'
+      - click: '[data-testid="design-lab-tour-open"]'
+      - expectVisible: '[data-testid="design-lab-tour-panel"]'
+      - click: '[data-testid="design-lab-tour-next"]'
+      - expectVisible: '[data-testid="design-lab-tour-step-preview"]'
+
+  - name: ui_library_theme_presets_wave_10_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - click: '[data-testid="design-lab-section-foundations"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ThemePresetGallery
+      - expectVisible: '[data-testid="design-lab-item-themepresetgallery"]'
+      - click: '[data-testid="design-lab-item-themepresetgallery"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-demo-card-theme-preset-gallery-catalog"] [data-component="theme-preset-gallery"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ThemePresetCompare
+      - expectVisible: '[data-testid="design-lab-item-themepresetcompare"]'
+      - click: '[data-testid="design-lab-item-themepresetcompare"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-demo-card-theme-preset-compare-default"] [data-component="theme-preset-compare"]'
+
+  - name: ui_library_recipe_wave_11_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - click: '[data-testid="design-lab-section-patterns"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: SearchFilterListing
+      - expectVisible: '[data-testid="design-lab-item-searchfilterlisting"]'
+      - click: '[data-testid="design-lab-item-searchfilterlisting"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-demo-card-search-filter-listing-default"] [data-component="search-filter-listing"]'
+      - click: '[data-testid="design-lab-section-templates"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: DetailSummary
+      - expectVisible: '[data-testid="design-lab-item-detailsummary"]'
+      - click: '[data-testid="design-lab-item-detailsummary"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-demo-card-detail-summary-default"] [data-component="detail-summary"]'
+      - click: '[data-testid="design-lab-section-ai_ux"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ApprovalReview
+      - expectVisible: '[data-testid="design-lab-item-approvalreview"]'
+      - click: '[data-testid="design-lab-item-approvalreview"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-demo-card-approval-review-default"] [data-component="approval-review"]'
+      - click: '[data-testid="design-lab-section-components"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: EmptyErrorLoading
+      - expectVisible: '[data-testid="design-lab-item-emptyerrorloading"]'
+      - click: '[data-testid="design-lab-item-emptyerrorloading"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: ':nth-match([data-testid="design-lab-demo-card-empty-error-loading-default"] [data-component="empty-error-loading"], 1)'
+      - click: '[data-testid="design-lab-section-ai_ux"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: AIGuidedAuthoring
+      - expectVisible: '[data-testid="design-lab-item-aiguidedauthoring"]'
+      - click: '[data-testid="design-lab-item-aiguidedauthoring"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-demo-card-ai-guided-authoring-default"] [data-component="ai-guided-authoring"]'
+      - click: '[data-testid="design-lab-workspace-recipes"]'
+      - expectVisible: '[data-testid="design-lab-recipe-list"]'
+      - click: '[data-testid="design-lab-section-patterns"]'
+      - click: '[data-testid="design-lab-recipe-search_filter_listing"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - click: '[role="tablist"][aria-label="Reçete önizleme panelleri"] [role="tab"]:has-text("Reçete")'
+      - expectVisible: '[data-testid="design-lab-recipe-demo-card-search_filter_listing-assembly-map"] [data-component="search-filter-listing"]'

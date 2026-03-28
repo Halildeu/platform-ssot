@@ -1,5 +1,10 @@
 import React from 'react';
-import { PageLayout } from 'mfe-ui-kit';
+import {
+  Button,
+  PageLayout,
+  createPageLayoutBreadcrumbItems,
+  createPageLayoutPreset,
+} from '@mfe/design-system';
 import { trackAction, trackMutation, resolveTraceId } from '@mfe/shared-http';
 import type { TelemetryEvent } from '@mfe/shared-types';
 import { fetchPageLayout } from '@mfe/shared-http';
@@ -9,6 +14,7 @@ import { useAccessRoles } from '../../features/access-management/model/use-acces
 import AccessFilterBar from '../../widgets/access-management/ui/AccessFilterBar.ui';
 import AccessGrid from '../../widgets/access-management/ui/AccessGrid.ui';
 import AccessRoleDrawer from '../../widgets/access-management/ui/AccessRoleDrawer.ui';
+import AccessVariantToolbar from '../../widgets/access-management/ui/AccessVariantToolbar.ui';
 import { accessRolesPageManifest } from '../../manifest/access/roles-page.manifest';
 import { useAccessVariants } from '../../features/access-management/model/use-access-variants.model';
 import RoleCloneModal from '../../widgets/access-management/ui/RoleCloneModal.ui';
@@ -16,6 +22,7 @@ import BulkPermissionModal from '../../widgets/access-management/ui/BulkPermissi
 import { getShellServices } from '../../app/services/shell-services';
 import { useAccessI18n } from '../../i18n/useAccessI18n';
 import PermissionRegistryPanel from '../../widgets/permission-registry/PermissionRegistryPanel.ui';
+import { isRuntimeDev, readRuntimeEnv } from '../../app/runtime/env';
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';
 
@@ -54,8 +61,8 @@ const AccessPage: React.FC = () => {
   const shellServices = React.useMemo(() => {
     try {
       return getShellServices();
-    } catch (error) {
-      if (process.env.NODE_ENV !== 'production') {
+    } catch (error: unknown) {
+      if (isRuntimeDev()) {
         console.debug('[mfe-access] Shell servislerine erişilemedi:', error);
       }
       return null;
@@ -87,8 +94,8 @@ const AccessPage: React.FC = () => {
         traceId,
         context: {
           app: 'mfe-access',
-          env: (process.env.APP_ENVIRONMENT as TelemetryEvent['context']['env']) || 'local',
-          version: process.env.APP_RELEASE || 'dev',
+          env: (readRuntimeEnv('APP_ENVIRONMENT', 'local') as TelemetryEvent['context']['env']),
+          version: readRuntimeEnv('APP_RELEASE', 'dev'),
           tags: { route: '/access/roles', mutationName, ...(tags ?? {}) },
         },
         metrics: { durationMs },
@@ -113,6 +120,10 @@ const AccessPage: React.FC = () => {
     ],
     [t],
   );
+  const variantOptions = React.useMemo(
+    () => variants.map((variant) => ({ value: variant.id, label: variant.name })),
+    [variants],
+  );
 
   React.useEffect(() => {
     fetchPageLayout('access')
@@ -133,10 +144,16 @@ const AccessPage: React.FC = () => {
   const layoutTitle = t(pageLayout?.title ?? accessRolesPageManifest.layout.title);
   const descriptionKey = pageLayout?.description ?? accessRolesPageManifest.layout.description;
   const layoutDescription = descriptionKey ? t(descriptionKey) : undefined;
-  const breadcrumbs = accessRolesPageManifest.layout.breadcrumbItems?.map((item) => ({
-    ...item,
-    title: t(item.title),
-  }));
+  const breadcrumbs = createPageLayoutBreadcrumbItems(
+    (accessRolesPageManifest.layout.breadcrumbItems ?? []).map((item) => ({
+      ...item,
+      title: t(item.title as string),
+    })),
+  );
+  const pageLayoutPreset = createPageLayoutPreset({
+    preset: 'content-only',
+    pageWidth: 'full',
+  });
 
   const selectionCount = selectedRoleIds.length;
   const singleSelectedRole = React.useMemo(() => {
@@ -156,8 +173,8 @@ const AccessPage: React.FC = () => {
       traceId,
       context: {
         app: 'mfe-access',
-        env: (process.env.APP_ENVIRONMENT as TelemetryEvent['context']['env']) || 'local',
-        version: process.env.APP_RELEASE || 'dev',
+        env: (readRuntimeEnv('APP_ENVIRONMENT', 'local') as TelemetryEvent['context']['env']),
+        version: readRuntimeEnv('APP_RELEASE', 'dev'),
         tags: { actionId, route: '/access/roles' },
       },
       payload: { route: '/access/roles' },
@@ -180,7 +197,7 @@ const AccessPage: React.FC = () => {
         }
       }
 
-      const handleClick = () => {
+      const activateAction = () => {
         if (disabled) {
           return;
         }
@@ -195,26 +212,37 @@ const AccessPage: React.FC = () => {
         }
       };
 
+      const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (disabled) {
+          return;
+        }
+        if (action.key !== 'clone-role' && action.key !== 'bulk-permission') {
+          return;
+        }
+        // Grid seçimi toolbar click'inde düşse bile aksiyon state'i yakalansın.
+        event.preventDefault();
+        activateAction();
+      };
+
+      const handleClick = () => {
+        activateAction();
+      };
+
       const label = t(action.label);
       const tooltip = action.tooltip ? t(action.tooltip) : undefined;
-      const intentClass =
-        action.intent === 'primary'
-          ? 'bg-action-primary text-action-primary-text hover:opacity-90'
-          : 'border border-border-subtle text-text-secondary hover:bg-surface-muted';
 
       return (
-        <button
+        <Button
           key={action.key}
           type="button"
           title={tooltip}
           disabled={disabled}
+          onMouseDown={handleMouseDown}
           onClick={handleClick}
-          className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
-            disabled ? 'cursor-not-allowed opacity-50' : intentClass
-          }`}
+          variant={action.intent === 'primary' ? 'primary' : 'secondary'}
         >
           {label}
-        </button>
+        </Button>
       );
     });
   }, [accessRolesPageManifest.actions, emitActionTelemetry, selectionCount, t]);
@@ -264,62 +292,16 @@ const AccessPage: React.FC = () => {
     () => (
       <div className="flex flex-col gap-3">
         <AccessFilterBar filters={filters} modules={modules} onChange={setFilters} t={t} />
-        <div className="flex flex-wrap items-center gap-2 text-text-secondary">
-          <select
-            className="min-w-[220px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
-            value={selectedVariantId ?? ''}
-            onChange={(event) => {
-              const value = event.target.value;
-              if (!value) {
-                selectVariant(null);
-                return;
-              }
-              selectVariant(value);
-            }}
-          >
-            <option value="">{t('access.variants.selectPlaceholder')}</option>
-            {variants.map((variant) => (
-              <option key={variant.id} value={variant.id}>
-                {variant.name}
-              </option>
-            ))}
-          </select>
-          <button
-            type="button"
-            onClick={handleSaveVariant}
-            className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-              selectedVariantId
-                ? isDirty
-                  ? 'bg-action-primary text-action-primary-text hover:opacity-90'
-                  : 'border border-border-subtle text-text-secondary hover:bg-surface-muted'
-                : 'bg-action-primary text-action-primary-text hover:opacity-90'
-            }`}
-          >
-            {selectedVariantId
-              ? isDirty
-                ? t('access.variants.saveChanges')
-                : t('access.variants.save')
-              : t('access.variants.save')}
-          </button>
-          <button
-            type="button"
-            onClick={handleSaveAsVariant}
-            className="rounded-xl border border-border-subtle px-4 py-2 text-sm font-semibold text-text-secondary hover:bg-surface-muted"
-          >
-            {t('access.variants.saveAs')}
-          </button>
-          <button
-            type="button"
-            onClick={handleDeleteVariant}
-            disabled={!selectedVariantId}
-            className="rounded-xl border border-state-danger-border px-4 py-2 text-sm font-semibold text-state-danger-text hover:bg-state-danger-bg disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {t('access.variants.delete')}
-          </button>
-          {isDirty && (
-            <span className="text-sm italic text-text-subtle">{t('access.variants.unsavedChanges')}</span>
-          )}
-        </div>
+        <AccessVariantToolbar
+          selectedVariantId={selectedVariantId}
+          variantOptions={variantOptions}
+          isDirty={isDirty}
+          onSelectVariant={selectVariant}
+          onSaveVariant={handleSaveVariant}
+          onSaveAsVariant={handleSaveAsVariant}
+          onDeleteVariant={handleDeleteVariant}
+          t={t}
+        />
       </div>
     ),
     [
@@ -327,6 +309,7 @@ const AccessPage: React.FC = () => {
       modules,
       selectedVariantId,
       variants,
+      variantOptions,
       selectVariant,
       handleDeleteVariant,
       handleSaveAsVariant,
@@ -342,38 +325,42 @@ const AccessPage: React.FC = () => {
 
   return (
     <>
-      <PageLayout
-        title={layoutTitle}
-        description={layoutDescription}
-        breadcrumbItems={breadcrumbs}
-        actions={actionButtons ? <div className="flex flex-wrap gap-2">{actionButtons}</div> : undefined}
-        filterBar={filterBar}
-      >
-        <div className="space-y-6">
-          <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
-            <p className="text-sm text-text-subtle">
-              {t('access.metrics.activeRoleCount', { count: formatNumber(total) })}
-            </p>
-            {roles.length > 0 ? (
-              <AccessGrid
-                rows={roles}
-                columns={translatedColumns}
-                onSelect={setSelectedRole}
-                selectedRoleIds={selectedRoleIds}
-                onSelectionChange={setSelectedRoleIds}
-                t={t}
-                formatDate={formatDate}
-              />
-            ) : (
-              <div className="mt-12 text-center text-text-subtle">
-                <p>{t('access.empty.noResults')}</p>
-              </div>
-            )}
-          </div>
+      <div data-testid="access-roles-page">
+        <PageLayout
+          {...pageLayoutPreset}
+          title={layoutTitle}
+          description={layoutDescription}
+          breadcrumbItems={breadcrumbs}
+          actions={actionButtons ? <div className="flex flex-wrap gap-2">{actionButtons}</div> : undefined}
+          filterBar={filterBar}
+        >
+          <div className="flex flex-col gap-6">
+            <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
+              <p className="text-sm text-text-subtle">
+                {t('access.metrics.activeRoleCount', { count: formatNumber(total) })}
+              </p>
+              {roles.length > 0 ? (
+                <AccessGrid
+                  rows={roles}
+                  columns={translatedColumns}
+                  onSelect={setSelectedRole}
+                  selectedRoleIds={selectedRoleIds}
+                  onSelectionChange={setSelectedRoleIds}
+                  t={t}
+                  formatNumber={formatNumber}
+                  formatDate={formatDate}
+                />
+              ) : (
+                <div className="mt-12 text-center text-text-subtle">
+                  <p>{t('access.empty.noResults')}</p>
+                </div>
+              )}
+            </div>
 
-          <PermissionRegistryPanel t={t} formatDate={formatDate} />
-        </div>
-      </PageLayout>
+            <PermissionRegistryPanel t={t} formatDate={formatDate} />
+          </div>
+        </PageLayout>
+      </div>
 
       <AccessRoleDrawer
         open={Boolean(selectedRole)}
@@ -389,7 +376,7 @@ const AccessPage: React.FC = () => {
               roleId,
               permissionCount: permissionIds.length,
             });
-          } catch (error) {
+          } catch (error: unknown) {
             const durationMs = performance.now() - startedAt;
             emitMutationTelemetry('update_role_permissions', 'error', durationMs, undefined, { roleId });
             throw error;
@@ -407,14 +394,14 @@ const AccessPage: React.FC = () => {
         role={singleSelectedRole}
         onCancel={() => setCloneModalOpen(false)}
         t={t}
-        onSubmit={(values) => {
+        onSubmit={async (values) => {
           if (!singleSelectedRole) {
             setCloneModalOpen(false);
             showToast('warning', t('access.notifications.cloneMissingSelection'));
             return;
           }
           try {
-            const result = cloneRole({
+            const result = await cloneRole({
               sourceRoleId: singleSelectedRole.id,
               name: values.name,
               description: values.description,
@@ -445,7 +432,7 @@ const AccessPage: React.FC = () => {
                 roleId: result.role.id,
               },
             });
-          } catch (error) {
+          } catch (error: unknown) {
             const errorMessage =
               error instanceof Error ? error.message : t('access.notifications.cloneError');
             showToast('error', errorMessage);

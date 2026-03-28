@@ -1,0 +1,173 @@
+{
+  "items": [
+    {
+      "name": "getSupportedComponentTypes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getSupportedComponentTypes } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getThemeAxes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getThemeAxes } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+      ]
+    },
+    {
+      "name": "getThemeContract",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getThemeContract } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
+        "web/apps/mfe-shell/src/features/theme/theme-matrix.constants.ts"
+      ]
+    },
+    {
+      "name": "hasKeyboardContract",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { hasKeyboardContract } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "letterSpacing",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { letterSpacing } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "lightTheme",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { lightTheme } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "lineHeight",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { lineHeight } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "opacity",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { opacity } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "palette",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { palette } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "radius",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { radius } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "registerGridVariantsTokenResolver",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { registerGridVariantsTokenResolver } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "registerTokenResolver",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { registerTokenResolver } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "resetTokenResolver",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { resetTokenResolver } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "resolveAccessState",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { resolveAccessState } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "resolveMenuBarActiveValue",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { resolveMenuBarActiveValue } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "resolveNavigationRailActiveValue",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { resolveNavigationRailActiveValue } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "resolveSegmentedNextValue",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { resolveSegmentedNextValue } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "resolveThemeModeKey",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { resolveThemeModeKey } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/layout/ThemeRuntimePanelButton.tsx",
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.shared.ts"
+      ]
+    },
+    {
+      "name": "searchComponents",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { searchComponents } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "semanticColorTokens",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { semanticColorTokens } from '@mfe/design-system';",
+      "whereUsed": []
+    }
+  ]
+}

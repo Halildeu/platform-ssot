@@ -24,7 +24,7 @@ from typing import Any, Dict, List
 ROOT = Path(__file__).resolve().parents[1]
 POLICY = (
     ROOT
-    / "docs"
+    / "docs-ssot"
     / "03-delivery"
     / "SPECS"
     / "doc-repair-autopr-policy.v0.6.json"

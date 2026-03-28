@@ -7,14 +7,18 @@ last_review: 2025-11-03
 
 # GUIDE-0009: Platform Glossary
 
-Bu sözlük; mikro-frontend platformunda sık kullanılan terimlerin herkes tarafından aynı anlamla kullanılmasını sağlar. Her terim için kısa tanım, pratik kullanım örneği ve ilgili doküman referansları yer alır. Yeni terim eklerken `docs/03-delivery/guides/GUIDE-0004-glossary-guide.md` içindeki kuralları ve (gerektiğinde) `backend/docs/legacy/03-delivery/templates/06-glossary/glossary-entry.md` iskeletini kullanın.
+Bu sözlük; mikro-frontend platformunda sık kullanılan terimlerin herkes
+tarafından aynı anlamla kullanılmasını sağlar. Her terim için kısa tanım,
+pratik kullanım örneği ve ilgili doküman referansları yer alır. Yeni terim
+eklerken `docs/03-delivery/guides/GUIDE-0004-glossary-guide.md` içindeki
+kuralları ve current docs/operasyon zincirini baz alın.
 
 ## 1. Mimari & Ürün Terimleri
 
 | Terim | Tanım | Kullanım / Notlar |
 | --- | --- | --- |
-| Manifest | Mikro-frontend ekranını tanımlayan JSON/yapılandırma dosyası; PageLayout bileşenleri, grid sütunları, aksiyonlar burada tanımlanır. | Ayrıntı: `docs/00-handbook/WEB-PROJECT-LAYOUT.md` (kanonik detay: `web/docs/architecture/frontend/frontend-project-layout.md`) |
-| Shell | MFE’lerin host uygulaması; servis sözleşmelerini, auth context’i ve ortak UI bileşenlerini sağlar. | ADR referansı: `backend/docs/legacy/root/05-governance/05-adr/ADR-002-page-layout-and-manifest-model.md` |
+| Manifest | Mikro-frontend ekranını tanımlayan JSON/yapılandırma dosyası; PageLayout bileşenleri, grid sütunları, aksiyonlar burada tanımlanır. | Ayrıntı: `web/docs/architecture/frontend/frontend-project-layout.md`, `docs/02-architecture/clients/WEB-ARCH.md` |
+| Shell | MFE’lerin host uygulaması; servis sözleşmelerini, auth context’i ve ortak UI bileşenlerini sağlar. | Mimari özet: `docs/02-architecture/clients/WEB-ARCH.md` |
 | Access Module | `mfe-access` uygulaması; rol ve izin yönetimini manifest tabanlı sunar. | Runbook: `docs/04-operations/RUNBOOKS/RB-mfe-access.md` |
 | Audit ID | Mutasyon yanıtlarında dönen benzersiz kimlik; audit log ekranına deep-link sağlar. | Üretim akışı: `web/docs/architecture/frontend/ux/planned-mfe-ux.md` |
 | TTFA (Time to First Action) | Kullanıcının ilk etkileşim yapabildiği ana kadar geçen süre; performans SLO metriği. | Gözlemleme: `docs/04-operations/RUNBOOKS/` |
@@ -23,30 +27,30 @@ Bu sözlük; mikro-frontend platformunda sık kullanılan terimlerin herkes tara
 
 | Terim | Tanım | Kullanım / Notlar |
 | --- | --- | --- |
-| Doc Hygiene | Sprint sonunda dokümanların güncelliğini kontrol eden ritüel; backlog maddeleri burada gözden geçirilir. | Süreç: `backend/docs/legacy/root/01-architecture/01-system/03-architecture-governance.md` |
-| Feature Flag | Unleash üzerinde yönetilen, MFE davranışını koşulsal değiştiren yapı. | Yönetişim: `backend/docs/legacy/root/05-governance/05-adr/ADR-009-feature-flag-governance.md` |
-| Guardrail | CI/CD üzerinde kırmızı çizgi adımları (ör. i18n-smoke, security-guardrails). | Örnek: `backend/docs/legacy/root/01-architecture/04-security/guardrails/security-guardrails.md`, `.github/workflows/i18n-smoke.yml` |
+| Doc Hygiene | Sprint sonunda dokümanların güncelliğini kontrol eden ritüel; backlog maddeleri burada gözden geçirilir. | Süreç: `docs/03-delivery/PROJECT-FLOW.md`, `docs/04-operations/RUNBOOKS/RB-doc-repair-loop.md` |
+| Feature Flag | Unleash üzerinde yönetilen, MFE davranışını koşulsal değiştiren yapı. | Yönetişim: `docs/04-operations/RUNBOOKS/RB-feature-flags.md` |
+| Guardrail | CI/CD üzerinde kırmızı çizgi adımları (ör. i18n-smoke, security-guardrails). | Örnek: `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md`, `.github/workflows/i18n-smoke.yml` |
 | Runbook | Incident anında uygulanacak prosedürlerin bulunduğu operasyon dokümanı. | Şablon: `docs/99-templates/RUNBOOK.template.md` |
-| Rollback | Başarısız release sonrası en son stabil deploy’a geri dönme adımları. | Strateji: `backend/docs/legacy/root/05-governance/05-adr/ADR-006-canary-and-rollback-strategy.md` |
+| Rollback | Başarısız release sonrası en son stabil deploy’a geri dönme adımları. | Strateji: `docs/04-operations/RUNBOOKS/RB-insansiz-flow.md`, `docs/04-operations/RUNBOOKS/RB-live-service-schema-cutover.md` |
 
 ## 3. Lokalizasyon & Güvenlik Terimleri
 
 | Terim | Tanım | Kullanım / Notlar |
 | --- | --- | --- |
-| TMS (Translation Management System) | Çeviri sözlüklerinin saklandığı servis; `npm run i18n:pull` komutu ile çekilir. | Ayrıntı: `docs/00-handbook/WEB-PROJECT-LAYOUT.md` (kanonik detay: `web/docs/architecture/frontend/frontend-project-layout.md`) |
+| TMS (Translation Management System) | Çeviri sözlüklerinin saklandığı servis; `npm run i18n:pull` komutu ile çekilir. | Ayrıntı: `web/docs/architecture/frontend/frontend-project-layout.md`, `docs/02-architecture/clients/WEB-ARCH.md` |
 | Pseudolocale | TMS’ten üretilen çeviri dosyası; UI çeviri eksiklerini ve taşmaları yakalamak için kullanılır. | Workflow: `.github/workflows/i18n-smoke.yml` |
-| SRI (Subresource Integrity) | Manifest ve remote bundle’lar için hash doğrulaması; güvenli yükleme sağlar. | Rehber: `security/sri-manifest.json`, `backend/docs/legacy/root/05-governance/05-adr/ADR-001-remote-manifest-and-sri.md` |
+| SRI (Subresource Integrity) | Manifest ve remote bundle’lar için hash doğrulaması; güvenli yükleme sağlar. | Rehber: `security/sri-manifest.json`, `docs/02-architecture/clients/WEB-ARCH.md` |
 | Vault | Gizli anahtar yönetimi ve dinamik DB secrets için kullanılan HashiCorp Vault kurulumumuz. | Rehber: `docs/04-operations/RUNBOOKS/RB-vault.md` |
-| Service Token | Servisler arası kimlik doğrulamada kullanılan token tipi; AppRole veya statik key ile üretilir. | Referans: `backend/docs/legacy/root/01-architecture/04-security/identity/05-service-jwt-keys.md` |
+| Service Token | Servisler arası kimlik doğrulamada kullanılan token tipi; AppRole veya statik key ile üretilir. | Referans: `docs/04-operations/RUNBOOKS/RB-keycloak.md` |
 
 ## 4. Telemetry & Observability Terimleri
 
 | Terim | Tanım | Kullanım / Notlar |
 | --- | --- | --- |
-| OTEL (OpenTelemetry) | Uygulama metrik/log/trace toplamak için kullanılan standard. | ADR: `backend/docs/legacy/root/05-governance/05-adr/ADR-011-observability-correlation.md` |
+| OTEL (OpenTelemetry) | Uygulama metrik/log/trace toplamak için kullanılan standard. | Referans: `docs/OPERATIONS/OBSERVABILITY-COVERAGE-MATRIX.v1.md` |
 | SendBeacon Fallback | Shell telemetry client’ının tarayıcı kapanırken veri göndermek için kullandığı yöntem. | Kod: `web/apps/mfe-shell/src/app/telemetry/telemetry-client.ts` |
 | Synthetic Check | Grafana üzerinden TTFA ve uptime için koşulan otomatik test. | Dashboard referansı: `docs/04-operations/RUNBOOKS/RB-mfe-access.md` §3 |
-| Error Budget | SLO hedefi aşıldığında kalan hata payı; release kararlarında referans alınır. | Açıklama: `backend/docs/legacy/root/01-architecture/01-system/03-architecture-governance.md` |
+| Error Budget | SLO hedefi aşıldığında kalan hata payı; release kararlarında referans alınır. | Açıklama: `docs/04-operations/SLO-SLA.md` |
 
 ## 5. Ek Terimler & Kısaltmalar
 
@@ -56,25 +60,4 @@ Bu sözlük; mikro-frontend platformunda sık kullanılan terimlerin herkes tara
 - **CI/CD:** Continuous Integration / Deployment.
 - **TTI:** Time to Interactive (baz performans metriği; TTFA ile birlikte izlenir).
 
-> Güncelleme notu: Yeni terim eklendiğinde bu sözlükte alfabetik sırayı koruyun ve ilgili doküman linklerini eklemeyi unutmayın.
-
-1. AMAÇ
-TBD
-
-2. KAPSAM
-TBD
-
-3. KAPSAM DIŞI
-TBD
-
-4. BAĞLAM / ARKA PLAN
-TBD
-
-5. ADIM ADIM (KULLANIM)
-TBD
-
-6. SIK HATALAR / EDGE-CASE
-TBD
-
-7. LİNKLER
-TBD
+> Güncelleme notu: Yeni terim eklendiğinde bu sözlükte alfabetik sırayı koruyun ve mümkünse current delivery veya canonical operasyon dokümanına bağlayın.

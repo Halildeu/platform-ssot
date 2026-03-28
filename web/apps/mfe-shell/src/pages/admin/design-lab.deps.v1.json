@@ -1,0 +1,568 @@
+{
+  "AIActionAuditTimeline": {
+    "dependsOn": [
+      "Badge",
+      "EmptyState",
+      "Text"
+    ],
+    "usedByComponents": [
+      "ApprovalReview"
+    ]
+  },
+  "AIGuidedAuthoring": {
+    "dependsOn": [
+      "Button",
+      "CommandPalette",
+      "ConfidenceBadge",
+      "PromptComposer",
+      "RecommendationCard",
+      "Text"
+    ],
+    "usedByComponents": []
+  },
+  "AgGridServer": {
+    "dependsOn": [
+      "GridShell"
+    ],
+    "usedByComponents": []
+  },
+  "Alert": {
+    "dependsOn": [
+      "Slot"
+    ],
+    "usedByComponents": []
+  },
+  "ApprovalCheckpoint": {
+    "dependsOn": [
+      "Badge",
+      "Button",
+      "Descriptions",
+      "List",
+      "Text"
+    ],
+    "usedByComponents": [
+      "ApprovalReview"
+    ]
+  },
+  "ApprovalReview": {
+    "dependsOn": [
+      "AIActionAuditTimeline",
+      "ApprovalCheckpoint",
+      "CitationPanel",
+      "Text"
+    ],
+    "usedByComponents": []
+  },
+  "Avatar": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "AvatarGroup",
+      "EntitySummaryBlock"
+    ]
+  },
+  "AvatarGroup": {
+    "dependsOn": [
+      "Avatar"
+    ],
+    "usedByComponents": []
+  },
+  "Badge": {
+    "dependsOn": [
+      "Slot"
+    ],
+    "usedByComponents": [
+      "AIActionAuditTimeline",
+      "ApprovalCheckpoint",
+      "CitationPanel",
+      "CommandPalette",
+      "ConfidenceBadge",
+      "JsonViewer",
+      "List",
+      "PromptComposer",
+      "RecommendationCard",
+      "ThemePresetGallery",
+      "Tree",
+      "TreeTable"
+    ]
+  },
+  "Button": {
+    "dependsOn": [
+      "Slot",
+      "Spinner"
+    ],
+    "usedByComponents": [
+      "AIGuidedAuthoring",
+      "ApprovalCheckpoint",
+      "EmptyErrorLoading",
+      "PromptComposer",
+      "RecommendationCard",
+      "TourCoachmarks"
+    ]
+  },
+  "Card": {
+    "dependsOn": [
+      "Slot"
+    ],
+    "usedByComponents": []
+  },
+  "CitationPanel": {
+    "dependsOn": [
+      "Badge",
+      "EmptyState",
+      "Text"
+    ],
+    "usedByComponents": [
+      "ApprovalReview"
+    ]
+  },
+  "CommandPalette": {
+    "dependsOn": [
+      "Badge",
+      "EmptyState",
+      "TextInput"
+    ],
+    "usedByComponents": [
+      "AIGuidedAuthoring"
+    ]
+  },
+  "ConfidenceBadge": {
+    "dependsOn": [
+      "Badge"
+    ],
+    "usedByComponents": [
+      "AIGuidedAuthoring",
+      "RecommendationCard"
+    ]
+  },
+  "DatePicker": {
+    "dependsOn": [
+      "Text"
+    ],
+    "usedByComponents": []
+  },
+  "Descriptions": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "ApprovalCheckpoint",
+      "DetailSummary",
+      "EntitySummaryBlock"
+    ]
+  },
+  "DesignSystemProvider": {
+    "dependsOn": [
+      "LocaleProvider",
+      "ThemeProvider"
+    ],
+    "usedByComponents": []
+  },
+  "DetailSummary": {
+    "dependsOn": [
+      "Descriptions",
+      "EntitySummaryBlock",
+      "PageHeader",
+      "SummaryStrip"
+    ],
+    "usedByComponents": []
+  },
+  "EmptyErrorLoading": {
+    "dependsOn": [
+      "Button",
+      "EmptyState",
+      "Skeleton",
+      "Spinner",
+      "Text"
+    ],
+    "usedByComponents": []
+  },
+  "EmptyState": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "AIActionAuditTimeline",
+      "CitationPanel",
+      "CommandPalette",
+      "EmptyErrorLoading",
+      "JsonViewer",
+      "List",
+      "SearchFilterListing",
+      "TableSimple",
+      "ThemePresetCompare",
+      "ThemePresetGallery",
+      "Tree",
+      "TreeTable"
+    ]
+  },
+  "EntityGridTemplate": {
+    "dependsOn": [
+      "GridShell",
+      "GridToolbar",
+      "TablePagination",
+      "VariantIntegration",
+      "useAgGridTablePagination",
+      "useDatasourceModeAdapter"
+    ],
+    "usedByComponents": []
+  },
+  "EntitySummaryBlock": {
+    "dependsOn": [
+      "Avatar",
+      "Descriptions",
+      "Text"
+    ],
+    "usedByComponents": [
+      "DetailSummary"
+    ]
+  },
+  "FilterBar": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "SearchFilterListing"
+    ]
+  },
+  "GridShell": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "AgGridServer",
+      "EntityGridTemplate"
+    ]
+  },
+  "GridToolbar": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "EntityGridTemplate"
+    ]
+  },
+  "IconButton": {
+    "dependsOn": [
+      "Slot",
+      "Spinner"
+    ],
+    "usedByComponents": [
+      "TablePagination",
+      "useAgGridTablePagination"
+    ]
+  },
+  "IconClose": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "VariantIntegration"
+    ]
+  },
+  "IconSave": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "VariantIntegration"
+    ]
+  },
+  "IconSettings": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "VariantIntegration"
+    ]
+  },
+  "Input": {
+    "dependsOn": [
+      "Spinner"
+    ],
+    "usedByComponents": []
+  },
+  "JsonViewer": {
+    "dependsOn": [
+      "Badge",
+      "EmptyState",
+      "Text"
+    ],
+    "usedByComponents": []
+  },
+  "LinkInline": {
+    "dependsOn": [
+      "Slot"
+    ],
+    "usedByComponents": []
+  },
+  "List": {
+    "dependsOn": [
+      "Badge",
+      "EmptyState",
+      "Skeleton",
+      "Text"
+    ],
+    "usedByComponents": [
+      "ApprovalCheckpoint"
+    ]
+  },
+  "LocaleProvider": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "DesignSystemProvider"
+    ]
+  },
+  "NotificationDrawer": {
+    "dependsOn": [
+      "NotificationPanel"
+    ],
+    "usedByComponents": []
+  },
+  "NotificationItemCard": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "NotificationPanel"
+    ]
+  },
+  "NotificationPanel": {
+    "dependsOn": [
+      "NotificationItemCard"
+    ],
+    "usedByComponents": [
+      "NotificationDrawer"
+    ]
+  },
+  "PageHeader": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "DetailSummary",
+      "SearchFilterListing"
+    ]
+  },
+  "PromptComposer": {
+    "dependsOn": [
+      "Badge",
+      "Button",
+      "Text",
+      "TextArea",
+      "TextInput"
+    ],
+    "usedByComponents": [
+      "AIGuidedAuthoring"
+    ]
+  },
+  "RecommendationCard": {
+    "dependsOn": [
+      "Badge",
+      "Button",
+      "ConfidenceBadge",
+      "Text"
+    ],
+    "usedByComponents": [
+      "AIGuidedAuthoring"
+    ]
+  },
+  "SearchFilterListing": {
+    "dependsOn": [
+      "EmptyState",
+      "FilterBar",
+      "PageHeader",
+      "SummaryStrip"
+    ],
+    "usedByComponents": []
+  },
+  "Skeleton": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "EmptyErrorLoading",
+      "List",
+      "TableSimple",
+      "Tree",
+      "TreeTable"
+    ]
+  },
+  "Slider": {
+    "dependsOn": [
+      "Text"
+    ],
+    "usedByComponents": []
+  },
+  "Slot": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "Alert",
+      "Badge",
+      "Button",
+      "Card",
+      "IconButton",
+      "LinkInline",
+      "Tag",
+      "Text"
+    ]
+  },
+  "Spinner": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "Button",
+      "EmptyErrorLoading",
+      "IconButton",
+      "Input"
+    ]
+  },
+  "SummaryStrip": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "DetailSummary",
+      "SearchFilterListing"
+    ]
+  },
+  "TablePagination": {
+    "dependsOn": [
+      "IconButton",
+      "Text",
+      "usePaginationState"
+    ],
+    "usedByComponents": [
+      "EntityGridTemplate"
+    ]
+  },
+  "TableSimple": {
+    "dependsOn": [
+      "EmptyState",
+      "Skeleton",
+      "Text"
+    ],
+    "usedByComponents": []
+  },
+  "Tag": {
+    "dependsOn": [
+      "Slot"
+    ],
+    "usedByComponents": []
+  },
+  "Text": {
+    "dependsOn": [
+      "Slot"
+    ],
+    "usedByComponents": [
+      "AIActionAuditTimeline",
+      "AIGuidedAuthoring",
+      "ApprovalCheckpoint",
+      "ApprovalReview",
+      "CitationPanel",
+      "DatePicker",
+      "EmptyErrorLoading",
+      "EntitySummaryBlock",
+      "JsonViewer",
+      "List",
+      "PromptComposer",
+      "RecommendationCard",
+      "Slider",
+      "TablePagination",
+      "TableSimple",
+      "ThemePresetCompare",
+      "ThemePresetGallery",
+      "TimePicker",
+      "Tree",
+      "TreeTable",
+      "Upload",
+      "useAgGridTablePagination"
+    ]
+  },
+  "TextArea": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "PromptComposer"
+    ]
+  },
+  "TextInput": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "CommandPalette",
+      "PromptComposer"
+    ]
+  },
+  "ThemePresetCompare": {
+    "dependsOn": [
+      "EmptyState",
+      "Text",
+      "ThemePreviewCard"
+    ],
+    "usedByComponents": []
+  },
+  "ThemePresetGallery": {
+    "dependsOn": [
+      "Badge",
+      "EmptyState",
+      "Text",
+      "ThemePreviewCard"
+    ],
+    "usedByComponents": []
+  },
+  "ThemePreviewCard": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "ThemePresetCompare",
+      "ThemePresetGallery"
+    ]
+  },
+  "ThemeProvider": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "DesignSystemProvider"
+    ]
+  },
+  "TimePicker": {
+    "dependsOn": [
+      "Text"
+    ],
+    "usedByComponents": []
+  },
+  "TourCoachmarks": {
+    "dependsOn": [
+      "Button"
+    ],
+    "usedByComponents": []
+  },
+  "Tree": {
+    "dependsOn": [
+      "Badge",
+      "EmptyState",
+      "Skeleton",
+      "Text"
+    ],
+    "usedByComponents": []
+  },
+  "TreeTable": {
+    "dependsOn": [
+      "Badge",
+      "EmptyState",
+      "Skeleton",
+      "Text"
+    ],
+    "usedByComponents": []
+  },
+  "Upload": {
+    "dependsOn": [
+      "Text"
+    ],
+    "usedByComponents": []
+  },
+  "VariantIntegration": {
+    "dependsOn": [
+      "IconClose",
+      "IconSave",
+      "IconSettings"
+    ],
+    "usedByComponents": [
+      "EntityGridTemplate"
+    ]
+  },
+  "useAgGridTablePagination": {
+    "dependsOn": [
+      "IconButton",
+      "Text",
+      "usePaginationState"
+    ],
+    "usedByComponents": [
+      "EntityGridTemplate"
+    ]
+  },
+  "useDatasourceModeAdapter": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "EntityGridTemplate"
+    ]
+  },
+  "usePaginationState": {
+    "dependsOn": [],
+    "usedByComponents": [
+      "TablePagination",
+      "useAgGridTablePagination"
+    ]
+  }
+}

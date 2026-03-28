@@ -1,30 +1,30 @@
 {
-  "generatedAt": "2026-03-08T12:58:54.279Z",
+  "generatedAt": "2026-03-08T16:14:36.879Z",
   "remotes": {
     "mfe-users": {
-      "artifact": "apps/dist/users/remoteEntry.js",
-      "sri": "sha384-9wxkx/8epVHd/qguA0zSyErhhOYVsqOF4wqtOx4jZYfyIjeJBTNOThnH6gSHbCpF",
-      "lastRotatedAt": "2026-03-08T12:58:54.279Z"
+      "artifact": "dist/users/remoteEntry.js",
+      "sri": "sha384-UYxsVJdV+wNriIJeCrFMIGbiibfDIpewoXt3FY+PwnJw474Inko9dwzBvYaGtKuE",
+      "lastRotatedAt": "2026-03-08T16:14:36.879Z"
     },
     "mfe-suggestions": {
-      "artifact": "apps/dist/suggestions/remoteEntry.js",
-      "sri": "sha384-P9QLcZhb+zIUW6TWGOd+gp0ibmoFlbUIqvkzC1CxE6pyMrpYafcsL//x2nbDj6rf",
-      "lastRotatedAt": "2026-03-08T12:58:54.279Z"
+      "artifact": "dist/suggestions/remoteEntry.js",
+      "sri": "sha384-DwgYPhGxgBFwegOk9+3txhEMwTTajSLMKB3vs6/+PM3bZPf3G2Cv7d/2PTVe6uD6",
+      "lastRotatedAt": "2026-03-08T16:14:36.879Z"
     },
     "mfe-ethic": {
-      "artifact": "apps/dist/ethic/remoteEntry.js",
+      "artifact": "dist/ethic/remoteEntry.js",
       "sri": "sha384-ZW4zhw+hEhiL7+BuDqj59wD9YgjOApxYeyQqHbUNa65X5RuVuzIboaXVS5g9V9yC",
-      "lastRotatedAt": "2026-03-08T12:58:54.279Z"
+      "lastRotatedAt": "2026-03-08T16:14:36.879Z"
     },
     "mfe-access": {
-      "artifact": "apps/dist/access/remoteEntry.js",
-      "sri": "sha384-vB2z4tpLR9Bxa4vIKMGx/R8+PZLKpwWYOyVHbJR4ZZTY/Wibnh1hRSFjmwyE0GQM",
-      "lastRotatedAt": "2026-03-08T12:58:54.279Z"
+      "artifact": "dist/access/remoteEntry.js",
+      "sri": "sha384-iCZ79inUyNx7SOdQdnoPvQr2m6RxZbuU7FhTgKHafBNAC/DeIW3C+Fmi+jA7xsVd",
+      "lastRotatedAt": "2026-03-08T16:14:36.879Z"
     },
-    "mfe-ui-kit": {
-      "artifact": "packages/dist/ui-kit/remoteEntry.js",
-      "sri": "sha384-5QygpAcEHOVmBJhpf+4RCOYZtEkuGUjjLOAIM3fb2EiL8kXNCVvccvfAF8dvH/eZ",
-      "lastRotatedAt": "2026-03-08T12:58:54.279Z"
+    "mfe-design-system": {
+      "artifact": "dist/design-system/remoteEntry.js",
+      "sri": "sha384-g30O7HSe1OP4OVizKgOj8eZLTjqOgAzfnt1Jy/bIGHa/rVr97NDxAYH8Wb+mkpRS",
+      "lastRotatedAt": "2026-03-08T16:14:36.879Z"
     }
   }
 }

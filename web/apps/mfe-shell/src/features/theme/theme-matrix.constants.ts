@@ -1,4 +1,4 @@
-import { getThemeContract } from 'mfe-ui-kit';
+import { getThemeContract } from '@mfe/design-system';
 
 export type RuntimeThemeMatrixTheme = string;
 

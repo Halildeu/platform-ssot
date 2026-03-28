@@ -1,0 +1,244 @@
+{
+  "items": [
+    {
+      "name": "focusRing",
+      "indexItem": {
+        "name": "focusRing",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { focusRing } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "fontFamily",
+      "indexItem": {
+        "name": "fontFamily",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { fontFamily } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "fontSize",
+      "indexItem": {
+        "name": "fontSize",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { fontSize } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "fontWeight",
+      "indexItem": {
+        "name": "fontWeight",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { fontWeight } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "generateCode",
+      "indexItem": {
+        "name": "generateCode",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { generateCode } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getAuditRules",
+      "indexItem": {
+        "name": "getAuditRules",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getAuditRules } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getBundleReport",
+      "indexItem": {
+        "name": "getBundleReport",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getBundleReport } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getChartColorPalette",
+      "indexItem": {
+        "name": "getChartColorPalette",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getChartColorPalette } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getChartThemeOverrides",
+      "indexItem": {
+        "name": "getChartThemeOverrides",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getChartThemeOverrides } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getComponentA11yChecklist",
+      "indexItem": {
+        "name": "getComponentA11yChecklist",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getComponentA11yChecklist } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getComponentCatalog",
+      "indexItem": {
+        "name": "getComponentCatalog",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getComponentCatalog } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getComponentDoc",
+      "indexItem": {
+        "name": "getComponentDoc",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getComponentDoc } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getComponentExamples",
+      "indexItem": {
+        "name": "getComponentExamples",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getComponentExamples } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getComponentSizes",
+      "indexItem": {
+        "name": "getComponentSizes",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getComponentSizes } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getComponentTokens",
+      "indexItem": {
+        "name": "getComponentTokens",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getComponentTokens } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getDesignTokens",
+      "indexItem": {
+        "name": "getDesignTokens",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getDesignTokens } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getKeyboardContract",
+      "indexItem": {
+        "name": "getKeyboardContract",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getKeyboardContract } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getRecommendations",
+      "indexItem": {
+        "name": "getRecommendations",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getRecommendations } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getResolvedToken",
+      "indexItem": {
+        "name": "getResolvedToken",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getResolvedToken } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "getSupportedChecklistTypes",
+      "indexItem": {
+        "name": "getSupportedChecklistTypes",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { getSupportedChecklistTypes } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    }
+  ]
+}

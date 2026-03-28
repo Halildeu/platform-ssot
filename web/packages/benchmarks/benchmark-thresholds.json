@@ -1,0 +1,20 @@
+{
+  "@mfe/design-system": {
+    "render-time-ms": 50
+  },
+  "@mfe/x-data-grid": {
+    "mount-time-ms": 200
+  },
+  "@mfe/x-charts": {
+    "render-time-ms": 100
+  },
+  "@mfe/x-form-builder": {
+    "build-time-ms": 150
+  },
+  "@mfe/x-editor": {
+    "init-time-ms": 300
+  },
+  "@mfe/shared-http": {
+    "request-time-ms": 50
+  }
+}

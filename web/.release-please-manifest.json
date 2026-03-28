@@ -1,0 +1,11 @@
+{
+  "packages/design-system": "1.0.0",
+  "packages/x-data-grid": "0.1.0",
+  "packages/x-charts": "0.1.0",
+  "packages/x-scheduler": "0.1.0",
+  "packages/x-kanban": "0.1.0",
+  "packages/x-editor": "0.1.0",
+  "packages/x-form-builder": "0.1.0",
+  "packages/blocks": "0.1.0",
+  "packages/create-app": "0.1.0"
+}

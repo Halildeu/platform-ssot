@@ -137,8 +137,8 @@ Bu bölüm, statü değişse de sabit kalan mimariyi özetler. Güncel durum ve 
 - Bu dosya: Frontend mimarisinin kanonik kaydı.  
 - Backend mimarisi: `docs/01-architecture/BACKEND-ARCH-STATUS.md`  
 - Mimari kararlar: `docs/05-governance/05-adr/ADR-*.md`  
-- Proje dizin yapısı: `docs/00-handbook/WEB-PROJECT-LAYOUT.md`  
-- Stil/kod kalitesi: `docs/00-handbook/STYLE-WEB-001.md` + `docs/00-handbook/STYLE-API-001.md`
+- Proje dizin yapısı: `WEB-PROJECT-LAYOUT.md`  
+- Stil/kod kalitesi: `STYLE-WEB-001.md` + `STYLE-API-001.md`
 
 ### 7.2 Amaç ve Kapsam
 Frontend ekosisteminin (shell + MFE’ler, state, styling, API, performans, test) tamamını tek yerde dokümante ederek:
@@ -281,8 +281,8 @@ Frontend ekosisteminin (shell + MFE’ler, state, styling, API, performans, test
   - `pnpm` + turborepo/Nx benzeri ile MFE bazlı build; shell remote manifestleri tüketir.
 
 ### 7.9 Referanslar
-- Style Guide: `docs/00-handbook/STYLE-WEB-001.md`
-- API Style Guide: `docs/00-handbook/STYLE-API-001.md`
-- Monorepo & proje yapısı: `docs/00-handbook/WEB-PROJECT-LAYOUT.md`
+- Style Guide: `STYLE-WEB-001.md`
+- API Style Guide: `STYLE-API-001.md`
+- Monorepo & proje yapısı: `WEB-PROJECT-LAYOUT.md`
 - ADR’ler: `docs/05-governance/05-adr/`
 - Playwright testleri: `frontend/e2e/` klasörü

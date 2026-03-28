@@ -78,6 +78,7 @@ class ChangeFlags:
     web_changed: bool
     backend_changed: bool
     workflows_changed: bool
+    legacy_archive_changed: bool
     meta_changed: bool
 
 
@@ -235,12 +236,21 @@ def flags_from_paths(paths: Sequence[str]) -> ChangeFlags:
     web_changed = any(p.startswith("web/") for p in paths)
     backend_changed = any(p.startswith("backend/") for p in paths)
     workflows_changed = any(is_workflows_path(p) for p in paths)
+    legacy_archive_changed = any(
+        p.startswith("autonomous-pipeline-v2/")
+        or p.startswith("docs/ARCHIVE/")
+        or p.startswith("registry/archives/")
+        or p == "registry/technical_baseline.aistd.v1.json"
+        or p == "scripts/archive_legacy_standards.py"
+        for p in paths
+    )
     meta_changed = any(p in {".gitignore", ".editorconfig"} for p in paths)
     return ChangeFlags(
         docs_changed=docs_changed,
         web_changed=web_changed,
         backend_changed=backend_changed,
         workflows_changed=workflows_changed,
+        legacy_archive_changed=legacy_archive_changed,
         meta_changed=meta_changed,
     )
 
@@ -254,6 +264,7 @@ def write_github_outputs(flags: ChangeFlags) -> None:
         f"web_changed={'true' if flags.web_changed else 'false'}",
         f"backend_changed={'true' if flags.backend_changed else 'false'}",
         f"workflows_changed={'true' if flags.workflows_changed else 'false'}",
+        f"legacy_archive_changed={'true' if flags.legacy_archive_changed else 'false'}",
         f"meta_changed={'true' if flags.meta_changed else 'false'}",
     ]
     Path(out_path).write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -321,6 +332,7 @@ def main(argv: List[str]) -> int:
     print(f"- web_changed={flags.web_changed}")
     print(f"- backend_changed={flags.backend_changed}")
     print(f"- workflows_changed={flags.workflows_changed}")
+    print(f"- legacy_archive_changed={flags.legacy_archive_changed}")
     print(f"- meta_changed={flags.meta_changed}")
 
     if args.emit_github_outputs:
@@ -340,6 +352,7 @@ def main(argv: List[str]) -> int:
                     f"| web_changed | `{flags.web_changed}` |",
                     f"| backend_changed | `{flags.backend_changed}` |",
                     f"| workflows_changed | `{flags.workflows_changed}` |",
+                    f"| legacy_archive_changed | `{flags.legacy_archive_changed}` |",
                     f"| meta_changed | `{flags.meta_changed}` |",
                     "",
                 ]
@@ -355,6 +368,7 @@ def main(argv: List[str]) -> int:
     layout_gate_needed = flags.workflows_changed or flags.backend_changed or flags.web_changed
     web_gate_needed = flags.workflows_changed or flags.web_changed or flags.meta_changed
     backend_gate_needed = flags.workflows_changed or flags.backend_changed
+    legacy_archive_gate_needed = flags.legacy_archive_changed
 
     if docs_gate_needed:
         results.append(
@@ -428,6 +442,25 @@ def main(argv: List[str]) -> int:
     else:
         results.append(GateResult(name="backend", status="SKIP", exit_code=0))
 
+    if legacy_archive_gate_needed:
+        results.append(
+            run_gate(
+                "legacy-archive",
+                [
+                    (
+                        ["python3", "scripts/ci/check_doc_zone_purity.py"],
+                        ROOT,
+                    ),
+                    (
+                        ["python3", "ci/check_standards_lock.py"],
+                        ROOT,
+                    ),
+                ],
+            )
+        )
+    else:
+        results.append(GateResult(name="legacy-archive", status="SKIP", exit_code=0))
+
     # v0.1: non-blocking (noop + summary)
     results.append(GateResult(name="security", status="SKIP", exit_code=0))
 
@@ -452,6 +485,7 @@ def main(argv: List[str]) -> int:
         f"| web_changed | `{flags.web_changed}` |",
         f"| backend_changed | `{flags.backend_changed}` |",
         f"| workflows_changed | `{flags.workflows_changed}` |",
+        f"| legacy_archive_changed | `{flags.legacy_archive_changed}` |",
         f"| meta_changed | `{flags.meta_changed}` |",
         "",
         "## Gates",

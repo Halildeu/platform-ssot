@@ -3,7 +3,7 @@ import { UserDetail, UserModulePermission, UserModuleAccessLevel } from '@mfe/sh
 import { useUserMutations } from '../../../features/user-management/model/use-users-query.model';
 import { PERMISSIONS } from '../../../features/user-management/lib/permissions.constants';
 import { useAuthorization } from '../../../features/user-management/model/use-authorization.model';
-import { DetailDrawer } from 'mfe-ui-kit';
+import { DetailDrawer } from '@mfe/design-system';
 import { useUsersI18n } from '../../../i18n/useUsersI18n';
 import { pushToast } from '../../../shared/notifications';
 
@@ -78,7 +78,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
         return {};
       }
       return parsed as { companyId?: string | number; projectId?: string | number; warehouseId?: string | number };
-    } catch (error) {
+    } catch (error: unknown) {
       console.warn('Scope bilgisi okunamadı', error);
       return {};
     }
@@ -189,7 +189,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
     try {
       await updateRoleMutation.mutateAsync({ userId: user.id, role });
       pushToast('success', t('users.detail.roleUpdated'));
-    } catch (error) {
+    } catch (error: unknown) {
       pushToast('error', (error as Error).message);
     }
   };
@@ -225,7 +225,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
           t('users.detail.modulePermission.updated').replace('{module}', moduleName),
         );
       }
-    } catch (error) {
+    } catch (error: unknown) {
       pushToast('error', (error as Error).message);
     } finally {
       setUpdatingModuleKey(null);
@@ -253,7 +253,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
           <h3 className="text-base font-semibold text-text-primary">
             {t('users.detail.section.profile')}
           </h3>
-          <dl className="mt-3 space-y-3 rounded-2xl border border-border-subtle bg-surface-muted p-4 text-sm">
+          <dl className="flex flex-col mt-3 gap-3 rounded-2xl border border-border-subtle bg-surface-muted p-4 text-sm">
             <div className="flex items-start justify-between gap-4">
               <dt className="text-xs font-semibold uppercase tracking-wide text-text-subtle">
                 {t('users.grid.columns.fullName')}
@@ -273,7 +273,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
               <dd>
                 {canEditRole ? (
                   <select
-                    className="min-w-[160px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
+                    className="min-w-[160px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
                     value={user.role}
                     onChange={(event) => handleRoleChange(event.target.value)}
                   >
@@ -301,7 +301,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
                       max={1440}
                       value={sessionTimeoutMinutes}
                       onChange={(event) => setSessionTimeoutMinutes(Number(event.target.value))}
-                      className="w-24 rounded-xl border border-border-subtle px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
+                      className="w-24 rounded-xl border border-border-subtle px-3 py-2 text-sm text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
                     />
                     <button
                       type="button"
@@ -310,7 +310,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
                         updateSessionTimeoutMutation.isPending
                         || Math.round(sessionTimeoutMinutes ?? 0) === Math.round(user.sessionTimeoutMinutes ?? 15)
                       }
-                      className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow hover:opacity-90 disabled:opacity-50"
+                      className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-xs hover:opacity-90 disabled:opacity-50"
                     >
                       {updateSessionTimeoutMutation.isPending
                         ? t('users.detail.sessionTimeout.saving')
@@ -357,7 +357,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
                             openInCenter: true,
                           }
                           : undefined);
-                      } catch (error) {
+                      } catch (error: unknown) {
                         pushToast('error', (error as Error).message);
                       }
                     }}
@@ -410,9 +410,9 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
               return (
                 <div
                   key={`${permission.moduleKey}-${permission.assignmentId ?? permission.level}`}
-                  className="grid gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 shadow-sm md:grid-cols-[1fr_auto]"
+                  className="grid gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 shadow-xs md:grid-cols-[1fr_auto]"
                 >
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
                     <div className="text-base font-semibold text-text-primary">
                       {permission.moduleLabel ?? permission.moduleKey}
                     </div>
@@ -436,7 +436,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
                   {canEditThisModule && (
                     <div className="flex flex-col gap-2">
                       <select
-                        className="h-10 min-w-[180px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline disabled:cursor-not-allowed disabled:opacity-50"
+                        className="h-10 min-w-[180px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline disabled:cursor-not-allowed disabled:opacity-50"
                         value={permission.level}
                         onChange={(event) =>
                           handleModuleLevelChange(permission, event.target.value as UserModuleAccessLevel)
@@ -463,7 +463,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
                       )}
                       {isUpdatingThisModule && (
                         <span className="inline-flex items-center gap-2 text-xs text-text-subtle">
-                        <span className="inline-flex h-4 w-4 animate-spin rounded-full border border-border-subtle border-t-action-primary-border" />
+                        <span className="inline-flex h-4 w-4 animate-spin rounded-full border border-border-subtle border-t-action-primary" />
                           {t('users.detail.modulePermission.updating')}
                         </span>
                       )}

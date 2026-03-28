@@ -1,0 +1,177 @@
+---
+title: DataGrid
+description: 'Enterprise veri tablosu — siralama, filtreleme, gruplama, export.'
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Playground from '../../../components/Playground.astro';
+import PropsTable from '../../../components/PropsTable.astro';
+
+## Import
+
+```tsx
+import { DataGrid } from '@mfe/design-system';
+```
+
+## Kullanim
+
+```tsx
+const columns = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  { field: 'name', headerName: 'Ad', flex: 1 },
+  { field: 'email', headerName: 'E-posta', flex: 1 },
+  { field: 'role', headerName: 'Rol', width: 120 },
+];
+
+const rows = [
+  { id: 1, name: 'Ahmet Yilmaz', email: 'ahmet@ornek.com', role: 'Admin' },
+  { id: 2, name: 'Ayse Demir', email: 'ayse@ornek.com', role: 'Editor' },
+];
+
+<DataGrid columns={columns} rows={rows} />
+```
+
+## Siralama
+
+```tsx
+<DataGrid
+  columns={columns}
+  rows={rows}
+  sortable
+  defaultSort={{ field: 'name', direction: 'asc' }}
+/>
+```
+
+## Filtreleme
+
+```tsx
+<DataGrid
+  columns={columns}
+  rows={rows}
+  filterable
+  filterMode="client"  // veya "server"
+/>
+```
+
+## Sayfalama
+
+```tsx
+<DataGrid
+  columns={columns}
+  rows={rows}
+  pagination
+  pageSize={25}
+  pageSizeOptions={[10, 25, 50, 100]}
+/>
+```
+
+## Satir Secimi
+
+```tsx
+<DataGrid
+  columns={columns}
+  rows={rows}
+  selectable
+  selectionMode="multiple"  // veya "single"
+  onSelectionChange={(selectedIds) => console.log(selectedIds)}
+/>
+```
+
+## Gruplama
+
+```tsx
+<DataGrid
+  columns={columns}
+  rows={rows}
+  groupable
+  defaultGroupBy={['role']}
+/>
+```
+
+## Export
+
+```tsx
+<DataGrid
+  columns={columns}
+  rows={rows}
+  exportable
+  exportFormats={['csv', 'xlsx', 'pdf']}
+/>
+```
+
+## Canli Playground
+
+<Playground
+  code={`const columns = [\n  { field: 'id', headerName: 'ID', width: 70 },\n  { field: 'name', headerName: 'Ad', flex: 1 },\n  { field: 'email', headerName: 'E-posta', flex: 1 },\n];\n\nconst rows = [\n  { id: 1, name: 'Ahmet Yilmaz', email: 'ahmet@ornek.com' },\n  { id: 2, name: 'Ayse Demir', email: 'ayse@ornek.com' },\n];\n\n<DataGrid columns={columns} rows={rows} sortable filterable />`}
+  componentName="DataGrid"
+  height="250px"
+/>
+
+## Kolon Tanimi
+
+<PropsTable props={[
+  { name: 'field', type: 'string', required: true, description: 'Veri alani adi' },
+  { name: 'headerName', type: 'string', required: true, description: 'Kolon basligi' },
+  { name: 'width', type: 'number', description: 'Sabit genislik (px)' },
+  { name: 'flex', type: 'number', description: 'Esnek genislik orani' },
+  { name: 'sortable', type: 'boolean', default: 'true', description: 'Siralanabilir' },
+  { name: 'filterable', type: 'boolean', default: 'true', description: 'Filtrelenebilir' },
+  { name: 'resizable', type: 'boolean', default: 'true', description: 'Yeniden boyutlandirilabilir' },
+  { name: 'renderCell', type: '(params) => ReactNode', description: 'Ozel hucre render\'i' },
+  { name: 'valueFormatter', type: '(value) => string', description: 'Deger formatlayici' },
+  { name: 'type', type: "'string' | 'number' | 'date' | 'boolean'", default: "'string'", description: 'Veri tipi' },
+]} />
+
+## DataGrid Props
+
+<PropsTable props={[
+  { name: 'columns', type: 'ColumnDef[]', required: true, description: 'Kolon tanimlari' },
+  { name: 'rows', type: 'any[]', required: true, description: 'Veri dizisi' },
+  { name: 'loading', type: 'boolean', default: 'false', description: 'Yukleniyor durumu' },
+  { name: 'sortable', type: 'boolean', default: 'false', description: 'Siralama aktif' },
+  { name: 'filterable', type: 'boolean', default: 'false', description: 'Filtreleme aktif' },
+  { name: 'pagination', type: 'boolean', default: 'false', description: 'Sayfalama aktif' },
+  { name: 'pageSize', type: 'number', default: '25', description: 'Sayfa basina satir' },
+  { name: 'selectable', type: 'boolean', default: 'false', description: 'Satir secimi aktif' },
+  { name: 'selectionMode', type: "'single' | 'multiple'", default: "'multiple'", description: 'Secim modu' },
+  { name: 'groupable', type: 'boolean', default: 'false', description: 'Gruplama aktif' },
+  { name: 'exportable', type: 'boolean', default: 'false', description: 'Export aktif' },
+  { name: 'height', type: 'number | string', default: '400', description: 'Tablo yuksekligi' },
+  { name: 'density', type: "'compact' | 'standard' | 'comfortable'", default: "'standard'", description: 'Satir yogunlugu' },
+  { name: 'onRowClick', type: '(row) => void', description: 'Satir tiklama handler\'i' },
+  { name: 'onSelectionChange', type: '(ids: any[]) => void', description: 'Secim degisikligi' },
+]} />
+
+## Erisilebilirlik
+
+- **Keyboard Navigation**: Ok tuslari ile hucre navigasyonu
+- **ARIA**: `role="grid"`, `role="row"`, `role="gridcell"` otomatik
+- **Focus Management**: Hucre fokus yonetimi ve tab navigasyonu
+- **Screen Reader**: Kolon basliklari ve siralama durumu duyurulur
+- **Selection**: `aria-selected` ile secim durumu belirtilir
+
+<Aside type="note">
+  Buyuk veri setleri (10,000+ satir) icin sanal kaydirma (virtualization) otomatik olarak aktif olur.
+</Aside>
+
+## Server-Side Islemler
+
+Buyuk veri setleri icin sunucu tarafli siralama, filtreleme ve sayfalama:
+
+```tsx
+<DataGrid
+  columns={columns}
+  rows={data}
+  loading={isLoading}
+  pagination
+  paginationMode="server"
+  rowCount={totalRows}
+  page={page}
+  pageSize={pageSize}
+  onPageChange={setPage}
+  sortingMode="server"
+  onSortModelChange={handleSort}
+  filterMode="server"
+  onFilterModelChange={handleFilter}
+/>
+```

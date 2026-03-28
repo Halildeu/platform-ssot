@@ -55,7 +55,7 @@ const UserActions: React.FC<UserActionsProps> = ({ user, onSelect }) => {
           try {
             await resetPasswordMutation.mutateAsync({ email: user.email });
             pushToast('success', t('users.actions.resetPassword.success'));
-          } catch (error) {
+          } catch (error: unknown) {
             pushToast('error', (error as Error).message);
           }
         },
@@ -87,7 +87,7 @@ const UserActions: React.FC<UserActionsProps> = ({ user, onSelect }) => {
                 openInCenter: true,
               }
               : undefined);
-          } catch (error) {
+          } catch (error: unknown) {
             pushToast('error', (error as Error).message);
           }
         },
@@ -101,7 +101,7 @@ const UserActions: React.FC<UserActionsProps> = ({ user, onSelect }) => {
     <div className="relative inline-block" ref={containerRef}>
       <button
         type="button"
-        className="rounded-md border border-border-subtle bg-surface-default px-3 py-1 text-xs font-semibold text-text-secondary shadow-sm hover:bg-surface-muted"
+        className="rounded-md border border-border-subtle bg-surface-default px-3 py-1 text-xs font-semibold text-text-secondary shadow-xs hover:bg-surface-muted"
         onClick={(event) => {
           event.stopPropagation();
           setOpen((prev) => {

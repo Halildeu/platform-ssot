@@ -1,0 +1,1465 @@
+[
+  {
+    "name": "palette.white",
+    "category": "color",
+    "value": "#ffffff",
+    "cssVariable": "--palette-white",
+    "description": ""
+  },
+  {
+    "name": "palette.black",
+    "category": "color",
+    "value": "#000000",
+    "cssVariable": "--palette-black",
+    "description": ""
+  },
+  {
+    "name": "palette.gray50",
+    "category": "color",
+    "value": "#f9fafb",
+    "cssVariable": "--palette-gray50",
+    "description": ""
+  },
+  {
+    "name": "palette.gray100",
+    "category": "color",
+    "value": "#f3f4f6",
+    "cssVariable": "--palette-gray100",
+    "description": ""
+  },
+  {
+    "name": "palette.gray200",
+    "category": "color",
+    "value": "#e5e7eb",
+    "cssVariable": "--palette-gray200",
+    "description": ""
+  },
+  {
+    "name": "palette.gray300",
+    "category": "color",
+    "value": "#d1d5db",
+    "cssVariable": "--palette-gray300",
+    "description": ""
+  },
+  {
+    "name": "palette.gray400",
+    "category": "color",
+    "value": "#9ca3af",
+    "cssVariable": "--palette-gray400",
+    "description": ""
+  },
+  {
+    "name": "palette.gray500",
+    "category": "color",
+    "value": "#6b7280",
+    "cssVariable": "--palette-gray500",
+    "description": ""
+  },
+  {
+    "name": "palette.gray600",
+    "category": "color",
+    "value": "#4b5563",
+    "cssVariable": "--palette-gray600",
+    "description": ""
+  },
+  {
+    "name": "palette.gray700",
+    "category": "color",
+    "value": "#374151",
+    "cssVariable": "--palette-gray700",
+    "description": ""
+  },
+  {
+    "name": "palette.gray800",
+    "category": "color",
+    "value": "#1f2937",
+    "cssVariable": "--palette-gray800",
+    "description": ""
+  },
+  {
+    "name": "palette.gray900",
+    "category": "color",
+    "value": "#111827",
+    "cssVariable": "--palette-gray900",
+    "description": ""
+  },
+  {
+    "name": "palette.primary50",
+    "category": "color",
+    "value": "#eff6ff",
+    "cssVariable": "--palette-primary50",
+    "description": ""
+  },
+  {
+    "name": "palette.primary100",
+    "category": "color",
+    "value": "#dbeafe",
+    "cssVariable": "--palette-primary100",
+    "description": ""
+  },
+  {
+    "name": "palette.primary200",
+    "category": "color",
+    "value": "#bfdbfe",
+    "cssVariable": "--palette-primary200",
+    "description": ""
+  },
+  {
+    "name": "palette.primary300",
+    "category": "color",
+    "value": "#93c5fd",
+    "cssVariable": "--palette-primary300",
+    "description": ""
+  },
+  {
+    "name": "palette.primary400",
+    "category": "color",
+    "value": "#60a5fa",
+    "cssVariable": "--palette-primary400",
+    "description": ""
+  },
+  {
+    "name": "palette.primary500",
+    "category": "color",
+    "value": "#3b82f6",
+    "cssVariable": "--palette-primary500",
+    "description": ""
+  },
+  {
+    "name": "palette.primary600",
+    "category": "color",
+    "value": "#2563eb",
+    "cssVariable": "--palette-primary600",
+    "description": ""
+  },
+  {
+    "name": "palette.primary700",
+    "category": "color",
+    "value": "#1d4ed8",
+    "cssVariable": "--palette-primary700",
+    "description": ""
+  },
+  {
+    "name": "palette.primary800",
+    "category": "color",
+    "value": "#1e40af",
+    "cssVariable": "--palette-primary800",
+    "description": ""
+  },
+  {
+    "name": "palette.primary900",
+    "category": "color",
+    "value": "#1e3a8a",
+    "cssVariable": "--palette-primary900",
+    "description": ""
+  },
+  {
+    "name": "palette.green50",
+    "category": "color",
+    "value": "#f0fdf4",
+    "cssVariable": "--palette-green50",
+    "description": ""
+  },
+  {
+    "name": "palette.green500",
+    "category": "color",
+    "value": "#22c55e",
+    "cssVariable": "--palette-green500",
+    "description": ""
+  },
+  {
+    "name": "palette.green700",
+    "category": "color",
+    "value": "#15803d",
+    "cssVariable": "--palette-green700",
+    "description": ""
+  },
+  {
+    "name": "palette.amber50",
+    "category": "color",
+    "value": "#fffbeb",
+    "cssVariable": "--palette-amber50",
+    "description": ""
+  },
+  {
+    "name": "palette.amber500",
+    "category": "color",
+    "value": "#f59e0b",
+    "cssVariable": "--palette-amber500",
+    "description": ""
+  },
+  {
+    "name": "palette.amber700",
+    "category": "color",
+    "value": "#b45309",
+    "cssVariable": "--palette-amber700",
+    "description": ""
+  },
+  {
+    "name": "palette.red50",
+    "category": "color",
+    "value": "#fef2f2",
+    "cssVariable": "--palette-red50",
+    "description": ""
+  },
+  {
+    "name": "palette.red500",
+    "category": "color",
+    "value": "#ef4444",
+    "cssVariable": "--palette-red500",
+    "description": ""
+  },
+  {
+    "name": "palette.red700",
+    "category": "color",
+    "value": "#b91c1c",
+    "cssVariable": "--palette-red700",
+    "description": ""
+  },
+  {
+    "name": "palette.blue50",
+    "category": "color",
+    "value": "#eff6ff",
+    "cssVariable": "--palette-blue50",
+    "description": ""
+  },
+  {
+    "name": "palette.blue500",
+    "category": "color",
+    "value": "#3b82f6",
+    "cssVariable": "--palette-blue500",
+    "description": ""
+  },
+  {
+    "name": "palette.blue700",
+    "category": "color",
+    "value": "#1d4ed8",
+    "cssVariable": "--palette-blue700",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.surface-default",
+    "category": "color",
+    "value": "--surface-default",
+    "cssVariable": "--semantic-color-tokens-surface-default",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.surface-canvas",
+    "category": "color",
+    "value": "--surface-canvas",
+    "cssVariable": "--semantic-color-tokens-surface-canvas",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.surface-muted",
+    "category": "color",
+    "value": "--surface-muted",
+    "cssVariable": "--semantic-color-tokens-surface-muted",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.surface-raised",
+    "category": "color",
+    "value": "--surface-raised",
+    "cssVariable": "--semantic-color-tokens-surface-raised",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.text-primary",
+    "category": "color",
+    "value": "--text-primary",
+    "cssVariable": "--semantic-color-tokens-text-primary",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.text-secondary",
+    "category": "color",
+    "value": "--text-secondary",
+    "cssVariable": "--semantic-color-tokens-text-secondary",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.text-disabled",
+    "category": "color",
+    "value": "--text-disabled",
+    "cssVariable": "--semantic-color-tokens-text-disabled",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.text-inverse",
+    "category": "color",
+    "value": "--text-inverse",
+    "cssVariable": "--semantic-color-tokens-text-inverse",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.border-default",
+    "category": "color",
+    "value": "--border-default",
+    "cssVariable": "--semantic-color-tokens-border-default",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.border-subtle",
+    "category": "color",
+    "value": "--border-subtle",
+    "cssVariable": "--semantic-color-tokens-border-subtle",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.border-strong",
+    "category": "color",
+    "value": "--border-strong",
+    "cssVariable": "--semantic-color-tokens-border-strong",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.action-primary",
+    "category": "color",
+    "value": "--action-primary",
+    "cssVariable": "--semantic-color-tokens-action-primary",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.action-primary-hover",
+    "category": "color",
+    "value": "--action-primary-hover",
+    "cssVariable": "--semantic-color-tokens-action-primary-hover",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.action-primary-active",
+    "category": "color",
+    "value": "--action-primary-active",
+    "cssVariable": "--semantic-color-tokens-action-primary-active",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.action-secondary",
+    "category": "color",
+    "value": "--action-secondary",
+    "cssVariable": "--semantic-color-tokens-action-secondary",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.state-success-bg",
+    "category": "color",
+    "value": "--state-success-bg",
+    "cssVariable": "--semantic-color-tokens-state-success-bg",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.state-success-text",
+    "category": "color",
+    "value": "--state-success-text",
+    "cssVariable": "--semantic-color-tokens-state-success-text",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.state-warning-bg",
+    "category": "color",
+    "value": "--state-warning-bg",
+    "cssVariable": "--semantic-color-tokens-state-warning-bg",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.state-warning-text",
+    "category": "color",
+    "value": "--state-warning-text",
+    "cssVariable": "--semantic-color-tokens-state-warning-text",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.state-error-bg",
+    "category": "color",
+    "value": "--state-danger-bg",
+    "cssVariable": "--semantic-color-tokens-state-error-bg",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.state-error-text",
+    "category": "color",
+    "value": "--state-danger-text",
+    "cssVariable": "--semantic-color-tokens-state-error-text",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.state-info-bg",
+    "category": "color",
+    "value": "--state-info-bg",
+    "cssVariable": "--semantic-color-tokens-state-info-bg",
+    "description": ""
+  },
+  {
+    "name": "semanticColorTokens.state-info-text",
+    "category": "color",
+    "value": "--state-info-text",
+    "cssVariable": "--semantic-color-tokens-state-info-text",
+    "description": ""
+  },
+  {
+    "name": "spacing.0",
+    "category": "spacing",
+    "value": "0px",
+    "cssVariable": "--spacing-0",
+    "description": ""
+  },
+  {
+    "name": "spacing.1",
+    "category": "spacing",
+    "value": "4px",
+    "cssVariable": "--spacing-1",
+    "description": ""
+  },
+  {
+    "name": "spacing.2",
+    "category": "spacing",
+    "value": "8px",
+    "cssVariable": "--spacing-2",
+    "description": ""
+  },
+  {
+    "name": "spacing.3",
+    "category": "spacing",
+    "value": "12px",
+    "cssVariable": "--spacing-3",
+    "description": ""
+  },
+  {
+    "name": "spacing.4",
+    "category": "spacing",
+    "value": "16px",
+    "cssVariable": "--spacing-4",
+    "description": ""
+  },
+  {
+    "name": "spacing.5",
+    "category": "spacing",
+    "value": "20px",
+    "cssVariable": "--spacing-5",
+    "description": ""
+  },
+  {
+    "name": "spacing.6",
+    "category": "spacing",
+    "value": "24px",
+    "cssVariable": "--spacing-6",
+    "description": ""
+  },
+  {
+    "name": "spacing.7",
+    "category": "spacing",
+    "value": "28px",
+    "cssVariable": "--spacing-7",
+    "description": ""
+  },
+  {
+    "name": "spacing.8",
+    "category": "spacing",
+    "value": "32px",
+    "cssVariable": "--spacing-8",
+    "description": ""
+  },
+  {
+    "name": "spacing.9",
+    "category": "spacing",
+    "value": "36px",
+    "cssVariable": "--spacing-9",
+    "description": ""
+  },
+  {
+    "name": "spacing.10",
+    "category": "spacing",
+    "value": "40px",
+    "cssVariable": "--spacing-10",
+    "description": ""
+  },
+  {
+    "name": "spacing.11",
+    "category": "spacing",
+    "value": "44px",
+    "cssVariable": "--spacing-11",
+    "description": ""
+  },
+  {
+    "name": "spacing.12",
+    "category": "spacing",
+    "value": "48px",
+    "cssVariable": "--spacing-12",
+    "description": ""
+  },
+  {
+    "name": "spacing.14",
+    "category": "spacing",
+    "value": "56px",
+    "cssVariable": "--spacing-14",
+    "description": ""
+  },
+  {
+    "name": "spacing.16",
+    "category": "spacing",
+    "value": "64px",
+    "cssVariable": "--spacing-16",
+    "description": ""
+  },
+  {
+    "name": "spacing.20",
+    "category": "spacing",
+    "value": "80px",
+    "cssVariable": "--spacing-20",
+    "description": ""
+  },
+  {
+    "name": "spacing.24",
+    "category": "spacing",
+    "value": "96px",
+    "cssVariable": "--spacing-24",
+    "description": ""
+  },
+  {
+    "name": "spacing.28",
+    "category": "spacing",
+    "value": "112px",
+    "cssVariable": "--spacing-28",
+    "description": ""
+  },
+  {
+    "name": "spacing.32",
+    "category": "spacing",
+    "value": "128px",
+    "cssVariable": "--spacing-32",
+    "description": ""
+  },
+  {
+    "name": "spacing.0.5",
+    "category": "spacing",
+    "value": "2px",
+    "cssVariable": "--spacing-0.5",
+    "description": ""
+  },
+  {
+    "name": "spacing.1.5",
+    "category": "spacing",
+    "value": "6px",
+    "cssVariable": "--spacing-1.5",
+    "description": ""
+  },
+  {
+    "name": "spacing.2.5",
+    "category": "spacing",
+    "value": "10px",
+    "cssVariable": "--spacing-2.5",
+    "description": ""
+  },
+  {
+    "name": "spacing.3.5",
+    "category": "spacing",
+    "value": "14px",
+    "cssVariable": "--spacing-3.5",
+    "description": ""
+  },
+  {
+    "name": "radius.none",
+    "category": "radius",
+    "value": "0px",
+    "cssVariable": "--radius-none",
+    "description": ""
+  },
+  {
+    "name": "radius.sm",
+    "category": "radius",
+    "value": "4px",
+    "cssVariable": "--radius-sm",
+    "description": ""
+  },
+  {
+    "name": "radius.md",
+    "category": "radius",
+    "value": "8px",
+    "cssVariable": "--radius-md",
+    "description": ""
+  },
+  {
+    "name": "radius.lg",
+    "category": "radius",
+    "value": "12px",
+    "cssVariable": "--radius-lg",
+    "description": ""
+  },
+  {
+    "name": "radius.xl",
+    "category": "radius",
+    "value": "16px",
+    "cssVariable": "--radius-xl",
+    "description": ""
+  },
+  {
+    "name": "radius.2xl",
+    "category": "radius",
+    "value": "20px",
+    "cssVariable": "--radius-2xl",
+    "description": ""
+  },
+  {
+    "name": "radius.3xl",
+    "category": "radius",
+    "value": "24px",
+    "cssVariable": "--radius-3xl",
+    "description": ""
+  },
+  {
+    "name": "radius.full",
+    "category": "radius",
+    "value": "9999px",
+    "cssVariable": "--radius-full",
+    "description": ""
+  },
+  {
+    "name": "fontFamily.sans",
+    "category": "typography",
+    "value": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    "cssVariable": "--font-family-sans",
+    "description": ""
+  },
+  {
+    "name": "fontFamily.mono",
+    "category": "typography",
+    "value": "'JetBrains Mono', 'Fira Code', 'Consolas', monospace",
+    "cssVariable": "--font-family-mono",
+    "description": ""
+  },
+  {
+    "name": "fontSize.xs",
+    "category": "typography",
+    "value": "0.75rem",
+    "cssVariable": "--font-size-xs",
+    "description": ""
+  },
+  {
+    "name": "fontSize.sm",
+    "category": "typography",
+    "value": "0.875rem",
+    "cssVariable": "--font-size-sm",
+    "description": ""
+  },
+  {
+    "name": "fontSize.base",
+    "category": "typography",
+    "value": "1rem",
+    "cssVariable": "--font-size-base",
+    "description": ""
+  },
+  {
+    "name": "fontSize.lg",
+    "category": "typography",
+    "value": "1.125rem",
+    "cssVariable": "--font-size-lg",
+    "description": ""
+  },
+  {
+    "name": "fontSize.xl",
+    "category": "typography",
+    "value": "1.25rem",
+    "cssVariable": "--font-size-xl",
+    "description": ""
+  },
+  {
+    "name": "fontSize.2xl",
+    "category": "typography",
+    "value": "1.5rem",
+    "cssVariable": "--font-size-2xl",
+    "description": ""
+  },
+  {
+    "name": "fontSize.3xl",
+    "category": "typography",
+    "value": "1.875rem",
+    "cssVariable": "--font-size-3xl",
+    "description": ""
+  },
+  {
+    "name": "fontSize.4xl",
+    "category": "typography",
+    "value": "2.25rem",
+    "cssVariable": "--font-size-4xl",
+    "description": ""
+  },
+  {
+    "name": "fontWeight.normal",
+    "category": "typography",
+    "value": 400,
+    "cssVariable": "--font-weight-normal",
+    "description": ""
+  },
+  {
+    "name": "fontWeight.medium",
+    "category": "typography",
+    "value": 500,
+    "cssVariable": "--font-weight-medium",
+    "description": ""
+  },
+  {
+    "name": "fontWeight.semibold",
+    "category": "typography",
+    "value": 600,
+    "cssVariable": "--font-weight-semibold",
+    "description": ""
+  },
+  {
+    "name": "fontWeight.bold",
+    "category": "typography",
+    "value": 700,
+    "cssVariable": "--font-weight-bold",
+    "description": ""
+  },
+  {
+    "name": "lineHeight.tight",
+    "category": "typography",
+    "value": 1.25,
+    "cssVariable": "--line-height-tight",
+    "description": ""
+  },
+  {
+    "name": "lineHeight.snug",
+    "category": "typography",
+    "value": 1.375,
+    "cssVariable": "--line-height-snug",
+    "description": ""
+  },
+  {
+    "name": "lineHeight.normal",
+    "category": "typography",
+    "value": 1.5,
+    "cssVariable": "--line-height-normal",
+    "description": ""
+  },
+  {
+    "name": "lineHeight.relaxed",
+    "category": "typography",
+    "value": 1.625,
+    "cssVariable": "--line-height-relaxed",
+    "description": ""
+  },
+  {
+    "name": "lineHeight.loose",
+    "category": "typography",
+    "value": 2,
+    "cssVariable": "--line-height-loose",
+    "description": ""
+  },
+  {
+    "name": "letterSpacing.tighter",
+    "category": "typography",
+    "value": "-0.05em",
+    "cssVariable": "--letter-spacing-tighter",
+    "description": ""
+  },
+  {
+    "name": "letterSpacing.tight",
+    "category": "typography",
+    "value": "-0.025em",
+    "cssVariable": "--letter-spacing-tight",
+    "description": ""
+  },
+  {
+    "name": "letterSpacing.normal",
+    "category": "typography",
+    "value": "0em",
+    "cssVariable": "--letter-spacing-normal",
+    "description": ""
+  },
+  {
+    "name": "letterSpacing.wide",
+    "category": "typography",
+    "value": "0.025em",
+    "cssVariable": "--letter-spacing-wide",
+    "description": ""
+  },
+  {
+    "name": "letterSpacing.wider",
+    "category": "typography",
+    "value": "0.05em",
+    "cssVariable": "--letter-spacing-wider",
+    "description": ""
+  },
+  {
+    "name": "letterSpacing.widest",
+    "category": "typography",
+    "value": "0.1em",
+    "cssVariable": "--letter-spacing-widest",
+    "description": ""
+  },
+  {
+    "name": "duration.instant",
+    "category": "motion",
+    "value": "0ms",
+    "cssVariable": "--duration-instant",
+    "description": ""
+  },
+  {
+    "name": "duration.fast",
+    "category": "motion",
+    "value": "100ms",
+    "cssVariable": "--duration-fast",
+    "description": ""
+  },
+  {
+    "name": "duration.normal",
+    "category": "motion",
+    "value": "200ms",
+    "cssVariable": "--duration-normal",
+    "description": ""
+  },
+  {
+    "name": "duration.slow",
+    "category": "motion",
+    "value": "300ms",
+    "cssVariable": "--duration-slow",
+    "description": ""
+  },
+  {
+    "name": "duration.slower",
+    "category": "motion",
+    "value": "500ms",
+    "cssVariable": "--duration-slower",
+    "description": ""
+  },
+  {
+    "name": "easing.default",
+    "category": "motion",
+    "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+    "cssVariable": "--easing-default",
+    "description": ""
+  },
+  {
+    "name": "easing.in",
+    "category": "motion",
+    "value": "cubic-bezier(0.4, 0, 1, 1)",
+    "cssVariable": "--easing-in",
+    "description": ""
+  },
+  {
+    "name": "easing.out",
+    "category": "motion",
+    "value": "cubic-bezier(0, 0, 0.2, 1)",
+    "cssVariable": "--easing-out",
+    "description": ""
+  },
+  {
+    "name": "easing.inOut",
+    "category": "motion",
+    "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+    "cssVariable": "--easing-in-out",
+    "description": ""
+  },
+  {
+    "name": "easing.spring",
+    "category": "motion",
+    "value": "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+    "cssVariable": "--easing-spring",
+    "description": ""
+  },
+  {
+    "name": "zIndex.base",
+    "category": "zIndex",
+    "value": 0,
+    "cssVariable": "--z-index-base",
+    "description": ""
+  },
+  {
+    "name": "zIndex.dropdown",
+    "category": "zIndex",
+    "value": 1000,
+    "cssVariable": "--z-index-dropdown",
+    "description": ""
+  },
+  {
+    "name": "zIndex.sticky",
+    "category": "zIndex",
+    "value": 1100,
+    "cssVariable": "--z-index-sticky",
+    "description": ""
+  },
+  {
+    "name": "zIndex.fixed",
+    "category": "zIndex",
+    "value": 1200,
+    "cssVariable": "--z-index-fixed",
+    "description": ""
+  },
+  {
+    "name": "zIndex.backdrop",
+    "category": "zIndex",
+    "value": 1300,
+    "cssVariable": "--z-index-backdrop",
+    "description": ""
+  },
+  {
+    "name": "zIndex.modal",
+    "category": "zIndex",
+    "value": 1400,
+    "cssVariable": "--z-index-modal",
+    "description": ""
+  },
+  {
+    "name": "zIndex.popover",
+    "category": "zIndex",
+    "value": 1500,
+    "cssVariable": "--z-index-popover",
+    "description": ""
+  },
+  {
+    "name": "zIndex.tooltip",
+    "category": "zIndex",
+    "value": 1600,
+    "cssVariable": "--z-index-tooltip",
+    "description": ""
+  },
+  {
+    "name": "zIndex.toast",
+    "category": "zIndex",
+    "value": 1700,
+    "cssVariable": "--z-index-toast",
+    "description": ""
+  },
+  {
+    "name": "zIndex.commandPalette",
+    "category": "zIndex",
+    "value": 1800,
+    "cssVariable": "--z-index-command-palette",
+    "description": ""
+  },
+  {
+    "name": "elevation.none",
+    "category": "elevation",
+    "value": "none",
+    "cssVariable": "--elevation-none",
+    "description": ""
+  },
+  {
+    "name": "elevation.xs",
+    "category": "elevation",
+    "value": "0 1px 2px rgba(0,0,0,0.05)",
+    "cssVariable": "--elevation-xs",
+    "description": ""
+  },
+  {
+    "name": "elevation.sm",
+    "category": "elevation",
+    "value": "0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06)",
+    "cssVariable": "--elevation-sm",
+    "description": ""
+  },
+  {
+    "name": "elevation.md",
+    "category": "elevation",
+    "value": "0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)",
+    "cssVariable": "--elevation-md",
+    "description": ""
+  },
+  {
+    "name": "elevation.lg",
+    "category": "elevation",
+    "value": "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)",
+    "cssVariable": "--elevation-lg",
+    "description": ""
+  },
+  {
+    "name": "elevation.xl",
+    "category": "elevation",
+    "value": "0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)",
+    "cssVariable": "--elevation-xl",
+    "description": ""
+  },
+  {
+    "name": "elevation.2xl",
+    "category": "elevation",
+    "value": "0 25px 50px -12px rgba(0,0,0,0.25)",
+    "cssVariable": "--elevation-2xl",
+    "description": ""
+  },
+  {
+    "name": "elevation.inner",
+    "category": "elevation",
+    "value": "inset 0 2px 4px rgba(0,0,0,0.05)",
+    "cssVariable": "--elevation-inner",
+    "description": ""
+  },
+  {
+    "name": "opacity.disabled",
+    "category": "opacity",
+    "value": 0.5,
+    "cssVariable": "--opacity-disabled",
+    "description": ""
+  },
+  {
+    "name": "opacity.readonly",
+    "category": "opacity",
+    "value": 0.7,
+    "cssVariable": "--opacity-readonly",
+    "description": ""
+  },
+  {
+    "name": "opacity.hover",
+    "category": "opacity",
+    "value": 0.8,
+    "cssVariable": "--opacity-hover",
+    "description": ""
+  },
+  {
+    "name": "opacity.active",
+    "category": "opacity",
+    "value": 0.9,
+    "cssVariable": "--opacity-active",
+    "description": ""
+  },
+  {
+    "name": "opacity.placeholder",
+    "category": "opacity",
+    "value": 0.5,
+    "cssVariable": "--opacity-placeholder",
+    "description": ""
+  },
+  {
+    "name": "opacity.overlay",
+    "category": "opacity",
+    "value": 0.6,
+    "cssVariable": "--opacity-overlay",
+    "description": ""
+  },
+  {
+    "name": "opacity.overlayLight",
+    "category": "opacity",
+    "value": 0.05,
+    "cssVariable": "--opacity-overlay-light",
+    "description": ""
+  },
+  {
+    "name": "opacity.overlayMedium",
+    "category": "opacity",
+    "value": 0.1,
+    "cssVariable": "--opacity-overlay-medium",
+    "description": ""
+  },
+  {
+    "name": "opacity.overlayHeavy",
+    "category": "opacity",
+    "value": 0.2,
+    "cssVariable": "--opacity-overlay-heavy",
+    "description": ""
+  },
+  {
+    "name": "density.compact.controlHeight.sm",
+    "category": "density",
+    "value": 24,
+    "cssVariable": "--density-compact-control-height-sm",
+    "description": ""
+  },
+  {
+    "name": "density.compact.controlHeight.md",
+    "category": "density",
+    "value": 28,
+    "cssVariable": "--density-compact-control-height-md",
+    "description": ""
+  },
+  {
+    "name": "density.compact.controlHeight.lg",
+    "category": "density",
+    "value": 32,
+    "cssVariable": "--density-compact-control-height-lg",
+    "description": ""
+  },
+  {
+    "name": "density.compact.padding.xs",
+    "category": "density",
+    "value": 4,
+    "cssVariable": "--density-compact-padding-xs",
+    "description": ""
+  },
+  {
+    "name": "density.compact.padding.sm",
+    "category": "density",
+    "value": 6,
+    "cssVariable": "--density-compact-padding-sm",
+    "description": ""
+  },
+  {
+    "name": "density.compact.padding.md",
+    "category": "density",
+    "value": 8,
+    "cssVariable": "--density-compact-padding-md",
+    "description": ""
+  },
+  {
+    "name": "density.compact.padding.lg",
+    "category": "density",
+    "value": 10,
+    "cssVariable": "--density-compact-padding-lg",
+    "description": ""
+  },
+  {
+    "name": "density.compact.gap.xs",
+    "category": "density",
+    "value": 2,
+    "cssVariable": "--density-compact-gap-xs",
+    "description": ""
+  },
+  {
+    "name": "density.compact.gap.sm",
+    "category": "density",
+    "value": 4,
+    "cssVariable": "--density-compact-gap-sm",
+    "description": ""
+  },
+  {
+    "name": "density.compact.gap.md",
+    "category": "density",
+    "value": 6,
+    "cssVariable": "--density-compact-gap-md",
+    "description": ""
+  },
+  {
+    "name": "density.compact.gap.lg",
+    "category": "density",
+    "value": 8,
+    "cssVariable": "--density-compact-gap-lg",
+    "description": ""
+  },
+  {
+    "name": "density.compact.fontSize.xs",
+    "category": "density",
+    "value": 10,
+    "cssVariable": "--density-compact-font-size-xs",
+    "description": ""
+  },
+  {
+    "name": "density.compact.fontSize.sm",
+    "category": "density",
+    "value": 11,
+    "cssVariable": "--density-compact-font-size-sm",
+    "description": ""
+  },
+  {
+    "name": "density.compact.fontSize.md",
+    "category": "density",
+    "value": 12,
+    "cssVariable": "--density-compact-font-size-md",
+    "description": ""
+  },
+  {
+    "name": "density.compact.fontSize.lg",
+    "category": "density",
+    "value": 13,
+    "cssVariable": "--density-compact-font-size-lg",
+    "description": ""
+  },
+  {
+    "name": "density.compact.iconSize.sm",
+    "category": "density",
+    "value": 12,
+    "cssVariable": "--density-compact-icon-size-sm",
+    "description": ""
+  },
+  {
+    "name": "density.compact.iconSize.md",
+    "category": "density",
+    "value": 14,
+    "cssVariable": "--density-compact-icon-size-md",
+    "description": ""
+  },
+  {
+    "name": "density.compact.iconSize.lg",
+    "category": "density",
+    "value": 16,
+    "cssVariable": "--density-compact-icon-size-lg",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.controlHeight.sm",
+    "category": "density",
+    "value": 28,
+    "cssVariable": "--density-comfortable-control-height-sm",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.controlHeight.md",
+    "category": "density",
+    "value": 32,
+    "cssVariable": "--density-comfortable-control-height-md",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.controlHeight.lg",
+    "category": "density",
+    "value": 40,
+    "cssVariable": "--density-comfortable-control-height-lg",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.padding.xs",
+    "category": "density",
+    "value": 6,
+    "cssVariable": "--density-comfortable-padding-xs",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.padding.sm",
+    "category": "density",
+    "value": 8,
+    "cssVariable": "--density-comfortable-padding-sm",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.padding.md",
+    "category": "density",
+    "value": 12,
+    "cssVariable": "--density-comfortable-padding-md",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.padding.lg",
+    "category": "density",
+    "value": 16,
+    "cssVariable": "--density-comfortable-padding-lg",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.gap.xs",
+    "category": "density",
+    "value": 4,
+    "cssVariable": "--density-comfortable-gap-xs",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.gap.sm",
+    "category": "density",
+    "value": 6,
+    "cssVariable": "--density-comfortable-gap-sm",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.gap.md",
+    "category": "density",
+    "value": 8,
+    "cssVariable": "--density-comfortable-gap-md",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.gap.lg",
+    "category": "density",
+    "value": 12,
+    "cssVariable": "--density-comfortable-gap-lg",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.fontSize.xs",
+    "category": "density",
+    "value": 11,
+    "cssVariable": "--density-comfortable-font-size-xs",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.fontSize.sm",
+    "category": "density",
+    "value": 12,
+    "cssVariable": "--density-comfortable-font-size-sm",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.fontSize.md",
+    "category": "density",
+    "value": 13,
+    "cssVariable": "--density-comfortable-font-size-md",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.fontSize.lg",
+    "category": "density",
+    "value": 14,
+    "cssVariable": "--density-comfortable-font-size-lg",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.iconSize.sm",
+    "category": "density",
+    "value": 14,
+    "cssVariable": "--density-comfortable-icon-size-sm",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.iconSize.md",
+    "category": "density",
+    "value": 16,
+    "cssVariable": "--density-comfortable-icon-size-md",
+    "description": ""
+  },
+  {
+    "name": "density.comfortable.iconSize.lg",
+    "category": "density",
+    "value": 20,
+    "cssVariable": "--density-comfortable-icon-size-lg",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.controlHeight.sm",
+    "category": "density",
+    "value": 32,
+    "cssVariable": "--density-spacious-control-height-sm",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.controlHeight.md",
+    "category": "density",
+    "value": 40,
+    "cssVariable": "--density-spacious-control-height-md",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.controlHeight.lg",
+    "category": "density",
+    "value": 48,
+    "cssVariable": "--density-spacious-control-height-lg",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.padding.xs",
+    "category": "density",
+    "value": 8,
+    "cssVariable": "--density-spacious-padding-xs",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.padding.sm",
+    "category": "density",
+    "value": 12,
+    "cssVariable": "--density-spacious-padding-sm",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.padding.md",
+    "category": "density",
+    "value": 16,
+    "cssVariable": "--density-spacious-padding-md",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.padding.lg",
+    "category": "density",
+    "value": 20,
+    "cssVariable": "--density-spacious-padding-lg",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.gap.xs",
+    "category": "density",
+    "value": 6,
+    "cssVariable": "--density-spacious-gap-xs",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.gap.sm",
+    "category": "density",
+    "value": 8,
+    "cssVariable": "--density-spacious-gap-sm",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.gap.md",
+    "category": "density",
+    "value": 12,
+    "cssVariable": "--density-spacious-gap-md",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.gap.lg",
+    "category": "density",
+    "value": 16,
+    "cssVariable": "--density-spacious-gap-lg",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.fontSize.xs",
+    "category": "density",
+    "value": 12,
+    "cssVariable": "--density-spacious-font-size-xs",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.fontSize.sm",
+    "category": "density",
+    "value": 13,
+    "cssVariable": "--density-spacious-font-size-sm",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.fontSize.md",
+    "category": "density",
+    "value": 14,
+    "cssVariable": "--density-spacious-font-size-md",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.fontSize.lg",
+    "category": "density",
+    "value": 16,
+    "cssVariable": "--density-spacious-font-size-lg",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.iconSize.sm",
+    "category": "density",
+    "value": 16,
+    "cssVariable": "--density-spacious-icon-size-sm",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.iconSize.md",
+    "category": "density",
+    "value": 20,
+    "cssVariable": "--density-spacious-icon-size-md",
+    "description": ""
+  },
+  {
+    "name": "density.spacious.iconSize.lg",
+    "category": "density",
+    "value": 24,
+    "cssVariable": "--density-spacious-icon-size-lg",
+    "description": ""
+  },
+  {
+    "name": "focusRing.width",
+    "category": "focusRing",
+    "value": 2,
+    "cssVariable": "--focus-ring-width",
+    "description": ""
+  },
+  {
+    "name": "focusRing.offset",
+    "category": "focusRing",
+    "value": 2,
+    "cssVariable": "--focus-ring-offset",
+    "description": ""
+  },
+  {
+    "name": "focusRing.color",
+    "category": "focusRing",
+    "value": "var(--focus-ring, var(--focus-outline, var(--accent-primary)))",
+    "cssVariable": "--focus-ring-color",
+    "description": ""
+  },
+  {
+    "name": "focusRing.style",
+    "category": "focusRing",
+    "value": "solid",
+    "cssVariable": "--focus-ring-style",
+    "description": ""
+  },
+  {
+    "name": "focusRing.class",
+    "category": "focusRing",
+    "value": "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[color-mix(in_oklab,var(--focus-ring)_30%,transparent)] focus-visible:ring-offset-2",
+    "cssVariable": "--focus-ring-class",
+    "description": ""
+  }
+]

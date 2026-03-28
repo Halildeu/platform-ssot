@@ -6,7 +6,7 @@
 </head>
 <body>
   <script>
-    // Keycloak will postMessage back to the parent window
+    parent.postMessage(location.href, location.origin);
   </script>
 </body>
 </html>

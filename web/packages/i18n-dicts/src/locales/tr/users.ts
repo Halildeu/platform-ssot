@@ -2,6 +2,9 @@ const users = {
   'users.layout.title': 'Kullanıcı Yönetimi',
   'users.layout.description':
     'Kullanıcıların rol ve modül yetkilerini yönetin, hesap güvenliği ile ilgili işlemleri tanımlayın.',
+  'admin.users.title': 'Kullanıcı Yönetimi',
+  'admin.users.description':
+    'Kullanıcıların rol ve modül yetkilerini yönetin, hesap güvenliği ile ilgili işlemleri tanımlayın.',
   'users.breadcrumb.management': 'Yönetim',
   'users.breadcrumb.users': 'Kullanıcı Yönetimi',
 

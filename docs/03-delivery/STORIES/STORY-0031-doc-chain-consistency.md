@@ -2,7 +2,7 @@
 
 ID: STORY-0031-doc-chain-consistency  
 Epic: QLTY-DOC-QA  
-Status: Planned  
+Status: Done  
 Owner: @team/platform-arch  
 Upstream: DOCS-WORKFLOW, DOCS-PROJECT-LAYOUT, NUMARALANDIRMA-STANDARDI  
 Downstream: AC-0031, TP-0031
@@ -42,17 +42,17 @@ Hariç:
 
 ## 4. ACCEPTANCE KRİTERLERİ
 
-- [ ] Belirli bir Story ID (örn. STORY-0007) verildiğinde, script
+- [x] Belirli bir Story ID (örn. STORY-0007) verildiğinde, script
   `check_doc_chain.py STORY-0007` çalıştırıldığında:  
   - Upstream PB/PRD, TECH-DESIGN/ADR ve downstream AC/TP/RUNBOOK için
     beklenen dokümanların varlığı kontrol edilir.  
   - Eksik halkalar okunabilir bir liste halinde raporlanır.
 
-- [ ] Sadece PB/PRD yazılmış ancak Story açılmamış feature’lar (Discover/
+- [x] Sadece PB/PRD yazılmış ancak Story açılmamış feature’lar (Discover/
   Shape aşamasında kalmış işler) “erken aşama – henüz delivery yok”
   şeklinde işaretlenir.  
 
-- [ ] Tüm zincir halkaları mevcut olan en az bir feature için script
+- [x] Tüm zincir halkaları mevcut olan en az bir feature için script
   “eksik yok” çıktısı üretir ve bu feature örnek olarak AC-0031 ve
   TP-0031 içinde belgelenir.
 
@@ -71,6 +71,9 @@ Hariç:
   kontrol edebilen bir mekanizmanın tanımını yapar.  
 - Amaç, hem insanlar hem AI agent için “bu iş hangi fazda, hangi
   dokümanlar eksik?” sorusuna hızlı ve standart bir yanıt verebilmektir.
+- 2026-03-09 global doğrulamasında `python3 scripts/check_doc_chain.py`
+  komutu mevcut STORY zincirleri için PASS vermiş ve doc chain hatası
+  üretmemiştir.
 
 ## 7. LİNKLER (İSTEĞE BAĞLI)
 

@@ -1,0 +1,52 @@
+---
+title: Components
+description: '@mfe/design-system component catalog'
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Overview
+
+`@mfe/design-system` provides 185+ components. Components are organized across four layers:
+
+<CardGrid>
+  <Card title="Primitives (24)" icon="puzzle">
+    Button, Input, Checkbox, Radio, Select, Switch, Badge, Tooltip and more.
+  </Card>
+  <Card title="Components (60)" icon="laptop">
+    DataGrid, Form, Modal, Tabs, Accordion, Card, DatePicker and more.
+  </Card>
+  <Card title="Enterprise (38)" icon="setting">
+    ProcessFlow, RiskMatrix, Kanban, Scheduler, FormBuilder and more.
+  </Card>
+  <Card title="Patterns (10)" icon="document">
+    MasterDetail, FilterPanel, WizardFlow, DashboardLayout and more.
+  </Card>
+</CardGrid>
+
+## Most Used
+
+<CardGrid>
+  <LinkCard title="Button" href="/components/button/" description="Core interaction button — variant, size, loading, icon support." />
+  <LinkCard title="Input" href="/components/input/" description="Text input — validation, masking, prefix/suffix support." />
+  <LinkCard title="DataGrid" href="/components/data-grid/" description="Enterprise data table — sorting, filtering, grouping, export." />
+</CardGrid>
+
+## Naming Convention
+
+All components are named in PascalCase and exported as named exports from the `@mfe/design-system` package:
+
+```tsx
+import { Button, Input, DataGrid } from '@mfe/design-system';
+```
+
+## Status Indicators
+
+Each component documentation page includes a status indicator:
+
+| Status | Description |
+|--------|-------------|
+| **Stable** | Ready for production use |
+| **Beta** | API may change, feedback welcome |
+| **Alpha** | Early stage, experimental |
+| **Deprecated** | Will be removed, alternative specified |

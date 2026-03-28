@@ -5,8 +5,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-POLICY_PATH = Path("docs/03-delivery/SPECS/nonprefix-naming-policy.v1.json")
-SSOT_PATH = Path("docs/00-handbook/DOC-NONPREFIX-NAMING-SSOT.json")
+POLICY_PATH = Path("docs-ssot/03-delivery/SPECS/nonprefix-naming-policy.v1.json")
+SSOT_PATH = Path("docs-ssot/00-handbook/DOC-NONPREFIX-NAMING-SSOT.json")
 
 
 def read_json(p: Path) -> dict:

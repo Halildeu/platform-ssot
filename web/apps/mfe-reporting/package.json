@@ -3,40 +3,33 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npx kill-port 3007 || true && webpack serve --config webpack.dev.js",
-    "build": "webpack --mode=production --config webpack.prod.js",
+    "start": "npx kill-port 3007 || true && vite",
+    "build": "vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "test": "npm run build"
+    "test": "echo \"no tests\""
   },
   "dependencies": {
-    "@mfe/shared-http": "file:../../packages/shared-http",
-    "@mfe/shared-types": "file:../../packages/shared-types",
-    "mfe-ui-kit": "file:../../packages/ui-kit",
+    "@platform/capabilities": "file:../../packages/platform-capabilities",
+    "@mfe/shared-http": "*",
+    "@mfe/shared-types": "*",
+    "@mfe/i18n-dicts": "*",
+    "@mfe/design-system": "*",
     "ag-grid-community": "34.3.1",
     "ag-grid-enterprise": "34.3.1",
     "ag-grid-react": "34.3.1",
-    "@tanstack/react-query": "^5.90.6",
+    "@tanstack/react-query": "^5.90.10",
+    "axios": "^1.7.7",
+    "clsx": "^2.1.1",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
     "react-router": "^6.27.0",
     "react-router-dom": "^6.27.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.0",
-    "@babel/preset-react": "^7.27.1",
-    "@babel/preset-typescript": "^7.27.1",
     "@types/node": "^24.0.14",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "eslint": "^9.13.0",
-    "babel-loader": "^10.0.0",
-    "css-loader": "^7.1.2",
-    "html-webpack-plugin": "^5.6.3",
-    "postcss-loader": "^8.1.1",
-    "style-loader": "^4.0.0",
-    "typescript": "^5.8.3",
-    "webpack": "^5.100.2",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.2"
+    "typescript": "^5.8.3"
   }
 }

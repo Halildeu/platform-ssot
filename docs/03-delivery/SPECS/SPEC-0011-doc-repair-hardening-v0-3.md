@@ -33,4 +33,5 @@ Plan/Apply çıktılarının deterministikliğini ve aksiyonlanabilirliğini art
 
 - Plan generator: `scripts/doc_repair_plan.py`
 - Apply engine: `scripts/doc_repair_apply.py`
-- Reason map (SSOT): `docs/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
+- Runbook: `docs/04-operations/RUNBOOKS/RB-doc-repair-loop.md`
+- Reason map (SSOT): `docs-ssot/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`

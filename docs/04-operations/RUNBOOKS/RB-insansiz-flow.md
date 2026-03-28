@@ -28,14 +28,17 @@ Owner: @team/platform
   - `wip/**` → draft (merge kapalı)
   - `ops/**` → default `merge_policy=none` (merge kapalı)
 - SSOT kaynakları:
+  - OPO authority map: `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`
+  - Managed standards lock: `standards.lock`
+  - Multi-repo operating contract: `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md`
   - Flow: `docs/03-delivery/PROJECT-FLOW.tsv` (+ render: `docs/03-delivery/PROJECT-FLOW.md`)
-  - Doc maturity rubric: `docs/00-handbook/DOC-MATURITY-RUBRIC.md` (non-blocking rapor)
-  - Semantic lint lexicon: `docs/00-handbook/DOC-SEMANTIC-LINT-LEXICON.md` (local-only, non-blocking)
+  - Doc maturity rubric: `DOC-MATURITY-RUBRIC.md` (transition-active, non-blocking rapor)
+  - Semantic lint lexicon: `DOC-SEMANTIC-LINT-LEXICON.md` (transition-active, local-only, non-blocking)
   - Semantic lint script: `scripts/check_doc_semantic_lint.py` (local-only rapor)
   - ID rezervasyonu: `docs/03-delivery/ID-REGISTRY.tsv`
     - Kural: Yeni STORY başlamadan önce ilgili `STORY/AC/TP` NUM (XXXX) bu registry’de rezerve edilir.
   - Delivery zinciri: `docs/03-delivery/STORIES/`, `docs/03-delivery/ACCEPTANCE/`, `docs/03-delivery/TEST-PLANS/`
-  - PR bot kuralları: `docs/04-operations/PR-BOT-RULES.json`
+  - PR bot kuralları: `docs-ssot/04-operations/PR-BOT-RULES.json`
   - Runbook’lar: bu doküman + `RB-pr-bot` + `RB-log-digest`
 - Kapsam dışı:
   - Fork repo’larda otomasyon (güvenlik nedeniyle çalışmaz).
@@ -98,7 +101,7 @@ Owner: @team/platform
     - `.github/workflows/deploy-backend.yml`
     - `.github/workflows/post-deploy-validate.yml`
     - `.github/workflows/rollback.yml`
-  - Merge’i kapat (SSOT): `docs/04-operations/PR-BOT-RULES.json` içinde ilgili `match` için `merge_policy=none`.
+  - Merge’i kapat (SSOT): `docs-ssot/04-operations/PR-BOT-RULES.json` içinde ilgili `match` için `merge_policy=none`.
   - Secrets kill switch (önerilen):
     - `DEPLOY_ENABLED` (true/false)
     - `ROLLBACK_ENABLED` (true/false)
@@ -214,7 +217,7 @@ Edge-case tablosu (v0.1):
 7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
-- SSOT: docs/04-operations/PR-BOT-RULES.json
+- SSOT: docs-ssot/04-operations/PR-BOT-RULES.json
 - Runbook: docs/04-operations/RUNBOOKS/RB-pr-bot.md
 - Runbook: docs/04-operations/RUNBOOKS/RB-log-digest.md
 - Workflow: .github/workflows/pr-bot.yml
@@ -233,9 +236,10 @@ Edge-case tablosu (v0.1):
 - Script: scripts/ops/ci_pull_deploy_chain_logs.sh
 - Script: scripts/ops/gh_pull_run_logs.sh
 - Script: scripts/ops/git_setup_push_auth.sh
-- Handbook: docs/00-handbook/DOC-MATURITY-RUBRIC.md
+- OPO authority map: docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md
+- Handbook: DOC-MATURITY-RUBRIC.md (transition-active)
 - Script: scripts/check_doc_maturity_rubric.py
-- Handbook: docs/00-handbook/DOC-SEMANTIC-LINT-LEXICON.md
+- Handbook: DOC-SEMANTIC-LINT-LEXICON.md (transition-active)
 - Script: scripts/check_doc_semantic_lint.py
 - STORY: docs/03-delivery/STORIES/STORY-0302-release-deploy-e2e-v0-1.md
 - ACCEPTANCE: docs/03-delivery/ACCEPTANCE/AC-0302-release-deploy-e2e-v0-1.md

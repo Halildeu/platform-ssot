@@ -149,6 +149,24 @@ logs/
 - Config:
   - Ortak konfigürasyonlar gerekirse infra/ veya manifest/ altına alınır;
     servis içinde sadece ilgili servise özgü config kalır.
+  - Shared Postgres kullanılan lokal compose senaryosunda her servis kendi
+    Flyway history tablosunu kullanır.
+  - Shared Postgres üzerinde hedef model servis bazlı schema ownership'tir.
+  - Her servis config'inde `<SERVICE>_DB_SCHEMA` env anahtarı tanımlanır.
+  - Fresh bootstrap re-baseline gerekiyorsa servis altında ayrıca
+    `src/main/resources/db/migration_schema_owned/` klasörü tutulur.
+  - Bu zincir varsayılan olmaz; yalnız `*_FLYWAY_LOCATIONS` override ile aktif edilir.
+  - Sonradan eklenen servis boş olmayan ortak şemaya ilk kez bağlanıyorsa
+    `baseline-on-migrate=true` ve uygun baseline versiyonu ile ayağa kalkmalıdır.
+  - Başka servise ait tabloya migration ile dokunulmaz; böyle bir ihtiyaç varsa
+    ilgili servis kendi migration zincirinde sahip olduğu tabloyu günceller.
+  - Versioned Flyway dosyaları geçmişte uygulanmışsa doğrudan içerik değiştirilmez;
+    gerekli düzeltme yeni migration, bootstrap veya re-baseline planı ile yapılır.
+
+- Servisler arası HTTP istemcisi:
+  - Yeni baseline `WebClient`’tır.
+  - `RestTemplate` yalnız mevcut legacy kodda geçici olarak tutulur.
+  - Yeni servis veya yeni iç servis çağrısı eklenirken `RestTemplate` tercih edilmez.
 
 -------------------------------------------------------------------------------
 6. AGENT KULLANIM REHBERİ

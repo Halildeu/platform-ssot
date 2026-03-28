@@ -55,5 +55,5 @@ Doc-Repair Plan (v0.1) çıktısını kullanarak yalnız güvenli (allowlist) do
 ## 5. LİNKLER
 
 - SPEC (Plan): `docs/03-delivery/SPECS/SPEC-0009-doc-repair-loop-v0-1.md`
-- Reason map (SSOT): `docs/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
+- Reason map (SSOT): `docs-ssot/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
 - Plan generator: `scripts/doc_repair_plan.py`

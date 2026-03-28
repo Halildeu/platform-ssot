@@ -23,7 +23,7 @@ elle test etmek için örnek prompt ve beklenen çıktı iskeletlerini içerir.
 **Önerilen prompt (özet):**
 
 > Aktif dosyalar:  
-> - `AGENT-CODEX.docs.md`  
+> - `Doküman transition rehberi`  
 > - `DOCS-PROJECT-LAYOUT.md`  
 > - `STYLE-DOCS-001.md`  
 > - `NUMARALANDIRMA-STANDARDI.md`  
@@ -54,7 +54,7 @@ elle test etmek için örnek prompt ve beklenen çıktı iskeletlerini içerir.
 **Önerilen prompt (özet):**
 
 > Aktif dosyalar:  
-> - `AGENT-CODEX.backend.md`  
+> - `Backend transition rehberi`  
 > - `BACKEND-PROJECT-LAYOUT.md`  
 > - `STORY-0002-backend-keycloak-jwt-hardening.md`  
 > - `AC-0002-backend-keycloak-jwt-hardening.md`  
@@ -84,7 +84,7 @@ elle test etmek için örnek prompt ve beklenen çıktı iskeletlerini içerir.
 **Önerilen prompt (özet):**
 
 > Aktif dosyalar:  
-> - `AGENT-CODEX.web.md`  
+> - `Web transition rehberi`  
 > - `WEB-PROJECT-LAYOUT.md`  
 > - `STYLE-WEB-001.md`  
 > - `web/docs/architecture/frontend/frontend-project-layout.md`  

@@ -1,0 +1,31 @@
+---
+title: '@mfe/design-system'
+description: Enterprise-grade React UI component library
+template: splash
+hero:
+  tagline: 44 enterprise bileşen, 175+ toplam bileşen, %95 scorecard ortalaması
+  actions:
+    - text: Başlangıç
+      link: /getting-started/installation/
+      icon: right-arrow
+    - text: Bileşenler
+      link: /components/primitives/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid stagger>
+  <Card title="175+ Bileşen" icon="puzzle">
+    Primitives, enterprise, patterns — her ihtiyaca uygun bileşen seti.
+  </Card>
+  <Card title="44 Enterprise" icon="rocket">
+    ProcessFlow, PivotTable, FineKinney — rakiplerde olmayan bileşenler.
+  </Card>
+  <Card title="Dark Mode" icon="moon">
+    Semantic token sistemi ile tam dark mode desteği.
+  </Card>
+  <Card title="A11y %100" icon="approve-check">
+    WCAG 2.2 AA uyumlu, axe-core testli.
+  </Card>
+</CardGrid>

@@ -51,9 +51,9 @@ Hariç (NON-GOALS):
 
 ## 5. BAĞIMLILIKLAR
 
-- Legacy Story: backend/docs/legacy/root/05-governance/02-stories/QLTY-API-V1-STANDARDIZATION-01.md  
-- Legacy Acceptance: backend/docs/legacy/root/05-governance/07-acceptance/QLTY-API-V1-STANDARDIZATION-01.acceptance.md  
-- STYLE-API-001: docs/00-handbook/STYLE-API-001.md  
+- Legacy QLTY-API-V1-STANDARDIZATION-01 story snapshot’ı  
+- Legacy QLTY-API-V1-STANDARDIZATION-01 acceptance snapshot’ı  
+- STYLE-API-001: STYLE-API-001.md  
 - API README: docs/03-delivery/api/README.md  
 
 ## 6. ÖZET

@@ -92,7 +92,7 @@ export const sendTelemetry = async (event: TelemetryEvent): Promise<void> => {
         'Content-Type': 'application/json',
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     // Telemetry başarısız olsa bile UI’yi bloklamayalım; yalnızca debug log bırak.
     if (isDevEnv) {
       // eslint-disable-next-line no-console

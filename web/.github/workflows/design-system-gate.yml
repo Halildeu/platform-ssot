@@ -1,0 +1,43 @@
+name: Design System Gate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'packages/design-system/**'
+      - 'packages/design-system/**'
+      - 'scripts/ci/**'
+      - 'scripts/tokens/**'
+
+jobs:
+  publish-gate:
+    name: Publish Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test --if-present
+
+      - name: Publish gate check
+        run: node scripts/ci/publish-gate.mjs
+
+      - name: Visual diff check
+        run: node scripts/ci/visual-diff-check.mjs
+
+      - name: Detect breaking changes
+        run: node scripts/ci/detect-breaking.mjs
+
+      - name: Validate tokens
+        run: node scripts/tokens/validate-tokens.mjs
+
+      - name: Build tokens
+        run: node scripts/tokens/build-tokens.mjs

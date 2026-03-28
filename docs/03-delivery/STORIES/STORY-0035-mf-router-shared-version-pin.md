@@ -4,7 +4,7 @@ ID: STORY-0035-mf-router-shared-version-pin
 Epic: QLTY-MF-ROUTER  
 Status: Done  
 Owner: @team/frontend  
-Upstream: QLTY-MF-ROUTER-01 (legacy), STYLE-FE-001.md  
+Upstream: QLTY-MF-ROUTER-01 (legacy snapshot), STYLE-WEB-001.md  
 Downstream: AC-0035, TP-0035
 
 -------------------------------------------------------------------------------
@@ -59,10 +59,10 @@ Hariç:
 ## 5. BAĞIMLILIKLAR
 -------------------------------------------------------------------------------
 
-- backend/docs/legacy/root/05-governance/02-stories/QLTY-MF-ROUTER-01-Frontend-Router-Shared.md  
-- backend/docs/legacy/root/05-governance/07-acceptance/QLTY-MF-ROUTER-01.acceptance.md  
-- frontend/docs/01-architecture/01-shell/01-frontend-architecture.md  
-- docs/00-handbook/STYLE-FE-001.md  
+- Legacy QLTY-MF-ROUTER-01 story snapshot’ı  
+- Legacy QLTY-MF-ROUTER-01 acceptance snapshot’ı  
+- web/docs/01-architecture/01-shell/01-frontend-architecture.md  
+- STYLE-WEB-001.md  
 - QLTY-FE-VERSIONS-01 (versiyon pin audit)
 
 -------------------------------------------------------------------------------
@@ -81,5 +81,4 @@ Hariç:
 - Story: docs/03-delivery/STORIES/STORY-0035-mf-router-shared-version-pin.md  
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0035-mf-router-shared-version-pin.md  
 - Test Plan: `docs/03-delivery/TEST-PLANS/TP-0035-mf-router-shared-version-pin.md`  
-- Legacy Story: backend/docs/legacy/root/05-governance/02-stories/QLTY-MF-ROUTER-01-Frontend-Router-Shared.md  
-- Legacy Acceptance: backend/docs/legacy/root/05-governance/07-acceptance/QLTY-MF-ROUTER-01.acceptance.md  
+- Legacy input seti: QLTY-MF-ROUTER-01 archive snapshot’ı  

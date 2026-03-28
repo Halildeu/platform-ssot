@@ -1,21 +1,90 @@
-@import './styles/theme.css';
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Content scanning for monorepo — TW4 native @source */
+@source "../../../packages/design-system/src/**/*.{ts,tsx}";
+@source "../../../packages/x-form-builder/src/**/*.{ts,tsx}";
+@source "../../../packages/x-charts/src/**/*.{ts,tsx}";
+@source "../../../packages/x-data-grid/src/**/*.{ts,tsx}";
+@source "../../../packages/x-editor/src/**/*.{ts,tsx}";
+@source "../../../packages/x-kanban/src/**/*.{ts,tsx}";
+@source "../../../packages/x-scheduler/src/**/*.{ts,tsx}";
+@source "../../../packages/blocks/src/**/*.{ts,tsx}";
+@source "../../mfe-suggestions/src/**/*.{ts,tsx}";
+@source "../../mfe-ethic/src/**/*.{ts,tsx}";
+@source "../../mfe-users/src/**/*.{ts,tsx}";
+@source "../../mfe-access/src/**/*.{ts,tsx}";
+@source "../../mfe-audit/src/**/*.{ts,tsx}";
+@source "../../mfe-reporting/src/**/*.{ts,tsx}";
 
-/* Hafif reset: margin/padding temizliği ve tema var'larından zemin/metin */
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ------------------------------------------------------------------ */
+/*  TW4 Compatibility Layer — Restore v3 defaults                      */
+/* ------------------------------------------------------------------ */
+
+/* Dark mode: use data-mode="dark" attribute (not prefers-color-scheme) */
+@custom-variant dark (&:where([data-mode=dark], [data-mode=dark] *));
+
+/* Restore v3 ring defaults (3px width, focus-outline color) */
+@theme {
+  --default-ring-width: 3px;
+  --default-ring-color: var(--focus-outline, var(--color-blue-500));
 }
 
+/* @layer cascade bug fix REMOVED — @tailwindcss/webpack preserves @layer natively */
+
+/* Restore v3 base defaults changed in TW4 */
+@layer base {
+  /* Border default: currentColor → gray-200 */
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  /* Button cursor: default → pointer */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  /* Placeholder color: currentColor/50% → gray-400 */
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-gray-400);
+  }
+
+  /* Dialog margin: reset → auto (centered) */
+  dialog {
+    margin: auto;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  @theme inline — auto-generated from figma.tokens.json              */
+/*  Run: npm run tokens:build:theme to regenerate.                     */
+/*  "inline" ensures TW4 utilities use var() directly, so runtime     */
+/*  theme switches (data-theme attr) cascade correctly.                */
+/* ------------------------------------------------------------------ */
+@import './styles/generated-theme-inline.css';
+
+/* ------------------------------------------------------------------ */
+/*  Theme overrides — runtime CSS vars override @theme static values   */
+/*  theme.css sets :root { --color-surface-default: <actual value> }   */
+/* ------------------------------------------------------------------ */
+@import './styles/theme.css';
+
+/* ------------------------------------------------------------------ */
+/*  Token → TW mapping is now handled by @theme inline above.          */
+/*  No separate :root override block needed — @theme inline emits      */
+/*  utility classes that directly reference runtime CSS variables.      */
+/* ------------------------------------------------------------------ */
+
+/* TW4 preflight handles reset — no manual reset needed */
+
 body {
-  background-color: var(--surface-page-bg);
-  color: var(--text-primary);
+  background-color: var(--color-surface-page);
+  color: var(--color-text-primary);
   font-family: var(
     --font-family-base,
     'Inter',
@@ -28,8 +97,9 @@ body {
   min-height: 100vh;
 }
 
-/* Radius aksı görünür olsun diye temel rounded sınıflarını tema var'larına bağla */
+/* Radius aksı — v4 renames: rounded-sm→rounded-xs */
 [data-radius] .rounded,
+[data-radius] .rounded-xs,
 [data-radius] .rounded-sm,
 [data-radius] .rounded-md {
   border-radius: var(--radius-control);
@@ -42,21 +112,77 @@ body {
   border-radius: var(--radius-surface);
 }
 
-/* Elevation aksı: tailwind shadow sınıflarını tema gölgelerine bağla */
-[data-elevation="raised"] .shadow,
-[data-elevation="raised"] .shadow-sm,
-[data-elevation="raised"] .shadow-md,
-[data-elevation="raised"] .shadow-lg,
-[data-elevation="raised"] .shadow-xl,
-[data-elevation="raised"] .shadow-2xl {
+/* Elevation aksı */
+/* v4 renames: shadow-sm→shadow-xs, shadow→shadow-sm — both old and new covered */
+[data-elevation="raised"] :is(.shadow, .shadow-xs, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl) {
   box-shadow: var(--elevation-surface) !important;
 }
 
-[data-elevation="flat"] .shadow,
-[data-elevation="flat"] .shadow-sm,
-[data-elevation="flat"] .shadow-md,
-[data-elevation="flat"] .shadow-lg,
-[data-elevation="flat"] .shadow-xl,
-[data-elevation="flat"] .shadow-2xl {
+[data-elevation="flat"] :is(.shadow, .shadow-xs, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl) {
   box-shadow: var(--elevation-surface) !important;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Forced Colors / High Contrast support                              */
+/*  Ensures all interactive elements have visible borders when the OS  */
+/*  strips background colors in forced-colors mode.                    */
+/* ------------------------------------------------------------------ */
+@media (forced-colors: active) {
+  button,
+  [role="button"],
+  input,
+  select,
+  textarea,
+  a {
+    border: 1px solid ButtonText;
+  }
+  :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  /* Active/selected states — prevent invisible elements */
+  [aria-current="page"],
+  [aria-selected="true"],
+  [data-state="active"],
+  [data-active],
+  .bg-action-primary {
+    forced-color-adjust: none;
+    background-color: Highlight !important;
+    color: HighlightText !important;
+    border-color: ButtonText !important;
+  }
+
+  /* Steps — active/completed indicators */
+  [aria-current="step"],
+  [data-step-status="active"],
+  [data-step-status="completed"] {
+    forced-color-adjust: none;
+    background-color: Highlight !important;
+    color: HighlightText !important;
+  }
+
+  /* Disabled states */
+  [aria-disabled="true"],
+  [disabled] {
+    forced-color-adjust: none;
+    color: GrayText !important;
+    border-color: GrayText !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --border-subtle: oklch(60% 0 0);
+    --border-default: oklch(80% 0 0);
+    --action-primary: oklch(55% 0.25 265);
+    --text-inverse: oklch(100% 0 0);
+  }
+
+  /* Ensure active buttons have strong contrast */
+  [aria-current="page"],
+  [aria-selected="true"] {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+  }
 }

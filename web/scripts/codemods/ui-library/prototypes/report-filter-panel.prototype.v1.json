@@ -1,0 +1,59 @@
+{
+  "version": "1.0",
+  "candidateId": "reportfilterpanel-mfe-reporting-codemod",
+  "component": "ReportFilterPanel",
+  "strategyId": "report-filter-panel-codemod-candidate",
+  "transformKind": "slot-prop-review",
+  "reviewMode": "illustrative-dry-run",
+  "sourcePath": "web/scripts/codemods/ui-library/prototypes/report-filter-panel.prototype.ts",
+  "rewriteRule": "Submit/reset label ve handler ciftleri canonical siraya alinip explicit access fallback'i eklenir; children slot'u korunur.",
+  "rewritePreview": {
+    "kind": "illustrative",
+    "before": "<ReportFilterPanel loading={loading} onSubmit={handleSubmit} onReset={handleReset} submitLabel={t('reports.filters.apply')} resetLabel={t('reports.filters.reset')}>",
+    "after": "<ReportFilterPanel submitLabel={t('reports.filters.apply')} resetLabel={t('reports.filters.reset')} onSubmit={handleSubmit} onReset={handleReset} loading={loading} access=\"full\">"
+  },
+  "matchStrategy": {
+    "requiredSelectors": [
+      "import { ReportFilterPanel } from '@mfe/design-system'",
+      "<ReportFilterPanel"
+    ],
+    "dryRunSignals": [
+      "submitLabel",
+      "resetLabel",
+      "onSubmit",
+      "onReset"
+    ],
+    "astTargets": [
+      "JSXOpeningElement[name=ReportFilterPanel]",
+      "JSXAttribute[name=submitLabel]",
+      "JSXAttribute[name=resetLabel]",
+      "JSXAttribute[name=onSubmit]",
+      "JSXAttribute[name=onReset]"
+    ],
+    "stopConditions": [
+      "children slot'u render-prop ise rewrite atlanir",
+      "access prop'u expression ise owner onayi olmadan rewrite uygulanmaz"
+    ]
+  },
+  "manualValidation": {
+    "storybook": [
+      "PageLayoutReporting",
+      "UiKitReleaseMatrix"
+    ],
+    "designLab": [
+      "report filter submit flow",
+      "analytics filter reset"
+    ],
+    "smoke": [
+      "reporting route submit/reset",
+      "frontend-doctor ui-library preset"
+    ]
+  },
+  "rollbackPlan": [
+    "submit/reset label string'leri lokalize expression disina cikarsa diff geri alinir",
+    "slot render davranisi degisirse component owner review zorunlu kalir"
+  ],
+  "notes": [
+    "Bu prototype yuksek risklidir; rewrite preview yalniz olasi hedef duzeni gosterir."
+  ]
+}

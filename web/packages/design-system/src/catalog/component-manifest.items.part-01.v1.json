@@ -1,0 +1,441 @@
+{
+  "items": [
+    {
+      "name": "AIActionAuditTimeline",
+      "indexItem": {
+        "name": "AIActionAuditTimeline",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { AIActionAuditTimeline } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAiGovernanceShowcaseSections.tsx"
+        ]
+      },
+      "apiItem": {
+        "name": "AIActionAuditTimeline",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "AIGuidedAuthoring",
+      "indexItem": {
+        "name": "AIGuidedAuthoring",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { AIGuidedAuthoring } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
+        ]
+      },
+      "apiItem": {
+        "name": "AIGuidedAuthoring",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "AILayoutBuilder",
+      "indexItem": {
+        "name": "AILayoutBuilder",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { AILayoutBuilder } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": {
+        "name": "AILayoutBuilder",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "Accordion",
+      "indexItem": {
+        "name": "Accordion",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { Accordion } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-shell/src/pages/admin/ThemeAdminRegistryEditor.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts"
+        ]
+      },
+      "apiItem": {
+        "name": "Accordion",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "AdaptiveForm",
+      "indexItem": {
+        "name": "AdaptiveForm",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { AdaptiveForm } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": {
+        "name": "AdaptiveForm",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "AgGridServer",
+      "indexItem": {
+        "name": "AgGridServer",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { AgGridServer } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/docs/guideRegistry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildCollectionGridLivePreview.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildDataDisplayAnalyticsShowcaseSections.tsx"
+        ]
+      },
+      "apiItem": {
+        "name": "AgGridServer",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "Alert",
+      "indexItem": {
+        "name": "Alert",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { Alert } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildTabsFeedbackShowcaseSections.tsx"
+        ]
+      },
+      "apiItem": {
+        "name": "Alert",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "AnchorToc",
+      "indexItem": {
+        "name": "AnchorToc",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { AnchorToc } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/docs/guideRegistry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildNavigationUtilityLivePreview.tsx"
+        ]
+      },
+      "apiItem": {
+        "name": "AnchorToc",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "ApprovalCheckpoint",
+      "indexItem": {
+        "name": "ApprovalCheckpoint",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { ApprovalCheckpoint } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAiGovernanceShowcaseSections.tsx"
+        ]
+      },
+      "apiItem": {
+        "name": "ApprovalCheckpoint",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "ApprovalReview",
+      "indexItem": {
+        "name": "ApprovalReview",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { ApprovalReview } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildThemeRecipeShowcaseSections.tsx"
+        ]
+      },
+      "apiItem": {
+        "name": "ApprovalReview",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "AreaChart",
+      "indexItem": {
+        "name": "AreaChart",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { AreaChart } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": {
+        "name": "AreaChart",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "Avatar",
+      "indexItem": {
+        "name": "Avatar",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { Avatar } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/demos/admin/main.tsx",
+          "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemeBuilderPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
+        ]
+      },
+      "apiItem": {
+        "name": "Avatar",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "AvatarGroup",
+      "indexItem": {
+        "name": "AvatarGroup",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { AvatarGroup } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": {
+        "name": "AvatarGroup",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "Badge",
+      "indexItem": {
+        "name": "Badge",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { Badge } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/demos/admin/main.tsx",
+          "web/apps/demos/crud/main.tsx",
+          "web/apps/demos/dashboard/main.tsx",
+          "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
+          "web/apps/mfe-access/src/widgets/permission-registry/PermissionRegistryPanel.ui.tsx",
+          "web/apps/mfe-shell/src/app/layout/DesignLabHeaderMenu.tsx",
+          "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+          "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/BenchmarkParityPanel.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentDetailSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentOverviewPanels.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabEcosystemDetailSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabFoundationDetailSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabPageDetailSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabRecipeDetailSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/MigrationGovernancePanel.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/PlatformContractsCompliancePanel.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/pages/QualityAuditPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemeBuilderPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/shared/DesignLabTaxonomyNavigator.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabMenuBarShowcase.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabTableSimpleShowcase.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/link-inline/index.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/menu-bar/menuBarShared.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/navigation-rail/index.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildActionDataEntryShowcaseSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildCollectionGridShowcaseSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildDataDisplayAnalyticsShowcaseSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayShowcaseSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildSearchFilterShowcaseSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildTabsFeedbackShowcaseSections.tsx",
+          "web/apps/mfe-users/src/widgets/user-management/ui/UsersGrid.ui.tsx"
+        ]
+      },
+      "apiItem": {
+        "name": "Badge",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "BarChart",
+      "indexItem": {
+        "name": "BarChart",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { BarChart } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": {
+        "name": "BarChart",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "Breadcrumb",
+      "indexItem": {
+        "name": "Breadcrumb",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { Breadcrumb } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabBreadcrumbShowcase.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx"
+        ]
+      },
+      "apiItem": {
+        "name": "Breadcrumb",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "Button",
+      "indexItem": {
+        "name": "Button",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { Button } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/demos/admin/main.tsx",
+          "web/apps/demos/crud/main.tsx",
+          "web/apps/mfe-access/src/pages/access/AccessPage.ui.tsx",
+          "web/apps/mfe-access/src/widgets/access-management/ui/AccessFilterBar.ui.tsx",
+          "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
+          "web/apps/mfe-access/src/widgets/access-management/ui/AccessVariantToolbar.ui.tsx",
+          "web/apps/mfe-access/src/widgets/access-management/ui/BulkPermissionModal.ui.tsx",
+          "web/apps/mfe-shell/src/app/layout/LoginPopover.tsx",
+          "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+          "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentDetailSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemeBuilderPage.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildActionDataEntryShowcaseSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayLivePreview.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayShowcaseSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildSearchFilterShowcaseSections.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildTabsFeedbackShowcaseSections.tsx",
+          "web/apps/mfe-shell/src/pages/login/LoginPage.ui.tsx",
+          "web/apps/mfe-shell/src/pages/register/RegisterPage.ui.tsx",
+          "web/apps/mfe-shell/src/pages/unauthorized/UnauthorizedPage.ui.tsx",
+          "web/apps/mfe-suggestions/src/App.tsx",
+          "web/apps/mfe-users/src/widgets/user-management/ui/UsersGrid.ui.tsx"
+        ]
+      },
+      "apiItem": {
+        "name": "Button",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "Calendar",
+      "indexItem": {
+        "name": "Calendar",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { Calendar } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": {
+        "name": "Calendar",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "Card",
+      "indexItem": {
+        "name": "Card",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { Card } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/demos/admin/main.tsx",
+          "web/apps/demos/crud/main.tsx",
+          "web/apps/demos/dashboard/main.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts"
+        ]
+      },
+      "apiItem": {
+        "name": "Card",
+        "props": [],
+        "slots": []
+      }
+    },
+    {
+      "name": "CardBody",
+      "indexItem": {
+        "name": "CardBody",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "component",
+        "importStatement": "import { CardBody } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts"
+        ]
+      },
+      "apiItem": {
+        "name": "CardBody",
+        "props": [],
+        "slots": []
+      }
+    }
+  ]
+}

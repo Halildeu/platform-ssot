@@ -1,30 +1,16 @@
 import React from 'react';
+import { getSharedReport } from '@platform/capabilities';
 import type { ReportModule } from '../types';
+import { fetchAccessReport } from './api';
+import type { AccessFilters, AccessRow } from './types';
 import type { ColumnDef } from '../../grid';
 
-type AccessFilters = {
-  search: string;
-};
-
-type AccessRow = {
-  id: string;
-  roleName: string;
-  memberCount: number;
-  moduleSummary: string;
-  updatedAt: string;
-};
-
-const mockRows: AccessRow[] = Array.from({ length: 40 }).map((_, index) => ({
-  id: `ROLE-${index + 1}`,
-  roleName: `Rol ${index + 1}`,
-  memberCount: Math.floor(Math.random() * 80),
-  moduleSummary: index % 2 === 0 ? 'Kullanıcı Yönetimi' : 'Audit + Erişim',
-  updatedAt: new Date(Date.now() - index * 6 * 60 * 60 * 1000).toISOString(),
-}));
+const sharedReport = getSharedReport('roles-access');
 
 export const accessReportModule: ReportModule<AccessFilters, AccessRow> = {
-  id: 'reports.access',
-  route: 'access',
+  id: sharedReport.webModuleId,
+  sharedReportId: sharedReport.id,
+  route: sharedReport.webRouteSegment,
   navKey: 'reports.nav.access',
   titleKey: 'reports.access.title',
   descriptionKey: 'reports.access.description',
@@ -37,7 +23,7 @@ export const accessReportModule: ReportModule<AccessFilters, AccessRow> = {
   }),
   renderFilters: ({ values, setFieldValue, t }) => {
     const inputClass =
-      'w-full min-w-[200px] rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1';
+      'w-full min-w-[200px] rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1';
     const labelClass = 'flex flex-col gap-1 text-xs font-medium text-text-secondary';
 
     return (
@@ -59,15 +45,28 @@ export const accessReportModule: ReportModule<AccessFilters, AccessRow> = {
       { headerName: t('reports.access.columns.moduleSummary'), field: 'moduleSummary', flex: 1.6 },
       { headerName: t('reports.access.columns.updatedAt'), field: 'updatedAt', flex: 1 },
     ] as ColumnDef<AccessRow>[],
-  fetchRows: async (filters) => {
-    const normalized = filters.search.trim().toLowerCase();
-    await new Promise((resolve) => setTimeout(resolve, 150));
-    const rows = normalized
-      ? mockRows.filter((row) => row.roleName.toLowerCase().includes(normalized))
-      : mockRows;
-    return { rows, total: rows.length };
+  fetchRows: (filters, request) => fetchAccessReport(filters, request),
+  renderDetail: (row, t) => {
+    if (!row) {
+      return <span>{t('reports.detail.empty')}</span>;
+    }
+    return (
+      <dl style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: 8 }}>
+        <dt>ID</dt>
+        <dd>{row.id}</dd>
+        <dt>{t('reports.access.columns.roleName')}</dt>
+        <dd>{row.roleName}</dd>
+        <dt>{t('reports.access.columns.memberCount')}</dt>
+        <dd>{row.memberCount}</dd>
+        <dt>Izin sayisi</dt>
+        <dd>{row.permissionCount}</dd>
+        <dt>{t('reports.access.columns.moduleSummary')}</dt>
+        <dd>{row.moduleSummary}</dd>
+        <dt>Aciklama</dt>
+        <dd>{row.description ?? '-'}</dd>
+        <dt>{t('reports.access.columns.updatedAt')}</dt>
+        <dd>{row.updatedAt || '-'}</dd>
+      </dl>
+    );
   },
-  renderDetail: (_row, t) => (
-    <span>{t('reports.access.comingSoon')}</span>
-  ),
 };

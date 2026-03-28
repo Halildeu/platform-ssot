@@ -1,0 +1,174 @@
+---
+title: Dark Mode Rehberi
+description: Dark mode kurulumu, semantic token'lar ve en iyi pratikler
+---
+
+## Genel Bakış
+
+Design system, semantic token tabanlı dark mode desteği sunar. Tüm bileşenler varsayılan olarak hem light hem dark temayı destekler. Uygulama geliştiricilerin yapması gereken minimum konfigürasyon yeterlidir.
+
+## Hızlı Kurulum
+
+### 1. Token CSS'lerini Import Edin
+
+```tsx
+// main.tsx veya index.tsx
+import '@mfe/design-system/tokens/build/tokens.css';
+import '@mfe/design-system/tokens/build/dark-mode.css';
+```
+
+### 2. Provider'ı Yapılandırın
+
+```tsx
+import { DesignSystemProvider } from '@mfe/design-system';
+
+function App() {
+  return (
+    <DesignSystemProvider
+      theme={{ appearance: 'light' }} // veya 'dark', 'system'
+    >
+      <YourApp />
+    </DesignSystemProvider>
+  );
+}
+```
+
+### 3. Tema Geçişi Ekleyin
+
+```tsx
+import { useTheme, ThemeToggle } from '@mfe/design-system';
+
+// Hazır bileşen kullanımı
+<ThemeToggle />
+
+// veya özel toggle
+function CustomToggle() {
+  const { axes, setAppearance } = useTheme();
+
+  return (
+    <button onClick={() => {
+      const next = axes.appearance === 'dark' ? 'light' : 'dark';
+      setAppearance(next);
+    }}>
+      {axes.appearance === 'dark' ? '☀️' : '🌙'}
+    </button>
+  );
+}
+```
+
+## Sistem Tercihine Uyum
+
+`appearance: 'system'` seçeneği ile kullanıcının işletim sistemi temasına otomatik uyum sağlanır:
+
+```tsx
+<DesignSystemProvider theme={{ appearance: 'system' }}>
+  <YourApp />
+</DesignSystemProvider>
+```
+
+Bu seçenek `prefers-color-scheme` media query'sini dinler ve otomatik geçiş yapar.
+
+## Semantic Token Yapısı
+
+Dark mode, sabit renk değerleri yerine anlamsal (semantic) token'lar kullanır:
+
+| Token | Light | Dark | Kullanım |
+|-------|-------|------|----------|
+| `--text-primary` | #111827 | #f9fafb | Ana metin rengi |
+| `--text-secondary` | #6b7280 | #9ca3af | İkincil metin |
+| `--surface-default` | #ffffff | #1f2937 | Varsayılan arka plan |
+| `--surface-raised` | #f9fafb | #374151 | Yükseltilmiş yüzey |
+| `--surface-sunken` | #f3f4f6 | #111827 | Çukur yüzey |
+| `--border-default` | #d1d5db | #4b5563 | Varsayılan kenarlık |
+| `--action-primary` | #2563eb | #3b82f6 | Birincil aksiyon |
+| `--action-danger` | #dc2626 | #ef4444 | Tehlikeli aksiyon |
+| `--action-success` | #16a34a | #22c55e | Başarılı aksiyon |
+
+## Özel Bileşenlerde Dark Mode
+
+Kendi bileşenlerinizde semantic token'ları kullanarak otomatik dark mode desteği sağlayın:
+
+```tsx
+// Doğru: Semantic token kullanımı
+const StyledCard = styled.div`
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+`;
+
+// Yanlış: Sabit renk değeri
+const StyledCard = styled.div`
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #d1d5db;
+`;
+```
+
+## Tailwind CSS Entegrasyonu
+
+Tailwind kullanıyorsanız, token'ları CSS değişkenleri olarak bağlayın:
+
+```js
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        'text-primary': 'var(--text-primary)',
+        'text-secondary': 'var(--text-secondary)',
+        'surface-default': 'var(--surface-default)',
+        'surface-raised': 'var(--surface-raised)',
+        'action-primary': 'var(--action-primary)',
+      },
+    },
+  },
+};
+```
+
+## High Contrast Modu
+
+Görme engelli kullanıcılar için yüksek kontrast modu:
+
+```tsx
+<DesignSystemProvider theme={{ appearance: 'high-contrast' }}>
+```
+
+| Token | High Contrast |
+|-------|--------------|
+| `--text-primary` | #000000 |
+| `--surface-default` | #ffffff |
+| `--border-default` | #000000 |
+| `--action-primary` | #0000cc |
+
+## Test Etme
+
+Dark mode testleri için `axe-core` ve görsel regresyon testleri kullanın:
+
+```tsx
+import { render } from '@testing-library/react';
+import { DesignSystemProvider } from '@mfe/design-system';
+
+function renderWithDarkMode(ui: React.ReactElement) {
+  return render(
+    <DesignSystemProvider theme={{ appearance: 'dark' }}>
+      {ui}
+    </DesignSystemProvider>
+  );
+}
+
+test('dark mode renkleri doğru uygulanmalı', () => {
+  const { container } = renderWithDarkMode(<MyComponent />);
+  const element = container.firstChild as HTMLElement;
+  const styles = getComputedStyle(element);
+  expect(styles.backgroundColor).toBe('rgb(31, 41, 55)');
+});
+```
+
+## En İyi Pratikler
+
+1. **Sabit renk kullanmayın** — Her zaman semantic token'ları tercih edin
+2. **Gölgeleri ayarlayın** — Dark mode'da gölgeler daha koyu olmalıdır
+3. **Görsel varlıkları kontrol edin** — Logolar ve ikonlar her iki temada da görünür olmalıdır
+4. **Kontrast oranlarını test edin** — Minimum 4.5:1 kontrast oranı sağlayın
+5. **Sistem tercihini destekleyin** — `appearance: 'system'` seçeneğini varsayılan yapın
+6. **Geçiş animasyonu ekleyin** — `transition: background-color 0.2s, color 0.2s` kullanın

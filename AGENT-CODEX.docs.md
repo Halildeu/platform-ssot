@@ -1,4 +1,10 @@
-# AGENT-CODEX.docs – Doküman Geliştirme Görevleri
+# Doküman Geliştirme Görevleri
+
+> Transition Durumu: Bu dosya transition-active rehber katmanındadır.
+> Canonical kaynaklar:
+> `standards.lock`,
+> `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md`,
+> `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`.
 
 Bu dosya, **[DOC]** tipindeki görevler için geçerlidir.
 
@@ -19,14 +25,14 @@ Bu dosya, **[DOC]** tipindeki görevler için geçerlidir.
 
 [DOC] işi alındığında agent:
 
-1. `AGENT-CODEX.core.md`
-2. `AGENTS.md`
-3. `docs/00-handbook/DOC-HIERARCHY.md`
-4. `docs/00-handbook/STYLE-DOCS-001.md`
+1. `AGENTS.md`
+2. `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`
+3. `DOC-HIERARCHY.md`
+4. `STYLE-DOCS-001.md`
 5. `NUMARALANDIRMA-STANDARDI.md`
 6. (DOCS-PRODUCTION / Direct-Gen ise) üretim kontratı:
    - `docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md`
-   - `docs/00-handbook/DOCS-PRODUCTION-AGENTS.md`
+   - `DOCS-PRODUCTION-AGENTS.md`
 7. Uygun şablonlar:
 	   - `docs/99-templates/PROBLEM-BRIEF.template.md`
 	   - `docs/99-templates/PRD.template.md`
@@ -56,7 +62,7 @@ BM → BENCH → TRACE → Delivery Pack (PB/PRD/SPEC/STORY/AC/TP) zinciridir.
 
 SSOT:
 - Kontrat: `docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md`
-- Rol dağılımı: `docs/00-handbook/DOCS-PRODUCTION-AGENTS.md`
+- Rol dağılımı: `DOCS-PRODUCTION-AGENTS.md`
 
 ## 4. Cevap Formatı
 
@@ -91,7 +97,7 @@ Varsayılan davranış:
 
 2. Dokümanları parça parça okuma
    - Tüm repo’yu okumaz; sadece ilgili dosyaları ve bölümleri tarar:
-     - İlgili AGENT-CODEX.* (özellikle `AGENT-CODEX.docs.md`)
+     - İlgili alan transition rehberi
      - `DOCS-PROJECT-LAYOUT.md`, `NUMARALANDIRMA-STANDARDI.md`, `STYLE-DOCS-001.md`
      - İlgili STORY / AC / TP / TECH-DESIGN / RUNBOOK / RELEASE-NOTES dosyaları
    - Okumayı token limitini aşmadan, küçük parçalar hâlinde yapar.

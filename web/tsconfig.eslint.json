@@ -12,8 +12,8 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "mfe-ui-kit": ["packages/ui-kit/src/index.ts"],
-      "mfe-ui-kit/*": ["packages/ui-kit/src/*"],
+      "@mfe/design-system": ["packages/design-system/src/index.ts"],
+      "@mfe/design-system/*": ["packages/design-system/src/*"],
       "mfe_shell": ["apps/mfe-shell/src/app/index.tsx"],
       "mfe_shell/*": ["apps/mfe-shell/src/*"],
       "@mfe/shared-types": ["packages/shared-types/src/index.ts"],

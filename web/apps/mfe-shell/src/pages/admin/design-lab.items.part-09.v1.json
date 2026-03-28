@@ -1,0 +1,164 @@
+{
+  "items": [
+    {
+      "name": "focusRing",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { focusRing } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "fontFamily",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { fontFamily } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "fontSize",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { fontSize } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "fontWeight",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { fontWeight } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "generateCode",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { generateCode } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getAuditRules",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getAuditRules } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getBundleReport",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getBundleReport } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getChartColorPalette",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getChartColorPalette } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getChartThemeOverrides",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getChartThemeOverrides } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getComponentA11yChecklist",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getComponentA11yChecklist } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getComponentCatalog",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getComponentCatalog } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getComponentDoc",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getComponentDoc } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getComponentExamples",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getComponentExamples } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getComponentSizes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getComponentSizes } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getComponentTokens",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getComponentTokens } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getDesignTokens",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getDesignTokens } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getKeyboardContract",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getKeyboardContract } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getRecommendations",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getRecommendations } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getResolvedToken",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getResolvedToken } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "getSupportedChecklistTypes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { getSupportedChecklistTypes } from '@mfe/design-system';",
+      "whereUsed": []
+    }
+  ]
+}

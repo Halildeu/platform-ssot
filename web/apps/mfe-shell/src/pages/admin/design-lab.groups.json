@@ -9,84 +9,295 @@
       "id": "actions",
       "label": "Actions",
       "subgroups": [
-        { "id": "buttons", "label": "Buttons" }
+        {
+          "id": "buttons",
+          "label": "Buttons"
+        }
       ]
     },
     {
       "id": "forms",
       "label": "Forms",
       "subgroups": [
-        { "id": "select", "label": "Select" },
-        { "id": "dropdown", "label": "Dropdown" },
-        { "id": "inputs", "label": "Inputs" }
+        {
+          "id": "select",
+          "label": "Select"
+        },
+        {
+          "id": "dropdown",
+          "label": "Dropdown"
+        },
+        {
+          "id": "inputs",
+          "label": "Inputs"
+        }
       ]
     },
     {
       "id": "overlays",
       "label": "Overlays",
       "subgroups": [
-        { "id": "modal", "label": "Modal" },
-        { "id": "drawers", "label": "Drawers" }
+        {
+          "id": "modal",
+          "label": "Modal"
+        },
+        {
+          "id": "drawers",
+          "label": "Drawers"
+        },
+        {
+          "id": "popover",
+          "label": "Popover"
+        },
+        {
+          "id": "context_menu",
+          "label": "Context menu"
+        },
+        {
+          "id": "tour_coachmarks",
+          "label": "Tour / Coachmarks"
+        }
       ]
     },
     {
       "id": "feedback",
       "label": "Feedback",
       "subgroups": [
-        { "id": "badges", "label": "Badges" },
-        { "id": "tooltips", "label": "Tooltips" },
-        { "id": "tags", "label": "Tags" }
+        {
+          "id": "badges",
+          "label": "Badges"
+        },
+        {
+          "id": "loading",
+          "label": "Loading & Placeholder"
+        },
+        {
+          "id": "tooltips",
+          "label": "Tooltips"
+        },
+        {
+          "id": "tags",
+          "label": "Tags"
+        },
+        {
+          "id": "state_recipes",
+          "label": "State Recipes"
+        }
       ]
     },
     {
-      "id": "layout",
-      "label": "Layout",
+      "id": "page_blocks",
+      "label": "Page Blocks",
       "subgroups": [
-        { "id": "page", "label": "Page Layout" },
-        { "id": "filters", "label": "Filters" }
+        {
+          "id": "page_shell",
+          "label": "Page Shell"
+        },
+        {
+          "id": "filters",
+          "label": "Filters"
+        },
+        {
+          "id": "summary",
+          "label": "Summary Blocks"
+        },
+        {
+          "id": "recipes",
+          "label": "Recipes"
+        }
+      ]
+    },
+    {
+      "id": "navigation",
+      "label": "Navigation",
+      "subgroups": [
+        {
+          "id": "tabs",
+          "label": "Tabs"
+        },
+        {
+          "id": "breadcrumb",
+          "label": "Breadcrumb"
+        },
+        {
+          "id": "pagination",
+          "label": "Pagination"
+        },
+        {
+          "id": "steps",
+          "label": "Steps"
+        },
+        {
+          "id": "anchor-toc",
+          "label": "Anchor / Table of contents"
+        }
       ]
     },
     {
       "id": "data-grid",
       "label": "Data & Grid",
       "subgroups": [
-        { "id": "entity-grid", "label": "Entity Grid" },
-        { "id": "ag-grid-server", "label": "AgGrid Server" },
-        { "id": "variants", "label": "Variants" }
+        {
+          "id": "entity-grid",
+          "label": "Entity Grid"
+        },
+        {
+          "id": "ag-grid-server",
+          "label": "AgGrid Server"
+        },
+        {
+          "id": "variants",
+          "label": "Variants"
+        }
+      ]
+    },
+    {
+      "id": "data_display",
+      "label": "Data Display",
+      "subgroups": [
+        {
+          "id": "table_simple",
+          "label": "Table"
+        },
+        {
+          "id": "data_grid",
+          "label": "Data Grid (AG Grid / EntityGrid)"
+        },
+        {
+          "id": "descriptions",
+          "label": "Descriptions / Key-Value"
+        },
+        {
+          "id": "list",
+          "label": "List"
+        },
+        {
+          "id": "tree_table",
+          "label": "Tree / TreeTable"
+        },
+        {
+          "id": "stat_cards",
+          "label": "Statistic / KPI cards"
+        },
+        {
+          "id": "timeline",
+          "label": "Timeline"
+        },
+        {
+          "id": "calendar_scheduler",
+          "label": "Calendar / Scheduler view"
+        },
+        {
+          "id": "media",
+          "label": "Media (Image/Carousel)"
+        },
+        {
+          "id": "json_viewer",
+          "label": "Code / JSON viewer"
+        }
       ]
     },
     {
       "id": "content",
       "label": "Content & Typography",
       "subgroups": [
-        { "id": "text", "label": "Text" }
+        {
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "id": "identity",
+          "label": "Identity"
+        },
+        {
+          "id": "divider",
+          "label": "Divider"
+        }
       ]
     },
     {
       "id": "empty-states",
       "label": "Empty States",
       "subgroups": [
-        { "id": "empty", "label": "Empty" }
+        {
+          "id": "empty",
+          "label": "Empty"
+        }
       ]
     },
     {
       "id": "theme",
       "label": "Theme & Tokens",
       "subgroups": [
-        { "id": "preview", "label": "Preview" },
-        { "id": "options", "label": "Options" },
-        { "id": "runtime", "label": "Runtime" }
+        {
+          "id": "preview",
+          "label": "Preview"
+        },
+        {
+          "id": "options",
+          "label": "Options"
+        },
+        {
+          "id": "runtime",
+          "label": "Runtime"
+        },
+        {
+          "id": "preset_gallery",
+          "label": "Preset Gallery"
+        },
+        {
+          "id": "preset_compare",
+          "label": "Preset Compare"
+        }
       ]
     },
     {
       "id": "runtime",
       "label": "Runtime (Advanced)",
       "subgroups": [
-        { "id": "auth", "label": "Auth" },
-        { "id": "access", "label": "Access" },
-        { "id": "utilities", "label": "Utilities" }
+        {
+          "id": "auth",
+          "label": "Auth"
+        },
+        {
+          "id": "access",
+          "label": "Access"
+        },
+        {
+          "id": "utilities",
+          "label": "Utilities"
+        }
+      ]
+    },
+    {
+      "id": "ai_helpers",
+      "label": "AI Helpers",
+      "subgroups": [
+        {
+          "id": "command_palette",
+          "label": "Command Palette"
+        },
+        {
+          "id": "recommendations",
+          "label": "Recommendations & Confidence"
+        },
+        {
+          "id": "approval_audit",
+          "label": "Approval & Audit"
+        },
+        {
+          "id": "citations_prompting",
+          "label": "Citations & Prompting"
+        },
+        {
+          "id": "authoring",
+          "label": "Authoring"
+        }
       ]
     }
   ]
 }
-

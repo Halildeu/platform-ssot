@@ -1,0 +1,240 @@
+{
+  "items": [
+    {
+      "name": "CardFooter",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { CardFooter } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts"
+      ]
+    },
+    {
+      "name": "CardHeader",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { CardHeader } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts"
+      ]
+    },
+    {
+      "name": "Carousel",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Carousel } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "Cascader",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Cascader } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "Checkbox",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Checkbox } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildActionDataEntryShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildFormControlLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildFormControlShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "CitationPanel",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { CitationPanel } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAiGovernanceShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "ColorPicker",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { ColorPicker } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "Combobox",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Combobox } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildActionDataEntryShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "CommandPalette",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { CommandPalette } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildSearchFilterShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "ConfidenceBadge",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { ConfidenceBadge } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAiGovernanceShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildConfidencePromptLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildConfidencePromptShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "ContextMenu",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { ContextMenu } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/docs/guideRegistry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "DEFAULT_THEME_AXES",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { DEFAULT_THEME_AXES } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "DatePicker",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { DatePicker } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAdvancedInputLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAdvancedInputShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildSearchFilterShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "Descriptions",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Descriptions } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationClientDefaultShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationEllipsisWideShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationReadonlyShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerDenseShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAiGovernanceShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildCollectionGridShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildDataDisplayAnalyticsShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildSearchFilterShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "DesignSystemMCPServer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { DesignSystemMCPServer } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "DesignSystemProvider",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { DesignSystemProvider } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "DetailDrawer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { DetailDrawer } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
+        "web/apps/mfe-audit/src/app/components/AuditDetailDrawer.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayShowcaseSections.tsx",
+        "web/apps/mfe-users/src/widgets/user-management/ui/UserDetailDrawer.ui.tsx"
+      ]
+    },
+    {
+      "name": "DetailSectionTabs",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { DetailSectionTabs } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/docs/guideRegistry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts"
+      ]
+    },
+    {
+      "name": "DetailSummary",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { DetailSummary } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildDataDisplayAnalyticsShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "Dialog",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Dialog } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/demos/crud/main.tsx"
+      ]
+    }
+  ]
+}

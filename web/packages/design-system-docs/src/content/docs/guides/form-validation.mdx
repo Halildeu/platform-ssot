@@ -1,0 +1,242 @@
+---
+title: Form Validation Rehberi
+description: AdaptiveForm sistemi, doğrulama kuralları ve hata yönetimi
+---
+
+## Genel Bakış
+
+Design system, `AdaptiveForm` bileşeni ile kapsamlı form yönetimi sunar. React Hook Form tabanlı altyapı, Zod/Yup şema doğrulaması ve otomatik hata mesajları içerir.
+
+## Temel Kullanım
+
+```tsx
+import { AdaptiveForm, ConnectedInput, ConnectedSelect } from '@mfe/design-system';
+import { z } from 'zod';
+
+const schema = z.object({
+  name: z.string().min(2, 'Ad en az 2 karakter olmalıdır'),
+  email: z.string().email('Geçerli bir e-posta adresi girin'),
+  role: z.enum(['admin', 'editor', 'viewer'], {
+    errorMap: () => ({ message: 'Bir rol seçin' }),
+  }),
+});
+
+function UserForm() {
+  return (
+    <AdaptiveForm
+      schema={schema}
+      onSubmit={async (data) => {
+        await createUser(data);
+      }}
+    >
+      <ConnectedInput name="name" label="Ad Soyad" />
+      <ConnectedInput name="email" label="E-posta" type="email" />
+      <ConnectedSelect
+        name="role"
+        label="Rol"
+        options={[
+          { value: 'admin', label: 'Yönetici' },
+          { value: 'editor', label: 'Editör' },
+          { value: 'viewer', label: 'İzleyici' },
+        ]}
+      />
+      <Button type="submit">Kaydet</Button>
+    </AdaptiveForm>
+  );
+}
+```
+
+## Connected Bileşenler
+
+Form bileşenleri `Connected` ön ekiyle form state'ine otomatik bağlanır:
+
+| Bileşen | Açıklama |
+|---------|----------|
+| `ConnectedInput` | Metin, e-posta, şifre, sayı girişi |
+| `ConnectedSelect` | Tekli/çoklu seçim |
+| `ConnectedCheckbox` | Onay kutusu |
+| `ConnectedRadioGroup` | Radyo buton grubu |
+| `ConnectedSwitch` | Açma/kapama |
+| `ConnectedDatePicker` | Tarih seçici |
+| `ConnectedTimePicker` | Saat seçici |
+| `ConnectedFileUpload` | Dosya yükleme |
+| `ConnectedRichText` | Zengin metin editörü |
+| `ConnectedSlider` | Kaydırıcı |
+
+## Doğrulama Şemaları
+
+### Zod ile Doğrulama
+
+```tsx
+import { z } from 'zod';
+
+const employeeSchema = z.object({
+  firstName: z.string().min(1, 'Ad zorunludur'),
+  lastName: z.string().min(1, 'Soyad zorunludur'),
+  email: z.string().email('Geçerli e-posta girin'),
+  phone: z.string().regex(/^(\+90|0)?[0-9]{10}$/, 'Geçerli telefon numarası girin'),
+  department: z.string().min(1, 'Departman seçin'),
+  salary: z.number().min(0, 'Maaş negatif olamaz').max(1000000),
+  startDate: z.date().min(new Date(), 'Başlangıç tarihi gelecekte olmalıdır'),
+  isActive: z.boolean().default(true),
+});
+```
+
+### Koşullu Doğrulama
+
+```tsx
+const schema = z.object({
+  employmentType: z.enum(['fulltime', 'contract']),
+  contractEndDate: z.date().optional(),
+}).refine(
+  (data) => {
+    if (data.employmentType === 'contract') {
+      return data.contractEndDate !== undefined;
+    }
+    return true;
+  },
+  {
+    message: 'Sözleşme bitiş tarihi zorunludur',
+    path: ['contractEndDate'],
+  }
+);
+```
+
+### Asenkron Doğrulama
+
+```tsx
+const schema = z.object({
+  username: z.string().min(3).refine(
+    async (val) => {
+      const exists = await checkUsernameExists(val);
+      return !exists;
+    },
+    'Bu kullanıcı adı zaten kullanılıyor'
+  ),
+});
+```
+
+## Hata Gösterimi
+
+### Satır İçi Hatalar
+
+Hatalar otomatik olarak ilgili alanın altında gösterilir:
+
+```tsx
+<ConnectedInput
+  name="email"
+  label="E-posta"
+  // Hata mesajı şema doğrulamasından otomatik gelir
+/>
+```
+
+### Form Düzeyi Hatalar
+
+```tsx
+<AdaptiveForm
+  onSubmit={async (data) => {
+    try {
+      await saveData(data);
+    } catch (error) {
+      // Form düzeyi hata
+      return { formError: 'Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.' };
+    }
+  }}
+  renderFormError={(error) => (
+    <Alert severity="error">{error}</Alert>
+  )}
+>
+```
+
+### Sunucu Taraflı Hatalar
+
+```tsx
+<AdaptiveForm
+  onSubmit={async (data) => {
+    const response = await api.post('/users', data);
+    if (response.errors) {
+      // Alan bazlı sunucu hataları
+      return {
+        fieldErrors: {
+          email: 'Bu e-posta adresi zaten kayıtlı',
+          username: 'Bu kullanıcı adı kullanılamaz',
+        },
+      };
+    }
+  }}
+>
+```
+
+## Form State Yönetimi
+
+### Varsayılan Değerler
+
+```tsx
+<AdaptiveForm
+  schema={schema}
+  defaultValues={{
+    name: 'Ahmet',
+    role: 'editor',
+    isActive: true,
+  }}
+  onSubmit={handleSubmit}
+>
+```
+
+### Form İzleme
+
+```tsx
+import { useFormContext } from '@mfe/design-system';
+
+function FormStatus() {
+  const { formState } = useFormContext();
+
+  return (
+    <div>
+      <p>Değişiklik var mı: {formState.isDirty ? 'Evet' : 'Hayır'}</p>
+      <p>Geçerli mi: {formState.isValid ? 'Evet' : 'Hayır'}</p>
+      <p>Gönderiliyor mu: {formState.isSubmitting ? 'Evet' : 'Hayır'}</p>
+    </div>
+  );
+}
+```
+
+### Kaydedilmemiş Değişiklik Uyarısı
+
+```tsx
+<AdaptiveForm
+  warnOnUnsavedChanges
+  unsavedMessage="Kaydedilmemiş değişiklikler var. Sayfadan ayrılmak istiyor musunuz?"
+  onSubmit={handleSubmit}
+>
+```
+
+## Çok Adımlı Formlar
+
+```tsx
+<AdaptiveForm schema={fullSchema} onSubmit={handleSubmit}>
+  <FormSteps>
+    <FormStep label="Kişisel Bilgiler" fields={['name', 'email', 'phone']}>
+      <ConnectedInput name="name" label="Ad Soyad" />
+      <ConnectedInput name="email" label="E-posta" />
+      <ConnectedInput name="phone" label="Telefon" />
+    </FormStep>
+
+    <FormStep label="İş Bilgileri" fields={['department', 'role']}>
+      <ConnectedSelect name="department" label="Departman" options={departments} />
+      <ConnectedSelect name="role" label="Pozisyon" options={roles} />
+    </FormStep>
+
+    <FormStep label="Onay">
+      <FormSummary />
+    </FormStep>
+  </FormSteps>
+</AdaptiveForm>
+```
+
+## Performans İpuçları
+
+1. **Büyük formlarda `mode: 'onBlur'` kullanın** — Her tuş vuruşunda doğrulama yapmaz
+2. **Koşullu alanları `shouldUnregister` ile kontrol edin** — Gizlenen alanları kayıttan çıkarır
+3. **Asenkron doğrulamayı debounce edin** — API çağrılarını sınırlayın
+4. **`FormStep` ile büyük formları bölün** — Adım adım doğrulama performansı artırır

@@ -1,0 +1,132 @@
+---
+title: Input
+description: 'Text input — validation, masking, prefix/suffix destegi.'
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Playground from '../../../components/Playground.astro';
+import PropsTable from '../../../components/PropsTable.astro';
+
+## Import
+
+```tsx
+import { Input } from '@mfe/design-system';
+```
+
+## Kullanim
+
+```tsx
+<Input label="Ad Soyad" placeholder="Adinizi girin" />
+<Input label="E-posta" type="email" required />
+<Input label="Telefon" mask="+90 (___) ___ __ __" />
+```
+
+## Variants
+
+```tsx
+<Input variant="outlined" label="Outlined" />
+<Input variant="filled" label="Filled" />
+<Input variant="underlined" label="Underlined" />
+```
+
+## Validation
+
+```tsx
+<Input
+  label="E-posta"
+  type="email"
+  error="Gecerli bir e-posta adresi girin"
+/>
+
+<Input
+  label="Kullanici Adi"
+  helperText="En az 3 karakter"
+  minLength={3}
+/>
+```
+
+## Prefix / Suffix
+
+```tsx
+<Input label="Fiyat" prefix="₺" suffix=".00" type="number" />
+<Input label="Web Sitesi" prefix="https://" />
+<Input label="Arama" prefix={<IconSearch />} />
+```
+
+## Masking
+
+Giris maskesi ile formatlenmis veri girisi:
+
+```tsx
+<Input label="Telefon" mask="+90 (___) ___ __ __" />
+<Input label="IBAN" mask="TR__ ____ ____ ____ ____ ____ __" />
+<Input label="Tarih" mask="__/__/____" />
+```
+
+## Canli Playground
+
+<Playground
+  code={`<Input label="Ad Soyad" placeholder="Adinizi girin" />\n<Input label="E-posta" type="email" error="Gecerli bir e-posta girin" />\n<Input label="Telefon" mask="+90 (___) ___ __ __" />`}
+  componentName="Input"
+  height="200px"
+/>
+
+## Props
+
+<PropsTable props={[
+  { name: 'label', type: 'string', description: 'Etiket metni' },
+  { name: 'placeholder', type: 'string', description: 'Placeholder' },
+  { name: 'variant', type: "'outlined' | 'filled' | 'underlined'", default: "'outlined'", description: 'Gorsel stil' },
+  { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Boyut' },
+  { name: 'type', type: "'text' | 'email' | 'password' | 'number' | 'tel' | 'url'", default: "'text'", description: 'Input tipi' },
+  { name: 'value', type: 'string', description: 'Kontrollu deger' },
+  { name: 'defaultValue', type: 'string', description: 'Varsayilan deger' },
+  { name: 'onChange', type: '(e: ChangeEvent) => void', description: 'Degisiklik handler\'i' },
+  { name: 'error', type: 'string | boolean', description: 'Hata mesaji veya durumu' },
+  { name: 'helperText', type: 'string', description: 'Yardimci metin' },
+  { name: 'required', type: 'boolean', default: 'false', description: 'Zorunlu alan' },
+  { name: 'disabled', type: 'boolean', default: 'false', description: 'Devre disi' },
+  { name: 'readOnly', type: 'boolean', default: 'false', description: 'Salt okunur' },
+  { name: 'prefix', type: 'ReactNode', description: 'Sol ek bilesen' },
+  { name: 'suffix', type: 'ReactNode', description: 'Sag ek bilesen' },
+  { name: 'mask', type: 'string', description: 'Giris maskesi (_ = karakter yeri)' },
+  { name: 'maxLength', type: 'number', description: 'Maksimum karakter sayisi' },
+]} />
+
+## Erisilebilirlik
+
+- **Label**: `<label>` elementi `htmlFor` ile otomatik baglanir
+- **Error**: `aria-invalid="true"` ve `aria-describedby` ile hata mesaji iliskilendirilir
+- **Required**: `aria-required="true"` otomatik eklenir
+- **Helper text**: `aria-describedby` ile yardimci metin iliskilendirilir
+
+<Aside type="caution">
+  `label` prop'u her zaman belirtin. Gorsel etiket istemiyorsaniz `hideLabel` prop'unu kullanin — bu durumda etiket ekran okuyucular icin korunur.
+</Aside>
+
+## Ornekler
+
+### Arama Kutusu
+
+```tsx
+<Input
+  label="Ara"
+  hideLabel
+  placeholder="Bilesen ara..."
+  prefix={<IconSearch />}
+  suffix={query && <IconClear onClick={() => setQuery('')} />}
+  value={query}
+  onChange={(e) => setQuery(e.target.value)}
+/>
+```
+
+### Sifre Alani
+
+```tsx
+<Input
+  label="Sifre"
+  type="password"
+  showPasswordToggle
+  helperText="En az 8 karakter, 1 buyuk harf, 1 rakam"
+/>
+```

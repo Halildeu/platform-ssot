@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useAppDispatch } from '../store/store.hooks';
 import type { AppDispatch } from '../store/store';
 import { pushNotification, toggleOpen } from '../../features/notifications/model/notifications.slice';
+import { useShellCommonI18n } from '../i18n';
 
 const isEditableElement = (target: EventTarget | null) => {
   if (!target || !(target instanceof HTMLElement)) {
@@ -31,6 +32,7 @@ const openNotification = (dispatch: AppDispatch, key: string, message: string, d
 
 export const useShellShortcuts = () => {
   const dispatch = useAppDispatch();
+  const { t } = useShellCommonI18n();
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -46,13 +48,23 @@ export const useShellShortcuts = () => {
           return;
         }
         event.preventDefault();
-        openNotification(dispatch, '/', 'Global arama kısayolu yakında', 'Komut paleti tamamlanana kadar menüyü kullanabilirsiniz.');
+        openNotification(
+          dispatch,
+          '/',
+          t('shell.shortcuts.searchSoon.title'),
+          t('shell.shortcuts.searchSoon.description'),
+        );
         return;
       }
 
       if (key === 'k' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
-        openNotification(dispatch, 'ctrl+k', 'Komut paleti hazırlanıyor', 'Komut paleti entegrasyonu SP2-2 görevinde tamamlanacak.');
+        openNotification(
+          dispatch,
+          'ctrl+k',
+          t('shell.shortcuts.commandPaletteSoon.title'),
+          t('shell.shortcuts.commandPaletteSoon.description'),
+        );
         return;
       }
 
@@ -61,11 +73,16 @@ export const useShellShortcuts = () => {
           return;
         }
         event.preventDefault();
-        openNotification(dispatch, 'r', 'Yenileme kısayolu devre dışı', 'MFE yenileme deneyimi üzerinde çalışıyoruz.');
+        openNotification(
+          dispatch,
+          'r',
+          t('shell.shortcuts.refreshDisabled.title'),
+          t('shell.shortcuts.refreshDisabled.description'),
+        );
       }
     };
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [dispatch]);
+  }, [dispatch, t]);
 };

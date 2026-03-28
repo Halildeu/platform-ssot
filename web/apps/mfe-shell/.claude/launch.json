@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mfe-shell-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["webpack", "serve", "--config", "webpack.dev.js", "--no-watch-options-stdin"],
+      "port": 3000
+    }
+  ]
+}

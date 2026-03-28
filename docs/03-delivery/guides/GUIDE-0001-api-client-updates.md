@@ -5,11 +5,11 @@ Amaç: İstemcilerin (FE, Postman, 3rd‑party) yeni güvenlik ve başlık sözl
 ## 0) Temeller (Base URL, Kimlik, Başlıklar)
 - Base URL (Gateway): `http(s)://<gateway-host>/api`
 - Kimlik (kullanıcı): Login ile alınan JWT → `Authorization: Bearer <JWT>`
-- Kimlik (servis‑servis): client_credentials akışı. Rehber: `backend/docs/legacy/root/01-architecture/04-security/identity/02-client-credentials-jwt.md`
+- Kimlik (servis‑servis): client_credentials akışı. Rehber: `docs/04-operations/RUNBOOKS/RB-keycloak.md`
 - Zorunlu başlıklar (domain bağlamı):
   - `X-Company-Id` (zorunlu)
   - Opsiyonel: `X-Project-Id`, `X-Warehouse-Id`
-- Ortak başlık sözleşmesi: `backend/docs/legacy/root/03-delivery/api/common-headers.md`
+- Ortak başlık sözleşmesi: `docs/03-delivery/api/common-headers.md`
 
 ## 1) Login (Kullanıcı JWT)
 - Endpoint: `POST /api/auth/login`
@@ -47,7 +47,7 @@ echo "$TOK" | wc -c  # > 100 beklenir
 ## 4) Korumalı Listeleme
 - Endpoint: `GET /api/users/all`
 - Başlıklar: `Authorization`, `X-Company-Id`
-- İlgili API dokümanı: `backend/docs/legacy/root/03-delivery/api/users.api.md`
+- İlgili API dokümanı: `docs/03-delivery/api/users.api.md`
 - Not: Sıralama/filtreleme kuralları, AdvancedFilter sözleşmesi ile uyumlu olmalı.
 
 ## 5) Gizlilik ve Export Guard
@@ -79,39 +79,19 @@ if (!pm.environment.get('JWT')) {
 ## 7) Geriye Dönük Uyum ve Versiyonlama
 - Kırıcı değişikliklerde semver kuralı ve deprecate süresi uygulanır (makul bir geçiş süresi, örn. en az bir akış/iteration).
 - Header/claim değişikliklerinde geçiş dönemi: her iki adlandırma paralel kabul edilir ve changelog/ADR ile duyurulur.
-- Değişiklik kaydı: `backend/docs/legacy/root/05-governance/05-adr/*`, roadmap tarafında ilgili `backend/docs/legacy/root/05-governance/PROJECT_FLOW.md` + Story dokümanları (eski snapshotlar için `backend/docs/legacy/root/05-governance/FEATURE_REQUESTS.md`)
+- Değişiklik kaydı: `docs/03-delivery/PROJECT-FLOW.md`, ilgili `STORY / AC / TP`
+  dokümanları ve gerekiyorsa `docs/04-operations/RELEASE-NOTES/**`
 
 ## 8) Hızlı Kontrol Listesi
 - [ ] `Authorization` başlığı var ve güncel JWT taşıyor
 - [ ] `X-Company-Id` gönderiliyor (ve gerekiyorsa `X-Project-Id`, `X-Warehouse-Id`)
 - [ ] Endpoint’ler gateway üzerinden `/api/*`
 - [ ] Export akışlarında export guard politikası teyit edildi
-- [ ] İlgili API referansları incelendi (`backend/docs/legacy/root/03-delivery/api/*.md`)
+- [ ] İlgili current API referansları incelendi (`docs/03-delivery/api/*.md`)
 
 ## 9) Referanslar
-- Ortak başlıklar: `backend/docs/legacy/root/03-delivery/api/common-headers.md`
-- Users API: `backend/docs/legacy/root/03-delivery/api/users.api.md`
-- Auth API: `backend/docs/legacy/root/03-delivery/api/auth.api.md`
-- Kimlik (client_credentials): `backend/docs/legacy/root/01-architecture/04-security/identity/02-client-credentials-jwt.md`
+- Ortak başlıklar: `docs/03-delivery/api/common-headers.md`
+- Users API: `docs/03-delivery/api/users.api.md`
+- Auth API: `docs/03-delivery/api/auth.api.md`
+- Kimlik (client_credentials): `docs/04-operations/RUNBOOKS/RB-keycloak.md`
 - Runbook/izleme: `docs/04-operations/RUNBOOKS/`, `docs/04-operations/MONITORING/`
-
-1. AMAÇ
-TBD
-
-2. KAPSAM
-TBD
-
-3. KAPSAM DIŞI
-TBD
-
-4. BAĞLAM / ARKA PLAN
-TBD
-
-5. ADIM ADIM (KULLANIM)
-TBD
-
-6. SIK HATALAR / EDGE-CASE
-TBD
-
-7. LİNKLER
-TBD

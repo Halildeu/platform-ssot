@@ -1,0 +1,114 @@
+---
+title: "Quality Dashboard"
+description: "Overview of test health, coverage, accessibility, bundle size, and security posture across the @mfe platform."
+---
+
+## Test Metrics
+
+| Metric | Current | Target |
+|---|---|---|
+| Total tests | 5,910+ | Growing with each PR |
+| Test files | 329 | -- |
+| Packages with typecheck | 9 | All packages |
+| Vitest exit code | 0 | Always 0 on main |
+| Avg test duration | ~45 s | < 60 s |
+
+### Verify Pipeline
+
+The `verify` script confirms platform health in a single command:
+
+```bash
+pnpm verify   # typecheck + test + build -> EXIT 0
+```
+
+CI blocks merge unless all three stages pass.
+
+## Code Coverage
+
+| Package | Line Coverage | Branch Coverage | Target |
+|---|---|---|---|
+| `@mfe/design-system` | 70%+ | 60%+ | 80% lines, 70% branches |
+| `@mfe/x-data-grid` | 65%+ | 55%+ | 75% lines, 65% branches |
+| `@mfe/x-charts` | 60%+ | 50%+ | 75% lines, 65% branches |
+| `@mfe/x-scheduler` | 55%+ | 45%+ | 70% lines, 60% branches |
+| `@mfe/ui-kit` | 70%+ | 60%+ | 80% lines, 70% branches |
+
+Coverage is tracked per PR. Regressions beyond 2% are flagged automatically.
+
+## Accessibility
+
+| Metric | Current | Target |
+|---|---|---|
+| A11y contract tests | 105 | 150+ by Q3 |
+| WCAG conformance target | 2.1 AA | 2.1 AA |
+| axe-core violations (CI) | 0 critical | 0 critical, 0 serious |
+| Screen reader matrix | 40/70 pass | 70/70 by Q4 |
+| Color contrast compliance | 100% primitives | 100% all components |
+
+## Bundle Size
+
+Tracked per PR via `size-limit`.
+
+| Package | Current (gzip) | Budget |
+|---|---|---|
+| `@mfe/design-system` | ~180 KB | 250 KB |
+| `@mfe/x-data-grid` | ~75 KB | 100 KB |
+| `@mfe/x-charts` | ~60 KB | 100 KB |
+| `@mfe/x-scheduler` | ~45 KB | 100 KB |
+| `@mfe/x-kanban` | ~30 KB | 100 KB |
+| `@mfe/x-editor` | ~55 KB | 100 KB |
+
+Bundle trend is posted as a PR comment with delta from main.
+
+## Build Health
+
+The full build pipeline:
+
+```
+typecheck (tsc --noEmit)  ->  test (vitest run)  ->  build (tsup/vite)
+         |                         |                      |
+    EXIT 0 required          EXIT 0 required         EXIT 0 required
+```
+
+| Check | Tool | Gate |
+|---|---|---|
+| Type safety | `tsc --noEmit` | PR merge block |
+| Unit + integration | Vitest | PR merge block |
+| Build output | tsup / Vite | PR merge block |
+| Lint | ESLint + Prettier | PR merge block |
+| Commit format | commitlint | PR merge block |
+
+## Visual Regression
+
+| Tool | Scope | Trigger |
+|---|---|---|
+| **Chromatic** | Storybook stories (design-system, ui-kit) | Every PR |
+| **Playwright screenshots** | Full-page snapshots (docs app, shell app) | Nightly + PR |
+
+- Chromatic catches component-level visual diffs with 0.01% threshold
+- Playwright screenshots catch layout regressions across pages
+- Both require manual approval for intentional changes
+
+## Security
+
+| Tool | What it checks | Cadence |
+|---|---|---|
+| **Trivy** | Container image vulnerabilities | Every build |
+| **Semgrep** | Static code patterns (XSS, injection, secrets) | Every PR |
+| **ZAP** | OWASP Top 10 dynamic scan | Weekly + pre-release |
+| **SBOM** | Software bill of materials generation | Every release |
+| **npm audit** | Dependency vulnerabilities | Daily (Dependabot) |
+| **Socket.dev** | Supply chain risk (typosquat, install scripts) | Every PR |
+
+### Security Targets
+
+- 0 critical / 0 high vulnerabilities in production dependencies
+- SBOM published with every release for enterprise compliance
+- Security advisories published within 48 hours of disclosure
+
+## Dashboard Links
+
+- **CI Pipeline**: GitHub Actions workflow summary
+- **Chromatic**: Visual regression review board
+- **Bundle Analysis**: `size-limit` PR comments
+- **Coverage Reports**: Codecov project dashboard

@@ -5,7 +5,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-POLICY_PATH = Path("docs/03-delivery/SPECS/guides-policy.v1.json")
+POLICY_PATH = Path("docs-ssot/03-delivery/SPECS/guides-policy.v1.json")
 OUT_DIR = Path(".autopilot-tmp/flow-mining")
 
 

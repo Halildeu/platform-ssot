@@ -10,10 +10,11 @@ import {
 import { getShellServices } from '../../../app/services/shell-services';
 
 const API_BASE_URL = getGatewayBaseUrl();
-const USERS_BASE_URL = `${API_BASE_URL}/v1/users`;
-const AUTH_BASE_URL = `${API_BASE_URL}/v1/auth`;
-const PERMISSIONS_BASE_URL = `${API_BASE_URL}/v1/permissions`;
+const USERS_RESOURCE_PATH = '/v1/users';
+const AUTH_RESOURCE_PATH = '/v1/auth';
+const PERMISSIONS_RESOURCE_PATH = '/v1/permissions';
 const UNAUTHORIZED_STATUS = new Set([401, 403]);
+const PROFILE_MISSING_CODE = 'PROFILE_MISSING';
 
 const getFetchBaseUrl = () => {
   if (typeof window !== 'undefined' && window.location?.origin) {
@@ -21,6 +22,10 @@ const getFetchBaseUrl = () => {
   }
   return 'http://localhost';
 };
+
+const buildGatewayUrl = (resourcePath: string) => `${API_BASE_URL}${resourcePath}`;
+
+const buildFetchGatewayUrl = (resourcePath: string) => `${getFetchBaseUrl()}${buildGatewayUrl(resourcePath)}`;
 
 const resolveHttpClient = (): ApiInstance => {
   try {
@@ -72,7 +77,7 @@ const MODULE_LEVEL_ROLE_MAP: Record<string, Partial<Record<UserModuleAccessLevel
 
 export interface UsersApiResponse extends PaginatedResponse<UserSummary> {
   meta?: {
-    reason: 'success' | 'unauthorized' | 'network-error';
+    reason: 'success' | 'unauthorized' | 'profile-missing' | 'network-error';
   };
 }
 
@@ -139,6 +144,355 @@ const buildEmptyUsersResponse = (params: UsersQueryParams = {}): PaginatedRespon
   pageSize: params.pageSize ?? 25,
 });
 
+const readRuntimeEnv = (key: string): string | undefined => {
+  if (typeof process !== 'undefined' && typeof process.env?.[key] === 'string') {
+    return process.env[key];
+  }
+  if (typeof window !== 'undefined') {
+    const runtimeWindow = window as Window & {
+      __env__?: Record<string, string | undefined>;
+      __ENV__?: Record<string, string | undefined>;
+    };
+    const candidate = runtimeWindow.__env__?.[key] ?? runtimeWindow.__ENV__?.[key];
+    if (typeof candidate === 'string') {
+      return candidate;
+    }
+  }
+  return undefined;
+};
+
+const parseRuntimeBoolean = (value: string | undefined): boolean => {
+  if (!value) {
+    return false;
+  }
+  const normalized = value.trim().toLowerCase();
+  return normalized === '1' || normalized === 'true' || normalized === 'yes' || normalized === 'on';
+};
+
+const normalizeTokenValue = (token: string | null | undefined): string => {
+  if (typeof token !== 'string') {
+    return '';
+  }
+  const normalized = token.trim();
+  if (!normalized || normalized === 'undefined' || normalized === 'null') {
+    return '';
+  }
+  return normalized;
+};
+
+const readPersistedToken = (): string => {
+  try {
+    return normalizeTokenValue(localStorage.getItem('token'));
+  } catch {
+    return '';
+  }
+};
+
+type LightweightUserProfile = {
+  email?: string | null;
+  fullName?: string | null;
+  displayName?: string | null;
+  role?: string | null;
+};
+
+const readPersistedUserProfile = (): LightweightUserProfile | null => {
+  try {
+    const raw = localStorage.getItem('user');
+    if (!raw) {
+      return null;
+    }
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') {
+      return null;
+    }
+    return parsed as LightweightUserProfile;
+  } catch {
+    return null;
+  }
+};
+
+const readShellAuthToken = (): string => {
+  try {
+    return normalizeTokenValue(getShellServices().auth.getToken());
+  } catch {
+    return '';
+  }
+};
+
+const readShellAuthUser = (): LightweightUserProfile | null => {
+  try {
+    const user = getShellServices().auth.getUser();
+    if (!user || typeof user !== 'object') {
+      return null;
+    }
+    return user as LightweightUserProfile;
+  } catch {
+    return null;
+  }
+};
+
+const isRuntimeTestProfile = (profile: LightweightUserProfile | null): boolean => {
+  if (!profile) {
+    return false;
+  }
+  const email = profile.email?.trim().toLowerCase() ?? '';
+  const fullName = profile.fullName?.trim().toLowerCase() ?? '';
+  const displayName = profile.displayName?.trim().toLowerCase() ?? '';
+
+  return email === 'runtime@test.local'
+    || fullName === 'runtime test user'
+    || displayName === 'runtime test user';
+};
+
+const shouldUseDevUsersFallback = (): boolean => {
+  const devFallbackDisabled = parseRuntimeBoolean(
+    readRuntimeEnv('VITE_USERS_DISABLE_DEV_FALLBACK') ?? readRuntimeEnv('USERS_DISABLE_DEV_FALLBACK'),
+  );
+  const authMode = (readRuntimeEnv('VITE_AUTH_MODE') ?? readRuntimeEnv('AUTH_MODE') ?? '').trim().toLowerCase();
+  const fakeAuthEnabled = parseRuntimeBoolean(
+    readRuntimeEnv('VITE_ENABLE_FAKE_AUTH') ?? readRuntimeEnv('ENABLE_FAKE_AUTH'),
+  );
+  const token = readPersistedToken().trim() || readShellAuthToken();
+  const runtimeUser = readPersistedUserProfile() ?? readShellAuthUser();
+
+  if (devFallbackDisabled) {
+    return false;
+  }
+
+  if (authMode === 'permitall') {
+    return true;
+  }
+
+  // Fake shell oturumu ".shell" ile biten sentetik JWT üretir.
+  // Bu durumda runtime env görünmese bile backend'e gitmek yerine
+  // doğrudan güvenli mock kullanıcı verisini kullanıyoruz.
+  if (token.endsWith('.shell')) {
+    return true;
+  }
+
+  if (fakeAuthEnabled) {
+    return true;
+  }
+
+  return isRuntimeTestProfile(runtimeUser);
+};
+
+const MOCK_USER_DETAILS: UserDetail[] = [
+  {
+    id: 'mock-user-001',
+    fullName: 'Selin Aydin',
+    email: 'selin.aydin@example.com',
+    role: 'ADMIN',
+    status: 'ACTIVE',
+    lastLoginAt: '2026-03-14T08:45:00Z',
+    createdAt: '2025-10-03T09:00:00Z',
+    sessionTimeoutMinutes: 30,
+    locale: 'tr-TR',
+    timezone: 'Europe/Istanbul',
+    title: 'Platform Yoneticisi',
+    phoneNumber: '+90 555 010 1001',
+    notes: 'PermitAll gelistirme modunda ornek yonetici kullanici.',
+    modulePermissions: [
+      {
+        moduleKey: 'USER_MANAGEMENT',
+        moduleLabel: 'Kullanici Modulu',
+        level: 'MANAGE',
+        roleName: 'ADMIN',
+        permissions: ['VIEW_USERS', 'EDIT_USERS', 'MANAGE_USERS'],
+      },
+      {
+        moduleKey: 'PURCHASE',
+        moduleLabel: 'Satin Alma Modulu',
+        level: 'VIEW',
+        roleName: 'PURCHASE_MANAGER',
+        permissions: ['VIEW_PURCHASE'],
+      },
+    ],
+  },
+  {
+    id: 'mock-user-002',
+    fullName: 'Emir Kara',
+    email: 'emir.kara@example.com',
+    role: 'USER',
+    status: 'ACTIVE',
+    lastLoginAt: '2026-03-13T16:20:00Z',
+    createdAt: '2025-12-11T10:15:00Z',
+    sessionTimeoutMinutes: 20,
+    locale: 'tr-TR',
+    timezone: 'Europe/Istanbul',
+    title: 'Kullanici Operasyon Uzmani',
+    phoneNumber: '+90 555 010 1002',
+    notes: 'Kullanicilari goruntuleyebilir ve sinirli duzenleme yapabilir.',
+    modulePermissions: [
+      {
+        moduleKey: 'USER_MANAGEMENT',
+        moduleLabel: 'Kullanici Modulu',
+        level: 'EDIT',
+        roleName: 'USER_MANAGER',
+        permissions: ['VIEW_USERS', 'EDIT_USERS'],
+      },
+      {
+        moduleKey: 'WAREHOUSE',
+        moduleLabel: 'Depo Modulu',
+        level: 'VIEW',
+        roleName: 'WAREHOUSE_OPERATOR',
+        permissions: ['VIEW_WAREHOUSE'],
+      },
+    ],
+  },
+  {
+    id: 'mock-user-003',
+    fullName: 'Derya Demir',
+    email: 'derya.demir@example.com',
+    role: 'USER',
+    status: 'INVITED',
+    lastLoginAt: null,
+    createdAt: '2026-01-20T14:10:00Z',
+    sessionTimeoutMinutes: 15,
+    locale: 'en-US',
+    timezone: 'Europe/Berlin',
+    title: 'Destek Uzmani',
+    phoneNumber: '+90 555 010 1003',
+    notes: 'Davet gonderilmis, ilk oturumunu henuz acmamis kullanici.',
+    modulePermissions: [
+      {
+        moduleKey: 'USER_MANAGEMENT',
+        moduleLabel: 'Kullanici Modulu',
+        level: 'VIEW',
+        roleName: 'USER_VIEWER',
+        permissions: ['VIEW_USERS'],
+      },
+    ],
+  },
+];
+
+const sortMockUsers = (items: UserDetail[], sort?: string): UserDetail[] => {
+  if (!sort) {
+    return [...items];
+  }
+
+  const [firstSort] = sort.split(';').map((segment) => segment.trim()).filter(Boolean);
+  if (!firstSort) {
+    return [...items];
+  }
+
+  const [fieldRaw, directionRaw] = firstSort.split(',');
+  const field = (fieldRaw ?? '').trim();
+  const direction = (directionRaw ?? 'asc').trim().toLowerCase() === 'desc' ? -1 : 1;
+
+  const readValue = (item: UserDetail) => {
+    switch (field) {
+      case 'name':
+      case 'fullName':
+        return item.fullName;
+      case 'email':
+        return item.email;
+      case 'role':
+        return item.role;
+      case 'status':
+        return item.status;
+      case 'lastLogin':
+      case 'lastLoginAt':
+        return item.lastLoginAt ?? '';
+      case 'sessionTimeoutMinutes':
+        return item.sessionTimeoutMinutes ?? 0;
+      default:
+        return item.fullName;
+    }
+  };
+
+  return [...items].sort((left, right) => {
+    const leftValue = readValue(left);
+    const rightValue = readValue(right);
+    if (typeof leftValue === 'number' && typeof rightValue === 'number') {
+      return (leftValue - rightValue) * direction;
+    }
+    return String(leftValue).localeCompare(String(rightValue), 'tr') * direction;
+  });
+};
+
+const buildMockUsersResponse = (params: UsersQueryParams = {}): UsersApiResponse => {
+  const search = params.search?.trim().toLocaleLowerCase('tr') ?? '';
+  const filtered = sortMockUsers(
+    MOCK_USER_DETAILS.filter((item) => {
+      const matchesSearch =
+        search.length === 0 ||
+        item.fullName.toLocaleLowerCase('tr').includes(search) ||
+        item.email.toLocaleLowerCase('tr').includes(search);
+      const matchesStatus = !params.status || params.status === 'ALL' || item.status === params.status;
+      const matchesRole = !params.role || params.role === 'ALL' || item.role === params.role;
+      const matchesModuleKey =
+        !params.moduleKey ||
+        item.modulePermissions.some((permission) => permission.moduleKey === params.moduleKey);
+      const matchesModuleLevel =
+        !params.moduleLevel ||
+        params.moduleLevel === 'ALL' ||
+        item.modulePermissions.some((permission) => permission.level === params.moduleLevel);
+
+      return matchesSearch && matchesStatus && matchesRole && matchesModuleKey && matchesModuleLevel;
+    }),
+    params.sort,
+  );
+
+  const page = params.page ?? 1;
+  const pageSize = params.pageSize ?? 25;
+
+  if (pageSize === 0) {
+    return {
+      items: filtered,
+      total: filtered.length,
+      page,
+      pageSize: filtered.length,
+      meta: { reason: 'success' },
+    };
+  }
+
+  const start = Math.max(0, (page - 1) * pageSize);
+  const end = start + pageSize;
+
+  return {
+    items: filtered.slice(start, end),
+    total: filtered.length,
+    page,
+    pageSize,
+    meta: { reason: 'success' },
+  };
+};
+
+const buildMockUserDetail = (user: { id: string; email: string }): UserDetail => {
+  const matched = MOCK_USER_DETAILS.find((item) => item.id === user.id || item.email === user.email);
+  if (matched) {
+    return matched;
+  }
+  return buildFallbackUserDetail(user);
+};
+
+const shouldUseFetchTransportStub = (): boolean => typeof fetch === 'function' && typeof document === 'undefined';
+
+const isProfileMissingPayload = (payload: unknown): boolean => {
+  if (!payload || typeof payload !== 'object') {
+    return false;
+  }
+  const record = payload as Record<string, unknown>;
+  return [record.message, record.error, record.errorCode, record.detail].some(
+    (value) => typeof value === 'string' && value.trim().toUpperCase() === PROFILE_MISSING_CODE,
+  );
+};
+
+const detectProfileMissingFromResponse = async (response: { clone?: () => Response; json?: () => Promise<unknown> }) => {
+  try {
+    if (typeof response.clone === 'function') {
+      return isProfileMissingPayload(await response.clone().json());
+    }
+    if (typeof response.json === 'function') {
+      return isProfileMissingPayload(await response.json());
+    }
+  } catch {
+    // ignore payload parsing errors
+  }
+  return false;
+};
+
 const buildFallbackUserDetail = (
   user: { id: string; email: string },
 ): UserDetail => ({
@@ -164,6 +518,12 @@ export interface RequestScope {
   warehouseId?: string | number;
 }
 
+type ControlledAccessRequestConfig = {
+  headers: Record<string, string>;
+  __suppressGlobalForbiddenToast: true;
+  __suppressGlobalProfileMissingToast: true;
+};
+
 const SCOPE_STORAGE_KEY = 'halo.scope';
 
 export const registerTokenResolver = (resolver?: Parameters<typeof registerSharedTokenResolver>[0]) => {
@@ -179,7 +539,7 @@ const getStoredScope = (): RequestScope => {
       return {};
     }
     return parsed as RequestScope;
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn('Scope bilgisi çözümlenemedi', error);
     return {};
   }
@@ -252,6 +612,15 @@ const buildQueryString = (params: UsersQueryParams) => {
   if (params.role && params.role !== 'ALL') qs.set('role', params.role);
   if (params.page) qs.set('page', params.page.toString());
   if (params.pageSize != null) qs.set('pageSize', params.pageSize.toString());
+  // Server-side grouping params
+  if ((params as any).rowGroupCols) qs.set('rowGroupCols', (params as any).rowGroupCols);
+  if ((params as any).groupKeys) qs.set('groupKeys', (params as any).groupKeys);
+  // Server-side aggregation + pivot params
+  if ((params as any).valueCols) qs.set('valueCols', (params as any).valueCols);
+  if ((params as any).pivotMode) qs.set('pivotMode', (params as any).pivotMode);
+  if ((params as any).pivotCols) qs.set('pivotCols', (params as any).pivotCols);
+  // Multi-value search (from filter builder bulk paste)
+  if ((params as any).multiSearch) qs.set('multiSearch', (params as any).multiSearch);
   const queryString = qs.toString();
   return queryString ? `?${queryString}` : '';
 };
@@ -262,21 +631,29 @@ const mergeHeaders = (scope?: RequestScope) => {
     ...buildScopeHeaders(scope),
   };
   try {
+    const shellToken = readShellAuthToken().trim();
     if (typeof window !== 'undefined' && window.localStorage) {
       const internalApiKey = window.localStorage.getItem('internalApiKey');
       if (internalApiKey) {
         headers['X-Internal-Api-Key'] = internalApiKey;
       }
-      const token = window.localStorage.getItem('token');
+      const persistedToken = normalizeTokenValue(window.localStorage.getItem('token'));
+      const token = shellToken || persistedToken;
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn('Internal API anahtarı okunamadı', error);
   }
   return headers;
 };
+
+const buildControlledAccessRequestConfig = (scope?: RequestScope): ControlledAccessRequestConfig => ({
+  headers: mergeHeaders(scope),
+  __suppressGlobalForbiddenToast: true,
+  __suppressGlobalProfileMissingToast: true,
+});
 
 const normalizeAccessLevel = (value: unknown): UserModuleAccessLevel => {
   if (typeof value === 'string') {
@@ -555,20 +932,27 @@ export const fetchUsers = async (
   params: UsersQueryParams,
   scope?: RequestScope,
 ): Promise<UsersApiResponse> => {
+  if (shouldUseDevUsersFallback()) {
+    return buildMockUsersResponse(params);
+  }
+
   let payload: UsersResponseWire;
 
   // Eğer global fetch stub'ı varsa (test ortamları), axios yerine doğrudan fetch kullan
-  if (typeof fetch === 'function') {
+  if (shouldUseFetchTransportStub()) {
     const headers = mergeHeaders(scope) as Record<string, string>;
-    const fetchBase = getFetchBaseUrl();
     try {
-      const response = await fetch(`${fetchBase}/api/v1/users${buildQueryString(params)}`, {
+      const response = await fetch(`${buildFetchGatewayUrl(USERS_RESOURCE_PATH)}${buildQueryString(params)}`, {
         headers,
       });
       if (!response.ok) {
         if (UNAUTHORIZED_STATUS.has(response.status)) {
+          const reason =
+            response.status === 403 && (await detectProfileMissingFromResponse(response))
+              ? ('profile-missing' as const)
+              : ('unauthorized' as const);
           return Object.assign(buildEmptyUsersResponse(params), {
-            meta: { reason: 'unauthorized' as const },
+            meta: { reason },
           });
         }
         return Object.assign(buildEmptyUsersResponse(params), {
@@ -587,11 +971,11 @@ export const fetchUsers = async (
   try {
     const client = resolveHttpClient();
     const response = await client.get<UsersResponseWire>(
-      `${USERS_BASE_URL}${buildQueryString(params)}`,
-      { headers: mergeHeaders(scope) },
+      `${USERS_RESOURCE_PATH}${buildQueryString(params)}`,
+      buildControlledAccessRequestConfig(scope),
     );
     payload = response.data ?? {};
-  } catch (error) {
+  } catch (error: unknown) {
     if (isAxiosError(error)) {
       const status = error.response?.status ?? 0;
       if (!error.response) {
@@ -601,21 +985,22 @@ export const fetchUsers = async (
         });
       }
       if (UNAUTHORIZED_STATUS.has(status)) {
+        const reason =
+          status === 403 && isProfileMissingPayload(error.response?.data)
+            ? ('profile-missing' as const)
+            : ('unauthorized' as const);
         console.warn(
           '[usersApi] Kullanıcı listesi yetkisiz döndü. Boş sonuç ile devam ediliyor.',
         );
         return Object.assign(buildEmptyUsersResponse(params), {
-          meta: { reason: 'unauthorized' as const },
+          meta: { reason },
         });
       }
       const parsed = await parseErrorResponse(error);
       reportError('Kullanıcı listesi', parsed);
       throw new Error(parsed.message);
     }
-    console.warn('[usersApi] Kullanıcı listesi alınamadı, bilinmeyen hata.', error);
-    return Object.assign(buildEmptyUsersResponse(params), {
-      meta: { reason: 'network-error' as const },
-    });
+    throw error;
   }
 
   const items = Array.isArray(payload.items)
@@ -702,13 +1087,17 @@ export const fetchUserDetail = async (
   user: { id: string; email: string },
   scope?: RequestScope,
 ): Promise<UserDetail> => {
-  const headers = mergeHeaders(scope);
+  if (shouldUseDevUsersFallback()) {
+    return buildMockUserDetail(user);
+  }
 
-  if (typeof fetch === 'function') {
-    const fetchBase = getFetchBaseUrl();
+  const controlledConfig = buildControlledAccessRequestConfig(scope);
+  const headers = controlledConfig.headers;
+
+  if (shouldUseFetchTransportStub()) {
     try {
       const userResponse = await fetch(
-        `${fetchBase}/api/v1/users/by-email?email=${encodeURIComponent(user.email)}`,
+        `${buildFetchGatewayUrl(USERS_RESOURCE_PATH)}/by-email?email=${encodeURIComponent(user.email)}`,
         { headers: headers as Record<string, string> },
       );
       if (!userResponse.ok) {
@@ -721,7 +1110,7 @@ export const fetchUserDetail = async (
       let assignments: AssignmentWire[] = [];
       try {
         const permResponse = await fetch(
-          `${fetchBase}/api/v1/permissions/assignments?userId=${encodeURIComponent(user.id)}`,
+          `${buildFetchGatewayUrl(PERMISSIONS_RESOURCE_PATH)}/assignments?userId=${encodeURIComponent(user.id)}`,
           { headers: headers as Record<string, string> },
         );
         if (permResponse.ok) {
@@ -743,11 +1132,11 @@ export const fetchUserDetail = async (
   try {
     const client = resolveHttpClient();
     const response = await client.get<UserDetailWire>(
-      `${USERS_BASE_URL}/by-email?email=${encodeURIComponent(user.email)}`,
-      { headers },
+      `${USERS_RESOURCE_PATH}/by-email?email=${encodeURIComponent(user.email)}`,
+      controlledConfig,
     );
     userData = response.data as UserDetailWire;
-  } catch (error) {
+  } catch (error: unknown) {
     if (isAxiosError(error)) {
       const status = error.response?.status ?? 0;
       if (!error.response || UNAUTHORIZED_STATUS.has(status)) {
@@ -758,21 +1147,21 @@ export const fetchUserDetail = async (
       reportError('Kullanıcı bilgisi', parsed);
       throw new Error(parsed.message);
     }
-    return buildFallbackUserDetail(user);
+    throw error;
   }
 
   let assignments: AssignmentWire[] = [];
   try {
     const client = resolveHttpClient();
     const response = await client.get<unknown>(
-      `${PERMISSIONS_BASE_URL}/assignments?userId=${encodeURIComponent(user.id)}`,
-      { headers },
+      `${PERMISSIONS_RESOURCE_PATH}/assignments?userId=${encodeURIComponent(user.id)}`,
+      controlledConfig,
     );
     const assignmentPayload = response.data;
     assignments = Array.isArray(assignmentPayload)
       ? assignmentPayload.filter(isPermissionWire).map((item) => item as AssignmentWire)
       : [];
-  } catch (error) {
+  } catch (error: unknown) {
     if (isAxiosError(error)) {
       const status = error.response?.status ?? 0;
       if (!UNAUTHORIZED_STATUS.has(status)) {
@@ -798,12 +1187,12 @@ export const updateUser = async (
   try {
     const client = resolveHttpClient();
     const response = await client.put(
-      `${USERS_BASE_URL}/${encodeURIComponent(args.userId)}`,
+      `${USERS_RESOURCE_PATH}/${encodeURIComponent(args.userId)}`,
       args.payload,
       { headers: mergeHeaders(args.scope) },
     );
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     const parsed = await parseErrorResponse(isAxiosError(error) ? error : undefined);
     reportError('Kullanıcı bilgisi güncelleme', parsed);
     throw new Error(parsed.message);
@@ -841,11 +1230,11 @@ export const updateUserModuleAccess = async (
   }
   try {
     const client = resolveHttpClient();
-    const response = await client.post(`${PERMISSIONS_BASE_URL}/assignments/update`, payload, {
+    const response = await client.post(`${PERMISSIONS_RESOURCE_PATH}/assignments/update`, payload, {
       headers: mergeHeaders(args.scope),
     });
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     const parsed = await parseErrorResponse(isAxiosError(error) ? error : undefined);
     reportError('Modül yetkisi güncelleme', parsed);
     throw new Error(parsed.message);
@@ -862,10 +1251,10 @@ export const revokeUserModuleAccess = async (
   try {
     const client = resolveHttpClient();
     await client.delete(
-      `${PERMISSIONS_BASE_URL}/assignments/${encodeURIComponent(args.assignmentId)}${query}`,
+      `${PERMISSIONS_RESOURCE_PATH}/assignments/${encodeURIComponent(args.assignmentId)}${query}`,
       { headers: mergeHeaders(args.scope) },
     );
-  } catch (error) {
+  } catch (error: unknown) {
     const parsed = await parseErrorResponse(isAxiosError(error) ? error : undefined);
     reportError('Modül yetkisi kaldırma', parsed);
     throw new Error(parsed.message);
@@ -878,12 +1267,12 @@ export const toggleUserStatus = async (
   try {
     const client = resolveHttpClient();
     const response = await client.put(
-      `${USERS_BASE_URL}/${encodeURIComponent(args.userId)}/activation`,
+      `${USERS_RESOURCE_PATH}/${encodeURIComponent(args.userId)}/activation`,
       { active: args.enabled },
       { headers: mergeHeaders(args.scope) },
     );
     return response.data as UserMutationAck;
-  } catch (error) {
+  } catch (error: unknown) {
     const parsed = await parseErrorResponse(isAxiosError(error) ? error : undefined);
     reportError('Kullanıcı durumu', parsed);
     throw new Error(parsed.message);
@@ -896,12 +1285,12 @@ export const triggerPasswordReset = async (
   try {
     const client = resolveHttpClient();
     const response = await client.post(
-      `${AUTH_BASE_URL}/password-resets`,
+      `${AUTH_RESOURCE_PATH}/password-resets`,
       { email: args.email },
       { headers: mergeHeaders() },
     );
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     const parsed = await parseErrorResponse(isAxiosError(error) ? error : undefined);
     reportError('Parola sıfırlama', parsed);
     throw new Error(parsed.message);

@@ -49,8 +49,7 @@ export const getPermissions = async (): Promise<PermissionDto[]> => {
       return res.data.items;
     }
     return [];
-  } catch (err) {
+  } catch (err: unknown) {
     parseError(err);
-    return [];
   }
 };

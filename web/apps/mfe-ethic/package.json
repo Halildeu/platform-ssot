@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npx kill-port 3002 || true && webpack serve --config webpack.dev.js",
-    "build": "webpack --mode=production --config webpack.prod.js",
+    "start": "npx kill-port 3002 || true && vite",
+    "build": "vite build",
     "test": "jest --runInBand --passWithNoTests"
   },
   "keywords": [],
@@ -12,7 +12,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@mfe/shared-types": "file:../../packages/shared-types",
+    "@mfe/design-system": "*",
+    "@mfe/shared-types": "*",
     "@reduxjs/toolkit": "^2.8.2",
     "clsx": "^2.1.1",
     "react": "~18.2.0",
@@ -35,16 +36,8 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "babel-jest": "^30.0.4",
-    "babel-loader": "^10.0.0",
-    "css-loader": "^7.1.2",
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
-    "postcss-loader": "^8.1.1",
-    "style-loader": "^4.0.0",
-    "typescript": "^5.8.3",
-    "webpack": "^5.100.2",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.2",
-    "html-webpack-plugin": "^5.6.3"
+    "typescript": "^5.8.3"
   }
 }

@@ -1,0 +1,127 @@
+---
+title: Dark Mode
+description: 'Karanlık mod kurulumu ve kullanım rehberi'
+---
+
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+## Genel Bakış
+
+`@mfe/design-system` üç görünüm modu destekler:
+
+- **Light** — Varsayılan aydınlık tema
+- **Dark** — Karanlık tema
+- **High Contrast** — Yüksek kontrast modu (a11y)
+
+Tüm bileşenler semantic token tabanlı olduğu için tema geçişleri otomatik ve tutarlıdır.
+
+## Kurulum
+
+### Basit Kullanım
+
+```tsx
+import { DesignSystemProvider } from '@mfe/design-system';
+
+function App() {
+  return (
+    <DesignSystemProvider theme={{ mode: 'dark' }}>
+      <YourApp />
+    </DesignSystemProvider>
+  );
+}
+```
+
+### Sistem Tercihine Uyum
+
+Kullanıcının işletim sistemi temasını otomatik algılamak için:
+
+```tsx
+import { DesignSystemProvider } from '@mfe/design-system';
+
+function App() {
+  return (
+    <DesignSystemProvider theme={{ mode: 'system' }}>
+      <YourApp />
+    </DesignSystemProvider>
+  );
+}
+```
+
+### Toggle ile Geçiş
+
+```tsx
+import { DesignSystemProvider, useTheme } from '@mfe/design-system';
+
+function ThemeToggle() {
+  const { mode, setMode } = useTheme();
+
+  return (
+    <button onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}>
+      {mode === 'light' ? '🌙' : '☀️'}
+    </button>
+  );
+}
+```
+
+## Flash of Unstyled Content (FOUC) Önleme
+
+Sayfa yüklenirken tema flash'ını önlemek için HTML `<head>` bölümüne script ekleyin:
+
+```html
+<script>
+  (function() {
+    const saved = localStorage.getItem('mfe-theme-mode');
+    const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = saved || preferred;
+  })();
+</script>
+```
+
+## CSS ile Dark Mode Stilleri
+
+Kendi bileşenlerinizde dark mode desteği eklemek için semantic token'ları kullanın:
+
+```css
+.card {
+  background: var(--mfe-bg-primary);
+  color: var(--mfe-text-primary);
+  border: 1px solid var(--mfe-border-default);
+}
+
+/* Token'lar otomatik olarak dark mode'da güncellenir */
+```
+
+<Aside type="tip">
+  `prefers-color-scheme` media query yerine semantic token kullanın. Token'lar high-contrast modu da dahil tüm tema varyantlarını destekler.
+</Aside>
+
+## High Contrast Modu
+
+WCAG AAA uyumlu yüksek kontrast modu:
+
+```tsx
+<DesignSystemProvider theme={{ mode: 'high-contrast' }}>
+  <YourApp />
+</DesignSystemProvider>
+```
+
+| Özellik | Light | Dark | High Contrast |
+|---------|-------|------|---------------|
+| Metin kontrastı | 4.5:1 | 4.5:1 | 7:1 |
+| Focus ring | 2px | 2px | 3px |
+| Border kalınlığı | 1px | 1px | 2px |
+
+## SSR Desteği
+
+Server-side rendering ortamlarında tema modu `defaultMode` ile belirtilir:
+
+```tsx
+<DesignSystemProvider
+  theme={{
+    mode: 'system',
+    defaultMode: 'light',  // SSR fallback
+  }}
+>
+  <YourApp />
+</DesignSystemProvider>
+```

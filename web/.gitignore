@@ -1,5 +1,16 @@
 node_modules
 security-reports
+packages/design-system/dist
 
 *storybook.log
 storybook-static
+apps/docs/.next/
+apps/docs/out/
+
+# Evidence registry (generated)
+.evidence/
+apps/mfe-shell/.env.local
+
+# Module Federation temp files
+.__mf__temp/
+.mf/

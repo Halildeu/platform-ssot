@@ -33,9 +33,9 @@ Hariç:
 
 ## 5. BAĞIMLILIKLAR
 
-- Legacy Story: backend/docs/legacy/root/05-governance/02-stories/QLTY-BE-AUTHZ-SCOPE-01.md  
-- Legacy Spec: backend/docs/legacy/root/05-governance/06-specs/SPEC-QLTY-BE-AUTHZ-SCOPE-01-AUTHZ-SCOPED-PERMISSIONS.md  
-- Legacy Acceptance: backend/docs/legacy/root/05-governance/07-acceptance/QLTY-BE-AUTHZ-SCOPE-01.acceptance.md  
+- Legacy QLTY-BE-AUTHZ-SCOPE-01 story snapshot’ı  
+- Legacy QLTY-BE-AUTHZ-SCOPE-01 spec snapshot’ı  
+- Legacy QLTY-BE-AUTHZ-SCOPE-01 acceptance snapshot’ı  
 
 ## 6. ÖZET
 

@@ -1,4 +1,10 @@
-# AGENT-CODEX.core – Çekirdek Kurallar
+# Çekirdek Kurallar
+
+> Transition Durumu: Bu dosya transition-active rehber katmanındadır;
+> canonical OPO authority değildir. Canonical kaynaklar:
+> `standards.lock`,
+> `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md`,
+> `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`.
 
 ## 1. Genel
 
@@ -9,14 +15,19 @@
 
 ## 2. Doküman öncelik sırası
 
-1. Bu dosya (AGENT-CODEX.core.md)
-2. AGENTS.md (iş tipi → doküman rotası)
-3. docs/00-handbook/DOC-HIERARCHY.md
-4. docs/00-handbook/NAMING.md
-5. İlgili AGENT-CODEX.*.md
-6. İlgili layout / style / architecture dokümanları
+1. `standards.lock`
+2. `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md`
+3. `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`
+4. `AGENTS.md` (giriş rotası)
+5. `docs/03-delivery/PROJECT-FLOW.md` ve ilişkili current delivery dokümanları
+6. Bu dosya (çekirdek transition rehberi)
+7. `DOC-HIERARCHY.md`
+8. `NAMING.md`
+9. İlgili alan transition rehberi
+10. İlgili layout / style / architecture dokümanları
 
-Çelişki durumunda bu sıra baz alınır.
+Çelişki durumunda bu sıra baz alınır; transition-active dosyalar canonical
+katmanı override edemez.
 
 ## 3. Cevap formatı
 
@@ -105,7 +116,7 @@ SELF-CHECK (ZORUNLU)
 - MODE = PLAN iken bu bölüm yazılmaz.
 
 Örnek:
-- `AGENT-CODEX.core.md:51 — Dil kuralı güncellendi (yapılan vs planlanan ayrımı).`
+- `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md:51 — Geçiş kuralı netleştirildi.`
 
 ### 3.5.1 Planlanan Değişiklikler (MODE=PLAN, OPSİYONEL)
 - Sadece MODE = PLAN iken yazılır.

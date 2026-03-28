@@ -34,7 +34,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -86,7 +86,7 @@ jobs:
 
       - name: Build remote artefacts for SRI verification
         run: |
-          npm run build --prefix packages/ui-kit
+          npm run build --prefix packages/design-system
           npm run build --prefix apps/mfe-suggestions
           npm run build --prefix apps/mfe-ethic
           npm run build --prefix apps/mfe-users

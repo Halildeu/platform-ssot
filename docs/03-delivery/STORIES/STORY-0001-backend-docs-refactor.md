@@ -10,28 +10,28 @@ Downstream: AC-0001, ADR-0001
 ## 1. AMAÇ
 
 Backend tarafındaki mevcut `backend/docs` içeriğini,
-kurulan yeni doküman mimarisi (docs/00-handbook, 01–05, 99-templates)
+kurulan yeni doküman mimarisi (transition handbook, 01–05, 99-templates)
 ile uyumlu hale getirmek; tek bir doküman sistemi üzerinden
 agent ve ekiplerin çalışmasını sağlamak.
 
 ## 2. TANIM
 
 - Bir backend geliştiricisi olarak, all backend documentation to live under the new `docs/` tree istiyorum; böylece there is a single, tutarlı doküman sistemi.
-- Bir agent/ekip arkadaşı olarak, AGENT-CODEX ve DOC-HIERARCHY’nin yalnızca `docs/` altındaki dokümanlara referans vermesini istiyorum; böylece doğru kaynağı hızlıca bulabileyim.
+- Bir agent/ekip arkadaşı olarak, transition agent rehberleri ve DOC-HIERARCHY’nin yalnızca `docs/` altındaki current dokümanlara referans vermesini istiyorum; böylece doğru kaynağı hızlıca bulabileyim.
 
 ## 3. KAPSAM VE SINIRLAR
 
 Dahil:
 - `backend/docs` altındaki tüm .md dosyalarının envanterinin çıkarılması
 - Her dosyanın yeni sistemdeki hedefi ile eşleştirilmesi:
-  - docs/00-handbook → genel kurallar / stil / layout
+  - transition handbook katmanı → genel kurallar / stil / layout
   - docs/02-architecture/services/** → TECH-DESIGN, DATA-MODEL, ADR
   - docs/03-delivery → STORIES, ACCEPTANCE, TEST-PLANS
   - docs/04-operations → RUNBOOKS, MONITORING, RELEASE-NOTES
   - docs/05-ml-ai → DATA-CARDS, MODEL-CARDS, EVALUATION-REPORTS (AI ile ilgili ise)
 - Gerekli dokümanların yeni lokasyonlara taşınması veya yeniden yazılması
-- Eski `backend/docs` içeriğinin `backend/docs/legacy` altına alınması
-- AGENT-CODEX ve DOC-HIERARCHY referanslarının yalnız docs/ üzerinden çalışır hale gelmesi
+- Eski `backend/docs` içeriğinin archive-reference backend docs alanına alınması
+- Transition agent rehberleri ve DOC-HIERARCHY referanslarının yalnız docs/ üzerinden çalışır hale gelmesi
 
 Hariç:
 - Yeni business feature geliştirme
@@ -40,7 +40,7 @@ Hariç:
 ## 4. ACCEPTANCE KRİTERLERİ
 
 - [x] Backend’le ilgili dokümanlara erişmek için yalnızca `docs/` hiyerarşisinin kullanılması yeterlidir.
-- [x] AGENT-CODEX.* ve DOC-HIERARCHY’nin referans verdiği her doküman fiziksel olarak `docs/` altında bulunur.
+- [x] Transition agent rehberleri ve DOC-HIERARCHY’nin referans verdiği her doküman fiziksel olarak `docs/` altında bulunur.
 - [x] `backend/docs` altında yalnızca `legacy/` altındaki arşiv içerikleri kalır.
 
 ## 5. BAĞIMLILIKLAR

@@ -1,0 +1,129 @@
+---
+title: Hızlı Başlangıç
+description: 5 dakikada design system kullanımı
+---
+
+## Dashboard Örneği
+
+```tsx
+import {
+  ExecutiveKPIStrip,
+  BarChart,
+  FilterPresets,
+  DataExportDialog,
+} from '@mfe/design-system';
+
+function Dashboard() {
+  return (
+    <div>
+      <ExecutiveKPIStrip metrics={metrics} />
+      <FilterPresets presets={savedFilters} onSelect={applyFilter} />
+      <BarChart data={chartData} />
+      <DataExportDialog open={showExport} onExport={handleExport} />
+    </div>
+  );
+}
+```
+
+## Form Örneği
+
+```tsx
+import { AdaptiveForm, ConnectedInput, ConnectedSelect } from '@mfe/design-system';
+
+function UserForm() {
+  return (
+    <AdaptiveForm onSubmit={handleSubmit}>
+      <ConnectedInput name="email" label="E-posta" />
+      <ConnectedSelect name="role" label="Rol" options={roles} />
+    </AdaptiveForm>
+  );
+}
+```
+
+## Tablo Örneği
+
+```tsx
+import { DataGrid, ColumnDef } from '@mfe/design-system';
+
+const columns: ColumnDef[] = [
+  { field: 'id', headerName: 'ID', width: 80 },
+  { field: 'name', headerName: 'Ad Soyad', flex: 1 },
+  { field: 'email', headerName: 'E-posta', flex: 1 },
+  { field: 'role', headerName: 'Rol', width: 120 },
+];
+
+function UserTable() {
+  return (
+    <DataGrid
+      rows={users}
+      columns={columns}
+      pagination
+      pageSize={25}
+      sortable
+      filterable
+    />
+  );
+}
+```
+
+## Grafik Örneği
+
+```tsx
+import { LineChart, BarChart, PieChart } from '@mfe/design-system';
+
+function AnalyticsDashboard() {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <LineChart
+        data={revenueData}
+        xKey="month"
+        yKey="revenue"
+        title="Aylık Gelir"
+      />
+      <BarChart
+        data={departmentData}
+        xKey="department"
+        yKey="headcount"
+        title="Departman Bazlı Çalışan"
+      />
+      <PieChart
+        data={categoryData}
+        valueKey="amount"
+        labelKey="category"
+        title="Kategori Dağılımı"
+      />
+    </div>
+  );
+}
+```
+
+## Layout Örneği
+
+```tsx
+import { AppShell, Sidebar, TopBar, Breadcrumb } from '@mfe/design-system';
+
+function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <AppShell>
+      <TopBar
+        logo={<Logo />}
+        actions={<UserMenu />}
+      />
+      <Sidebar
+        items={navigationItems}
+        collapsible
+      />
+      <AppShell.Content>
+        <Breadcrumb items={breadcrumbItems} />
+        {children}
+      </AppShell.Content>
+    </AppShell>
+  );
+}
+```
+
+## Sonraki Adımlar
+
+- [Tema Sistemi](/getting-started/theming/) ile görünümü özelleştirin
+- [Bileşenler](/components/primitives/) sayfasından tüm bileşenleri inceleyin
+- [Dark Mode](/guides/dark-mode/) rehberini okuyun

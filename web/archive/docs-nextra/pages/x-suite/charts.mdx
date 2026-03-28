@@ -1,0 +1,81 @@
+# X-Charts
+
+Data visualization package with chart components, dashboard widgets,
+and composition hooks for enterprise dashboards.
+
+## Quick Start
+
+```tsx
+import { BarChart, LineChart, PieChart } from '@mfe/x-charts';
+
+<BarChart
+  data={salesData}
+  xField="month"
+  yField="revenue"
+  color="primary"
+/>
+```
+
+## Chart Types
+
+| Component | Use Case |
+|-----------|----------|
+| `BarChart` | Category comparisons |
+| `LineChart` | Trends over time |
+| `AreaChart` | Volume trends |
+| `PieChart` | Part-to-whole ratios |
+| `ScatterChart` | Correlation analysis |
+| `RadarChart` | Multi-axis comparison |
+| `GaugeChart` | KPI indicators |
+| `HeatmapChart` | Density visualization |
+| `TreemapChart` | Hierarchical proportions |
+| `WaterfallChart` | Incremental value changes |
+
+## Dashboard Widgets
+
+| Component | Purpose |
+|-----------|---------|
+| `ChartDashboard` | Grid layout for multiple charts |
+| `ChartContainer` | Wrapper with loading/error states |
+| `SparklineChart` | Inline mini sparkline |
+| `MiniChart` | Compact chart for cards |
+| `KPICard` | KPI metric display with trend |
+| `StatWidget` | Single-stat summary widget |
+| `ChartLegend` | Standalone legend component |
+| `ChartToolbar` | Chart action toolbar (zoom, export) |
+
+## Theming
+
+Charts inherit the global palette from `ThemeProvider` automatically.
+Override per-chart with the `color` or `palette` props:
+
+```tsx
+<LineChart
+  data={metrics}
+  xField="date"
+  yField="users"
+  palette={['#1a56db', '#e74c3c', '#2ecc71']}
+  animate
+/>
+```
+
+## Hooks
+
+| Hook | Purpose |
+|------|---------|
+| `useChartInteractions` | Click, hover, and selection handlers |
+| `useChartResize` | Responsive container resize observer |
+| `useRealTimeData` | Live-updating data stream adapter |
+| `useChartVariants` | Chart variant configuration |
+| `useDashboardComposition` | Cross-package: dashboard with shared date range |
+| `useResponsiveBreakpoint` | Breakpoint detection for responsive charts |
+| `useResponsiveChartConfig` | Auto-adjust chart config per breakpoint |
+
+## Responsive Behavior
+
+All charts are responsive by default. Use the `aspectRatio` prop
+to control proportions:
+
+```tsx
+<BarChart data={data} xField="q" yField="sales" aspectRatio={16 / 9} />
+```

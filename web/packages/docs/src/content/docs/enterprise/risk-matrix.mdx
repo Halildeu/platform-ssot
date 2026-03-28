@@ -1,0 +1,123 @@
+---
+title: RiskMatrix
+description: 'Risk değerlendirme matrisi — olasılık/etki analizi, renk kodlama.'
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Import
+
+```tsx
+import { RiskMatrix } from '@mfe/design-system';
+```
+
+## Kullanım
+
+```tsx
+const risks = [
+  { id: 'R1', title: 'Veri ihlali', likelihood: 3, impact: 5, category: 'Güvenlik' },
+  { id: 'R2', title: 'Sunucu kesintisi', likelihood: 2, impact: 4, category: 'Altyapı' },
+  { id: 'R3', title: 'Bütçe aşımı', likelihood: 4, impact: 3, category: 'Finansal' },
+  { id: 'R4', title: 'Personel kaybı', likelihood: 3, impact: 3, category: 'İnsan Kaynakları' },
+];
+
+<RiskMatrix risks={risks} />
+```
+
+## Matris Konfigürasyonu
+
+Varsayılan olarak 5x5 matris kullanılır. Özelleştirmek için:
+
+```tsx
+<RiskMatrix
+  risks={risks}
+  levels={5}  // 3, 4 veya 5
+  likelihoodLabels={['Çok Düşük', 'Düşük', 'Orta', 'Yüksek', 'Çok Yüksek']}
+  impactLabels={['Önemsiz', 'Düşük', 'Orta', 'Yüksek', 'Kritik']}
+/>
+```
+
+## Renk Kodlama
+
+| Seviye | Renk | Aralık (5x5) | Açıklama |
+|--------|------|-------------|----------|
+| Düşük | Yeşil | 1-4 | Kabul edilebilir risk |
+| Orta | Sarı | 5-9 | İzleme gerekli |
+| Yüksek | Turuncu | 10-16 | Aksiyon gerekli |
+| Kritik | Kırmızı | 17-25 | Acil müdahale |
+
+## Etkileşimli Mod
+
+```tsx
+<RiskMatrix
+  risks={risks}
+  interactive
+  onRiskClick={(risk) => openRiskDetail(risk)}
+  onRiskMove={(risk, newPosition) => updateRisk(risk.id, newPosition)}
+  tooltip  // hover'da detay göster
+/>
+```
+
+## Filtre ve Gruplama
+
+```tsx
+<RiskMatrix
+  risks={risks}
+  filterByCategory={['Güvenlik', 'Altyapı']}
+  groupByCategory
+  showLegend
+/>
+```
+
+## Props
+
+| Prop | Tip | Varsayılan | Açıklama |
+|------|-----|-----------|----------|
+| `risks` | `Risk[]` | — | Risk listesi |
+| `levels` | `3 \| 4 \| 5` | `5` | Matris boyutu |
+| `likelihoodLabels` | `string[]` | — | Olasılık etiketleri |
+| `impactLabels` | `string[]` | — | Etki etiketleri |
+| `interactive` | `boolean` | `false` | Etkileşimli mod |
+| `tooltip` | `boolean` | `true` | Hover tooltip |
+| `showLegend` | `boolean` | `true` | Renk açıklaması |
+| `groupByCategory` | `boolean` | `false` | Kategori gruplama |
+| `filterByCategory` | `string[]` | — | Kategori filtresi |
+| `onRiskClick` | `(risk) => void` | — | Tıklama handler'ı |
+| `onRiskMove` | `(risk, pos) => void` | — | Sürükleme handler'ı |
+| `colorScheme` | `'default' \| 'deuteranopia' \| 'protanopia'` | `'default'` | Renk şeması |
+
+## Risk Tipi
+
+```tsx
+interface Risk {
+  id: string;
+  title: string;
+  likelihood: number;  // 1-5
+  impact: number;       // 1-5
+  category?: string;
+  description?: string;
+  owner?: string;
+  mitigations?: string[];
+}
+```
+
+## Erişilebilirlik
+
+- **Keyboard**: Ok tuşları ile matris hücreleri arası navigasyon
+- **ARIA**: `role="grid"` ile matris yapısı, her hücre `role="gridcell"`
+- **Screen Reader**: Risk seviyesi ve detayları sesli duyurulur
+- **Renk Körlüğü**: `colorScheme` prop'u ile deuteranopia ve protanopia uyumlu renkler
+
+<Aside type="tip">
+  Renk körlüğü olan kullanıcılar için `colorScheme="deuteranopia"` kullanın. Bu mod renklerin yanı sıra desen (pattern) kullanarak risk seviyelerini ayırt eder.
+</Aside>
+
+## Export
+
+```tsx
+<RiskMatrix
+  risks={risks}
+  exportable
+  exportFormats={['png', 'pdf', 'csv']}
+/>
+```

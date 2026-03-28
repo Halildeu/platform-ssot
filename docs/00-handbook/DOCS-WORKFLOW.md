@@ -1,5 +1,11 @@
 # DOCS-WORKFLOW – Dokümantasyon Süreci Rehberi (Compact)
 
+> Transition Durumu: Bu dosya transition-active rehber katmanındadır.
+> Canonical OPO authority için
+> `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`,
+> `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md` ve
+> `standards.lock` kullanılır.
+
 Bu doküman, proje içindeki tüm yazılı dokümanların (PB, PRD, Story, Acceptance,
 Tech-Design, ADR, Test-Plan, Runbook vb.) **nasıl üretileceğini ve güncelleneceğini**
 tek ve tutarlı bir workflow halinde tanımlar.

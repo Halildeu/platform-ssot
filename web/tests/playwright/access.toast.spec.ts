@@ -20,12 +20,12 @@ test.describe('Access toast notifications', () => {
   });
 
   test('clone role triggers success toast', async ({ page, baseURL }) => {
-    await authenticateAndNavigate(page, baseURL, '/access/roles', ['VIEW_ACCESS', 'MANAGE_ACCESS']);
+    await authenticateAndNavigate(page, baseURL, '/access/roles', ['ACCESS_MODULE', 'MANAGE_ACCESS']);
     await page.waitForSelector('.ag-center-cols-container .ag-row', { timeout: 30000 });
 
-    await page.locator('.ag-selection-checkbox').first().click();
+    await page.getByRole('checkbox', { name: /Press Space to toggle row selection/i }).first().click();
     await page.getByRole('button', { name: /Rolü Klonla/i }).click();
-    await page.getByRole('button', { name: /Oluştur/i }).click();
+    await page.getByRole('button', { name: /^(Oluştur|access\\.clone\\.okText)$/i }).click();
 
     await expect
       .poll(async () => {

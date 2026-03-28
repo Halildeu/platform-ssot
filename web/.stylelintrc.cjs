@@ -2,11 +2,16 @@
 
 module.exports = {
   extends: ['stylelint-config-standard'],
+  ignoreFiles: [
+    '**/node_modules/**',
+    '**/node_modules_old/**',
+    'node_modules_failed_pnpm_hoisted/**',
+  ],
   rules: {
     'at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: ['tailwind', 'layer', 'apply', 'variants', 'responsive', 'screen'],
+        ignoreAtRules: ['tailwind', 'layer', 'apply', 'variants', 'responsive', 'screen', 'theme', 'source', 'custom-variant', 'utility'],
       },
     ],
     'custom-property-empty-line-before': null,

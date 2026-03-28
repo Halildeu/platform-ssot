@@ -13,16 +13,16 @@ Owner: Halil K.
 
 ## 2. KAPSAM
 
-- Yeni doküman mimarisi (docs/00-handbook, 01–05, 99-templates).
+- Yeni doküman mimarisi (transition handbook, 01–05, 99-templates).
 - `backend/docs` altındaki tüm .md dosyalarının envanteri ve mapping tabloları.
 - Örnek zincir: STORY-0001, AC-0001, ADR-0001, TP-0001/0002, RB-*.
-- Legacy backend/docs içeriğinin `backend/docs/legacy/**` altında arşivlenmesi.
+- Legacy backend/docs içeriğinin archive-reference backend docs alanında arşivlenmesi.
 
 ## 3. GIVEN / WHEN / THEN SENARYOLARI
 
 ### Genel Kriterler
 
-- [x] Given: Yeni doküman mimarisi (docs/00-handbook, 01–05, 99-templates) tanımlıdır.  
+- [x] Given: Yeni doküman mimarisi (transition handbook, 01–05, 99-templates) tanımlıdır.  
       When: Geliştirici veya agent backend ile ilgili rehber doküman arar.  
       Then: Gerekli tüm rehberler (layout, stil, mimari, süreç) sadece `docs/` altında bulunur;
       `backend/docs` altı günlük kullanım için gerekli değildir.
@@ -39,12 +39,12 @@ Owner: Halil K.
 
 - [x] Given: Yeni docs yapısı.  
       When: Eski frontend layout / stil doküman adları için tarama yapılır (örn. grep ile).  
-      Then: Yeni `docs/` hiyerarşisi altında bu eski isimlere doğrudan referans kalmaz; sadece `backend/docs/legacy/` altında görülebilir.
+      Then: Yeni `docs/` hiyerarşisi altında bu eski isimlere doğrudan referans kalmaz; sadece archive-reference backend docs alanında görülebilir.
 
 ### RUNBOOKS İlerleme Durumu
 
 - [x] Vault, MFE Access, Keycloak ve feature flag yönetimi için RB-* runbook'ları `docs/04-operations/RUNBOOKS/` altında oluşturuldu; ayrıntılı adımlar legacy runbook dosyalarına referans veriyor.
-- [x] `backend/docs/legacy/04-operations/01-runbooks` altındaki tüm runbook `.md` dosyaları legacy klasörü olarak korunmakta ve RB-* dokümanlarından gerektiği yerde link verilmektedir.
+- [x] Legacy runbook arşivi korunmakta ve RB-* dokümanlarından gerektiği yerde archive-reference link verilmektedir.
 
 ### Operasyonel Kriterler
 
@@ -55,13 +55,13 @@ Owner: Halil K.
 
 - [x] Given: Eski backend docs tamamen silinmemiştir.  
       When: `backend/docs/` altına bakılır.  
-      Then: Sadece `backend/docs/README.md` ve `backend/docs/legacy/**` altında arşiv içerikleri bulunur ve
+      Then: Sadece `backend/docs/README.md` ve archive-reference backend docs alanında arşiv içerikleri bulunur ve
       README'de “yeni dokümantasyon docs/ altında” notu yer alır.
 
 ## 4. NOTLAR / KISITLAR
 
 - Bu acceptance yalnız doküman yapısını kapsar; uygulama kodu değişiklikleri bu kapsamda değildir.
-- Legacy dokümanlar silinmez, yalnızca `backend/docs/legacy/**` altında arşivlenir.
+- Legacy dokümanlar silinmez, yalnızca archive-reference backend docs alanında arşivlenir.
 
 ## 5. ÖZET
 

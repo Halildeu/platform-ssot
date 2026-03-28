@@ -1,0 +1,49 @@
+{
+  "motion": {
+    "$description": "Motion tokens — duration and easing curves",
+    "duration": {
+      "instant": {
+        "$value": "0ms",
+        "$type": "duration"
+      },
+      "fast": {
+        "$value": "100ms",
+        "$type": "duration"
+      },
+      "normal": {
+        "$value": "200ms",
+        "$type": "duration"
+      },
+      "slow": {
+        "$value": "300ms",
+        "$type": "duration"
+      },
+      "slower": {
+        "$value": "500ms",
+        "$type": "duration"
+      }
+    },
+    "easing": {
+      "default": {
+        "$value": [0.4, 0, 0.2, 1],
+        "$type": "cubicBezier"
+      },
+      "in": {
+        "$value": [0.4, 0, 1, 1],
+        "$type": "cubicBezier"
+      },
+      "out": {
+        "$value": [0, 0, 0.2, 1],
+        "$type": "cubicBezier"
+      },
+      "inOut": {
+        "$value": [0.4, 0, 0.2, 1],
+        "$type": "cubicBezier"
+      },
+      "spring": {
+        "$value": [0.175, 0.885, 0.32, 1.275],
+        "$type": "cubicBezier"
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "version": "v1",
+  "subject_id": "ux_katalogu",
+  "generated_at": "2026-03-05T19:00:00Z",
+  "entries": [
+    {
+      "path": "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+      "ux_theme_id": "task_completion_architecture",
+      "ux_subtheme_id": "critical_path_minimization"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/widgets/app-shell/ui/Sidebar.ui.tsx",
+      "ux_theme_id": "navigation_information_scent",
+      "ux_subtheme_id": "orientation_and_wayfinding"
+    },
+    {
+      "path": "web/packages/ui-kit/src/layout/PageLayout/PageLayout.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    }
+  ]
+}

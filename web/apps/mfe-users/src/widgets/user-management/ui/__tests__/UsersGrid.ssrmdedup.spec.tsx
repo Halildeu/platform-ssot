@@ -7,7 +7,7 @@ import UsersGrid from '../UsersGrid.ui';
 // Capture props passed to EntityGridTemplate
 let capturedProps: any = null;
 
-jest.mock('mfe-ui-kit', () => ({
+jest.mock('@mfe/design-system', () => ({
   EntityGridTemplate: (props: any) => {
     capturedProps = props;
     return null;
@@ -38,7 +38,7 @@ describe('UsersGrid SSRM dedup', () => {
     // createServerSideDatasource props üzerinden alınır
     expect(typeof capturedProps?.createServerSideDatasource).toBe('function');
 
-    const ds = capturedProps.createServerSideDatasource({ gridApi: {}, columnApi: {} });
+    const ds = capturedProps.createServerSideDatasource({ gridApi: {} });
 
     const paramsA: any = {
       request: { startRow: 0, endRow: 50, filterModel: {}, sortModel: [] },

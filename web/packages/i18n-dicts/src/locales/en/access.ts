@@ -19,6 +19,9 @@ const access = {
   'access.grid.columns.memberCount': 'Member count',
   'access.grid.columns.moduleSummary': 'Permitted modules',
   'access.grid.columns.lastModified': 'Last update',
+  'access.grid.pagination.rowsPerPage': 'Page size:',
+  'access.grid.pagination.range': '{start}-{end} / {total} roles',
+  'access.grid.pagination.pageIndicator': 'Page {currentPage} / {pageCount}',
 
   'access.variants.selectPlaceholder': 'Select a saved view',
   'access.variants.save': 'Save',

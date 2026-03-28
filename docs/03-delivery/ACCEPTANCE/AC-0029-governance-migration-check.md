@@ -2,7 +2,7 @@
 
 ID: AC-0029  
 Story: STORY-0029-governance-migration-check  
-Status: Planned  
+Status: Done  
 Owner: @team/platform-arch
 
 -------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ Owner: @team/platform-arch
 ## 3. GIVEN / WHEN / THEN SENARYOLARI
 -------------------------------------------------------------------------------
 
-- [ ] Senaryo 1 – Taşınmamış governance maddeleri:
+- [x] Senaryo 1 – Taşınmamış governance maddeleri:
   - Given: Legacy FEATURE_REQUESTS / PROJECT_FLOW içinde bazı governance
     maddeleri vardır ve bunların yeni PROJECT-FLOW’da karşılığı yoktur.  
     When: Governance migration script’i (`check_governance_migration.py`)
@@ -32,14 +32,14 @@ Owner: @team/platform-arch
     Then: Bu maddeler “yeni STORY açılması gerekenler” listesinde, ID önerisi
     ve kısa açıklama ile raporlanır.
 
-- [ ] Senaryo 2 – Zaten taşınmış maddeler:
+- [x] Senaryo 2 – Zaten taşınmış maddeler:
   - Given: Bazı legacy governance maddeleri için yeni sistemde STORY-00xx /
     AC-00xx / TP-00xx dokümanları zaten açılmıştır.  
     When: Aynı script çalıştırılır.  
     Then: Bu maddeler “zaten taşındı” veya benzeri bir işaretle gösterilir;
     tekrar açılması önerilmez.
 
-- [ ] Senaryo 3 – Boş legacy backlog:
+- [x] Senaryo 3 – Boş legacy backlog:
   - Given: Legacy FEATURE_REQUESTS / PROJECT_FLOW tamamen tüketilmiş veya
     arşivlenmiştir.  
     When: Script yeniden çalıştırılır.  
@@ -61,6 +61,8 @@ Owner: @team/platform-arch
 - Governance migration script’i legacy backlog ile yeni Story sistemi
   arasında köprü kurar ve taşınmamış maddeleri güvenilir şekilde
   raporlayabiliyorsa bu acceptance tamamlanmış sayılır.
+- 2026-03-09 çalıştırmasında script `43` taşınmış, `0` taşınmamış governance
+  ID sonucu üretmiştir.
 
 -------------------------------------------------------------------------------
 ## 6. LİNKLER (İSTEĞE BAĞLI)
@@ -68,4 +70,3 @@ Owner: @team/platform-arch
 
 - Story: docs/03-delivery/STORIES/STORY-0029-governance-migration-check.md  
 - Test Plan: docs/03-delivery/TEST-PLANS/TP-0029-governance-migration-check.md  
-

@@ -1,0 +1,288 @@
+---
+title: "Troubleshooting"
+description: "Common issues and their solutions when working with the monorepo."
+---
+
+## 1. AG Grid License Warning
+
+**Symptom**: Console warning about AG Grid enterprise license missing.
+
+**Solution**: Set the `AG_GRID_LICENSE_KEY` environment variable in your `.env.local`:
+
+```bash
+AG_GRID_LICENSE_KEY=your-license-key-here
+```
+
+The license is injected at build time via `LicenseManager.setLicenseKey()` in the
+design-system grid wrapper. In CI, the key is stored as a repository secret.
+
+---
+
+## 2. Module Federation Compilation Error
+
+**Symptom**: Build fails with `Container reference "mfe_xxx" is not declared in externals`.
+
+**Solution**:
+
+1. Verify the remote name matches exactly between host and remote webpack configs.
+2. Ensure the MFE dev server is running if you are in local development mode.
+3. Check `modulefederation.config.ts` for typos in the `remotes` map.
+
+```bash
+# Start the shell + the MFE you need
+pnpm dev:shell
+pnpm --filter @mfe/crm dev
+```
+
+---
+
+## 3. pnpm Workspace Resolution Issues
+
+**Symptom**: `ERR_PNPM_PEER_DEP_ISSUES` or packages resolve to the wrong version.
+
+**Solution**:
+
+```bash
+# Clean and reinstall
+rm -rf node_modules packages/*/node_modules
+pnpm install
+```
+
+If a specific package version is pinned incorrectly, check `pnpm-workspace.yaml`
+and the root `package.json` `pnpm.overrides` field.
+
+---
+
+## 4. CSS Import Fails in Test Environment
+
+**Symptom**: `SyntaxError: Unexpected token '.'` when importing `.css` or `.module.css`
+files in Jest/Vitest.
+
+**Solution**: Ensure the test config includes a CSS transform. In `vitest.config.ts`:
+
+```ts
+export default defineConfig({
+  test: {
+    css: true,
+    // or use a mock
+    // css: { modules: { classNameStrategy: 'non-scoped' } }
+  },
+});
+```
+
+For Jest, add `moduleNameMapper` pointing `.css` imports to `identity-obj-proxy`.
+
+---
+
+## 5. @mfe/design-system Module Not Found
+
+**Symptom**: `Cannot find module '@mfe/design-system'` at build or runtime.
+
+**Solution**:
+
+1. Build the design-system first:
+   ```bash
+   pnpm build:design-system
+   ```
+2. If using path aliases, verify `tsconfig.json` paths include:
+   ```json
+   { "@mfe/design-system": ["packages/design-system/src/index.ts"] }
+   ```
+3. For Module Federation, confirm `design-system` is listed in `shared` config.
+
+---
+
+## 6. Vite CJS Deprecation Warning
+
+**Symptom**: `The CJS build of Vite's Node API is deprecated` warning during dev.
+
+**Solution**: Ensure your config files use ESM syntax. Rename `vite.config.js` to
+`vite.config.ts` or add `"type": "module"` to the package's `package.json`.
+
+This is a non-blocking warning and does not affect functionality in current versions.
+
+---
+
+## 7. React act() Warning in Tests
+
+**Symptom**: `Warning: An update to Component inside a test was not wrapped in act(...)`.
+
+**Solution**:
+
+- Wrap state-changing operations in `act()` or use `waitFor` from Testing Library:
+  ```ts
+  await waitFor(() => {
+    expect(screen.getByText('Loaded')).toBeInTheDocument();
+  });
+  ```
+- If using fake timers, advance them inside `act()`:
+  ```ts
+  await act(async () => {
+    vi.advanceTimersByTime(1000);
+  });
+  ```
+
+---
+
+## 8. design-system dist Not Built
+
+**Symptom**: Consuming packages see stale or missing exports from `@mfe/design-system`.
+
+**Solution**:
+
+```bash
+pnpm build:design-system
+```
+
+During development, run the design-system in watch mode so changes propagate
+immediately:
+
+```bash
+pnpm --filter @mfe/design-system dev
+```
+
+---
+
+## 9. Port Conflicts (3000, 3001, etc.)
+
+**Symptom**: `EADDRINUSE: address already in use :::3000`.
+
+**Solution**:
+
+```bash
+# Find what is using the port
+lsof -i :3000
+
+# Kill it
+kill -9 <PID>
+```
+
+Default port assignments:
+| Service        | Port |
+|----------------|------|
+| Shell          | 3000 |
+| Design Lab     | 3001 |
+| Docs           | 3002 |
+| MFE remotes    | 3010+ |
+
+Override with `PORT=XXXX` environment variable.
+
+---
+
+## 10. TypeScript Strict Mode Errors
+
+**Symptom**: New `TS2322` or `TS7053` errors after enabling `strict: true`.
+
+**Solution**:
+
+- Fix implicit `any` types by adding explicit annotations.
+- For index signatures, use `Record<string, T>` or add an index signature.
+- The repo uses `strict: true` at the root. Per-package overrides in
+  `tsconfig.json` can relax rules temporarily during migration:
+  ```json
+  { "compilerOptions": { "noImplicitAny": false } }
+  ```
+
+---
+
+## 11. Storybook Build Failures
+
+**Symptom**: `ERR! Error: Failed to build the preview` during `pnpm build-storybook`.
+
+**Solution**:
+
+1. Clear the Storybook cache:
+   ```bash
+   rm -rf node_modules/.cache/storybook
+   ```
+2. Ensure all peer dependencies are installed (especially `@storybook/addon-*`).
+3. Verify `.storybook/main.ts` `stories` globs match actual file locations.
+4. Check for circular imports -- Storybook's webpack build is less forgiving.
+
+---
+
+## 12. Chromatic Baseline Mismatch
+
+**Symptom**: Chromatic flags visual diffs that look identical on your screen.
+
+**Solution**:
+
+- Anti-aliasing and font rendering differ between your machine and Chromatic's
+  capture environment (Chrome on Linux).
+- Use `chromatic: { diffThreshold: 0.2 }` in story parameters for known
+  rendering-sensitive components.
+- For animations, disable them in the Storybook test decorator or set
+  `chromatic: { delay: 500 }` to wait for animations to settle.
+
+---
+
+## 13. Hot Reload Not Working
+
+**Symptom**: Code changes are saved but the browser does not update.
+
+**Solution**:
+
+1. Check the terminal for HMR errors or disconnection messages.
+2. Ensure you are editing files inside the `src/` directory (files outside the
+   watched scope are ignored).
+3. For Module Federation remotes, HMR only works within the remote's own code.
+   Changes to shared modules require a page reload.
+4. On macOS, if FSEvents is broken:
+   ```bash
+   brew install watchman
+   ```
+
+---
+
+## 14. Memory Issues with Large Test Suites
+
+**Symptom**: `FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory`.
+
+**Solution**:
+
+```bash
+# Increase Node heap size
+NODE_OPTIONS="--max-old-space-size=8192" pnpm test
+```
+
+For CI, this is set in the workflow environment. Locally, add it to your shell
+profile or `.env.local`.
+
+Also consider running tests in smaller batches:
+
+```bash
+pnpm --filter @mfe/design-system test
+```
+
+---
+
+## 15. Node Version Mismatch
+
+**Symptom**: `error @mfe/design-system@1.0.0: The engine "node" is incompatible`.
+
+**Solution**:
+
+The repo requires Node 22. Use a version manager:
+
+```bash
+# nvm
+nvm install 22
+nvm use 22
+
+# fnm
+fnm use 22
+
+# Verify
+node -v  # should print v22.x.x
+```
+
+The required version is specified in `package.json` under `engines` and in
+`.nvmrc` at the repo root.
+
+---
+
+## Still Stuck?
+
+- Search existing issues in the repository.
+- Ask in the `#frontend-platform` channel.
+- Open an issue with the `bug` label and include reproduction steps.

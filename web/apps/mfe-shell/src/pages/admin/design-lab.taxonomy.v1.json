@@ -1,0 +1,610 @@
+{
+  "version": "1",
+  "defaults": {
+    "showEmptyGroups": true,
+    "showEmptySubgroups": true,
+    "defaultView": "components",
+    "defaultSection": "components",
+    "advancedToggleLabel": "Advanced (Runtime/Utils)"
+  },
+  "sections": [
+    {
+      "id": "foundations",
+      "title": "Foundations",
+      "description": "Theme, tokens, accessibility, runtime helpers ve kalite altyapisi",
+      "groupIds": [
+        "theme_tokens",
+        "a11y_i18n",
+        "dev_diagnostics",
+        "runtime_utilities"
+      ]
+    },
+    {
+      "id": "components",
+      "title": "Components",
+      "description": "Primitives, forms, navigation, collections, charts ve guvenlik dahil tam component katalogu",
+      "groupIds": [
+        "general",
+        "actions",
+        "navigation",
+        "data_entry",
+        "forms_data_entry",
+        "data_display",
+        "feedback",
+        "state_feedback",
+        "search_filtering",
+        "overlays_portals",
+        "layout",
+        "page_blocks",
+        "theme_tokens",
+        "ai_native_helpers",
+        "auth_security_ui",
+        "charts_visualization"
+      ]
+    },
+    {
+      "id": "recipes",
+      "title": "Recipes",
+      "description": "Tekrarlanabilir workflow, state ve task odakli kullanim kaliplari",
+      "groupIds": [
+        "tables_grid_addons",
+        "ai_native_helpers"
+      ]
+    },
+    {
+      "id": "pages",
+      "title": "Pages / Templates",
+      "description": "Sayfa iskeletleri, page shell building blocklari ve tam template yuzeyleri",
+      "groupIds": [
+        "layout_surfaces",
+        "page_blocks"
+      ]
+    },
+    {
+      "id": "apis",
+      "label": "API'ler",
+      "labelEn": "Programmatic APIs",
+      "description": "Hooks, utilities, theme API ve yardımcı fonksiyonlar",
+      "groupIds": ["hooks", "utilities", "theme_api", "theme_setters", "constants", "hocs"]
+    },
+    {
+      "id": "ecosystem",
+      "title": "Enterprise Extensions",
+      "description": "Pro/enterprise data surfaces, advanced grid, charts, admin shells ve premium lane extensions",
+      "groupIds": [
+        "enterprise",
+        "enterprise_data",
+        "enterprise_admin",
+        "enterprise_analytics",
+        "x_data_grid",
+        "x_charts",
+        "x_scheduler",
+        "x_kanban",
+        "x_editor",
+        "x_form_builder"
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "id": "enterprise",
+      "title": "Enterprise Components",
+      "subgroups": [
+        "6 sebep-bazli bos durum ekrani",
+        "6 tip mini inline SVG grafik",
+        "80/20 analiz, bar + kumulatif cizgi",
+        "Akis/deger akisi diagram",
+        "BPMN tarzi surec akisi",
+        "Bildirim paneli",
+        "Capraz tablo pivot analiz bileseni",
+        "Dashboard donem secici",
+        "Double-click inline duzenleme",
+        "Durum degisim gecmisi timeline",
+        "Egitim takip listesi",
+        "Gantt chart zaman cizelgesi",
+        "GitHub-style aktivite isi haritasi",
+        "Hedef-gerceklesen kompakt SVG grafigi",
+        "Hiyerarsik organizasyon semasi SVG bileseni",
+        "Huni grafigi, donusum analizi",
+        "ISG risk skoru (OxFxS), 5 seviye risk tablosu",
+        "Karsilastirma tablosu",
+        "Kaydedilmis filtre setleri",
+        "Lean deger akisi haritasi",
+        "No-code gorsel is akisi tasarimcisi",
+        "Onay sureci adim gosterge",
+        "PDF/Excel/CSV/PNG export dialog",
+        "Risk degerlendirme matrisi",
+        "SPC, kontrol grafigi, istatistiksel proses kontrol",
+        "SWOT, stratejik analiz, 4 kadran matrisi",
+        "Tema onizleme layout",
+        "Yasi gruplama analizi",
+        "Yonetici KPI strip, trend gosterge",
+        "Yonetisim panosu",
+        "aktivite akisi, sosyal bildirim, zaman cizgisi",
+        "dosya yukleme, drag drop, upload, dosya yonetimi",
+        "histogram, frekans dagilimi, istatistik",
+        "istatistik, kutu grafik, dagilim analizi",
+        "karar matrisi, agirlikli puanlama, opsiyon degerlendirme",
+        "metrik karsilastirma, donem bazli, KPI kart",
+        "tartisma, yorum dizisi, isbirligi"
+      ]
+    },
+    {
+      "id": "general",
+      "title": "General & Identity",
+      "subgroups": [
+        "Typography",
+        "Iconography",
+        "Avatar & Identity",
+        "Badge / Tag / Chip",
+        "Button",
+        "Carousel & Gallery",
+        "Divider",
+        "Divider / Separator",
+        "Copy / Clipboard",
+        "Float Button & FAB",
+        "Icon button",
+        "Link",
+        "Link / Inline navigation",
+        "QR Code & Barcode",
+        "Timeline & History",
+        "Watermark & Overlay"
+      ]
+    },
+    {
+      "id": "layout_surfaces",
+      "title": "Layout & Surfaces",
+      "subgroups": [
+        "App Shell Layout (Header/Sidebar/Footer)",
+        "Page Layout / Containers",
+        "Grid / Flex helpers",
+        "Card / Panel / Surface",
+        "Split / Resizable",
+        "Spacing helpers",
+        "Sticky / Affix"
+      ]
+    },
+    {
+      "id": "navigation",
+      "title": "Navigation & Wayfinding",
+      "subgroups": [
+        "Menu Bar",
+        "App Header",
+        "Navigation Menu",
+        "Search / Command Header",
+        "Action Header",
+        "Action Bar",
+        "Desktop Menubar",
+        "Navigation Rail",
+        "Tabs",
+        "Segmented / Toggle Group",
+        "Breadcrumb",
+        "Pagination",
+        "Table pagination",
+        "Pagination / Table pagination",
+        "Steps",
+        "Steps / Mobile stepper",
+        "Anchor / Table of contents",
+        "Accordion / Disclosure",
+        "Navigation menu / side nav",
+        "Drawer navigation"
+      ]
+    },
+    {
+      "id": "data_entry",
+      "title": "Forms & Data Entry",
+      "subgroups": [
+        "Text Input / TextArea",
+        "Select / Dropdown / Combobox",
+        "Autocomplete / Typeahead",
+        "Autocomplete & Combobox",
+        "Checkbox / Radio",
+        "Switch / Toggle",
+        "OTP / PIN input",
+        "Slider",
+        "Slider / Range",
+        "Date / Time pickers",
+        "Date & Time",
+        "Upload / File picker",
+        "Color picker",
+        "Color Picker",
+        "Cascader / Tree select",
+        "Cascader & Hierarchy",
+        "Numeric Input",
+        "Rating / Mentions",
+        "Mentions & Tagging",
+        "Rating & Scoring",
+        "Search & Filter",
+        "Transfer & Shuttle",
+        "Form wrappers (Form, Field, Validation)",
+        "Rich text editor"
+      ]
+    },
+    {
+      "id": "data_display",
+      "title": "Data Display & Collections",
+      "subgroups": [
+        "Table",
+        "Data Grid (AG Grid / EntityGrid)",
+        "List",
+        "Tree / TreeTable",
+        "Descriptions / Key-Value",
+        "Detail summary / inspector",
+        "Statistic / KPI cards",
+        "Timeline / Activity feed",
+        "Calendar / Scheduler view",
+        "Media (Image/Carousel)",
+        "Code / JSON viewer",
+        "Card collections / gallery"
+      ]
+    },
+    {
+      "id": "feedback",
+      "title": "Feedback & Status",
+      "subgroups": [
+        "Alert / Banner",
+        "Drawer / Side Panel",
+        "Empty & Placeholder",
+        "Error Handling",
+        "Toast / Notification",
+        "Toast & Notification",
+        "Modal / Dialog / Confirm",
+        "Popover / Hover card",
+        "Tooltip",
+        "Progress / Spinner",
+        "Skeleton / Placeholder",
+        "Empty state / No data",
+        "Result / Success page",
+        "Empty / Error / Loading recipes",
+        "Error boundary / Fallback UI"
+      ]
+    },
+    {
+      "id": "search_filtering",
+      "title": "Search, Filter & Query",
+      "subgroups": [
+        "Search box",
+        "Filter bar",
+        "Search + filter listings",
+        "Facets",
+        "Sort controls",
+        "Saved filters / Views",
+        "Query builder",
+        "Filter chips / tokens"
+      ]
+    },
+    {
+      "id": "actions",
+      "title": "Actions & Triggers",
+      "subgroups": [
+        "Button",
+        "Icon button",
+        "Button group / Split button",
+        "Context actions (kebab menu)",
+        "Floating action button",
+        "Inline actions",
+        "Quick actions / command triggers"
+      ]
+    },
+    {
+      "id": "forms_data_entry",
+      "title": "Advanced Form Components",
+      "subgroups": [
+        "Multi-step form",
+        "Form summary",
+        "Repeatable field group",
+        "Field registry",
+        "Mention list",
+        "Slash command menu"
+      ]
+    },
+    {
+      "id": "state_feedback",
+      "title": "State & Feedback",
+      "subgroups": [
+        "Toast / Snackbar",
+        "Inline notifications"
+      ]
+    },
+    {
+      "id": "layout",
+      "title": "Layout Components",
+      "subgroups": [
+        "Card",
+        "Stack",
+        "Master-detail",
+        "Smart dashboard"
+      ]
+    },
+    {
+      "id": "overlays_portals",
+      "title": "Overlays, Menus & Portals",
+      "subgroups": [
+        "Drawer / Side panel",
+        "Popover",
+        "Popover / Hover card",
+        "Modal stack manager",
+        "Dropdown menu",
+        "Context menu",
+        "Command palette",
+        "Menubar / navigation popup",
+        "Sheet / Bottom sheet",
+        "Tour / Coachmarks"
+      ]
+    },
+    {
+      "id": "tables_grid_addons",
+      "title": "Table & Grid Extensions",
+      "subgroups": [
+        "Column picker",
+        "Export (CSV/Excel/PDF)",
+        "Row selection / bulk actions",
+        "Inline edit",
+        "Grouping / pivot",
+        "Server-side pagination helpers",
+        "Grid theming bridge (CSS vars)",
+        "Density / view presets"
+      ]
+    },
+    {
+      "id": "page_blocks",
+      "title": "Page Blocks & Templates",
+      "subgroups": [
+        "Page Shell",
+        "Filters",
+        "Summary Blocks",
+        "Detail / inspector layouts",
+        "Sectioned docs / playground shells",
+        "Page Templates",
+        "Card & Container",
+        "Master-Detail & Split View",
+        "Dashboard & Grid",
+        "Stack & Spacing"
+      ]
+    },
+    {
+      "id": "charts_visualization",
+      "title": "Charts & Visualization",
+      "subgroups": [
+        "Basic charts (bar/line/pie)",
+        "Time series",
+        "Heatmap",
+        "Sankey / network",
+        "Map",
+        "Dashboard layout widgets"
+      ]
+    },
+    {
+      "id": "theme_tokens",
+      "title": "Theme, Tokens & Appearance",
+      "subgroups": [
+        "Theme registry browser",
+        "Theme editor (axes)",
+        "Token viewer (semantic/raw)",
+        "Theme preview cards",
+        "Theme preset gallery",
+        "Theme preset comparison",
+        "Contrast / a11y checker",
+        "Density / radius / motion presets",
+        "Overlay intensity tools"
+      ]
+    },
+    {
+      "id": "a11y_i18n",
+      "title": "Accessibility & i18n",
+      "subgroups": [
+        "A11y helpers (aria wrappers)",
+        "Focus management",
+        "Keyboard shortcuts",
+        "Localization helpers",
+        "RTL support tools"
+      ]
+    },
+    {
+      "id": "auth_security_ui",
+      "title": "Auth & Security",
+      "subgroups": [
+        "Login / Register components",
+        "ProtectedRoute guards",
+        "Permission gates",
+        "Session/timeout banners",
+        "MFA / verification prompts",
+        "Security confirmation UI"
+      ]
+    },
+    {
+      "id": "dev_diagnostics",
+      "title": "Dev, QA & Diagnostics",
+      "subgroups": [
+        "Design Lab itself",
+        "Component playground",
+        "Where-used explorer",
+        "Hardcode/bypass warnings",
+        "Performance overlays",
+        "Visual regression dashboards"
+      ]
+    },
+    {
+      "id": "runtime_utilities",
+      "title": "Runtime, Hooks & Utilities",
+      "subgroups": [
+        "Hooks (useX)",
+        "Functions",
+        "Runtime controllers (theme/auth)",
+        "HTTP helpers",
+        "Storage helpers",
+        "Event bus / BroadcastChannel",
+        "Feature flags",
+        "Adapter / mapper helpers"
+      ]
+    },
+    {
+      "id": "ai_native_helpers",
+      "title": "AI-Native Helpers",
+      "subgroups": [
+        "Command palette",
+        "Recommendation / Confidence",
+        "Approval / Audit",
+        "Approval / Review recipes",
+        "Citations / Prompting",
+        "AI authoring workflows"
+      ]
+    },
+    {
+      "id": "enterprise_data",
+      "title": "Enterprise Data Surfaces",
+      "subgroups": [
+        "Pro Data Grid (server-side, tree-data, master-detail)",
+        "Pro Table (virtual scroll, column pinning, row spanning)",
+        "Pro Forms (conditional fields, multi-step, array fields)",
+        "Pro Export (streaming CSV/Excel/PDF, scheduled export)",
+        "Data pipeline visualizer",
+        "Audit trail / change history viewer"
+      ]
+    },
+    {
+      "id": "enterprise_admin",
+      "title": "Enterprise Admin Shells",
+      "subgroups": [
+        "Admin dashboard shell",
+        "Settings / configuration shell",
+        "User management shell",
+        "Role / permission management shell",
+        "Tenant / multi-org shell",
+        "Onboarding / wizard shell"
+      ]
+    },
+    {
+      "id": "enterprise_analytics",
+      "title": "Enterprise Analytics & Reporting",
+      "subgroups": [
+        "KPI dashboard builder",
+        "Report designer",
+        "Pivot table / cross-tab",
+        "Scheduled report viewer",
+        "Data export center",
+        "Real-time metrics dashboard"
+      ]
+    },
+    {
+      "id": "x_data_grid",
+      "title": "X-Data-Grid",
+      "subgroups": [
+        "Filter chips",
+        "Selection bar",
+        "Server data source",
+        "Column builder",
+        "Master-detail grid",
+        "Tree data grid",
+        "Pivot grid",
+        "Editable grid",
+        "Row grouping grid"
+      ]
+    },
+    {
+      "id": "x_charts",
+      "title": "X-Charts",
+      "subgroups": [
+        "Chart container",
+        "Scatter chart",
+        "Radar chart",
+        "Treemap chart",
+        "Heatmap chart",
+        "Gauge chart",
+        "Waterfall chart",
+        "Chart dashboard",
+        "KPI card",
+        "Sparkline chart",
+        "Stat widget",
+        "Chart legend",
+        "Chart toolbar",
+        "Mini chart"
+      ]
+    },
+    {
+      "id": "x_scheduler",
+      "title": "X-Scheduler",
+      "subgroups": [
+        "Scheduler",
+        "Day view",
+        "Week view",
+        "Month view",
+        "Scheduler event",
+        "Scheduler toolbar",
+        "Agenda view",
+        "Resource view",
+        "Event form"
+      ]
+    },
+    {
+      "id": "x_kanban",
+      "title": "X-Kanban",
+      "subgroups": [
+        "Kanban board",
+        "Kanban column",
+        "Kanban card",
+        "Kanban toolbar",
+        "Kanban swimlane",
+        "Kanban card detail",
+        "Kanban metrics"
+      ]
+    },
+    {
+      "id": "x_editor",
+      "title": "X-Editor",
+      "subgroups": [
+        "Rich text editor",
+        "Editor toolbar",
+        "Editor menu bubble",
+        "Slash command menu",
+        "Mention list",
+        "Editor link dialog",
+        "Editor image upload",
+        "Editor table menu"
+      ]
+    },
+    {
+      "id": "x_form_builder",
+      "title": "X-Form-Builder",
+      "subgroups": [
+        "Form renderer",
+        "Field renderer",
+        "Form preview",
+        "Multi-step form",
+        "Form summary",
+        "Repeatable field group",
+        "Field registry"
+      ]
+    },
+    {
+      "id": "hooks",
+      "label": "Hooks",
+      "subgroups": ["useToast", "useAsyncCombobox", "useGridVariants", "useAgGridTablePagination", "useScheduler"]
+    },
+    {
+      "id": "utilities",
+      "label": "Utilities",
+      "subgroups": ["buildAuthHeaders", "buildEntityGridQueryParams", "createAccordionPreset", "createBreadcrumbItemsFromRoute", "createMenuBarPreset", "createNavigationRailPreset", "createPageLayoutPreset", "createSegmentedPreset", "resolveAccessState", "resolveMenuBarActiveValue", "resolveNavigationRailActiveValue", "resolveSegmentedNextValue", "shouldBlockInteraction"]
+    },
+    {
+      "id": "theme_api",
+      "label": "Theme API",
+      "subgroups": ["getThemeAxes", "getThemeContract", "getResolvedToken", "registerTokenResolver", "resetTokenResolver", "subscribeThemeAxes", "updateThemeAxes"]
+    },
+    {
+      "id": "theme_setters",
+      "label": "Theme Setters",
+      "subgroups": ["setAppearance", "setDensity", "setElevation", "setMotion", "setRadius", "setOverlayIntensity", "setOverlayOpacity", "setSurfaceTone", "setTableSurfaceTone", "resolveThemeModeKey", "toggleVariantDefault"]
+    },
+    {
+      "id": "constants",
+      "label": "Constants",
+      "subgroups": ["THEME_APPEARANCE_OPTIONS", "THEME_DENSITY_OPTIONS", "THEME_ELEVATION_OPTIONS", "THEME_MOTION_OPTIONS", "THEME_RADIUS_OPTIONS"]
+    },
+    {
+      "id": "hocs",
+      "label": "HOCs",
+      "subgroups": ["withAccessGuard"]
+    }
+  ]
+}

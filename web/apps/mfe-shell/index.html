@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Platform</title>
+  </head>
+<body>
+  <script>
+    // Runtime environment — Vite injects VITE_ vars via import.meta.env,
+    // but design-system reads from window.__env__ at runtime.
+    // transformIndexHtml plugin populates this at build time.
+    window.__env__ = window.__env__ || {};
+    window.__AG_GRID_LICENSE_EARLY__ = true;
+    // Debug: capture first uncaught errors before React loads
+    window.__earlyErrors = [];
+    window.addEventListener('error', function(e) {
+      window.__earlyErrors.push({ msg: e.message, file: e.filename, line: e.lineno, col: e.colno });
+    });
+  </script>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <!-- Vite entry point — replaces webpack entry: './src/index.tsx' -->
+  <script type="module" src="/src/index.tsx"></script>
+</body>
+</html>

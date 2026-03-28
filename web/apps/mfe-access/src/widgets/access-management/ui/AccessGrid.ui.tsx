@@ -1,6 +1,11 @@
 import React from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import type { AgGridReact as AgGridReactType } from 'ag-grid-react';
+import {
+  TablePagination,
+  useAgGridTablePagination,
+  type AgGridTablePaginationApi,
+} from '@mfe/design-system/advanced/data-grid/TablePagination';
 import type { ColDef, SelectionColumnDef } from 'ag-grid-community';
 import type { AccessRole, AccessLevel } from '../../../features/access-management/model/access.types';
 
@@ -19,8 +24,13 @@ interface AccessGridProps {
   selectedRoleIds: string[];
   onSelectionChange: (roleIds: string[]) => void;
   t: (key: string, params?: Record<string, unknown>) => string;
+  formatNumber: (value: number, options?: Intl.NumberFormatOptions) => string;
   formatDate: (value: Date | number, options?: Intl.DateTimeFormatOptions) => string;
+  GridComponent?: typeof AgGridReact;
 }
+
+const DEFAULT_PAGE_SIZE = 10;
+const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 
 const defaultColumnDef: ColDef = {
   resizable: true,
@@ -47,9 +57,24 @@ const AccessGrid: React.FC<AccessGridProps> = ({
   selectedRoleIds,
   onSelectionChange,
   t,
+  formatNumber,
   formatDate,
+  GridComponent,
 }) => {
   const gridRef = React.useRef<AgGridReactType<AccessRole>>(null);
+  const ResolvedGridComponent = GridComponent ?? AgGridReact;
+  const {
+    gridApi,
+    pageSize,
+    paginationSnapshot,
+    registerGridApi,
+    refreshPaginationSnapshot,
+    handlePageChange,
+    handlePageSizeChange,
+  } = useAgGridTablePagination<AccessRole>({
+    initialPageSize: DEFAULT_PAGE_SIZE,
+    totalItems: rows.length,
+  });
 
   const columnDefs = React.useMemo<ColDef[]>(() => {
     const mappedCols = columns.map((column) => ({
@@ -85,10 +110,13 @@ const AccessGrid: React.FC<AccessGridProps> = ({
   }, [columns, formatDate, t]);
 
   React.useEffect(() => {
-    if (!gridRef.current?.api) {
+    const api =
+      gridApi
+      ?? (gridRef.current?.api as AgGridTablePaginationApi<AccessRole> | null);
+    if (!api) {
       return;
     }
-    gridRef.current.api.forEachNode((node) => {
+    api.forEachNode((node) => {
       if (!node?.data) {
         return;
       }
@@ -97,32 +125,72 @@ const AccessGrid: React.FC<AccessGridProps> = ({
         node.setSelected(shouldSelect);
       }
     });
-  }, [rows, selectedRoleIds]);
+  }, [gridApi, rows, selectedRoleIds]);
+
+  const paginationLocaleText = React.useMemo(
+    () => ({
+      rowsPerPageLabel: t('access.grid.pagination.rowsPerPage'),
+      rangeLabel: (start: number, end: number, totalItems: number) =>
+        `${t('access.grid.pagination.range', {
+          start: formatNumber(start),
+          end: formatNumber(end),
+          total: formatNumber(totalItems),
+        })} · ${t('access.grid.pagination.pageIndicator', {
+          currentPage: formatNumber(paginationSnapshot.page),
+          pageCount: formatNumber(paginationSnapshot.totalPages),
+        })}`,
+    }),
+    [formatNumber, paginationSnapshot.page, paginationSnapshot.totalPages, t],
+  );
 
   return (
-    <div className="ag-theme-quartz" style={{ width: '100%', height: 520 }}>
-      <AgGridReact
-        ref={gridRef}
-        rowData={rows}
-        columnDefs={columnDefs}
-        defaultColDef={defaultColumnDef}
-        selectionColumnDef={selectionColumnDef}
-        rowSelection={{
-          mode: 'multiRow',
-          enableClickSelection: false,
-          enableSelectionWithoutKeys: false,
-          checkboxes: true,
-          headerCheckbox: true,
-        }}
-        onSelectionChanged={(event) => {
-          const ids = event.api
-            .getSelectedNodes()
-            .filter((node) => Boolean(node.data))
-            .map((node) => (node.data as AccessRole).id);
-          onSelectionChange(ids);
-        }}
-        onRowClicked={(event) => onSelect(event.data as AccessRole)}
-      />
+    <div data-testid="access-grid" className="flex flex-col rounded-[24px] border border-border-subtle bg-surface-default shadow-xs">
+      <div className="ag-theme-quartz" style={{ width: '100%', height: 520 }}>
+        <ResolvedGridComponent
+          ref={gridRef}
+          rowData={rows}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColumnDef}
+          selectionColumnDef={selectionColumnDef}
+          pagination
+          paginationPageSize={pageSize}
+          suppressPaginationPanel
+          rowSelection={{
+            mode: 'multiRow',
+            enableClickSelection: false,
+            enableSelectionWithoutKeys: false,
+            checkboxes: true,
+            headerCheckbox: true,
+          }}
+          onGridReady={(event) => {
+            registerGridApi(event.api as AgGridTablePaginationApi<AccessRole>);
+          }}
+          onPaginationChanged={() => refreshPaginationSnapshot()}
+          onModelUpdated={() => refreshPaginationSnapshot()}
+          onSelectionChanged={(event) => {
+            const ids = event.api
+              .getSelectedNodes()
+              .filter((node) => Boolean(node.data))
+              .map((node) => (node.data as AccessRole).id);
+            onSelectionChange(ids);
+          }}
+          onRowClicked={(event) => onSelect(event.data as AccessRole)}
+        />
+      </div>
+      <div className="border-t border-border-subtle p-4">
+        <TablePagination
+          totalItems={paginationSnapshot.totalItems}
+          page={paginationSnapshot.page}
+          pageSize={paginationSnapshot.pageSize}
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
+          showFirstLastButtons
+          access={gridApi ? 'full' : 'disabled'}
+          className="w-full justify-between rounded-none border-0 bg-transparent p-0 shadow-none"
+          localeText={paginationLocaleText}
+        />
+      </div>
     </div>
   );
 };

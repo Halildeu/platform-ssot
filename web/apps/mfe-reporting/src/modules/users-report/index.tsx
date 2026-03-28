@@ -1,4 +1,5 @@
 import React from 'react';
+import { getSharedReport } from '@platform/capabilities';
 import type { ReportModule } from '../types';
 import type { UsersReportFilters, UsersReportRow } from './types';
 import type { ColumnDef } from '../../grid';
@@ -12,9 +13,12 @@ const ALLOWED_STATUSES: Array<UsersReportFilters['status']> = [
   'SUSPENDED',
 ];
 
+const sharedReport = getSharedReport('users-overview');
+
 export const usersReportModule: ReportModule<UsersReportFilters, UsersReportRow> = {
-  id: 'reports.users',
-  route: 'users',
+  id: sharedReport.webModuleId,
+  sharedReportId: sharedReport.id,
+  route: sharedReport.webRouteSegment,
   navKey: 'reports.nav.users',
   titleKey: 'reports.users.title',
   descriptionKey: 'reports.users.description',
@@ -37,7 +41,7 @@ export const usersReportModule: ReportModule<UsersReportFilters, UsersReportRow>
   },
   renderFilters: ({ values, setFieldValue, t }) => {
     const inputClass =
-      'w-full rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1';
+      'w-full rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1';
     const labelClass = 'flex flex-col gap-1 text-xs font-medium text-text-secondary min-w-[200px]';
 
     return (
@@ -55,6 +59,7 @@ export const usersReportModule: ReportModule<UsersReportFilters, UsersReportRow>
         <label className={labelClass}>
           <span>{t('reports.filters.status.placeholder')}</span>
           <select
+            data-testid="report-filter-status"
             className={inputClass}
             value={values.status ?? 'ALL'}
             onChange={(event) => setFieldValue('status', event.target.value as UsersReportFilters['status'])}

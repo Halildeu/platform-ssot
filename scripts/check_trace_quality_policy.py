@@ -3,7 +3,7 @@ import json
 import sys
 from pathlib import Path
 
-P = "docs/03-delivery/SPECS/trace-quality-policy.v1.json"
+P = "docs-ssot/03-delivery/SPECS/trace-quality-policy.v1.json"
 
 
 def die(msg: str) -> int:

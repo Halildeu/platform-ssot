@@ -24,9 +24,18 @@ export const useAuthorization = () => {
     if (set.has('MANAGE_USERS')) {
       set.add('EDIT_USERS');
       set.add('VIEW_USERS');
+      set.add('USER-READ');
+      set.add('USER-CREATE');
+      set.add('USER-UPDATE');
+      set.add('USER-DELETE');
     }
     if (set.has('EDIT_USERS')) {
       set.add('VIEW_USERS');
+      set.add('USER-READ');
+      set.add('USER-UPDATE');
+    }
+    if (set.has('VIEW_USERS')) {
+      set.add('USER-READ');
     }
 
     // Yeni granular kullanıcı izinleri → eski eşleşme
@@ -36,6 +45,11 @@ export const useAuthorization = () => {
     }
     if (set.has('USER-READ')) {
       set.add('VIEW_USERS');
+    }
+
+    // Reporting izin eşleştirmesi
+    if (set.has('REPORT_VIEW')) {
+      set.add('VIEW_REPORTS');
     }
 
     return set;

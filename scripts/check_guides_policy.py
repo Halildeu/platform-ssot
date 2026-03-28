@@ -3,7 +3,7 @@ import json
 import sys
 from pathlib import Path
 
-POLICY_PATH = Path("docs/03-delivery/SPECS/guides-policy.v1.json")
+POLICY_PATH = Path("docs-ssot/03-delivery/SPECS/guides-policy.v1.json")
 
 
 def die(msg: str) -> int:

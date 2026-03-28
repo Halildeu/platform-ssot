@@ -1,0 +1,229 @@
+---
+title: Erişilebilirlik Rehberi
+description: WCAG 2.2 AA uyumlu bileşenler, klavye navigasyonu ve axe-core testleri
+---
+
+## Genel Bakış
+
+Design system tüm bileşenlerinde WCAG 2.2 AA standartlarına uyum sağlar. Erişilebilirlik, sonradan eklenen bir özellik değil, tasarım sürecinin temel parçasıdır.
+
+## Desteklenen Standartlar
+
+| Standart | Seviye | Durum |
+|----------|--------|-------|
+| WCAG 2.2 | AA | Tam Uyumlu |
+| ARIA 1.2 | - | Tam Uyumlu |
+| Section 508 | - | Tam Uyumlu |
+| EN 301 549 | - | Tam Uyumlu |
+
+## Klavye Navigasyonu
+
+Tüm bileşenler tam klavye desteği sunar:
+
+| Tuş | Davranış |
+|-----|----------|
+| `Tab` | Sonraki etkileşimli elemana geç |
+| `Shift + Tab` | Önceki etkileşimli elemana geç |
+| `Enter` / `Space` | Buton veya bağlantıyı etkinleştir |
+| `Escape` | Modal, popover veya dropdown kapat |
+| `Arrow Keys` | Liste, menü, tab içinde gezin |
+| `Home` / `End` | İlk/son öğeye git |
+
+### Fokus Yönetimi
+
+```tsx
+import { FocusTrap } from '@mfe/design-system';
+
+// Modal içinde fokus tuzağı
+<Modal open={isOpen}>
+  <FocusTrap>
+    <Input label="Ad" autoFocus />
+    <Input label="E-posta" />
+    <Button onClick={save}>Kaydet</Button>
+    <Button onClick={close}>Kapat</Button>
+  </FocusTrap>
+</Modal>
+```
+
+### Fokus Göstergesi
+
+Tüm etkileşimli elemanlar görünür fokus halkası sunar:
+
+```css
+/* Varsayılan fokus stili */
+:focus-visible {
+  outline: 2px solid var(--action-primary);
+  outline-offset: 2px;
+}
+```
+
+## ARIA Özellikleri
+
+Bileşenler uygun ARIA rollerini ve özelliklerini otomatik ekler:
+
+```tsx
+// Button — otomatik role="button"
+<Button>Kaydet</Button>
+
+// Alert — otomatik role="alert" ve aria-live="polite"
+<Alert severity="warning">Dikkat: İşlem geri alınamaz.</Alert>
+
+// Modal — otomatik role="dialog" ve aria-modal="true"
+<Modal title="Onay" open={isOpen}>
+  İçerik...
+</Modal>
+
+// Tabs — otomatik role="tablist", role="tab", role="tabpanel"
+<Tabs>
+  <Tabs.List>
+    <Tabs.Tab value="a">Sekme A</Tabs.Tab>
+  </Tabs.List>
+  <Tabs.Panel value="a">Panel A</Tabs.Panel>
+</Tabs>
+```
+
+### Özel ARIA Etiketleri
+
+```tsx
+// Açıklayıcı etiket ekleme
+<Button aria-label="Belgeyi PDF olarak indir" icon={<DownloadIcon />} />
+
+// Canlı bölge bildirimi
+<div aria-live="polite" aria-atomic="true">
+  {statusMessage}
+</div>
+
+// İlişkilendirme
+<Input
+  id="email"
+  label="E-posta"
+  aria-describedby="email-help"
+/>
+<p id="email-help">Kurumsal e-posta adresinizi girin.</p>
+```
+
+## Renk ve Kontrast
+
+### Minimum Kontrast Oranları
+
+| Eleman | Minimum Oran | Standart |
+|--------|-------------|----------|
+| Normal metin | 4.5:1 | WCAG AA |
+| Büyük metin (18px+) | 3:1 | WCAG AA |
+| UI bileşenleri | 3:1 | WCAG AA |
+| İkonlar | 3:1 | WCAG AA |
+
+### Renk Bağımsızlığı
+
+Bilgi iletmek için yalnızca renge güvenmeyin. Ek göstergeler kullanın:
+
+```tsx
+// Doğru: Renk + ikon + metin
+<Alert severity="error" icon={<ErrorIcon />}>
+  Hata: Form gönderilirken bir sorun oluştu.
+</Alert>
+
+// Doğru: Renk + desen
+<Badge variant="success" icon={<CheckIcon />}>Onaylandı</Badge>
+<Badge variant="danger" icon={<XIcon />}>Reddedildi</Badge>
+```
+
+## Form Erişilebilirliği
+
+```tsx
+// Etiket ilişkilendirmesi otomatiktir
+<Input label="Ad Soyad" required />
+// Render: <label for="auto-id">Ad Soyad *</label><input id="auto-id" required />
+
+// Hata mesajları erişilebilir şekilde bağlanır
+<Input
+  label="E-posta"
+  error="Geçerli bir e-posta adresi girin"
+/>
+// aria-invalid="true" ve aria-errormessage otomatik eklenir
+
+// Yardım metni
+<Input
+  label="Şifre"
+  helperText="En az 8 karakter, bir büyük harf ve bir rakam içermelidir"
+/>
+```
+
+## Ekran Okuyucu Desteği
+
+Test edilen ekran okuyucular:
+
+| Ekran Okuyucu | Tarayıcı | Durum |
+|---------------|----------|-------|
+| NVDA | Chrome, Firefox | Tam Uyumlu |
+| JAWS | Chrome, Edge | Tam Uyumlu |
+| VoiceOver | Safari, Chrome | Tam Uyumlu |
+| TalkBack | Chrome (Android) | Tam Uyumlu |
+
+### VisuallyHidden Bileşeni
+
+Görsel olarak gizli ama ekran okuyuculara erişilebilir metin:
+
+```tsx
+import { VisuallyHidden } from '@mfe/design-system';
+
+<Button>
+  <DeleteIcon />
+  <VisuallyHidden>Kullanıcıyı sil</VisuallyHidden>
+</Button>
+```
+
+## axe-core ile Otomatik Test
+
+```tsx
+import { axe, toHaveNoViolations } from 'jest-axe';
+import { render } from '@testing-library/react';
+
+expect.extend(toHaveNoViolations);
+
+test('bileşen erişilebilirlik ihlali içermemeli', async () => {
+  const { container } = render(
+    <DesignSystemProvider>
+      <MyComponent />
+    </DesignSystemProvider>
+  );
+
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
+```
+
+### Storybook a11y Eklentisi
+
+```tsx
+// .storybook/main.ts
+export default {
+  addons: ['@storybook/addon-a11y'],
+};
+```
+
+## Hareket Hassasiyeti
+
+Hareket hassasiyeti olan kullanıcılar için animasyonları devre dışı bırakma:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+Design system bu media query'yi otomatik olarak destekler. Ek yapılandırma gerekmez.
+
+## Kontrol Listesi
+
+- [ ] Tüm etkileşimli elemanlar klavye ile erişilebilir mi?
+- [ ] Fokus sırası mantıklı mı?
+- [ ] Fokus göstergesi görünür mü?
+- [ ] Renk kontrast oranları yeterli mi?
+- [ ] ARIA etiketleri doğru kullanılmış mı?
+- [ ] Form hataları erişilebilir şekilde bildirildi mi?
+- [ ] Ekran okuyucu ile test edildi mi?
+- [ ] axe-core testleri geçiyor mu?

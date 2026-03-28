@@ -1,4 +1,4 @@
-import type { PageBreadcrumbItem, PageLayoutProps } from 'mfe-ui-kit';
+import type { PageBreadcrumbItem, PageLayoutProps } from '@mfe/design-system';
 
 export interface UsersPageManifest {
   pageId: string;

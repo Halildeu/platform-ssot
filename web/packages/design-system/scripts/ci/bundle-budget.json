@@ -1,0 +1,23 @@
+{
+  "_comment": "Per-module max size in KB. Budgets set ~20% above current measured values to catch regressions. Updated 2026-03-23 after F4D enterprise suite (24 components) added.",
+  "total_max_kb": 15000,
+  "modules": {
+    "primitives": 425,
+    "components": 2140,
+    "patterns": 255,
+    "advanced": 420,
+    "internal": 215,
+    "utils": 50,
+    "tokens": 40,
+    "icons": 120,
+    "theme": 170,
+    "providers": 25,
+    "a11y": 120,
+    "lib": 100,
+    "mcp": 100,
+    "performance": 810,
+    "catalog": 200,
+    "legacy": 200,
+    "_root": 11000
+  }
+}

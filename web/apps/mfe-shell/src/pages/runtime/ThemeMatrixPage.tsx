@@ -1,17 +1,23 @@
 import React from 'react';
-import { PageLayout, Text } from 'mfe-ui-kit';
+import {
+  PageLayout,
+  Text,
+  createPageLayoutBreadcrumbItems,
+  createPageLayoutPreset,
+} from '@mfe/design-system';
 import { ThemeMatrixGallery } from '../../features/theme/theme-matrix-gallery';
 
 export const ThemeMatrixPage: React.FC = () => (
   <PageLayout
+    {...createPageLayoutPreset({ preset: 'content-only', pageWidth: 'wide' })}
     title="Runtime Theme Matrix"
     description="Tema × yoğunluk × access varyantlarını test etmek için yardımcı sayfa."
-    breadcrumbItems={[
+    breadcrumbItems={createPageLayoutBreadcrumbItems([
       { title: 'Shell', path: '/' },
       { title: 'Runtime Theme Matrix', path: '/runtime/theme-matrix' },
-    ]}
+    ])}
   >
-    <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+    <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
       <Text variant="secondary">
         Bu sayfa, Playwright ve Chromatic/axe testleri için resmi tema modları × yoğunluk
         (comfortable/compact) kombinasyonlarını ve Button/Select/Tag gibi bileşenlerin

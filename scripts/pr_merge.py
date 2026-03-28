@@ -304,7 +304,7 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     ap.add_argument("--repo", default=os.environ.get("GITHUB_REPOSITORY"))
     ap.add_argument("--event-path", default=os.environ.get("GITHUB_EVENT_PATH"))
     ap.add_argument("--token-env", default="GH_TOKEN")
-    ap.add_argument("--rules-path", default="docs/04-operations/PR-BOT-RULES.json")
+    ap.add_argument("--rules-path", default="docs-ssot/04-operations/PR-BOT-RULES.json")
     ap.add_argument("--pr", type=int, default=int(os.environ["PR_NUMBER"]) if os.environ.get("PR_NUMBER", "").isdigit() else None)
     ap.add_argument("--dry-run", action="store_true")
     return ap.parse_args(argv)

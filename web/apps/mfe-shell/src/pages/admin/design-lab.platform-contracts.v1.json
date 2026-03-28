@@ -1,0 +1,142 @@
+{
+  "version": "1",
+  "description": "Cross-cutting platform contracts that all layers (foundations, components, recipes, pages) must comply with.",
+  "contracts": [
+    {
+      "id": "theme_token_governance",
+      "title": "Theme & Token Governance",
+      "scope": "foundations",
+      "enforcement": "build-time + runtime",
+      "rules": [
+        "All visual values must reference semantic tokens, not raw values",
+        "Theme presets must pass contrast ratio validation (WCAG AA minimum)",
+        "Token overrides must use the official ThemeProvider API",
+        "Orphan tokens (unreferenced) must be flagged in CI"
+      ],
+      "appliesTo": ["foundations", "components", "recipes", "pages"],
+      "gate": "ci/validate_tokens.ts"
+    },
+    {
+      "id": "accessibility_compliance",
+      "title": "Accessibility Compliance",
+      "scope": "foundations",
+      "enforcement": "build-time + runtime",
+      "rules": [
+        "All interactive elements must be keyboard-navigable",
+        "ARIA roles and labels must follow WAI-ARIA patterns",
+        "Focus management must use the platform FocusTrap/FocusScope utilities",
+        "Color-only information encoding is prohibited",
+        "Screen reader announcements for dynamic content changes"
+      ],
+      "appliesTo": ["foundations", "components", "recipes", "pages"],
+      "gate": "ci/validate_a11y.ts"
+    },
+    {
+      "id": "i18n_localization",
+      "title": "Internationalization & Localization",
+      "scope": "foundations",
+      "enforcement": "build-time",
+      "rules": [
+        "All user-visible strings must use i18n keys, not hardcoded text",
+        "RTL layout support must be validated for all layout components",
+        "Date, number and currency formatting must use locale-aware formatters",
+        "Pluralization must use ICU message format"
+      ],
+      "appliesTo": ["foundations", "components", "recipes", "pages"],
+      "gate": "ci/validate_i18n.ts"
+    },
+    {
+      "id": "density_motion",
+      "title": "Density & Motion",
+      "scope": "foundations",
+      "enforcement": "runtime",
+      "rules": [
+        "Density presets (compact/comfortable/spacious) must be respected by all surfaces",
+        "Motion must respect prefers-reduced-motion media query",
+        "Animation durations must use platform timing tokens",
+        "Border radius must use platform radius tokens"
+      ],
+      "appliesTo": ["components", "recipes", "pages"],
+      "gate": "ci/validate_density.ts"
+    },
+    {
+      "id": "component_api_contract",
+      "title": "Component API Contract",
+      "scope": "components",
+      "enforcement": "build-time",
+      "rules": [
+        "Public API surface must be explicitly exported and documented",
+        "Breaking changes require semver major bump and migration guide",
+        "Props must use TypeScript strict types (no any/unknown in public API)",
+        "Default values must be documented and tested"
+      ],
+      "appliesTo": ["components"],
+      "gate": "ci/validate_component_api.ts"
+    },
+    {
+      "id": "recipe_workflow_contract",
+      "title": "Recipe Workflow Contract",
+      "scope": "recipes",
+      "enforcement": "build-time",
+      "rules": [
+        "Recipe must declare owner blocks (component dependencies)",
+        "Recipe must declare workflow intent",
+        "Recipe must reference at least one track for release binding",
+        "Recipe quality gates must include demo coverage"
+      ],
+      "appliesTo": ["recipes"],
+      "gate": "ci/validate_recipe_contract.ts"
+    },
+    {
+      "id": "page_shell_contract",
+      "title": "Page Shell Contract",
+      "scope": "pages",
+      "enforcement": "build-time",
+      "rules": [
+        "Page template must declare layout regions",
+        "Page template must declare building block dependencies",
+        "Page template must validate against foundation theme compliance",
+        "Page shell navigation zones must follow canonical nav patterns"
+      ],
+      "appliesTo": ["pages"],
+      "gate": "ci/validate_page_contract.ts"
+    },
+    {
+      "id": "enterprise_data_surface_contract",
+      "title": "Enterprise Data Surface Contract",
+      "scope": "ecosystem",
+      "enforcement": "build-time + runtime",
+      "rules": [
+        "Data grid configurations must use the canonical grid theme bridge",
+        "Export functionality must support CSV, Excel and PDF",
+        "Server-side pagination must use the platform pagination helpers",
+        "Column definitions must be type-safe and serializable",
+        "Grid density must respect platform density tokens"
+      ],
+      "appliesTo": ["components", "recipes"],
+      "gate": "ci/validate_data_surfaces.ts"
+    }
+  ],
+  "complianceMatrix": {
+    "foundations": {
+      "mustComply": ["theme_token_governance", "accessibility_compliance", "i18n_localization", "density_motion"],
+      "mustEnforce": ["theme_token_governance", "accessibility_compliance", "i18n_localization", "density_motion"]
+    },
+    "components": {
+      "mustComply": ["theme_token_governance", "accessibility_compliance", "i18n_localization", "density_motion", "component_api_contract"],
+      "mustEnforce": ["component_api_contract"]
+    },
+    "recipes": {
+      "mustComply": ["theme_token_governance", "accessibility_compliance", "recipe_workflow_contract"],
+      "mustEnforce": ["recipe_workflow_contract"]
+    },
+    "pages": {
+      "mustComply": ["theme_token_governance", "accessibility_compliance", "i18n_localization", "page_shell_contract"],
+      "mustEnforce": ["page_shell_contract"]
+    },
+    "ecosystem": {
+      "mustComply": ["theme_token_governance", "enterprise_data_surface_contract"],
+      "mustEnforce": ["enterprise_data_surface_contract"]
+    }
+  }
+}

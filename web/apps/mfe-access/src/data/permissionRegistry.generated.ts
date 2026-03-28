@@ -83,7 +83,7 @@ export const permissionRegistry: PermissionRegistryEntry[] = [
     "status": "active",
     "owner": "team-reporting",
     "module": "variant-service",
-    "description": "Grid varyantlarını ve kayıtlı preset’leri görüntüler."
+    "description": "Grid varyantlarını ve kayıtlı preset'leri görüntüler."
   },
   {
     "key": "MANAGE_VARIANTS",

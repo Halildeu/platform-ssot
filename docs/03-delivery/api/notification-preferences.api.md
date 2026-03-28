@@ -25,6 +25,20 @@
 - Davranış: Gönderilen gövdeye göre kullanıcının tercihlerini kısmi olarak
   günceller (idempotent davranış hedeflenir).
 
+### 2.3 Kanal Snapshot (offline replay)
+
+- Method: `GET`
+- Path: `/api/v1/notification-preferences/{channel}`
+- Davranış: Geçerli kullanıcının tek bir kanal için optimistic-lock snapshot'unu
+  döndürür.
+
+### 2.4 Kanal Mutasyonu (offline replay)
+
+- Method: `PUT`
+- Path: `/api/v1/notification-preferences/{channel}`
+- Davranış: Tek kanal tercih mutasyonunu `expectedVersion` ile
+  optimistic-lock kontrollü uygular.
+
 -------------------------------------------------------------------------------
 3) DTO Özetleri
 -------------------------------------------------------------------------------
@@ -39,6 +53,8 @@
   - Kanal bazlı frekans tercihi (ör. `immediate`, `daily`, `weekly`).
 - `updatedAt`: `string (ISO-8601 datetime)`, opsiyonel  
   - Tercihin son güncellenme zamanı.
+- `version`: `number`, zorunlu
+  - Kanal tercihinin optimistic-lock versiyonu.
 
 Response (örnek yapı):  
 - `preferences`: `NotificationPreferenceDto[]`
@@ -57,6 +73,39 @@ Response (örnek yapı):
 - `frequency`: `string`, opsiyonel  
   - İlgili kanal için yeni frekans değeri (varsa).
 
+### 3.4 NotificationPreferenceSnapshotDto (response)
+
+- `resourceKey`: `string`, zorunlu
+  - Örn. `notification-preference:admin@example.com:email`
+- `channel`: `string`, zorunlu
+- `enabled`: `boolean`, zorunlu
+- `frequency`: `string|null`, opsiyonel
+- `version`: `number`, zorunlu
+
+### 3.5 UpdateNotificationPreferenceRequestDto (request)
+
+- `enabled`: `boolean`, zorunlu
+- `frequency`: `string|null`, opsiyonel
+- `expectedVersion`: `number`, zorunlu
+- `source`: `string`, opsiyonel
+- `attemptCount`: `number`, opsiyonel
+- `queueActionId`: `string`, opsiyonel
+
+### 3.6 NotificationPreferenceMutationDto (response)
+
+- `status`: `string`, zorunlu
+  - `ok` veya `conflict`
+- `auditId`: `string|null`, opsiyonel
+- `resourceKey`: `string`, zorunlu
+- `channel`: `string`, zorunlu
+- `enabled`: `boolean`, zorunlu
+- `frequency`: `string|null`, opsiyonel
+- `version`: `number`, zorunlu
+- `source`: `string`, zorunlu
+- `message`: `string`, zorunlu
+- `errorCode`: `string|null`, opsiyonel
+- `conflictReason`: `string|null`, opsiyonel
+
 -------------------------------------------------------------------------------
 4) Status Code ve Error Zarfı
 -------------------------------------------------------------------------------
@@ -69,6 +118,7 @@ Kullanılan başlıca status code’lar:
   eksik zorunlu alanlar.
 - `401 UNAUTHORIZED` – Geçersiz veya eksik JWT.
 - `403 FORBIDDEN` – Kullanıcının bu tercihleri görüntüleme/güncelleme yetkisi yok.
+- `409 CONFLICT` – `expectedVersion` ile mevcut kanal versiyonu uyuşmuyor.
 - `500 INTERNAL SERVER ERROR` – Beklenmeyen sunucu hatası.
 
 Hatalar için ortak `ErrorResponse` şeması (STYLE-API-001’e uygun):
@@ -99,6 +149,12 @@ Hatalar için ortak `ErrorResponse` şeması (STYLE-API-001’e uygun):
 - Kimlik doğrulama: `Authorization: Bearer <jwt>` header’ı zorunlu.  
 - Rol/scope gibi detaylar ve ortak header kullanımı için:  
   - `docs/03-delivery/api/common-headers.md`
+- Offline replay notu:
+  - `PUT /api/v1/notification-preferences/{channel}` başarılı olduğunda
+    local `user_audit_events` kaydı üretir ve izin veriliyorsa merkezi audit
+    feed'e mirror eder.
+  - Conflict durumunda `USER_NOTIFICATION_PREFERENCE_SYNC_CONFLICT`
+    event'i üretilir.
 
 -------------------------------------------------------------------------------
 7) Bağlantılar

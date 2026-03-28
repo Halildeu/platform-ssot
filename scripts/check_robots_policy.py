@@ -4,8 +4,8 @@ import sys
 from pathlib import Path
 
 
-REG = Path("docs/04-operations/ROBOTS-REGISTRY.v0.1.json")
-POL = Path("docs/03-delivery/SPECS/robots-policy.v1.json")
+REG = Path("docs-ssot/04-operations/ROBOTS-REGISTRY.v0.1.json")
+POL = Path("docs-ssot/03-delivery/SPECS/robots-policy.v1.json")
 
 ALLOWED_MODES = {"observe", "plan", "apply"}
 ALLOWED_KINDS = {"script", "workflow"}

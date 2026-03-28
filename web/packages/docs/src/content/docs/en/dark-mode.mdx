@@ -1,0 +1,127 @@
+---
+title: Dark Mode
+description: 'Dark mode setup and usage guide'
+---
+
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+`@mfe/design-system` supports three appearance modes:
+
+- **Light** — Default light theme
+- **Dark** — Dark theme
+- **High Contrast** — High contrast mode (a11y)
+
+Since all components are built on semantic tokens, theme transitions are automatic and consistent.
+
+## Setup
+
+### Basic Usage
+
+```tsx
+import { DesignSystemProvider } from '@mfe/design-system';
+
+function App() {
+  return (
+    <DesignSystemProvider theme={{ mode: 'dark' }}>
+      <YourApp />
+    </DesignSystemProvider>
+  );
+}
+```
+
+### System Preference Detection
+
+To automatically detect the user's operating system theme:
+
+```tsx
+import { DesignSystemProvider } from '@mfe/design-system';
+
+function App() {
+  return (
+    <DesignSystemProvider theme={{ mode: 'system' }}>
+      <YourApp />
+    </DesignSystemProvider>
+  );
+}
+```
+
+### Toggle Switch
+
+```tsx
+import { DesignSystemProvider, useTheme } from '@mfe/design-system';
+
+function ThemeToggle() {
+  const { mode, setMode } = useTheme();
+
+  return (
+    <button onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}>
+      {mode === 'light' ? '🌙' : '☀️'}
+    </button>
+  );
+}
+```
+
+## Preventing Flash of Unstyled Content (FOUC)
+
+Add a script to the HTML `<head>` section to prevent theme flash on page load:
+
+```html
+<script>
+  (function() {
+    const saved = localStorage.getItem('mfe-theme-mode');
+    const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = saved || preferred;
+  })();
+</script>
+```
+
+## Dark Mode Styles with CSS
+
+Use semantic tokens to add dark mode support in your own components:
+
+```css
+.card {
+  background: var(--mfe-bg-primary);
+  color: var(--mfe-text-primary);
+  border: 1px solid var(--mfe-border-default);
+}
+
+/* Tokens update automatically in dark mode */
+```
+
+<Aside type="tip">
+  Use semantic tokens instead of `prefers-color-scheme` media queries. Tokens support all theme variants including high-contrast mode.
+</Aside>
+
+## High Contrast Mode
+
+WCAG AAA compliant high contrast mode:
+
+```tsx
+<DesignSystemProvider theme={{ mode: 'high-contrast' }}>
+  <YourApp />
+</DesignSystemProvider>
+```
+
+| Feature | Light | Dark | High Contrast |
+|---------|-------|------|---------------|
+| Text contrast | 4.5:1 | 4.5:1 | 7:1 |
+| Focus ring | 2px | 2px | 3px |
+| Border width | 1px | 1px | 2px |
+
+## SSR Support
+
+In server-side rendering environments, specify the theme mode with `defaultMode`:
+
+```tsx
+<DesignSystemProvider
+  theme={{
+    mode: 'system',
+    defaultMode: 'light',  // SSR fallback
+  }}
+>
+  <YourApp />
+</DesignSystemProvider>
+```

@@ -1,0 +1,132 @@
+name: Figma Token Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      direction:
+        description: 'Sync direction'
+        required: true
+        default: 'figma-to-code'
+        type: choice
+        options:
+          - figma-to-code
+          - code-to-figma
+          - diff-only
+  schedule:
+    - cron: '0 9 * * 1-5' # Weekdays 9 AM
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web/packages/design-system
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build tokens from DTCG source
+        run: npm run build:tokens
+
+      # ── figma-to-code direction ──────────────────────────────────
+      - name: Generate token diff report
+        if: inputs.direction == 'figma-to-code' || github.event_name == 'schedule'
+        run: node scripts/figma-token-diff.mjs --output token-diff-report.json
+        continue-on-error: true
+
+      - name: Check for token divergence
+        if: inputs.direction == 'figma-to-code' || github.event_name == 'schedule'
+        id: diff
+        run: |
+          if [ -f token-diff-report.json ]; then
+            CHANGES=$(node -e "const r=require('./token-diff-report.json'); console.log(r.changes || 0)")
+            echo "changes=$CHANGES" >> $GITHUB_OUTPUT
+          else
+            echo "changes=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Post-sync validation (generate theme CSS)
+        if: (inputs.direction == 'figma-to-code' || github.event_name == 'schedule') && steps.diff.outputs.changes != '0'
+        working-directory: web
+        run: node scripts/theme/generate-theme-css.mjs
+
+      - name: Post-sync validation (validate tokens)
+        if: (inputs.direction == 'figma-to-code' || github.event_name == 'schedule') && steps.diff.outputs.changes != '0'
+        working-directory: web
+        run: node scripts/tokens/validate-tokens.mjs
+
+      - name: Create PR if tokens changed (figma-to-code)
+        if: (inputs.direction == 'figma-to-code' || github.event_name == 'schedule') && steps.diff.outputs.changes != '0'
+        run: |
+          git config user.name "figma-sync[bot]"
+          git config user.email "figma-sync@mfe.dev"
+          git checkout -b figma-sync/$(date +%Y%m%d-%H%M%S)
+          git add tokens/ dist/tokens/ ../../.figma-sync-state.json
+          git commit -m "chore(tokens): sync from Figma $(date +%Y-%m-%d)"
+          git push origin HEAD
+          gh pr create --title "chore(tokens): Figma token sync" --body "Automated token sync from Figma. Review changes in tokens/ directory."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── code-to-figma direction ──────────────────────────────────
+      - name: Run code-to-figma reverse sync
+        if: inputs.direction == 'code-to-figma'
+        working-directory: web
+        run: node scripts/tokens/figma-sync-reverse.mjs --write
+
+      - name: Commit sync state (code-to-figma)
+        if: inputs.direction == 'code-to-figma'
+        run: |
+          git config user.name "figma-sync[bot]"
+          git config user.email "figma-sync@mfe.dev"
+          git add ../../.figma-sync-state.json
+          if git diff --cached --quiet; then
+            echo "No sync state changes to commit"
+          else
+            git commit -m "chore(tokens): update sync state after code-to-figma push"
+            git push origin HEAD
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── diff-only direction ──────────────────────────────────────
+      - name: Generate bidirectional diff report
+        if: inputs.direction == 'diff-only'
+        working-directory: web
+        run: node scripts/ci/token-diff-report.mjs
+
+      - name: Check for drift (diff-only)
+        if: inputs.direction == 'diff-only'
+        id: drift
+        working-directory: web
+        run: |
+          CONFLICTS=$(node -e "const r=JSON.parse(require('fs').readFileSync('reports/token-diff-report.json','utf-8')); console.log(r.summary?.conflicts || 0)")
+          DRIFT=$(node -e "const r=JSON.parse(require('fs').readFileSync('reports/token-diff-report.json','utf-8')); console.log((r.summary?.figmaAhead || 0) + (r.summary?.codeAhead || 0))")
+          echo "conflicts=$CONFLICTS" >> $GITHUB_OUTPUT
+          echo "drift=$DRIFT" >> $GITHUB_OUTPUT
+
+      - name: Create issue if drift detected (diff-only)
+        if: inputs.direction == 'diff-only' && (steps.drift.outputs.drift != '0' || steps.drift.outputs.conflicts != '0')
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "Token Drift Detected \u2014 ${{ steps.drift.outputs.drift }} drifted, ${{ steps.drift.outputs.conflicts }} conflicts"
+          content-filepath: web/reports/token-diff-report.json
+          labels: tokens, drift, automated
+
+      - name: Upload diff report artifact
+        if: inputs.direction == 'diff-only'
+        uses: actions/upload-artifact@v4
+        with:
+          name: token-diff-report
+          path: web/reports/token-diff-report.*

@@ -1,0 +1,9 @@
+export default {
+  "index": "Overview",
+  "data-grid": "Data Grid",
+  "charts": "Charts",
+  "editor": "Editor",
+  "kanban": "Kanban",
+  "scheduler": "Scheduler",
+  "form-builder": "Form Builder"
+}

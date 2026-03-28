@@ -12,7 +12,7 @@ Owner: @team/docs
 - Codex’in doküman mimarisini (00–05 + 99-templates) **parça parça** okuyarak,
   token limitine takılmadan, uçtan uca bir işi yürütebildiğini doğrulamak.
 - Tüm iş tipleri ([DOC], [BE], [WEB], [AI], [DATA], [OPS]) için:
-  - Doğru dokümanları bulup,
+  - Doğru canonical ve current dokümanları bulup,
   - Doğru sırayla okuyup,
   - STORY/AC/TP/RUNBOOK/RELEASE-NOTES zinciriyle uyumlu çalıştığını görmek.
 
@@ -20,10 +20,11 @@ Owner: @team/docs
 2. KAPSAM
 -------------------------------------------------------------------------------
 
-- AGENT-CODEX.* dosyaları
-- `docs/00-handbook/**`
+- `AGENTS.md`
+- `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`
 - `docs/01–05/**`
 - `docs/99-templates/**`
+- Transition rehberleri yalnız authority map gerekli görürse
 - Örnek Story zincirleri:
   - STORY-0001…0006 + ilgili AC / TP / RUNBOOK / RELEASE-NOTES
 
@@ -51,10 +52,10 @@ Owner: @team/docs
   - Yeni bir doküman türü veya rehber tasarımı.
 - Adımlar:
   1. Prompt’ta şu dosyaları ver:
-     - `AGENT-CODEX.docs.md`
-     - `docs/00-handbook/DOCS-PROJECT-LAYOUT.md`
-     - `docs/00-handbook/STYLE-DOCS-001.md`
-     - `docs/00-handbook/NUMARALANDIRMA-STANDARDI.md`
+     - `AGENTS.md`
+     - `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`
+     - `docs/03-delivery/PROJECT-FLOW.md`
+     - `docs/99-templates/`
   2. Codex’ten belirli bir doküman taslağı iste (örn. yeni bir GUIDE).
   3. Kontrol:
      - Doğru ID formatını kullanıyor mu?
@@ -67,8 +68,8 @@ Owner: @team/docs
   - STORY-0001 veya STORY-0002 üzerinden backend işi yürütmek.
 - Adımlar:
   1. Prompt’ta ver:
-     - `AGENT-CODEX.backend.md`
-     - `docs/00-handbook/BACKEND-PROJECT-LAYOUT.md`
+     - `AGENTS.md`
+     - `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`
      - İlgili STORY / AC / TP (örn. `STORY-0002`, `AC-0002`, `TP-0003`)
   2. Codex’ten:
      - “Bu Story şu an hangi aşamada, sıradaki mantıklı adım ne?” diye sor.
@@ -82,9 +83,9 @@ Owner: @team/docs
   - `web/docs/**` altındaki bir rehberi kullanarak iş akışı tasarlatmak.
 - Adımlar:
   1. Prompt’ta ver:
-     - `AGENT-CODEX.web.md`
-     - `docs/00-handbook/WEB-PROJECT-LAYOUT.md`
-     - `docs/00-handbook/STYLE-WEB-001.md`
+     - `AGENTS.md`
+     - `docs/02-architecture/clients/WEB-ARCH.md`
+     - `web/docs/architecture/frontend/frontend-project-layout.md`
   2. `web/docs/architecture/frontend/frontend-project-layout.md` referansıyla
      basit bir görev iste.
   3. Kontrol:
@@ -113,8 +114,7 @@ Owner: @team/docs
 
 - Codex, her senaryoda:
   - Gereksiz dosyaları okumadan, sadece referans verilen dokümanlarla çalışır.
-  - Doküman ID ve klasör seçimlerinde `NUMARALANDIRMA-STANDARDI.md` ve
-    `DOCS-PROJECT-LAYOUT.md` ile uyumlu davranır.
+  - Doküman ID ve klasör seçimlerinde canonical/current kaynaklarla uyumlu davranır.
   - PROJECT-FLOW ve ACCEPTANCE/TP statülerini doğru okur.
 
 -------------------------------------------------------------------------------
@@ -125,5 +125,5 @@ Owner: @team/docs
   - Kullanılan prompt (özet)
   - Codex çıktısının kısa özeti
   - Gözlenen başarı/eksik noktalar
-  `backend/docs/legacy` yerine `docs/03-delivery/TEST-PLANS/` altındaki bu
-  dosyaya veya ayrı bir not dokümanına not edilebilir.
+  `docs/03-delivery/TEST-PLANS/` altındaki bu dosyaya veya ayrı bir not
+  dokümanına not edilebilir.

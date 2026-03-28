@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "candidateId": "tag-mfe-shell-codemod",
+  "component": "Tag",
+  "strategyId": "tag-tone-codemod-candidate",
+  "transformKind": "tone-access-normalization",
+  "reviewMode": "illustrative-dry-run",
+  "sourcePath": "web/scripts/codemods/ui-library/prototypes/tag.prototype.ts",
+  "rewriteRule": "Tone ve access prop'lari canonical siraya alinip readonly fallback aciklasmasi eklenir; label metni korunur.",
+  "rewritePreview": {
+    "kind": "illustrative",
+    "before": "<Tag access=\"readonly\">Readonly</Tag>",
+    "after": "<Tag tone=\"info\" access=\"readonly\" accessReason=\"Audit kaydi\">Readonly</Tag>"
+  },
+  "matchStrategy": {
+    "requiredSelectors": [
+      "import { Tag } from '@mfe/design-system'",
+      "<Tag"
+    ],
+    "dryRunSignals": [
+      "tone",
+      "access"
+    ],
+    "astTargets": [
+      "JSXOpeningElement[name=Tag]",
+      "JSXAttribute[name=tone]",
+      "JSXAttribute[name=access]"
+    ],
+    "stopConditions": [
+      "tone value theme token map disinda ise rewrite atlanir",
+      "children icinde nested markup varsa tonal rewrite manuel review ister"
+    ]
+  },
+  "manualValidation": {
+    "storybook": [
+      "RuntimeThemeMatrix",
+      "StableSurfacePatterns"
+    ],
+    "designLab": [
+      "semantic status tags",
+      "access hidden behavior"
+    ],
+    "smoke": [
+      "theme matrix drawer preview"
+    ]
+  },
+  "rollbackPlan": [
+    "semantic tone map review FAIL ise diff geri alinir",
+    "uppercase/layout bozulursa rollback story snapshot ile birlikte yapilir"
+  ],
+  "notes": [
+    "Tag rewrite'i label text veya casing davranisini degistirmez; yalniz prop normalization hedeflenir."
+  ]
+}

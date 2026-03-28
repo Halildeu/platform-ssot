@@ -1,0 +1,193 @@
+{
+  "version": "v1",
+  "kind": "ux-north-star-catalog-aistd",
+  "status": "ACTIVE",
+  "program_id": "ui_kutuphane_sistemi",
+  "updated_at": "2026-03-04T00:00:00Z",
+  "north_star": {
+    "goal": "Tutarlilik ve hiz kaybetmeden, olculebilir kaliteyle AI-assisted UX teslim etmek",
+    "primary_metric": "task_success_rate",
+    "target": ">=0.90",
+    "constraints": [
+      "single_ui_library",
+      "token_driven_visuals",
+      "modular_pages",
+      "parametric_data"
+    ]
+  },
+  "thinking_consultation": {
+    "mode": "policy_driven_multi_lens",
+    "provider_policy_path": "policies/policy_llm_live.v1.json",
+    "provider_guardrails_path": "policies/policy_llm_providers_guardrails.v1.json",
+    "provider_candidates": [
+      "google",
+      "claude",
+      "deepseek",
+      "qwen",
+      "xai"
+    ],
+    "required_lenses": [
+      "compliance_safety",
+      "task_success",
+      "clarity_cognitive_load",
+      "accessibility_inclusion",
+      "operations_observability"
+    ],
+    "notes": [
+      "Canli model cagrisi sadece explicit live flag ile acilir.",
+      "Canli cagrilar yoksa ayni lens setiyle policy-temelli masaustu degerlendirme yapilir.",
+      "OpenAI cagrisi bu repoda zorunlu degildir; allowlist policy belirleyicidir."
+    ]
+  },
+  "references": [
+    {
+      "id": "ref-wcag-22",
+      "title": "W3C WCAG 2.2",
+      "publisher": "W3C",
+      "url": "https://www.w3.org/TR/WCAG22/",
+      "type": "accessibility"
+    },
+    {
+      "id": "ref-aria-apg",
+      "title": "WAI-ARIA Authoring Practices Guide",
+      "publisher": "W3C",
+      "url": "https://www.w3.org/WAI/ARIA/apg/",
+      "type": "interaction_patterns"
+    },
+    {
+      "id": "ref-nist-ai-rmf",
+      "title": "NIST AI Risk Management Framework",
+      "publisher": "NIST",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "ai_governance"
+    },
+    {
+      "id": "ref-pair-guidebook",
+      "title": "People + AI Guidebook",
+      "publisher": "Google PAIR",
+      "url": "https://pair.withgoogle.com/guidebook/",
+      "type": "ai_ux"
+    },
+    {
+      "id": "ref-ms-human-ai",
+      "title": "Guidelines for Human-AI Interaction",
+      "publisher": "Microsoft Research",
+      "url": "https://www.microsoft.com/en-us/research/blog/guidelines-for-human-ai-interaction-eighteen-best-practices-for-human-centered-ai-design/",
+      "type": "ai_ux"
+    },
+    {
+      "id": "ref-govuk-design-system",
+      "title": "GOV.UK Design System",
+      "publisher": "GOV.UK",
+      "url": "https://design-system.service.gov.uk/",
+      "type": "design_system"
+    },
+    {
+      "id": "ref-nng-heuristics",
+      "title": "10 Usability Heuristics for User Interface Design",
+      "publisher": "Nielsen Norman Group",
+      "url": "https://www.nngroup.com/articles/ten-usability-heuristics/",
+      "type": "ux_heuristics"
+    },
+    {
+      "id": "ref-apple-hig",
+      "title": "Human Interface Guidelines",
+      "publisher": "Apple",
+      "url": "https://developer.apple.com/design/human-interface-guidelines",
+      "type": "platform_ux"
+    },
+    {
+      "id": "ref-material-3",
+      "title": "Material Design 3",
+      "publisher": "Google",
+      "url": "https://m3.material.io/",
+      "type": "design_system"
+    }
+  ],
+  "domains": [
+    {
+      "id": "component_library_management",
+      "label": "Bilesen Kutuphanesi Yonetimi",
+      "item_count": 6,
+      "priority": "P0"
+    },
+    {
+      "id": "design_token_management",
+      "label": "Tasarim Token Yonetimi",
+      "item_count": 7,
+      "priority": "P0"
+    },
+    {
+      "id": "documentation_standards",
+      "label": "Dokumantasyon Standartlari",
+      "item_count": 5,
+      "priority": "P1"
+    },
+    {
+      "id": "accessibility_compliance",
+      "label": "Erisilebilirlik Uyumu",
+      "item_count": 6,
+      "priority": "P0"
+    },
+    {
+      "id": "governance_contribution",
+      "label": "Yonetisim ve Katki Surecleri",
+      "item_count": 5,
+      "priority": "P1"
+    },
+    {
+      "id": "integration_distribution",
+      "label": "Entegrasyon ve Dagitim",
+      "item_count": 6,
+      "priority": "P1"
+    },
+    {
+      "id": "navigation_patterns",
+      "label": "Navigasyon Kaliplari",
+      "item_count": 6,
+      "priority": "P0"
+    },
+    {
+      "id": "overlay_components",
+      "label": "Ortu Bilesenleri",
+      "item_count": 6,
+      "priority": "P1"
+    },
+    {
+      "id": "responsive_layout",
+      "label": "Duyarli Duzen Sistemi",
+      "item_count": 5,
+      "priority": "P0"
+    },
+    {
+      "id": "state_feedback",
+      "label": "Durum ve Geri Bildirim",
+      "item_count": 6,
+      "priority": "P0"
+    },
+    {
+      "id": "table_data_display",
+      "label": "Tablo ve Veri Goruntuleme",
+      "item_count": 7,
+      "priority": "P0"
+    },
+    {
+      "id": "theming_customization",
+      "label": "Tema ve Ozellestirme",
+      "item_count": 5,
+      "priority": "P1"
+    },
+    {
+      "id": "utility_components",
+      "label": "Yardimci Bilesenler",
+      "item_count": 6,
+      "priority": "P1"
+    },
+    {
+      "id": "visualization_charts",
+      "label": "Gorsellestirme ve Grafikler",
+      "item_count": 6,
+      "priority": "P1"
+    }
+  ]
+}

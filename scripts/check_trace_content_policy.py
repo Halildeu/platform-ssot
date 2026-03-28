@@ -12,7 +12,7 @@ Goal:
   - (Exemplar) full coverage for selected trace files
 
 Policy:
-- docs/03-delivery/SPECS/trace-content-policy.v1.json
+- docs-ssot/03-delivery/SPECS/trace-content-policy.v1.json
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-POLICY_PATH = Path("docs/03-delivery/SPECS/trace-content-policy.v1.json")
+POLICY_PATH = Path("docs-ssot/03-delivery/SPECS/trace-content-policy.v1.json")
 TRACE_DIR = Path("docs/03-delivery/TRACES")
 BM_ROOT = Path("docs/01-product/BUSINESS-MASTERS")
 OUT_REPORT = Path(".autopilot-tmp/flow-mining/trace-content-report.md")

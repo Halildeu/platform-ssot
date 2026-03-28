@@ -1,0 +1,41 @@
+name: Deploy Docs Portal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/docs/**'
+      - 'packages/design-system/src/**'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Generate API docs
+        run: cd packages/design-system && npm run docs:api
+
+      - name: Build docs
+        run: cd packages/docs && npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/docs/dist
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        if: github.ref == 'refs/heads/main'

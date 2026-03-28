@@ -1,0 +1,553 @@
+{
+  "$schema": "./figma-component-map.schema.json",
+  "components": {
+    "Accordion": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ActivityFeed": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "AdaptiveForm": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "AgGridServer": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "AgingBuckets": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "AIActionAuditTimeline": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "AIGuidedAuthoring": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "AILayoutBuilder": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Alert": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "AnchorToc": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ApprovalCheckpoint": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ApprovalReview": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ApprovalWorkflow": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "AppSidebar": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "AreaChart": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Autocomplete": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Avatar": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "AvatarGroup": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Badge": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "BoxPlot": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Breadcrumb": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "BulletChart": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Button": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Calendar": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Card": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Carousel": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Cascader": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Checkbox": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "CitationPanel": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ColorPicker": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Combobox": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "CommandPalette": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "CommentThread": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ComparisonTable": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ConfidenceBadge": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ContextMenu": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ControlChart": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "DataExportDialog": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "DatePicker": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "DateRangePicker": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "DecisionMatrix": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Descriptions": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "DetailDrawer": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "DetailSectionTabs": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "DetailSummary": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Dialog": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Divider": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Drawer": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Dropdown": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "EmptyErrorLoading": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "EmptyState": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "EmptyStateBuilder": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "EntitySummaryBlock": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ErrorBoundary": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ExecutiveKPIStrip": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "FileUploadZone": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "FilterBar": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "FilterPresets": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "FineKinney": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "FloatButton": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "FlowBuilder": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "FormDrawer": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "FormField": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "FunnelChart": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "GanttTimeline": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "GaugeChart": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "GovernanceBoard": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "HeatmapCalendar": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "HistogramChart": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "IconButton": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "InlineEdit": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "InputNumber": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "JsonViewer": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "LinkInline": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "List": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "MasterDetail": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Mentions": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "MenuBar": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "MetricComparisonCard": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "MicroChart": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Modal": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "NavigationRail": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "NotificationCenter": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "NotificationDrawer": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "OrgChart": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "PageHeader": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "PageLayout": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Pagination": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ParetoChart": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "PivotTable": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Popover": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ProcessFlow": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "PromptComposer": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "QRCode": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "RadarChart": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Radio": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Rating": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "RecommendationCard": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ReportFilterPanel": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "RiskMatrix": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "SankeyDiagram": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "SearchFilterListing": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "SearchInput": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Segmented": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Select": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Skeleton": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Slider": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "SmartDashboard": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Spinner": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Stack": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "StatusTimeline": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Steps": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "SummaryStrip": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Switch": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "SWOTMatrix": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "TableSimple": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Tabs": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Tag": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Text": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "TextInput": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ThemeLayout": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ThemePresetCompare": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ThemePreviewCard": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Timeline": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "TimePicker": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Toast": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Tooltip": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "TourCoachmarks": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "TrainingTracker": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Transfer": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Tree": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "TreemapChart": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "TreeTable": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Upload": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "ValueStream": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "WaterfallChart": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    },
+    "Watermark": {
+      "figmaUrl": "FIGMA_URL_PLACEHOLDER",
+      "figmaNodeId": ""
+    }
+  }
+}

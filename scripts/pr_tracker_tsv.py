@@ -35,7 +35,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_TRACKER_PATH = ROOT / ".autopilot-tmp" / "pr-tracker" / "PR-TRACKER.tsv"
 DEFAULT_STATUS_PATH = ROOT / ".autopilot-tmp" / "pr-tracker" / "STATUS.md"
 DEFAULT_WORKFLOW_NAME = "ci-gate"
-PR_BOT_RULES_PATH = ROOT / "docs/04-operations/PR-BOT-RULES.json"
+PR_BOT_RULES_PATH = ROOT / "docs-ssot/04-operations/PR-BOT-RULES.json"
 
 MERGE_POLICY_NONE = "none"
 MERGE_POLICY_BOT_SQUASH = "bot_squash"

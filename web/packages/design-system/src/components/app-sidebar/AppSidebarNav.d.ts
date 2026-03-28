@@ -1,0 +1,27 @@
+import React from 'react';
+import type { AppSidebarNavProps as AppSidebarNavPropsBase } from './types';
+/**
+ * Navigation container slot for the AppSidebar compound component.
+ * Renders a `<nav role="navigation">` element with vertical overflow scrolling.
+ * Contains NavItem, Section, and Group children.
+ *
+ * @example
+ * ```tsx
+ * <AppSidebar.Nav>
+ *   <AppSidebar.NavItem icon={<HomeIcon />} label="Home" />
+ * </AppSidebar.Nav>
+ * ```
+ *
+ * @since 1.0.0
+ * @see AppSidebar
+ */
+export declare const AppSidebarNav: React.ForwardRefExoticComponent<AppSidebarNavPropsBase & React.RefAttributes<HTMLElement>>;
+/** Props for the AppSidebarNav component. */
+export interface AppSidebarNavProps extends AppSidebarNavPropsBase {
+}
+/** Ref type for AppSidebarNav. */
+export type AppSidebarNavRef = React.Ref<HTMLDivElement>;
+/** Element type for AppSidebarNav. */
+export type AppSidebarNavElement = HTMLDivElement;
+/** CSS properties type for AppSidebarNav. */
+export type AppSidebarNavCSSProperties = React.CSSProperties;

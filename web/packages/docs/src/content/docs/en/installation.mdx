@@ -1,0 +1,110 @@
+---
+title: Installation
+description: 'Add @mfe/design-system to your project'
+---
+
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+## Package Manager
+
+<Tabs>
+  <TabItem label="pnpm">
+  ```bash
+  pnpm add @mfe/design-system
+  ```
+  </TabItem>
+  <TabItem label="npm">
+  ```bash
+  npm install @mfe/design-system
+  ```
+  </TabItem>
+  <TabItem label="yarn">
+  ```bash
+  yarn add @mfe/design-system
+  ```
+  </TabItem>
+</Tabs>
+
+<Aside type="tip">
+  If you're using a monorepo, add the package to the relevant app package rather than the workspace root.
+</Aside>
+
+## Requirements
+
+| Dependency  | Minimum Version   |
+|-------------|-------------------|
+| React       | >= 18.0           |
+| ReactDOM    | >= 18.0           |
+| TypeScript  | >= 5.0 (optional) |
+
+## Provider Setup
+
+Wrap your application's root component with `DesignSystemProvider`. This provider manages theme, locale and other global settings.
+
+```tsx
+import { DesignSystemProvider } from '@mfe/design-system';
+
+function App() {
+  return (
+    <DesignSystemProvider>
+      <YourApp />
+    </DesignSystemProvider>
+  );
+}
+```
+
+## First Component
+
+```tsx
+import { Button } from '@mfe/design-system';
+
+function MyPage() {
+  return (
+    <Button variant="primary" size="md">
+      Hello World
+    </Button>
+  );
+}
+```
+
+## Tree Shaking
+
+The package is distributed in ES modules format. Modern bundlers (webpack 5, Vite, esbuild) automatically strip unused components:
+
+```tsx
+// Only Button is included in the bundle
+import { Button } from '@mfe/design-system';
+```
+
+## Peer Dependencies
+
+The following packages are defined as peer dependencies and must be installed in your project:
+
+```json
+{
+  "react": ">=18.0.0",
+  "react-dom": ">=18.0.0"
+}
+```
+
+## Troubleshooting
+
+### Module not found error
+
+Make sure the package is correctly installed:
+
+```bash
+pnpm list @mfe/design-system
+```
+
+### TypeScript errors
+
+Check the `moduleResolution` setting in your `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}
+```

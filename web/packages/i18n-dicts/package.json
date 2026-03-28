@@ -8,6 +8,8 @@
     "build": "echo \"i18n dicts are static\"",
     "test": "tsx --test \"src/__tests__/**/*.test.ts\"",
     "generate:pseudo": "tsx ./scripts/generate-pseudolocale.ts",
+    "report:coverage": "tsx ./scripts/report-locale-coverage.ts",
+    "check:pseudo-smoke": "tsx ./scripts/check-pseudolocale-smoke.ts",
     "pull": "tsx ./scripts/fetch-translations.ts",
     "pull:ci": "tsx ./scripts/fetch-translations.ts --ci",
     "pull:dry": "tsx ./scripts/fetch-translations.ts --dry-run"

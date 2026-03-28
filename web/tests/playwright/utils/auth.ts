@@ -5,6 +5,7 @@ export const JWT_SIGNATURE = 'shell';
 const AUTH_CHANNEL_NAME = 'shell-auth';
 const SESSION_TTL_MS = 60 * 60 * 1000;
 const DEFAULT_AUTH_MODE = 'none';
+const AUTH_WAIT_TIMEOUT_MS = 60_000;
 
 export interface TestTokenPayload {
   permissions: string[];
@@ -62,6 +63,36 @@ export const buildTestToken = (permissions: string[] = []): TestSession => {
 const resolveAuthMode = () => (process.env.PW_AUTH_MODE ?? DEFAULT_AUTH_MODE).trim().toLowerCase();
 
 const readInjectedToken = () => (process.env.PW_TEST_TOKEN ?? '').trim();
+const shouldUseFakeAuth = () => (process.env.PW_FAKE_AUTH ?? '').trim() === '1';
+const readFakeAuthPermissions = (fallback: string[]) => {
+  const raw = (process.env.PW_FAKE_AUTH_PERMISSIONS ?? '').trim();
+  if (!raw) return fallback;
+  return raw
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+};
+const installFakeAuthEnv = async (page: Page, permissions: string[]) => {
+  const resolvedPermissions = readFakeAuthPermissions(permissions);
+  await page.addInitScript(
+    ({ nextPermissions }) => {
+      const current = (window as Window & { __env__?: Record<string, string>; __ENV__?: Record<string, string> }).__env__ ?? {};
+      const merged = {
+        ...current,
+        VITE_AUTH_MODE: 'permitAll',
+        VITE_ENABLE_FAKE_AUTH: '1',
+        VITE_FAKE_AUTH_PERMISSIONS: nextPermissions.join(','),
+        VITE_FAKE_AUTH_EMAIL: 'runtime@test.local',
+        VITE_FAKE_AUTH_NAME: 'Runtime Test User',
+        VITE_FAKE_AUTH_DISPLAY: 'Runtime Test User',
+        VITE_FAKE_AUTH_ROLE: 'ADMIN',
+      };
+      (window as Window & { __env__?: Record<string, string>; __ENV__?: Record<string, string> }).__env__ = merged;
+      (window as Window & { __env__?: Record<string, string>; __ENV__?: Record<string, string> }).__ENV__ = merged;
+    },
+    { nextPermissions: resolvedPermissions },
+  );
+};
 
 const hasTokenEndpointConfig = () => {
   const url = (process.env.KEYCLOAK_TOKEN_URL ?? '').trim();
@@ -160,39 +191,75 @@ export const applyAuthState = async (page: Page, session: TestSession, ttlMs: nu
   );
 };
 
+const installSessionState = async (page: Page, session: TestSession, expiresAtMs: number) => {
+  await page.evaluate(
+    ({ token, user, nextExpiresAtMs }) => {
+      try {
+        window.localStorage.setItem('token', token);
+        window.localStorage.setItem('user', JSON.stringify(user));
+        window.localStorage.setItem('tokenExpiresAt', String(nextExpiresAtMs));
+      } catch {
+        // ignore
+      }
+
+      const store = (window as any).__shellStore;
+      if (!store) {
+        return;
+      }
+
+      store.dispatch({
+        type: 'auth/setKeycloakSession',
+        payload: {
+          token,
+          profile: user,
+          expiresAt: nextExpiresAtMs,
+        },
+      });
+      store.dispatch({ type: 'auth/setAuthInitialized', payload: true });
+    },
+    { token: session.token, user: session.user, nextExpiresAtMs: expiresAtMs },
+  );
+};
+
+const waitForShellStore = async (page: Page) => {
+  await page.waitForFunction(() => typeof (window as any).__shellStore !== 'undefined', { timeout: AUTH_WAIT_TIMEOUT_MS });
+};
+
+const waitForAuthState = async (page: Page) => {
+  await page.waitForFunction(() => {
+    const state = (window as any).__shellStore?.getState?.()?.auth;
+    return Boolean(state?.initialized && state?.token);
+  }, { timeout: AUTH_WAIT_TIMEOUT_MS });
+};
+
 export const authenticateAndNavigate = async (
   page: Page,
   baseURL: string | undefined,
   targetPath: string,
   permissions: string[],
 ) => {
+  if (shouldUseFakeAuth()) {
+    const root = baseURL ?? 'http://localhost:3000';
+    await installFakeAuthEnv(page, permissions);
+    await page.goto(`${root}${targetPath}`, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => typeof (window as any).__shellStore !== 'undefined', { timeout: 30_000 });
+    return { session: buildTestToken(readFakeAuthPermissions(permissions)), root };
+  }
   const session = await buildAuthSession(permissions);
   const root = baseURL ?? 'http://localhost:3000';
+  const expiresAt = Date.now() + SESSION_TTL_MS;
   await page.goto(`${root}/login`, { waitUntil: 'domcontentloaded' });
-  await page.waitForFunction(() => typeof (window as any).__shellStore !== 'undefined', { timeout: 30_000 });
-  await page.evaluate(
-    ({ token, user, ttl }) => {
-      const store = (window as any).__shellStore;
-      if (!store) {
-        console.warn('[auth.sync] shell store not available');
-        return;
-      }
-      store.dispatch({
-        type: 'auth/setKeycloakSession',
-        payload: {
-          token,
-          profile: user,
-          expiresAt: Date.now() + ttl,
-        },
-      });
-      store.dispatch({ type: 'auth/setAuthInitialized', payload: true });
-    },
-    { token: session.token, user: session.user, ttl: SESSION_TTL_MS },
-  );
-  // Bazı senaryolarda BroadcastChannel dinleyicisi geç abone olabildiğinden,
-  // auth durumunu hem login ekranında hem hedef rotada yayınlayarak garantili hale getiriyoruz.
+  await waitForShellStore(page);
+  await installSessionState(page, session, expiresAt);
+  await waitForAuthState(page);
   await applyAuthState(page, session);
+
+  // Full navigation is more stable than pushState for remote-mounted routes.
   await page.goto(`${root}${targetPath}`, { waitUntil: 'domcontentloaded' });
+  await page.waitForFunction((nextPath) => window.location.pathname === nextPath, targetPath, { timeout: AUTH_WAIT_TIMEOUT_MS });
+  await waitForShellStore(page);
+  await installSessionState(page, session, expiresAt);
   await applyAuthState(page, session);
+  await waitForAuthState(page);
   return { session, root };
 };

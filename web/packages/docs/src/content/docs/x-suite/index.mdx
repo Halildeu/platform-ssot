@@ -1,0 +1,49 @@
+---
+title: "Enterprise X Suite"
+description: "Six specialized packages for enterprise application development, extending the core design system with domain-specific components."
+---
+
+Each package extends the core design system with domain-specific
+components and patterns.
+
+## Packages
+
+| Package | Purpose | Components |
+|---------|---------|-----------|
+| [x-data-grid](/x-suite/data-grid) | AG Grid recipe layer | 11 |
+| [x-charts](/x-suite/charts) | Data visualization | 18 |
+| [x-editor](/x-suite/editor) | Rich text editing | 13 |
+| [x-kanban](/x-suite/kanban) | Board & workflow views | 11 |
+| [x-scheduler](/x-suite/scheduler) | Calendar & scheduling | 14 |
+| [x-form-builder](/x-suite/form-builder) | Dynamic form generation | 12 |
+
+## Installation
+
+Install any X Suite package alongside the core library:
+
+```bash
+pnpm add @mfe/design-system @mfe/x-data-grid
+```
+
+## Shared Patterns
+
+All X Suite packages follow consistent conventions:
+
+- **Theme-aware** -- Inherit from the global `ThemeProvider`
+- **Composable** -- Combine packages freely within layouts
+- **Server-side ready** -- Support SSR and hydration patterns
+- **Type-safe** -- Full TypeScript generics for data models
+
+```tsx
+import { EntityGridTemplate } from '@mfe/x-data-grid';
+import { BarChart } from '@mfe/x-charts';
+
+function Dashboard({ data, columnDefs }) {
+  return (
+    <>
+      <BarChart data={data} />
+      <EntityGridTemplate gridId="dashboard" gridSchemaVersion={1} rowData={data} columnDefs={columnDefs} />
+    </>
+  );
+}
+```

@@ -1,0 +1,290 @@
+#!/usr/bin/env node
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const webRoot = path.resolve(__dirname, '..', '..');
+const repoRoot = path.resolve(webRoot, '..');
+const args = process.argv.slice(2);
+const getArg = (name, fallback = null) => {
+  const idx = args.indexOf(name);
+  if (idx === -1) return fallback;
+  return args[idx + 1] ?? fallback;
+};
+
+const contextPath = path.join(repoRoot, 'docs', '02-architecture', 'context', 'ui-library-system.context.v1.json');
+const readActiveWave = () => {
+  const context = JSON.parse(readFileSync(contextPath, 'utf8'));
+  const active = context.active_wave_contracts?.[0];
+  if (!active) {
+    throw new Error('active_wave_contracts bos');
+  }
+  const base = path.basename(active);
+  if (base.includes('wave-1-foundation-primitives')) return 'wave_1_foundation_primitives';
+  if (base.includes('wave-2-navigation')) return 'wave_2_navigation';
+  if (base.includes('wave-3-forms')) return 'wave_3_forms';
+  if (base.includes('wave-4-data-display')) return 'wave_4_data_display';
+  if (base.includes('wave-5-overlay')) return 'wave_5_overlay';
+  if (base.includes('wave-6-ai-native-helpers')) return 'wave_6_ai_native_helpers';
+  if (base.includes('wave-7-page-blocks')) return 'wave_7_page_blocks';
+  if (base.includes('wave-8-overlay-extensions')) return 'wave_8_overlay_extensions';
+  if (base.includes('wave-9-foundation-language')) return 'wave_9_foundation_language';
+  if (base.includes('wave-10-theme-presets')) return 'wave_10_theme_presets';
+  if (base.includes('wave-11-recipes')) return 'wave_11_recipes';
+  throw new Error(`aktif wave anlasilamadi: ${active}`);
+};
+
+const waveId = getArg('--wave', readActiveWave());
+const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+const outDir = path.join(webRoot, 'test-results', 'diagnostics', 'ui-library-wave-gate', `${stamp}-${waveId}`);
+const logDir = path.join(outDir, 'logs');
+mkdirSync(logDir, { recursive: true });
+
+const waveMap = {
+  wave_1_foundation_primitives: {
+    checker: 'python3 scripts/check_ui_library_wave_1_foundation_primitives.py',
+    focus: ['Button', 'Text', 'LinkInline', 'IconButton'],
+  },
+  wave_2_navigation: {
+    checker: 'python3 scripts/check_ui_library_wave_2_navigation.py',
+    focus: ['Tabs', 'Breadcrumb', 'Pagination', 'Steps', 'AnchorToc'],
+  },
+  wave_3_forms: {
+    checker: 'python3 scripts/check_ui_library_wave_3_forms.py',
+    focus: ['TextInput', 'TextArea', 'Checkbox', 'Radio', 'Switch', 'Slider', 'DatePicker', 'TimePicker', 'Upload'],
+  },
+  wave_4_data_display: {
+    checker: 'python3 scripts/check_ui_library_wave_4_data_display.py',
+    focus: ['TableSimple', 'Descriptions', 'AgGridServer', 'EntityGridTemplate', 'List', 'JsonViewer', 'Tree', 'TreeTable'],
+  },
+  wave_5_overlay: {
+    checker: 'python3 scripts/check_ui_library_wave_5_overlay.py',
+    focus: ['Modal', 'Dropdown', 'Tooltip', 'FormDrawer', 'DetailDrawer', 'Popover'],
+  },
+  wave_6_ai_native_helpers: {
+    checker: 'python3 scripts/check_ui_library_wave_6_ai_native_helpers.py',
+    focus: ['CommandPalette', 'RecommendationCard', 'ConfidenceBadge', 'ApprovalCheckpoint', 'CitationPanel', 'AIActionAuditTimeline', 'PromptComposer'],
+  },
+  wave_7_page_blocks: {
+    checker: 'python3 scripts/check_ui_library_wave_7_page_blocks.py',
+    focus: ['PageLayout', 'FilterBar', 'ReportFilterPanel', 'PageHeader', 'SummaryStrip', 'EntitySummaryBlock'],
+  },
+  wave_8_overlay_extensions: {
+    checker: 'python3 scripts/check_ui_library_wave_8_overlay_extensions.py',
+    focus: ['ContextMenu', 'TourCoachmarks'],
+  },
+  wave_9_foundation_language: {
+    checker: 'python3 scripts/check_ui_library_wave_9_foundation_language.py',
+    focus: ['TypographySystem', 'IconographySystem', 'MotionSystem', 'ResponsiveLayoutGrid'],
+  },
+  wave_10_theme_presets: {
+    checker: 'python3 scripts/check_ui_library_wave_10_theme_presets.py',
+    focus: ['ThemePresetGallery', 'ThemePresetCompare'],
+  },
+  wave_11_recipes: {
+    checker: 'python3 scripts/check_ui_library_wave_11_recipes.py',
+    focus: ['SearchFilterListing', 'DetailSummary', 'ApprovalReview', 'EmptyErrorLoading', 'AIGuidedAuthoring'],
+  },
+};
+
+if (!waveMap[waveId]) {
+  console.error(`[ui-library-wave-gate] Bilinmeyen wave: ${waveId}`);
+  process.exit(2);
+}
+
+const steps = [
+  {
+    id: 'governance_contract',
+    label: 'Governance contract check',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_governance_contract.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'ux_alignment',
+    label: 'UX alignment check',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_ux_alignment.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'foundation_contracts',
+    label: 'Foundation contracts check',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_foundation_contracts.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'system_extensions',
+    label: 'System extensions check',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_system_extensions.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'component_roadmap',
+    label: 'Component roadmap check',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_component_roadmap.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'page_block_contract',
+    label: 'Page/block contract check',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_page_block_contract.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'frontend_diagnostics_registry',
+    label: 'Frontend diagnostics registry check',
+    cmd: 'python3',
+    args: ['scripts/check_frontend_diagnostics_registry.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'wave_contract',
+    label: 'Wave contract check',
+    cmd: 'python3',
+    args: [waveMap[waveId].checker.replace(/^python3\s+/, '')],
+    cwd: repoRoot,
+  },
+  {
+    id: 'designlab_index',
+    label: 'Design Lab index',
+    cmd: 'npm',
+    args: ['run', 'designlab:index'],
+    cwd: webRoot,
+  },
+  {
+    id: 'release_manifest',
+    label: 'UI library release manifest',
+    cmd: 'npm',
+    args: ['run', 'release:ui-library:manifest'],
+    cwd: webRoot,
+  },
+  {
+    id: 'package_release_contract',
+    label: 'Package release contract check',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_package_release_contract.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'tailwind_lint',
+    label: 'Tailwind lint',
+    cmd: 'npm',
+    args: ['run', 'lint:tailwind'],
+    cwd: webRoot,
+  },
+  {
+    id: 'no_antd_guard',
+    label: 'No antd runtime guard',
+    cmd: 'npm',
+    args: ['run', 'lint:no-antd'],
+    cwd: webRoot,
+  },
+  {
+    id: 'theme_style_guard',
+    label: 'No hardcoded theme styles',
+    cmd: 'python3',
+    args: ['scripts/check_no_hardcoded_theme_styles.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'adoption_enforcement',
+    label: 'UI library adoption enforcement',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_adoption_enforcement.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'design_system_tests',
+    label: 'Design system tests',
+    cmd: 'npm',
+    args: ['run', 'test:design-system'],
+    cwd: webRoot,
+  },
+  {
+    id: 'doctor_frontend_ui_library',
+    label: 'Frontend doctor (ui-library)',
+    cmd: 'npm',
+    args: ['run', 'doctor:frontend', '--', '--preset', 'ui-library'],
+    cwd: webRoot,
+  },
+];
+
+const runStep = (step) => {
+  const startedAt = new Date();
+  const result = spawnSync(step.cmd, step.args, {
+    cwd: step.cwd,
+    env: process.env,
+    encoding: 'utf8',
+    maxBuffer: 1024 * 1024 * 16,
+  });
+  const logPath = path.join(logDir, `${step.id}.log`);
+  mkdirSync(logDir, { recursive: true });
+  writeFileSync(
+    logPath,
+    [`$ ${step.cmd} ${step.args.join(' ')}`, '', result.stdout || '', result.stderr || ''].join('\n'),
+    'utf8',
+  );
+  return {
+    id: step.id,
+    label: step.label,
+    command: `${step.cmd} ${step.args.join(' ')}`,
+    status: result.status === 0 ? 'PASS' : 'FAIL',
+    exitCode: result.status,
+    signal: result.signal,
+    startedAt: startedAt.toISOString(),
+    endedAt: new Date().toISOString(),
+    logPath: path.relative(repoRoot, logPath),
+  };
+};
+
+const executed = steps.map(runStep);
+const failed = executed.filter((step) => step.status !== 'PASS');
+const overall = failed.length === 0 ? 'PASS' : 'FAIL';
+
+const summary = {
+  version: '1.0',
+  gate_id: 'ui-library-wave-gate',
+  wave_id: waveId,
+  focus_components: waveMap[waveId].focus,
+  overall_status: overall,
+  started_at: executed[0]?.startedAt ?? new Date().toISOString(),
+  ended_at: new Date().toISOString(),
+  steps: executed,
+  out_dir: path.relative(repoRoot, outDir),
+};
+
+const jsonPath = path.join(outDir, 'ui-library-wave-gate.summary.v1.json');
+const mdPath = path.join(outDir, 'ui-library-wave-gate.summary.v1.md');
+writeFileSync(jsonPath, JSON.stringify(summary, null, 2), 'utf8');
+
+const lines = [
+  '# UI Library Wave Gate Summary',
+  '',
+  `- Wave: ${waveId}`,
+  `- Overall: ${overall}`,
+  `- Focus: ${waveMap[waveId].focus.join(', ')}`,
+  '',
+  '## Steps',
+  '| Step | Result | Log |',
+  '|---|---|---|',
+  ...executed.map((step) => `| ${step.id} | ${step.status} | ${step.logPath} |`),
+];
+writeFileSync(mdPath, lines.join('\n'), 'utf8');
+
+console.log(JSON.stringify({
+  status: overall,
+  wave_id: waveId,
+  out_json: path.relative(repoRoot, jsonPath),
+  out_md: path.relative(repoRoot, mdPath),
+}, null, 2));
+
+if (overall !== 'PASS') {
+  process.exit(1);
+}

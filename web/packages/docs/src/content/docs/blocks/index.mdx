@@ -1,0 +1,56 @@
+---
+title: "Blocks & App Kits"
+description: "Composable page blocks for rapid application development. Pre-wired layouts combining multiple design system components into production-ready page sections."
+---
+
+## Available Blocks
+
+| Block | Description |
+|-------|-------------|
+| `PageHeader` | Title, breadcrumbs, and action toolbar |
+| `PageBuilder` | Grid + filters + toolbar composition |
+| `DetailPageLayout` | Form + sidebar + tab navigation |
+| `DashboardGrid` | Responsive widget grid layout |
+| `MetricStripBlock` | KPI metric cards in a row |
+| `DataGridFilterChips` | Composable filter chip bar |
+| `EmptyState` | Illustrated empty state placeholder |
+| `ErrorBoundary` | Error fallback with retry action |
+| `LoadingSkeleton` | Shimmer loading placeholders |
+| `WizardLayout` | Multi-step wizard container |
+| `SplitView` | Resizable two-pane layout |
+| `CommandPalette` | Keyboard-driven command search |
+| `NotificationCenter` | Toast and notification stack |
+| `ConfirmDialog` | Confirmation modal with variants |
+
+## Usage
+
+Blocks compose core components with sensible defaults:
+
+```tsx
+import { PageBuilder, MetricStripBlock } from '@mfe/blocks';
+import { EntityGridTemplate, DataGridFilterChips } from '@mfe/x-data-grid';
+
+function InvoicesPage() {
+  return (
+    <PageBuilder
+      title="Invoices"
+      stats={<MetricStripBlock items={kpis} />}
+      filters={<DataGridFilterChips filters={filterConfig} />}
+    >
+      <EntityGridTemplate rows={invoices} columns={columns} />
+    </PageBuilder>
+  );
+}
+```
+
+## Customization
+
+Override block defaults via props or wrap with custom styles:
+
+```tsx
+<PageHeader
+  title="Dashboard"
+  breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Dashboard' }]}
+  actions={<Button>Export</Button>}
+/>
+```

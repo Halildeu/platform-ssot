@@ -43,6 +43,24 @@ const createSseHeaders = (): Record<string, string> => {
 
 const normaliseChunk = (chunk: string) => chunk.replace(/\r\n/g, '\n');
 
+const shouldLogLiveStreamWarning = (error: unknown): boolean => {
+  const message = error instanceof Error ? error.message : String(error ?? '');
+  if (!message) {
+    return false;
+  }
+  const normalized = message.toLowerCase();
+  if (normalized.includes('abort')) {
+    return false;
+  }
+  if (normalized.includes('failed to fetch')) {
+    return false;
+  }
+  if (normalized.includes('load failed')) {
+    return false;
+  }
+  return true;
+};
+
 export const useAuditLiveStream = (enabled: boolean, handlers: LiveStreamHandlers) => {
   useEffect(() => {
     if (!enabled) {
@@ -86,7 +104,7 @@ export const useAuditLiveStream = (enabled: boolean, handlers: LiveStreamHandler
         const normalised = normaliseAuditEvent(payload);
         handlers.onEvent?.(normalised);
         stopFallback();
-      } catch (error) {
+      } catch (error: unknown) {
         console.warn('Failed to parse audit live event', error);
         handlers.onFallbackTick?.();
       }
@@ -141,7 +159,7 @@ export const useAuditLiveStream = (enabled: boolean, handlers: LiveStreamHandler
           processEventPayload(buffer);
         }
         throw new Error('Audit live stream closed unexpectedly.');
-      } catch (error) {
+      } catch (error: unknown) {
         if (controller.signal.aborted) {
           return;
         }
@@ -158,8 +176,13 @@ export const useAuditLiveStream = (enabled: boolean, handlers: LiveStreamHandler
       if (isStreaming || abortController) {
         return;
       }
+      if (!resolveAuthToken()) {
+        startFallback();
+        scheduleReconnect();
+        return;
+      }
       openStream().catch((error) => {
-        if (process.env.NODE_ENV !== 'production') {
+        if (process.env.NODE_ENV !== 'production' && shouldLogLiveStreamWarning(error)) {
           console.warn('Audit live stream error', error);
         }
         handlers.onFallbackTick?.();

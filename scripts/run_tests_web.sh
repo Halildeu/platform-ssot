@@ -24,6 +24,8 @@ MODE="${1:-unit}"
 
 cd "$WEB_DIR"
 
+export BROWSERSLIST_IGNORE_OLD_DATA="${BROWSERSLIST_IGNORE_OLD_DATA:-1}"
+
 case "$MODE" in
   unit)
     echo "[run_tests_web] npm test"

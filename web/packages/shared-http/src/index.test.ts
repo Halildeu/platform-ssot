@@ -61,17 +61,21 @@ describe('shared-http interceptors', () => {
     vi.unstubAllGlobals();
   });
 
-  it('redirects to login and triggers unauthorized handler on 401', async () => {
+  it('triggers unauthorized handler on 401 without forbidden toast', async () => {
     const { mod, locationReplace, dispatchEvent } = await loadModule();
     const unauthorizedHandler = vi.fn();
+    mod.registerAuthTokenResolver(() => 'token-from-store');
     mod.registerUnauthorizedHandler(unauthorizedHandler);
     const rejected = getResponseInterceptor(mod.api);
-    const error = { response: { status: 401 } } as AxiosError;
+    const firstError = { response: { status: 401 } } as AxiosError;
+    const secondError = { response: { status: 401 } } as AxiosError;
 
-    await expect(rejected?.(error)).rejects.toBe(error);
+    await expect(rejected?.(firstError)).rejects.toBe(firstError);
+    await expect(rejected?.(secondError)).rejects.toBe(secondError);
 
-    expect(unauthorizedHandler).toHaveBeenCalledWith(error);
-    expect(locationReplace).toHaveBeenCalledWith('/login?redirect=%2Fadmin%2Fusers');
+    expect(unauthorizedHandler).toHaveBeenCalledTimes(2);
+    expect(unauthorizedHandler).toHaveBeenLastCalledWith(secondError);
+    expect(locationReplace).not.toHaveBeenCalled();
     expect(dispatchEvent).not.toHaveBeenCalled();
   });
 
@@ -88,6 +92,32 @@ describe('shared-http interceptors', () => {
     expect(locationReplace).not.toHaveBeenCalled();
     expect(dispatchEvent).toHaveBeenCalledTimes(1);
     expect(dispatchEvent.mock.calls[0][0].detail.text).toBe('Bu işlem için yetkiniz bulunmuyor.');
+  });
+
+  it('suppresses forbidden toast when request opts out from global access toast', async () => {
+    const { mod, locationReplace, dispatchEvent } = await loadModule();
+    const rejected = getResponseInterceptor(mod.api);
+    const error = {
+      config: { __suppressGlobalForbiddenToast: true },
+      response: { status: 403 },
+    } as AxiosError;
+
+    await expect(rejected?.(error)).rejects.toBe(error);
+
+    expect(locationReplace).not.toHaveBeenCalled();
+    expect(dispatchEvent).not.toHaveBeenCalled();
+  });
+
+  it('deduplicates repeated forbidden toasts in a short time window', async () => {
+    const { mod, dispatchEvent } = await loadModule();
+    const rejected = getResponseInterceptor(mod.api);
+    const first = { response: { status: 403 } } as AxiosError;
+    const second = { response: { status: 403 } } as AxiosError;
+
+    await expect(rejected?.(first)).rejects.toBe(first);
+    await expect(rejected?.(second)).rejects.toBe(second);
+
+    expect(dispatchEvent).toHaveBeenCalledTimes(1);
   });
 
   it('shows profile missing toast without redirect on 403 PROFILE_MISSING', async () => {

@@ -1,0 +1,13 @@
+export { SidebarBreadcrumb } from "./SidebarBreadcrumb";
+export { SidebarFilterBar, useFilterState } from "./SidebarFilterBar";
+export type { FilterKey } from "./SidebarFilterBar";
+export { SidebarFavorites } from "./SidebarFavorites";
+export { SidebarRecentlyViewed } from "./SidebarRecentlyViewed";
+export { SidebarHealthBanner } from "./SidebarHealthBanner";
+export { SidebarSearchEnhanced, HighlightedLabel } from "./SidebarSearchEnhanced";
+export { ContextMenuProvider, useContextMenu, buildComponentMenuItems } from "./SidebarContextMenu";
+export type { ContextMenuItem } from "./SidebarContextMenu";
+export { HoverPreviewProvider, useHoverPreview } from "./SidebarHoverPreview";
+export type { PreviewData } from "./SidebarHoverPreview";
+export { SidebarQuickActions } from "./SidebarQuickActions";
+export { SidebarGroupProgress } from "./SidebarGroupProgress";

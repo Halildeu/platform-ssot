@@ -34,7 +34,7 @@ jobs:
           python3 - <<'PY'
           import json, os
           from pathlib import Path
-          p = Path("docs/03-delivery/SPECS/doc-repair-autopr-policy.v0.6.json")
+          p = Path("docs-ssot/03-delivery/SPECS/doc-repair-autopr-policy.v0.6.json")
           d = json.loads(p.read_text(encoding="utf-8"))
           enabled = bool(d.get("enabled", False))
           print(f"enabled={enabled}")
@@ -104,7 +104,7 @@ jobs:
           python3 - <<'PY'
           import json, os
           from pathlib import Path
-          pol = json.loads(Path("docs/03-delivery/SPECS/doc-repair-autopr-policy.v0.6.json").read_text(encoding="utf-8"))
+          pol = json.loads(Path("docs-ssot/03-delivery/SPECS/doc-repair-autopr-policy.v0.6.json").read_text(encoding="utf-8"))
           th = pol["thresholds"]
           met = json.loads(Path("artifacts/doc-repair/metrics.json").read_text(encoding="utf-8"))
           ds = json.loads(Path("artifacts/doc-repair/diff-stats.json").read_text(encoding="utf-8"))

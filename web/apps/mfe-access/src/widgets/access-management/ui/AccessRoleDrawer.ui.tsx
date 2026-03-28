@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { DetailDrawer, Badge } from 'mfe-ui-kit';
+import { Badge, Button, Checkbox, DetailDrawer } from '@mfe/design-system';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
 import { getPermissions } from '../../../entities/permissions/api/permissions.api';
 
@@ -40,28 +40,26 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
   formatNumber,
   formatDate,
 }) => {
-  if (!open || !role) {
-    return null;
-  }
+  const isOpen = open && Boolean(role);
 
   const { data: permissionList = [] } = useQuery({
     queryKey: ['permissions'],
     queryFn: getPermissions,
-    enabled: open,
+    enabled: isOpen,
     staleTime: 60_000,
   });
 
   const [selectedPermissionIds, setSelectedPermissionIds] = React.useState<string[]>(
-    Array.isArray(role.permissions) ? role.permissions : [],
+    Array.isArray(role?.permissions) ? role.permissions : [],
   );
 
   React.useEffect(() => {
-    setSelectedPermissionIds(Array.isArray(role.permissions) ? role.permissions : []);
+    setSelectedPermissionIds(Array.isArray(role?.permissions) ? role.permissions : []);
   }, [role]);
 
-  const togglePermission = (id: string) => {
-    setSelectedPermissionIds((prev) => (prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]));
-  };
+  if (!isOpen || !role) {
+    return null;
+  }
 
   const handleSavePermissions = async () => {
     if (!role || !onPermissionsSave) {
@@ -70,7 +68,7 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
     try {
       await onPermissionsSave(role.id, selectedPermissionIds);
       showToast('success', 'Permissions updated');
-    } catch (error) {
+    } catch (error: unknown) {
       const message = error instanceof Error ? error.message : t('auth.login.failed');
       showToast('error', message);
     }
@@ -86,18 +84,17 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
     <DetailDrawer
       open={open}
       onClose={onClose}
-      width={420}
       title={role.name}
-      extra={(
-        <button type="button" className="text-sm font-medium text-text-secondary hover:text-text-primary" onClick={onClose}>
+      actions={(
+        <Button type="button" variant="ghost" size="sm" onClick={onClose}>
           {t('access.clone.cancelText')}
-        </button>
+        </Button>
       )}
     >
-      <div className="flex flex-col gap-6">
+      <div data-testid="access-role-drawer-content" className="flex flex-col gap-6">
         <p className="text-sm text-text-subtle">{role.description || t('access.drawer.noDescription')}</p>
 
-        <dl className="space-y-3 rounded-2xl border border-border-subtle bg-surface-muted p-4 text-sm">
+        <dl className="flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-muted p-4 text-sm">
           <div className="flex items-center justify-between">
             <dt className="text-text-subtle">{t('access.drawer.members')}</dt>
             <dd className="font-semibold text-text-primary">{formattedMemberCount}</dd>
@@ -123,7 +120,7 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
           ) : (
             <div className="flex flex-col gap-3">
               {role.policies.map((policy) => (
-                <div key={`${role.id}-${policy.moduleKey}`} className="rounded-2xl border border-border-subtle p-4 shadow-sm">
+                <div key={`${role.id}-${policy.moduleKey}`} className="rounded-2xl border border-border-subtle p-4 shadow-xs">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-semibold text-text-primary">
@@ -139,7 +136,7 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
                         })}
                       </p>
                     </div>
-                    <Badge tone={levelToneMap[policy.level] ?? 'default'}>
+                    <Badge variant={levelToneMap[policy.level] ?? 'default'}>
                       {t(`access.filter.level.${policy.level.toLowerCase()}`)}
                     </Badge>
                   </div>
@@ -160,33 +157,34 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
                 if (!id) return null;
                 const code = perm.code ?? id;
                 return (
-                  <label key={id} className="flex items-center gap-3 rounded-xl border border-border-subtle px-3 py-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={selectedPermissionIds.includes(id)}
-                      onChange={() => togglePermission(id)}
-                      className="h-4 w-4 accent-action-primary"
-                    />
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-text-primary">{code}</span>
-                      {perm.moduleLabel ? (
-                        <span className="text-xs text-text-subtle">{perm.moduleLabel}</span>
-                      ) : null}
-                    </div>
-                  </label>
+                  <Checkbox
+                    key={id}
+                    checked={selectedPermissionIds.includes(id)}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setSelectedPermissionIds((prev) =>
+                        checked ? (prev.includes(id) ? prev : [...prev, id]) : prev.filter((pid) => pid !== id),
+                      );
+                    }}
+                    label={code}
+                    description={perm.moduleLabel}
+                    size="sm"
+                    data-testid={`access-role-permission-${id}`}
+                  />
                 );
               })
             )}
           </div>
           <div className="flex justify-end">
-            <button
+            <Button
               type="button"
-              className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow hover:opacity-90 disabled:opacity-50"
               onClick={handleSavePermissions}
-              disabled={savingPermissions}
+              loading={savingPermissions}
+              loadingLabel={t('common.loading')}
+              data-testid="access-role-drawer-save"
             >
-              {savingPermissions ? t('common.loading') : t('common.save')}
-            </button>
+              {t('common.save')}
+            </Button>
           </div>
         </section>
 

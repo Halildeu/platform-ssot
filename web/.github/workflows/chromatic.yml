@@ -34,7 +34,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -64,4 +64,19 @@ jobs:
       - name: Publish to Chromatic
         env:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-        run: SENTRY_DSN="" npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --build-script-name build-storybook --exit-once-uploaded
+        run: |
+          CHROMATIC_ARGS="--project-token=$CHROMATIC_PROJECT_TOKEN --build-script-name build-storybook"
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            CHROMATIC_ARGS="$CHROMATIC_ARGS --auto-accept-changes"
+          else
+            CHROMATIC_ARGS="$CHROMATIC_ARGS --exit-zero-on-changes"
+          fi
+          SENTRY_DSN="" npx chromatic $CHROMATIC_ARGS
+      - name: Upload visual diff report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromatic-visual-diff
+          path: |
+            .chromatic/
+          retention-days: 30

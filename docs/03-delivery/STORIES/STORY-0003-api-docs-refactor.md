@@ -10,7 +10,7 @@ Downstream: AC-0003, docs/03-delivery/api/*.md, TP-0003
 ## 1. AMAÇ
 
 Backend’e ait kullanıcı, auth, permission ve audit API sözleşmelerinin
-`backend/docs/legacy/root/03-delivery/api/**` altındaki eski yerleşimden
+legacy API arşiv yerleşiminden
 çıkarılıp yeni `docs/03-delivery/api/` klasörü altında, STYLE-API-001 ve
 NUMARALANDIRMA standardı ile uyumlu tek kaynak haline getirilmesi.
 
@@ -27,7 +27,7 @@ Dahil:
   hiyerarşisinde tanımlanması.
 - `docs/03-delivery/guides/GUIDE-0001-api-client-updates.md` ve ilgili backend/front-end
   rehberlerinin yeni path’lerle çalışır hale getirilmesi.
-- Legacy API dokümanlarının `backend/docs/legacy/**` altında arşiv olarak
+- Legacy API dokümanlarının archive-reference alanda arşiv olarak
   korunması; yeni geliştirme için yalnız `docs/03-delivery/api/*.md` dizisinin
   referans alınması.
 
@@ -50,7 +50,7 @@ Hariç:
 ## 5. BAĞIMLILIKLAR
 
 - STYLE-API-001.md  
-- Legacy API dokümanları (`backend/docs/legacy/root/03-delivery/api/*.md`)  
+- Legacy API archive snapshot’ları  
 - İlgili TECH-DESIGN dokümanları ve AC-0003 / TP-0003
 
 - Eski API dokümanlarındaki bazı detaylar (özellikle örnekler ve edge-case

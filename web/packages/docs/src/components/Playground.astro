@@ -1,0 +1,116 @@
+---
+interface Props {
+  code: string;
+  componentName?: string;
+  height?: string;
+}
+
+const { code, componentName = 'Demo', height = '200px' } = Astro.props;
+---
+
+<div class="playground" data-component={componentName}>
+  <div class="playground-header">
+    <span class="playground-title">Canli Onizleme</span>
+    <div class="playground-actions">
+      <button class="playground-copy" title="Kodu kopyala">📋</button>
+      <button class="playground-reset" title="Sifirla">↺</button>
+    </div>
+  </div>
+  <div class="playground-preview" style={`min-height: ${height}`}>
+    <div class="playground-render" id={`preview-${componentName}`}>
+      <!-- Runtime render target -->
+    </div>
+  </div>
+  <div class="playground-editor">
+    <textarea class="playground-code" spellcheck="false" rows="8">{code}</textarea>
+  </div>
+</div>
+
+<style>
+.playground {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.playground-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--sl-color-gray-6);
+  border-bottom: 1px solid var(--sl-color-gray-5);
+}
+.playground-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--sl-color-white);
+}
+.playground-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.playground-actions button {
+  background: none;
+  border: 1px solid var(--sl-color-gray-4);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--sl-color-gray-2);
+}
+.playground-actions button:hover {
+  background: var(--sl-color-gray-5);
+}
+.playground-preview {
+  padding: 1.5rem;
+  background: var(--sl-color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.playground-editor {
+  border-top: 1px solid var(--sl-color-gray-5);
+}
+.playground-code {
+  width: 100%;
+  padding: 1rem;
+  font-family: var(--sl-font-mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-gray-1);
+  border: none;
+  resize: vertical;
+  tab-size: 2;
+}
+.playground-code:focus {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: -2px;
+}
+</style>
+
+<script>
+  // Copy button
+  document.querySelectorAll('.playground-copy').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.playground')?.querySelector('.playground-code');
+      if (code) {
+        navigator.clipboard.writeText((code as HTMLTextAreaElement).value);
+        btn.textContent = '✅';
+        setTimeout(() => { btn.textContent = '📋'; }, 1500);
+      }
+    });
+  });
+
+  // Reset button
+  document.querySelectorAll('.playground-reset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const playground = btn.closest('.playground');
+      const code = playground?.querySelector('.playground-code') as HTMLTextAreaElement;
+      if (code) {
+        code.value = code.defaultValue;
+      }
+    });
+  });
+</script>

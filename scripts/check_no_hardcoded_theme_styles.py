@@ -27,7 +27,19 @@ from typing import Iterable, List, Set, Tuple
 ROOT = Path(__file__).resolve().parents[1]
 
 ALLOWED_EXT = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".css", ".scss"}
-SKIP_DIRS = {"node_modules", "dist", "build", "coverage", "test-results", ".git", ".next"}
+SKIP_DIRS = {
+    "node_modules",
+    "node_modules_old",
+    "node_modules_failed_pnpm",
+    "node_modules_failed_pnpm_hoisted",
+    "dist",
+    "build",
+    "coverage",
+    "test-results",
+    "storybook-static",
+    ".git",
+    ".next",
+}
 
 # Guardrail scope: product code. Storybook/docs/assets intentionally excluded.
 SCOPE_PREFIXES = ("web/apps/", "web/packages/")

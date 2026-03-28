@@ -1,4 +1,10 @@
-# AGENT-CODEX.data – Data / Rapor / ETL Görevleri (Compact)
+# Data / Rapor / ETL Görevleri (Compact)
+
+> Transition Durumu: Bu dosya transition-active rehber katmanındadır.
+> Canonical kaynaklar:
+> `standards.lock`,
+> `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md`,
+> `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`.
 
 Bu dosya, [DATA] tipindeki görevlerde agent’ın nasıl davranacağını tanımlar.
 Amaç: SQL, rapor, ETL ve data-pipeline işlerinde tutarlı, performanslı ve güvenli
@@ -26,8 +32,7 @@ bir yaklaşım sağlamaktır.
 - Büyük data işlemlerinde performans optimizasyonu
 
 Eğer iş hem backend API hem data sorgusu içeriyorsa:
-- Data kısmı için AGENT-CODEX.data.md,
-- API kısmı için AGENT-CODEX.backend.md uygulanmalıdır.
+- Data ve backend transition rehberleri birlikte uygulanmalıdır.
 
 -------------------------------------------------------------------------------
 3. ZORUNLU OKUMA
@@ -36,14 +41,14 @@ Eğer iş hem backend API hem data sorgusu içeriyorsa:
 [DATA] işi alındığında agent aşağıdaki dokümanları dikkate almalıdır:
 
 1. ÇEKİRDEK DAVRANIŞ
-   - AGENT-CODEX.core.md
+   - Çekirdek transition rehberi
    - AGENTS.md
 
 2. DATA LAYOUT
-   - docs/00-handbook/DATA-PROJECT-LAYOUT.md
+   - DATA-PROJECT-LAYOUT.md
 
 3. DATA STİL
-   - docs/00-handbook/STYLE-DATA-001.md
+   - STYLE-DATA-001.md
 
 4. İLGİLİ DOMAIN / SERVİS DOKÜMANLARI
    - docs/02-architecture/services/<servis-adı>/DATA-MODEL-*.md

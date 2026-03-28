@@ -1,0 +1,17 @@
+{
+  "name": "@mfe/docs",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "generate": "node scripts/generate-component-docs.mjs"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "0.38.2",
+    "@pagefind/default-ui": "^1.3.0",
+    "astro": "6.0.8",
+    "sharp": "^0.33.0"
+  }
+}

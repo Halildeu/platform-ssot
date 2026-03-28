@@ -6,6 +6,7 @@ on:
       - "docs/**"
       - "scripts/**"
       - ".github/workflows/doc-qa.yml"
+      - "standards.lock"
       - "AGENTS.md"
       - "AGENT-CODEX*.md"
       - "NUMARALANDIRMA-STANDARDI.md"
@@ -68,6 +69,8 @@ jobs:
           python3 scripts/check_doc_repair_reason_map.py
           python3 scripts/check_doc_repair_autopr_policy.py
           python3 scripts/check_doc_chain.py
+          python3 scripts/check_transition_authority_map.py
+          python3 scripts/report_transition_reference_consumers.py --repo-root . --out-json .cache/reports/transition_reference_consumers.v1.json --out-md .cache/reports/transition_reference_consumers.v1.md
           python3 scripts/check_governance_migration.py
           python3 scripts/check_trace_quality_policy.py
           python3 scripts/check_trace_quality.py

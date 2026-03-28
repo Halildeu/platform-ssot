@@ -137,10 +137,10 @@ Yeni doküman açarken:
 - Aynı ID iki dosyada bulunursa:
   - Hangisinin aktif doküman olduğu belirlenir (yeni sistemdeki `docs/` altı
     tercih edilir).  
-  - Diğer dosya `backend/docs/legacy/**` altına taşınır veya dosya içinde
+  - Diğer dosya archive-reference alana taşınır veya dosya içinde
     “legacy / migrated” notu ile işaretlenir.
 - Eski ID formatlarından (örn. `QLTY-...`, `E01-S01-...`) yeni formata geçerken:
-  - Eski dosya `backend/docs/legacy/**` altında saklanır.  
+  - Eski dosya archive-reference alanda saklanır.  
   - Yeni ID ile `docs/` altında özet bir doküman oluşturulur ve içerikte
     legacy ID referans olarak belirtilir.
 
@@ -151,8 +151,8 @@ Yeni doküman açarken:
 Yeni bir doküman üretirken agent şu sıralamayı izlemelidir:
 
 1. `NUMARALANDIRMA-STANDARDI.md` → Doğru ID türü ve formatı.  
-2. `docs/00-handbook/DOCS-PROJECT-LAYOUT.md` → Doğru klasör ve yerleşim.  
-3. İlgili `AGENT-CODEX.*.md` → İş tipine göre davranış (DOCS/WEB/BE/DATA/AI).  
+2. `DOCS-PROJECT-LAYOUT.md` → Doğru klasör ve yerleşim.  
+3. İlgili alan transition rehberi → İş tipine göre davranış (DOCS/WEB/BE/DATA/AI).  
 4. `docs/99-templates/*.template.md` → Doğru şablon.
 
 Bu adımlar tamamlanmadan yeni bir doküman adı/ID’si seçilmemelidir.

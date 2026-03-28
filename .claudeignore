@@ -1,0 +1,33 @@
+# Web build artifacts
+web/apps/*/dist/
+web/node_modules/
+web/.next/
+
+# Backend build artifacts
+backend/*/target/
+backend/**/build/
+
+# Cache
+.cache/
+web/.eslintcache
+
+# Test results (generated)
+test-results/
+web/cypress/screenshots/
+web/cypress/videos/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+web/logs/
+backend/logs/
+
+# Worktrees
+.claude/worktrees/
+
+# Design tokens build output
+web/design-tokens/dist/

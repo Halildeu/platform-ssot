@@ -1,6 +1,9 @@
 import React from 'react';
-import type { PageBreadcrumbItem } from 'mfe-ui-kit';
-import { PageLayout } from 'mfe-ui-kit';
+import {
+  PageLayout,
+  createPageLayoutBreadcrumbItems,
+  createPageLayoutPreset,
+} from '@mfe/design-system';
 import { UserDetail, UserSummary, TelemetryEvent } from '@mfe/shared-types';
 import { fetchPageLayout, trackAction, resolveTraceId } from '@mfe/shared-http';
 import type { PageLayoutManifest } from '@mfe/shared-types';
@@ -39,15 +42,21 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
       });
   }, []);
 
-  const pageBreadcrumbItems = React.useMemo<PageBreadcrumbItem[] | undefined>(
-    () => usersPageManifest.layout.breadcrumbItems?.map((item) => ({
-      ...item,
-      title: t(item.title),
-    })),
+  const pageBreadcrumbItems = React.useMemo(
+    () => createPageLayoutBreadcrumbItems(
+      (usersPageManifest.layout.breadcrumbItems ?? []).map((item) => ({
+        ...item,
+        title: t(item.title as string),
+      })),
+    ),
     [t],
   );
-  const pageTitle = t(pageLayout?.title ?? usersPageManifest.layout.title);
-  const pageDescription = t(pageLayout?.description ?? usersPageManifest.layout.description);
+  const pageLayoutPreset = React.useMemo(
+    () => createPageLayoutPreset({ preset: 'content-only', pageWidth: 'full' }),
+    [],
+  );
+  const pageTitle = t((pageLayout?.title ?? usersPageManifest.layout.title) as string);
+  const pageDescription = t((pageLayout?.description ?? usersPageManifest.layout.description) as string);
 
   const { data: selectedUserDetail, isLoading: isDetailLoading } = useUserDetailQuery(
     selectedUserSummary ? { id: selectedUserSummary.id, email: selectedUserSummary.email } : null,
@@ -81,7 +90,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
     const getOption = extendedApi.getGridOption?.bind(api);
     const rowModelType = typeof getOption === 'function' ? getOption('rowModelType') : undefined;
 
-    // ServerSide ise SSRM store’u yenile
+    // ServerSide ise SSRM store'u yenile
     if (rowModelType === 'serverSide') {
       if (typeof api.refreshServerSideStore === 'function') {
         api.refreshServerSideStore({ purge: true });
@@ -91,7 +100,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
       return;
     }
 
-    // ClientSide ise client row model’i tazele
+    // ClientSide ise client row model'i tazele
     extendedApi.refreshClientSideRowModel?.('filter');
   }, []);
 
@@ -129,12 +138,12 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
           type="button"
           onClick={handleRefreshUsers}
           disabled={!gridApiRef.current || isLoading}
-          className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-xs transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {t('users.actions.refresh')}
         </button>
         {isLoading && (
-          <span className="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary-border" />
+          <span className="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary" />
         )}
       </div>
     ),
@@ -153,12 +162,12 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
               type="button"
               onClick={handleRefreshUsers}
               disabled={!gridApiRef.current || isLoading}
-              className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-xs transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {t('users.actions.refresh')}
             </button>
             {isLoading && (
-              <span className="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary-border" />
+              <span className="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary" />
             )}
           </div>
           <UsersGrid
@@ -173,13 +182,14 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
         </div>
       ) : (
         <PageLayout
+          {...pageLayoutPreset}
           title={pageTitle}
           description={pageDescription}
           breadcrumbItems={pageBreadcrumbItems}
           actions={actionContent}
         >
           <div
-            className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm"
+            className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs"
             data-testid={GRID_TEST_ID}
           >
             <UsersGrid
@@ -200,8 +210,8 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
         user={mergedUserDetail}
       />
       {(isDetailLoading && selectedUserSummary) && (
-        <div className="fixed bottom-6 right-6 rounded-full border border-border-subtle bg-surface-default p-3 shadow-lg bg-opacity-90">
-          <span className="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary-border" />
+        <div className="fixed bottom-6 right-6 rounded-full border border-border-subtle bg-surface-default/90 p-3 shadow-lg">
+          <span className="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary" />
         </div>
       )}
     </>
