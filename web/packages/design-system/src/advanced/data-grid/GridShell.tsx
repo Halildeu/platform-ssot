@@ -236,6 +236,11 @@ function GridShellInner<RowData = unknown>(
           rowGroupPanelShow="always"
           enableRangeSelection
           groupDefaultExpanded={0}
+          autoGroupColumnDef={{
+            floatingFilter: true,
+            filter: 'agTextColumnFilter',
+            minWidth: 200,
+          }}
           // groupTotalRow="bottom" — disabled: duplicates group header values
           pagination={rowModelType === "serverSide"}
           paginationPageSize={rowModelType === "serverSide" ? 50 : undefined}
