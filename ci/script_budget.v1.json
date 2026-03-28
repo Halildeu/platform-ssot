@@ -126,5 +126,10 @@
     "scripts/check_cache_boundary.py",
     "scripts/check_branch_protection_solo_policy.py",
     "extensions/PRJ-PM-SUITE/contract/check_feature_execution_contract.py"
+  ],
+  "excluded_patterns": [
+    "web/reports/token-diff-report.json",
+    "web/reports/token-diff-report.html",
+    "web/packages/design-system/docs/api/API-REFERENCE.md"
   ]
 }
