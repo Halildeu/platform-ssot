@@ -5,7 +5,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Filter, X, Trash2, Check } from 'lucide-react';
 import type { ColDef, GridApi } from 'ag-grid-community';
-import { useFilterBuilder } from './useFilterBuilder';
+import { useFilterBuilder, createEmptyGroup } from './useFilterBuilder';
 import { treeToFilterModel, filterModelToTree } from './filterModelConverter';
 import { FilterGroupNode } from './FilterGroupNode';
 
@@ -115,9 +115,32 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
   useEffect(() => {
     if (open && !prevOpenRef.current && gridApi) {
       const model = gridApi.getFilterModel?.() ?? {};
-      if (Object.keys(model).length > 0) {
-        setRoot(filterModelToTree(model, columnDefs));
+      const imported = Object.keys(model).length > 0
+        ? filterModelToTree(model, columnDefs)
+        : createEmptyGroup();
+
+      // Re-inject multiSearch terms as a text condition with comma-separated values
+      const multiSearch = (gridApi as any).__multiSearch as string | undefined;
+      if (multiSearch) {
+        const terms = multiSearch.split('|').filter(Boolean);
+        if (terms.length > 0) {
+          // Find which colId was used — default to first text column
+          const textCol = columnDefs.find((c) =>
+            c.field && c.filter !== 'agSetColumnFilter' && c.filter !== 'agNumberColumnFilter' && c.filter !== 'agDateColumnFilter'
+          );
+          const colId = textCol?.field ?? 'fullName';
+          imported.children.push({
+            type: 'condition' as const,
+            id: `fb_multi_${Date.now()}`,
+            colId,
+            filterType: 'text' as const,
+            operator: 'contains',
+            value: terms.join(', '),
+          });
+        }
       }
+
+      setRoot(imported);
     }
     prevOpenRef.current = open;
   }, [open, gridApi, columnDefs, setRoot]);
