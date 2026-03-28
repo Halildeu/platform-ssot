@@ -167,6 +167,7 @@
     "i18n:pull:ci": "npm run pull:ci --prefix packages/i18n-dicts",
     "i18n:pull:dry": "npm run pull:dry --prefix packages/i18n-dicts",
     "i18n:pseudo": "npm run generate:pseudo --prefix packages/i18n-dicts",
+    "security:build-bundle": "npm run build",
     "security:sri:check": "node ./scripts/security/verify-sri.mjs --check --output security-reports/sri/report.json",
     "security:sri:rotate": "node ./scripts/security/verify-sri.mjs --write",
     "security:csp:summary": "node ./scripts/security/aggregate-csp.mjs --output security-reports/csp/summary.json",

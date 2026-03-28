@@ -5,12 +5,18 @@
   "standard_sources": {
     "coding_standards": "docs/OPERATIONS/CODING-STANDARDS.md",
     "repo_layout": "docs/OPERATIONS/repo-layout.v1.json",
+    "technical_baseline_aistd": "registry/technical_baseline.aistd.v1.json",
+    "pm_suite_policy": "policies/policy_pm_suite.v1.json",
+    "feature_execution_bridge_policy": "policies/policy_feature_execution_bridge.v1.json",
     "layer_boundary_policy": "policies/policy_layer_boundary.v1.json",
     "llm_live_policy": "policies/policy_llm_live.v1.json",
     "llm_provider_guardrails_policy": "policies/policy_llm_providers_guardrails.v1.json",
     "kernel_api_guardrails_policy": "policies/policy_kernel_api_guardrails.v1.json",
+    "ui_design_system_policy": "policies/policy_ui_design_system.v1.json",
     "security_policy": "policies/policy_security.v1.json",
-    "secrets_policy": "policies/policy_secrets.v1.json"
+    "secrets_policy": "policies/policy_secrets.v1.json",
+    "ux_catalog_enforcement_policy": "policies/policy_ux_catalog_enforcement.v1.json",
+    "ux_catalog_lock": "extensions/PRJ-UX-NORTH-STAR/contract/ux_katalogu.final_lock.v1.json"
   },
   "required_files": [
     "standards.lock",
