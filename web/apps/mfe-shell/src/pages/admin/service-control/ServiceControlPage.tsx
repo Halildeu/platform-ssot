@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   XCircle,
   HelpCircle,
+  MemoryStick,
 } from 'lucide-react';
 import { Text } from '@mfe/design-system';
 import { DataProvenanceBadge } from '../../admin/design-lab/components/DataProvenanceBadge';
@@ -66,6 +67,20 @@ export default function ServiceControlPage() {
   const upCount = services.filter((s) => s.health === 'UP').length;
   const downCount = services.filter((s) => s.health === 'DOWN' || s.health === 'TIMEOUT').length;
   const unknownCount = services.length - upCount - downCount;
+
+  // RAM stats by category + total
+  const ramStats = useMemo(() => {
+    const byCategory: Record<string, { ram: number; count: number }> = {};
+    let totalRam = 0;
+    for (const s of services) {
+      const ram = (s as any).rssMb ?? 0;
+      totalRam += ram;
+      if (!byCategory[s.category]) byCategory[s.category] = { ram: 0, count: 0 };
+      byCategory[s.category].ram += ram;
+      byCategory[s.category].count += 1;
+    }
+    return { byCategory, totalRam };
+  }, [services]);
 
   const handleBulk = (action: 'start' | 'stop' | 'restart') => {
     setConfirmAction(null);
@@ -155,6 +170,57 @@ export default function ServiceControlPage() {
           </Text>
         )}
       </div>
+
+      {/* Resource overview */}
+      {ramStats.totalRam > 0 && (
+        <div className="rounded-xl border border-border-subtle bg-surface-default px-5 py-3">
+          <div className="flex items-center gap-6">
+            {/* Total */}
+            <div className="flex items-center gap-2 border-r border-border-subtle pr-6">
+              <MemoryStick className="h-4 w-4 text-text-secondary" />
+              <div>
+                <Text className="text-[10px] text-text-secondary">Toplam RAM</Text>
+                <Text className={`text-lg font-bold ${
+                  ramStats.totalRam > 8000 ? 'text-rose-600' : ramStats.totalRam > 5000 ? 'text-amber-600' : 'text-text-primary'
+                }`}>
+                  {ramStats.totalRam >= 1024
+                    ? `${(ramStats.totalRam / 1024).toFixed(1)} GB`
+                    : `${ramStats.totalRam} MB`}
+                </Text>
+              </div>
+            </div>
+
+            {/* Per category */}
+            {CATEGORIES.filter((c) => c.key !== 'all').map((cat) => {
+              const stats = ramStats.byCategory[cat.key];
+              if (!stats || stats.ram === 0) return null;
+              const ramLabel = stats.ram >= 1024
+                ? `${(stats.ram / 1024).toFixed(1)}GB`
+                : `${stats.ram}MB`;
+              const pct = Math.round((stats.ram / ramStats.totalRam) * 100);
+              return (
+                <button
+                  key={cat.key}
+                  onClick={() => setActiveTab(cat.key === activeTab ? 'all' : cat.key)}
+                  className={`flex flex-col items-center gap-0.5 rounded-lg px-3 py-1 transition ${
+                    activeTab === cat.key ? 'bg-surface-muted ring-1 ring-border-subtle' : 'hover:bg-surface-muted'
+                  }`}
+                >
+                  <Text className="text-[10px] text-text-secondary">{cat.label}</Text>
+                  <Text className="text-sm font-semibold text-text-primary">{ramLabel}</Text>
+                  <div className="h-1 w-12 overflow-hidden rounded-full bg-gray-200">
+                    <div
+                      className="h-full rounded-full bg-action-primary"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                  <Text className="text-[9px] text-text-secondary">{pct}%</Text>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Category tabs */}
       <div className="flex items-center gap-1 rounded-xl border border-border-subtle bg-surface-default p-1">
