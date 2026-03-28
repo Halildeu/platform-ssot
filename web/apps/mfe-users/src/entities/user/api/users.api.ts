@@ -612,6 +612,9 @@ const buildQueryString = (params: UsersQueryParams) => {
   if (params.role && params.role !== 'ALL') qs.set('role', params.role);
   if (params.page) qs.set('page', params.page.toString());
   if (params.pageSize != null) qs.set('pageSize', params.pageSize.toString());
+  // Server-side grouping params
+  if ((params as any).rowGroupCols) qs.set('rowGroupCols', (params as any).rowGroupCols);
+  if ((params as any).groupKeys) qs.set('groupKeys', (params as any).groupKeys);
   const queryString = qs.toString();
   return queryString ? `?${queryString}` : '';
 };

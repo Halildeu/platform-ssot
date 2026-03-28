@@ -340,9 +340,6 @@ const UsersGrid: React.FC<UsersGridProps> = ({
             cacheBlockSize: SERVER_CACHE_BLOCK_SIZE,
             maxBlocksInCache: 1,
             blockLoadDebounceMillis: 25,
-            // SSRM grouping: detect group rows by sessionTimeoutMinutes > 0 (used as childCount)
-            isServerSideGroup: (data: UserSummary) => !!(data as any)._isGroup,
-            getServerSideGroupKey: (data: UserSummary) => (data as any)._groupKey ?? data.name ?? '',
           }
         : {}),
     }),
@@ -608,20 +605,8 @@ const UsersGrid: React.FC<UsersGridProps> = ({
               return;
             }
             setGridState('idle');
-            let items = response.items ?? [];
+            const items = response.items ?? [];
             const total = response.total ?? items.length;
-
-            // Enrich group rows returned by server-side grouping
-            const reqGroupCols = params.request.rowGroupCols ?? [];
-            const reqGroupKeys = params.request.groupKeys ?? [];
-            const isGroupLevel = reqGroupCols.length > 0 && reqGroupKeys.length < reqGroupCols.length;
-            if (isGroupLevel) {
-              items = items.map((item) => ({
-                ...item,
-                _isGroup: true,
-                _groupKey: item.name ?? item.role ?? '',
-              })) as typeof items;
-            }
             debugLog('server:getRows:success', requestLabel, {
               queryParams: baseParams,
               returnedItems: items.length,
