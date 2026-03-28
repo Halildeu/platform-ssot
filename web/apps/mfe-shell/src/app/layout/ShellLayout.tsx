@@ -47,17 +47,22 @@ const ShellChrome: React.FC = () => {
       }}
       className="flex min-h-screen flex-col"
     >
+      {/* Fixed header — takes space via pt below */}
       <ShellHeader />
-      {showAuditSummary ? <AuditSummaryStrip /> : null}
-      {showSidebar ? <Sidebar /> : null}
-      <div className="flex min-h-0 flex-1">
-        {/* Spacer matching fixed sidebar width — reads same localStorage key */}
-        {showSidebar ? <SidebarSpacer /> : null}
-        <main className="min-w-0 flex-1 px-8 py-8">
+      {/* Push content below fixed header */}
+      <div className="pt-[var(--shell-header-h,56px)]">
+        {showAuditSummary ? <AuditSummaryStrip /> : null}
+        {/* Fixed sidebar — rendered outside flow */}
+        {showSidebar ? <Sidebar /> : null}
+        <div className="flex min-h-0 flex-1">
+          {/* Spacer matching fixed sidebar width */}
+          {showSidebar ? <SidebarSpacer /> : null}
+          <main className="min-w-0 flex-1 px-8 py-8">
           <div className="flex w-full flex-col gap-6">
             <AppRouter />
           </div>
         </main>
+      </div>
       </div>
     </div>
   );

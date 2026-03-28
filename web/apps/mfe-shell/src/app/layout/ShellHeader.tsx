@@ -146,8 +146,14 @@ export const ShellHeader: React.FC = () => {
 
   return (
     <header
+      ref={(el) => {
+        if (el) {
+          const h = el.getBoundingClientRect().height;
+          document.documentElement.style.setProperty('--shell-header-h', `${h}px`);
+        }
+      }}
       style={{ backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)" }}
-      className="sticky top-0 z-50 bg-surface-header px-6 py-2"
+      className="fixed inset-x-0 top-0 z-50 bg-surface-header px-6 py-2"
     >
       <div className="flex items-center justify-between gap-3 rounded-xl border border-border-subtle bg-surface-panel px-3 py-2 shadow-xs">
         <div className="flex flex-1 items-center gap-2 min-w-0">
