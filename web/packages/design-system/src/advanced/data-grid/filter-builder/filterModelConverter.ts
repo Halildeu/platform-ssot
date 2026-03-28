@@ -27,15 +27,29 @@ export function treeToFilterModel(root: FilterGroup): Record<string, unknown> {
   }
 
   for (const [colId, conds] of byCol) {
-    if (conds.length === 1) {
-      model[colId] = conditionToAgModel(conds[0]);
+    // Expand comma-separated values into individual OR conditions
+    const expanded: FilterCondition[] = [];
+    for (const c of conds) {
+      if (c.filterType === 'text' && typeof c.value === 'string' && c.value.includes(',')) {
+        const parts = c.value.split(',').map((s) => s.trim()).filter(Boolean);
+        if (parts.length > 1) {
+          for (const part of parts) {
+            expanded.push({ ...c, id: `${c.id}_${part}`, value: part });
+          }
+          continue;
+        }
+      }
+      expanded.push(c);
+    }
+
+    if (expanded.length === 1) {
+      model[colId] = conditionToAgModel(expanded[0]);
     } else {
-      // Multiple conditions on same column → use AG Grid's conditions array
-      const parentLogic = findParentLogic(root, colId);
+      // Multiple conditions on same column → use AG Grid's conditions array with OR
       model[colId] = {
-        filterType: conds[0].filterType === 'set' ? 'set' : conds[0].filterType,
-        operator: parentLogic,
-        conditions: conds.map(conditionToAgModel),
+        filterType: expanded[0].filterType === 'set' ? 'set' : expanded[0].filterType,
+        operator: 'OR',
+        conditions: expanded.map(conditionToAgModel),
       };
     }
   }
