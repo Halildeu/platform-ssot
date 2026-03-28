@@ -51,7 +51,7 @@ export const BarChartHorizontal: Story = {
 export const LineChartDefault: Story = {
   render: () => (
     <LineChart
-      series={[{ name: 'Trend', data: data.map((d) => d.value), color: '#3b82f6' }]}
+      series={[{ name: 'Trend', data: data.map((d) => d.value), color: 'var(--action-primary)' }]}
       labels={data.map((d) => d.label)}
       size="md"
     />
@@ -61,7 +61,7 @@ export const LineChartDefault: Story = {
 export const AreaChartDefault: Story = {
   render: () => (
     <AreaChart
-      series={[{ name: 'Alan', data: data.map((d) => d.value), color: '#10b981' }]}
+      series={[{ name: 'Alan', data: data.map((d) => d.value), color: 'var(--state-success-text)' }]}
       labels={data.map((d) => d.label)}
       size="md"
     />

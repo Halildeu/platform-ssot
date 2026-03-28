@@ -38,14 +38,14 @@ export function MetricStripBlock({ stats }: MetricStripBlockProps) {
             padding: '0.75rem 1rem',
             borderRight:
               idx < stats.length - 1
-                ? '1px solid var(--color-border, #e2e8f0)'
+                ? '1px solid var(--color-border))'
                 : 'none',
           }}
         >
           <span
             style={{
               fontSize: '0.75rem',
-              color: 'var(--color-text-secondary, #64748b)',
+              color: 'var(--color-text-secondary))',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
             }}
@@ -56,7 +56,7 @@ export function MetricStripBlock({ stats }: MetricStripBlockProps) {
             style={{
               fontSize: '1.25rem',
               fontWeight: 600,
-              color: 'var(--color-text-primary, #0f172a)',
+              color: 'var(--color-text-primary))',
               marginTop: '0.25rem',
             }}
           >
@@ -69,10 +69,10 @@ export function MetricStripBlock({ stats }: MetricStripBlockProps) {
                 marginTop: '0.125rem',
                 color:
                   stat.change > 0
-                    ? 'var(--color-success, #16a34a)'
+                    ? 'var(--color-success))'
                     : stat.change < 0
-                      ? 'var(--color-error, #dc2626)'
-                      : 'var(--color-text-secondary, #64748b)',
+                      ? 'var(--color-error))'
+                      : 'var(--color-text-secondary))',
               }}
             >
               {stat.change > 0 ? '+' : ''}

@@ -142,7 +142,7 @@ const MenuBarMetricChip: React.FC<{
   value: React.ReactNode;
   tone?: React.ComponentProps<typeof Badge>['tone'];
 }> = ({ label, value, tone = 'muted' }) => (
-  <div className="rounded-2xl border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.8))] px-3 py-2 shadow-[0_14px_28px_-24px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-xs">
+  <div className="rounded-2xl border border-border-subtle/70 bg-[var(--surface-card))] px-3 py-2 shadow-[0_14px_28px_-24px_var(--shadow-color))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-xs">
     <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
       {label as string}
     </Text>
@@ -151,13 +151,13 @@ const MenuBarMetricChip: React.FC<{
         className={[
           'inline-flex h-2.5 w-2.5 rounded-full',
           tone === 'danger'
-            ? 'bg-rose-500'
+            ? 'bg-state-danger-text'
             : tone === 'warning'
-              ? 'bg-amber-500'
+              ? 'bg-state-warning-text'
               : tone === 'success'
-                ? 'bg-emerald-500'
+                ? 'bg-state-success-text'
                 : tone === 'info'
-                  ? 'bg-sky-500'
+                  ? 'bg-state-info-text'
                   : 'bg-[var(--text-subtle)]',
         ].join(' ')}
       />
@@ -445,7 +445,7 @@ const buildInteractiveVariantConfig = (
         searchEmptyStateLabel: t('Eşleşen rota veya komut bulunamadı.', 'No matching routes or commands.'),
         initialPath: '/console/approval',
         startSlot: (
-          <div className="flex items-center gap-2 rounded-full border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.78))] px-3 py-1.5 shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-xs">
+          <div className="flex items-center gap-2 rounded-full border border-border-subtle/70 bg-[var(--surface-card))] px-3 py-1.5 shadow-[0_12px_24px_-24px_var(--shadow-color))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-xs">
             <Search className={iconClassName} />
             <Text variant="secondary" className="text-xs">{t('Ara, komut çalıştır, rota aç', 'Search, run a command, open a route')}</Text>
             <Badge variant="muted">⌘K</Badge>
@@ -600,7 +600,7 @@ const buildInteractiveVariantConfig = (
           { label: t('Kritik modül', 'Critical module'), value: t('Onaylar', 'Approvals'), tone: 'warning' },
         ],
         supportingPanel: (
-          <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.82))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color,rgba(15,23,42,0.22))]">
+          <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color))]">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
@@ -631,9 +631,9 @@ const buildInteractiveVariantConfig = (
         ),
         wrapperClassName: 'max-w-[480px] rounded-[26px] border border-border-subtle bg-surface-canvas p-3',
         frameClassName:
-          'rounded-[28px] border border-amber-200/70 bg-[radial-gradient(circle_at_top_right,rgba(253,230,138,0.3),transparent_34%),linear-gradient(180deg,rgba(255,251,235,0.96),var(--surface-default,rgba(255,255,255,0.94)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color,rgba(217,119,6,0.28))]',
+          'rounded-[28px] border border-state-warning-text/20/70 bg-[radial-gradient(circle_at_top_right,rgba(253,230,138,0.3),transparent_34%),linear-gradient(180deg,rgba(255,251,235,0.96),var(--surface-default)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color))]',
         surfaceClassName:
-          'rounded-[24px] border border-amber-200/70 bg-[var(--surface-card,rgba(255,255,255,0.9))] p-3 ring-1 ring-[var(--border-subtle)]/20 shadow-[0_22px_36px_-30px_rgba(217,119,6,0.24)]',
+          'rounded-[24px] border border-state-warning-text/20/70 bg-[var(--surface-card))] p-3 ring-1 ring-[var(--border-subtle)]/20 shadow-[0_22px_36px_-30px_rgba(217,119,6,0.24)]',
       };
     case 'responsive_app_header':
       return {
@@ -696,7 +696,7 @@ const buildInteractiveVariantConfig = (
                 body: t('Escalation ve SLA bağlamı üst çubukta kalır; agent görevleri sayfaya yayılmaz.', 'Escalation and SLA context stay in the header so agent tasks do not spill across the page.'),
               },
             ].map((card) => (
-              <div key={card.title} className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.84))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color,rgba(15,23,42,0.2))]">
+              <div key={card.title} className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color))]">
                 <Text as="div" preset="body-sm" className="text-sm font-semibold text-text-primary">
                   {card.title}
                 </Text>
@@ -709,9 +709,9 @@ const buildInteractiveVariantConfig = (
         ),
         wrapperClassName: 'max-w-[620px] rounded-[26px] border border-border-subtle bg-surface-canvas p-3',
         frameClassName:
-          'rounded-[28px] border border-violet-200/70 bg-[radial-gradient(circle_at_top_left,rgba(221,214,254,0.34),transparent_34%),linear-gradient(180deg,rgba(248,250,255,0.98),rgba(243,244,255,0.94))] p-4 shadow-[0_34px_72px_-52px_rgba(91,33,182,0.22)]',
+          'rounded-[28px] border border-action-primary/20/70 bg-[radial-gradient(circle_at_top_left,rgba(221,214,254,0.34),transparent_34%),linear-gradient(180deg,rgba(248,250,255,0.98),rgba(243,244,255,0.94))] p-4 shadow-[0_34px_72px_-52px_rgba(91,33,182,0.22)]',
         surfaceClassName:
-          'rounded-[24px] border border-violet-200/70 bg-[var(--surface-card,rgba(255,255,255,0.88))] p-3 ring-1 ring-[var(--border-subtle)]/20 shadow-[0_22px_36px_-30px_rgba(91,33,182,0.2)]',
+          'rounded-[24px] border border-action-primary/20/70 bg-[var(--surface-card))] p-3 ring-1 ring-[var(--border-subtle)]/20 shadow-[0_22px_36px_-30px_rgba(91,33,182,0.2)]',
       };
     case 'account_utility_cluster':
       return {
@@ -750,7 +750,7 @@ const buildInteractiveVariantConfig = (
           </MenuBarSlotCluster>
         ),
         supportingPanel: (
-          <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.84))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color,rgba(15,23,42,0.2))]">
+          <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color))]">
             <div className="grid gap-3 md:grid-cols-3">
               {[
                 { label: t('Bildirim merkezi', 'Notification center'), value: t('3 yüksek sinyal', '3 high signal') },
@@ -770,9 +770,9 @@ const buildInteractiveVariantConfig = (
           </div>
         ),
         frameClassName:
-          'rounded-[28px] border border-emerald-200/70 bg-[radial-gradient(circle_at_top_right,rgba(187,247,208,0.34),transparent_34%),linear-gradient(180deg,rgba(247,254,250,0.98),var(--surface-default,rgba(255,255,255,0.94)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color,rgba(5,150,105,0.22))]',
+          'rounded-[28px] border border-state-success-text/20/70 bg-[radial-gradient(circle_at_top_right,rgba(187,247,208,0.34),transparent_34%),linear-gradient(180deg,rgba(247,254,250,0.98),var(--surface-default)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color))]',
         surfaceClassName:
-          'rounded-[24px] border border-emerald-200/70 bg-[var(--surface-card,rgba(255,255,255,0.88))] p-3 ring-1 ring-[var(--border-subtle)]/20 shadow-[0_22px_36px_-30px_rgba(5,150,105,0.18)]',
+          'rounded-[24px] border border-state-success-text/20/70 bg-[var(--surface-card))] p-3 ring-1 ring-[var(--border-subtle)]/20 shadow-[0_22px_36px_-30px_rgba(5,150,105,0.18)]',
       };
     case 'pinned_favorites':
       return {
@@ -808,7 +808,7 @@ const buildInteractiveVariantConfig = (
         endSlot: <Badge variant="info">{t('Kurumsal IA', 'Enterprise IA')}</Badge>,
         supportingPanel: (
           <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(240px,0.9fr)]">
-            <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.84))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color,rgba(15,23,42,0.2))]">
+            <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color))]">
               <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
                 {t('Sabit favoriler', 'Pinned favorites')}
               </Text>
@@ -830,7 +830,7 @@ const buildInteractiveVariantConfig = (
               </Text>
               <div className="flex flex-col mt-3 gap-2">
                 {['analytics', 'exports', 'tokens'].map((entry) => (
-                  <div key={entry} className="flex items-center justify-between rounded-2xl border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.84))] px-3 py-2">
+                  <div key={entry} className="flex items-center justify-between rounded-2xl border border-border-subtle/70 bg-[var(--surface-card))] px-3 py-2">
                     <Text as="div" preset="body-sm" className="text-sm font-semibold text-text-primary">
                       {entry}
                     </Text>
@@ -844,9 +844,9 @@ const buildInteractiveVariantConfig = (
           </div>
         ),
         frameClassName:
-          'rounded-[28px] border border-orange-200/70 bg-[radial-gradient(circle_at_top_left,rgba(254,215,170,0.36),transparent_34%),linear-gradient(180deg,rgba(255,250,245,0.98),var(--surface-default,rgba(255,255,255,0.94)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color,rgba(194,65,12,0.2))]',
+          'rounded-[28px] border border-state-warning-text/20/70 bg-[radial-gradient(circle_at_top_left,rgba(254,215,170,0.36),transparent_34%),linear-gradient(180deg,rgba(255,250,245,0.98),var(--surface-default)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color))]',
         surfaceClassName:
-          'rounded-[24px] border border-orange-200/70 bg-[var(--surface-card,rgba(255,255,255,0.88))] p-3 ring-1 ring-[var(--border-subtle)]/20 shadow-[0_22px_36px_-30px_rgba(194,65,12,0.18)]',
+          'rounded-[24px] border border-state-warning-text/20/70 bg-[var(--surface-card))] p-3 ring-1 ring-[var(--border-subtle)]/20 shadow-[0_22px_36px_-30px_rgba(194,65,12,0.18)]',
       };
     case 'readonly_governance':
       return {
@@ -907,7 +907,7 @@ const buildInteractiveVariantConfig = (
         currentBadge: <Badge variant="success">{t('Aktif', 'Active')}</Badge>,
         endSlot: <Badge variant="info">v2</Badge>,
         supportingPanel: (
-          <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.84))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color,rgba(15,23,42,0.2))]">
+          <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color))]">
             <div className="grid gap-3 md:grid-cols-3">
               {[
                 { title: t('Saved view', 'Saved view'), body: t('CFO weekly', 'CFO weekly') },
@@ -927,7 +927,7 @@ const buildInteractiveVariantConfig = (
           </div>
         ),
         frameClassName:
-          'rounded-[28px] border border-cyan-200/70 bg-[radial-gradient(circle_at_top_right,rgba(165,243,252,0.32),transparent_34%),linear-gradient(180deg,rgba(245,252,255,0.98),var(--surface-default,rgba(255,255,255,0.94)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color,rgba(8,145,178,0.2))]',
+          'rounded-[28px] border border-state-info-text/20/70 bg-[radial-gradient(circle_at_top_right,rgba(165,243,252,0.32),transparent_34%),linear-gradient(180deg,rgba(245,252,255,0.98),var(--surface-default)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color))]',
       };
     case 'command_hybrid':
       return {
@@ -992,7 +992,7 @@ const buildInteractiveVariantConfig = (
         endSlot: <Badge variant="warning">Queue 4</Badge>,
         supportingPanel: (
           <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.72fr)]">
-            <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.84))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color,rgba(15,23,42,0.2))]">
+            <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color))]">
               <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
                 {t('Önerilen komut akışı', 'Suggested command flow')}
               </Text>
@@ -1016,7 +1016,7 @@ const buildInteractiveVariantConfig = (
           </div>
         ),
         frameClassName:
-          'rounded-[28px] border border-[var(--border-subtle)]/70 bg-[var(--surface-card,linear-gradient(180deg,rgba(248,250,252,0.98),rgba(241,245,249,0.94)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color,rgba(15,23,42,0.24))]',
+          'rounded-[28px] border border-[var(--border-subtle)]/70 bg-[var(--surface-card),rgba(241,245,249,0.94)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color))]',
       };
     case 'subdomain_shell':
       return {
@@ -1061,7 +1061,7 @@ const buildInteractiveVariantConfig = (
         currentBadge: <Badge variant="info">{t('Current', 'Current')}</Badge>,
         endSlot: <Badge variant="success">v3.4</Badge>,
         supportingPanel: (
-          <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.84))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color,rgba(15,23,42,0.2))]">
+          <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color))]">
             <div className="grid gap-3 md:grid-cols-2">
               <div className="rounded-2xl border border-border-subtle/70 bg-surface-default px-3 py-3">
                 <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
@@ -1083,7 +1083,7 @@ const buildInteractiveVariantConfig = (
           </div>
         ),
         frameClassName:
-          'rounded-[28px] border border-indigo-200/70 bg-[radial-gradient(circle_at_top_left,rgba(199,210,254,0.34),transparent_34%),linear-gradient(180deg,rgba(248,250,255,0.98),var(--surface-default,rgba(255,255,255,0.94)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color,rgba(67,56,202,0.2))]',
+          'rounded-[28px] border border-action-primary/20/70 bg-[radial-gradient(circle_at_top_left,rgba(199,210,254,0.34),transparent_34%),linear-gradient(180deg,rgba(248,250,255,0.98),var(--surface-default)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color))]',
       };
     case 'theme_contrast':
       return {
@@ -1126,7 +1126,7 @@ const buildInteractiveVariantConfig = (
         ),
         endSlot: <Badge variant="info">{t('Premium tema', 'Premium theme')}</Badge>,
         frameClassName:
-          'rounded-[28px] border border-fuchsia-200/70 bg-[radial-gradient(circle_at_top_right,rgba(245,208,254,0.34),transparent_34%),linear-gradient(180deg,rgba(253,244,255,0.98),var(--surface-default,rgba(255,255,255,0.94)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color,rgba(192,38,211,0.18))]',
+          'rounded-[28px] border border-action-primary/20/70 bg-[radial-gradient(circle_at_top_right,rgba(245,208,254,0.34),transparent_34%),linear-gradient(180deg,rgba(253,244,255,0.98),var(--surface-default)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color))]',
       };
   }
 };

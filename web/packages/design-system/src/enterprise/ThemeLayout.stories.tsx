@@ -6,14 +6,14 @@ const Placeholder = ({ label, h = 80 }: { label: string; h?: number }) => (
   <div
     style={{
       height: h,
-      background: 'var(--surface-muted, #f3f4f6)',
-      border: '1px dashed var(--border-default, #d1d5db)',
+      background: 'var(--surface-muted))',
+      border: '1px dashed var(--border-default))',
       borderRadius: 8,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       fontSize: 13,
-      color: 'var(--text-secondary, #6b7280)',
+      color: 'var(--text-secondary))',
     }}
   >
     {label}

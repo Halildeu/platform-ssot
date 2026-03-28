@@ -167,10 +167,10 @@ const TIER_DISPLAY: Record<
   QualityTier,
   { label: string; color: string; bg: string; barBg: string }
 > = {
-  platinum: { label: "Platinum", color: "text-indigo-600", bg: "bg-indigo-100", barBg: "bg-indigo-500" },
-  gold: { label: "Gold", color: "text-amber-700", bg: "bg-amber-100", barBg: "bg-amber-500" },
-  silver: { label: "Silver", color: "text-zinc-600", bg: "bg-zinc-100", barBg: "bg-zinc-400" },
-  bronze: { label: "Bronze", color: "text-orange-700", bg: "bg-orange-100", barBg: "bg-orange-500" },
+  platinum: { label: "Platinum", color: "text-action-primary", bg: "bg-action-primary/10", barBg: "bg-action-primary" },
+  gold: { label: "Gold", color: "text-state-warning-text", bg: "bg-state-warning-bg", barBg: "bg-state-warning-text" },
+  silver: { label: "Silver", color: "text-text-secondary", bg: "bg-surface-muted", barBg: "bg-border-strong" },
+  bronze: { label: "Bronze", color: "text-state-warning-text", bg: "bg-state-warning-bg", barBg: "bg-state-warning-text" },
 };
 
 /* ================================================================== */
@@ -368,8 +368,8 @@ export default function QualityDashboardPage() {
       {/* ─── Header ─── */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500/20 to-violet-500/20">
-            <Award className="h-5 w-5 text-indigo-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-action-primary/20 to-action-primary/20">
+            <Award className="h-5 w-5 text-action-primary" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -423,7 +423,7 @@ export default function QualityDashboardPage() {
             <DataProvenanceBadge level={evidenceAvailable ? 'ci' : 'derived'} />
           </div>
           {evidence.benchmarks.workflow_exists && (
-            <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
+            <span className="rounded-full bg-state-success-bg px-2.5 py-0.5 text-[10px] font-bold text-state-success-text">
               CI yapilandirildi
             </span>
           )}
@@ -587,7 +587,7 @@ export default function QualityDashboardPage() {
       {/* ─── Bottom 20 Components ─── */}
       <div id="bottom-components" className="rounded-2xl border border-border-subtle bg-surface-default">
         <div className="flex items-center gap-2 border-b border-border-subtle px-5 py-4">
-          <AlertTriangle className="h-4 w-4 text-amber-500" />
+          <AlertTriangle className="h-4 w-4 text-state-warning-text" />
           <Text as="div" className="text-sm font-semibold text-text-primary">
             Bottom 20 — En Düşük Kalite Skorları
           </Text>
@@ -599,7 +599,7 @@ export default function QualityDashboardPage() {
               className="flex cursor-pointer items-center gap-4 px-5 py-3 transition-colors hover:bg-surface-canvas/30"
               onClick={() => handleComponentNavigate(comp.item.name)}
             >
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 text-[10px] font-bold text-red-600">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-state-danger-bg text-[10px] font-bold text-state-danger-text">
                 {idx + 1}
               </span>
               <div className="min-w-0 flex-1">

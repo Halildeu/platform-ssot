@@ -109,7 +109,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, canInteract, onRemove }) => {
       className={cn(
         'flex items-center gap-3 px-3 py-2 rounded-md border transition-colors',
         file.status === 'error'
-          ? 'border-[var(--state-error-border,var(--state-error-text))] bg-[var(--state-error-bg)]'
+          ? 'border-[var(--state-error-border))] bg-[var(--state-error-bg)]'
           : 'border-[var(--border-subtle)] bg-[var(--surface-default)]',
       )}
       role="listitem"

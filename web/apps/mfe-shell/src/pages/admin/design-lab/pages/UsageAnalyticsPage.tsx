@@ -160,9 +160,9 @@ function HighlightCard({
   variant: "warning" | "info";
 }) {
   if (items.length === 0) return null;
-  const bgColor = variant === "warning" ? "bg-amber-50 border-amber-200" : "bg-blue-50 border-blue-200";
-  const textColor = variant === "warning" ? "text-amber-800" : "text-blue-800";
-  const iconColor = variant === "warning" ? "text-amber-500" : "text-blue-500";
+  const bgColor = variant === "warning" ? "bg-state-warning-bg border-state-warning-text/20" : "bg-state-info-bg border-state-info-text/20";
+  const textColor = variant === "warning" ? "text-state-warning-text" : "text-action-primary";
+  const iconColor = variant === "warning" ? "text-state-warning-text" : "text-action-primary";
 
   return (
     <div className={`rounded-2xl border p-4 ${bgColor}`}>
@@ -255,9 +255,9 @@ export default function UsageAnalyticsPage() {
   /* ---- Lifecycle chart data ---- */
   const lifecycleSegments = useMemo(
     () => [
-      { label: "Stable", value: analytics.lifecycleCounts["stable"] ?? 0, color: "#22c55e" },
-      { label: "Beta", value: analytics.lifecycleCounts["beta"] ?? 0, color: "#f59e0b" },
-      { label: "Planned", value: analytics.lifecycleCounts["planned"] ?? 0, color: "#94a3b8" },
+      { label: "Stable", value: analytics.lifecycleCounts["stable"] ?? 0, color: "var(--state-success-text)" },
+      { label: "Beta", value: analytics.lifecycleCounts["beta"] ?? 0, color: "var(--state-warning-text)" },
+      { label: "Planned", value: analytics.lifecycleCounts["planned"] ?? 0, color: "var(--text-subtle)" },
     ],
     [analytics.lifecycleCounts],
   );
@@ -265,21 +265,21 @@ export default function UsageAnalyticsPage() {
   /* ---- Layer chart data ---- */
   const layerBars = useMemo(() => {
     const colors: Record<string, string> = {
-      primitives: "#3b82f6",
-      "form-controls": "#22c55e",
-      feedback: "#f59e0b",
-      "data-display": "#a855f7",
-      navigation: "#ec4899",
-      overlays: "#06b6d4",
-      layout: "#8b5cf6",
-      patterns: "#f97316",
+      primitives: "var(--action-primary)",
+      "form-controls": "var(--state-success-text)",
+      feedback: "var(--state-warning-text)",
+      "data-display": "var(--action-primary)",
+      navigation: "var(--state-danger-text)",
+      overlays: "var(--state-info-text)",
+      layout: "var(--action-primary)",
+      patterns: "var(--state-warning-text)",
     };
 
     return Object.entries(analytics.layerCounts)
       .map(([layer, count]) => ({
         label: layer,
         value: count,
-        color: colors[layer.toLowerCase()] ?? "#94a3b8",
+        color: colors[layer.toLowerCase()] ?? "var(--text-subtle)",
       }))
       .sort((a, b) => b.value - a.value);
   }, [analytics.layerCounts]);
@@ -293,7 +293,7 @@ export default function UsageAnalyticsPage() {
         .map((d) => ({
           label: d.name,
           value: d.usedBy,
-          color: d.lifecycle === "stable" ? "#22c55e" : d.lifecycle === "beta" ? "#f59e0b" : "#94a3b8",
+          color: d.lifecycle === "stable" ? "var(--state-success-text)" : d.lifecycle === "beta" ? "var(--state-warning-text)" : "var(--text-subtle)",
         })),
     [analytics.topAdopted],
   );
@@ -328,7 +328,7 @@ export default function UsageAnalyticsPage() {
               onClick={() => setTab(t.id)}
               className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
                 tab === t.id
-                  ? "bg-action-primary text-white"
+                  ? "bg-action-primary text-text-inverse"
                   : "text-text-secondary hover:bg-surface-canvas hover:text-text-primary"
               }`}
             >
@@ -358,7 +358,7 @@ export default function UsageAnalyticsPage() {
             icon={<PieChart className="h-4 w-4" />}
             label="Stable"
             value={analytics.stableCount}
-            color="text-emerald-600"
+            color="text-state-success-text"
             sub={`${analytics.total > 0 ? Math.round((analytics.stableCount / analytics.total) * 100) : 0}% mature`}
           />
           <StatCard
@@ -424,8 +424,8 @@ export default function UsageAnalyticsPage() {
                 variant="info"
               />
               {analytics.stableUnused.length === 0 && analytics.betaHighAdoption.length === 0 && (
-                <div className="flex items-center justify-center rounded-2xl border border-emerald-200 bg-emerald-50 p-8">
-                  <Text className="text-sm font-medium text-emerald-700">
+                <div className="flex items-center justify-center rounded-2xl border border-state-success-text/20 bg-state-success-bg p-8">
+                  <Text className="text-sm font-medium text-state-success-text">
                     ✓ No anomalies detected — healthy library!
                   </Text>
                 </div>

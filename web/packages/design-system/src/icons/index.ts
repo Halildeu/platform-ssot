@@ -6,7 +6,7 @@
 /*                                                                     */
 /*  Usage:                                                             */
 /*    import { IconCheck, IconClose } from '@mfe/design-system/icons'; */
-/*    <IconCheck size={20} className="text-green-500" />               */
+/*    <IconCheck size={20} className="text-state-success-text" />               */
 /* ------------------------------------------------------------------ */
 
 export { Icon } from "./Icon";

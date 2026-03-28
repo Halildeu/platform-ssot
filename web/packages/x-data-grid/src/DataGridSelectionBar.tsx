@@ -28,7 +28,7 @@ export function DataGridSelectionBar({
       className,
     )}>
       <div className="flex items-center gap-3">
-        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-action-primary text-[10px] font-bold text-white">
+        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-action-primary text-[10px] font-bold text-text-inverse">
           {selectedCount}
         </span>
         <span className="text-sm font-medium text-text-primary">

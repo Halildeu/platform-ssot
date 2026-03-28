@@ -20,7 +20,7 @@ import { useDesignLab } from "../DesignLabProvider";
 /*  DesignTokensListing — Token group grid with mini previews          */
 /* ------------------------------------------------------------------ */
 
-const MINI_PALETTE = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#6b7280", "#1f2937"];
+const MINI_PALETTE = ["var(--action-primary)", "var(--state-success-text)", "var(--state-warning-text)", "var(--state-danger-text)", "var(--text-secondary)", "var(--text-primary)"];
 const MINI_SIZES = [12, 14, 16, 20, 24, 30];
 const MINI_SPACINGS = [4, 8, 16, 24, 32, 48];
 const MINI_RADII = ["0px", "4px", "8px", "16px", "9999px"];
@@ -29,8 +29,8 @@ const TOKEN_GROUPS = [
   {
     id: "colors",
     icon: <Palette className="h-5 w-5" />,
-    gradient: "from-rose-500/10 to-pink-500/5",
-    iconBg: "bg-rose-500/10 text-rose-600",
+    gradient: "from-state-danger-text/10 to-state-danger-text/5",
+    iconBg: "bg-state-danger-text/10 text-state-danger-text",
     count: "56",
     preview: (
       <div className="mt-3 flex gap-1">
@@ -43,13 +43,13 @@ const TOKEN_GROUPS = [
   {
     id: "typography",
     icon: <Type className="h-5 w-5" />,
-    gradient: "from-blue-500/10 to-cyan-500/5",
-    iconBg: "bg-blue-500/10 text-blue-600",
+    gradient: "from-action-primary/10 to-state-info-text/5",
+    iconBg: "bg-action-primary/10 text-action-primary",
     count: "28",
     preview: (
       <div className="mt-3 flex items-end gap-1">
         {MINI_SIZES.map((s) => (
-          <span key={s} className="font-semibold leading-none text-blue-600/40" style={{ fontSize: `${s}px` }}>A</span>
+          <span key={s} className="font-semibold leading-none text-action-primary/40" style={{ fontSize: `${s}px` }}>A</span>
         ))}
       </div>
     ),
@@ -57,13 +57,13 @@ const TOKEN_GROUPS = [
   {
     id: "spacing",
     icon: <Ruler className="h-5 w-5" />,
-    gradient: "from-emerald-500/10 to-teal-500/5",
-    iconBg: "bg-emerald-500/10 text-emerald-600",
+    gradient: "from-state-success-text/10 to-state-success-text/5",
+    iconBg: "bg-state-success-text/10 text-state-success-text",
     count: "23",
     preview: (
       <div className="mt-3 flex items-end gap-1">
         {MINI_SPACINGS.map((s) => (
-          <div key={s} className="w-2 rounded-xs bg-emerald-500/25" style={{ height: `${Math.min(s, 32)}px` }} />
+          <div key={s} className="w-2 rounded-xs bg-state-success-text/25" style={{ height: `${Math.min(s, 32)}px` }} />
         ))}
       </div>
     ),
@@ -71,13 +71,13 @@ const TOKEN_GROUPS = [
   {
     id: "radius",
     icon: <Circle className="h-5 w-5" />,
-    gradient: "from-violet-500/10 to-purple-500/5",
-    iconBg: "bg-violet-500/10 text-violet-600",
+    gradient: "from-action-primary/10 to-action-primary/5",
+    iconBg: "bg-action-primary/10 text-action-primary",
     count: "8",
     preview: (
       <div className="mt-3 flex items-center gap-1.5">
         {MINI_RADII.map((r) => (
-          <div key={r} className="h-5 w-5 border-2 border-violet-500/30 bg-violet-500/10" style={{ borderRadius: r }} />
+          <div key={r} className="h-5 w-5 border-2 border-action-primary/30 bg-action-primary/10" style={{ borderRadius: r }} />
         ))}
       </div>
     ),
@@ -85,15 +85,15 @@ const TOKEN_GROUPS = [
   {
     id: "motion",
     icon: <Zap className="h-5 w-5" />,
-    gradient: "from-amber-500/10 to-orange-500/5",
-    iconBg: "bg-amber-500/10 text-amber-600",
+    gradient: "from-state-warning-text/10 to-state-warning-text/5",
+    iconBg: "bg-state-warning-text/10 text-state-warning-text",
     count: "10",
     preview: (
       <div className="mt-3 flex items-center gap-1">
         {[100, 200, 300, 500].map((ms) => (
           <div key={ms} className="flex flex-col items-center gap-0.5">
-            <div className="h-3 w-3 rounded-full bg-amber-500/30" />
-            <span className="text-[8px] tabular-nums text-amber-600/50">{ms}ms</span>
+            <div className="h-3 w-3 rounded-full bg-state-warning-text/30" />
+            <span className="text-[8px] tabular-nums text-state-warning-text/50">{ms}ms</span>
           </div>
         ))}
       </div>
@@ -102,13 +102,13 @@ const TOKEN_GROUPS = [
   {
     id: "zindex",
     icon: <Layers className="h-5 w-5" />,
-    gradient: "from-indigo-500/10 to-blue-500/5",
-    iconBg: "bg-indigo-500/10 text-indigo-600",
+    gradient: "from-action-primary/10 to-action-primary/5",
+    iconBg: "bg-action-primary/10 text-action-primary",
     count: "10",
     preview: (
       <div className="mt-3 flex items-end gap-0.5">
         {[0, 1000, 1200, 1400, 1600, 1800].map((z, i) => (
-          <div key={z} className="w-4 rounded-xs bg-indigo-500/20" style={{ height: `${8 + i * 4}px` }} />
+          <div key={z} className="w-4 rounded-xs bg-action-primary/20" style={{ height: `${8 + i * 4}px` }} />
         ))}
       </div>
     ),
@@ -122,7 +122,7 @@ const TOKEN_GROUPS = [
     preview: (
       <div className="mt-3 flex items-center gap-2">
         {["none", "0 1px 2px rgba(0,0,0,.05)", "0 4px 6px rgba(0,0,0,.1)", "0 10px 15px rgba(0,0,0,.1)", "0 20px 25px rgba(0,0,0,.15)"].map((s, i) => (
-          <div key={i} className="h-5 w-5 rounded-md bg-[var(--surface-default,#fff)]" style={{ boxShadow: s }} />
+          <div key={i} className="h-5 w-5 rounded-md bg-[var(--surface-default))]" style={{ boxShadow: s }} />
         ))}
       </div>
     ),
@@ -130,13 +130,13 @@ const TOKEN_GROUPS = [
   {
     id: "breakpoints",
     icon: <Monitor className="h-5 w-5" />,
-    gradient: "from-cyan-500/10 to-sky-500/5",
-    iconBg: "bg-cyan-500/10 text-cyan-600",
+    gradient: "from-state-info-text/10 to-state-info-text/5",
+    iconBg: "bg-state-info-text/10 text-state-info-text",
     count: "8",
     preview: (
       <div className="mt-3 flex items-end gap-1">
         {[8, 12, 16, 22, 28, 32].map((w, i) => (
-          <div key={i} className="rounded-xs bg-cyan-500/25" style={{ width: `${w}px`, height: "18px" }} />
+          <div key={i} className="rounded-xs bg-state-info-text/25" style={{ width: `${w}px`, height: "18px" }} />
         ))}
       </div>
     ),
@@ -144,13 +144,13 @@ const TOKEN_GROUPS = [
   {
     id: "opacity",
     icon: <Eye className="h-5 w-5" />,
-    gradient: "from-fuchsia-500/10 to-pink-500/5",
-    iconBg: "bg-fuchsia-500/10 text-fuchsia-600",
+    gradient: "from-action-primary/10 to-state-danger-text/5",
+    iconBg: "bg-action-primary/10 text-action-primary",
     count: "8",
     preview: (
       <div className="mt-3 flex items-center gap-1">
         {[0, 0.1, 0.2, 0.38, 0.5, 0.7, 1].map((o) => (
-          <div key={o} className="h-5 w-5 rounded-md bg-fuchsia-500" style={{ opacity: o }} />
+          <div key={o} className="h-5 w-5 rounded-md bg-action-primary" style={{ opacity: o }} />
         ))}
       </div>
     ),
@@ -158,8 +158,8 @@ const TOKEN_GROUPS = [
   {
     id: "border",
     icon: <Square className="h-5 w-5" />,
-    gradient: "from-teal-500/10 to-green-500/5",
-    iconBg: "bg-teal-500/10 text-teal-600",
+    gradient: "from-state-success-text/10 to-state-success-text/5",
+    iconBg: "bg-state-success-text/10 text-state-success-text",
     count: "10",
     preview: (
       <div className="mt-3 flex items-center gap-1.5">

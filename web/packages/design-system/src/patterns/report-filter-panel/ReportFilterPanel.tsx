@@ -76,7 +76,7 @@ export const ReportFilterPanel = React.forwardRef<HTMLFormElement, ReportFilterP
 
   const buttonBase = cn(
     "inline-flex items-center justify-center rounded-md border text-sm font-semibold transition-colors",
-    "focus:outline-hidden focus:ring-2 focus:ring-[var(--selection-outline,var(--action-primary))] focus:ring-offset-1",
+    "focus:outline-hidden focus:ring-2 focus:ring-[var(--selection-outline))] focus:ring-offset-1",
     "disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2",
   );
 

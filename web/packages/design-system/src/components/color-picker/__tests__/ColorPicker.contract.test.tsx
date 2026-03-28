@@ -40,16 +40,16 @@ describe('ColorPicker contract', () => {
 
   /* ---- Default value ---- */
   it('uses defaultValue', () => {
-    render(<ColorPicker defaultValue="#ff0000" />);
+    render(<ColorPicker defaultValue="var(--state-danger-text)" />);
     const swatch = screen.getByTestId('color-picker-swatch');
-    expect(swatch).toHaveStyle({ backgroundColor: '#ff0000' });
+    expect(swatch).toHaveStyle({ backgroundColor: 'var(--state-danger-text)' });
   });
 
   /* ---- Controlled value ---- */
   it('respects controlled value', () => {
-    render(<ColorPicker value="#00ff00" />);
+    render(<ColorPicker value="var(--state-success-text)" />);
     const swatch = screen.getByTestId('color-picker-swatch');
-    expect(swatch).toHaveStyle({ backgroundColor: '#00ff00' });
+    expect(swatch).toHaveStyle({ backgroundColor: 'var(--state-success-text)' });
   });
 
   /* ---- onValueChange callback ---- */
@@ -76,7 +76,7 @@ describe('ColorPicker contract', () => {
   /* ---- Presets ---- */
   it('renders preset palettes when provided', async () => {
     const user = userEvent.setup();
-    const presets = [{ label: 'Basic', colors: ['#ff0000', '#00ff00'] }];
+    const presets = [{ label: 'Basic', colors: ['var(--state-danger-text)', 'var(--state-success-text)'] }];
     render(<ColorPicker presets={presets} />);
     await user.click(screen.getByTestId('color-picker-swatch'));
     expect(screen.getByTestId('color-picker-presets')).toBeInTheDocument();

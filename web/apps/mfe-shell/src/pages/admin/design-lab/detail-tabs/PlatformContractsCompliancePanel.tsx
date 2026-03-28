@@ -35,11 +35,11 @@ const ENFORCEMENT_TONE: Record<string, 'success' | 'warning' | 'info' | 'muted'>
 };
 
 const LAYER_COLORS: Record<string, string> = {
-  foundations: 'bg-violet-400',
-  components: 'bg-blue-400',
-  recipes: 'bg-emerald-400',
-  pages: 'bg-amber-400',
-  ecosystem: 'bg-red-400',
+  foundations: 'bg-action-primary',
+  components: 'bg-action-primary',
+  recipes: 'bg-state-success-text',
+  pages: 'bg-state-warning-text',
+  ecosystem: 'bg-state-danger-text',
 };
 
 /* ── Layer filter type ── */
@@ -170,7 +170,7 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
                 <div className="flex flex-col mt-3 gap-1.5">
                   {contract.rules.map((rule, idx) => (
                     <div key={idx} className="flex items-start gap-2">
-                      <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" />
+                      <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-state-success-text" />
                       <Text variant="secondary" className="text-xs leading-5">
                         {rule}
                       </Text>
@@ -186,7 +186,7 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
                         key={layer}
                         className="inline-flex items-center gap-1 rounded-md bg-surface-panel px-2 py-1 text-[10px] font-medium text-text-secondary"
                       >
-                        <span className={`inline-block h-1.5 w-1.5 rounded-full ${LAYER_COLORS[layer] ?? 'bg-zinc-400'}`} />
+                        <span className={`inline-block h-1.5 w-1.5 rounded-full ${LAYER_COLORS[layer] ?? 'bg-border-strong'}`} />
                         {layer}
                       </span>
                     ))}
@@ -213,7 +213,7 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
                 className="flex items-center justify-between gap-3 rounded-xl bg-surface-default px-3 py-2.5"
               >
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className={`inline-block h-2 w-2 shrink-0 rounded-full ${LAYER_COLORS[layerId] ?? 'bg-zinc-400'}`} />
+                  <span className={`inline-block h-2 w-2 shrink-0 rounded-full ${LAYER_COLORS[layerId] ?? 'bg-border-strong'}`} />
                   <Text className="text-xs font-semibold text-text-primary">{layerId}</Text>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
@@ -223,7 +223,7 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
                   </div>
                   <div className="flex items-center gap-1">
                     <Text variant="secondary" className="text-[10px]">enforce:</Text>
-                    <Text className="text-xs font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">{entry.mustEnforce.length}</Text>
+                    <Text className="text-xs font-bold text-state-success-text dark:text-state-success-text tabular-nums">{entry.mustEnforce.length}</Text>
                   </div>
                 </div>
               </div>

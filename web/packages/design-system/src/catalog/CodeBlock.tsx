@@ -93,7 +93,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
       className={clsx(
         "rounded-2xl border overflow-hidden",
         isDark
-          ? "border-white/10 bg-[var(--surface-code)] text-white"
+          ? "border-surface-default/10 bg-[var(--surface-code)] text-text-inverse"
           : "border-border-subtle bg-surface-panel text-text-primary",
         className,
       )}
@@ -102,13 +102,13 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
       <div
         className={clsx(
           "flex items-center justify-between px-4 py-2 border-b",
-          isDark ? "border-white/10" : "border-border-subtle",
+          isDark ? "border-surface-default/10" : "border-border-subtle",
         )}
       >
         <span
           className={clsx(
             "text-[11px] font-medium",
-            isDark ? "text-white/50" : "text-text-secondary",
+            isDark ? "text-text-inverse/50" : "text-text-secondary",
           )}
         >
           {displayLabel}
@@ -121,7 +121,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
             className={clsx(
               "flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-medium transition",
               isDark
-                ? "text-white/50 hover:text-white/80 hover:bg-white/10"
+                ? "text-text-inverse/50 hover:text-text-inverse/80 hover:bg-surface-default/10"
                 : "text-text-secondary hover:text-text-primary hover:bg-surface-muted",
             )}
           >
@@ -161,7 +161,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
           <pre
             className={clsx(
               "px-4 py-4 text-xs leading-6",
-              isDark ? "text-white/80" : "text-text-primary",
+              isDark ? "text-text-inverse/80" : "text-text-primary",
             )}
           >
             <code>{code.trim()}</code>

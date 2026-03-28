@@ -201,10 +201,10 @@ export const RecipesSidebarRenderer: React.FC<DesignLabSidebarRendererProps> = (
                             <div className="mt-1.5 flex items-center gap-1.5">
                               <span className={`inline-block h-1.5 w-1.5 rounded-full ${
                                 complexity === "complex"
-                                  ? "bg-red-400"
+                                  ? "bg-state-danger-text"
                                   : complexity === "moderate"
-                                    ? "bg-amber-400"
-                                    : "bg-emerald-400"
+                                    ? "bg-state-warning-text"
+                                    : "bg-state-success-text"
                               }`} />
                               <Text variant="secondary" className="text-[10px]">
                                 {family.ownerBlocks.length} blocks

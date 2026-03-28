@@ -98,8 +98,8 @@ export const HeatmapChart = React.forwardRef<HTMLDivElement, HeatmapChartProps>(
               ? { colorRange: colors }
               : {
                   colorRange: [
-                    "var(--surface-subtle, #f1f5f9)",
-                    "var(--action-primary, #3b82f6)",
+                    "var(--surface-subtle))",
+                    "var(--action-primary))",
                   ],
                 }),
           } as any,

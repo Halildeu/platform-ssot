@@ -19,8 +19,8 @@ const menuStyles: React.CSSProperties = {
   maxWidth: '320px',
   maxHeight: '320px',
   overflowY: 'auto',
-  backgroundColor: 'var(--surface-default, #ffffff)',
-  border: '1px solid var(--border-subtle, #e2e8f0)',
+  backgroundColor: 'var(--surface-default))',
+  border: '1px solid var(--border-subtle))',
   borderRadius: '8px',
   boxShadow: '0 4px 16px rgba(0, 0, 0, 0.12)',
   zIndex: 60,
@@ -33,7 +33,7 @@ const categoryStyles: React.CSSProperties = {
   fontWeight: 600,
   textTransform: 'uppercase' as const,
   letterSpacing: '0.05em',
-  color: 'var(--text-muted, #94a3b8)',
+  color: 'var(--text-muted))',
   userSelect: 'none',
 };
 
@@ -45,7 +45,7 @@ const itemStyles: React.CSSProperties = {
   padding: '8px 12px',
   border: 'none',
   backgroundColor: 'transparent',
-  color: 'var(--text-primary, #1e293b)',
+  color: 'var(--text-primary))',
   fontSize: '13px',
   textAlign: 'left',
   cursor: 'pointer',
@@ -55,7 +55,7 @@ const itemStyles: React.CSSProperties = {
 
 const selectedItemStyles: React.CSSProperties = {
   ...itemStyles,
-  backgroundColor: 'var(--surface-active, #f1f5f9)',
+  backgroundColor: 'var(--surface-active))',
 };
 
 const iconWrapperStyles: React.CSSProperties = {
@@ -65,7 +65,7 @@ const iconWrapperStyles: React.CSSProperties = {
   width: '24px',
   height: '24px',
   borderRadius: '4px',
-  backgroundColor: 'var(--surface-subtle, #f8fafc)',
+  backgroundColor: 'var(--surface-subtle))',
   fontSize: '12px',
   flexShrink: 0,
 };
@@ -76,14 +76,14 @@ const labelStyles: React.CSSProperties = {
 
 const descriptionStyles: React.CSSProperties = {
   fontSize: '12px',
-  color: 'var(--text-muted, #94a3b8)',
+  color: 'var(--text-muted))',
   marginTop: '1px',
 };
 
 const emptyStyles: React.CSSProperties = {
   padding: '16px 12px',
   fontSize: '13px',
-  color: 'var(--text-muted, #94a3b8)',
+  color: 'var(--text-muted))',
   textAlign: 'center',
 };
 

@@ -17,8 +17,8 @@ const TIER_LABELS: Record<string, string> = {
 };
 
 const TIER_COLORS: Record<string, string> = {
-  tier1: "bg-emerald-100 text-emerald-700",
-  tier2: "bg-blue-100 text-blue-700",
+  tier1: "bg-state-success-bg text-state-success-text",
+  tier2: "bg-state-info-bg text-state-info-text",
   tier3: "bg-surface-muted text-text-secondary",
 };
 
@@ -81,7 +81,7 @@ export function OwnershipPanel() {
         </div>
         <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-surface-muted">
           <div
-            className="h-full rounded-full bg-emerald-500 transition-all"
+            className="h-full rounded-full bg-state-success-text transition-all"
             style={{ width: `${coverage}%` }}
           />
         </div>

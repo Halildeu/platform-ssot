@@ -193,7 +193,7 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(function Rat
   const step = allowHalf ? 0.5 : 1;
 
   const filledColor = "var(--rating-filled)";
-  const emptyColor = "var(--rating-empty, var(--border-subtle))";
+  const emptyColor = "var(--rating-empty))";
 
   const isInteractive = !accessState.isReadonly && !accessState.isDisabled;
 

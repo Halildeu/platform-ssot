@@ -43,34 +43,34 @@ const LAYER_ICONS: Record<string, React.ReactNode> = {
 };
 
 const LAYER_GRADIENTS: Record<string, string> = {
-  design: "from-rose-500/10 to-pink-500/5",
-  theme: "from-violet-500/10 to-purple-500/5",
-  primitives: "from-teal-500/10 to-cyan-500/5",
-  components: "from-blue-500/10 to-cyan-500/5",
-  patterns: "from-amber-500/10 to-orange-500/5",
-  advanced: "from-orange-500/10 to-red-500/5",
-  apis: "from-cyan-500/10 to-blue-500/5",
-  recipes: "from-emerald-500/10 to-teal-500/5",
-  ecosystem: "from-indigo-500/10 to-blue-500/5",
+  design: "from-state-danger-text/10 to-state-danger-text/5",
+  theme: "from-action-primary/10 to-action-primary/5",
+  primitives: "from-state-success-text/10 to-state-info-text/5",
+  components: "from-action-primary/10 to-state-info-text/5",
+  patterns: "from-state-warning-text/10 to-state-warning-text/5",
+  advanced: "from-state-warning-text/10 to-state-danger-text/5",
+  apis: "from-state-info-text/10 to-action-primary/5",
+  recipes: "from-state-success-text/10 to-state-success-text/5",
+  ecosystem: "from-action-primary/10 to-action-primary/5",
 };
 
 const LAYER_ICON_BG: Record<string, string> = {
-  design: "bg-rose-500/10 text-rose-600",
-  theme: "bg-violet-500/10 text-violet-600",
-  primitives: "bg-teal-500/10 text-teal-600",
-  components: "bg-blue-500/10 text-blue-600",
-  patterns: "bg-amber-500/10 text-amber-600",
-  advanced: "bg-orange-500/10 text-orange-600",
-  apis: "bg-cyan-500/10 text-cyan-600",
-  recipes: "bg-emerald-500/10 text-emerald-600",
-  ecosystem: "bg-indigo-500/10 text-indigo-600",
+  design: "bg-state-danger-text/10 text-state-danger-text",
+  theme: "bg-action-primary/10 text-action-primary",
+  primitives: "bg-state-success-text/10 text-state-success-text",
+  components: "bg-action-primary/10 text-action-primary",
+  patterns: "bg-state-warning-text/10 text-state-warning-text",
+  advanced: "bg-state-warning-text/10 text-state-warning-text",
+  apis: "bg-state-info-text/10 text-state-info-text",
+  recipes: "bg-state-success-text/10 text-state-success-text",
+  ecosystem: "bg-action-primary/10 text-action-primary",
 };
 
 const TYPE_BADGE_COLORS: Record<string, string> = {
-  component: "bg-blue-500/10 text-blue-600",
-  api: "bg-cyan-500/10 text-cyan-600",
-  recipe: "bg-emerald-500/10 text-emerald-600",
-  page: "bg-amber-500/10 text-amber-600",
+  component: "bg-action-primary/10 text-action-primary",
+  api: "bg-state-info-text/10 text-state-info-text",
+  recipe: "bg-state-success-text/10 text-state-success-text",
+  page: "bg-state-warning-text/10 text-state-warning-text",
 };
 
 export default function DesignLabLanding() {
@@ -406,8 +406,8 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/icons")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 transition-[scale] duration-300 group-hover:scale-110">
-            <Sparkles className="h-5 w-5 text-amber-600" />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-state-warning-text/10 transition-[scale] duration-300 group-hover:scale-110">
+            <Sparkles className="h-5 w-5 text-state-warning-text" />
           </div>
           <div className="min-w-0 flex-1">
             <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -424,8 +424,8 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/bundle-size")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 transition-[scale] duration-300 group-hover:scale-110">
-            <Package className="h-5 w-5 text-rose-600" />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-state-danger-text/10 transition-[scale] duration-300 group-hover:scale-110">
+            <Package className="h-5 w-5 text-state-danger-text" />
           </div>
           <div className="min-w-0 flex-1">
             <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -442,8 +442,8 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/quality-dashboard")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 transition-[scale] duration-300 group-hover:scale-110">
-            <Award className="h-5 w-5 text-indigo-600" />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-action-primary/10 transition-[scale] duration-300 group-hover:scale-110">
+            <Award className="h-5 w-5 text-action-primary" />
           </div>
           <div className="min-w-0 flex-1">
             <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -460,8 +460,8 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/observability")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 transition-[scale] duration-300 group-hover:scale-110">
-            <Activity className="h-5 w-5 text-cyan-600" />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-state-info-text/10 transition-[scale] duration-300 group-hover:scale-110">
+            <Activity className="h-5 w-5 text-state-info-text" />
           </div>
           <div className="min-w-0 flex-1">
             <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -478,8 +478,8 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/governance")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 transition-[scale] duration-300 group-hover:scale-110">
-            <ShieldCheck className="h-5 w-5 text-emerald-600" />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-state-success-text/10 transition-[scale] duration-300 group-hover:scale-110">
+            <ShieldCheck className="h-5 w-5 text-state-success-text" />
           </div>
           <div className="min-w-0 flex-1">
             <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -496,8 +496,8 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/intelligence")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-500/10 transition-[scale] duration-300 group-hover:scale-110">
-            <Brain className="h-5 w-5 text-violet-600" />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-action-primary/10 transition-[scale] duration-300 group-hover:scale-110">
+            <Brain className="h-5 w-5 text-action-primary" />
           </div>
           <div className="min-w-0 flex-1">
             <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -514,8 +514,8 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/leadership")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 transition-[scale] duration-300 group-hover:scale-110">
-            <Trophy className="h-5 w-5 text-amber-600" />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-state-warning-text/10 transition-[scale] duration-300 group-hover:scale-110">
+            <Trophy className="h-5 w-5 text-state-warning-text" />
           </div>
           <div className="min-w-0 flex-1">
             <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -541,26 +541,26 @@ export default function DesignLabLanding() {
           <StatCard
             label={t("designlab.landing.stats.exported")}
             value={index.summary?.exported ?? 0}
-            accent="text-blue-600"
+            accent="text-action-primary"
           />
           <StatCard
             label={t("designlab.landing.stats.stable")}
             value={
               index.items.filter((i) => i.lifecycle === "stable").length
             }
-            accent="text-emerald-600"
+            accent="text-state-success-text"
           />
           <StatCard
             label={t("designlab.landing.stats.liveDemo")}
             value={index.summary?.liveDemo ?? 0}
-            accent="text-violet-600"
+            accent="text-action-primary"
           />
           <StatCard
             label={t("designlab.landing.stats.apiCoverage")}
             value={`${Math.round(
               ((index.adoption as any)?.apiCoverage?.coveragePercent ?? 0),
             )}%`}
-            accent="text-amber-600"
+            accent="text-state-warning-text"
           />
         </div>
       </div>

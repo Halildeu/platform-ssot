@@ -37,14 +37,14 @@ import { useDesignLabAnalytics } from "../intelligence/useDesignLabAnalytics";
 
 /** Static badges whose values never change at runtime */
 const STATIC_BADGES = [
-  { label: "Tests", value: "5910 pass", color: "bg-emerald-500/10 text-emerald-600" },
-  { label: "Coverage", value: "85%", color: "bg-emerald-500/10 text-emerald-600" },
-  { label: "TypeScript", value: "strict", color: "bg-blue-500/10 text-blue-600" },
-  { label: "Bundle", value: "gated", color: "bg-emerald-500/10 text-emerald-600" },
-  { label: "A11y", value: "axe-core", color: "bg-violet-500/10 text-violet-600" },
-  { label: "Tokens", value: "DTCG", color: "bg-amber-500/10 text-amber-600" },
-  { label: "Node", value: "20 | 22", color: "bg-emerald-500/10 text-emerald-600" },
-  { label: "React", value: "18.2 | 18.3", color: "bg-blue-500/10 text-blue-600" },
+  { label: "Tests", value: "5910 pass", color: "bg-state-success-text/10 text-state-success-text" },
+  { label: "Coverage", value: "85%", color: "bg-state-success-text/10 text-state-success-text" },
+  { label: "TypeScript", value: "strict", color: "bg-action-primary/10 text-action-primary" },
+  { label: "Bundle", value: "gated", color: "bg-state-success-text/10 text-state-success-text" },
+  { label: "A11y", value: "axe-core", color: "bg-action-primary/10 text-action-primary" },
+  { label: "Tokens", value: "DTCG", color: "bg-state-warning-text/10 text-state-warning-text" },
+  { label: "Node", value: "20 | 22", color: "bg-state-success-text/10 text-state-success-text" },
+  { label: "React", value: "18.2 | 18.3", color: "bg-action-primary/10 text-action-primary" },
 ];
 
 /** Build the full badges array with dynamic counts derived from the catalog index */
@@ -58,8 +58,8 @@ function buildBadges(index: { items: unknown[]; summary?: { exported?: number } 
     STATIC_BADGES[0],
     STATIC_BADGES[1],
     STATIC_BADGES[2],
-    { label: "Components", value: String(componentCount), color: "bg-blue-500/10 text-blue-600" },
-    { label: "Stories", value: String(storyCount), color: "bg-blue-500/10 text-blue-600" },
+    { label: "Components", value: String(componentCount), color: "bg-action-primary/10 text-action-primary" },
+    { label: "Stories", value: String(storyCount), color: "bg-action-primary/10 text-action-primary" },
     ...STATIC_BADGES.slice(3),
   ];
 }
@@ -159,7 +159,7 @@ export default function LeadershipProofPage() {
   return (
     <div className="flex flex-col gap-10 pb-12">
       {/* ── Hero ── */}
-      <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-amber-500/5 via-surface-default to-violet-500/5 px-6 py-10 sm:px-10 sm:py-14">
+      <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-state-warning-text/5 via-surface-default to-action-primary/5 px-6 py-10 sm:px-10 sm:py-14">
         <div className="pointer-events-none absolute inset-0 opacity-[0.02]"
           style={{
             backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)",
@@ -167,8 +167,8 @@ export default function LeadershipProofPage() {
           }}
         />
         <div className="relative text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10">
-            <Trophy className="h-8 w-8 text-amber-600" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-state-warning-text/10">
+            <Trophy className="h-8 w-8 text-state-warning-text" />
           </div>
           <Text as="div" className="text-3xl font-extrabold tracking-tight text-text-primary sm:text-4xl">
             Leadership Proof
@@ -182,8 +182,8 @@ export default function LeadershipProofPage() {
       {/* ── 1. Quality Badges ── */}
       <Section
         id="badges"
-        icon={<Award className="h-5 w-5 text-amber-600" />}
-        iconBg="bg-amber-500/10"
+        icon={<Award className="h-5 w-5 text-state-warning-text" />}
+        iconBg="bg-state-warning-text/10"
         title="Quality Badges"
         subtitle="Platform kalite göstergeleri"
       >
@@ -203,8 +203,8 @@ export default function LeadershipProofPage() {
       {/* ── 2. Benchmark Results ── */}
       <Section
         id="benchmarks"
-        icon={<Zap className="h-5 w-5 text-orange-600" />}
-        iconBg="bg-orange-500/10"
+        icon={<Zap className="h-5 w-5 text-state-warning-text" />}
+        iconBg="bg-state-warning-text/10"
         title="Benchmark Results"
         subtitle="Tekrarlanabilir performans ölçümleri"
       >
@@ -215,7 +215,7 @@ export default function LeadershipProofPage() {
               <Text variant="secondary" className="text-xs">Paket benchmarked</Text>
             </div>
             <div className="text-center">
-              <Text className="text-2xl font-extrabold tabular-nums text-emerald-600">CI</Text>
+              <Text className="text-2xl font-extrabold tabular-nums text-state-success-text">CI</Text>
               <Text variant="secondary" className="text-xs">Otomatik regresyon tespiti</Text>
             </div>
             <div className="text-center">
@@ -232,8 +232,8 @@ export default function LeadershipProofPage() {
       {/* ── 3. Compatibility Matrix ── */}
       <Section
         id="compatibility"
-        icon={<Shield className="h-5 w-5 text-blue-600" />}
-        iconBg="bg-blue-500/10"
+        icon={<Shield className="h-5 w-5 text-action-primary" />}
+        iconBg="bg-action-primary/10"
         title="Certified Compatibility"
         subtitle="CI matrix ile doğrulanmış platform kombinasyonları"
       >
@@ -243,7 +243,7 @@ export default function LeadershipProofPage() {
               key={row.category}
               className="flex items-center gap-2 rounded-lg border border-border-subtle bg-surface-default px-3 py-2"
             >
-              <CheckCircle className="h-4 w-4 shrink-0 text-emerald-600" />
+              <CheckCircle className="h-4 w-4 shrink-0 text-state-success-text" />
               <Text className="text-xs font-medium text-text-primary">{row.category}</Text>
             </div>
           ))}
@@ -258,8 +258,8 @@ export default function LeadershipProofPage() {
       {/* ── 5. Reference Apps ── */}
       <Section
         id="reference-apps"
-        icon={<BookOpen className="h-5 w-5 text-violet-600" />}
-        iconBg="bg-violet-500/10"
+        icon={<BookOpen className="h-5 w-5 text-action-primary" />}
+        iconBg="bg-action-primary/10"
         title="Reference Applications"
         subtitle="Hemen başlayabileceğiniz şablon uygulamalar"
       >
@@ -303,8 +303,8 @@ export default function LeadershipProofPage() {
       {/* ── 7. Analytics Summary ── */}
       <Section
         id="analytics"
-        icon={<BarChart3 className="h-5 w-5 text-cyan-600" />}
-        iconBg="bg-cyan-500/10"
+        icon={<BarChart3 className="h-5 w-5 text-state-info-text" />}
+        iconBg="bg-state-info-text/10"
         title="Usage Analytics"
         subtitle="Design Lab kullanım istatistikleri"
       >

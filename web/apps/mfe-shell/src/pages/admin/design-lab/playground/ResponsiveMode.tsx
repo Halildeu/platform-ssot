@@ -25,9 +25,9 @@ type BreakpointDef = {
 };
 
 const BREAKPOINTS: BreakpointDef[] = [
-  { name: "Mobile", width: 375, icon: <Smartphone className="h-3.5 w-3.5" />, color: "border-blue-400" },
-  { name: "Tablet", width: 768, icon: <Tablet className="h-3.5 w-3.5" />, color: "border-purple-400" },
-  { name: "Desktop", width: 1280, icon: <Monitor className="h-3.5 w-3.5" />, color: "border-emerald-400" },
+  { name: "Mobile", width: 375, icon: <Smartphone className="h-3.5 w-3.5" />, color: "border-action-primary" },
+  { name: "Tablet", width: 768, icon: <Tablet className="h-3.5 w-3.5" />, color: "border-action-primary/40" },
+  { name: "Desktop", width: 1280, icon: <Monitor className="h-3.5 w-3.5" />, color: "border-state-success-text/40" },
 ];
 
 type ResponsiveModeProps = {
@@ -86,7 +86,7 @@ export const ResponsiveMode: React.FC<ResponsiveModeProps> = ({
             onClick={() => setMode("multi")}
             className={[
               "flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition",
-              mode === "multi" ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary hover:text-text-primary",
+              mode === "multi" ? "bg-action-primary text-text-inverse" : "bg-surface-muted text-text-secondary hover:text-text-primary",
             ].join(" ")}
           >
             Side by Side
@@ -96,7 +96,7 @@ export const ResponsiveMode: React.FC<ResponsiveModeProps> = ({
             onClick={() => setMode("single")}
             className={[
               "flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition",
-              mode === "single" ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary hover:text-text-primary",
+              mode === "single" ? "bg-action-primary text-text-inverse" : "bg-surface-muted text-text-secondary hover:text-text-primary",
             ].join(" ")}
           >
             Resizable
@@ -186,7 +186,7 @@ export const ResponsiveMode: React.FC<ResponsiveModeProps> = ({
                 className={[
                   "flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition",
                   Math.abs(singleWidth - bp.width) < 50
-                    ? "bg-action-primary text-white"
+                    ? "bg-action-primary text-text-inverse"
                     : "bg-surface-muted text-text-secondary hover:text-text-primary",
                 ].join(" ")}
               >

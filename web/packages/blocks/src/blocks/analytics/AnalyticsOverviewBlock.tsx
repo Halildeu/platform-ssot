@@ -32,7 +32,7 @@ export function AnalyticsOverviewBlock({
       <div
         style={{
           fontSize: '0.8125rem',
-          color: 'var(--color-text-secondary, #64748b)',
+          color: 'var(--color-text-secondary))',
           marginBottom: '1rem',
         }}
       >
@@ -54,14 +54,14 @@ export function AnalyticsOverviewBlock({
             style={{
               padding: '1rem',
               borderRadius: '0.5rem',
-              border: '1px solid var(--color-border, #e2e8f0)',
-              backgroundColor: 'var(--color-surface, #fff)',
+              border: '1px solid var(--color-border))',
+              backgroundColor: 'var(--color-surface))',
             }}
           >
             <div
               style={{
                 fontSize: '0.75rem',
-                color: 'var(--color-text-secondary, #64748b)',
+                color: 'var(--color-text-secondary))',
                 marginBottom: '0.375rem',
               }}
             >
@@ -71,7 +71,7 @@ export function AnalyticsOverviewBlock({
               style={{
                 fontSize: '1.25rem',
                 fontWeight: 600,
-                color: 'var(--color-text-primary, #0f172a)',
+                color: 'var(--color-text-primary))',
               }}
             >
               {metric.value}
@@ -82,10 +82,10 @@ export function AnalyticsOverviewBlock({
                 marginTop: '0.25rem',
                 color:
                   metric.change > 0
-                    ? 'var(--color-success, #16a34a)'
+                    ? 'var(--color-success))'
                     : metric.change < 0
-                      ? 'var(--color-error, #dc2626)'
-                      : 'var(--color-text-secondary, #64748b)',
+                      ? 'var(--color-error))'
+                      : 'var(--color-text-secondary))',
               }}
             >
               {metric.change > 0 ? '+' : ''}
@@ -101,8 +101,8 @@ export function AnalyticsOverviewBlock({
           style={{
             padding: '1rem',
             borderRadius: '0.5rem',
-            border: '1px solid var(--color-border, #e2e8f0)',
-            backgroundColor: 'var(--color-surface, #fff)',
+            border: '1px solid var(--color-border))',
+            backgroundColor: 'var(--color-surface))',
             minHeight: '300px',
           }}
         >

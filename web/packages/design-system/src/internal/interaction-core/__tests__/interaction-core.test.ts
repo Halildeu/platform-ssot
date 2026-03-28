@@ -126,7 +126,7 @@ describe("focusRingClassWithColor", () => {
   });
 
   test("none strategy ignores color", () => {
-    expect(focusRingClassWithColor("none", "#ff0000")).toBe("focus-visible:outline-hidden");
+    expect(focusRingClassWithColor("none", "var(--state-danger-text)")).toBe("focus-visible:outline-hidden");
   });
 });
 

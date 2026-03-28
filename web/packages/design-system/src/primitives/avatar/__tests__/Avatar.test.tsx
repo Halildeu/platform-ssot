@@ -241,14 +241,14 @@ describe('Avatar — Faz 3 Dalga 5 deepening', () => {
         <Avatar data-testid="status-avatar" />
         <span
           data-testid="status-dot"
-          className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 ring-2 ring-white"
+          className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-state-success-text ring-2 ring-surface-default"
         />
       </span>,
     );
     expect(screen.getByTestId('status-avatar')).toBeInTheDocument();
     const dot = screen.getByTestId('status-dot');
     expect(dot).toBeInTheDocument();
-    expect(dot.className).toContain('bg-green-500');
+    expect(dot.className).toContain('bg-state-success-text');
   });
 
   /* --- Fallback chain: src > initials > icon > default SVG --- */

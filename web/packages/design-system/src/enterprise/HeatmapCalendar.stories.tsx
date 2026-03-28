@@ -84,7 +84,7 @@ export const CustomColors: Story = {
     data: yearData,
     startDate: '2025-01-01',
     endDate: '2025-12-31',
-    colorScale: ['#dbeafe', '#93c5fd', '#3b82f6', '#1d4ed8', '#1e3a5f'],
+    colorScale: ['var(--state-info-bg)', 'var(--action-primary)', 'var(--action-primary)', 'var(--action-primary)', 'var(--surface-inverse)'],
     showMonthLabels: true,
     showDayLabels: true,
   },

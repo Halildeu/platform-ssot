@@ -112,7 +112,7 @@ export function EditableGrid<TRow>({
             onClick={handleSave}
             disabled={isSaving}
             className={cn(
-              'rounded-md px-3 py-1.5 text-sm font-medium text-white transition-colors',
+              'rounded-md px-3 py-1.5 text-sm font-medium text-text-inverse transition-colors',
               'bg-action-primary hover:bg-action-primary/90',
               'disabled:opacity-50 disabled:cursor-not-allowed',
             )}

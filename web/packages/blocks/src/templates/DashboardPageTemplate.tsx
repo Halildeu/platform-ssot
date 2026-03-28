@@ -38,7 +38,7 @@ export function DashboardPageTemplate({
         style={{
           fontSize: '1.5rem',
           fontWeight: 700,
-          color: 'var(--color-text-primary, #0f172a)',
+          color: 'var(--color-text-primary))',
           margin: '0 0 1.5rem 0',
         }}
       >
@@ -63,15 +63,15 @@ export function DashboardPageTemplate({
           style={{
             padding: '1rem',
             borderRadius: '0.5rem',
-            border: '1px solid var(--color-border, #e2e8f0)',
-            backgroundColor: 'var(--color-surface, #fff)',
+            border: '1px solid var(--color-border))',
+            backgroundColor: 'var(--color-surface))',
           }}
         >
           <h2
             style={{
               fontSize: '1rem',
               fontWeight: 600,
-              color: 'var(--color-text-primary, #0f172a)',
+              color: 'var(--color-text-primary))',
               margin: '0 0 0.75rem 0',
             }}
           >
@@ -85,16 +85,16 @@ export function DashboardPageTemplate({
                   display: 'flex',
                   justifyContent: 'space-between',
                   padding: '0.5rem 0',
-                  borderBottom: '1px solid var(--color-border, #e2e8f0)',
+                  borderBottom: '1px solid var(--color-border))',
                   fontSize: '0.875rem',
                 }}
               >
-                <span style={{ color: 'var(--color-text-primary, #0f172a)' }}>
+                <span style={{ color: 'var(--color-text-primary))' }}>
                   {item.text}
                 </span>
                 <span
                   style={{
-                    color: 'var(--color-text-secondary, #64748b)',
+                    color: 'var(--color-text-secondary))',
                     fontSize: '0.75rem',
                     whiteSpace: 'nowrap',
                     marginLeft: '1rem',

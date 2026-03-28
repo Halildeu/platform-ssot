@@ -698,7 +698,7 @@ export const DesignLabFoundationDetailSections: React.FC<DesignLabFoundationDeta
                           <div key={tokenGroup} className="text-center">
                             <div
                               className="mx-auto h-8 w-8 rounded-lg border border-border-subtle shadow-xs"
-                              style={{ backgroundColor: `var(--color-${tokenGroup}, var(--color-action-${tokenGroup}, #ddd))` }}
+                              style={{ backgroundColor: `var(--color-${tokenGroup}, var(--color-action-${tokenGroup}, var(--border-default)))` }}
                             />
                             <Text variant="secondary" className="mt-1 block text-[8px]">{tokenGroup}</Text>
                           </div>

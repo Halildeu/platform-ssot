@@ -48,7 +48,7 @@ export const WithBadge: Story = {
     <AppSidebarNavItem
       icon={<HomeIcon />}
       label="Notifications"
-      badge={<span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 9999, background: '#dcfce7', color: '#16a34a' }}>5</span>}
+      badge={<span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 9999, background: 'var(--state-success-bg)', color: 'var(--state-success-text)' }}>5</span>}
     />
   ),
 };

@@ -48,7 +48,7 @@ export const WithError: Story = {
         id={args.inputId}
         type="email"
         placeholder="user@example.com"
-        className="w-full rounded-xs border border-red-500 px-3 py-2"
+        className="w-full rounded-xs border border-state-danger-text px-3 py-2"
       />
     </FieldControlShell>
   ),

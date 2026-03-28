@@ -62,7 +62,7 @@ function Section({
         onClick={() => setOpen(!open)}
         className="flex w-full items-center gap-3 px-5 py-4 text-left transition hover:bg-surface-canvas/50"
       >
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-action-primary/10 text-action-primary">
           {icon}
         </div>
         <Text className="flex-1 text-sm font-semibold text-text-primary">
@@ -139,13 +139,13 @@ function CodegenSandboxSection() {
         type="button"
         onClick={handleGenerate}
         disabled={!componentName.trim()}
-        className="self-start rounded-lg bg-action-primary px-4 py-2 text-xs font-semibold text-white transition hover:bg-action-primary/90 disabled:opacity-40"
+        className="self-start rounded-lg bg-action-primary px-4 py-2 text-xs font-semibold text-text-inverse transition hover:bg-action-primary/90 disabled:opacity-40"
       >
         Kod Uret
       </button>
 
       {error && (
-        <Text className="text-xs text-red-600">{error}</Text>
+        <Text className="text-xs text-state-danger-text">{error}</Text>
       )}
 
       {result && (
@@ -153,7 +153,7 @@ function CodegenSandboxSection() {
           {/* Validity */}
           <div className="flex items-center gap-2">
             <span
-              className={`inline-block h-2 w-2 rounded-full ${result.isValid ? "bg-emerald-500" : "bg-red-500"}`}
+              className={`inline-block h-2 w-2 rounded-full ${result.isValid ? "bg-state-success-text" : "bg-state-danger-text"}`}
             />
             <Text className="text-xs font-medium text-text-primary">
               {result.isValid ? "Gecerli" : "Uyari mevcut"}
@@ -162,9 +162,9 @@ function CodegenSandboxSection() {
 
           {/* Warnings */}
           {result.warnings.length > 0 && (
-            <div className="rounded-lg bg-amber-50 p-2.5">
+            <div className="rounded-lg bg-state-warning-bg p-2.5">
               {result.warnings.map((w, i) => (
-                <Text key={i} className="text-xs text-amber-700">
+                <Text key={i} className="text-xs text-state-warning-text">
                   - {w}
                 </Text>
               ))}
@@ -205,7 +205,7 @@ function MCPExportButton() {
     <button
       type="button"
       onClick={handleExport}
-      className="flex items-center gap-2 rounded-xl bg-action-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-action-primary/90"
+      className="flex items-center gap-2 rounded-xl bg-action-primary px-4 py-2.5 text-sm font-semibold text-text-inverse transition hover:bg-action-primary/90"
     >
       <Download className="h-4 w-4" />
       MCP Manifest Indir
@@ -260,8 +260,8 @@ function DependencyGraphSummary() {
             Toplam baglanti
           </Text>
         </div>
-        <div className="rounded-xl bg-violet-50 p-3 text-center">
-          <Text className="text-lg font-bold text-violet-700">
+        <div className="rounded-xl bg-action-primary/10 p-3 text-center">
+          <Text className="text-lg font-bold text-action-primary">
             {stats.mostDepended || "—"}
           </Text>
           <Text variant="secondary" className="text-[10px]">
@@ -333,9 +333,9 @@ function MigrationImpactCalculator() {
   }, [selectedComponent, index]);
 
   const riskColors = {
-    low: "bg-emerald-100 text-emerald-700",
-    medium: "bg-amber-100 text-amber-700",
-    high: "bg-rose-100 text-rose-700",
+    low: "bg-state-success-bg text-state-success-text",
+    medium: "bg-state-warning-bg text-state-warning-text",
+    high: "bg-state-danger-bg text-state-danger-text",
   };
 
   return (
@@ -387,7 +387,7 @@ function MigrationImpactCalculator() {
                 {impact.affectedApps.map((app) => (
                   <span
                     key={app}
-                    className="rounded-xs bg-blue-100 px-2 py-0.5 text-[10px] font-medium text-blue-700"
+                    className="rounded-xs bg-state-info-bg px-2 py-0.5 text-[10px] font-medium text-state-info-text"
                   >
                     {app}
                   </span>
@@ -408,7 +408,7 @@ function MigrationImpactCalculator() {
                 {impact.affectedRecipes.map((r) => (
                   <span
                     key={r.recipeId}
-                    className="rounded-xs bg-purple-100 px-2 py-0.5 text-[10px] font-medium text-purple-700"
+                    className="rounded-xs bg-action-primary/10 px-2 py-0.5 text-[10px] font-medium text-action-primary"
                   >
                     {r.title}
                   </span>
@@ -429,7 +429,7 @@ function MigrationImpactCalculator() {
                 {impact.affectedPages.map((p) => (
                   <span
                     key={p.pageId}
-                    className="rounded-xs bg-cyan-100 px-2 py-0.5 text-[10px] font-medium text-cyan-700"
+                    className="rounded-xs bg-state-info-bg px-2 py-0.5 text-[10px] font-medium text-state-info-text"
                   >
                     {p.title}
                   </span>
@@ -515,7 +515,7 @@ function APISurfaceStats() {
           </Text>
         </div>
         <div className="rounded-xl bg-surface-muted p-3 text-center">
-          <Text className="text-2xl font-bold text-amber-700">
+          <Text className="text-2xl font-bold text-state-warning-text">
             {stats.complexCount}
           </Text>
           <Text variant="secondary" className="text-[10px]">
@@ -525,7 +525,7 @@ function APISurfaceStats() {
       </div>
 
       {stats.complexCount > 0 && (
-        <div className="rounded-xl bg-amber-50/50 p-3">
+        <div className="rounded-xl bg-state-warning-bg/50 p-3">
           <Text variant="secondary" className="mb-1 text-[10px] font-medium">
             Karmasik API bilesenleri:
           </Text>
@@ -533,7 +533,7 @@ function APISurfaceStats() {
             {stats.complexNames.map((name) => (
               <span
                 key={name}
-                className="rounded-xs bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700"
+                className="rounded-xs bg-state-warning-bg px-2 py-0.5 text-[10px] font-medium text-state-warning-text"
               >
                 {name}
               </span>
@@ -591,12 +591,12 @@ function UsageAnalyticsQuickView() {
     <div className="flex flex-col gap-4">
       {/* Most used */}
       {analytics.mostUsed && (
-        <div className="rounded-xl bg-emerald-50/50 p-3">
+        <div className="rounded-xl bg-state-success-bg/50 p-3">
           <Text variant="secondary" className="text-[10px] font-medium">
             En cok kullanilan bilesen
           </Text>
           <div className="mt-1 flex items-baseline gap-2">
-            <Text className="text-lg font-bold text-emerald-700">
+            <Text className="text-lg font-bold text-state-success-text">
               {analytics.mostUsed.name}
             </Text>
             <Text variant="secondary" className="text-xs">
@@ -634,7 +634,7 @@ function UsageAnalyticsQuickView() {
       {analytics.orphans.length > 0 && (
         <div>
           <div className="mb-1.5 flex items-center gap-1.5">
-            <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />
+            <AlertTriangle className="h-3.5 w-3.5 text-state-warning-text" />
             <Text variant="secondary" className="text-xs font-medium">
               Yetim adaylari (0 kullanim, exported)
             </Text>
@@ -643,7 +643,7 @@ function UsageAnalyticsQuickView() {
             {analytics.orphans.map((item) => (
               <span
                 key={item.name}
-                className="rounded-xs bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700"
+                className="rounded-xs bg-state-warning-bg px-2 py-0.5 text-[10px] font-medium text-state-warning-text"
               >
                 {item.name}
               </span>
@@ -672,8 +672,8 @@ export default function IntelligencePage() {
       {/* Header */}
       <div className="border-b border-border-subtle bg-surface-default px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/10">
-            <Brain className="h-5 w-5 text-violet-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-action-primary/10">
+            <Brain className="h-5 w-5 text-action-primary" />
           </div>
           <div>
             <Text as="h1" className="text-lg font-bold text-text-primary">

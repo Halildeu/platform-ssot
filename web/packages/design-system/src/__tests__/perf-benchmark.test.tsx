@@ -245,7 +245,7 @@ describe("Performance Benchmarks", () => {
   it("ColorPicker renders under 15ms average", async () => {
     const { ColorPicker } = await import("../components/color-picker");
     const avg = measureRenderTime(ColorPicker, {
-      defaultValue: "#3b82f6",
+      defaultValue: "var(--action-primary)",
       label: "Brand color",
     });
     console.log(`ColorPicker: ${avg.toFixed(2)}ms avg`);

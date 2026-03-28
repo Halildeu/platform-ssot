@@ -28,9 +28,9 @@ vi.mock("@mfe/design-system", () => ({
 
 describe("ChartLegend", () => {
   const baseItems = [
-    { label: "Revenue", color: "#3b82f6" },
-    { label: "Expenses", color: "#ef4444" },
-    { label: "Profit", color: "#22c55e" },
+    { label: "Revenue", color: "var(--action-primary)" },
+    { label: "Expenses", color: "var(--state-danger-text)" },
+    { label: "Profit", color: "var(--state-success-text)" },
   ];
 
   it("renders legend items with labels", () => {
@@ -55,8 +55,8 @@ describe("ChartLegend", () => {
 
   it("renders values when provided", () => {
     const itemsWithValues = [
-      { label: "Revenue", color: "#3b82f6", value: "$45K" },
-      { label: "Expenses", color: "#ef4444", value: "$30K" },
+      { label: "Revenue", color: "var(--action-primary)", value: "$45K" },
+      { label: "Expenses", color: "var(--state-danger-text)", value: "$30K" },
     ];
 
     render(<ChartLegend items={itemsWithValues} />);
@@ -67,7 +67,7 @@ describe("ChartLegend", () => {
 
   it("renders numeric values", () => {
     const itemsWithNumericValues = [
-      { label: "A", color: "#000", value: 123 },
+      { label: "A", color: "var(--text-primary)", value: 123 },
     ];
 
     render(<ChartLegend items={itemsWithNumericValues} />);
@@ -92,9 +92,9 @@ describe("ChartLegend", () => {
 
   it("truncates with '+N more' when exceeding maxItems", () => {
     const manyItems = [
-      { label: "A", color: "#111" },
-      { label: "B", color: "#222" },
-      { label: "C", color: "#333" },
+      { label: "A", color: "var(--text-primary)" },
+      { label: "B", color: "var(--text-primary)" },
+      { label: "C", color: "var(--text-primary)" },
       { label: "D", color: "#444" },
       { label: "E", color: "#555" },
     ];

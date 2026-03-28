@@ -72,7 +72,7 @@ const entry: DesignLabComponentDocEntry = {
       {
         "name": "defaultValue",
         "type": "string",
-        "default": "#3b82f6",
+        "default": "var(--action-primary)",
         "required": false,
         "description": "Uncontrolled baslangic renk degeri."
       },

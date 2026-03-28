@@ -102,7 +102,7 @@ export default function EcosystemListing() {
                   <Text as="div" className="text-sm font-semibold text-text-primary">
                     {item.name}
                   </Text>
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                  <span className="rounded-full bg-state-success-bg px-2 py-0.5 text-[10px] font-medium text-state-success-text dark:bg-state-success-text/30 dark:text-state-success-text">
                     {item.lifecycle}
                   </span>
                 </div>

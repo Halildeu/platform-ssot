@@ -47,18 +47,18 @@ function mapEvidenceStatus(status: EvidenceStatus): ConfigStatus {
 
 const STATUS_CONFIG: Record<ConfigStatus, { icon: React.ReactNode; badge: string; label: string }> = {
   configured: {
-    icon: <CheckCircle2 className="h-4 w-4 text-emerald-500" />,
-    badge: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+    icon: <CheckCircle2 className="h-4 w-4 text-state-success-text" />,
+    badge: 'bg-state-success-bg text-state-success-text dark:bg-state-success-text/30 dark:text-state-success-text',
     label: 'Yapilandirildi',
   },
   missing: {
-    icon: <XCircle className="h-4 w-4 text-red-500" />,
-    badge: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+    icon: <XCircle className="h-4 w-4 text-state-danger-text" />,
+    badge: 'bg-state-danger-bg text-state-danger-text dark:bg-state-danger-text/30 dark:text-state-danger-text',
     label: 'Eksik',
   },
   no_data: {
-    icon: <HelpCircle className="h-4 w-4 text-zinc-400" />,
-    badge: 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800/30 dark:text-zinc-400',
+    icon: <HelpCircle className="h-4 w-4 text-text-disabled" />,
+    badge: 'bg-surface-muted text-text-subtle dark:bg-surface-inverse/30 dark:text-text-disabled',
     label: 'Veri yok',
   },
 };
@@ -87,7 +87,7 @@ export function SecurityPosture() {
     <div className="rounded-2xl border border-border-subtle bg-surface-default p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <ShieldAlert className="h-4 w-4 text-violet-500" />
+          <ShieldAlert className="h-4 w-4 text-action-primary" />
           <Text as="div" className="text-sm font-semibold text-text-primary">
             Security Posture
           </Text>
@@ -95,8 +95,8 @@ export function SecurityPosture() {
         </div>
         <div className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
           configuredCount === checks.length
-            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-            : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+            ? 'bg-state-success-bg text-state-success-text dark:bg-state-success-text/30 dark:text-state-success-text'
+            : 'bg-state-warning-bg text-state-warning-text dark:bg-state-warning-text/30 dark:text-state-warning-text'
         }`}>
           {configuredCount}/{checks.length} yapilandirildi
         </div>

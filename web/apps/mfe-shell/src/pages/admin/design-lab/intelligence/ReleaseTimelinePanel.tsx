@@ -112,22 +112,22 @@ const INCIDENTS: IncidentEntry[] = [
 /* ------------------------------------------------------------------ */
 
 const HEALTH_CONFIG = {
-  healthy: { icon: CheckCircle, color: "text-emerald-600", bg: "bg-emerald-500/10", label: "Healthy" },
-  "known-issues": { icon: AlertTriangle, color: "text-amber-600", bg: "bg-amber-500/10", label: "Known Issues" },
-  incident: { icon: AlertTriangle, color: "text-red-600", bg: "bg-red-500/10", label: "Incident" },
+  healthy: { icon: CheckCircle, color: "text-state-success-text", bg: "bg-state-success-text/10", label: "Healthy" },
+  "known-issues": { icon: AlertTriangle, color: "text-state-warning-text", bg: "bg-state-warning-text/10", label: "Known Issues" },
+  incident: { icon: AlertTriangle, color: "text-state-danger-text", bg: "bg-state-danger-text/10", label: "Incident" },
 } as const;
 
 const SEVERITY_COLORS = {
-  low: "bg-blue-500/10 text-blue-600",
-  medium: "bg-amber-500/10 text-amber-600",
-  high: "bg-orange-500/10 text-orange-600",
-  critical: "bg-red-500/10 text-red-600",
+  low: "bg-action-primary/10 text-action-primary",
+  medium: "bg-state-warning-text/10 text-state-warning-text",
+  high: "bg-state-warning-text/10 text-state-warning-text",
+  critical: "bg-state-danger-text/10 text-state-danger-text",
 } as const;
 
 const STATUS_COLORS = {
-  open: "bg-red-500/10 text-red-600",
-  investigating: "bg-amber-500/10 text-amber-600",
-  resolved: "bg-emerald-500/10 text-emerald-600",
+  open: "bg-state-danger-text/10 text-state-danger-text",
+  investigating: "bg-state-warning-text/10 text-state-warning-text",
+  resolved: "bg-state-success-text/10 text-state-success-text",
 } as const;
 
 function ReleaseCard({ release }: { release: ReleaseEntry }) {
@@ -159,7 +159,7 @@ function ReleaseCard({ release }: { release: ReleaseEntry }) {
                 {health.label}
               </span>
               {release.breaking > 0 && (
-                <span className="rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] font-medium text-red-600">
+                <span className="rounded-full bg-state-danger-text/10 px-2 py-0.5 text-[10px] font-medium text-state-danger-text">
                   {release.breaking} breaking
                 </span>
               )}
@@ -180,7 +180,7 @@ function ReleaseCard({ release }: { release: ReleaseEntry }) {
             <Text className="text-sm text-text-primary">{release.summary}</Text>
             {release.knownIssues && release.knownIssues.length > 0 && (
               <div className="mt-2">
-                <Text className="text-xs font-semibold text-amber-600">Known Issues:</Text>
+                <Text className="text-xs font-semibold text-state-warning-text">Known Issues:</Text>
                 <ul className="ml-4 mt-1 list-disc">
                   {release.knownIssues.map((issue, i) => (
                     <li key={i}>
@@ -225,7 +225,7 @@ function IncidentCard({ incident }: { incident: IncidentEntry }) {
 
           {expanded && incident.resolution && (
             <div className="mt-3 rounded-lg border border-border-subtle bg-surface-canvas p-3">
-              <Text className="text-xs font-semibold text-emerald-600">Resolution:</Text>
+              <Text className="text-xs font-semibold text-state-success-text">Resolution:</Text>
               <Text variant="secondary" className="mt-1 text-xs">{incident.resolution}</Text>
             </div>
           )}
@@ -246,8 +246,8 @@ export default function ReleaseTimelinePanel() {
     <div className="flex flex-col gap-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10">
-          <Tag className="h-5 w-5 text-indigo-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-action-primary/10">
+          <Tag className="h-5 w-5 text-action-primary" />
         </div>
         <div>
           <Text className="text-lg font-semibold text-text-primary">Release Timeline</Text>

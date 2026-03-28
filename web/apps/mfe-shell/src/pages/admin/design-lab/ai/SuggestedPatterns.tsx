@@ -57,11 +57,11 @@ export const SuggestedPatterns: React.FC<SuggestedPatternsProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-violet-500" />
+          <Sparkles className="h-4 w-4 text-action-primary" />
           <Text as="h3" className="text-xs font-semibold text-text-primary">
             Suggested Patterns
           </Text>
-          <span className="rounded-full bg-violet-100 px-2 py-0.5 text-[10px] font-bold text-violet-700">
+          <span className="rounded-full bg-action-primary/10 px-2 py-0.5 text-[10px] font-bold text-action-primary">
             {templates.length}
           </span>
         </div>
@@ -75,7 +75,7 @@ export const SuggestedPatterns: React.FC<SuggestedPatternsProps> = ({
           className={[
             "rounded-md px-2 py-1 text-[10px] font-medium transition",
             filterCategory === "all"
-              ? "bg-violet-500 text-white"
+              ? "bg-action-primary text-text-inverse"
               : "bg-surface-muted text-text-secondary hover:text-text-primary",
           ].join(" ")}
         >
@@ -92,7 +92,7 @@ export const SuggestedPatterns: React.FC<SuggestedPatternsProps> = ({
               className={[
                 "rounded-md px-2 py-1 text-[10px] font-medium transition",
                 filterCategory === cat.id
-                  ? "bg-violet-500 text-white"
+                  ? "bg-action-primary text-text-inverse"
                   : "bg-surface-muted text-text-secondary hover:text-text-primary",
               ].join(" ")}
             >
@@ -143,7 +143,7 @@ export const SuggestedPatterns: React.FC<SuggestedPatternsProps> = ({
                   onClick={() => handleCopy(template)}
                   className="ml-2 flex shrink-0 items-center gap-1 rounded-md border border-border-subtle px-2 py-1 text-[10px] font-medium text-text-secondary hover:text-text-primary transition"
                 >
-                  {isCopied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+                  {isCopied ? <Check className="h-3 w-3 text-state-success-text" /> : <Copy className="h-3 w-3" />}
                   {isCopied ? "Copied" : "Copy"}
                 </button>
               </div>
@@ -151,7 +151,7 @@ export const SuggestedPatterns: React.FC<SuggestedPatternsProps> = ({
               {/* Code block */}
               {isExpanded && (
                 <div className="border-t border-border-subtle">
-                  <pre className="overflow-x-auto bg-gray-900 p-3 text-[11px] leading-relaxed text-gray-200 font-mono">
+                  <pre className="overflow-x-auto bg-surface-inverse p-3 text-[11px] leading-relaxed text-border-subtle font-mono">
                     {code}
                   </pre>
                 </div>
@@ -175,12 +175,12 @@ export const SuggestedPatterns: React.FC<SuggestedPatternsProps> = ({
 /* ---- Category badge ---- */
 
 const CATEGORY_COLORS: Record<string, string> = {
-  form: "bg-blue-100 text-blue-700",
-  conditional: "bg-amber-100 text-amber-700",
-  list: "bg-emerald-100 text-emerald-700",
-  error: "bg-red-100 text-red-700",
-  composition: "bg-purple-100 text-purple-700",
-  state: "bg-indigo-100 text-indigo-700",
+  form: "bg-state-info-bg text-state-info-text",
+  conditional: "bg-state-warning-bg text-state-warning-text",
+  list: "bg-state-success-bg text-state-success-text",
+  error: "bg-state-danger-bg text-state-danger-text",
+  composition: "bg-action-primary/10 text-action-primary",
+  state: "bg-action-primary/10 text-action-primary",
 };
 
 function CategoryBadge({ category }: { category: string }) {

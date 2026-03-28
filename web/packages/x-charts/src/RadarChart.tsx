@@ -45,11 +45,11 @@ const SIZE_DIM: Record<ChartSize, number> = { sm: 200, md: 300, lg: 400 };
 
 /** Design-token-based fallback palette using CSS custom properties. */
 const DEFAULT_COLORS = [
-  "var(--action-primary, #3b82f6)",
-  "var(--state-success-text, #22c55e)",
-  "var(--state-warning-text, #f59e0b)",
-  "var(--state-error-text, #ef4444)",
-  "var(--text-tertiary, #94a3b8)",
+  "var(--action-primary))",
+  "var(--state-success-text))",
+  "var(--state-warning-text))",
+  "var(--state-error-text))",
+  "var(--text-tertiary))",
 ];
 
 const GRID_RINGS = 5;
@@ -120,7 +120,7 @@ export const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
                 key={`ring-${i}`}
                 points={points}
                 fill="none"
-                stroke="var(--border-subtle, #e2e8f0)"
+                stroke="var(--border-subtle))"
                 strokeWidth="0.5"
               />
             );
@@ -137,7 +137,7 @@ export const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
             y1={cy}
             x2={x}
             y2={y}
-            stroke="var(--border-subtle, #e2e8f0)"
+            stroke="var(--border-subtle))"
             strokeWidth="0.5"
           />
         );
@@ -154,7 +154,7 @@ export const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
             textAnchor="middle"
             dominantBaseline="central"
             fontSize="10"
-            fill="var(--text-secondary, #64748b)"
+            fill="var(--text-secondary))"
           >
             {cat}
           </text>

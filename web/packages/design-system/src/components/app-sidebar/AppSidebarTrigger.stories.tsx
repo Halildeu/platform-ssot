@@ -31,7 +31,7 @@ export const Default: Story = {
 };
 
 export const CustomClass: Story = {
-  render: () => <AppSidebarTrigger className="bg-gray-100" />,
+  render: () => <AppSidebarTrigger className="bg-surface-muted" />,
 };
 
 export const InExpandedSidebar: Story = {

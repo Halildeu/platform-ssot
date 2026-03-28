@@ -26,7 +26,7 @@ const multiSeries: RadarSeries[] = [
     id: 'target',
     label: 'Target State',
     values: { speed: 90, reliability: 95, security: 95, scalability: 85, usability: 88, cost: 70 },
-    color: '#22c55e',
+    color: 'var(--state-success-text)',
     fillOpacity: 0.1,
   },
 ];

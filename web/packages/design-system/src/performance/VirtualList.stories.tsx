@@ -34,15 +34,15 @@ function VirtualListDemo({ itemCount = 1000, height = 400 }: { itemCount?: numbe
             display: 'flex',
             alignItems: 'center',
             padding: '0 16px',
-            borderBottom: '1px solid #e5e7eb',
-            background: index % 2 === 0 ? '#ffffff' : '#f9fafb',
+            borderBottom: '1px solid var(--border-subtle)',
+            background: index % 2 === 0 ? 'var(--surface-default)' : 'var(--surface-muted)',
           }}
         >
           <div style={{ flex: 1 }}>
             <div style={{ fontWeight: 500, fontSize: 14 }}>{item.name}</div>
-            <div style={{ fontSize: 12, color: '#6b7280' }}>{item.email}</div>
+            <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{item.email}</div>
           </div>
-          <div style={{ fontSize: 12, color: '#9ca3af' }}>{item.department}</div>
+          <div style={{ fontSize: 12, color: 'var(--text-subtle)' }}>{item.department}</div>
         </div>
       )}
     />

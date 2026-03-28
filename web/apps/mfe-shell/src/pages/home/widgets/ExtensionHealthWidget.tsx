@@ -52,7 +52,7 @@ export const ExtensionHealthWidget: React.FC<{ onRefresh?: () => void }> = ({ on
   const chartData = extensions.slice(0, 12).map((ext) => ({
     label: ext.extension_id.replace("PRJ-", "").slice(0, 12),
     value: ext.enabled !== false ? 1 : 0,
-    color: ext.enabled !== false ? "#22c55e" : "#ef4444",
+    color: ext.enabled !== false ? "var(--state-success-text)" : "var(--state-danger-text)",
   }));
 
   return (

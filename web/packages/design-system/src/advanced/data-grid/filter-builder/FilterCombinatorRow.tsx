@@ -35,9 +35,9 @@ export const FilterCombinatorRow: React.FC<FilterCombinatorRowProps> = ({
         className={[
           'mx-2 min-w-[46px] rounded-full px-2.5 py-0.5 text-[10px] font-bold transition-colors',
           isAnd
-            ? 'bg-blue-100 text-blue-700 hover:bg-orange-100 hover:text-orange-700'
-            : 'bg-orange-100 text-orange-700 hover:bg-blue-100 hover:text-blue-700',
-          disabled ? 'cursor-default opacity-60 hover:bg-blue-100 hover:text-blue-700' : 'cursor-pointer',
+            ? 'bg-state-info-bg text-state-info-text hover:bg-state-warning-bg hover:text-state-warning-text'
+            : 'bg-state-warning-bg text-state-warning-text hover:bg-state-info-bg hover:text-state-info-text',
+          disabled ? 'cursor-default opacity-60 hover:bg-state-info-bg hover:text-state-info-text' : 'cursor-pointer',
         ].join(' ')}
       >
         {isAnd ? 'VE' : 'VEYA'}

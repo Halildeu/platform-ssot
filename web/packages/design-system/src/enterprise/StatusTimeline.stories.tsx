@@ -53,11 +53,11 @@ export const WithRejection: Story = {
       { id: 'e-rej', status: 'rejected', timestamp: '2024-03-11T17:00:00Z', actor: 'Ali Ozturk', description: 'Order rejected due to stock unavailability' },
     ],
     statusColors: {
-      created: '#3b82f6',
-      pending: '#f59e0b',
-      'in-progress': '#6366f1',
-      'in-review': '#8b5cf6',
-      rejected: '#ef4444',
+      created: 'var(--action-primary)',
+      pending: 'var(--state-warning-text)',
+      'in-progress': 'var(--action-primary)',
+      'in-review': 'var(--action-primary)',
+      rejected: 'var(--state-danger-text)',
     },
   },
 };

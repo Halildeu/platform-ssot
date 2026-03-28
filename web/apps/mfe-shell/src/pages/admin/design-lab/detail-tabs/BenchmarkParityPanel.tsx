@@ -39,17 +39,17 @@ const STATUS_TONE: Record<string, 'success' | 'warning' | 'muted' | 'info'> = {
 };
 
 const SCORE_COLOR = (score: number): string => {
-  if (score >= 95) return 'text-emerald-600 dark:text-emerald-400';
-  if (score >= 90) return 'text-blue-600 dark:text-blue-400';
-  if (score >= 85) return 'text-amber-600 dark:text-amber-400';
-  return 'text-zinc-600 dark:text-zinc-400';
+  if (score >= 95) return 'text-state-success-text dark:text-state-success-text';
+  if (score >= 90) return 'text-action-primary dark:text-action-primary';
+  if (score >= 85) return 'text-state-warning-text dark:text-state-warning-text';
+  return 'text-text-secondary dark:text-text-disabled';
 };
 
 const SCORE_BAR_COLOR = (score: number): string => {
-  if (score >= 95) return 'bg-emerald-400';
-  if (score >= 90) return 'bg-blue-400';
-  if (score >= 85) return 'bg-amber-400';
-  return 'bg-zinc-400';
+  if (score >= 95) return 'bg-state-success-text';
+  if (score >= 90) return 'bg-action-primary';
+  if (score >= 85) return 'bg-state-warning-text';
+  return 'bg-border-strong';
 };
 
 /* ── Layer filter type ── */
@@ -60,7 +60,7 @@ export type BenchmarkLayerFilter = 'all' | 'foundations' | 'components' | 'recip
 
 const ScoreBar: React.FC<{ score: number }> = ({ score }) => (
   <div className="flex items-center gap-2">
-    <div className="h-1.5 flex-1 rounded-full bg-zinc-100 dark:bg-zinc-800">
+    <div className="h-1.5 flex-1 rounded-full bg-surface-muted dark:bg-surface-inverse">
       <div
         className={`h-1.5 rounded-full transition-all ${SCORE_BAR_COLOR(score)}`}
         style={{ width: `${score}%` }}

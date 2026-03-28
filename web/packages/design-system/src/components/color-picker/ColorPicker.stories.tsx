@@ -26,7 +26,7 @@ type Story = StoryObj<typeof ColorPicker>;
 export const Default: Story = {
   args: {
     label: 'Renk Sec',
-    defaultValue: '#3b82f6',
+    defaultValue: 'var(--action-primary)',
   },
 };
 
@@ -34,9 +34,9 @@ export const WithPresets: Story = {
   args: {
     label: 'Tema Rengi',
     presets: [
-      { label: 'Birincil', colors: ['#3b82f6', '#2563eb', '#1d4ed8'] },
-      { label: 'Basarili', colors: ['#22c55e', '#16a34a', '#15803d'] },
-      { label: 'Uyari', colors: ['#f59e0b', '#d97706', '#b45309'] },
+      { label: 'Birincil', colors: ['var(--action-primary)', 'var(--action-primary)', 'var(--action-primary)'] },
+      { label: 'Basarili', colors: ['var(--state-success-text)', 'var(--state-success-text)', 'var(--state-success-text)'] },
+      { label: 'Uyari', colors: ['var(--state-warning-text)', 'var(--state-warning-text)', 'var(--state-warning-text)'] },
     ],
   },
 };
@@ -44,7 +44,7 @@ export const WithPresets: Story = {
 export const WithoutInput: Story = {
   args: {
     showInput: false,
-    defaultValue: '#ef4444',
+    defaultValue: 'var(--state-danger-text)',
   },
 };
 
@@ -52,7 +52,7 @@ export const AllSizes: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 24 }}>
       {(['sm', 'md', 'lg'] as const).map((size) => (
-        <ColorPicker key={size} size={size} label={size} defaultValue="#8b5cf6" />
+        <ColorPicker key={size} size={size} label={size} defaultValue="var(--action-primary)" />
       ))}
     </div>
   ),

@@ -124,12 +124,12 @@ export const TokensTab: React.FC<TokensTabProps> = ({ componentName }) => {
               className={[
                 "rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition",
                 activeTier === tier
-                  ? "bg-action-primary text-white"
+                  ? "bg-action-primary text-text-inverse"
                   : "bg-surface-muted text-text-secondary hover:text-text-primary",
               ].join(" ")}
             >
               {tier === "all" ? "All" : TOKEN_TIER_META[tier].label}
-              <span className={`ml-1 ${activeTier === tier ? "text-white/70" : "text-text-tertiary"}`}>
+              <span className={`ml-1 ${activeTier === tier ? "text-text-inverse/70" : "text-text-tertiary"}`}>
                 {tier === "all" ? allTokens.length : allTokens.filter((t) => t.tier === tier).length}
               </span>
             </button>
@@ -214,7 +214,7 @@ export const TokensTab: React.FC<TokensTabProps> = ({ componentName }) => {
                             </div>
                           </td>
                           <td className="px-4 py-2.5">
-                            <code className="rounded-xs bg-surface-muted px-1.5 py-0.5 text-[11px] font-mono text-rose-600">
+                            <code className="rounded-xs bg-surface-muted px-1.5 py-0.5 text-[11px] font-mono text-state-danger-text">
                               {token.cssVar}
                             </code>
                           </td>
@@ -274,11 +274,11 @@ export const TokensTab: React.FC<TokensTabProps> = ({ componentName }) => {
               onClick={handleCopyOverride}
               className="flex items-center gap-1 rounded-lg border border-border-subtle px-2 py-1 text-[11px] font-medium text-text-secondary hover:text-text-primary transition"
             >
-              {copiedOverride ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+              {copiedOverride ? <Check className="h-3 w-3 text-state-success-text" /> : <Copy className="h-3 w-3" />}
               {copiedOverride ? "Copied" : "Copy"}
             </button>
           </div>
-          <pre className="overflow-x-auto rounded-xl bg-gray-900 p-4 text-xs leading-relaxed text-gray-200 font-mono">
+          <pre className="overflow-x-auto rounded-xl bg-surface-inverse p-4 text-xs leading-relaxed text-border-subtle font-mono">
             {generateThemeOverride(componentName, overrides)}
           </pre>
         </div>

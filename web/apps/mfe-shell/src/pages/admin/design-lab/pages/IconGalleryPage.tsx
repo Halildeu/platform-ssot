@@ -220,7 +220,7 @@ export default function IconGalleryPage() {
               className={[
                 "rounded-lg px-2.5 py-1.5 text-xs font-medium transition",
                 idx === sizeIdx
-                  ? "bg-action-primary text-white shadow-xs"
+                  ? "bg-action-primary text-text-inverse shadow-xs"
                   : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
               ].join(" ")}
             >
@@ -243,7 +243,7 @@ export default function IconGalleryPage() {
           className={[
             "rounded-full px-3 py-1.5 text-xs font-medium transition",
             activeCategory === null
-              ? "bg-action-primary text-white shadow-xs"
+              ? "bg-action-primary text-text-inverse shadow-xs"
               : "border border-border-subtle bg-surface-default text-text-secondary hover:border-border-default hover:text-text-primary",
           ].join(" ")}
         >
@@ -257,7 +257,7 @@ export default function IconGalleryPage() {
             className={[
               "rounded-full px-3 py-1.5 text-xs font-medium transition",
               activeCategory === cat.name
-                ? "bg-action-primary text-white shadow-xs"
+                ? "bg-action-primary text-text-inverse shadow-xs"
                 : "border border-border-subtle bg-surface-default text-text-secondary hover:border-border-default hover:text-text-primary",
             ].join(" ")}
           >
@@ -330,12 +330,12 @@ const IconCell = React.memo(function IconCell({
       className={[
         "group relative flex flex-col items-center justify-center gap-2 rounded-xl border p-3 transition-all duration-200",
         copied
-          ? "border-emerald-500/50 bg-emerald-500/5"
+          ? "border-state-success-text/50 bg-state-success-text/5"
           : "border-border-subtle bg-surface-default hover:-translate-y-0.5 hover:border-action-primary/30 hover:shadow-md",
       ].join(" ")}
     >
       {copied ? (
-        <Check className={`${sizeCls} text-emerald-500`} />
+        <Check className={`${sizeCls} text-state-success-text`} />
       ) : (
         <Component className={`${sizeCls} text-text-primary transition-colors group-hover:text-action-primary`} />
       )}

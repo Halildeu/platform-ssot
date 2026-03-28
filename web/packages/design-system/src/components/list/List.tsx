@@ -75,13 +75,13 @@ const toneClass: Record<ListTone, string> = {
   default:
     "border border-border-subtle/75 bg-[var(--surface-card-alt)] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
   info:
-    "border border-state-info-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(239,246,255,0.98),rgba(246,247,255,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
+    "border border-state-info-border/55 bg-[var(--surface-card-alt),rgba(246,247,255,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
   success:
-    "border border-state-success-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(240,253,244,0.98),rgba(247,250,255,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
+    "border border-state-success-border/55 bg-[var(--surface-card-alt),rgba(247,250,255,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
   warning:
-    "border border-state-warning-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(255,251,235,0.98),rgba(255,247,237,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
+    "border border-state-warning-border/55 bg-[var(--surface-card-alt),rgba(255,247,237,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
   danger:
-    "border border-state-danger-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(254,242,242,0.98),rgba(255,247,247,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
+    "border border-state-danger-border/55 bg-[var(--surface-card-alt),rgba(255,247,247,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
 };
 
 const badgeToneMap: Record<ListTone, BadgeVariant> = {

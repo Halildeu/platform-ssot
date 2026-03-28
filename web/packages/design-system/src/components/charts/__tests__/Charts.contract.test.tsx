@@ -31,7 +31,7 @@ beforeAll(() => {
     getImageData: vi.fn().mockReturnValue({ data: new Uint8ClampedArray(4) }),
     createImageData: vi.fn(), setLineDash: vi.fn(), getLineDash: vi.fn().mockReturnValue([]),
     isPointInPath: vi.fn().mockReturnValue(false), isPointInStroke: vi.fn().mockReturnValue(false),
-    ellipse: vi.fn(), lineWidth: 1, strokeStyle: '#000', fillStyle: '#000',
+    ellipse: vi.fn(), lineWidth: 1, strokeStyle: 'var(--text-primary)', fillStyle: 'var(--text-primary)',
     globalAlpha: 1, globalCompositeOperation: 'source-over',
     textAlign: 'start', textBaseline: 'alphabetic', imageSmoothingEnabled: true,
     canvas: { toDataURL: () => 'data:image/png;base64,AAAA', width: 300, height: 150 },

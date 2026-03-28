@@ -54,7 +54,7 @@ function Section({
           fontWeight: 600,
           marginBottom: 16,
           paddingBottom: 8,
-          borderBottom: "1px solid var(--border-subtle, #e2e8f0)",
+          borderBottom: "1px solid var(--border-subtle))",
         }}
       >
         {title}

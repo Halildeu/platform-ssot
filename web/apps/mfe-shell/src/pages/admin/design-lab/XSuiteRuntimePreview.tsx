@@ -117,7 +117,7 @@ const RUNTIME_DEFAULT_PROPS: Record<string, Record<string, any>> = {
   SparklineChart: { data: [10, 12, 8, 15, 13, 17, 20, 18, 22], type: "area" },
   MiniChart: { data: [{ label: "Oca", value: 45 }, { label: "Sub", value: 52 }, { label: "Mar", value: 48 }], type: "bar" },
   ChartContainer: { title: "Grafik Basligi", description: "Aciklama metni", height: 200 },
-  ChartLegend: { items: [{ label: "Web", color: "#3b82f6", value: "45%" }, { label: "Mobile", color: "#16a34a", value: "30%" }], direction: "horizontal" },
+  ChartLegend: { items: [{ label: "Web", color: "var(--action-primary)", value: "45%" }, { label: "Mobile", color: "var(--state-success-text)", value: "30%" }], direction: "horizontal" },
   ChartDashboard: { columns: 3, gap: "md" },
   GaugeChart: { value: 72, min: 0, max: 100, label: "Performans" },
   RadarChart: { data: [{ label: "Hiz", value: 80 }, { label: "Guvenilirlik", value: 90 }, { label: "Olceklenebilirlik", value: 70 }, { label: "Kullanilabilirlik", value: 85 }, { label: "Guvenlik", value: 75 }] },
@@ -125,7 +125,7 @@ const RUNTIME_DEFAULT_PROPS: Record<string, Record<string, any>> = {
   DataGridSelectionBar: { selectedCount: 3, onClearSelection: () => {} },
   RichTextEditor: { placeholder: "Icerik yazin...", minHeight: 200 },
   KanbanBoard: { columns: [{ id: "todo", title: "Yapilacak" }, { id: "doing", title: "Yapiliyor" }, { id: "done", title: "Tamamlandi" }], cards: [{ id: "1", columnId: "todo", title: "API entegrasyonu", priority: "high", tags: ["backend"] }, { id: "2", columnId: "doing", title: "Test yazimi", priority: "low", tags: ["qa"] }] },
-  Scheduler: { events: [{ id: "1", title: "Toplanti", start: new Date(2025, 2, 21, 10, 0), end: new Date(2025, 2, 21, 11, 30), color: "#3b82f6" }], view: "day", date: new Date(2025, 2, 21) },
+  Scheduler: { events: [{ id: "1", title: "Toplanti", start: new Date(2025, 2, 21, 10, 0), end: new Date(2025, 2, 21, 11, 30), color: "var(--action-primary)" }], view: "day", date: new Date(2025, 2, 21) },
   FormRenderer: { schema: { id: "demo", title: "Kullanici Bilgileri", columns: 2, fields: [{ id: "name", type: "text", name: "name", label: "Ad Soyad", required: true }, { id: "email", type: "email", name: "email", label: "E-posta", required: true }], submitLabel: "Kaydet" }, onSubmit: () => {} },
 };
 

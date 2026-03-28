@@ -436,7 +436,7 @@ const PageOverviewTab: React.FC<{
                         key={item.templateId}
                         className={`rounded-[24px] border p-4 shadow-xs transition-colors ${
                           isActive
-                            ? 'border-blue-300 bg-blue-50/50 dark:border-blue-700 dark:bg-blue-900/20'
+                            ? 'border-state-info-text/30 bg-state-info-bg/50 dark:border-action-primary dark:bg-action-primary/20'
                             : 'border-border-subtle bg-surface-default'
                         }`}
                       >
@@ -474,8 +474,8 @@ const PageOverviewTab: React.FC<{
 
                         {isActive ? (
                           <div className="mt-2 flex items-center gap-1">
-                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-400" />
-                            <Text className="text-[10px] font-semibold text-blue-600 dark:text-blue-300">Active match</Text>
+                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-action-primary" />
+                            <Text className="text-[10px] font-semibold text-action-primary dark:text-action-primary/60">Active match</Text>
                           </div>
                         ) : null}
                       </div>
@@ -602,12 +602,12 @@ const PageApiTab: React.FC<{
 
 /* ── Region color mapping for composition builder ── */
 const REGION_COLORS: Record<string, { bg: string; border: string; text: string }> = {
-  hero: { bg: 'bg-violet-50 dark:bg-violet-900/20', border: 'border-violet-200 dark:border-violet-800', text: 'text-violet-600 dark:text-violet-300' },
-  header: { bg: 'bg-blue-50 dark:bg-blue-900/20', border: 'border-blue-200 dark:border-blue-800', text: 'text-blue-600 dark:text-blue-300' },
-  nav: { bg: 'bg-amber-50 dark:bg-amber-900/20', border: 'border-amber-200 dark:border-amber-800', text: 'text-amber-600 dark:text-amber-300' },
-  sidebar: { bg: 'bg-emerald-50 dark:bg-emerald-900/20', border: 'border-emerald-200 dark:border-emerald-800', text: 'text-emerald-600 dark:text-emerald-300' },
-  body: { bg: 'bg-sky-50 dark:bg-sky-900/20', border: 'border-sky-200 dark:border-sky-800', text: 'text-sky-600 dark:text-sky-300' },
-  footer: { bg: 'bg-zinc-50 dark:bg-zinc-900/20', border: 'border-zinc-200 dark:border-zinc-800', text: 'text-zinc-600 dark:text-zinc-300' },
+  hero: { bg: 'bg-action-primary/10 dark:bg-action-primary/20', border: 'border-action-primary/20 dark:border-action-primary', text: 'text-action-primary dark:text-action-primary/60' },
+  header: { bg: 'bg-state-info-bg dark:bg-action-primary/20', border: 'border-state-info-text/20 dark:border-action-primary', text: 'text-action-primary dark:text-action-primary/60' },
+  nav: { bg: 'bg-state-warning-bg dark:bg-state-warning-text/20', border: 'border-state-warning-text/20 dark:border-state-warning-text', text: 'text-state-warning-text dark:text-state-warning-text' },
+  sidebar: { bg: 'bg-state-success-bg dark:bg-state-success-text/20', border: 'border-state-success-text/20 dark:border-state-success-text', text: 'text-state-success-text dark:text-state-success-text' },
+  body: { bg: 'bg-state-info-bg dark:bg-state-info-text/20', border: 'border-state-info-text/20 dark:border-state-info-text', text: 'text-state-info-text dark:text-state-info-text' },
+  footer: { bg: 'bg-surface-muted dark:bg-surface-inverse/20', border: 'border-border-subtle dark:border-surface-inverse', text: 'text-text-secondary dark:text-text-disabled' },
 };
 
 const resolveRegionColor = (regionId: string) => {

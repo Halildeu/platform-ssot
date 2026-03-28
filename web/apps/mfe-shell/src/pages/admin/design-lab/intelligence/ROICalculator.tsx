@@ -86,8 +86,8 @@ export default function ROICalculator() {
     <div className="flex flex-col gap-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10">
-          <Calculator className="h-5 w-5 text-emerald-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-state-success-text/10">
+          <Calculator className="h-5 w-5 text-state-success-text" />
         </div>
         <div>
           <Text className="text-lg font-semibold text-text-primary">ROI Calculator</Text>
@@ -141,10 +141,10 @@ export default function ROICalculator() {
       </div>
 
       {/* Summary banner */}
-      <div className="rounded-2xl bg-linear-to-r from-emerald-500/10 via-blue-500/5 to-violet-500/10 p-6">
+      <div className="rounded-2xl bg-linear-to-r from-state-success-text/10 via-action-primary/5 to-action-primary/10 p-6">
         <Text className="text-center text-sm font-medium text-text-secondary">
           Bu platform {formatNumber(calculations.totalHoursSaved)} saat geliştirme süresinden{" "}
-          <span className="text-lg font-bold text-emerald-600">
+          <span className="text-lg font-bold text-state-success-text">
             {formatCurrency(calculations.totalCostSaved)}
           </span>{" "}
           tasarruf sağlıyor
@@ -158,28 +158,28 @@ export default function ROICalculator() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           icon={<Clock className="h-4 w-4" />}
-          iconBg="bg-blue-500/10 text-blue-600"
+          iconBg="bg-action-primary/10 text-action-primary"
           label="Toplam Saat Tasarrufu"
           value={`${formatNumber(calculations.totalHoursSaved)} saat`}
           detail={`Geliştirici başına ${formatNumber(calculations.hoursPerDev)} saat/yıl`}
         />
         <MetricCard
           icon={<TrendingUp className="h-4 w-4" />}
-          iconBg="bg-emerald-500/10 text-emerald-600"
+          iconBg="bg-state-success-text/10 text-state-success-text"
           label="Yeniden Kullanım Tasarrufu"
           value={`${formatNumber(calculations.componentReuseSavings)} saat`}
           detail={`${totalComponents} bileşen, ${appsCount} uygulamada paylaşıldı`}
         />
         <MetricCard
           icon={<Shield className="h-4 w-4" />}
-          iconBg="bg-violet-500/10 text-violet-600"
+          iconBg="bg-action-primary/10 text-action-primary"
           label="Engellenen Bug"
           value={`${calculations.preventedBugs} bug`}
           detail={`${formatNumber(calculations.bugFixSavings)} saat fix süresi tasarrufu`}
         />
         <MetricCard
           icon={<Calculator className="h-4 w-4" />}
-          iconBg="bg-amber-500/10 text-amber-600"
+          iconBg="bg-state-warning-text/10 text-state-warning-text"
           label="Verimlilik Çarpanı"
           value={`${calculations.productivityMultiplier.toFixed(2)}x`}
           detail="Yıllık geliştirici verimliliği artışı"
@@ -194,19 +194,19 @@ export default function ROICalculator() {
             label="Bileşen yeniden kullanım tasarrufu"
             hours={calculations.componentReuseSavings}
             total={calculations.totalHoursSaved}
-            color="bg-blue-500"
+            color="bg-action-primary"
           />
           <BreakdownRow
             label="Bug engelleme tasarrufu"
             hours={calculations.bugFixSavings}
             total={calculations.totalHoursSaved}
-            color="bg-violet-500"
+            color="bg-action-primary"
           />
           <BreakdownRow
             label="Tutarlılık & review tasarrufu"
             hours={calculations.consistencySavings}
             total={calculations.totalHoursSaved}
-            color="bg-emerald-500"
+            color="bg-state-success-text"
           />
         </div>
       </div>

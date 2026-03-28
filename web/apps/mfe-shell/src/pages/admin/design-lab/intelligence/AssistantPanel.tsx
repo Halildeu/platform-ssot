@@ -20,9 +20,9 @@ const CONFIDENCE_STYLES: Record<
   AssistantResponse["confidence"],
   { bg: string; text: string }
 > = {
-  high: { bg: "bg-emerald-100", text: "text-emerald-700" },
-  medium: { bg: "bg-amber-100", text: "text-amber-700" },
-  low: { bg: "bg-slate-100", text: "text-slate-600" },
+  high: { bg: "bg-state-success-bg", text: "text-state-success-text" },
+  medium: { bg: "bg-state-warning-bg", text: "text-state-warning-text" },
+  low: { bg: "bg-surface-muted", text: "text-text-secondary" },
 };
 
 function ConfidenceBadge({
@@ -77,12 +77,12 @@ function MessageBubble({ message }: { message: ChatMessage }) {
       <div
         className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
           isUser
-            ? "bg-action-primary text-white"
+            ? "bg-action-primary text-text-inverse"
             : "bg-surface-canvas text-text-primary"
         }`}
       >
         <Text
-          className={`whitespace-pre-wrap text-sm ${isUser ? "text-white" : "text-text-primary"}`}
+          className={`whitespace-pre-wrap text-sm ${isUser ? "text-text-inverse" : "text-text-primary"}`}
         >
           {message.content}
         </Text>
@@ -274,7 +274,7 @@ export default function AssistantPanel() {
         <button
           type="submit"
           disabled={!input.trim()}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-action-primary text-white transition hover:bg-action-primary/90 disabled:opacity-40"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-action-primary text-text-inverse transition hover:bg-action-primary/90 disabled:opacity-40"
         >
           <Send className="h-4 w-4" />
         </button>

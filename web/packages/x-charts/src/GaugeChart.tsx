@@ -46,9 +46,9 @@ export interface GaugeChartProps {
 const SIZE_DIM: Record<ChartSize, number> = { sm: 160, md: 240, lg: 320 };
 
 const DEFAULT_THRESHOLDS: GaugeThreshold[] = [
-  { value: 60, color: "var(--state-success-text, #22c55e)" },
-  { value: 80, color: "var(--state-warning-text, #f59e0b)" },
-  { value: 100, color: "var(--state-error-text, #ef4444)" },
+  { value: 60, color: "var(--state-success-text))" },
+  { value: 80, color: "var(--state-warning-text))" },
+  { value: 100, color: "var(--state-error-text))" },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -149,7 +149,7 @@ export const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
           <path
             d={arcPath(cx, cy, midR, -180, 0)}
             fill="none"
-            stroke="var(--border-subtle, #e2e8f0)"
+            stroke="var(--border-subtle))"
             strokeWidth={strokeW}
             strokeLinecap="butt"
           />
@@ -169,12 +169,12 @@ export const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
             y1={tail.y}
             x2={tip.x}
             y2={tip.y}
-            stroke="var(--text-primary, #1e293b)"
+            stroke="var(--text-primary))"
             strokeWidth="2"
             strokeLinecap="round"
           />
           {/* centre dot */}
-          <circle cx={cx} cy={cy} r="4" fill="var(--text-primary, #1e293b)" />
+          <circle cx={cx} cy={cy} r="4" fill="var(--text-primary))" />
           {/* value text */}
           <text
             x={cx}
@@ -182,7 +182,7 @@ export const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
             textAnchor="middle"
             fontSize={dim * 0.09}
             fontWeight="600"
-            fill="var(--text-primary, #1e293b)"
+            fill="var(--text-primary))"
           >
             {displayValue}
           </text>
@@ -193,7 +193,7 @@ export const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
               y={cy + 36}
               textAnchor="middle"
               fontSize="11"
-              fill="var(--text-secondary, #64748b)"
+              fill="var(--text-secondary))"
             >
               {label}
             </text>
@@ -204,7 +204,7 @@ export const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
             y={cy + 14}
             textAnchor="middle"
             fontSize="10"
-            fill="var(--text-tertiary, #94a3b8)"
+            fill="var(--text-tertiary))"
           >
             {min}
           </text>
@@ -213,7 +213,7 @@ export const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
             y={cy + 14}
             textAnchor="middle"
             fontSize="10"
-            fill="var(--text-tertiary, #94a3b8)"
+            fill="var(--text-tertiary))"
           >
             {max}
           </text>

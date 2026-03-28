@@ -34,12 +34,12 @@ import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
 type ViewMode = "heatmap" | "table";
 
 const STATUS_ICON: Record<string, React.ReactNode> = {
-  adopted: <ArrowUpRight className="h-3.5 w-3.5 text-emerald-500" />,
+  adopted: <ArrowUpRight className="h-3.5 w-3.5 text-state-success-text" />,
   unused: <Minus className="h-3.5 w-3.5 text-[var(--text-subtle)]" />,
 };
 
 const STATUS_BADGE: Record<string, string> = {
-  adopted: "bg-emerald-100 text-emerald-700",
+  adopted: "bg-state-success-bg text-state-success-text",
   unused: "bg-[var(--surface-muted)] text-[var(--text-secondary)]",
 };
 
@@ -67,8 +67,8 @@ export default function InsightsDashboardPage() {
     <div className="flex flex-col mx-auto max-w-6xl gap-6 p-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-violet-500/20 to-indigo-500/20">
-          <Activity className="h-5 w-5 text-violet-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-action-primary/20 to-action-primary/20">
+          <Activity className="h-5 w-5 text-action-primary" />
         </div>
         <div>
           <div className="flex items-center gap-2">
@@ -86,29 +86,29 @@ export default function InsightsDashboardPage() {
         <SummaryCard
           label="Toplam Bilesen"
           value={data.length}
-          icon={<BarChart3 className="h-4 w-4 text-indigo-500" />}
-          color="bg-indigo-50"
+          icon={<BarChart3 className="h-4 w-4 text-action-primary" />}
+          color="bg-action-primary/10"
         />
         <SummaryCard
           label="Dokumante"
           value={`${documented}/${data.length}`}
           sub={`${data.length > 0 ? Math.round((documented / data.length) * 100) : 0}%`}
-          icon={<FileQuestion className="h-4 w-4 text-amber-500" />}
-          color="bg-amber-50"
+          icon={<FileQuestion className="h-4 w-4 text-state-warning-text" />}
+          color="bg-state-warning-bg"
         />
         <SummaryCard
           label="Kullanilan"
           value={data.filter((d) => d.status === "adopted").length}
           sub={`${adoptionRate}% benimseme`}
-          icon={<TrendingUp className="h-4 w-4 text-emerald-500" />}
-          color="bg-emerald-50"
+          icon={<TrendingUp className="h-4 w-4 text-state-success-text" />}
+          color="bg-state-success-bg"
         />
         <SummaryCard
           label="Kullanilmayan"
           value={data.filter((d) => d.status === "unused").length}
           sub="whereUsed bos"
-          icon={<Activity className="h-4 w-4 text-violet-500" />}
-          color="bg-violet-50"
+          icon={<Activity className="h-4 w-4 text-action-primary" />}
+          color="bg-action-primary/10"
         />
       </div>
 
@@ -123,7 +123,7 @@ export default function InsightsDashboardPage() {
               className={[
                 "rounded-lg px-3 py-1.5 text-xs font-medium transition",
                 viewMode === mode
-                  ? "bg-action-primary text-white"
+                  ? "bg-action-primary text-text-inverse"
                   : "bg-surface-muted text-text-secondary hover:text-text-primary",
               ].join(" ")}
             >
@@ -175,9 +175,9 @@ export default function InsightsDashboardPage() {
                   </td>
                   <td className="px-3 py-2.5 text-center">
                     {entry.documented ? (
-                      <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
+                      <span className="inline-block h-2 w-2 rounded-full bg-state-success-text" />
                     ) : (
-                      <span className="inline-block h-2 w-2 rounded-full bg-red-400" />
+                      <span className="inline-block h-2 w-2 rounded-full bg-state-danger-text" />
                     )}
                   </td>
                   <td className="px-3 py-2.5 text-center">
@@ -195,7 +195,7 @@ export default function InsightsDashboardPage() {
         {/* Most Used */}
         <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
           <div className="mb-3 flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-emerald-500" />
+            <TrendingUp className="h-4 w-4 text-state-success-text" />
             <Text as="h3" className="text-sm font-semibold text-text-primary">En Cok Kullanilan</Text>
           </div>
           <div className="flex flex-col gap-2">
@@ -214,7 +214,7 @@ export default function InsightsDashboardPage() {
         {/* Least Used */}
         <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
           <div className="mb-3 flex items-center gap-2">
-            <TrendingDown className="h-4 w-4 text-red-500" />
+            <TrendingDown className="h-4 w-4 text-state-danger-text" />
             <Text as="h3" className="text-sm font-semibold text-text-primary">Kullanilmayan</Text>
           </div>
           <div className="flex flex-col gap-2">
@@ -233,9 +233,9 @@ export default function InsightsDashboardPage() {
         {/* Undocumented Backlog */}
         <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
           <div className="mb-3 flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 text-amber-500" />
+            <AlertCircle className="h-4 w-4 text-state-warning-text" />
             <Text as="h3" className="text-sm font-semibold text-text-primary">Dokumante Edilmemis</Text>
-            <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+            <span className="ml-auto rounded-full bg-state-warning-bg px-2 py-0.5 text-[10px] font-bold text-state-warning-text">
               {backlog.length}
             </span>
           </div>
@@ -288,7 +288,7 @@ function SummaryCard({
 }
 
 function PriorityBar({ value }: { value: number }) {
-  const color = value >= 70 ? "bg-red-400" : value >= 40 ? "bg-amber-400" : "bg-emerald-400";
+  const color = value >= 70 ? "bg-state-danger-text" : value >= 40 ? "bg-state-warning-text" : "bg-state-success-text";
   return (
     <div className="flex items-center gap-1.5">
       <div className="h-1.5 w-12 overflow-hidden rounded-full bg-surface-muted">

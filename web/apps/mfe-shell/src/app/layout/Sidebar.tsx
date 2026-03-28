@@ -251,7 +251,7 @@ export const Sidebar: React.FC = () => {
           document.documentElement.style.setProperty('--shell-sidebar-w', w);
         }
       }}
-      className={`fixed bottom-0 left-0 top-[var(--shell-header-h,56px)] z-30 flex flex-col border-r border-border-subtle bg-surface-panel shadow-xs ${
+      className={`fixed bottom-0 left-0 top-[var(--shell-header-h)] z-30 flex flex-col border-r border-border-subtle bg-surface-panel shadow-xs ${
         isCollapsed ? 'w-[76px]' : 'w-[280px]'
       }`}
     >

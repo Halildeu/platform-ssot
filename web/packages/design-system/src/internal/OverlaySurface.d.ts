@@ -1,7 +1,7 @@
 import React from "react";
 export type OverlayCloseReason = "close-button" | "overlay" | "escape";
 export declare const premiumOverlayPanelClassName = "rounded-[28px] border border-border-subtle/80 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md";
-export declare const premiumOverlayCloseButtonClassName = "inline-flex h-8 w-8 items-center justify-center rounded-full border border-border-subtle/70 bg-[var(--surface-card,var(--surface-default))] text-text-subtle shadow-[0_14px_28px_-24px_var(--shadow-color)] transition hover:-translate-y-px hover:border-border-default hover:bg-[var(--surface-card,var(--surface-default))] hover:text-text-primary hover:shadow-[0_18px_32px_-22px_var(--shadow-color)]";
+export declare const premiumOverlayCloseButtonClassName = "inline-flex h-8 w-8 items-center justify-center rounded-full border border-border-subtle/70 bg-[var(--surface-card))] text-text-subtle shadow-[0_14px_28px_-24px_var(--shadow-color)] transition hover:-translate-y-px hover:border-border-default hover:bg-[var(--surface-card))] hover:text-text-primary hover:shadow-[0_18px_32px_-22px_var(--shadow-color)]";
 /** Props for {@link OverlaySurface}. */
 interface OverlaySurfaceProps {
     /** Whether the overlay is currently visible. */

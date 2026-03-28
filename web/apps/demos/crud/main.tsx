@@ -30,17 +30,17 @@ const CrudDemo = () => (
     <section>
       <h2 className="text-xl font-semibold mb-3">Sayfa Yapısı</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="border rounded-lg p-4 bg-blue-50">
+        <div className="border rounded-lg p-4 bg-state-info-bg">
           <h3 className="font-semibold">List View</h3>
-          <p className="text-sm text-gray-600">AG Grid ile server-side pagination, filtering, sorting</p>
+          <p className="text-sm text-text-secondary">AG Grid ile server-side pagination, filtering, sorting</p>
         </div>
-        <div className="border rounded-lg p-4 bg-green-50">
+        <div className="border rounded-lg p-4 bg-state-success-bg">
           <h3 className="font-semibold">Detail View</h3>
-          <p className="text-sm text-gray-600">Seçili kaydın detayları, ilişkili veriler, audit trail</p>
+          <p className="text-sm text-text-secondary">Seçili kaydın detayları, ilişkili veriler, audit trail</p>
         </div>
-        <div className="border rounded-lg p-4 bg-orange-50">
+        <div className="border rounded-lg p-4 bg-state-warning-bg">
           <h3 className="font-semibold">Create / Edit Form</h3>
-          <p className="text-sm text-gray-600">FormBuilder ile validasyonlu form, dosya yükleme</p>
+          <p className="text-sm text-text-secondary">FormBuilder ile validasyonlu form, dosya yükleme</p>
         </div>
       </div>
     </section>
@@ -59,7 +59,7 @@ const CrudDemo = () => (
 
     <section>
       <h2 className="text-xl font-semibold mb-3">Başlangıç</h2>
-      <pre className="bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
+      <pre className="bg-surface-inverse text-state-success-text p-4 rounded-lg text-sm overflow-x-auto">
         npx @mfe/create-app my-crud-app --template crud
       </pre>
     </section>

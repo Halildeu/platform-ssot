@@ -34,7 +34,7 @@ export const Default: Story = {
 };
 
 export const CustomClass: Story = {
-  render: () => <AppSidebarSeparator className="border-red-300" />,
+  render: () => <AppSidebarSeparator className="border-state-danger-text/30" />,
 };
 
 export const BetweenGroups: Story = {

@@ -23,11 +23,11 @@ export type ExampleEntry = {
 };
 
 export const EXAMPLE_CATEGORY_META: Record<ExampleCategory, { label: string; emoji: string; color: string }> = {
-  basic: { label: "Basic", emoji: "🟢", color: "bg-emerald-100 text-emerald-700" },
-  form: { label: "Form", emoji: "📝", color: "bg-blue-100 text-blue-700" },
-  layout: { label: "Layout", emoji: "📐", color: "bg-amber-100 text-amber-700" },
-  advanced: { label: "Advanced", emoji: "⚡", color: "bg-purple-100 text-purple-700" },
-  patterns: { label: "Patterns", emoji: "🧩", color: "bg-rose-100 text-rose-700" },
+  basic: { label: "Basic", emoji: "🟢", color: "bg-state-success-bg text-state-success-text" },
+  form: { label: "Form", emoji: "📝", color: "bg-state-info-bg text-state-info-text" },
+  layout: { label: "Layout", emoji: "📐", color: "bg-state-warning-bg text-state-warning-text" },
+  advanced: { label: "Advanced", emoji: "⚡", color: "bg-action-primary/10 text-action-primary" },
+  patterns: { label: "Patterns", emoji: "🧩", color: "bg-state-danger-bg text-state-danger-text" },
 };
 
 /* ---- Curated examples per component ---- */
@@ -529,15 +529,15 @@ export function PolitikaListesi() {
       items={[
         <div key="1" className="flex justify-between p-3 border rounded-lg">
           <span className="font-medium">policy_autonomy.v1</span>
-          <span className="text-xs text-green-600">Aktif</span>
+          <span className="text-xs text-state-success-text">Aktif</span>
         </div>,
         <div key="2" className="flex justify-between p-3 border rounded-lg">
           <span className="font-medium">policy_secrets.v1</span>
-          <span className="text-xs text-green-600">Aktif</span>
+          <span className="text-xs text-state-success-text">Aktif</span>
         </div>,
         <div key="3" className="flex justify-between p-3 border rounded-lg">
           <span className="font-medium">policy_network.v2</span>
-          <span className="text-xs text-yellow-600">Pasif</span>
+          <span className="text-xs text-state-warning-text">Pasif</span>
         </div>,
       ]}
     />
@@ -586,11 +586,11 @@ export function AktifFiltreler() {
       items={[
         <div key="1" className="flex justify-between p-3 border rounded-lg">
           <span className="font-medium">srv-prod-web-01</span>
-          <span className="text-xs text-green-600">Aktif</span>
+          <span className="text-xs text-state-success-text">Aktif</span>
         </div>,
         <div key="2" className="flex justify-between p-3 border rounded-lg">
           <span className="font-medium">srv-prod-api-03</span>
-          <span className="text-xs text-green-600">Aktif</span>
+          <span className="text-xs text-state-success-text">Aktif</span>
         </div>,
       ]}
     />
@@ -638,19 +638,19 @@ export function SiralanabilirListe() {
         <div key="1" className="flex justify-between p-3 border rounded-lg">
           <div>
             <div className="font-medium">Veritabani migrasyonu</div>
-            <div className="text-xs text-gray-500">2024-12-15 — Yuksek oncelik</div>
+            <div className="text-xs text-text-subtle">2024-12-15 — Yuksek oncelik</div>
           </div>
         </div>,
         <div key="2" className="flex justify-between p-3 border rounded-lg">
           <div>
             <div className="font-medium">API dokumantasyonu</div>
-            <div className="text-xs text-gray-500">2024-12-14 — Orta oncelik</div>
+            <div className="text-xs text-text-subtle">2024-12-14 — Orta oncelik</div>
           </div>
         </div>,
         <div key="3" className="flex justify-between p-3 border rounded-lg">
           <div>
             <div className="font-medium">Performans testi</div>
-            <div className="text-xs text-gray-500">2024-12-13 — Dusuk oncelik</div>
+            <div className="text-xs text-text-subtle">2024-12-13 — Dusuk oncelik</div>
           </div>
         </div>,
       ]}
@@ -712,14 +712,14 @@ export function KullaniciYonetimi() {
                     : prev.filter((key) => key !== k.id)
                 );
               }}
-              className="h-4 w-4 rounded-xs border-gray-300"
+              className="h-4 w-4 rounded-xs border-border-default"
             />
             <div>
               <div className="font-medium">{k.ad}</div>
-              <div className="text-xs text-gray-500">{k.email}</div>
+              <div className="text-xs text-text-subtle">{k.email}</div>
             </div>
           </div>
-          <span className="rounded-full bg-gray-100 px-2 py-1 text-xs">{k.rol}</span>
+          <span className="rounded-full bg-surface-muted px-2 py-1 text-xs">{k.rol}</span>
         </div>
       ))}
     />
@@ -809,13 +809,13 @@ export function KompaktListe() {
       ]}
       items={[
         <div key="1" className="flex justify-between p-2 border rounded-xs text-sm">
-          <span>auth-service</span><span className="text-green-600 text-xs">Calisiyor</span>
+          <span>auth-service</span><span className="text-state-success-text text-xs">Calisiyor</span>
         </div>,
         <div key="2" className="flex justify-between p-2 border rounded-xs text-sm">
-          <span>payment-gateway</span><span className="text-green-600 text-xs">Calisiyor</span>
+          <span>payment-gateway</span><span className="text-state-success-text text-xs">Calisiyor</span>
         </div>,
         <div key="3" className="flex justify-between p-2 border rounded-xs text-sm">
-          <span>notification-svc</span><span className="text-yellow-600 text-xs">Dusuk</span>
+          <span>notification-svc</span><span className="text-state-warning-text text-xs">Dusuk</span>
         </div>,
       ]}
     />
@@ -858,18 +858,18 @@ export function ToolbarOrnegi() {
       listTitle="Log Kayitlari"
       items={[
         <div key="1" className="flex gap-3 p-3 border rounded-lg font-mono text-sm">
-          <span className="text-gray-400">12:04:22</span>
-          <span className="text-green-600">[INFO]</span>
+          <span className="text-text-disabled">12:04:22</span>
+          <span className="text-state-success-text">[INFO]</span>
           <span>Kullanici giris yapti — user_id=4821</span>
         </div>,
         <div key="2" className="flex gap-3 p-3 border rounded-lg font-mono text-sm">
-          <span className="text-gray-400">12:04:19</span>
-          <span className="text-yellow-600">[WARN]</span>
+          <span className="text-text-disabled">12:04:19</span>
+          <span className="text-state-warning-text">[WARN]</span>
           <span>Yuksek bellek kullanimi — %87 esik</span>
         </div>,
         <div key="3" className="flex gap-3 p-3 border rounded-lg font-mono text-sm">
-          <span className="text-gray-400">12:04:15</span>
-          <span className="text-red-600">[ERROR]</span>
+          <span className="text-text-disabled">12:04:15</span>
+          <span className="text-state-danger-text">[ERROR]</span>
           <span>Veritabani baglanti zaman asimi — pool=primary</span>
         </div>,
       ]}
@@ -2851,7 +2851,7 @@ export function Example() {
   return (
     <PageHeader
       breadcrumb={
-        <nav className="text-sm text-gray-500">
+        <nav className="text-sm text-text-subtle">
           <a href="/admin">Yonetim</a> / <a href="/admin/projeler">Projeler</a> / Detay
         </nav>
       }
@@ -2921,11 +2921,11 @@ export function Example() {
       actions={<Button variant="primary">Urun Ekle</Button>}
       footer={
         <div className="flex justify-end">
-          <span className="text-sm text-gray-500">Toplam 1.284 kayit</span>
+          <span className="text-sm text-text-subtle">Toplam 1.284 kayit</span>
         </div>
       }
     >
-      <div className="rounded-lg border p-8 text-center text-gray-400">
+      <div className="rounded-lg border p-8 text-center text-text-disabled">
         Tablo icerigi buraya gelir
       </div>
     </PageLayout>
@@ -2954,17 +2954,17 @@ export function Example() {
         <div className="flex flex-col gap-4">
           <div className="rounded-lg border p-4">
             <h3 className="font-medium mb-2">Iletisim Bilgileri</h3>
-            <p className="text-sm text-gray-500">email@ornek.com</p>
-            <p className="text-sm text-gray-500">+90 555 123 4567</p>
+            <p className="text-sm text-text-subtle">email@ornek.com</p>
+            <p className="text-sm text-text-subtle">+90 555 123 4567</p>
           </div>
           <div className="rounded-lg border p-4">
             <h3 className="font-medium mb-2">Son Islemler</h3>
-            <p className="text-sm text-gray-500">3 aktif siparis</p>
+            <p className="text-sm text-text-subtle">3 aktif siparis</p>
           </div>
         </div>
       }
     >
-      <div className="rounded-lg border p-8 text-center text-gray-400">
+      <div className="rounded-lg border p-8 text-center text-text-disabled">
         Ana icerik alani
       </div>
     </PageLayout>
@@ -3120,7 +3120,7 @@ export function Example() {
           value: '₺842.300',
           tone: 'success',
           icon: <TrendingUp />,
-          trend: <span className="text-green-600">+12.5%</span>,
+          trend: <span className="text-state-success-text">+12.5%</span>,
           note: 'Gecen aya gore artis',
         },
         {
@@ -3129,7 +3129,7 @@ export function Example() {
           value: '1.523',
           tone: 'info',
           icon: <ShoppingCart />,
-          trend: <span className="text-blue-600">+8.2%</span>,
+          trend: <span className="text-action-primary">+8.2%</span>,
         },
         {
           key: 'musteri',
@@ -3137,7 +3137,7 @@ export function Example() {
           value: '287',
           tone: 'warning',
           icon: <Users />,
-          trend: <span className="text-amber-600">-3.1%</span>,
+          trend: <span className="text-state-warning-text">-3.1%</span>,
           note: 'Hedefin altinda',
         },
       ]}
@@ -3241,7 +3241,7 @@ export function Example() {
         size="xl"
       >
         <div className="flex flex-col p-6 gap-4">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-text-secondary">
             Musteri hesap detaylari ve gecmis islem ozeti burada goruntulenir.
           </p>
         </div>
@@ -3368,7 +3368,7 @@ export function Example() {
       eyebrow="Siparisler / #ORD-2024-1847"
       title="Siparis Detayi"
       description="12 Aralik 2024 tarihli musteri siparisi."
-      actions={<button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">Duzenle</button>}
+      actions={<button className="px-4 py-2 bg-action-primary text-text-inverse rounded-lg text-sm">Duzenle</button>}
       summaryItems={[
         { key: 'toplam', label: 'Toplam Tutar', value: '₺86.597' },
         { key: 'kalem', label: 'Kalem Sayisi', value: '3' },
@@ -3514,7 +3514,7 @@ export function Example() {
       ]}
       defaultValue="dashboard"
       footer={
-        <button className="flex w-full items-center gap-3 rounded-xl px-4 py-2 text-sm text-gray-500 hover:bg-gray-100 transition-colors">
+        <button className="flex w-full items-center gap-3 rounded-xl px-4 py-2 text-sm text-text-subtle hover:bg-surface-muted transition-colors">
           <LogOut className="h-4 w-4" />
           <span>Cikis Yap</span>
         </button>
@@ -3612,7 +3612,7 @@ export function Example() {
       <TextInput
         label="E-posta"
         leadingVisual={<Mail className="h-4 w-4" />}
-        trailingVisual={<span className="text-xs text-gray-400">@sirket.com</span>}
+        trailingVisual={<span className="text-xs text-text-disabled">@sirket.com</span>}
         placeholder="kullanici"
       />
     </div>
@@ -4083,7 +4083,7 @@ import { FileX } from 'lucide-react';
 
 export function Example() {
   return (
-    <div className="rounded-xl border border-gray-200 p-4">
+    <div className="rounded-xl border border-border-subtle p-4">
       <Empty
         compact
         icon={<FileX />}
@@ -4503,7 +4503,7 @@ const items = [
 export function Example() {
   return (
     <ContextMenu items={items}>
-      <div className="rounded-lg border p-8 text-center text-sm text-gray-500">
+      <div className="rounded-lg border p-8 text-center text-sm text-text-subtle">
         Sağ tıklayın
       </div>
     </ContextMenu>
@@ -4535,7 +4535,7 @@ const items = [
 export function Example() {
   return (
     <ContextMenu items={items}>
-      <div className="rounded-lg border p-8 text-center text-sm text-gray-500">
+      <div className="rounded-lg border p-8 text-center text-sm text-text-subtle">
         Sağ tıklayın
       </div>
     </ContextMenu>
@@ -4562,7 +4562,7 @@ const items = [
 export function Example() {
   return (
     <ContextMenu items={items}>
-      <div className="rounded-lg border p-8 text-center text-sm text-gray-500">
+      <div className="rounded-lg border p-8 text-center text-sm text-text-subtle">
         Sağ tıklayın
       </div>
     </ContextMenu>
@@ -5573,7 +5573,7 @@ export function Example() {
     <EntitySummaryBlock
       title="PRJ-2024-Alpha"
       subtitle="Musteri portali modernizasyon projesi"
-      badge={<span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">Aktif</span>}
+      badge={<span className="rounded-full bg-state-success-bg px-2.5 py-0.5 text-xs font-semibold text-state-success-text">Aktif</span>}
       actions={
         <div className="flex gap-2">
           <Button size="sm" variant="secondary">Duzenle</Button>
@@ -5614,9 +5614,9 @@ export function Example() {
       <input
         type="text"
         placeholder="Urun adi..."
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+        className="w-full rounded-md border border-border-default px-3 py-2 text-sm"
       />
-      <select className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
+      <select className="w-full rounded-md border border-border-default px-3 py-2 text-sm">
         <option value="">Kategori secin</option>
         <option value="elektronik">Elektronik</option>
         <option value="giyim">Giyim</option>
@@ -5645,15 +5645,15 @@ export function Example() {
     >
       <input
         type="date"
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+        className="w-full rounded-md border border-border-default px-3 py-2 text-sm"
         defaultValue="2024-01-01"
       />
       <input
         type="date"
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+        className="w-full rounded-md border border-border-default px-3 py-2 text-sm"
         defaultValue="2024-12-31"
       />
-      <select className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
+      <select className="w-full rounded-md border border-border-default px-3 py-2 text-sm">
         <option value="">Tum durumlar</option>
         <option value="aktif">Aktif</option>
         <option value="pasif">Pasif</option>
@@ -5684,9 +5684,9 @@ export function Example() {
       <input
         type="text"
         placeholder="Calisan adi..."
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+        className="w-full rounded-md border border-border-default px-3 py-2 text-sm"
       />
-      <select className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
+      <select className="w-full rounded-md border border-border-default px-3 py-2 text-sm">
         <option value="muhendislik">Muhendislik</option>
       </select>
     </ReportFilterPanel>

@@ -29,12 +29,12 @@ describe('ColorPicker (Browser)', () => {
     const hexInput = screen.getByTestId('color-picker-input');
     // Clear the existing value and type a new valid hex
     await userEvent.clear(hexInput.element());
-    await userEvent.type(hexInput.element(), '#ff0000');
+    await userEvent.type(hexInput.element(), 'var(--state-danger-text)');
     expect(onValueChange).toHaveBeenCalled();
   });
 
   it('renders with default value color', async () => {
-    const screen = await render(<ColorPicker defaultValue="#00ff00" />);
+    const screen = await render(<ColorPicker defaultValue="var(--state-success-text)" />);
     const swatch = screen.getByTestId('color-picker-swatch');
     await expect.element(swatch).toBeVisible();
   });
@@ -45,7 +45,7 @@ describe('ColorPicker (Browser)', () => {
   });
 
   it('renders preset colors when provided', async () => {
-    const presets = [{ label: 'Primary', colors: ['#ff0000', '#00ff00', '#0000ff'] }];
+    const presets = [{ label: 'Primary', colors: ['var(--state-danger-text)', 'var(--state-success-text)', 'var(--action-primary)'] }];
     const screen = await render(<ColorPicker presets={presets} />);
     await screen.getByTestId('color-picker-swatch').click();
     await expect.element(screen.getByText('Primary')).toBeVisible();

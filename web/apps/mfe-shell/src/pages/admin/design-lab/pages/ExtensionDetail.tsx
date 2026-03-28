@@ -189,9 +189,9 @@ function ExtOverview({
 type Surface = (typeof surfacesCatalog.surfaces)[number];
 
 const TIER_COLORS: Record<string, string> = {
-  pro: "bg-blue-500/10 text-blue-600",
-  enterprise: "bg-violet-500/10 text-violet-600",
-  community: "bg-emerald-500/10 text-emerald-600",
+  pro: "bg-action-primary/10 text-action-primary",
+  enterprise: "bg-action-primary/10 text-action-primary",
+  community: "bg-state-success-text/10 text-state-success-text",
 };
 
 const READINESS_LABELS: Record<string, string> = {

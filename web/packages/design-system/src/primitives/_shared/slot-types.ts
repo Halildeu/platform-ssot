@@ -9,7 +9,7 @@ import type React from "react";
  * @example
  * <Tabs
  *   slotProps={{
- *     list: { className: 'bg-gray-100 rounded-lg' },
+ *     list: { className: 'bg-surface-muted rounded-lg' },
  *     trigger: { className: 'font-bold' },
  *     content: { className: 'p-6' },
  *   }}

@@ -64,10 +64,10 @@ const meta: Meta<typeof AppSidebar> = {
   },
   decorators: [
     (Story) => (
-      <div style={{ height: 600, display: 'flex', background: 'var(--surface-canvas, #f5f5f5)' }}>
+      <div style={{ height: 600, display: 'flex', background: 'var(--surface-canvas)' }}>
         <Story />
         <div style={{ flex: 1, padding: 24 }}>
-          <p style={{ color: 'var(--text-secondary, #666)' }}>Main content area</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Main content area</p>
         </div>
       </div>
     ),
@@ -95,7 +95,7 @@ export const Default: Story = {
         <AppSidebar.NavItem icon={<SettingsIcon />} label="Settings" />
       </AppSidebar.Nav>
       <AppSidebar.Footer>
-        <span style={{ fontSize: 11, color: 'var(--text-secondary, #999)' }}>v2.4.0</span>
+        <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>v2.4.0</span>
       </AppSidebar.Footer>
     </AppSidebar>
   ),
@@ -203,7 +203,7 @@ export const NestedItems: Story = {
 const StableBadge = () => (
   <span style={{
     fontSize: 10, padding: '1px 6px', borderRadius: 9999,
-    background: 'var(--status-success-subtle, #dcfce7)', color: 'var(--status-success, #16a34a)',
+    background: 'var(--status-success-subtle))', color: 'var(--status-success))',
   }}>
     stable
   </span>
@@ -211,7 +211,7 @@ const StableBadge = () => (
 const BetaBadge = () => (
   <span style={{
     fontSize: 10, padding: '1px 6px', borderRadius: 9999,
-    background: 'var(--status-warning-subtle, #fef9c3)', color: 'var(--status-warning, #ca8a04)',
+    background: 'var(--status-warning-subtle)', color: 'var(--status-warning)',
   }}>
     beta
   </span>
@@ -219,7 +219,7 @@ const BetaBadge = () => (
 const DeprecatedBadge = () => (
   <span style={{
     fontSize: 10, padding: '1px 6px', borderRadius: 9999,
-    background: 'var(--status-error-subtle, #fee2e2)', color: 'var(--status-error, #dc2626)',
+    background: 'var(--status-error-subtle)', color: 'var(--status-error))',
   }}>
     deprecated
   </span>
@@ -305,7 +305,7 @@ export const KitchenSink: Story = {
           logo={
             <span style={{
               width: 28, height: 28, borderRadius: 6,
-              background: 'var(--action-primary, #3b82f6)', color: '#fff',
+              background: 'var(--action-primary))', color: 'var(--surface-default)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 13, fontWeight: 700,
             }}>
@@ -355,13 +355,13 @@ export const KitchenSink: Story = {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 8px' }}>
             <span style={{
               width: 24, height: 24, borderRadius: '50%',
-              background: 'var(--action-primary, #3b82f6)', color: '#fff',
+              background: 'var(--action-primary))', color: 'var(--surface-default)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 10, fontWeight: 600,
             }}>
               HK
             </span>
-            <span style={{ fontSize: 12, color: 'var(--text-secondary, #666)' }}>Halil K.</span>
+            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Halil K.</span>
           </div>
         </AppSidebar.Footer>
         <AppSidebar.Resizer />

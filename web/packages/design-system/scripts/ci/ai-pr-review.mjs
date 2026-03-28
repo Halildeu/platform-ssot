@@ -83,9 +83,9 @@ for (const file of changedFiles) {
     fileIssues.push({ severity: 'info', rule: 'missing-display-name', message: 'forwardRef component without displayName' });
   }
 
-  // Rule 8: text-white without semantic token
-  if (content.includes('text-white') && !content.includes('text-[var(--text-inverse)]')) {
-    fileIssues.push({ severity: 'warning', rule: 'non-semantic-color', message: 'text-white should be text-[var(--text-inverse)] for dark mode' });
+  // Rule 8: text-text-inverse without semantic token
+  if (content.includes('text-text-inverse') && !content.includes('text-[var(--text-inverse)]')) {
+    fileIssues.push({ severity: 'warning', rule: 'non-semantic-color', message: 'text-text-inverse should be text-[var(--text-inverse)] for dark mode' });
   }
 
   if (fileIssues.length > 0) {

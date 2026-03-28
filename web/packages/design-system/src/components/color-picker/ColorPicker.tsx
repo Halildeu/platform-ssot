@@ -21,7 +21,7 @@ export interface ColorPickerPreset {
 export interface ColorPickerProps extends AccessControlledProps {
   /** Controlled color value (hex string). */
   value?: string;
-  /** Default value for uncontrolled usage. @default "#3b82f6" */
+  /** Default value for uncontrolled usage. @default "var(--action-primary)" */
   defaultValue?: string;
   /** Display format for the input. @default "hex" */
   format?: ColorPickerFormat;
@@ -188,7 +188,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
   function ColorPicker(
     {
       value,
-      defaultValue = "#3b82f6",
+      defaultValue = "var(--action-primary)",
       format = "hex",
       presets,
       showInput = true,
@@ -426,8 +426,8 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                 maxWidth: 200,
                 height: 150,
                 background: `
-                  linear-gradient(to top, #000, transparent),
-                  linear-gradient(to right, #fff, hsl(${hsv.h}, 100%, 50%))
+                  linear-gradient(to top, var(--text-primary), transparent),
+                  linear-gradient(to right, var(--surface-default), hsl(${hsv.h}, 100%, 50%))
                 `,
               }}
               onClick={handleGradientClick}
@@ -439,7 +439,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
             >
               {/* Indicator dot */}
               <div
-                className="absolute w-3 h-3 rounded-full border-2 border-white shadow-xs pointer-events-none -translate-x-1/2 -translate-y-1/2"
+                className="absolute w-3 h-3 rounded-full border-2 border-surface-default shadow-xs pointer-events-none -translate-x-1/2 -translate-y-1/2"
                 style={{
                   left: `${hsv.s}%`,
                   top: `${100 - hsv.v}%`,
@@ -460,7 +460,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
               style={{
                 background:
                   // eslint-disable-next-line semantic-theme/no-inline-color-literals -- Hue spectrum requires literal color stops
-                  "linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)",
+                  "linear-gradient(to right, var(--state-danger-text), var(--state-warning-text), var(--state-success-text), var(--state-info-text), var(--action-primary), var(--action-primary), var(--state-danger-text))",
               }}
               aria-label="Ton"
               data-testid="color-picker-hue"

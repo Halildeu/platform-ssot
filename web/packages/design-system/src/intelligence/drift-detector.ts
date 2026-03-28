@@ -214,7 +214,7 @@ const styleDriftRules: DriftRule[] = [
     // Tailwind color utilities that override design tokens
     pattern: /\b(?:bg|text|border)-(?:red|blue|green|yellow|purple|pink|indigo|gray|slate|zinc|neutral|stone|orange|amber|lime|emerald|teal|cyan|sky|violet|fuchsia|rose)-\d{2,3}\b/g,
     message: 'Tailwind utility overriding design tokens',
-    suggestion: 'Use semantic design token classes, e.g. bg-action-primary instead of bg-blue-500',
+    suggestion: 'Use semantic design token classes, e.g. bg-action-primary instead of bg-action-primary',
   },
 ];
 

@@ -113,7 +113,7 @@ export const FormDrawer = React.forwardRef<HTMLDivElement, FormDrawerProps>(({
       {/* Backdrop */}
       <div
         data-access-state={accessState.state}
-        className="absolute inset-0 bg-black/40 animate-in fade-in-0"
+        className="absolute inset-0 bg-surface-inverse/40 animate-in fade-in-0"
         onClick={handleBackdropClick}
         aria-hidden
       />

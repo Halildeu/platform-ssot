@@ -175,7 +175,7 @@ const BlockCard: React.FC<{
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-border-subtle/80 bg-[var(--surface-card,var(--surface-default-bg))] shadow-xs transition-all duration-200",
+        "relative overflow-hidden rounded-2xl border border-border-subtle/80 bg-[var(--surface-card))] shadow-xs transition-all duration-200",
         densityPadding[density],
         isDraggable && "cursor-grab active:cursor-grabbing",
       )}

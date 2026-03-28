@@ -76,7 +76,7 @@ describe('useExternalDrop', () => {
     const onDrop = vi.fn();
     const { result } = renderHook(() => useExternalDrop({ onDrop }));
 
-    const eventData = { title: 'New Event', color: '#ff0000' };
+    const eventData = { title: 'New Event', color: 'var(--state-danger-text)' };
     const slotDate = new Date('2025-06-15T14:00:00');
 
     const calendarProps = result.current.getCalendarDropProps(slotDate);
@@ -92,7 +92,7 @@ describe('useExternalDrop', () => {
 
     expect(onDrop).toHaveBeenCalledTimes(1);
     expect(onDrop).toHaveBeenCalledWith(
-      expect.objectContaining({ title: 'New Event', color: '#ff0000' }),
+      expect.objectContaining({ title: 'New Event', color: 'var(--state-danger-text)' }),
       slotDate,
     );
   });

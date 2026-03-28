@@ -127,7 +127,7 @@ export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(({
       className={cn(
         "fixed inset-0 z-[1400] m-auto rounded-2xl border border-border-subtle",
         "bg-surface-default p-0 shadow-xl",
-        "backdrop:bg-black/50 backdrop:backdrop-blur-xs",
+        "backdrop:bg-surface-inverse/50 backdrop:backdrop-blur-xs",
         "open:animate-in open:fade-in-0 open:zoom-in-95",
         sizeStyles[size],
         size !== "full" && "w-full",

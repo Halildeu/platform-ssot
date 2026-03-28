@@ -39,9 +39,9 @@ const gradeVariant = (grade: string) => {
 
 const barColor = (score: number, max: number) => {
   const pct = score / max;
-  if (pct >= 1) return "var(--state-success-text, #22c55e)";
-  if (pct >= 0.5) return "var(--state-warning-text, #f59e0b)";
-  return "var(--state-danger-text, #ef4444)";
+  if (pct >= 1) return "var(--state-success-text))";
+  if (pct >= 0.5) return "var(--state-warning-text))";
+  return "var(--state-danger-text))";
 };
 
 export const ContextHealthWidget: React.FC<{ onRefresh?: () => void }> = ({ onRefresh }) => {
@@ -130,7 +130,7 @@ export const ContextHealthWidget: React.FC<{ onRefresh?: () => void }> = ({ onRe
                 </span>
                 <div style={{
                   flex: 1, height: 8,
-                  backgroundColor: "var(--surface-secondary, #f3f4f6)",
+                  backgroundColor: "var(--surface-secondary))",
                   borderRadius: 4, overflow: "hidden",
                 }}>
                   <div style={{

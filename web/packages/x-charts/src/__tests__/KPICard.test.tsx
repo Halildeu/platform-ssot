@@ -83,7 +83,7 @@ describe("KPICard", () => {
     // The trend span uses inline style with success color
     const trendSpan = container.querySelector("span[style]");
     expect(trendSpan).toBeTruthy();
-    expect(trendSpan!.getAttribute("style")).toContain("#22c55e");
+    expect(trendSpan!.getAttribute("style")).toContain("var(--state-success-text)");
   });
 
   it("applies negative color for negative trend (direction=down)", () => {
@@ -97,7 +97,7 @@ describe("KPICard", () => {
 
     const trendSpan = container.querySelector("span[style]");
     expect(trendSpan).toBeTruthy();
-    expect(trendSpan!.getAttribute("style")).toContain("#ef4444");
+    expect(trendSpan!.getAttribute("style")).toContain("var(--state-danger-text)");
   });
 
   it("allows overriding positive via trend.positive", () => {
@@ -111,7 +111,7 @@ describe("KPICard", () => {
 
     // down direction but positive=true should use success color
     const trendSpan = container.querySelector("span[style]");
-    expect(trendSpan!.getAttribute("style")).toContain("#22c55e");
+    expect(trendSpan!.getAttribute("style")).toContain("var(--state-success-text)");
   });
 
   it("renders icon slot", () => {

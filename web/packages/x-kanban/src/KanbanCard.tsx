@@ -3,10 +3,10 @@ import type { KanbanCard as KanbanCardType } from './types';
 import { useSortableCard } from './createDndKitEngine';
 
 const PRIORITY_COLORS: Record<string, string> = {
-  low: 'var(--color-success, #22c55e)',
-  medium: 'var(--color-warning, #f59e0b)',
-  high: 'var(--color-orange, #f97316)',
-  critical: 'var(--color-error, #ef4444)',
+  low: 'var(--color-success))',
+  medium: 'var(--color-warning))',
+  high: 'var(--color-orange)',
+  critical: 'var(--color-error))',
 };
 
 export interface KanbanCardProps {
@@ -51,7 +51,7 @@ const CardContent: React.FC<{ card: KanbanCardType }> = ({ card }) => {
         <span
           aria-hidden="true"
           style={{
-            color: 'var(--text-tertiary, #9ca3af)',
+            color: 'var(--text-tertiary))',
             fontSize: '12px',
             lineHeight: 1,
             cursor: 'grab',
@@ -91,7 +91,7 @@ const CardContent: React.FC<{ card: KanbanCardType }> = ({ card }) => {
           fontWeight: 600,
           fontSize: '14px',
           lineHeight: '1.3',
-          color: 'var(--text-primary, #111827)',
+          color: 'var(--text-primary))',
         }}
       >
         {card.title}
@@ -103,7 +103,7 @@ const CardContent: React.FC<{ card: KanbanCardType }> = ({ card }) => {
           style={{
             fontSize: '12px',
             lineHeight: '1.4',
-            color: 'var(--text-secondary, #6b7280)',
+            color: 'var(--text-secondary))',
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
@@ -124,9 +124,9 @@ const CardContent: React.FC<{ card: KanbanCardType }> = ({ card }) => {
                 fontSize: '10px',
                 fontWeight: 500,
                 padding: '2px 6px',
-                borderRadius: 'var(--radius-sm, 4px)',
-                background: 'var(--surface-subtle, #f3f4f6)',
-                color: 'var(--text-secondary, #6b7280)',
+                borderRadius: 'var(--radius-sm)',
+                background: 'var(--surface-subtle))',
+                color: 'var(--text-secondary))',
               }}
             >
               {tag}
@@ -158,13 +158,13 @@ const CardContent: React.FC<{ card: KanbanCardType }> = ({ card }) => {
                   width: '20px',
                   height: '20px',
                   borderRadius: '50%',
-                  background: 'var(--surface-subtle, #e5e7eb)',
+                  background: 'var(--surface-subtle))',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '10px',
                   fontWeight: 600,
-                  color: 'var(--text-secondary, #6b7280)',
+                  color: 'var(--text-secondary))',
                 }}
               >
                 {card.assignee.charAt(0).toUpperCase()}
@@ -172,7 +172,7 @@ const CardContent: React.FC<{ card: KanbanCardType }> = ({ card }) => {
               <span
                 style={{
                   fontSize: '11px',
-                  color: 'var(--text-secondary, #6b7280)',
+                  color: 'var(--text-secondary))',
                 }}
               >
                 {card.assignee}
@@ -185,8 +185,8 @@ const CardContent: React.FC<{ card: KanbanCardType }> = ({ card }) => {
                 fontSize: '11px',
                 fontWeight: 500,
                 color: isOverdue
-                  ? 'var(--color-error, #ef4444)'
-                  : 'var(--text-tertiary, #9ca3af)',
+                  ? 'var(--color-error))'
+                  : 'var(--text-tertiary))',
               }}
             >
               {formatDueDate(new Date(card.dueDate))}
@@ -299,9 +299,9 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({
 
 function cardBaseStyle(isDragging: boolean): React.CSSProperties {
   return {
-    background: 'var(--surface-default, #fff)',
-    border: '1px solid var(--border-subtle, #e5e7eb)',
-    borderRadius: 'var(--radius-md, 8px)',
+    background: 'var(--surface-default))',
+    border: '1px solid var(--border-subtle))',
+    borderRadius: 'var(--radius-md)',
     padding: '12px',
     cursor: 'grab',
     transition: 'box-shadow 0.15s ease, opacity 0.15s ease, transform 0.15s ease',

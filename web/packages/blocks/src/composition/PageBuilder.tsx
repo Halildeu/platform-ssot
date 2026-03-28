@@ -57,7 +57,7 @@ export function PageBuilder({ composition, registry: registryProp }: PageBuilder
           style={{
             fontSize: '1.5rem',
             fontWeight: 700,
-            color: 'var(--color-text-primary, #0f172a)',
+            color: 'var(--color-text-primary))',
             margin: '0 0 1.5rem 0',
           }}
         >
@@ -75,9 +75,9 @@ export function PageBuilder({ composition, registry: registryProp }: PageBuilder
                 key={idx}
                 style={{
                   padding: '1rem',
-                  border: '1px dashed var(--color-border, #e2e8f0)',
+                  border: '1px dashed var(--color-border))',
                   borderRadius: '0.5rem',
-                  color: 'var(--color-text-secondary, #64748b)',
+                  color: 'var(--color-text-secondary))',
                   fontSize: '0.875rem',
                   ...(composition.layout === 'grid' && entry.span
                     ? { gridColumn: `span ${entry.span}` }

@@ -122,7 +122,7 @@ export interface SearchFilterListingProps extends AccessControlledProps {
    */
 
 const panelBase =
-  "relative overflow-hidden rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card,var(--surface-default))] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs transition-all duration-200";
+  "relative overflow-hidden rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card))] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs transition-all duration-200";
 
 const SKELETON_PULSE = "animate-pulse rounded-lg bg-surface-muted";
 
@@ -153,7 +153,7 @@ const FilterChips: React.FC<{
           <button
             type="button"
             onClick={f.onRemove}
-            className="ms-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-[var(--action-primary-bg,var(--action-primary))] hover:text-text-inverse"
+            className="ms-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-[var(--action-primary-bg))] hover:text-text-inverse"
             aria-label={`${f.label} filtresini kaldir`}
           >
             <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
@@ -166,7 +166,7 @@ const FilterChips: React.FC<{
         <button
           type="button"
           onClick={onClearAll}
-          className="text-xs font-medium text-[var(--action-primary-bg,var(--action-primary))] transition-colors hover:underline"
+          className="text-xs font-medium text-[var(--action-primary-bg))] transition-colors hover:underline"
         >
           Tumunu temizle
         </button>
@@ -185,14 +185,14 @@ const SelectionBar: React.FC<{
   return (
     <div
       className={cn(
-        "flex items-center justify-between rounded-2xl border border-[color-mix(in_oklab,var(--selection-outline,var(--action-primary))_40%,transparent)] bg-[var(--selection-bg)] transition-all duration-200",
+        "flex items-center justify-between rounded-2xl border border-[color-mix(in_oklab,var(--selection-outline))_40%,transparent)] bg-[var(--selection-bg)] transition-all duration-200",
         compact ? "px-3 py-2" : "px-5 py-3",
       )}
       role="status"
       aria-live="polite"
     >
       <div className="flex items-center gap-3">
-        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--action-primary-bg,var(--action-primary))] text-[10px] font-bold text-text-inverse">
+        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--action-primary-bg))] text-[10px] font-bold text-text-inverse">
           {count}
         </span>
         <span className="text-sm font-medium text-text-primary">
@@ -227,7 +227,7 @@ const SortDropdown: React.FC<{
           const key = e.target.value;
           if (key && onChange) onChange(key, active?.direction ?? "asc");
         }}
-        className="rounded-lg border border-border-subtle bg-transparent px-2 py-1 text-xs text-text-secondary outline-hidden focus:border-[var(--selection-outline,var(--action-primary))]"
+        className="rounded-lg border border-border-subtle bg-transparent px-2 py-1 text-xs text-text-secondary outline-hidden focus:border-[var(--selection-outline))]"
         aria-label="Siralama"
       >
         <option value="">Siralama</option>

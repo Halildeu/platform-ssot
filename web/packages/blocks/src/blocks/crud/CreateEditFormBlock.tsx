@@ -52,7 +52,7 @@ export function CreateEditFormBlock({
         style={{
           fontSize: '1.25rem',
           fontWeight: 600,
-          color: 'var(--color-text-primary, #0f172a)',
+          color: 'var(--color-text-primary))',
           marginBottom: '1.5rem',
           margin: '0 0 1.5rem 0',
         }}
@@ -69,13 +69,13 @@ export function CreateEditFormBlock({
                 display: 'block',
                 fontSize: '0.875rem',
                 fontWeight: 500,
-                color: 'var(--color-text-primary, #0f172a)',
+                color: 'var(--color-text-primary))',
                 marginBottom: '0.375rem',
               }}
             >
               {field.label}
               {field.required && (
-                <span style={{ color: 'var(--color-error, #dc2626)', marginLeft: '0.25rem' }}>
+                <span style={{ color: 'var(--color-error))', marginLeft: '0.25rem' }}>
                   *
                 </span>
               )}
@@ -94,7 +94,7 @@ export function CreateEditFormBlock({
                   width: '100%',
                   padding: '0.5rem 0.75rem',
                   borderRadius: '0.375rem',
-                  border: '1px solid var(--color-border, #e2e8f0)',
+                  border: '1px solid var(--color-border))',
                   fontSize: '0.875rem',
                   resize: 'vertical',
                   boxSizing: 'border-box',
@@ -111,7 +111,7 @@ export function CreateEditFormBlock({
                   width: '100%',
                   padding: '0.5rem 0.75rem',
                   borderRadius: '0.375rem',
-                  border: '1px solid var(--color-border, #e2e8f0)',
+                  border: '1px solid var(--color-border))',
                   fontSize: '0.875rem',
                   boxSizing: 'border-box',
                 }}
@@ -136,7 +136,7 @@ export function CreateEditFormBlock({
                   width: '100%',
                   padding: '0.5rem 0.75rem',
                   borderRadius: '0.375rem',
-                  border: '1px solid var(--color-border, #e2e8f0)',
+                  border: '1px solid var(--color-border))',
                   fontSize: '0.875rem',
                   boxSizing: 'border-box',
                 }}
@@ -161,7 +161,7 @@ export function CreateEditFormBlock({
           style={{
             padding: '0.5rem 1rem',
             borderRadius: '0.375rem',
-            border: '1px solid var(--color-border, #e2e8f0)',
+            border: '1px solid var(--color-border))',
             background: 'transparent',
             fontSize: '0.875rem',
             cursor: 'pointer',
@@ -175,8 +175,8 @@ export function CreateEditFormBlock({
             padding: '0.5rem 1rem',
             borderRadius: '0.375rem',
             border: 'none',
-            background: 'var(--color-primary, #2563eb)',
-            color: '#fff',
+            background: 'var(--color-primary))',
+            color: 'var(--surface-default)',
             fontSize: '0.875rem',
             fontWeight: 500,
             cursor: 'pointer',

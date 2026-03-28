@@ -117,7 +117,7 @@ describe("StatWidget", () => {
     // The change badge uses inline style with success color
     const changeSpan = container.querySelector("span[style]");
     expect(changeSpan).toBeTruthy();
-    expect(changeSpan!.getAttribute("style")).toContain("#22c55e");
+    expect(changeSpan!.getAttribute("style")).toContain("var(--state-success-text)");
   });
 
   it("shows negative change with error color", () => {
@@ -131,7 +131,7 @@ describe("StatWidget", () => {
 
     const changeSpan = container.querySelector("span[style]");
     expect(changeSpan).toBeTruthy();
-    expect(changeSpan!.getAttribute("style")).toContain("#ef4444");
+    expect(changeSpan!.getAttribute("style")).toContain("var(--state-danger-text)");
   });
 
   it("does not show change when previousValue is not provided", () => {

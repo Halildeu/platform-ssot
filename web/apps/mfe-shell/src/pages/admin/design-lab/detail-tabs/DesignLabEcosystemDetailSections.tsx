@@ -323,7 +323,7 @@ const EcosystemSurfaceCatalogPanel: React.FC<{
                 {surface.capabilities.slice(0, 5).map((cap) => (
                   <span
                     key={cap}
-                    className="inline-flex items-center rounded-md bg-violet-50 px-1.5 py-0.5 text-[9px] font-medium text-violet-600 dark:bg-violet-900/20 dark:text-violet-300"
+                    className="inline-flex items-center rounded-md bg-action-primary/10 px-1.5 py-0.5 text-[9px] font-medium text-action-primary dark:bg-action-primary/20 dark:text-action-primary/60"
                   >
                     {cap.replace(/_/g, ' ')}
                   </span>
@@ -349,7 +349,7 @@ const EcosystemSurfaceCatalogPanel: React.FC<{
                   {Object.values(surface.readinessChecks).map((ready, idx) => (
                     <span
                       key={idx}
-                      className={`inline-block h-1.5 w-3 rounded-full ${ready ? 'bg-emerald-400' : 'bg-zinc-200 dark:bg-zinc-700'}`}
+                      className={`inline-block h-1.5 w-3 rounded-full ${ready ? 'bg-state-success-text' : 'bg-surface-raised dark:bg-surface-inverse'}`}
                     />
                   ))}
                 </div>
@@ -371,7 +371,7 @@ const EcosystemSurfaceCatalogPanel: React.FC<{
                 key={pattern.patternId}
                 className="flex items-start gap-2 rounded-xl bg-surface-panel px-3 py-2"
               >
-                <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400" />
+                <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-action-primary" />
                 <div className="min-w-0">
                   <Text className="text-xs font-medium text-text-primary">
                     {pattern.patternId.replace(/_/g, ' ')}
@@ -414,9 +414,9 @@ const EcosystemTierBreakdownPanel: React.FC<{
   }, [matchedSurfaces]);
 
   const tierColors: Record<string, string> = {
-    pro: 'bg-violet-400',
-    enterprise: 'bg-amber-400',
-    community: 'bg-emerald-400',
+    pro: 'bg-action-primary',
+    enterprise: 'bg-state-warning-text',
+    community: 'bg-state-success-text',
   };
 
   return (
@@ -441,7 +441,7 @@ const EcosystemTierBreakdownPanel: React.FC<{
         {Object.entries(tierGroups).map(([tier, surfaces]) => (
           <div key={tier} className="flex flex-col gap-1.5">
             <div className="flex items-center gap-2 px-1">
-              <span className={`inline-block h-2 w-2 rounded-full ${tierColors[tier] ?? 'bg-zinc-400'}`} />
+              <span className={`inline-block h-2 w-2 rounded-full ${tierColors[tier] ?? 'bg-border-strong'}`} />
               <Text className="text-xs font-semibold uppercase tracking-[0.06em] text-text-secondary">
                 {tier}
               </Text>
@@ -453,7 +453,7 @@ const EcosystemTierBreakdownPanel: React.FC<{
                 className="flex items-center justify-between gap-3 rounded-xl bg-surface-panel px-3 py-2"
               >
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${tierColors[tier] ?? 'bg-zinc-400'}`} />
+                  <span className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${tierColors[tier] ?? 'bg-border-strong'}`} />
                   <Text className="text-xs font-medium text-text-primary">{surface.title}</Text>
                 </div>
                 <Text variant="secondary" className="shrink-0 text-[10px]">
@@ -640,7 +640,7 @@ const EcosystemApiContent: React.FC<{
                   className="flex items-center justify-between gap-3 rounded-xl bg-surface-panel px-3 py-2"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400" />
+                    <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-action-primary" />
                     <Text className="text-xs font-medium text-text-primary">{surface.title}</Text>
                   </div>
                   <Text variant="secondary" className="shrink-0 text-[10px] font-mono">
@@ -863,7 +863,7 @@ const EcosystemQualityContent: React.FC<{
                   className="flex items-center justify-between gap-2 rounded-xl bg-surface-panel px-3 py-2"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${isCatalogGate ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                    <span className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${isCatalogGate ? 'bg-state-success-text' : 'bg-state-warning-text'}`} />
                     <Text className="text-xs font-medium text-text-primary">
                       {gate.replace(/_/g, ' ')}
                     </Text>
@@ -926,7 +926,7 @@ const EcosystemQualityContent: React.FC<{
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         <span
-                          className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${status ? 'bg-emerald-400' : 'bg-zinc-300 dark:bg-zinc-600'}`}
+                          className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${status ? 'bg-state-success-text' : 'bg-border-default dark:bg-text-secondary'}`}
                         />
                         <Text className="text-xs font-medium text-text-primary">
                           {READINESS_LABELS[checkId] ?? checkId}
@@ -951,7 +951,7 @@ const EcosystemQualityContent: React.FC<{
                   className="flex items-center justify-between gap-2 rounded-xl bg-surface-panel px-3 py-2"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-300 dark:bg-zinc-600" />
+                    <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-border-default dark:bg-text-secondary" />
                     <Text className="text-xs font-medium text-text-primary">{label}</Text>
                   </div>
                   <SectionBadge label="Pending" />

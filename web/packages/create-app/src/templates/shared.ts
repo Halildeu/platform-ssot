@@ -173,8 +173,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--color-background, #f8fafc);
-  color: var(--color-text-primary, #0f172a);
+  background-color: var(--color-background));
+  color: var(--color-text-primary));
 }
 
 #root {
@@ -207,20 +207,20 @@ const navStyle: React.CSSProperties = {
   gap: '1.5rem',
   padding: '0 1.5rem',
   height: '56px',
-  borderBottom: '1px solid var(--color-border, #e2e8f0)',
-  backgroundColor: 'var(--color-surface, #fff)',
+  borderBottom: '1px solid var(--color-border))',
+  backgroundColor: 'var(--color-surface))',
 };
 
 const linkStyle: React.CSSProperties = {
   textDecoration: 'none',
   fontSize: '0.875rem',
   fontWeight: 500,
-  color: 'var(--color-text-secondary, #64748b)',
+  color: 'var(--color-text-secondary))',
 };
 
 const activeStyle: React.CSSProperties = {
   ...linkStyle,
-  color: 'var(--color-primary, #2563eb)',
+  color: 'var(--color-primary))',
 };
 
 export default function AppLayout({ children }: AppLayoutProps) {
@@ -231,7 +231,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           style={{
             fontWeight: 700,
             fontSize: '1rem',
-            color: 'var(--color-text-primary, #0f172a)',
+            color: 'var(--color-text-primary))',
             marginRight: '1rem',
           }}
         >

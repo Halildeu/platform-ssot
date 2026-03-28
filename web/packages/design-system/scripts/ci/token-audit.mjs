@@ -31,7 +31,7 @@ function scanFile(filePath) {
     const regex = new RegExp(pattern.source, pattern.flags);
     let match;
     while ((match = regex.exec(content)) !== null) {
-      // Skip if inside a var() fallback like var(--token, #fff)
+      // Skip if inside a var() fallback like var(--token))
       const before = content.slice(Math.max(0, match.index - 30), match.index);
       if (before.includes('var(')) continue;
 

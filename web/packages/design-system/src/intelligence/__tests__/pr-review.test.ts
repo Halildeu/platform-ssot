@@ -16,13 +16,13 @@ function findIssues(source: string, ruleId: string) {
 
 describe('hardcoded-color', () => {
   it('detects hex color in JSX', () => {
-    const issues = findIssues('<div style={{ color: "#ff0000" }} />', 'hardcoded-color');
+    const issues = findIssues('<div style={{ color: "var(--state-danger-text)" }} />', 'hardcoded-color');
     expect(issues.length).toBeGreaterThanOrEqual(1);
     expect(issues[0].severity).toBe('error');
   });
 
   it('detects short hex color', () => {
-    const issues = findIssues('<div className="text-[#abc]" />', 'hardcoded-color');
+    const issues = findIssues('<div className="text-[var(--border-default)]" />', 'hardcoded-color');
     expect(issues.length).toBeGreaterThanOrEqual(1);
   });
 

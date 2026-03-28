@@ -58,7 +58,7 @@ export const Empty: Story = {
 
 export const CustomClass: Story = {
   render: () => (
-    <AppSidebarNav className="bg-gray-50">
+    <AppSidebarNav className="bg-surface-muted">
       <AppSidebar.NavItem label="Styled" />
     </AppSidebarNav>
   ),

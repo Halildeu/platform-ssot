@@ -89,7 +89,7 @@ export function CrudPageTemplate<T extends Record<string, any>>({
             style={{
               fontSize: '1.5rem',
               fontWeight: 700,
-              color: 'var(--color-text-primary, #0f172a)',
+              color: 'var(--color-text-primary))',
               margin: 0,
             }}
           >
@@ -109,8 +109,8 @@ export function CrudPageTemplate<T extends Record<string, any>>({
                 padding: '0.5rem 1rem',
                 borderRadius: '0.375rem',
                 border: 'none',
-                background: 'var(--color-primary, #2563eb)',
-                color: '#fff',
+                background: 'var(--color-primary))',
+                color: 'var(--surface-default)',
                 fontSize: '0.875rem',
                 fontWeight: 500,
                 cursor: 'pointer',
@@ -134,7 +134,7 @@ export function CrudPageTemplate<T extends Record<string, any>>({
           style={{
             padding: '0.375rem 0.75rem',
             borderRadius: '0.25rem',
-            border: '1px solid var(--color-border, #e2e8f0)',
+            border: '1px solid var(--color-border))',
             background: 'transparent',
             fontSize: '0.8125rem',
             cursor: 'pointer',
@@ -154,7 +154,7 @@ export function CrudPageTemplate<T extends Record<string, any>>({
                 style={{
                   padding: '0.5rem 1rem',
                   borderRadius: '0.375rem',
-                  border: '1px solid var(--color-border, #e2e8f0)',
+                  border: '1px solid var(--color-border))',
                   background: 'transparent',
                   fontSize: '0.875rem',
                   cursor: 'pointer',
@@ -173,8 +173,8 @@ export function CrudPageTemplate<T extends Record<string, any>>({
                     padding: '0.5rem 1rem',
                     borderRadius: '0.375rem',
                     border: 'none',
-                    background: 'var(--color-error, #dc2626)',
-                    color: '#fff',
+                    background: 'var(--color-error))',
+                    color: 'var(--surface-default)',
                     fontSize: '0.875rem',
                     cursor: 'pointer',
                   }}
@@ -198,7 +198,7 @@ export function CrudPageTemplate<T extends Record<string, any>>({
         style={{
           padding: '0.375rem 0.75rem',
           borderRadius: '0.25rem',
-          border: '1px solid var(--color-border, #e2e8f0)',
+          border: '1px solid var(--color-border))',
           background: 'transparent',
           fontSize: '0.8125rem',
           cursor: 'pointer',

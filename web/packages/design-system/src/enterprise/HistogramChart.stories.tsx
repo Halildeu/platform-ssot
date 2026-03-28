@@ -61,7 +61,7 @@ export const WithMedian: Story = {
     showMedian: true,
     xLabel: 'Temperature (C)',
     yLabel: 'Count',
-    color: '#10b981',
+    color: 'var(--state-success-text)',
   },
 };
 

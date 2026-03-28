@@ -21,14 +21,14 @@ import { useReleaseHealth, type ReleaseHealth } from "./useReleaseHealth";
 const STATUS_CONFIG = {
   pass: {
     icon: CheckCircle,
-    color: "text-emerald-600",
-    bg: "bg-emerald-50",
+    color: "text-state-success-text",
+    bg: "bg-state-success-bg",
     label: "Passing",
   },
   fail: {
     icon: XCircle,
-    color: "text-red-600",
-    bg: "bg-red-50",
+    color: "text-state-danger-text",
+    bg: "bg-state-danger-bg",
     label: "Failing",
   },
   unknown: {
@@ -41,18 +41,18 @@ const STATUS_CONFIG = {
 
 const COVERAGE_CONFIG = {
   good: {
-    color: "text-emerald-600",
-    bg: "bg-emerald-50",
+    color: "text-state-success-text",
+    bg: "bg-state-success-bg",
     label: "Good",
   },
   warning: {
-    color: "text-amber-600",
-    bg: "bg-amber-50",
+    color: "text-state-warning-text",
+    bg: "bg-state-warning-bg",
     label: "Warning",
   },
   critical: {
-    color: "text-red-600",
-    bg: "bg-red-50",
+    color: "text-state-danger-text",
+    bg: "bg-state-danger-bg",
     label: "Critical",
   },
   unknown: {
@@ -119,7 +119,7 @@ export function ReleaseHealthCard() {
         {/* Pending approvals */}
         <div className="rounded-xl bg-surface-muted px-3 py-2.5">
           <div className="flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5 text-amber-600" />
+            <Clock className="h-3.5 w-3.5 text-state-warning-text" />
             <Text className="text-xs font-medium text-text-primary">
               {health.pendingApprovals}
             </Text>

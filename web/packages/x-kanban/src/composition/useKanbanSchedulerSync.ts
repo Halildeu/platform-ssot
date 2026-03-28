@@ -42,10 +42,10 @@ export interface UseKanbanSchedulerSyncReturn {
 const DEFAULT_DURATION_MINUTES = 60;
 
 const DEFAULT_PRIORITY_COLORS: Record<string, string> = {
-  low: '#4caf50',
-  medium: '#ff9800',
-  high: '#f44336',
-  critical: '#9c27b0',
+  low: 'var(--state-success-text)',
+  medium: 'var(--state-warning-text)',
+  high: 'var(--state-danger-text)',
+  critical: 'var(--action-primary)',
 };
 
 /**

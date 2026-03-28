@@ -11,12 +11,12 @@ interface IntakeData {
 }
 
 const BUCKET_COLORS: Record<string, string> = {
-  TICKET: "#3b82f6",
-  PROJECT: "#8b5cf6",
-  BUG: "#ef4444",
-  TECH_DEBT: "#f59e0b",
-  ENHANCEMENT: "#22c55e",
-  RESEARCH: "#06b6d4",
+  TICKET: "var(--action-primary)",
+  PROJECT: "var(--action-primary)",
+  BUG: "var(--state-danger-text)",
+  TECH_DEBT: "var(--state-warning-text)",
+  ENHANCEMENT: "var(--state-success-text)",
+  RESEARCH: "var(--state-info-text)",
 };
 
 export const WorkIntakeWidget: React.FC<{ onRefresh?: () => void }> = ({ onRefresh }) => {
@@ -59,7 +59,7 @@ export const WorkIntakeWidget: React.FC<{ onRefresh?: () => void }> = ({ onRefre
   const chartData = Object.entries(bucketCounts).map(([label, value]) => ({
     label,
     value,
-    color: BUCKET_COLORS[label] || "#9ca3af",
+    color: BUCKET_COLORS[label] || "var(--text-subtle)",
   }));
 
   const total = data.items.length;

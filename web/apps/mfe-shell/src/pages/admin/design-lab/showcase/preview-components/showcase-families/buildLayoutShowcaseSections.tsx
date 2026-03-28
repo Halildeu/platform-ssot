@@ -158,18 +158,18 @@ export const buildLayoutShowcaseSections = (
         return (
           <div className="grid grid-cols-[1.2fr_0.8fr] gap-1.5" aria-hidden>
             <div className="flex flex-col gap-1.5">
-              <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.9))]" />
+              <div className="h-3 rounded-full bg-[var(--surface-card))]" />
               <div className="grid grid-cols-3 gap-1.5">
-                <div className="h-8 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
-                <div className="h-8 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.76))]" />
-                <div className="h-8 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.72))]" />
+                <div className="h-8 rounded-xl bg-[var(--surface-card))]" />
+                <div className="h-8 rounded-xl bg-[var(--surface-card))]" />
+                <div className="h-8 rounded-xl bg-[var(--surface-card))]" />
               </div>
-              <div className="h-14 rounded-2xl bg-[var(--surface-card,rgba(255,255,255,0.74))]" />
+              <div className="h-14 rounded-2xl bg-[var(--surface-card))]" />
             </div>
             <div className="flex flex-col gap-1.5">
-              <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
-              <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.74))]" />
-              <div className="h-9 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.68))]" />
+              <div className="h-5 rounded-lg bg-[var(--surface-card))]" />
+              <div className="h-5 rounded-lg bg-[var(--surface-card))]" />
+              <div className="h-9 rounded-xl bg-[var(--surface-card))]" />
             </div>
           </div>
         );
@@ -177,15 +177,15 @@ export const buildLayoutShowcaseSections = (
         return (
           <div className="flex flex-col gap-1.5" aria-hidden>
             <div className="grid grid-cols-3 gap-1.5">
-              <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.88))]" />
-              <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
-              <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.72))]" />
+              <div className="h-3 rounded-full bg-[var(--surface-card))]" />
+              <div className="h-3 rounded-full bg-[var(--surface-card))]" />
+              <div className="h-3 rounded-full bg-[var(--surface-card))]" />
             </div>
             <div className="flex flex-col gap-1.5">
-              <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
-              <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.75))]" />
-              <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.7))]" />
-              <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.66))]" />
+              <div className="h-5 rounded-lg bg-[var(--surface-card))]" />
+              <div className="h-5 rounded-lg bg-[var(--surface-card))]" />
+              <div className="h-5 rounded-lg bg-[var(--surface-card))]" />
+              <div className="h-5 rounded-lg bg-[var(--surface-card))]" />
             </div>
           </div>
         );
@@ -193,29 +193,29 @@ export const buildLayoutShowcaseSections = (
         return (
           <div className="grid grid-cols-[1fr_0.55fr] gap-1.5" aria-hidden>
             <div className="flex flex-col gap-1.5">
-              <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.88))]" />
-              <div className="h-12 rounded-2xl bg-[var(--surface-card,rgba(255,255,255,0.78))]" />
-              <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.72))]" />
+              <div className="h-3 rounded-full bg-[var(--surface-card))]" />
+              <div className="h-12 rounded-2xl bg-[var(--surface-card))]" />
+              <div className="h-5 rounded-lg bg-[var(--surface-card))]" />
             </div>
             <div className="flex flex-col gap-1.5">
-              <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
-              <div className="h-10 rounded-2xl bg-[var(--surface-card,rgba(255,255,255,0.68))]" />
+              <div className="h-5 rounded-lg bg-[var(--surface-card))]" />
+              <div className="h-10 rounded-2xl bg-[var(--surface-card))]" />
             </div>
           </div>
         );
       case 'workspace':
         return (
           <div className="flex flex-col gap-1.5" aria-hidden>
-            <div className="h-4 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.88))]" />
+            <div className="h-4 rounded-full bg-[var(--surface-card))]" />
             <div className="grid grid-cols-[0.7fr_1.3fr] gap-1.5">
               <div className="flex flex-col gap-1.5">
-                <div className="h-6 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.78))]" />
-                <div className="h-6 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.7))]" />
+                <div className="h-6 rounded-xl bg-[var(--surface-card))]" />
+                <div className="h-6 rounded-xl bg-[var(--surface-card))]" />
               </div>
               <div className="flex flex-col gap-1.5">
-                <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.76))]" />
-                <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.68))]" />
-                <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.64))]" />
+                <div className="h-5 rounded-lg bg-[var(--surface-card))]" />
+                <div className="h-5 rounded-lg bg-[var(--surface-card))]" />
+                <div className="h-5 rounded-lg bg-[var(--surface-card))]" />
               </div>
             </div>
           </div>
@@ -224,14 +224,14 @@ export const buildLayoutShowcaseSections = (
         return (
           <div className="grid grid-cols-[0.6fr_1fr] gap-1.5" aria-hidden>
             <div className="flex flex-col gap-1.5">
-              <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.88))]" />
-              <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
-              <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.72))]" />
+              <div className="h-3 rounded-full bg-[var(--surface-card))]" />
+              <div className="h-3 rounded-full bg-[var(--surface-card))]" />
+              <div className="h-3 rounded-full bg-[var(--surface-card))]" />
             </div>
             <div className="flex flex-col gap-1.5">
-              <div className="h-6 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
-              <div className="h-6 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.72))]" />
-              <div className="h-6 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.66))]" />
+              <div className="h-6 rounded-xl bg-[var(--surface-card))]" />
+              <div className="h-6 rounded-xl bg-[var(--surface-card))]" />
+              <div className="h-6 rounded-xl bg-[var(--surface-card))]" />
             </div>
           </div>
         );
@@ -262,7 +262,7 @@ export const buildLayoutShowcaseSections = (
           <SectionBadge label={profile.experienceLabel} />
         </div>
       </div>
-      <div className="mt-3 rounded-[18px] border border-[color-mix(in_oklab,var(--border-subtle)_20%,transparent)] bg-[var(--surface-card,rgba(255,255,255,0.35))] px-3 py-3 backdrop-blur-xs">
+      <div className="mt-3 rounded-[18px] border border-[color-mix(in_oklab,var(--border-subtle)_20%,transparent)] bg-[var(--surface-card))] px-3 py-3 backdrop-blur-xs">
         {renderTemplateSilhouette(profile.silhouette)}
       </div>
       <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">

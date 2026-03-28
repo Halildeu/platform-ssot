@@ -175,8 +175,8 @@ beforeAll(() => {
     lineJoin: 'miter',
     miterLimit: 10,
     lineDashOffset: 0,
-    strokeStyle: '#000',
-    fillStyle: '#000',
+    strokeStyle: 'var(--text-primary)',
+    fillStyle: 'var(--text-primary)',
     globalAlpha: 1,
     globalCompositeOperation: 'source-over',
     shadowBlur: 0,
@@ -212,12 +212,12 @@ beforeAll(() => {
 /*
  * Allowed bare-color exceptions:
  *
- * - "text-white" is intentionally used on filled/primary variants (white text on colored
+ * - "text-text-inverse" is intentionally used on filled/primary variants (white text on colored
  *   background is correct for both light and dark modes).
  * - ColorPicker uses inline background-color with rgb() for rendering actual color swatches
  *   — this is the component's functional output, not a themeable surface.
  */
-const GLOBAL_ALLOW_LIST = ['text-white', 'text-black'];
+const GLOBAL_ALLOW_LIST = ['text-text-inverse', 'text-text-primary'];
 
 /* ------------------------------------------------------------------ */
 /*  Teardown                                                           */

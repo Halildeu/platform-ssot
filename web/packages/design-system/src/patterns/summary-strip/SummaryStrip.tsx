@@ -91,7 +91,7 @@ export const SummaryStrip = React.forwardRef<HTMLDivElement, SummaryStripProps>(
           <article
             key={item.key}
             className={cn(
-              "relative rounded-lg border border-border-subtle bg-[var(--surface-card,var(--surface-default))] px-4 py-4",
+              "relative rounded-lg border border-border-subtle bg-[var(--surface-card))] px-4 py-4",
               hasToneBorder && "border-s-2",
               hasToneBorder && TONE_BORDER[tone],
             )}

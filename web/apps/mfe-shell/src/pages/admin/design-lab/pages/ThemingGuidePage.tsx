@@ -31,17 +31,17 @@ const CODE_EXAMPLES: Record<string, { title: string; code: string }[]> = {
 
 const customTheme = createTheme({
   colors: {
-    primary: '#6366f1',      // Indigo
-    primaryHover: '#4f46e5',
-    secondary: '#f1f5f9',
-    background: '#ffffff',
-    surface: '#f8fafc',
-    text: '#0f172a',
-    textSecondary: '#64748b',
-    border: '#e2e8f0',
-    error: '#ef4444',
-    success: '#22c55e',
-    warning: '#f59e0b',
+    primary: 'var(--action-primary)',      // Indigo
+    primaryHover: 'var(--action-primary)',
+    secondary: 'var(--surface-muted)',
+    background: 'var(--surface-default)',
+    surface: 'var(--surface-default)',
+    text: 'var(--text-primary)',
+    textSecondary: 'var(--text-secondary)',
+    border: 'var(--border-subtle)',
+    error: 'var(--state-danger-text)',
+    success: 'var(--state-success-text)',
+    warning: 'var(--state-warning-text)',
   },
   typography: {
     fontFamily: "'Inter', sans-serif",
@@ -84,7 +84,7 @@ function App() {
     {
       title: "CSS Class Overrides",
       code: `// Override specific component styles via className
-<Button className="!bg-linear-to-r !from-violet-500 !to-fuchsia-500">
+<Button className="!bg-linear-to-r !from-action-primary !to-action-primary">
   Gradient Button
 </Button>
 
@@ -111,7 +111,7 @@ const theme = createTheme({
           textTransform: 'uppercase',
           letterSpacing: '0.05em',
         },
-        primary: { background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' },
+        primary: { background: 'linear-gradient(135deg, var(--action-primary), var(--action-primary))' },
         sm: { padding: '6px 16px', fontSize: '12px' },
       },
     },
@@ -134,7 +134,7 @@ function AdminPanel() {
   return (
     <ConfigProvider
       theme={{
-        colors: { primary: '#dc2626', background: '#1e1e2e' },
+        colors: { primary: 'var(--state-danger-text)', background: 'var(--surface-inverse)' },
         borderRadius: { md: '4px' },  // Sharp corners
       }}
     >
@@ -148,7 +148,7 @@ function App() {
   return (
     <ThemeProvider theme={mainTheme}>
       <Header />  {/* uses mainTheme */}
-      <ConfigProvider theme={{ colors: { primary: '#16a34a' } }}>
+      <ConfigProvider theme={{ colors: { primary: 'var(--state-success-text)' } }}>
         <Sidebar />  {/* green primary */}
       </ConfigProvider>
       <Main />  {/* uses mainTheme */}
@@ -188,7 +188,7 @@ function TenantApp({ tenantId }) {
 
 export default function ThemingGuidePage() {
   const [activeSection, setActiveSection] = useState<ThemeSection>("global");
-  const [sandboxCSS, setSandboxCSS] = useState("/* Enter custom CSS overrides here */\n:root {\n  --color-action-primary: #6366f1;\n  --radius-lg: 12px;\n}");
+  const [sandboxCSS, setSandboxCSS] = useState("/* Enter custom CSS overrides here */\n:root {\n  --color-action-primary: var(--action-primary);\n  --radius-lg: 12px;\n}");
   const [copied, setCopied] = useState<string | null>(null);
 
   const handleCopy = useCallback(async (code: string, id: string) => {
@@ -205,8 +205,8 @@ export default function ThemingGuidePage() {
     <div className="flex flex-col mx-auto max-w-4xl gap-6 p-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-violet-500/20 to-fuchsia-500/20">
-          <Paintbrush className="h-5 w-5 text-violet-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-action-primary/20 to-action-primary/20">
+          <Paintbrush className="h-5 w-5 text-action-primary" />
         </div>
         <div>
           <Text as="h1" className="text-xl font-bold text-text-primary">Theming Guide</Text>
@@ -245,7 +245,7 @@ export default function ThemingGuidePage() {
             <textarea
               value={sandboxCSS}
               onChange={(e) => setSandboxCSS(e.target.value)}
-              className="h-64 w-full rounded-2xl border border-border-subtle bg-gray-900 p-4 font-mono text-xs text-gray-200 outline-hidden focus:border-action-primary"
+              className="h-64 w-full rounded-2xl border border-border-subtle bg-surface-inverse p-4 font-mono text-xs text-border-subtle outline-hidden focus:border-action-primary"
               spellCheck={false}
             />
           </div>
@@ -255,14 +255,14 @@ export default function ThemingGuidePage() {
               <style>{sandboxCSS}</style>
               <div className="flex flex-col gap-4">
                 <div className="flex gap-2">
-                  <button className="rounded-lg bg-[var(--color-action-primary,#2563eb)] px-4 py-2 text-sm font-medium text-white">Primary Button</button>
-                  <button className="rounded-lg border border-[var(--color-border-default,#cbd5e1)] px-4 py-2 text-sm font-medium">Secondary</button>
+                  <button className="rounded-lg bg-[var(--color-action-primary))] px-4 py-2 text-sm font-medium text-text-inverse">Primary Button</button>
+                  <button className="rounded-lg border border-[var(--color-border-default))] px-4 py-2 text-sm font-medium">Secondary</button>
                 </div>
                 <input
-                  className="w-full rounded-[var(--radius-lg,8px)] border border-[var(--color-border-default,#cbd5e1)] px-3 py-2 text-sm outline-hidden"
+                  className="w-full rounded-[var(--radius-lg)] border border-[var(--color-border-default))] px-3 py-2 text-sm outline-hidden"
                   placeholder="Sample input"
                 />
-                <div className="rounded-[var(--radius-lg,8px)] border border-blue-200 bg-blue-50 p-3 text-sm text-blue-700">
+                <div className="rounded-[var(--radius-lg)] border border-state-info-text/20 bg-state-info-bg p-3 text-sm text-state-info-text">
                   Sample alert message
                 </div>
               </div>
@@ -280,11 +280,11 @@ export default function ThemingGuidePage() {
                   onClick={() => handleCopy(example.code, `${activeSection}-${idx}`)}
                   className="flex items-center gap-1 rounded-lg border border-border-subtle px-2 py-1 text-[11px] font-medium text-text-secondary hover:text-text-primary transition"
                 >
-                  {copied === `${activeSection}-${idx}` ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+                  {copied === `${activeSection}-${idx}` ? <Check className="h-3 w-3 text-state-success-text" /> : <Copy className="h-3 w-3" />}
                   {copied === `${activeSection}-${idx}` ? "Copied" : "Copy"}
                 </button>
               </div>
-              <pre className="overflow-x-auto bg-gray-900 p-5 text-xs leading-relaxed text-gray-200 font-mono">
+              <pre className="overflow-x-auto bg-surface-inverse p-5 text-xs leading-relaxed text-border-subtle font-mono">
                 {example.code}
               </pre>
             </div>

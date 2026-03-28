@@ -63,12 +63,12 @@ function isComplexType(typeStr: string): boolean {
 }
 
 function getTypeBadgeColor(typeStr: string): string {
-  if (typeStr === "boolean") return "bg-amber-100 text-amber-700";
-  if (typeStr === "string") return "bg-emerald-100 text-emerald-700";
-  if (typeStr === "number") return "bg-blue-100 text-blue-700";
-  if (typeStr.includes("|")) return "bg-purple-100 text-purple-700";
-  if (typeStr.includes("=>") || typeStr.includes("Function")) return "bg-rose-100 text-rose-700";
-  if (typeStr.includes("React")) return "bg-indigo-100 text-indigo-700";
+  if (typeStr === "boolean") return "bg-state-warning-bg text-state-warning-text";
+  if (typeStr === "string") return "bg-state-success-bg text-state-success-text";
+  if (typeStr === "number") return "bg-state-info-bg text-state-info-text";
+  if (typeStr.includes("|")) return "bg-action-primary/10 text-action-primary";
+  if (typeStr.includes("=>") || typeStr.includes("Function")) return "bg-state-danger-bg text-state-danger-text";
+  if (typeStr.includes("React")) return "bg-action-primary/10 text-action-primary";
   return "bg-[var(--surface-muted)] text-[var(--text-secondary)]";
 }
 
@@ -88,7 +88,7 @@ function UnionChip({
       className={[
         "inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-mono font-medium transition",
         onClick
-          ? "bg-purple-50 text-purple-700 hover:bg-purple-100 cursor-pointer"
+          ? "bg-action-primary/10 text-action-primary hover:bg-action-primary/10 cursor-pointer"
           : "bg-surface-muted text-text-secondary",
       ].join(" ")}
       title={onClick ? `Set playground to "${value}"` : undefined}
@@ -194,7 +194,7 @@ function PropRow({
               {prop.name}
             </code>
             {prop.required && (
-              <span className="rounded-xs bg-amber-500/10 px-1 py-0.5 text-[9px] font-bold uppercase text-amber-600">
+              <span className="rounded-xs bg-state-warning-text/10 px-1 py-0.5 text-[9px] font-bold uppercase text-state-warning-text">
                 req
               </span>
             )}
@@ -358,12 +358,12 @@ export const PropsTableV2: React.FC<PropsTableV2Props> = ({
               className={[
                 "flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition",
                 filter === opt.id
-                  ? "bg-action-primary text-white"
+                  ? "bg-action-primary text-text-inverse"
                   : "bg-surface-muted text-text-secondary hover:text-text-primary",
               ].join(" ")}
             >
               {opt.label}
-              <span className={filter === opt.id ? "text-white/70" : "text-text-tertiary"}>
+              <span className={filter === opt.id ? "text-text-inverse/70" : "text-text-tertiary"}>
                 {opt.count}
               </span>
             </button>

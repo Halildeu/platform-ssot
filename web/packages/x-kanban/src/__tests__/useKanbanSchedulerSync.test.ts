@@ -34,7 +34,7 @@ describe('useKanbanSchedulerSync', () => {
     // Default 60 min duration
     expect(events[0].end.getTime() - events[0].start.getTime()).toBe(60 * 60 * 1000);
     // High priority -> red
-    expect(events[0].color).toBe('#f44336');
+    expect(events[0].color).toBe('var(--state-danger-text)');
   });
 
   it('converts scheduler events to kanban cards', () => {

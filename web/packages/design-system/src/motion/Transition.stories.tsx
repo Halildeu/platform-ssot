@@ -9,12 +9,12 @@ function TransitionDemo({ preset = 'fadeIn' as const }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <button
         onClick={() => setShow((s) => !s)}
-        style={{ padding: '8px 16px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', width: 'fit-content' }}
+        style={{ padding: '8px 16px', background: 'var(--action-primary)', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', width: 'fit-content' }}
       >
         {show ? 'Hide' : 'Show'}
       </button>
       <Transition show={show} preset={preset}>
-        <div style={{ padding: 24, background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8 }}>
+        <div style={{ padding: 24, background: 'var(--state-info-bg)', border: '1px solid var(--state-info-bg)', borderRadius: 8 }}>
           Animated content with preset: <strong>{preset}</strong>
         </div>
       </Transition>

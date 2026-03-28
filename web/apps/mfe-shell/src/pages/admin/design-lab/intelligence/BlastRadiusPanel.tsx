@@ -10,10 +10,10 @@ import type { BlastRadius, Consumer } from "./useBlastRadius";
 /* ------------------------------------------------------------------ */
 
 const RISK_STYLES: Record<BlastRadius["riskScore"], { bg: string; text: string; label: string }> = {
-  low: { bg: "bg-emerald-100", text: "text-emerald-700", label: "Low" },
-  medium: { bg: "bg-amber-100", text: "text-amber-700", label: "Medium" },
-  high: { bg: "bg-orange-100", text: "text-orange-700", label: "High" },
-  critical: { bg: "bg-red-100", text: "text-red-700", label: "Critical" },
+  low: { bg: "bg-state-success-bg", text: "text-state-success-text", label: "Low" },
+  medium: { bg: "bg-state-warning-bg", text: "text-state-warning-text", label: "Medium" },
+  high: { bg: "bg-state-warning-bg", text: "text-state-warning-text", label: "High" },
+  critical: { bg: "bg-state-danger-bg", text: "text-state-danger-text", label: "Critical" },
 };
 
 function RiskBadge({ score }: { score: BlastRadius["riskScore"] }) {
@@ -33,10 +33,10 @@ function RiskBadge({ score }: { score: BlastRadius["riskScore"] }) {
 /* ------------------------------------------------------------------ */
 
 const TYPE_ICONS: Record<Consumer["type"], React.ReactNode> = {
-  app: <Zap className="h-3.5 w-3.5 text-blue-500" />,
-  recipe: <BookOpen className="h-3.5 w-3.5 text-emerald-500" />,
-  pattern: <Box className="h-3.5 w-3.5 text-amber-500" />,
-  component: <Box className="h-3.5 w-3.5 text-violet-500" />,
+  app: <Zap className="h-3.5 w-3.5 text-action-primary" />,
+  recipe: <BookOpen className="h-3.5 w-3.5 text-state-success-text" />,
+  pattern: <Box className="h-3.5 w-3.5 text-state-warning-text" />,
+  component: <Box className="h-3.5 w-3.5 text-action-primary" />,
 };
 
 function ConsumerGroup({

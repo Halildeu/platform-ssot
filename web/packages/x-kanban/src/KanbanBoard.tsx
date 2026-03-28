@@ -168,10 +168,10 @@ const AddColumnButton: React.FC<{ label: string; onClick: () => void }> = ({
       width: '300px',
       minWidth: '300px',
       minHeight: '120px',
-      border: '2px dashed var(--border-subtle, #d1d5db)',
-      borderRadius: 'var(--radius-lg, 12px)',
+      border: '2px dashed var(--border-subtle))',
+      borderRadius: 'var(--radius-lg)',
       background: 'transparent',
-      color: 'var(--text-tertiary, #9ca3af)',
+      color: 'var(--text-tertiary))',
       fontSize: '14px',
       fontWeight: 500,
       cursor: 'pointer',
@@ -180,14 +180,14 @@ const AddColumnButton: React.FC<{ label: string; onClick: () => void }> = ({
     }}
     onMouseEnter={(e) => {
       const el = e.currentTarget;
-      el.style.borderColor = 'var(--border-accent, #3b82f6)';
-      el.style.color = 'var(--text-primary, #111827)';
-      el.style.background = 'var(--surface-subtle, #f9fafb)';
+      el.style.borderColor = 'var(--border-accent))';
+      el.style.color = 'var(--text-primary))';
+      el.style.background = 'var(--surface-subtle))';
     }}
     onMouseLeave={(e) => {
       const el = e.currentTarget;
-      el.style.borderColor = 'var(--border-subtle, #d1d5db)';
-      el.style.color = 'var(--text-tertiary, #9ca3af)';
+      el.style.borderColor = 'var(--border-subtle))';
+      el.style.color = 'var(--text-tertiary))';
       el.style.background = 'transparent';
     }}
   >

@@ -31,7 +31,7 @@ export const Default: Story = {
 };
 
 export const CustomClass: Story = {
-  render: () => <AppSidebarResizer className="bg-blue-200" />,
+  render: () => <AppSidebarResizer className="bg-state-info-bg" />,
 };
 
 export const WithContent: Story = {

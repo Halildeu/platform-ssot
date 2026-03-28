@@ -15,7 +15,7 @@ function ConnectedCheckboxDemo({ defaultChecked = false }: { defaultChecked?: bo
           <ConnectedCheckbox name="acceptTerms" />
           I accept the terms and conditions
         </label>
-        <pre style={{ fontSize: 11, background: '#f3f4f6', padding: 8, borderRadius: 4 }}>
+        <pre style={{ fontSize: 11, background: 'var(--surface-muted)', padding: 8, borderRadius: 4 }}>
           acceptTerms: {String(values.acceptTerms)}
         </pre>
       </div>

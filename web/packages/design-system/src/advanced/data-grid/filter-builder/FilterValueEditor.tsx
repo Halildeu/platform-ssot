@@ -294,7 +294,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
                     <button
                       type="button"
                       onClick={() => onChange(selected.filter((s) => s !== v))}
-                      className="ml-0.5 hover:text-rose-600"
+                      className="ml-0.5 hover:text-state-danger-text"
                     >
                       ×
                     </button>

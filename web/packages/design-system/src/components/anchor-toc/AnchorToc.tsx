@@ -185,7 +185,7 @@ export const AnchorToc = React.forwardRef<HTMLElement, AnchorTocProps>(
                     focusRingClass("ring"),
                     densityClass[density],
                     active
-                      ? "border-[var(--accent-primary,var(--action-primary))] bg-[var(--accent-soft)] text-text-primary shadow-xs"
+                      ? "border-[var(--accent-primary))] bg-[var(--accent-soft)] text-text-primary shadow-xs"
                       : "border-transparent bg-transparent text-text-secondary hover:border-border-subtle hover:bg-surface-muted hover:text-text-primary",
                     disabled && "pointer-events-none opacity-55",
                   )}

@@ -6,7 +6,7 @@ const STORAGE_KEY = 'x-chart-variants';
 
 const sampleConfig: ChartConfig = {
   type: 'bar',
-  colors: ['#3366cc', '#dc3912'],
+  colors: ['var(--action-primary)', 'var(--state-danger-text)'],
   showGrid: true,
   showLegend: true,
 };

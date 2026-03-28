@@ -15,7 +15,7 @@ type Tab = 'upload' | 'url';
 const overlayStyles: React.CSSProperties = {
   position: 'fixed',
   inset: 0,
-  backgroundColor: 'var(--surface-overlay, rgba(0, 0, 0, 0.3))',
+  backgroundColor: 'var(--surface-overlay))',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -23,8 +23,8 @@ const overlayStyles: React.CSSProperties = {
 };
 
 const dialogStyles: React.CSSProperties = {
-  backgroundColor: 'var(--surface-default, #ffffff)',
-  border: '1px solid var(--border-subtle, #e2e8f0)',
+  backgroundColor: 'var(--surface-default))',
+  border: '1px solid var(--border-subtle))',
   borderRadius: '12px',
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.16)',
   padding: '20px',
@@ -35,7 +35,7 @@ const dialogStyles: React.CSSProperties = {
 const titleStyles: React.CSSProperties = {
   fontSize: '15px',
   fontWeight: 600,
-  color: 'var(--text-primary, #1e293b)',
+  color: 'var(--text-primary))',
   margin: '0 0 16px 0',
 };
 
@@ -43,7 +43,7 @@ const tabBarStyles: React.CSSProperties = {
   display: 'flex',
   gap: '0',
   marginBottom: '16px',
-  borderBottom: '1px solid var(--border-subtle, #e2e8f0)',
+  borderBottom: '1px solid var(--border-subtle))',
 };
 
 const tabStyles: React.CSSProperties = {
@@ -51,7 +51,7 @@ const tabStyles: React.CSSProperties = {
   border: 'none',
   borderBottom: '2px solid transparent',
   backgroundColor: 'transparent',
-  color: 'var(--text-secondary, #64748b)',
+  color: 'var(--text-secondary))',
   fontSize: '13px',
   fontWeight: 500,
   cursor: 'pointer',
@@ -60,12 +60,12 @@ const tabStyles: React.CSSProperties = {
 
 const activeTabStyles: React.CSSProperties = {
   ...tabStyles,
-  color: 'var(--text-primary, #1e293b)',
-  borderBottomColor: 'var(--border-accent, #3b82f6)',
+  color: 'var(--text-primary))',
+  borderBottomColor: 'var(--border-accent))',
 };
 
 const dropZoneStyles: React.CSSProperties = {
-  border: '2px dashed var(--border-subtle, #e2e8f0)',
+  border: '2px dashed var(--border-subtle))',
   borderRadius: '8px',
   padding: '32px 16px',
   textAlign: 'center',
@@ -76,19 +76,19 @@ const dropZoneStyles: React.CSSProperties = {
 
 const dropZoneActiveStyles: React.CSSProperties = {
   ...dropZoneStyles,
-  borderColor: 'var(--border-accent, #3b82f6)',
-  backgroundColor: 'var(--surface-active, #eff6ff)',
+  borderColor: 'var(--border-accent))',
+  backgroundColor: 'var(--surface-active)',
 };
 
 const dropZoneTextStyles: React.CSSProperties = {
   fontSize: '13px',
-  color: 'var(--text-muted, #94a3b8)',
+  color: 'var(--text-muted))',
   marginTop: '8px',
 };
 
 const dropZoneIconStyles: React.CSSProperties = {
   fontSize: '28px',
-  color: 'var(--text-muted, #94a3b8)',
+  color: 'var(--text-muted))',
 };
 
 const previewStyles: React.CSSProperties = {
@@ -96,7 +96,7 @@ const previewStyles: React.CSSProperties = {
   maxHeight: '160px',
   objectFit: 'contain',
   borderRadius: '6px',
-  border: '1px solid var(--border-subtle, #e2e8f0)',
+  border: '1px solid var(--border-subtle))',
   marginBottom: '12px',
 };
 
@@ -110,16 +110,16 @@ const fieldStyles: React.CSSProperties = {
 const labelStyles: React.CSSProperties = {
   fontSize: '12px',
   fontWeight: 500,
-  color: 'var(--text-secondary, #64748b)',
+  color: 'var(--text-secondary))',
 };
 
 const inputStyles: React.CSSProperties = {
   padding: '8px 10px',
-  border: '1px solid var(--border-subtle, #e2e8f0)',
+  border: '1px solid var(--border-subtle))',
   borderRadius: '6px',
   fontSize: '13px',
-  color: 'var(--text-primary, #1e293b)',
-  backgroundColor: 'var(--surface-default, #ffffff)',
+  color: 'var(--text-primary))',
+  backgroundColor: 'var(--surface-default))',
   outline: 'none',
   transition: 'border-color 0.15s',
 };
@@ -141,16 +141,16 @@ const buttonBaseStyles: React.CSSProperties = {
 
 const cancelButtonStyles: React.CSSProperties = {
   ...buttonBaseStyles,
-  border: '1px solid var(--border-subtle, #e2e8f0)',
-  backgroundColor: 'var(--surface-default, #ffffff)',
-  color: 'var(--text-primary, #1e293b)',
+  border: '1px solid var(--border-subtle))',
+  backgroundColor: 'var(--surface-default))',
+  color: 'var(--text-primary))',
 };
 
 const confirmButtonStyles: React.CSSProperties = {
   ...buttonBaseStyles,
   border: '1px solid transparent',
-  backgroundColor: 'var(--surface-accent, #3b82f6)',
-  color: 'var(--text-inverse, #ffffff)',
+  backgroundColor: 'var(--surface-accent))',
+  color: 'var(--text-inverse))',
 };
 
 const disabledConfirmStyles: React.CSSProperties = {
@@ -161,7 +161,7 @@ const disabledConfirmStyles: React.CSSProperties = {
 
 const errorStyles: React.CSSProperties = {
   fontSize: '12px',
-  color: 'var(--text-danger, #ef4444)',
+  color: 'var(--text-danger))',
   marginBottom: '8px',
 };
 

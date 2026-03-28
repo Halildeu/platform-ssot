@@ -22,14 +22,14 @@ export function SLOTracker({ metrics }: SLOTrackerProps) {
         const colorMap = { healthy: 'emerald', warning: 'amber', critical: 'red' } as const;
         const color = colorMap[m.status];
         const strokeClasses = {
-          emerald: 'text-emerald-500',
-          amber: 'text-amber-500',
-          red: 'text-red-500',
+          emerald: 'text-state-success-text',
+          amber: 'text-state-warning-text',
+          red: 'text-state-danger-text',
         };
         const badgeBgClasses = {
-          emerald: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-          amber: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-          red: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+          emerald: 'bg-state-success-bg text-state-success-text dark:bg-state-success-text/30 dark:text-state-success-text',
+          amber: 'bg-state-warning-bg text-state-warning-text dark:bg-state-warning-text/30 dark:text-state-warning-text',
+          red: 'bg-state-danger-bg text-state-danger-text dark:bg-state-danger-text/30 dark:text-state-danger-text',
         };
         const r = 32;
         const circumference = 2 * Math.PI * r;

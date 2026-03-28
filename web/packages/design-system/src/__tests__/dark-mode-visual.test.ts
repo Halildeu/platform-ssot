@@ -15,9 +15,9 @@ describe('Dark mode token compliance', () => {
     /(?:color|background|fill|stroke):\s*['"]?#(?:fff|ffffff|000|000000)['"]?/gi,
     // Hardcoded gray palette
     /(?:color|background|fill|stroke):\s*['"]?#[0-9a-f]{6}['"]?(?!\s*[,;)])/gi,
-    // text-white without var()
+    // text-text-inverse without var()
     /\btext-white\b(?!.*var\()/g,
-    // bg-white without var()
+    // bg-surface-default without var()
     /\bbg-white\b(?!.*var\()/g,
   ];
 

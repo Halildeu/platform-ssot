@@ -147,7 +147,7 @@ function RadioOption({
 function Backdrop({ onClick }: { onClick: () => void }) {
   return (
     <div
-      className="fixed inset-0 z-40 bg-black/30 backdrop-blur-xs"
+      className="fixed inset-0 z-40 bg-surface-inverse/30 backdrop-blur-xs"
       onClick={onClick}
       aria-hidden="true"
     />

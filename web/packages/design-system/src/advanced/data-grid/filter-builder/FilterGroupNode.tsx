@@ -91,7 +91,7 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
     <div
       className={[
         isRoot ? 'flex flex-col gap-0' : `overflow-hidden rounded-lg border ${colors.border} ${colors.bg}`,
-        isLocked && !isRoot ? 'opacity-80 ring-1 ring-amber-300' : '',
+        isLocked && !isRoot ? 'opacity-80 ring-1 ring-state-warning-text/30' : '',
       ].join(' ')}
     >
       {/* ── Group header ── */}

@@ -22,9 +22,9 @@ export type TokenEntry = {
 };
 
 export const TOKEN_TIER_META: Record<TokenTier, { label: string; color: string }> = {
-  global: { label: "Global", color: "bg-blue-100 text-blue-700" },
-  alias: { label: "Alias", color: "bg-purple-100 text-purple-700" },
-  component: { label: "Component", color: "bg-amber-100 text-amber-700" },
+  global: { label: "Global", color: "bg-state-info-bg text-state-info-text" },
+  alias: { label: "Alias", color: "bg-action-primary/10 text-action-primary" },
+  component: { label: "Component", color: "bg-state-warning-bg text-state-warning-text" },
 };
 
 export const TOKEN_CATEGORY_META: Record<TokenCategory, { label: string; icon: string }> = {
@@ -42,16 +42,16 @@ export const TOKEN_CATEGORY_META: Record<TokenCategory, { label: string; icon: s
 const _tokenMap: Record<string, TokenEntry[]> = {
   Button: [
     // Colors
-    { name: "button-bg-primary", cssVar: "--color-action-primary", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "Primary button background" },
-    { name: "button-bg-primary-hover", cssVar: "--color-action-primary-hover", resolvedValue: "#1d4ed8", tier: "alias", category: "color", description: "Primary button hover background" },
-    { name: "button-bg-secondary", cssVar: "--color-surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Secondary button background" },
+    { name: "button-bg-primary", cssVar: "--color-action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Primary button background" },
+    { name: "button-bg-primary-hover", cssVar: "--color-action-primary-hover", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Primary button hover background" },
+    { name: "button-bg-secondary", cssVar: "--color-surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Secondary button background" },
     { name: "button-bg-ghost", cssVar: "--color-transparent", resolvedValue: "transparent", tier: "component", category: "color", description: "Ghost button background" },
-    { name: "button-text-primary", cssVar: "--color-text-inverse", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Primary button text" },
-    { name: "button-text-secondary", cssVar: "--color-text-primary", resolvedValue: "#0f172a", tier: "alias", category: "color", description: "Secondary button text" },
-    { name: "button-border", cssVar: "--color-border-subtle", resolvedValue: "#e2e8f0", tier: "alias", category: "color", description: "Button border color" },
-    { name: "button-focus-ring", cssVar: "--color-action-primary", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "Focus ring color" },
-    { name: "button-disabled-bg", cssVar: "--color-surface-disabled", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Disabled button background" },
-    { name: "button-disabled-text", cssVar: "--color-text-disabled", resolvedValue: "#94a3b8", tier: "alias", category: "color", description: "Disabled button text" },
+    { name: "button-text-primary", cssVar: "--color-text-inverse", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Primary button text" },
+    { name: "button-text-secondary", cssVar: "--color-text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Secondary button text" },
+    { name: "button-border", cssVar: "--color-border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Button border color" },
+    { name: "button-focus-ring", cssVar: "--color-action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Focus ring color" },
+    { name: "button-disabled-bg", cssVar: "--color-surface-disabled", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Disabled button background" },
+    { name: "button-disabled-text", cssVar: "--color-text-disabled", resolvedValue: "var(--text-subtle)", tier: "alias", category: "color", description: "Disabled button text" },
     // Spacing
     { name: "button-padding-x-sm", cssVar: "--spacing-2", resolvedValue: "8px", tier: "global", category: "spacing", description: "Small button horizontal padding" },
     { name: "button-padding-x-md", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Medium button horizontal padding" },
@@ -77,13 +77,13 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "button-transition", cssVar: "--transition-fast", resolvedValue: "150ms ease", tier: "global", category: "motion", description: "Button transition duration" },
   ],
   Input: [
-    { name: "input-bg", cssVar: "--color-surface-default", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Input background" },
-    { name: "input-bg-disabled", cssVar: "--color-surface-disabled", resolvedValue: "#f8fafc", tier: "alias", category: "color", description: "Disabled input background" },
-    { name: "input-border", cssVar: "--color-border-default", resolvedValue: "#cbd5e1", tier: "alias", category: "color", description: "Input border" },
-    { name: "input-border-focus", cssVar: "--color-action-primary", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "Focused input border" },
-    { name: "input-border-error", cssVar: "--color-feedback-error", resolvedValue: "#ef4444", tier: "alias", category: "color", description: "Error state border" },
-    { name: "input-text", cssVar: "--color-text-primary", resolvedValue: "#0f172a", tier: "alias", category: "color", description: "Input text" },
-    { name: "input-placeholder", cssVar: "--color-text-tertiary", resolvedValue: "#94a3b8", tier: "alias", category: "color", description: "Placeholder text" },
+    { name: "input-bg", cssVar: "--color-surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Input background" },
+    { name: "input-bg-disabled", cssVar: "--color-surface-disabled", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Disabled input background" },
+    { name: "input-border", cssVar: "--color-border-default", resolvedValue: "var(--border-default)", tier: "alias", category: "color", description: "Input border" },
+    { name: "input-border-focus", cssVar: "--color-action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Focused input border" },
+    { name: "input-border-error", cssVar: "--color-feedback-error", resolvedValue: "var(--state-danger-text)", tier: "alias", category: "color", description: "Error state border" },
+    { name: "input-text", cssVar: "--color-text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Input text" },
+    { name: "input-placeholder", cssVar: "--color-text-tertiary", resolvedValue: "var(--text-subtle)", tier: "alias", category: "color", description: "Placeholder text" },
     { name: "input-height", cssVar: "--size-10", resolvedValue: "40px", tier: "component", category: "sizing", description: "Input height" },
     { name: "input-padding-x", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "Input horizontal padding" },
     { name: "input-border-radius", cssVar: "--radius-lg", resolvedValue: "8px", tier: "global", category: "border", description: "Input border radius" },
@@ -91,33 +91,33 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "input-focus-ring-width", cssVar: "--ring-width-2", resolvedValue: "2px", tier: "component", category: "border", description: "Focus ring width" },
   ],
   Select: [
-    { name: "select-bg", cssVar: "--color-surface-default", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Select trigger background" },
-    { name: "select-border", cssVar: "--color-border-default", resolvedValue: "#cbd5e1", tier: "alias", category: "color", description: "Select border" },
-    { name: "select-dropdown-bg", cssVar: "--color-surface-elevated", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Dropdown background" },
-    { name: "select-option-hover", cssVar: "--color-surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Option hover background" },
+    { name: "select-bg", cssVar: "--color-surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Select trigger background" },
+    { name: "select-border", cssVar: "--color-border-default", resolvedValue: "var(--border-default)", tier: "alias", category: "color", description: "Select border" },
+    { name: "select-dropdown-bg", cssVar: "--color-surface-elevated", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Dropdown background" },
+    { name: "select-option-hover", cssVar: "--color-surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Option hover background" },
     { name: "select-height", cssVar: "--size-10", resolvedValue: "40px", tier: "component", category: "sizing", description: "Select trigger height" },
     { name: "select-dropdown-shadow", cssVar: "--shadow-lg", resolvedValue: "0 10px 15px -3px rgba(0,0,0,0.1)", tier: "global", category: "shadow", description: "Dropdown shadow" },
     { name: "select-border-radius", cssVar: "--radius-lg", resolvedValue: "8px", tier: "global", category: "border", description: "Select border radius" },
   ],
   Alert: [
-    { name: "alert-bg-info", cssVar: "--color-feedback-info-light", resolvedValue: "#eff6ff", tier: "alias", category: "color", description: "Info alert background" },
-    { name: "alert-bg-success", cssVar: "--color-feedback-success-light", resolvedValue: "#f0fdf4", tier: "alias", category: "color", description: "Success alert background" },
-    { name: "alert-bg-warning", cssVar: "--color-feedback-warning-light", resolvedValue: "#fffbeb", tier: "alias", category: "color", description: "Warning alert background" },
-    { name: "alert-bg-error", cssVar: "--color-feedback-error-light", resolvedValue: "#fef2f2", tier: "alias", category: "color", description: "Error alert background" },
+    { name: "alert-bg-info", cssVar: "--color-feedback-info-light", resolvedValue: "var(--state-info-bg)", tier: "alias", category: "color", description: "Info alert background" },
+    { name: "alert-bg-success", cssVar: "--color-feedback-success-light", resolvedValue: "var(--state-success-bg)", tier: "alias", category: "color", description: "Success alert background" },
+    { name: "alert-bg-warning", cssVar: "--color-feedback-warning-light", resolvedValue: "var(--state-warning-bg)", tier: "alias", category: "color", description: "Warning alert background" },
+    { name: "alert-bg-error", cssVar: "--color-feedback-error-light", resolvedValue: "var(--state-danger-bg)", tier: "alias", category: "color", description: "Error alert background" },
     { name: "alert-border-radius", cssVar: "--radius-xl", resolvedValue: "12px", tier: "global", category: "border", description: "Alert border radius" },
     { name: "alert-padding", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Alert padding" },
     { name: "alert-icon-size", cssVar: "--size-5", resolvedValue: "20px", tier: "component", category: "sizing", description: "Alert icon size" },
   ],
   Checkbox: [
     { name: "checkbox-size", cssVar: "--size-4", resolvedValue: "16px", tier: "component", category: "sizing", description: "Checkbox size" },
-    { name: "checkbox-border", cssVar: "--color-border-default", resolvedValue: "#cbd5e1", tier: "alias", category: "color", description: "Checkbox border" },
-    { name: "checkbox-checked-bg", cssVar: "--color-action-primary", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "Checked background" },
+    { name: "checkbox-border", cssVar: "--color-border-default", resolvedValue: "var(--border-default)", tier: "alias", category: "color", description: "Checkbox border" },
+    { name: "checkbox-checked-bg", cssVar: "--color-action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Checked background" },
     { name: "checkbox-border-radius", cssVar: "--radius-sm", resolvedValue: "4px", tier: "global", category: "border", description: "Checkbox border radius" },
     { name: "checkbox-label-gap", cssVar: "--spacing-2", resolvedValue: "8px", tier: "global", category: "spacing", description: "Gap between checkbox and label" },
   ],
   Modal: [
     { name: "modal-overlay-bg", cssVar: "--color-overlay", resolvedValue: "rgba(0,0,0,0.5)", tier: "alias", category: "color", description: "Backdrop overlay" },
-    { name: "modal-surface-bg", cssVar: "--color-surface-elevated", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Modal surface" },
+    { name: "modal-surface-bg", cssVar: "--color-surface-elevated", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Modal surface" },
     { name: "modal-border-radius", cssVar: "--radius-2xl", resolvedValue: "16px", tier: "global", category: "border", description: "Modal border radius" },
     { name: "modal-shadow", cssVar: "--shadow-2xl", resolvedValue: "0 25px 50px -12px rgba(0,0,0,0.25)", tier: "global", category: "shadow", description: "Modal shadow" },
     { name: "modal-padding", cssVar: "--spacing-6", resolvedValue: "24px", tier: "global", category: "spacing", description: "Modal content padding" },
@@ -125,21 +125,21 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   ],
   Pagination: [
     { name: "pagination-item-size", cssVar: "--size-9", resolvedValue: "36px", tier: "component", category: "sizing", description: "Page button size" },
-    { name: "pagination-active-bg", cssVar: "--color-action-primary", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "Active page background" },
-    { name: "pagination-active-text", cssVar: "--color-text-inverse", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Active page text" },
+    { name: "pagination-active-bg", cssVar: "--color-action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Active page background" },
+    { name: "pagination-active-text", cssVar: "--color-text-inverse", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Active page text" },
     { name: "pagination-gap", cssVar: "--spacing-1", resolvedValue: "4px", tier: "global", category: "spacing", description: "Gap between page buttons" },
     { name: "pagination-border-radius", cssVar: "--radius-lg", resolvedValue: "8px", tier: "global", category: "border", description: "Page button radius" },
   ],
   SearchFilterListing: [
     // Color
-    { name: "sfl-surface-card", cssVar: "--surface-card", resolvedValue: "var(--surface-default-bg, #fff)", tier: "alias", category: "color", description: "Panel arka plan rengi (koyu modda otomatik uyum saglar)" },
-    { name: "sfl-surface-muted", cssVar: "--surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Chip, skeleton, totalCount badge ve bos durum ikon arka plani" },
-    { name: "sfl-surface-hover", cssVar: "--surface-hover", resolvedValue: "#e2e8f0", tier: "alias", category: "color", description: "Filtre chip hover arka plan rengi" },
+    { name: "sfl-surface-card", cssVar: "--surface-card", resolvedValue: "var(--surface-default-bg))", tier: "alias", category: "color", description: "Panel arka plan rengi (koyu modda otomatik uyum saglar)" },
+    { name: "sfl-surface-muted", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Chip, skeleton, totalCount badge ve bos durum ikon arka plani" },
+    { name: "sfl-surface-hover", cssVar: "--surface-hover", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Filtre chip hover arka plan rengi" },
     { name: "sfl-text-primary", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Baslik, liste basligi ve chip metin rengi" },
     { name: "sfl-text-secondary", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "Aciklama, eyebrow, siralama ve totalCount metin rengi" },
-    { name: "sfl-action-primary-bg", cssVar: "--action-primary-bg", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "Chip kaldir hover, secim sayaci badge ve tumunu temizle link rengi" },
-    { name: "sfl-selection-outline", cssVar: "--selection-outline", resolvedValue: "#3b82f6", tier: "alias", category: "color", description: "Secim cubugu kenarligi ve siralama dropdown focus rengi" },
-    { name: "sfl-selection-bg", cssVar: "--selection-bg", resolvedValue: "#eff6ff", tier: "alias", category: "color", description: "Secim cubugu arka plan rengi" },
+    { name: "sfl-action-primary-bg", cssVar: "--action-primary-bg", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Chip kaldir hover, secim sayaci badge ve tumunu temizle link rengi" },
+    { name: "sfl-selection-outline", cssVar: "--selection-outline", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Secim cubugu kenarligi ve siralama dropdown focus rengi" },
+    { name: "sfl-selection-bg", cssVar: "--selection-bg", resolvedValue: "var(--state-info-bg)", tier: "alias", category: "color", description: "Secim cubugu arka plan rengi" },
     { name: "sfl-border-subtle", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Panel, chip ve siralama dropdown kenarlik rengi" },
     // Spacing
     { name: "sfl-panel-padding", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Panel ic boslugu (default mod, p-5)" },
@@ -266,7 +266,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Colors
     { name: "switch-track-checked", cssVar: "--action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Açık durumdaki track arka plan rengi" },
     { name: "switch-track-unchecked", cssVar: "--border-default", resolvedValue: "var(--border-default)", tier: "alias", category: "color", description: "Kapalı durumdaki track arka plan rengi" },
-    { name: "switch-thumb-bg", cssVar: "--color-white", resolvedValue: "#ffffff", tier: "global", category: "color", description: "Thumb (düğme) arka plan rengi" },
+    { name: "switch-thumb-bg", cssVar: "--color-white", resolvedValue: "var(--surface-default)", tier: "global", category: "color", description: "Thumb (düğme) arka plan rengi" },
     { name: "switch-label-text", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Switch etiket metin rengi" },
     { name: "switch-description-text", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "Switch açıklama metin rengi" },
     // Spacing
@@ -421,7 +421,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "popover-panel-bg-start", cssVar: "--color-surface-default", resolvedValue: "rgba(255,255,255,0.98)", tier: "alias", category: "color", description: "Panel gradient başlangıç rengi" },
     { name: "popover-panel-bg-end", cssVar: "--color-surface-subtle", resolvedValue: "rgba(245,246,255,0.94)", tier: "alias", category: "color", description: "Panel gradient bitiş rengi" },
     { name: "popover-panel-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)/80", tier: "alias", category: "color", description: "Panel kenarlık rengi (%80 opasite)" },
-    { name: "popover-panel-ring", cssVar: "--color-white-alpha-75", resolvedValue: "rgba(255,255,255,0.75)", tier: "component", category: "color", description: "Panel dış halka rengi (ring-white/75)" },
+    { name: "popover-panel-ring", cssVar: "--color-white-alpha-75", resolvedValue: "rgba(255,255,255,0.75)", tier: "component", category: "color", description: "Panel dış halka rengi (ring-surface-default/75)" },
     { name: "popover-title-text", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Başlık metin rengi" },
     { name: "popover-content-text", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "İçerik metin rengi" },
     { name: "popover-arrow-bg", cssVar: "--color-surface-gradient", resolvedValue: "linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,246,255,0.94))", tier: "component", category: "color", description: "Ok göstergesi arka plan gradienti" },
@@ -538,7 +538,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "accordion-surface-bg-start", cssVar: "--color-surface-default", resolvedValue: "rgba(255,255,255,0.96)", tier: "alias", category: "color", description: "Panel gradient başlangıç rengi" },
     { name: "accordion-surface-bg-end", cssVar: "--color-surface-subtle", resolvedValue: "rgba(244,246,255,0.92)", tier: "alias", category: "color", description: "Panel gradient bitiş rengi" },
     { name: "accordion-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)/80", tier: "alias", category: "color", description: "Kenarlık rengi (%80 opasite)" },
-    { name: "accordion-ring", cssVar: "--color-white-alpha-75", resolvedValue: "rgba(255,255,255,0.75)", tier: "component", category: "color", description: "Dış halka rengi (ring-white/75)" },
+    { name: "accordion-ring", cssVar: "--color-white-alpha-75", resolvedValue: "rgba(255,255,255,0.75)", tier: "component", category: "color", description: "Dış halka rengi (ring-surface-default/75)" },
     { name: "accordion-title-text", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Başlık metin rengi" },
     { name: "accordion-description-text", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "Açıklama ve içerik metin rengi" },
     { name: "accordion-icon-color", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "Genişletme ikonu rengi" },
@@ -594,7 +594,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   Steps: [
     // Colors
     { name: "steps-indicator-active-bg", cssVar: "--action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Aktif/tamamlanmış adım gösterge arka planı" },
-    { name: "steps-indicator-active-text", cssVar: "--color-white", resolvedValue: "#ffffff", tier: "global", category: "color", description: "Aktif adım gösterge metin rengi" },
+    { name: "steps-indicator-active-text", cssVar: "--color-white", resolvedValue: "var(--surface-default)", tier: "global", category: "color", description: "Aktif adım gösterge metin rengi" },
     { name: "steps-indicator-wait-border", cssVar: "--border-default", resolvedValue: "var(--border-default)", tier: "alias", category: "color", description: "Bekleyen adım kenarlık rengi" },
     { name: "steps-indicator-error-border", cssVar: "--feedback-error", resolvedValue: "var(--feedback-error)", tier: "alias", category: "color", description: "Hata adımı kenarlık rengi" },
     { name: "steps-connector-active", cssVar: "--action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Tamamlanmış bağlantı çizgisi rengi" },
@@ -707,10 +707,10 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "descriptions-label-text", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "Öğe etiket metin rengi" },
     { name: "descriptions-value-text", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Öğe değer metin rengi" },
     { name: "descriptions-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Kenarlıklı mod kenarlık rengi" },
-    { name: "descriptions-tone-info", cssVar: "--state-info-border", resolvedValue: "var(--state-info-border,#3b82f6)", tier: "alias", category: "color", description: "Bilgi tonu sol kenarlık rengi" },
-    { name: "descriptions-tone-success", cssVar: "--state-success-border", resolvedValue: "var(--state-success-border,#22c55e)", tier: "alias", category: "color", description: "Başarılı tonu sol kenarlık rengi" },
-    { name: "descriptions-tone-warning", cssVar: "--state-warning-border", resolvedValue: "var(--state-warning-border,#eab308)", tier: "alias", category: "color", description: "Uyarı tonu sol kenarlık rengi" },
-    { name: "descriptions-tone-danger", cssVar: "--state-danger-border", resolvedValue: "var(--state-danger-border,#ef4444)", tier: "alias", category: "color", description: "Tehlike tonu sol kenarlık rengi" },
+    { name: "descriptions-tone-info", cssVar: "--state-info-border", resolvedValue: "var(--state-info-border))", tier: "alias", category: "color", description: "Bilgi tonu sol kenarlık rengi" },
+    { name: "descriptions-tone-success", cssVar: "--state-success-border", resolvedValue: "var(--state-success-border))", tier: "alias", category: "color", description: "Başarılı tonu sol kenarlık rengi" },
+    { name: "descriptions-tone-warning", cssVar: "--state-warning-border", resolvedValue: "var(--state-warning-border)", tier: "alias", category: "color", description: "Uyarı tonu sol kenarlık rengi" },
+    { name: "descriptions-tone-danger", cssVar: "--state-danger-border", resolvedValue: "var(--state-danger-border))", tier: "alias", category: "color", description: "Tehlike tonu sol kenarlık rengi" },
     // Spacing
     { name: "descriptions-cell-padding-comfortable", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Rahat yoğunluk hücre iç boşluk (py-4 px-4)" },
     { name: "descriptions-cell-padding-compact", cssVar: "--spacing-2", resolvedValue: "8px", tier: "global", category: "spacing", description: "Sıkı yoğunluk hücre iç boşluk (py-2 px-3)" },
@@ -806,14 +806,14 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   ],
   SummaryStrip: [
     // Colors
-    { name: "summary-strip-card-bg", cssVar: "--surface-card", resolvedValue: "var(--surface-card,var(--surface-default))", tier: "alias", category: "color", description: "Metrik kartı arka plan rengi" },
+    { name: "summary-strip-card-bg", cssVar: "--surface-card", resolvedValue: "var(--surface-card))", tier: "alias", category: "color", description: "Metrik kartı arka plan rengi" },
     { name: "summary-strip-card-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Kart kenarlık rengi" },
     { name: "summary-strip-label-text", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "Metrik etiket metin rengi" },
     { name: "summary-strip-value-text", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Metrik değer metin rengi" },
     { name: "summary-strip-icon-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "İkon arka plan rengi" },
-    { name: "summary-strip-tone-info", cssVar: "--state-info-border", resolvedValue: "#3b82f6", tier: "alias", category: "color", description: "Info ton sol kenarlık rengi" },
-    { name: "summary-strip-tone-success", cssVar: "--state-success-border", resolvedValue: "#22c55e", tier: "alias", category: "color", description: "Success ton sol kenarlık rengi" },
-    { name: "summary-strip-tone-warning", cssVar: "--state-warning-border", resolvedValue: "#f59e0b", tier: "alias", category: "color", description: "Warning ton sol kenarlık rengi" },
+    { name: "summary-strip-tone-info", cssVar: "--state-info-border", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Info ton sol kenarlık rengi" },
+    { name: "summary-strip-tone-success", cssVar: "--state-success-border", resolvedValue: "var(--state-success-text)", tier: "alias", category: "color", description: "Success ton sol kenarlık rengi" },
+    { name: "summary-strip-tone-warning", cssVar: "--state-warning-border", resolvedValue: "var(--state-warning-text)", tier: "alias", category: "color", description: "Warning ton sol kenarlık rengi" },
     // Spacing
     { name: "summary-strip-card-padding", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Kart iç boşluğu (px-4 py-4)" },
     { name: "summary-strip-grid-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Kartlar arası boşluk (gap-4)" },
@@ -828,7 +828,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   ],
   DetailDrawer: [
     // Colors
-    { name: "detail-drawer-backdrop", cssVar: "--color-overlay", resolvedValue: "rgba(0,0,0,0.4)", tier: "alias", category: "color", description: "Arka plan karartma rengi (bg-black/40)" },
+    { name: "detail-drawer-backdrop", cssVar: "--color-overlay", resolvedValue: "rgba(0,0,0,0.4)", tier: "alias", category: "color", description: "Arka plan karartma rengi (bg-surface-inverse/40)" },
     { name: "detail-drawer-surface", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Panel arka plan rengi" },
     { name: "detail-drawer-header-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Başlık alt kenarlık rengi" },
     { name: "detail-drawer-title-text", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Başlık metin rengi" },
@@ -850,7 +850,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   ],
   FormDrawer: [
     // Colors
-    { name: "form-drawer-backdrop", cssVar: "--color-overlay", resolvedValue: "rgba(0,0,0,0.4)", tier: "alias", category: "color", description: "Arka plan karartma rengi (bg-black/40)" },
+    { name: "form-drawer-backdrop", cssVar: "--color-overlay", resolvedValue: "rgba(0,0,0,0.4)", tier: "alias", category: "color", description: "Arka plan karartma rengi (bg-surface-inverse/40)" },
     { name: "form-drawer-surface", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Panel arka plan rengi" },
     { name: "form-drawer-header-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Başlık alt kenarlık rengi" },
     { name: "form-drawer-title-text", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Başlık metin rengi" },
@@ -1100,7 +1100,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "tabs-enclosed-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Enclosed varyant container arka plan rengi" },
     { name: "tabs-enclosed-active-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Enclosed varyant aktif sekme arka planı" },
     { name: "tabs-pill-active-bg", cssVar: "--action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Pill varyant aktif sekme arka planı" },
-    { name: "tabs-pill-active-text", cssVar: "--color-white", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Pill varyant aktif sekme metin rengi" },
+    { name: "tabs-pill-active-text", cssVar: "--color-white", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Pill varyant aktif sekme metin rengi" },
     // Spacing
     { name: "tabs-padding-x-sm", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "Küçük sekme yatay iç boşluk (px-3)" },
     { name: "tabs-padding-x-md", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Orta sekme yatay iç boşluk (px-4)" },
@@ -1193,7 +1193,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "menubar-bg-default", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Varsayılan görünüm arka plan gradyanı" },
     { name: "menubar-border-default", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Varsayılan görünüm kenarlık rengi" },
     { name: "menubar-active-bg", cssVar: "--action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Aktif sekme arka plan rengi" },
-    { name: "menubar-active-text", cssVar: "--color-white", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Aktif sekme metin rengi" },
+    { name: "menubar-active-text", cssVar: "--color-white", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Aktif sekme metin rengi" },
     { name: "menubar-inactive-text", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "Pasif sekme metin rengi" },
     { name: "menubar-hover-bg", cssVar: "--surface-hover", resolvedValue: "var(--surface-hover)", tier: "alias", category: "color", description: "Hover durumu arka plan rengi" },
     { name: "menubar-badge-bg", cssVar: "--feedback-error", resolvedValue: "var(--feedback-error)", tier: "alias", category: "color", description: "Badge arka plan rengi" },
@@ -1239,7 +1239,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "navmenu-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Navigasyon menü arka plan rengi" },
     { name: "navmenu-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Navigasyon menü kenarlık rengi" },
     { name: "navmenu-active-bg", cssVar: "--action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Aktif rota arka plan rengi" },
-    { name: "navmenu-active-text", cssVar: "--color-white", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Aktif rota metin rengi" },
+    { name: "navmenu-active-text", cssVar: "--color-white", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Aktif rota metin rengi" },
     { name: "navmenu-inactive-text", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "Pasif rota metin rengi" },
     { name: "navmenu-hover-bg", cssVar: "--surface-hover", resolvedValue: "var(--surface-hover)", tier: "alias", category: "color", description: "Hover durumu arka plan rengi" },
     // Spacing
@@ -1260,7 +1260,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "actionheader-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Aksiyon header kenarlık rengi" },
     { name: "actionheader-action-text", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Aksiyon buton metin rengi" },
     { name: "actionheader-selection-bg", cssVar: "--action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Seçim sayacı arka plan rengi" },
-    { name: "actionheader-selection-text", cssVar: "--color-white", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Seçim sayacı metin rengi" },
+    { name: "actionheader-selection-text", cssVar: "--color-white", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Seçim sayacı metin rengi" },
     { name: "actionheader-disabled-text", cssVar: "--text-disabled", resolvedValue: "var(--text-disabled)", tier: "alias", category: "color", description: "Devre dışı aksiyon metin rengi" },
     // Spacing
     { name: "actionheader-padding-x", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Header yatay iç boşluk (px-4)" },
@@ -1607,7 +1607,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   ReportFilterPanel: [
     // Color
     { name: "reportfilter-submit-bg", cssVar: "--action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Filtrele butonu arka plan rengi" },
-    { name: "reportfilter-submit-text", cssVar: "--action-primary-text", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Filtrele butonu metin rengi" },
+    { name: "reportfilter-submit-text", cssVar: "--action-primary-text", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Filtrele butonu metin rengi" },
     { name: "reportfilter-reset-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Sıfırla butonu arka plan rengi" },
     { name: "reportfilter-reset-text", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "Sıfırla butonu metin rengi" },
     { name: "reportfilter-reset-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Sıfırla butonu kenarlık rengi" },
@@ -1746,7 +1746,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "ai-authoring-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "AI yazarlık paneli arka plan rengi" },
     { name: "ai-authoring-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Panel kenarlık rengi" },
     { name: "ai-authoring-title-text", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Başlık metin rengi" },
-    { name: "ai-authoring-confidence-bg", cssVar: "--surface-default", resolvedValue: "#fff", tier: "alias", category: "color", description: "Güven skoru kutusu arka plan rengi" },
+    { name: "ai-authoring-confidence-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Güven skoru kutusu arka plan rengi" },
     // Spacing
     { name: "ai-authoring-padding", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Panel iç boşluk (p-5)" },
     { name: "ai-authoring-grid-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Grid öğeleri arası boşluk (gap-4)" },
@@ -1768,7 +1768,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "audit-timeline-bg", cssVar: "--surface-default", resolvedValue: "rgba(255,255,255,0.98)", tier: "alias", category: "color", description: "Denetim zaman çizelgesi arka plan rengi" },
     { name: "audit-timeline-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Panel kenarlık rengi" },
     { name: "audit-timeline-dot-active", cssVar: "--accent-primary", resolvedValue: "var(--accent-primary)", tier: "alias", category: "color", description: "Seçili zaman noktası rengi" },
-    { name: "audit-timeline-dot-default", cssVar: "--border-default", resolvedValue: "#cbd5e1", tier: "alias", category: "color", description: "Varsayılan zaman noktası rengi" },
+    { name: "audit-timeline-dot-default", cssVar: "--border-default", resolvedValue: "var(--border-default)", tier: "alias", category: "color", description: "Varsayılan zaman noktası rengi" },
     { name: "audit-timeline-line", cssVar: "--border-subtle", resolvedValue: "rgba(203,213,225,0.65)", tier: "component", category: "color", description: "Bağlantı çizgisi rengi" },
     { name: "audit-timeline-actor-ai", cssVar: "--color-state-info", resolvedValue: "var(--color-state-info)", tier: "alias", category: "color", description: "AI aktörü rozet rengi" },
     { name: "audit-timeline-actor-human", cssVar: "--color-state-success", resolvedValue: "var(--color-state-success)", tier: "alias", category: "color", description: "İnsan aktörü rozet rengi" },
@@ -1790,7 +1790,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "prompt-composer-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Prompt düzenleyici arka plan rengi" },
     { name: "prompt-composer-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Panel kenarlık rengi" },
     { name: "prompt-composer-contract-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Sözleşme kartı arka plan rengi" },
-    { name: "prompt-composer-scope-active", cssVar: "--color-action-primary", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "Aktif kapsam butonu rengi" },
+    { name: "prompt-composer-scope-active", cssVar: "--color-action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Aktif kapsam butonu rengi" },
     { name: "prompt-composer-guardrail-badge", cssVar: "--color-state-warning", resolvedValue: "var(--color-state-warning)", tier: "alias", category: "color", description: "Koruma kuralı rozet rengi" },
     // Spacing
     { name: "prompt-composer-padding", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Panel iç boşluk (p-5)" },
@@ -1869,11 +1869,11 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Color
     { name: "command-header-bg", cssVar: "--surface-default", resolvedValue: "rgba(255,255,255,0.98)", tier: "alias", category: "color", description: "Komut başlığı arka plan rengi" },
     { name: "command-header-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Başlık alt kenarlık rengi" },
-    { name: "command-header-search-bg", cssVar: "--surface-muted", resolvedValue: "#f8fafc", tier: "alias", category: "color", description: "Arama alanı arka plan rengi" },
-    { name: "command-header-search-text", cssVar: "--text-primary", resolvedValue: "#0f172a", tier: "alias", category: "color", description: "Arama metni rengi" },
-    { name: "command-header-search-placeholder", cssVar: "--text-tertiary", resolvedValue: "#94a3b8", tier: "alias", category: "color", description: "Arama placeholder rengi" },
-    { name: "command-header-favorite-active", cssVar: "--color-state-warning", resolvedValue: "#f59e0b", tier: "alias", category: "color", description: "Aktif favori yıldız rengi" },
-    { name: "command-header-recent-bg", cssVar: "--surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Son kullanılanlar bölümü arka planı" },
+    { name: "command-header-search-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Arama alanı arka plan rengi" },
+    { name: "command-header-search-text", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Arama metni rengi" },
+    { name: "command-header-search-placeholder", cssVar: "--text-tertiary", resolvedValue: "var(--text-subtle)", tier: "alias", category: "color", description: "Arama placeholder rengi" },
+    { name: "command-header-favorite-active", cssVar: "--color-state-warning", resolvedValue: "var(--state-warning-text)", tier: "alias", category: "color", description: "Aktif favori yıldız rengi" },
+    { name: "command-header-recent-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Son kullanılanlar bölümü arka planı" },
     // Spacing
     { name: "command-header-padding-x", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Başlık yatay iç boşluk" },
     { name: "command-header-padding-y", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "Başlık dikey iç boşluk" },
@@ -1888,10 +1888,10 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   ],
   CommandWorkspace: [
     // Color
-    { name: "command-workspace-bg", cssVar: "--surface-default", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Komut çalışma alanı arka planı" },
-    { name: "command-workspace-sidebar-bg", cssVar: "--surface-muted", resolvedValue: "#f8fafc", tier: "alias", category: "color", description: "Bağlam paneli arka plan rengi" },
-    { name: "command-workspace-search-bg", cssVar: "--surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Arama çubuğu arka planı" },
-    { name: "command-workspace-result-hover", cssVar: "--surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Sonuç satırı hover arka planı" },
+    { name: "command-workspace-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Komut çalışma alanı arka planı" },
+    { name: "command-workspace-sidebar-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Bağlam paneli arka plan rengi" },
+    { name: "command-workspace-search-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Arama çubuğu arka planı" },
+    { name: "command-workspace-result-hover", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Sonuç satırı hover arka planı" },
     { name: "command-workspace-queue-bg", cssVar: "--accent-soft", resolvedValue: "rgba(238,242,255,0.98)", tier: "alias", category: "color", description: "Son işler kuyruğu arka planı" },
     // Spacing
     { name: "command-workspace-padding", cssVar: "--spacing-6", resolvedValue: "24px", tier: "global", category: "spacing", description: "Çalışma alanı iç boşluk" },
@@ -1908,10 +1908,10 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   ],
   CrudTemplate: [
     // Color
-    { name: "crud-template-bg", cssVar: "--surface-default", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "CRUD şablon arka planı" },
-    { name: "crud-template-header-bg", cssVar: "--surface-muted", resolvedValue: "#f8fafc", tier: "alias", category: "color", description: "Başlık alanı arka planı" },
-    { name: "crud-template-filter-bg", cssVar: "--surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Filtre çubuğu arka planı" },
-    { name: "crud-template-row-hover", cssVar: "--surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Tablo satırı hover rengi" },
+    { name: "crud-template-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "CRUD şablon arka planı" },
+    { name: "crud-template-header-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Başlık alanı arka planı" },
+    { name: "crud-template-filter-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Filtre çubuğu arka planı" },
+    { name: "crud-template-row-hover", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Tablo satırı hover rengi" },
     { name: "crud-template-row-selected", cssVar: "--accent-soft", resolvedValue: "rgba(238,242,255,0.98)", tier: "alias", category: "color", description: "Seçili satır arka planı" },
     // Spacing
     { name: "crud-template-padding", cssVar: "--spacing-6", resolvedValue: "24px", tier: "global", category: "spacing", description: "Şablon dış boşluk" },
@@ -1922,17 +1922,17 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "crud-template-summary-size", cssVar: "--font-size-sm", resolvedValue: "14px", tier: "global", category: "typography", description: "Özet metrik boyutu" },
     // Border
     { name: "crud-template-radius", cssVar: "--radius-xl", resolvedValue: "12px", tier: "component", category: "border", description: "Şablon kart kenar yarıçapı" },
-    { name: "crud-template-table-border", cssVar: "--border-subtle", resolvedValue: "#e2e8f0", tier: "alias", category: "border", description: "Tablo kenarlık rengi" },
+    { name: "crud-template-table-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "border", description: "Tablo kenarlık rengi" },
     // Sizing
     { name: "crud-template-filter-height", cssVar: "--size-10", resolvedValue: "40px", tier: "component", category: "sizing", description: "Filtre çubuğu yüksekliği" },
   ],
   DashboardTemplate: [
     // Color
-    { name: "dashboard-template-bg", cssVar: "--surface-default", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Dashboard arka planı" },
-    { name: "dashboard-template-kpi-bg", cssVar: "--surface-muted", resolvedValue: "#f8fafc", tier: "alias", category: "color", description: "KPI kart arka planı" },
-    { name: "dashboard-template-kpi-accent", cssVar: "--color-action-primary", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "KPI vurgu rengi" },
-    { name: "dashboard-template-card-bg", cssVar: "--surface-default", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Özet kart arka planı" },
-    { name: "dashboard-template-card-border", cssVar: "--border-subtle", resolvedValue: "#e2e8f0", tier: "alias", category: "color", description: "Özet kart kenarlık rengi" },
+    { name: "dashboard-template-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Dashboard arka planı" },
+    { name: "dashboard-template-kpi-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "KPI kart arka planı" },
+    { name: "dashboard-template-kpi-accent", cssVar: "--color-action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "KPI vurgu rengi" },
+    { name: "dashboard-template-card-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Özet kart arka planı" },
+    { name: "dashboard-template-card-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Özet kart kenarlık rengi" },
     // Spacing
     { name: "dashboard-template-padding", cssVar: "--spacing-6", resolvedValue: "24px", tier: "global", category: "spacing", description: "Dashboard iç boşluk" },
     { name: "dashboard-template-card-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Kartlar arası boşluk" },
@@ -1948,11 +1948,11 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   ],
   DetailTemplate: [
     // Color
-    { name: "detail-template-bg", cssVar: "--surface-default", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Detay şablon arka planı" },
-    { name: "detail-template-header-bg", cssVar: "--surface-muted", resolvedValue: "#f8fafc", tier: "alias", category: "color", description: "Varlık başlık alanı arka planı" },
-    { name: "detail-template-rail-bg", cssVar: "--surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Inspector rail arka planı" },
-    { name: "detail-template-section-border", cssVar: "--border-subtle", resolvedValue: "#e2e8f0", tier: "alias", category: "color", description: "Bölüm ayırıcı kenarlık rengi" },
-    { name: "detail-template-metadata-text", cssVar: "--text-secondary", resolvedValue: "#64748b", tier: "alias", category: "color", description: "Metadata etiket rengi" },
+    { name: "detail-template-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Detay şablon arka planı" },
+    { name: "detail-template-header-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Varlık başlık alanı arka planı" },
+    { name: "detail-template-rail-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Inspector rail arka planı" },
+    { name: "detail-template-section-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Bölüm ayırıcı kenarlık rengi" },
+    { name: "detail-template-metadata-text", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "Metadata etiket rengi" },
     // Spacing
     { name: "detail-template-padding", cssVar: "--spacing-6", resolvedValue: "24px", tier: "global", category: "spacing", description: "Şablon iç boşluk" },
     { name: "detail-template-section-gap", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Bölümler arası boşluk" },
@@ -1967,11 +1967,11 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   ],
   SettingsTemplate: [
     // Color
-    { name: "settings-template-bg", cssVar: "--surface-default", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Ayarlar şablon arka planı" },
-    { name: "settings-template-section-bg", cssVar: "--surface-muted", resolvedValue: "#f8fafc", tier: "alias", category: "color", description: "Ayar bölümü arka planı" },
-    { name: "settings-template-aside-bg", cssVar: "--surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Kural paneli arka planı" },
-    { name: "settings-template-tab-active", cssVar: "--color-action-primary", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "Aktif sekme vurgu rengi" },
-    { name: "settings-template-tab-inactive", cssVar: "--text-secondary", resolvedValue: "#64748b", tier: "alias", category: "color", description: "Pasif sekme metin rengi" },
+    { name: "settings-template-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Ayarlar şablon arka planı" },
+    { name: "settings-template-section-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Ayar bölümü arka planı" },
+    { name: "settings-template-aside-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Kural paneli arka planı" },
+    { name: "settings-template-tab-active", cssVar: "--color-action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Aktif sekme vurgu rengi" },
+    { name: "settings-template-tab-inactive", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "Pasif sekme metin rengi" },
     // Spacing
     { name: "settings-template-padding", cssVar: "--spacing-6", resolvedValue: "24px", tier: "global", category: "spacing", description: "Şablon iç boşluk" },
     { name: "settings-template-section-gap", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Ayar bölümleri arası boşluk" },
@@ -1987,12 +1987,12 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   ],
   ThemePresetCompare: [
     // Color
-    { name: "preset-compare-bg", cssVar: "--surface-muted", resolvedValue: "#f8fafc", tier: "alias", category: "color", description: "Karşılaştırma paneli arka planı" },
-    { name: "preset-compare-card-bg", cssVar: "--surface-default", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Preset kart arka planı" },
-    { name: "preset-compare-border", cssVar: "--border-subtle", resolvedValue: "#e2e8f0", tier: "alias", category: "color", description: "Panel kenarlık rengi" },
-    { name: "preset-compare-axis-bg", cssVar: "--surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Eksen satır arka planı" },
-    { name: "preset-compare-text-primary", cssVar: "--text-primary", resolvedValue: "#0f172a", tier: "alias", category: "color", description: "Birincil metin rengi" },
-    { name: "preset-compare-text-secondary", cssVar: "--text-secondary", resolvedValue: "#64748b", tier: "alias", category: "color", description: "İkincil metin rengi" },
+    { name: "preset-compare-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Karşılaştırma paneli arka planı" },
+    { name: "preset-compare-card-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Preset kart arka planı" },
+    { name: "preset-compare-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Panel kenarlık rengi" },
+    { name: "preset-compare-axis-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Eksen satır arka planı" },
+    { name: "preset-compare-text-primary", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Birincil metin rengi" },
+    { name: "preset-compare-text-secondary", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "İkincil metin rengi" },
     // Spacing
     { name: "preset-compare-padding", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Panel iç boşluk (p-5)" },
     { name: "preset-compare-card-padding", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Kart iç boşluk (p-4)" },
@@ -2010,14 +2010,14 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   ],
   ThemePresetGallery: [
     // Color
-    { name: "preset-gallery-bg", cssVar: "--surface-muted", resolvedValue: "#f8fafc", tier: "alias", category: "color", description: "Galeri arka planı" },
-    { name: "preset-gallery-card-bg", cssVar: "--surface-default", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Preset kart arka planı" },
+    { name: "preset-gallery-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Galeri arka planı" },
+    { name: "preset-gallery-card-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Preset kart arka planı" },
     { name: "preset-gallery-card-selected-bg", cssVar: "--action-primary-soft", resolvedValue: "rgba(238,242,255,0.98)", tier: "alias", category: "color", description: "Seçili preset kart arka planı" },
-    { name: "preset-gallery-card-selected-border", cssVar: "--action-primary-border", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "Seçili preset kenarlık rengi" },
-    { name: "preset-gallery-card-hover", cssVar: "--surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "Kart hover arka planı" },
-    { name: "preset-gallery-border", cssVar: "--border-subtle", resolvedValue: "#e2e8f0", tier: "alias", category: "color", description: "Galeri kenarlık rengi" },
-    { name: "preset-gallery-badge-success", cssVar: "--color-state-success", resolvedValue: "#16a34a", tier: "alias", category: "color", description: "Default rozet rengi" },
-    { name: "preset-gallery-badge-warning", cssVar: "--color-state-warning", resolvedValue: "#f59e0b", tier: "alias", category: "color", description: "Yüksek kontrast rozet rengi" },
+    { name: "preset-gallery-card-selected-border", cssVar: "--action-primary-border", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Seçili preset kenarlık rengi" },
+    { name: "preset-gallery-card-hover", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "Kart hover arka planı" },
+    { name: "preset-gallery-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Galeri kenarlık rengi" },
+    { name: "preset-gallery-badge-success", cssVar: "--color-state-success", resolvedValue: "var(--state-success-text)", tier: "alias", category: "color", description: "Default rozet rengi" },
+    { name: "preset-gallery-badge-warning", cssVar: "--color-state-warning", resolvedValue: "var(--state-warning-text)", tier: "alias", category: "color", description: "Yüksek kontrast rozet rengi" },
     // Spacing
     { name: "preset-gallery-padding", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Galeri iç boşluk (p-5)" },
     { name: "preset-gallery-card-padding", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Kart iç boşluk (px-4 py-4)" },
@@ -2034,13 +2034,13 @@ const _tokenMap: Record<string, TokenEntry[]> = {
   ],
   ThemePreviewCard: [
     // Color
-    { name: "preview-card-bg", cssVar: "--surface-default", resolvedValue: "#ffffff", tier: "alias", category: "color", description: "Önizleme kartı arka planı" },
-    { name: "preview-card-selected-border", cssVar: "--action-primary", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "Seçili kart kenarlık rengi" },
-    { name: "preview-card-unselected-border", cssVar: "--border-subtle", resolvedValue: "#e2e8f0", tier: "alias", category: "color", description: "Seçili olmayan kart kenarlık rengi" },
-    { name: "preview-card-hover-border", cssVar: "--text-secondary", resolvedValue: "#64748b", tier: "alias", category: "color", description: "Hover kenarlık rengi" },
-    { name: "preview-card-check-bg", cssVar: "--action-primary", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "Seçim onay daire arka planı" },
-    { name: "preview-card-skeleton-bg", cssVar: "--surface-muted", resolvedValue: "#f1f5f9", tier: "alias", category: "color", description: "İskelet önizleme arka planı" },
-    { name: "preview-card-button-bg", cssVar: "--action-primary", resolvedValue: "#2563eb", tier: "alias", category: "color", description: "Mini buton arka planı" },
+    { name: "preview-card-bg", cssVar: "--surface-default", resolvedValue: "var(--surface-default)", tier: "alias", category: "color", description: "Önizleme kartı arka planı" },
+    { name: "preview-card-selected-border", cssVar: "--action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Seçili kart kenarlık rengi" },
+    { name: "preview-card-unselected-border", cssVar: "--border-subtle", resolvedValue: "var(--border-subtle)", tier: "alias", category: "color", description: "Seçili olmayan kart kenarlık rengi" },
+    { name: "preview-card-hover-border", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "Hover kenarlık rengi" },
+    { name: "preview-card-check-bg", cssVar: "--action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Seçim onay daire arka planı" },
+    { name: "preview-card-skeleton-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "İskelet önizleme arka planı" },
+    { name: "preview-card-button-bg", cssVar: "--action-primary", resolvedValue: "var(--action-primary)", tier: "alias", category: "color", description: "Mini buton arka planı" },
     // Spacing
     { name: "preview-card-padding", cssVar: "--spacing-2", resolvedValue: "8px", tier: "global", category: "spacing", description: "Kart iç boşluk (p-2)" },
     { name: "preview-card-inner-padding", cssVar: "--spacing-2", resolvedValue: "8px", tier: "global", category: "spacing", description: "İç bölüm boşluk (px-2 py-2)" },

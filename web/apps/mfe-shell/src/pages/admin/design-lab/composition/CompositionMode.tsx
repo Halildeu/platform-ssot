@@ -301,11 +301,11 @@ export const CompositionMode: React.FC<CompositionModeProps> = ({
             onClick={handleCopy}
             className="flex items-center gap-1 rounded-lg border border-border-subtle px-2 py-1 text-[11px] font-medium text-text-secondary hover:text-text-primary transition"
           >
-            {copied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+            {copied ? <Check className="h-3 w-3 text-state-success-text" /> : <Copy className="h-3 w-3" />}
             {copied ? "Copied" : "Copy"}
           </button>
         </div>
-        <pre className="overflow-x-auto bg-gray-900 p-4 text-xs leading-relaxed text-gray-200 font-mono">
+        <pre className="overflow-x-auto bg-surface-inverse p-4 text-xs leading-relaxed text-border-subtle font-mono">
           {generatedCode}
         </pre>
       </div>
@@ -342,7 +342,7 @@ function ChildItem({
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-xs p-1 text-text-tertiary hover:text-red-500 transition"
+          className="rounded-xs p-1 text-text-tertiary hover:text-state-danger-text transition"
         >
           <Trash2 className="h-3 w-3" />
         </button>

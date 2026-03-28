@@ -78,9 +78,9 @@ export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartPro
       if (!data || data.length === 0) return { data: [] } as AgChartOptions;
 
       const palette = colors ?? [
-        "var(--state-success-text, #22c55e)", // increase
-        "var(--state-error-text, #ef4444)",   // decrease
-        "var(--action-primary, #3b82f6)",     // total
+        "var(--state-success-text))", // increase
+        "var(--state-error-text))",   // decrease
+        "var(--action-primary))",     // total
       ];
       const themeOverrides = getChartThemeOverrides();
 

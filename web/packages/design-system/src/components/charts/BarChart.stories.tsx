@@ -11,11 +11,11 @@ const quarterlyData: ChartDataPoint[] = [
 ];
 
 const departmentData: ChartDataPoint[] = [
-  { label: 'Engineering', value: 42, color: '#3b82f6' },
-  { label: 'Marketing', value: 28, color: '#22c55e' },
-  { label: 'Sales', value: 35, color: '#f59e0b' },
-  { label: 'Operations', value: 18, color: '#8b5cf6' },
-  { label: 'HR', value: 12, color: '#ec4899' },
+  { label: 'Engineering', value: 42, color: 'var(--action-primary)' },
+  { label: 'Marketing', value: 28, color: 'var(--state-success-text)' },
+  { label: 'Sales', value: 35, color: 'var(--state-warning-text)' },
+  { label: 'Operations', value: 18, color: 'var(--action-primary)' },
+  { label: 'HR', value: 12, color: 'var(--state-danger-text)' },
 ];
 
 const meta: Meta<typeof BarChart> = {

@@ -41,7 +41,7 @@ export function DetailViewBlock({ title, sections, actions }: DetailViewBlockPro
           style={{
             fontSize: '1.25rem',
             fontWeight: 600,
-            color: 'var(--color-text-primary, #0f172a)',
+            color: 'var(--color-text-primary))',
             margin: 0,
           }}
         >
@@ -57,7 +57,7 @@ export function DetailViewBlock({ title, sections, actions }: DetailViewBlockPro
             style={{
               fontSize: '0.875rem',
               fontWeight: 600,
-              color: 'var(--color-text-secondary, #64748b)',
+              color: 'var(--color-text-secondary))',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
               marginBottom: '0.75rem',
@@ -78,7 +78,7 @@ export function DetailViewBlock({ title, sections, actions }: DetailViewBlockPro
                 <div
                   style={{
                     fontSize: '0.75rem',
-                    color: 'var(--color-text-secondary, #64748b)',
+                    color: 'var(--color-text-secondary))',
                     marginBottom: '0.25rem',
                   }}
                 >
@@ -87,7 +87,7 @@ export function DetailViewBlock({ title, sections, actions }: DetailViewBlockPro
                 <div
                   style={{
                     fontSize: '0.875rem',
-                    color: 'var(--color-text-primary, #0f172a)',
+                    color: 'var(--color-text-primary))',
                   }}
                 >
                   {field.value}

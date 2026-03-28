@@ -117,7 +117,7 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 z-40 bg-black/20" onClick={onClose} />
+      <div className="fixed inset-0 z-40 bg-surface-inverse/20" onClick={onClose} />
 
       {/* Panel */}
       <div className="fixed bottom-0 right-0 top-0 z-50 flex w-[620px] flex-col bg-surface-default shadow-2xl">

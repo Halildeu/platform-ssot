@@ -131,7 +131,7 @@ export const DetailDrawer = React.forwardRef<HTMLDivElement, DetailDrawerProps>(
     <div className="fixed inset-0 z-[1300] flex" data-access-state={accessState.state}>
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40 animate-in fade-in-0"
+        className="absolute inset-0 bg-surface-inverse/40 animate-in fade-in-0"
         onClick={handleBackdrop}
         aria-hidden
       />

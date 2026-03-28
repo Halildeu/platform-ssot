@@ -73,7 +73,7 @@ export const ExampleCard: React.FC<ExampleCardProps> = ({
             title="Copy code"
           >
             {copied ? (
-              <Check className="h-3 w-3 text-emerald-500" />
+              <Check className="h-3 w-3 text-state-success-text" />
             ) : (
               <Copy className="h-3 w-3" />
             )}

@@ -73,7 +73,7 @@ export default function PrimitivesListing() {
             }
             className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
           >
-            <div className="absolute inset-0 bg-linear-to-br from-teal-500/10 to-cyan-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="absolute inset-0 bg-linear-to-br from-state-success-text/10 to-state-info-text/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             <div className="relative">
               <div className="flex items-center justify-between gap-2">
                 <Text

@@ -4731,18 +4731,18 @@ const DesignLabPage: React.FC = () => {
         return (
           <div className="grid grid-cols-[1.3fr_0.7fr] gap-1" aria-hidden>
             <div className="flex flex-col gap-1">
-              <div className="h-3 rounded-full bg-white/90" />
+              <div className="h-3 rounded-full bg-surface-default/90" />
               <div className="grid grid-cols-3 gap-1">
-                <div className="h-7 rounded-lg bg-white/80" />
-                <div className="h-7 rounded-lg bg-white/75" />
-                <div className="h-7 rounded-lg bg-white/70" />
+                <div className="h-7 rounded-lg bg-surface-default/80" />
+                <div className="h-7 rounded-lg bg-surface-default/75" />
+                <div className="h-7 rounded-lg bg-surface-default/70" />
               </div>
-              <div className="h-12 rounded-xl bg-white/75" />
+              <div className="h-12 rounded-xl bg-surface-default/75" />
             </div>
             <div className="flex flex-col gap-1">
-              <div className="h-5 rounded-lg bg-white/80" />
-              <div className="h-5 rounded-lg bg-white/70" />
-              <div className="h-7 rounded-lg bg-white/65" />
+              <div className="h-5 rounded-lg bg-surface-default/80" />
+              <div className="h-5 rounded-lg bg-surface-default/70" />
+              <div className="h-7 rounded-lg bg-surface-default/65" />
             </div>
           </div>
         );
@@ -4750,14 +4750,14 @@ const DesignLabPage: React.FC = () => {
         return (
           <div className="flex flex-col gap-1" aria-hidden>
             <div className="grid grid-cols-3 gap-1">
-              <div className="h-3 rounded-full bg-white/90" />
-              <div className="h-3 rounded-full bg-white/80" />
-              <div className="h-3 rounded-full bg-white/70" />
+              <div className="h-3 rounded-full bg-surface-default/90" />
+              <div className="h-3 rounded-full bg-surface-default/80" />
+              <div className="h-3 rounded-full bg-surface-default/70" />
             </div>
             <div className="flex flex-col gap-1">
-              <div className="h-4 rounded-lg bg-white/80" />
-              <div className="h-4 rounded-lg bg-white/75" />
-              <div className="h-4 rounded-lg bg-white/70" />
+              <div className="h-4 rounded-lg bg-surface-default/80" />
+              <div className="h-4 rounded-lg bg-surface-default/75" />
+              <div className="h-4 rounded-lg bg-surface-default/70" />
             </div>
           </div>
         );
@@ -4765,14 +4765,14 @@ const DesignLabPage: React.FC = () => {
         return (
           <div className="grid grid-cols-[0.55fr_1fr] gap-1" aria-hidden>
             <div className="flex flex-col gap-1">
-              <div className="h-3 rounded-full bg-white/90" />
-              <div className="h-3 rounded-full bg-white/80" />
-              <div className="h-3 rounded-full bg-white/75" />
+              <div className="h-3 rounded-full bg-surface-default/90" />
+              <div className="h-3 rounded-full bg-surface-default/80" />
+              <div className="h-3 rounded-full bg-surface-default/75" />
             </div>
             <div className="flex flex-col gap-1">
-              <div className="h-5 rounded-lg bg-white/80" />
-              <div className="h-5 rounded-lg bg-white/72" />
-              <div className="h-5 rounded-lg bg-white/68" />
+              <div className="h-5 rounded-lg bg-surface-default/80" />
+              <div className="h-5 rounded-lg bg-surface-default/72" />
+              <div className="h-5 rounded-lg bg-surface-default/68" />
             </div>
           </div>
         );
@@ -4780,29 +4780,29 @@ const DesignLabPage: React.FC = () => {
         return (
           <div className="grid grid-cols-[1fr_0.5fr] gap-1" aria-hidden>
             <div className="flex flex-col gap-1">
-              <div className="h-3 rounded-full bg-white/90" />
-              <div className="h-9 rounded-xl bg-white/78" />
-              <div className="h-4 rounded-lg bg-white/72" />
+              <div className="h-3 rounded-full bg-surface-default/90" />
+              <div className="h-9 rounded-xl bg-surface-default/78" />
+              <div className="h-4 rounded-lg bg-surface-default/72" />
             </div>
             <div className="flex flex-col gap-1">
-              <div className="h-4 rounded-lg bg-white/80" />
-              <div className="h-8 rounded-xl bg-white/68" />
+              <div className="h-4 rounded-lg bg-surface-default/80" />
+              <div className="h-8 rounded-xl bg-surface-default/68" />
             </div>
           </div>
         );
       case 'workspace':
         return (
           <div className="flex flex-col gap-1" aria-hidden>
-            <div className="h-3 rounded-full bg-white/90" />
+            <div className="h-3 rounded-full bg-surface-default/90" />
             <div className="grid grid-cols-[0.7fr_1.3fr] gap-1">
               <div className="flex flex-col gap-1">
-                <div className="h-6 rounded-xl bg-white/78" />
-                <div className="h-6 rounded-xl bg-white/70" />
+                <div className="h-6 rounded-xl bg-surface-default/78" />
+                <div className="h-6 rounded-xl bg-surface-default/70" />
               </div>
               <div className="flex flex-col gap-1">
-                <div className="h-4 rounded-lg bg-white/76" />
-                <div className="h-4 rounded-lg bg-white/68" />
-                <div className="h-4 rounded-lg bg-white/64" />
+                <div className="h-4 rounded-lg bg-surface-default/76" />
+                <div className="h-4 rounded-lg bg-surface-default/68" />
+                <div className="h-4 rounded-lg bg-surface-default/64" />
               </div>
             </div>
           </div>
@@ -4811,12 +4811,12 @@ const DesignLabPage: React.FC = () => {
         return (
           <div className="grid grid-cols-2 gap-1" aria-hidden>
             <div className="flex flex-col gap-1">
-              <div className="h-3 rounded-full bg-white/90" />
-              <div className="h-6 rounded-lg bg-white/78" />
+              <div className="h-3 rounded-full bg-surface-default/90" />
+              <div className="h-6 rounded-lg bg-surface-default/78" />
             </div>
             <div className="flex flex-col gap-1">
-              <div className="h-3 rounded-full bg-white/82" />
-              <div className="h-6 rounded-lg bg-white/70" />
+              <div className="h-3 rounded-full bg-surface-default/82" />
+              <div className="h-6 rounded-lg bg-surface-default/70" />
             </div>
           </div>
         );
@@ -4862,7 +4862,7 @@ const DesignLabPage: React.FC = () => {
         return (
           <span className="relative flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-[6px] border border-border-subtle bg-surface-default/80">
             <span className={`absolute inset-0 opacity-80 ${accentClass}`} />
-            <span className="relative h-[6px] w-[6px] rounded-full border border-white/80 bg-white/60" />
+            <span className="relative h-[6px] w-[6px] rounded-full border border-surface-default/80 bg-surface-default/60" />
           </span>
         );
       case 'forms':
@@ -5029,7 +5029,7 @@ const DesignLabPage: React.FC = () => {
               </div>
               <SectionBadge label={card.primaryMetric} />
             </div>
-            <div className="mt-3 rounded-[18px] border border-white/70 bg-white/35 px-3 py-3 backdrop-blur-xs">
+            <div className="mt-3 rounded-[18px] border border-surface-default/70 bg-surface-default/35 px-3 py-3 backdrop-blur-xs">
               {renderOverviewSilhouette(card.silhouette)}
             </div>
             <Text variant="secondary" className="mt-2 block text-xs leading-5">
@@ -5253,7 +5253,7 @@ const DesignLabPage: React.FC = () => {
                       </div>
                       <SectionBadge label={active ? 'Active template' : 'Open template'} />
                     </div>
-                    <div className="mt-3 rounded-[18px] border border-white/70 bg-white/35 px-3 py-3 backdrop-blur-xs">
+                    <div className="mt-3 rounded-[18px] border border-surface-default/70 bg-surface-default/35 px-3 py-3 backdrop-blur-xs">
                       {renderOverviewSilhouette(card.silhouette)}
                     </div>
                     <Text variant="secondary" className="mt-2 block text-xs leading-5">

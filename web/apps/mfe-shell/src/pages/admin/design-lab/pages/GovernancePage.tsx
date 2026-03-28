@@ -41,9 +41,9 @@ const ROLE_LABELS: Record<string, string> = {
 
 const ROLE_COLORS: Record<string, string> = {
   viewer: "bg-surface-muted text-text-secondary",
-  contributor: "bg-blue-100 text-blue-700",
-  maintainer: "bg-purple-100 text-purple-700",
-  admin: "bg-emerald-100 text-emerald-700",
+  contributor: "bg-state-info-bg text-state-info-text",
+  maintainer: "bg-action-primary/10 text-action-primary",
+  admin: "bg-state-success-bg text-state-success-text",
 };
 
 /* ------------------------------------------------------------------ */
@@ -77,7 +77,7 @@ function DeprecationTimeline() {
     <div className="rounded-2xl border border-border-subtle bg-surface-default p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Clock className="h-4 w-4 text-amber-600" />
+          <Clock className="h-4 w-4 text-state-warning-text" />
           <Text as="h3" className="text-sm font-semibold text-text-primary">
             Deprecation Timeline
           </Text>
@@ -87,9 +87,9 @@ function DeprecationTimeline() {
 
       <div className="mt-3">
         {deprecated.length === 0 ? (
-          <div className="rounded-xl bg-emerald-50 p-4 text-center">
-            <CheckSquare className="mx-auto h-6 w-6 text-emerald-500" />
-            <Text className="mt-2 text-sm font-medium text-emerald-700">
+          <div className="rounded-xl bg-state-success-bg p-4 text-center">
+            <CheckSquare className="mx-auto h-6 w-6 text-state-success-text" />
+            <Text className="mt-2 text-sm font-medium text-state-success-text">
               0 deprecated — tum bilesenler guncel
             </Text>
           </div>
@@ -98,9 +98,9 @@ function DeprecationTimeline() {
             {deprecated.map((item) => (
               <div
                 key={item.name}
-                className="flex items-center gap-3 rounded-xl border border-amber-200/50 bg-amber-50/50 p-3"
+                className="flex items-center gap-3 rounded-xl border border-state-warning-text/20/50 bg-state-warning-bg/50 p-3"
               >
-                <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" />
+                <AlertCircle className="h-4 w-4 shrink-0 text-state-warning-text" />
                 <div className="min-w-0 flex-1">
                   <Text className="text-sm font-semibold text-text-primary">
                     {item.name}
@@ -142,7 +142,7 @@ function QualityExceptionRegistry() {
     <div className="rounded-2xl border border-border-subtle bg-surface-default p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <AlertOctagon className="h-4 w-4 text-rose-600" />
+          <AlertOctagon className="h-4 w-4 text-state-danger-text" />
           <Text as="h3" className="text-sm font-semibold text-text-primary">
             Quality Exception Registry
           </Text>
@@ -152,9 +152,9 @@ function QualityExceptionRegistry() {
 
       <div className="mt-3">
         {exceptions.length === 0 ? (
-          <div className="rounded-xl bg-emerald-50 p-4 text-center">
-            <CheckSquare className="mx-auto h-6 w-6 text-emerald-500" />
-            <Text className="mt-2 text-sm font-medium text-emerald-700">
+          <div className="rounded-xl bg-state-success-bg p-4 text-center">
+            <CheckSquare className="mx-auto h-6 w-6 text-state-success-text" />
+            <Text className="mt-2 text-sm font-medium text-state-success-text">
               Kalite istisna kaydı yok — tum uretim bilesenleri stabil
             </Text>
           </div>
@@ -163,9 +163,9 @@ function QualityExceptionRegistry() {
             {exceptions.map((item) => (
               <div
                 key={item.name}
-                className="flex items-center gap-3 rounded-xl border border-rose-200/50 bg-rose-50/30 p-3"
+                className="flex items-center gap-3 rounded-xl border border-state-danger-text/20/50 bg-state-danger-bg/30 p-3"
               >
-                <AlertOctagon className="h-4 w-4 shrink-0 text-rose-500" />
+                <AlertOctagon className="h-4 w-4 shrink-0 text-state-danger-text" />
                 <div className="min-w-0 flex-1">
                   <Text className="text-sm font-semibold text-text-primary">
                     {item.name}
@@ -179,7 +179,7 @@ function QualityExceptionRegistry() {
                   {item.whereUsed.slice(0, 3).map((app) => (
                     <span
                       key={app}
-                      className="rounded-xs bg-rose-100 px-1.5 py-0.5 text-[10px] font-medium text-rose-700"
+                      className="rounded-xs bg-state-danger-bg px-1.5 py-0.5 text-[10px] font-medium text-state-danger-text"
                     >
                       {app}
                     </span>
@@ -236,7 +236,7 @@ function PolicyComplianceSummary() {
     <div className="rounded-2xl border border-border-subtle bg-surface-default p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <BarChart3 className="h-4 w-4 text-blue-600" />
+          <BarChart3 className="h-4 w-4 text-action-primary" />
           <Text as="h3" className="text-sm font-semibold text-text-primary">
             Policy Compliance Summary
           </Text>
@@ -259,10 +259,10 @@ function PolicyComplianceSummary() {
             <div
               className={`h-full rounded-full transition-all ${
                 stats.pct >= 80
-                  ? "bg-emerald-500"
+                  ? "bg-state-success-text"
                   : stats.pct >= 50
-                    ? "bg-amber-500"
-                    : "bg-rose-500"
+                    ? "bg-state-warning-text"
+                    : "bg-state-danger-text"
               }`}
               style={{ width: `${stats.pct}%` }}
             />
@@ -329,7 +329,7 @@ function KnownIssuesPanel() {
     <div className="rounded-2xl border border-border-subtle bg-surface-default p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <AlertCircle className="h-4 w-4 text-amber-600" />
+          <AlertCircle className="h-4 w-4 text-state-warning-text" />
           <Text as="h3" className="text-sm font-semibold text-text-primary">
             Known Issues
           </Text>
@@ -435,7 +435,7 @@ export default function GovernancePage() {
               key={key}
               className={`rounded-lg px-3 py-2 text-xs ${
                 value
-                  ? "bg-emerald-50 text-emerald-700"
+                  ? "bg-state-success-bg text-state-success-text"
                   : "bg-surface-muted text-text-secondary"
               }`}
             >

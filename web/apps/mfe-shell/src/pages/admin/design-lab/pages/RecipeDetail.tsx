@@ -189,18 +189,18 @@ function RecipeOverview({
 /* ---- Workflow pattern matching ---- */
 
 const COMPLEXITY_COLORS: Record<string, { bg: string; text: string }> = {
-  simple: { bg: "bg-emerald-500/10", text: "text-emerald-600" },
-  moderate: { bg: "bg-amber-500/10", text: "text-amber-600" },
-  complex: { bg: "bg-rose-500/10", text: "text-rose-600" },
+  simple: { bg: "bg-state-success-text/10", text: "text-state-success-text" },
+  moderate: { bg: "bg-state-warning-text/10", text: "text-state-warning-text" },
+  complex: { bg: "bg-state-danger-text/10", text: "text-state-danger-text" },
 };
 
 const STATE_COLORS: Record<string, string> = {
-  zinc: "bg-zinc-100 text-zinc-600 border-zinc-300",
-  blue: "bg-blue-100 text-blue-600 border-blue-300",
-  emerald: "bg-emerald-100 text-emerald-600 border-emerald-300",
-  amber: "bg-amber-100 text-amber-600 border-amber-300",
-  violet: "bg-violet-100 text-violet-600 border-violet-300",
-  red: "bg-red-100 text-red-600 border-red-300",
+  zinc: "bg-surface-muted text-text-secondary border-border-default",
+  blue: "bg-state-info-bg text-action-primary border-state-info-text/30",
+  emerald: "bg-state-success-bg text-state-success-text border-state-success-text/30",
+  amber: "bg-state-warning-bg text-state-warning-text border-state-warning-text/30",
+  violet: "bg-action-primary/10 text-action-primary border-action-primary/30",
+  red: "bg-state-danger-bg text-state-danger-text border-state-danger-text/30",
 };
 
 function snakeToReadable(s: string): string {
@@ -300,9 +300,9 @@ function RecipeWorkflow({ recipe }: { recipe: RecipeFamily }) {
                   className={[
                     "absolute -left-8 top-1 flex h-7 w-7 items-center justify-center rounded-full border-2",
                     isFirst
-                      ? "border-blue-500 bg-blue-500 text-white"
+                      ? "border-action-primary bg-action-primary text-text-inverse"
                       : isLast
-                        ? "border-emerald-500 bg-emerald-500 text-white"
+                        ? "border-state-success-text bg-state-success-text text-text-inverse"
                         : "border-border-subtle bg-surface-default text-text-secondary",
                   ].join(" ")}
                 >
@@ -360,7 +360,7 @@ function RecipeWorkflow({ recipe }: { recipe: RecipeFamily }) {
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {pattern.qualityGates.map((gate) => (
               <div key={gate} className="flex items-center gap-2 rounded-lg border border-border-subtle bg-surface-default px-3 py-2">
-                <Shield className="h-3.5 w-3.5 text-emerald-500" />
+                <Shield className="h-3.5 w-3.5 text-state-success-text" />
                 <Text className="text-xs font-medium text-text-primary">{snakeToReadable(gate)}</Text>
               </div>
             ))}
@@ -379,7 +379,7 @@ function RecipeWorkflow({ recipe }: { recipe: RecipeFamily }) {
               const depPattern = workflowCatalog.workflowPatterns.find((p) => p.patternId === dep);
               return (
                 <div key={dep} className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-default px-3 py-2">
-                  <GitBranch className="h-3.5 w-3.5 text-violet-500" />
+                  <GitBranch className="h-3.5 w-3.5 text-action-primary" />
                   <Text className="text-xs font-medium text-text-primary">
                     {depPattern?.title ?? snakeToReadable(dep)}
                   </Text>

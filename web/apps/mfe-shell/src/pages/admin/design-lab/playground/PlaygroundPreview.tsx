@@ -22,7 +22,7 @@ _xSuiteComponents.KPICard = function KPICardStub(props: any) {
     }, props.trend?.direction === "up" ? "\u25B2" : "\u25BC", " ", props.trend?.value),
     React.createElement("div", { style: { marginTop: 12, height: 24, background: "var(--surface-muted)", borderRadius: 4, overflow: "hidden" } },
       React.createElement("svg", { viewBox: "0 0 100 24", width: "100%", height: 24, preserveAspectRatio: "none" },
-        React.createElement("polyline", { points: "0,20 15,14 30,16 45,8 60,12 75,6 90,10 100,4", fill: "none", stroke: "var(--action-primary, #3b82f6)", strokeWidth: 1.5 })
+        React.createElement("polyline", { points: "0,20 15,14 30,16 45,8 60,12 75,6 90,10 100,4", fill: "none", stroke: "var(--action-primary))", strokeWidth: 1.5 })
       )
     )
   );
@@ -35,7 +35,7 @@ _xSuiteComponents.SparklineChart = function SparklineChartStub(props: any) {
   const range = max - min || 1;
   const pts = (data ?? []).map((v: number, i: number) => `${(i / ((data ?? []).length - 1)) * 100},${24 - ((v - min) / range) * 20}`).join(" ");
   return React.createElement("svg", { viewBox: "0 0 100 24", width: 120, height: 24, style: { display: "block" } },
-    React.createElement("polyline", { points: pts, fill: "none", stroke: "var(--action-primary, #3b82f6)", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round" })
+    React.createElement("polyline", { points: pts, fill: "none", stroke: "var(--action-primary))", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round" })
   );
 };
 
@@ -46,7 +46,7 @@ _xSuiteComponents.MiniChart = function MiniChartStub(props: any) {
     ...(data ?? []).map((d: any, i: number) =>
       React.createElement("div", { key: i, style: { display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 2, flex: 1 } },
         React.createElement("div", {
-          style: { width: "100%", height: `${(d.value / max) * 36}px`, background: "var(--action-primary, #3b82f6)", borderRadius: 2, minHeight: 4, opacity: 0.7 + (i / (data ?? []).length) * 0.3 }
+          style: { width: "100%", height: `${(d.value / max) * 36}px`, background: "var(--action-primary))", borderRadius: 2, minHeight: 4, opacity: 0.7 + (i / (data ?? []).length) * 0.3 }
         }),
         React.createElement("span", { style: { fontSize: 8, color: "var(--text-secondary)" } }, d.label)
       )
@@ -80,7 +80,7 @@ _xSuiteComponents.StatWidget = function StatWidgetStub(props: any) {
 };
 
 _xSuiteComponents.ChartLegend = function ChartLegendStub(props: any) {
-  const items = props.items || [{ label: "Series A", color: "#3b82f6" }, { label: "Series B", color: "#16a34a" }];
+  const items = props.items || [{ label: "Series A", color: "var(--action-primary)" }, { label: "Series B", color: "var(--state-success-text)" }];
   const horiz = props.direction === "horizontal";
   return React.createElement("div", {
     style: { display: "flex", flexDirection: horiz ? "row" as const : "column" as const, gap: horiz ? 16 : 6, padding: 8 }
@@ -118,7 +118,7 @@ _xSuiteComponents.GaugeChart = function GaugeChartStub(props: any) {
   return React.createElement("div", { style: { textAlign: "center" as const, padding: 8 } },
     React.createElement("svg", { viewBox: "0 0 120 70", width: 160, height: 100 },
       React.createElement("path", { d: "M 10 65 A 50 50 0 0 1 110 65", fill: "none", stroke: "var(--border-subtle)", strokeWidth: 8, strokeLinecap: "round" }),
-      React.createElement("path", { d: "M 10 65 A 50 50 0 0 1 110 65", fill: "none", stroke: "var(--action-primary, #3b82f6)", strokeWidth: 8, strokeLinecap: "round", strokeDasharray: `${pct * 157} 157` }),
+      React.createElement("path", { d: "M 10 65 A 50 50 0 0 1 110 65", fill: "none", stroke: "var(--action-primary))", strokeWidth: 8, strokeLinecap: "round", strokeDasharray: `${pct * 157} 157` }),
       React.createElement("line", {
         x1: 60, y1: 65, x2: 60 + 35 * Math.cos((angle * Math.PI) / 180), y2: 65 + 35 * Math.sin((angle * Math.PI) / 180),
         stroke: "var(--text-primary)", strokeWidth: 2, strokeLinecap: "round"
@@ -146,7 +146,7 @@ _xSuiteComponents.RadarChart = function RadarChartStub(props: any) {
       const [x, y] = getPoint(i, 1);
       return React.createElement("line", { key: `l${i}`, x1: cx, y1: cy, x2: x, y2: y, stroke: "var(--border-subtle)", strokeWidth: 0.5 });
     }),
-    React.createElement("polygon", { points: dataPts, fill: "var(--action-primary, #3b82f6)", fillOpacity: 0.2, stroke: "var(--action-primary, #3b82f6)", strokeWidth: 1.5 }),
+    React.createElement("polygon", { points: dataPts, fill: "var(--action-primary))", fillOpacity: 0.2, stroke: "var(--action-primary))", strokeWidth: 1.5 }),
     ...(data ?? []).map((d: any, i: number) => {
       const [x, y] = getPoint(i, 1.18);
       return React.createElement("text", { key: `t${i}`, x, y, textAnchor: "middle", dominantBaseline: "middle", fontSize: 8, fill: "var(--text-secondary)" }, d.label);
@@ -166,20 +166,20 @@ _xSuiteComponents.DataGridFilterChips = function DataGridFilterChipsStub(props: 
         React.createElement("span", { style: { marginLeft: 4, cursor: "pointer", color: "var(--text-secondary)", fontWeight: 700, lineHeight: 1 } }, "\u00D7")
       )
     ),
-    (filters ?? []).length > 1 && React.createElement("button", { style: { fontSize: 11, color: "var(--action-primary, #3b82f6)", background: "none", border: "none", cursor: "pointer", padding: "4px 8px" } }, "Clear all")
+    (filters ?? []).length > 1 && React.createElement("button", { style: { fontSize: 11, color: "var(--action-primary))", background: "none", border: "none", cursor: "pointer", padding: "4px 8px" } }, "Clear all")
   );
 };
 
 _xSuiteComponents.DataGridSelectionBar = function DataGridSelectionBarStub(props: any) {
   const count = props.selectedCount ?? 3;
   return React.createElement("div", {
-    style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 16px", borderRadius: 8, background: "var(--action-primary, #3b82f6)", color: "#fff", fontSize: 13 }
+    style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 16px", borderRadius: 8, background: "var(--action-primary))", color: "var(--surface-default)", fontSize: 13 }
   },
     React.createElement("span", { style: { fontWeight: 600 } }, count, " item", count !== 1 ? "s" : "", " selected"),
     React.createElement("div", { style: { display: "flex", gap: 8 } },
       props.children || React.createElement(React.Fragment, null,
-        React.createElement("button", { style: { padding: "4px 12px", borderRadius: 6, background: "rgba(255,255,255,0.2)", border: "none", color: "#fff", fontSize: 12, cursor: "pointer" } }, "Delete"),
-        React.createElement("button", { style: { padding: "4px 12px", borderRadius: 6, background: "rgba(255,255,255,0.2)", border: "none", color: "#fff", fontSize: 12, cursor: "pointer" } }, "Export")
+        React.createElement("button", { style: { padding: "4px 12px", borderRadius: 6, background: "rgba(255,255,255,0.2)", border: "none", color: "var(--surface-default)", fontSize: 12, cursor: "pointer" } }, "Delete"),
+        React.createElement("button", { style: { padding: "4px 12px", borderRadius: 6, background: "rgba(255,255,255,0.2)", border: "none", color: "var(--surface-default)", fontSize: 12, cursor: "pointer" } }, "Export")
       )
     )
   );
@@ -237,7 +237,7 @@ _xSuiteComponents.MentionList = function MentionListStub(props: any) {
   },
     ...(items ?? []).map((it: any, i: number) =>
       React.createElement("div", { key: it.id, style: { display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", background: i === sel ? "var(--surface-muted)" : "transparent", cursor: "pointer" } },
-        React.createElement("div", { style: { width: 24, height: 24, borderRadius: "50%", background: "var(--action-primary, #3b82f6)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 600, flexShrink: 0 } }, it.label.split(" ").map((w: string) => w[0]).join("").slice(0, 2)),
+        React.createElement("div", { style: { width: 24, height: 24, borderRadius: "50%", background: "var(--action-primary))", color: "var(--surface-default)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 600, flexShrink: 0 } }, it.label.split(" ").map((w: string) => w[0]).join("").slice(0, 2)),
         React.createElement("span", { style: { fontSize: 13, color: "var(--text-primary)" } }, it.label)
       )
     )
@@ -252,7 +252,7 @@ _xSuiteComponents.EditorTableMenu = function EditorTableMenuStub() {
     React.createElement("div", { style: { fontSize: 11, color: "var(--text-secondary)", marginBottom: 8, fontWeight: 500 } }, "Insert Table"),
     React.createElement("div", { style: { display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 3 } },
       ...Array.from({ length: rows * cols }, (_, i) =>
-        React.createElement("div", { key: i, style: { width: 24, height: 20, borderRadius: 3, border: "1px solid var(--border-subtle)", background: i < 7 ? "var(--action-primary, #3b82f6)" : "var(--surface-muted)", opacity: i < 7 ? 0.3 : 1, cursor: "pointer" } })
+        React.createElement("div", { key: i, style: { width: 24, height: 20, borderRadius: 3, border: "1px solid var(--border-subtle)", background: i < 7 ? "var(--action-primary))" : "var(--surface-muted)", opacity: i < 7 ? 0.3 : 1, cursor: "pointer" } })
       )
     ),
     React.createElement("div", { style: { fontSize: 11, color: "var(--text-secondary)", marginTop: 6, textAlign: "center" as const } }, "3 \u00D7 2")
@@ -274,7 +274,7 @@ _xSuiteComponents.EditorLinkDialog = function EditorLinkDialogStub(props: any) {
     ),
     React.createElement("div", { style: { display: "flex", gap: 8, justifyContent: "flex-end" } },
       React.createElement("button", { style: { padding: "6px 16px", borderRadius: 6, border: "1px solid var(--border-subtle)", background: "transparent", fontSize: 13, cursor: "pointer", color: "var(--text-primary)" } }, "Cancel"),
-      React.createElement("button", { style: { padding: "6px 16px", borderRadius: 6, border: "none", background: "var(--action-primary, #3b82f6)", color: "#fff", fontSize: 13, cursor: "pointer", fontWeight: 500 } }, "Insert")
+      React.createElement("button", { style: { padding: "6px 16px", borderRadius: 6, border: "none", background: "var(--action-primary))", color: "var(--surface-default)", fontSize: 13, cursor: "pointer", fontWeight: 500 } }, "Insert")
     )
   );
 };
@@ -293,7 +293,7 @@ _xSuiteComponents.EditorImageUpload = function EditorImageUploadStub() {
     ),
     React.createElement("div", { style: { display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 16 } },
       React.createElement("button", { style: { padding: "6px 16px", borderRadius: 6, border: "1px solid var(--border-subtle)", background: "transparent", fontSize: 13, cursor: "pointer", color: "var(--text-primary)" } }, "Cancel"),
-      React.createElement("button", { style: { padding: "6px 16px", borderRadius: 6, border: "none", background: "var(--action-primary, #3b82f6)", color: "#fff", fontSize: 13, cursor: "pointer", fontWeight: 500, opacity: 0.5 } }, "Insert")
+      React.createElement("button", { style: { padding: "6px 16px", borderRadius: 6, border: "none", background: "var(--action-primary))", color: "var(--surface-default)", fontSize: 13, cursor: "pointer", fontWeight: 500, opacity: 0.5 } }, "Insert")
     )
   );
 };
@@ -313,7 +313,7 @@ _xSuiteComponents.FormRenderer = function FormRendererStub(props: any) {
       )
     ),
     React.createElement("div", { style: { marginTop: 20, display: "flex", justifyContent: "flex-end" } },
-      React.createElement("button", { style: { padding: "8px 20px", borderRadius: 6, border: "none", background: "var(--action-primary, #3b82f6)", color: "#fff", fontSize: 13, fontWeight: 500, cursor: "pointer" } }, schema.submitLabel || "Submit")
+      React.createElement("button", { style: { padding: "8px 20px", borderRadius: 6, border: "none", background: "var(--action-primary))", color: "var(--surface-default)", fontSize: 13, fontWeight: 500, cursor: "pointer" } }, schema.submitLabel || "Submit")
     )
   );
 };
@@ -375,7 +375,7 @@ _xSuiteComponents.KanbanBoard = function KanbanBoardStub(props: any) {
             React.createElement("div", { key: card.id, style: { padding: 12, borderRadius: 8, background: "var(--surface-default)", border: "1px solid var(--border-subtle)", cursor: "grab" } },
               React.createElement("div", { style: { fontSize: 13, fontWeight: 500, color: "var(--text-primary)", marginBottom: 6 } }, card.title),
               React.createElement("div", { style: { display: "flex", gap: 4, flexWrap: "wrap" as const } },
-                card.priority && React.createElement("span", { style: { fontSize: 10, padding: "2px 6px", borderRadius: 4, background: priorityColors[card.priority] || "var(--surface-muted)", color: "#fff", fontWeight: 600, textTransform: "uppercase" as const } }, card.priority),
+                card.priority && React.createElement("span", { style: { fontSize: 10, padding: "2px 6px", borderRadius: 4, background: priorityColors[card.priority] || "var(--surface-muted)", color: "var(--surface-default)", fontWeight: 600, textTransform: "uppercase" as const } }, card.priority),
                 ...(card.tags ?? []).map((t: string) =>
                   React.createElement("span", { key: t, style: { fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "var(--surface-muted)", color: "var(--text-secondary)" } }, t)
                 )
@@ -412,11 +412,11 @@ _xSuiteComponents.KanbanCard = function KanbanCardStub(props: any) {
   return React.createElement("div", { style: { padding: 14, borderRadius: 10, background: "var(--surface-default)", border: "1px solid var(--border-subtle)", minWidth: 200, cursor: "grab" } },
     React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start" } },
       React.createElement("div", { style: { fontSize: 14, fontWeight: 500, color: "var(--text-primary)", flex: 1 } }, card.title),
-      card.assignee && React.createElement("div", { style: { width: 24, height: 24, borderRadius: "50%", background: "var(--action-primary, #3b82f6)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 600, flexShrink: 0, marginLeft: 8 } }, card.assignee)
+      card.assignee && React.createElement("div", { style: { width: 24, height: 24, borderRadius: "50%", background: "var(--action-primary))", color: "var(--surface-default)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 600, flexShrink: 0, marginLeft: 8 } }, card.assignee)
     ),
     card.description && React.createElement("div", { style: { fontSize: 12, color: "var(--text-secondary)", marginTop: 4, lineHeight: 1.4 } }, card.description),
     React.createElement("div", { style: { display: "flex", gap: 4, flexWrap: "wrap" as const, marginTop: 8 } },
-      card.priority && React.createElement("span", { style: { fontSize: 10, padding: "2px 6px", borderRadius: 4, background: priorityColors[card.priority] || "var(--surface-muted)", color: "#fff", fontWeight: 600, textTransform: "uppercase" as const } }, card.priority),
+      card.priority && React.createElement("span", { style: { fontSize: 10, padding: "2px 6px", borderRadius: 4, background: priorityColors[card.priority] || "var(--surface-muted)", color: "var(--surface-default)", fontWeight: 600, textTransform: "uppercase" as const } }, card.priority),
       ...(card.tags ?? []).map((t: string) =>
         React.createElement("span", { key: t, style: { fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "var(--surface-muted)", color: "var(--text-secondary)" } }, t)
       )
@@ -430,7 +430,7 @@ _xSuiteComponents.KanbanToolbar = function KanbanToolbarStub(props: any) {
       React.createElement("span", { style: { color: "var(--text-secondary)", fontSize: 14 } }, "\uD83D\uDD0D"),
       React.createElement("span", { style: { fontSize: 13, color: "var(--text-secondary)" } }, props.searchValue || "Search cards...")
     ),
-    React.createElement("button", { style: { padding: "6px 16px", borderRadius: 8, border: "none", background: "var(--action-primary, #3b82f6)", color: "#fff", fontSize: 13, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 } }, "+ Add Column")
+    React.createElement("button", { style: { padding: "6px 16px", borderRadius: 8, border: "none", background: "var(--action-primary))", color: "var(--surface-default)", fontSize: 13, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 } }, "+ Add Column")
   );
 };
 
@@ -449,7 +449,7 @@ _xSuiteComponents.KanbanMetrics = function KanbanMetricsStub(props: any) {
           limit && React.createElement("span", { style: { fontSize: 11, color: "var(--text-secondary)" } }, "/ ", limit)
         ),
         limit && React.createElement("div", { style: { height: 4, borderRadius: 2, background: "var(--surface-muted)", marginTop: 6, overflow: "hidden" } },
-          React.createElement("div", { style: { height: "100%", width: `${pct}%`, borderRadius: 2, background: pct >= 100 ? "var(--state-error-text)" : pct >= 75 ? "var(--state-warning-text)" : "var(--action-primary, #3b82f6)", transition: "width 0.3s" } })
+          React.createElement("div", { style: { height: "100%", width: `${pct}%`, borderRadius: 2, background: pct >= 100 ? "var(--state-error-text)" : pct >= 75 ? "var(--state-warning-text)" : "var(--action-primary))", transition: "width 0.3s" } })
         )
       );
     })
@@ -459,7 +459,7 @@ _xSuiteComponents.KanbanMetrics = function KanbanMetricsStub(props: any) {
 /* ---- X-Scheduler stubs ---- */
 
 _xSuiteComponents.Scheduler = function SchedulerStub(props: any) {
-  const events = props.events || [{ id: "1", title: "Meeting", start: new Date(), end: new Date(), color: "#3b82f6" }];
+  const events = props.events || [{ id: "1", title: "Meeting", start: new Date(), end: new Date(), color: "var(--action-primary)" }];
   const hours = Array.from({ length: 10 }, (_, i) => i + 8);
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 8, overflow: "hidden", background: "var(--surface-default)" } },
     ...hours.map((h) =>
@@ -470,7 +470,7 @@ _xSuiteComponents.Scheduler = function SchedulerStub(props: any) {
             const eH = e.start instanceof Date ? e.start.getHours() : h;
             return eH === h;
           }).map((e: any) =>
-            React.createElement("div", { key: e.id, style: { position: "absolute" as const, left: 4, right: 4, top: 2, padding: "4px 8px", borderRadius: 4, background: e.color || "#3b82f6", color: "#fff", fontSize: 11, fontWeight: 500 } }, e.title)
+            React.createElement("div", { key: e.id, style: { position: "absolute" as const, left: 4, right: 4, top: 2, padding: "4px 8px", borderRadius: 4, background: e.color || "var(--action-primary)", color: "var(--surface-default)", fontSize: 11, fontWeight: 500 } }, e.title)
           )
         )
       )
@@ -490,20 +490,20 @@ _xSuiteComponents.SchedulerToolbar = function SchedulerToolbarStub(props: any) {
     ),
     React.createElement("div", { style: { display: "flex", borderRadius: 8, overflow: "hidden", border: "1px solid var(--border-subtle)" } },
       ...views.map((v) =>
-        React.createElement("button", { key: v, style: { padding: "6px 14px", border: "none", background: v.toLowerCase() === active ? "var(--action-primary, #3b82f6)" : "var(--surface-default)", color: v.toLowerCase() === active ? "#fff" : "var(--text-primary)", fontSize: 12, fontWeight: 500, cursor: "pointer", borderRight: "1px solid var(--border-subtle)" } }, v)
+        React.createElement("button", { key: v, style: { padding: "6px 14px", border: "none", background: v.toLowerCase() === active ? "var(--action-primary))" : "var(--surface-default)", color: v.toLowerCase() === active ? "var(--surface-default)" : "var(--text-primary)", fontSize: 12, fontWeight: 500, cursor: "pointer", borderRight: "1px solid var(--border-subtle)" } }, v)
       )
     )
   );
 };
 
 _xSuiteComponents.AgendaView = function AgendaViewStub(props: any) {
-  const events = props.events || [{ id: "1", title: "Morning Meeting", start: new Date(2025, 2, 21, 9, 0), end: new Date(2025, 2, 21, 10, 0), color: "#3b82f6" }, { id: "2", title: "Sprint Planning", start: new Date(2025, 2, 21, 14, 0), end: new Date(2025, 2, 21, 15, 30), color: "#8b5cf6" }];
+  const events = props.events || [{ id: "1", title: "Morning Meeting", start: new Date(2025, 2, 21, 9, 0), end: new Date(2025, 2, 21, 10, 0), color: "var(--action-primary)" }, { id: "2", title: "Sprint Planning", start: new Date(2025, 2, 21, 14, 0), end: new Date(2025, 2, 21, 15, 30), color: "var(--action-primary)" }];
   const formatTime = (d: Date) => d instanceof Date ? `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}` : "";
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, overflow: "hidden", background: "var(--surface-default)" } },
     React.createElement("div", { style: { padding: "10px 16px", background: "var(--surface-muted)", borderBottom: "1px solid var(--border-subtle)", fontSize: 13, fontWeight: 600, color: "var(--text-primary)" } }, "Today"),
     ...(events ?? []).map((e: any) =>
       React.createElement("div", { key: e.id, style: { display: "flex", alignItems: "center", gap: 12, padding: "10px 16px", borderBottom: "1px solid var(--border-subtle)" } },
-        React.createElement("div", { style: { width: 4, height: 32, borderRadius: 2, background: e.color || "#3b82f6", flexShrink: 0 } }),
+        React.createElement("div", { style: { width: 4, height: 32, borderRadius: 2, background: e.color || "var(--action-primary)", flexShrink: 0 } }),
         React.createElement("div", { style: { flex: 1 } },
           React.createElement("div", { style: { fontSize: 13, fontWeight: 500, color: "var(--text-primary)" } }, e.title),
           React.createElement("div", { style: { fontSize: 11, color: "var(--text-secondary)", marginTop: 2 } }, formatTime(e.start), " \u2013 ", formatTime(e.end))
@@ -525,14 +525,14 @@ _xSuiteComponents.EventForm = function EventFormStub() {
     React.createElement("div", { style: { marginBottom: 16 } },
       React.createElement("label", { style: { fontSize: 12, fontWeight: 500, color: "var(--text-secondary)", display: "block", marginBottom: 6 } }, "Color"),
       React.createElement("div", { style: { display: "flex", gap: 6 } },
-        ...["#3b82f6", "#16a34a", "#8b5cf6", "#d97706", "#dc2626"].map((c) =>
-          React.createElement("div", { key: c, style: { width: 24, height: 24, borderRadius: "50%", background: c, cursor: "pointer", border: c === "#3b82f6" ? "2px solid var(--text-primary)" : "2px solid transparent" } })
+        ...["var(--action-primary)", "var(--state-success-text)", "var(--action-primary)", "var(--state-warning-text)", "var(--state-danger-text)"].map((c) =>
+          React.createElement("div", { key: c, style: { width: 24, height: 24, borderRadius: "50%", background: c, cursor: "pointer", border: c === "var(--action-primary)" ? "2px solid var(--text-primary)" : "2px solid transparent" } })
         )
       )
     ),
     React.createElement("div", { style: { display: "flex", gap: 8, justifyContent: "flex-end" } },
       React.createElement("button", { style: { padding: "6px 16px", borderRadius: 6, border: "1px solid var(--border-subtle)", background: "transparent", fontSize: 13, cursor: "pointer", color: "var(--text-primary)" } }, "Cancel"),
-      React.createElement("button", { style: { padding: "6px 16px", borderRadius: 6, border: "none", background: "var(--action-primary, #3b82f6)", color: "#fff", fontSize: 13, cursor: "pointer", fontWeight: 500 } }, "Save")
+      React.createElement("button", { style: { padding: "6px 16px", borderRadius: 6, border: "none", background: "var(--action-primary))", color: "var(--surface-default)", fontSize: 13, cursor: "pointer", fontWeight: 500 } }, "Save")
     )
   );
 };
@@ -554,7 +554,7 @@ _xSuiteComponents.EditableGrid = function EditableGridStub() {
             ...r.map((cell, ci) =>
               React.createElement("td", { key: ci, style: { padding: "6px 12px", borderBottom: "1px solid var(--border-subtle)", color: "var(--text-primary)", position: "relative" as const } },
                 cell,
-                ci > 0 ? React.createElement("span", { style: { position: "absolute" as const, top: 4, right: 6, fontSize: 9, color: "var(--action-primary, #3b82f6)", opacity: 0.7 } }, "\u270E") : null
+                ci > 0 ? React.createElement("span", { style: { position: "absolute" as const, top: 4, right: 6, fontSize: 9, color: "var(--action-primary))", opacity: 0.7 } }, "\u270E") : null
               )
             )
           )
@@ -574,7 +574,7 @@ _xSuiteComponents.EditorMenuBubble = function EditorMenuBubbleStub() {
   ];
   return React.createElement("div", { style: { padding: 24, display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 12, background: "var(--surface-default)", border: "1px solid var(--border-subtle)", borderRadius: 12 } },
     React.createElement("div", { style: { fontWeight: 600, fontSize: 14, color: "var(--text-primary)", marginBottom: 4 } }, "EditorMenuBubble"),
-    React.createElement("div", { style: { display: "inline-flex", gap: 2, background: "var(--surface-elevated, #1e293b)", borderRadius: 8, padding: 4, boxShadow: "0 4px 12px rgba(0,0,0,0.15)" } },
+    React.createElement("div", { style: { display: "inline-flex", gap: 2, background: "var(--surface-elevated))", borderRadius: 8, padding: 4, boxShadow: "0 4px 12px rgba(0,0,0,0.15)" } },
       ...buttons.map((b) =>
         React.createElement("button", { key: b.label, style: { ...b.style, width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", border: "none", background: "transparent", color: "var(--text-primary)", borderRadius: 4, cursor: "pointer", fontSize: 14 } }, b.label)
       )
@@ -597,7 +597,7 @@ _xSuiteComponents.FieldRegistry = function FieldRegistryStub() {
     React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 } },
       ...fields.map((f) =>
         React.createElement("div", { key: f.type, style: { display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", borderRadius: 6, border: "1px solid var(--border-subtle)", background: "var(--surface-muted)", fontSize: 12, color: "var(--text-primary)" } },
-          React.createElement("span", { style: { width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, background: "var(--action-primary, #3b82f6)", color: "#fff", fontSize: 11, fontWeight: 600, flexShrink: 0 } }, f.icon),
+          React.createElement("span", { style: { width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, background: "var(--action-primary))", color: "var(--surface-default)", fontSize: 11, fontWeight: 600, flexShrink: 0 } }, f.icon),
           f.type
         )
       )
@@ -622,7 +622,7 @@ _xSuiteComponents.HeatmapChart = function HeatmapChartStub() {
       ...grid.flatMap((row, ri) => [
         React.createElement("div", { key: `rl-${ri}`, style: { fontSize: 10, color: "var(--text-secondary)", display: "flex", alignItems: "center", fontWeight: 500 } }, rowLabels[ri]),
         ...row.map((v, ci) =>
-          React.createElement("div", { key: `${ri}-${ci}`, style: { height: 32, borderRadius: 4, background: `rgba(59,130,246,${v})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, color: v > 0.6 ? "#fff" : "var(--text-secondary)" } }, (v * 100).toFixed(0))
+          React.createElement("div", { key: `${ri}-${ci}`, style: { height: 32, borderRadius: 4, background: `rgba(59,130,246,${v})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, color: v > 0.6 ? "var(--surface-default)" : "var(--text-secondary)" } }, (v * 100).toFixed(0))
         ),
       ])
     )
@@ -634,7 +634,7 @@ _xSuiteComponents.KanbanCardDetail = function KanbanCardDetailStub() {
     React.createElement("div", { style: { fontWeight: 600, fontSize: 14, color: "var(--text-primary)", marginBottom: 12 } }, "KanbanCardDetail"),
     React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 } },
       React.createElement("span", { style: { fontSize: 16, fontWeight: 600, color: "var(--text-primary)" } }, "Implement Auth Flow"),
-      React.createElement("span", { style: { fontSize: 10, padding: "2px 8px", borderRadius: 99, background: "var(--action-primary, #3b82f6)", color: "#fff", fontWeight: 500 } }, "In Progress")
+      React.createElement("span", { style: { fontSize: 10, padding: "2px 8px", borderRadius: 99, background: "var(--action-primary))", color: "var(--surface-default)", fontWeight: 500 } }, "In Progress")
     ),
     React.createElement("p", { style: { fontSize: 12, color: "var(--text-secondary)", margin: "0 0 12px", lineHeight: 1.5 } }, "Add OAuth2 PKCE flow with Keycloak integration and token refresh handling."),
     React.createElement("div", { style: { display: "flex", gap: 12, fontSize: 11, color: "var(--text-secondary)", borderTop: "1px solid var(--border-subtle)", paddingTop: 12 } },
@@ -675,7 +675,7 @@ _xSuiteComponents.MasterDetailGrid = function MasterDetailGridStub() {
       React.createElement("span", { style: { flex: 1, fontWeight: 600 } }, "Total")
     ),
     React.createElement("div", { style: { padding: "8px 16px", borderBottom: "1px solid var(--border-subtle)", display: "flex", gap: 12, fontSize: 12, color: "var(--text-primary)" } },
-      React.createElement("span", { style: { width: 20, color: "var(--action-primary, #3b82f6)", cursor: "pointer" } }, "\u25BC"),
+      React.createElement("span", { style: { width: 20, color: "var(--action-primary))", cursor: "pointer" } }, "\u25BC"),
       React.createElement("span", { style: { flex: 1 } }, "#1024"),
       React.createElement("span", { style: { flex: 1 } }, "Acme Inc."),
       React.createElement("span", { style: { flex: 1 } }, "$1,250")
@@ -706,12 +706,12 @@ _xSuiteComponents.MultiStepForm = function MultiStepFormStub() {
         const current = i === active;
         const items = [
           React.createElement("div", { key: `step-${i}`, style: { display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 4, flex: "0 0 auto" } },
-            React.createElement("div", { style: { width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 600, background: done ? "var(--state-success-text, #16a34a)" : current ? "var(--action-primary, #3b82f6)" : "var(--surface-muted)", color: done || current ? "#fff" : "var(--text-secondary)", border: current ? "2px solid var(--action-primary, #3b82f6)" : "none" } }, done ? "\u2713" : String(i + 1)),
-            React.createElement("span", { style: { fontSize: 10, color: current ? "var(--action-primary, #3b82f6)" : "var(--text-secondary)", fontWeight: current ? 600 : 400 } }, s)
+            React.createElement("div", { style: { width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 600, background: done ? "var(--state-success-text))" : current ? "var(--action-primary))" : "var(--surface-muted)", color: done || current ? "var(--surface-default)" : "var(--text-secondary)", border: current ? "2px solid var(--action-primary))" : "none" } }, done ? "\u2713" : String(i + 1)),
+            React.createElement("span", { style: { fontSize: 10, color: current ? "var(--action-primary))" : "var(--text-secondary)", fontWeight: current ? 600 : 400 } }, s)
           ),
         ];
         if (i < steps.length - 1) {
-          items.push(React.createElement("div", { key: `line-${i}`, style: { flex: 1, height: 2, background: done ? "var(--state-success-text, #16a34a)" : "var(--border-subtle)", margin: "0 8px", marginBottom: 16 } }));
+          items.push(React.createElement("div", { key: `line-${i}`, style: { flex: 1, height: 2, background: done ? "var(--state-success-text))" : "var(--border-subtle)", margin: "0 8px", marginBottom: 16 } }));
         }
         return items;
       })
@@ -754,18 +754,18 @@ _xSuiteComponents.RepeatableFieldGroup = function RepeatableFieldGroupStub() {
         React.createElement("span", { style: { fontSize: 10, fontWeight: 600, color: "var(--text-secondary)", width: 20 } }, `${i + 1}.`),
         React.createElement("div", { style: { flex: 1, height: 32, borderRadius: 6, border: "1px solid var(--border-subtle)", background: "var(--surface-muted)", display: "flex", alignItems: "center", paddingLeft: 10, fontSize: 12, color: "var(--text-primary)" } }, r),
         React.createElement("div", { style: { flex: 1, height: 32, borderRadius: 6, border: "1px solid var(--border-subtle)", background: "var(--surface-muted)" } }),
-        React.createElement("button", { style: { width: 28, height: 28, borderRadius: 6, border: "1px solid var(--border-subtle)", background: "transparent", color: "var(--state-error-text, #dc2626)", cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center" } }, "\u00D7")
+        React.createElement("button", { style: { width: 28, height: 28, borderRadius: 6, border: "1px solid var(--border-subtle)", background: "transparent", color: "var(--state-error-text))", cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center" } }, "\u00D7")
       )
     ),
-    React.createElement("button", { style: { display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 6, border: "1px dashed var(--action-primary, #3b82f6)", background: "transparent", color: "var(--action-primary, #3b82f6)", cursor: "pointer", fontSize: 12, fontWeight: 500, marginTop: 4 } }, "+ Add Item")
+    React.createElement("button", { style: { display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 6, border: "1px dashed var(--action-primary))", background: "transparent", color: "var(--action-primary))", cursor: "pointer", fontSize: 12, fontWeight: 500, marginTop: 4 } }, "+ Add Item")
   );
 };
 
 _xSuiteComponents.ResourceView = function ResourceViewStub() {
   const resources = [
-    { name: "Room A", blocks: [{ left: 10, width: 30, color: "var(--action-primary, #3b82f6)" }] },
-    { name: "Room B", blocks: [{ left: 25, width: 20, color: "#8b5cf6" }, { left: 60, width: 25, color: "#16a34a" }] },
-    { name: "Room C", blocks: [{ left: 5, width: 40, color: "#d97706" }] },
+    { name: "Room A", blocks: [{ left: 10, width: 30, color: "var(--action-primary))" }] },
+    { name: "Room B", blocks: [{ left: 25, width: 20, color: "var(--action-primary)" }, { left: 60, width: 25, color: "var(--state-success-text)" }] },
+    { name: "Room C", blocks: [{ left: 5, width: 40, color: "var(--state-warning-text)" }] },
   ];
   const hours = ["8am", "10am", "12pm", "2pm", "4pm"];
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
@@ -790,7 +790,7 @@ _xSuiteComponents.RowGroupingGrid = function RowGroupingGridStub() {
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, overflow: "hidden", background: "var(--surface-default)" } },
     React.createElement("div", { style: { fontWeight: 600, fontSize: 14, padding: "12px 16px", color: "var(--text-primary)", borderBottom: "1px solid var(--border-subtle)" } }, "RowGroupingGrid"),
     React.createElement("div", { style: { padding: "8px 16px", background: "var(--surface-muted)", borderBottom: "1px solid var(--border-subtle)", display: "flex", gap: 8, alignItems: "center", fontSize: 12, fontWeight: 600, color: "var(--text-primary)" } },
-      React.createElement("span", { style: { color: "var(--action-primary, #3b82f6)" } }, "\u25BC"),
+      React.createElement("span", { style: { color: "var(--action-primary))" } }, "\u25BC"),
       "Electronics (3)"
     ),
     ...["Laptop", "Monitor", "Keyboard"].map((item, i) =>
@@ -818,7 +818,7 @@ _xSuiteComponents.ScatterChart = function ScatterChartStub() {
       React.createElement("line", { x1: 10, y1: 5, x2: 10, y2: 90, stroke: "var(--border-subtle)", strokeWidth: 0.5 }),
       React.createElement("line", { x1: 10, y1: 90, x2: 95, y2: 90, stroke: "var(--border-subtle)", strokeWidth: 0.5 }),
       ...points.map((p, i) =>
-        React.createElement("circle", { key: i, cx: p.x, cy: 90 - p.y * 0.85, r: 2.5, fill: "var(--action-primary, #3b82f6)", opacity: 0.7 })
+        React.createElement("circle", { key: i, cx: p.x, cy: 90 - p.y * 0.85, r: 2.5, fill: "var(--action-primary))", opacity: 0.7 })
       )
     )
   );
@@ -828,7 +828,7 @@ _xSuiteComponents.SchedulerEvent = function SchedulerEventStub() {
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 20, background: "var(--surface-default)", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 12 } },
     React.createElement("div", { style: { fontWeight: 600, fontSize: 14, color: "var(--text-primary)" } }, "SchedulerEvent"),
     React.createElement("div", { style: { width: "100%", maxWidth: 240, borderRadius: 8, overflow: "hidden", border: "1px solid var(--border-subtle)" } },
-      React.createElement("div", { style: { height: 4, background: "var(--action-primary, #3b82f6)" } }),
+      React.createElement("div", { style: { height: 4, background: "var(--action-primary))" } }),
       React.createElement("div", { style: { padding: "10px 12px", background: "rgba(59,130,246,0.08)" } },
         React.createElement("div", { style: { fontSize: 13, fontWeight: 600, color: "var(--text-primary)", marginBottom: 4 } }, "Team Standup"),
         React.createElement("div", { style: { fontSize: 11, color: "var(--text-secondary)", display: "flex", alignItems: "center", gap: 6 } },
@@ -860,8 +860,8 @@ _xSuiteComponents.ServerDataSource = function ServerDataSourceStub() {
         if (i < nodes.length - 1) {
           items.push(
             React.createElement("div", { key: `a-${i}`, style: { display: "flex", flexDirection: "column" as const, alignItems: "center", margin: "0 8px", marginBottom: 18 } },
-              React.createElement("div", { style: { width: 40, height: 2, background: "var(--action-primary, #3b82f6)", position: "relative" as const } },
-                React.createElement("div", { style: { position: "absolute" as const, right: -4, top: -3, width: 0, height: 0, borderTop: "4px solid transparent", borderBottom: "4px solid transparent", borderLeft: "6px solid var(--action-primary, #3b82f6)" } })
+              React.createElement("div", { style: { width: 40, height: 2, background: "var(--action-primary))", position: "relative" as const } },
+                React.createElement("div", { style: { position: "absolute" as const, right: -4, top: -3, width: 0, height: 0, borderTop: "4px solid transparent", borderBottom: "4px solid transparent", borderLeft: "6px solid var(--action-primary))" } })
               )
             )
           );
@@ -885,7 +885,7 @@ _xSuiteComponents.TreeDataGrid = function TreeDataGridStub() {
     React.createElement("div", { style: { fontWeight: 600, fontSize: 14, padding: "12px 16px", color: "var(--text-primary)", borderBottom: "1px solid var(--border-subtle)" } }, "TreeDataGrid"),
     ...rows.map((r, i) =>
       React.createElement("div", { key: i, style: { padding: `6px 12px 6px ${12 + r.indent * 20}px`, borderBottom: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--text-primary)" } },
-        React.createElement("span", { style: { fontSize: 10, width: 14, color: r.icon === "\uD83D\uDCC4" ? "var(--text-secondary)" : "var(--action-primary, #3b82f6)", flexShrink: 0 } }, r.icon),
+        React.createElement("span", { style: { fontSize: 10, width: 14, color: r.icon === "\uD83D\uDCC4" ? "var(--text-secondary)" : "var(--action-primary))", flexShrink: 0 } }, r.icon),
         React.createElement("span", { style: { flex: 1 } }, r.label),
         React.createElement("span", { style: { fontSize: 10, color: "var(--text-secondary)" } }, r.extra)
       )
@@ -897,11 +897,11 @@ _xSuiteComponents.TreemapChart = function TreemapChartStub() {
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
     React.createElement("div", { style: { fontWeight: 600, fontSize: 14, color: "var(--text-primary)", marginBottom: 12 } }, "TreemapChart"),
     React.createElement("div", { style: { display: "grid", gridTemplateColumns: "3fr 2fr", gridTemplateRows: "60px 40px 40px", gap: 3, height: 144 } },
-      React.createElement("div", { style: { gridRow: "1 / 3", borderRadius: 6, background: "var(--action-primary, #3b82f6)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 600, color: "#fff", opacity: 0.85 } }, "Sales 42%"),
-      React.createElement("div", { style: { borderRadius: 6, background: "#8b5cf6", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "#fff", opacity: 0.85 } }, "Marketing 24%"),
-      React.createElement("div", { style: { borderRadius: 6, background: "#16a34a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 600, color: "#fff", opacity: 0.85 } }, "Ops 16%"),
-      React.createElement("div", { style: { borderRadius: 6, background: "#d97706", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 600, color: "#fff", opacity: 0.85 } }, "HR 10%"),
-      React.createElement("div", { style: { borderRadius: 6, background: "#dc2626", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 600, color: "#fff", opacity: 0.85 } }, "R&D 8%")
+      React.createElement("div", { style: { gridRow: "1 / 3", borderRadius: 6, background: "var(--action-primary))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 600, color: "var(--surface-default)", opacity: 0.85 } }, "Sales 42%"),
+      React.createElement("div", { style: { borderRadius: 6, background: "var(--action-primary)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "var(--surface-default)", opacity: 0.85 } }, "Marketing 24%"),
+      React.createElement("div", { style: { borderRadius: 6, background: "var(--state-success-text)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 600, color: "var(--surface-default)", opacity: 0.85 } }, "Ops 16%"),
+      React.createElement("div", { style: { borderRadius: 6, background: "var(--state-warning-text)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 600, color: "var(--surface-default)", opacity: 0.85 } }, "HR 10%"),
+      React.createElement("div", { style: { borderRadius: 6, background: "var(--state-danger-text)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 600, color: "var(--surface-default)", opacity: 0.85 } }, "R&D 8%")
     )
   );
 };
@@ -921,7 +921,7 @@ _xSuiteComponents.WaterfallChart = function WaterfallChartStub() {
       ...bars.map((b) => {
         const barH = Math.abs(b.isTotal ? b.value : b.value) * 0.65;
         const bottomOffset = b.isTotal ? 0 : (b.value > 0 ? b.cumulative : b.cumulative + b.value) * 0.65;
-        const color = b.isTotal ? "var(--action-primary, #3b82f6)" : b.value >= 0 ? "var(--state-success-text, #16a34a)" : "var(--state-error-text, #dc2626)";
+        const color = b.isTotal ? "var(--action-primary))" : b.value >= 0 ? "var(--state-success-text))" : "var(--state-error-text))";
         return React.createElement("div", { key: b.label, style: { flex: 1, display: "flex", flexDirection: "column" as const, alignItems: "center", height: "100%", justifyContent: "flex-end" } },
           React.createElement("div", { style: { fontSize: 9, color: "var(--text-secondary)", marginBottom: 2, fontWeight: 500 } }, b.isTotal ? b.value : (b.value > 0 ? `+${b.value}` : b.value)),
           React.createElement("div", { style: { width: "70%", height: barH, background: color, borderRadius: "3px 3px 0 0", marginBottom: bottomOffset, opacity: 0.85 } }),
@@ -934,15 +934,15 @@ _xSuiteComponents.WaterfallChart = function WaterfallChartStub() {
 
 _xSuiteComponents.useScheduler = function UseSchedulerStub() {
   const lines = [
-    { text: "const {", color: "var(--action-primary, #3b82f6)" },
+    { text: "const {", color: "var(--action-primary))" },
     { text: "  events,", color: "var(--text-primary)" },
     { text: "  addEvent,", color: "var(--text-primary)" },
     { text: "  removeEvent,", color: "var(--text-primary)" },
     { text: "  updateEvent,", color: "var(--text-primary)" },
-    { text: "} = useScheduler({", color: "var(--action-primary, #3b82f6)" },
-    { text: '  view: "week",', color: "var(--state-success-text, #16a34a)" },
+    { text: "} = useScheduler({", color: "var(--action-primary))" },
+    { text: '  view: "week",', color: "var(--state-success-text))" },
     { text: "  defaultDate: new Date(),", color: "var(--text-primary)" },
-    { text: "});", color: "var(--action-primary, #3b82f6)" },
+    { text: "});", color: "var(--action-primary))" },
   ];
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
     React.createElement("div", { style: { fontWeight: 600, fontSize: 14, color: "var(--text-primary)", marginBottom: 12 } }, "useScheduler"),
@@ -970,7 +970,7 @@ _xSuiteComponents.AgingBuckets = function AgingBucketsStub(props: any) {
     React.createElement("div", { style: { display: "flex", gap: 8 } },
       ...buckets.map((b: any, i: number) => {
         const pct = ((b.value / total) * 100).toFixed(0);
-        const colors = ["var(--state-success-text,#16a34a)", "var(--state-info-text,#3b82f6)", "var(--state-warning-text,#d97706)", "var(--state-error-text,#dc2626)"];
+        const colors = ["var(--state-success-text))", "var(--state-info-text))", "var(--state-warning-text))", "var(--state-error-text))"];
         return React.createElement("div", { key: i, style: { flex: 1, textAlign: "center" as const, padding: 8, borderRadius: 8, background: "var(--surface-muted)" } },
           React.createElement("div", { style: { fontSize: 10, color: "var(--text-secondary)", marginBottom: 4 } }, b.label),
           React.createElement("div", { style: { fontSize: 18, fontWeight: 700, color: colors[i] || colors[0] } }, typeof b.value === "number" ? b.value.toLocaleString("tr-TR") : b.value),
@@ -992,11 +992,11 @@ _xSuiteComponents.ApprovalWorkflow = function ApprovalWorkflowStub(props: any) {
     React.createElement("div", { style: { fontSize: 14, fontWeight: 600, color: "var(--text-primary)", marginBottom: 12 } }, props.title || "Onay Is Akisi"),
     React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 0 } },
       ...steps.flatMap((s: any, i: number) => {
-        const statusColors: Record<string, string> = { completed: "var(--state-success-text,#16a34a)", current: "var(--action-primary,#3b82f6)", pending: "var(--text-secondary)" };
+        const statusColors: Record<string, string> = { completed: "var(--state-success-text))", current: "var(--action-primary))", pending: "var(--text-secondary)" };
         const statusIcons: Record<string, string> = { completed: "\u2713", current: "\u25CF", pending: "\u25CB" };
         const items = [
           React.createElement("div", { key: s.id, style: { textAlign: "center" as const, flex: 1 } },
-            React.createElement("div", { style: { width: 28, height: 28, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", background: s.status === "completed" ? statusColors.completed : "var(--surface-muted)", color: s.status === "completed" ? "#fff" : statusColors[s.status], fontSize: 14, fontWeight: 700, border: `2px solid ${statusColors[s.status]}` } }, statusIcons[s.status]),
+            React.createElement("div", { style: { width: 28, height: 28, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", background: s.status === "completed" ? statusColors.completed : "var(--surface-muted)", color: s.status === "completed" ? "var(--surface-default)" : statusColors[s.status], fontSize: 14, fontWeight: 700, border: `2px solid ${statusColors[s.status]}` } }, statusIcons[s.status]),
             React.createElement("div", { style: { fontSize: 11, fontWeight: 600, color: statusColors[s.status], marginTop: 4 } }, s.label),
             s.actor && React.createElement("div", { style: { fontSize: 9, color: "var(--text-secondary)" } }, s.actor),
           ),
@@ -1014,13 +1014,13 @@ _xSuiteComponents.BulletChart = function BulletChartStub(props: any) {
   const value = props.value ?? 275;
   const target = props.target ?? 300;
   const max = props.max ?? 400;
-  const ranges = props.ranges || [{ value: 150, color: "var(--state-error-bg,#fecaca)" }, { value: 250, color: "var(--state-warning-bg,#fef3c7)" }, { value: max, color: "var(--state-success-bg,#dcfce7)" }];
+  const ranges = props.ranges || [{ value: 150, color: "var(--state-error-bg)" }, { value: 250, color: "var(--state-warning-bg)" }, { value: max, color: "var(--state-success-bg))" }];
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
     React.createElement("div", { style: { fontSize: 12, fontWeight: 600, color: "var(--text-primary)", marginBottom: 8 } }, props.title || "Performans"),
     React.createElement("div", { style: { position: "relative" as const, height: 24, borderRadius: 4, overflow: "hidden", background: "var(--surface-muted)" } },
       ...ranges.map((r: any, i: number) => React.createElement("div", { key: i, style: { position: "absolute" as const, left: 0, top: 0, height: "100%", width: `${(r.value / max) * 100}%`, background: r.color, zIndex: ranges.length - i } })),
       React.createElement("div", { style: { position: "absolute" as const, left: 0, top: 4, height: 16, width: `${(value / max) * 100}%`, background: "var(--text-primary)", borderRadius: 2, zIndex: ranges.length + 1 } }),
-      React.createElement("div", { style: { position: "absolute" as const, left: `${(target / max) * 100}%`, top: 0, width: 2, height: "100%", background: "var(--state-error-text,#dc2626)", zIndex: ranges.length + 2 } }),
+      React.createElement("div", { style: { position: "absolute" as const, left: `${(target / max) * 100}%`, top: 0, width: 2, height: "100%", background: "var(--state-error-text))", zIndex: ranges.length + 2 } }),
     ),
     React.createElement("div", { style: { display: "flex", justifyContent: "space-between", marginTop: 4, fontSize: 10, color: "var(--text-secondary)" } },
       React.createElement("span", null, `Gerceklesen: ${value}`),
@@ -1035,7 +1035,7 @@ _xSuiteComponents.AuditLog = function AuditLogStub(props: any) {
     { id: "2", action: "Rol degistirildi", actor: "Ahmet Y.", timestamp: "2024-03-15 10:30", level: "warning" },
     { id: "3", action: "Erisim reddedildi", actor: "Bilinmeyen", timestamp: "2024-03-15 11:15", level: "error" },
   ];
-  const levelColors: Record<string, string> = { info: "var(--state-info-text,#3b82f6)", warning: "var(--state-warning-text,#d97706)", error: "var(--state-error-text,#dc2626)" };
+  const levelColors: Record<string, string> = { info: "var(--state-info-text))", warning: "var(--state-warning-text))", error: "var(--state-error-text))" };
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
     React.createElement("div", { style: { fontSize: 14, fontWeight: 600, color: "var(--text-primary)", marginBottom: 12 } }, props.title || "Denetim Kayitlari"),
     React.createElement("div", { style: { display: "flex", flexDirection: "column" as const, gap: 8 } },
@@ -1054,10 +1054,10 @@ _xSuiteComponents.TenantSwitcher = function TenantSwitcherStub(props: any) {
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 12, background: "var(--surface-default)", minWidth: 220 } },
     React.createElement("div", { style: { fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, color: "var(--text-secondary)", letterSpacing: 1, marginBottom: 8 } }, "Organizasyon"),
     React.createElement("div", { style: { display: "flex", flexDirection: "column" as const, gap: 4 } },
-      ...tenants.map((t: any) => React.createElement("div", { key: t.id, style: { display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", borderRadius: 8, background: t.active ? "var(--surface-muted)" : "transparent", cursor: "pointer", border: t.active ? "1px solid var(--action-primary,#3b82f6)" : "1px solid transparent" } },
-        React.createElement("div", { style: { width: 24, height: 24, borderRadius: 6, background: "var(--action-primary,#3b82f6)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10, fontWeight: 700 } }, t.name.charAt(0)),
+      ...tenants.map((t: any) => React.createElement("div", { key: t.id, style: { display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", borderRadius: 8, background: t.active ? "var(--surface-muted)" : "transparent", cursor: "pointer", border: t.active ? "1px solid var(--action-primary))" : "1px solid transparent" } },
+        React.createElement("div", { style: { width: 24, height: 24, borderRadius: 6, background: "var(--action-primary))", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--surface-default)", fontSize: 10, fontWeight: 700 } }, t.name.charAt(0)),
         React.createElement("span", { style: { fontSize: 12, fontWeight: t.active ? 600 : 400, color: "var(--text-primary)" } }, t.name),
-        t.active && React.createElement("span", { style: { marginLeft: "auto", fontSize: 10, color: "var(--action-primary,#3b82f6)" } }, "\u2713"),
+        t.active && React.createElement("span", { style: { marginLeft: "auto", fontSize: 10, color: "var(--action-primary))" } }, "\u2713"),
       ))
     )
   );
@@ -1078,11 +1078,11 @@ _xSuiteComponents.OnboardingChecklist = function OnboardingChecklistStub(props: 
       React.createElement("span", { style: { fontSize: 11, color: "var(--text-secondary)" } }, `${completed}/${items.length} tamamlandi`),
     ),
     React.createElement("div", { style: { height: 4, borderRadius: 2, background: "var(--surface-muted)", marginBottom: 12 } },
-      React.createElement("div", { style: { height: "100%", borderRadius: 2, background: "var(--action-primary,#3b82f6)", width: `${pct}%`, transition: "width 300ms ease" } }),
+      React.createElement("div", { style: { height: "100%", borderRadius: 2, background: "var(--action-primary))", width: `${pct}%`, transition: "width 300ms ease" } }),
     ),
     React.createElement("div", { style: { display: "flex", flexDirection: "column" as const, gap: 6 } },
       ...items.map((item: any) => React.createElement("div", { key: item.id, style: { display: "flex", alignItems: "center", gap: 8, fontSize: 12 } },
-        React.createElement("span", { style: { width: 18, height: 18, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", background: item.completed ? "var(--state-success-text,#16a34a)" : "var(--surface-muted)", color: item.completed ? "#fff" : "var(--text-secondary)", fontSize: 10, fontWeight: 600, border: item.completed ? "none" : "1px solid var(--border-subtle)" } }, item.completed ? "\u2713" : ""),
+        React.createElement("span", { style: { width: 18, height: 18, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", background: item.completed ? "var(--state-success-text))" : "var(--surface-muted)", color: item.completed ? "var(--surface-default)" : "var(--text-secondary)", fontSize: 10, fontWeight: 600, border: item.completed ? "none" : "1px solid var(--border-subtle)" } }, item.completed ? "\u2713" : ""),
         React.createElement("span", { style: { color: item.completed ? "var(--text-secondary)" : "var(--text-primary)", textDecoration: item.completed ? "line-through" : "none" } }, item.label),
       ))
     )
@@ -1110,7 +1110,7 @@ _xSuiteComponents.PermissionMatrix = function PermissionMatrixStub(props: any) {
         ...permissions.map((p: any, i: number) => React.createElement("tr", { key: i, style: { borderBottom: i < permissions.length - 1 ? "1px solid var(--border-subtle)" : "none" } },
           React.createElement("td", { style: { padding: "8px 16px", fontWeight: 500, color: "var(--text-primary)" } }, p.label),
           ...p.values.map((v: boolean, j: number) => React.createElement("td", { key: j, style: { padding: "8px 16px", textAlign: "center" as const } },
-            React.createElement("span", { style: { color: v ? "var(--state-success-text,#16a34a)" : "var(--state-error-text,#dc2626)", fontSize: 14 } }, v ? "\u2713" : "\u2717"),
+            React.createElement("span", { style: { color: v ? "var(--state-success-text))" : "var(--state-error-text))", fontSize: 14 } }, v ? "\u2713" : "\u2717"),
           )),
         )),
       ),
@@ -1125,7 +1125,7 @@ _xSuiteComponents.DataPipeline = function DataPipelineStub(props: any) {
     { id: "s3", label: "Dogrulama", status: "running", duration: "..." },
     { id: "s4", label: "Yukleme", status: "pending" },
   ];
-  const statusColors: Record<string, string> = { completed: "var(--state-success-text,#16a34a)", running: "var(--action-primary,#3b82f6)", pending: "var(--text-secondary)", failed: "var(--state-error-text,#dc2626)" };
+  const statusColors: Record<string, string> = { completed: "var(--state-success-text))", running: "var(--action-primary))", pending: "var(--text-secondary)", failed: "var(--state-error-text))" };
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
     React.createElement("div", { style: { fontSize: 14, fontWeight: 600, color: "var(--text-primary)", marginBottom: 12 } }, props.title || "Veri Hatti"),
     React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 0 } },
@@ -1234,7 +1234,7 @@ _appSidebarStub.AppSidebar = function AppSidebarStub() {
               !collapsed && item.badge && React.createElement("span", {
                 style: { fontSize: 9, padding: "1px 6px", borderRadius: 10,
                   background: item.badge === "new" ? "var(--action-primary)" : "var(--surface-muted)",
-                  color: item.badge === "new" ? "#fff" : "var(--text-secondary)", fontWeight: 600 },
+                  color: item.badge === "new" ? "var(--surface-default)" : "var(--text-secondary)", fontWeight: 600 },
               }, item.badge),
             ),
           ),
@@ -1248,7 +1248,7 @@ _appSidebarStub.AppSidebar = function AppSidebarStub() {
         display: "flex", alignItems: "center", gap: 8, justifyContent: collapsed ? "center" : "flex-start" },
     },
       React.createElement("div", { style: { width: 28, height: 28, borderRadius: "50%", background: "var(--action-primary)",
-        display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 700 } }, "HA"),
+        display: "flex", alignItems: "center", justifyContent: "center", color: "var(--surface-default)", fontSize: 12, fontWeight: 700 } }, "HA"),
       !collapsed && React.createElement("div", null,
         React.createElement("div", { style: { fontSize: 12, fontWeight: 600, color: "var(--text-primary)" } }, "Halil Admin"),
         React.createElement("div", { style: { fontSize: 10, color: "var(--text-secondary)" } }, "admin@example.com"),
@@ -1968,7 +1968,7 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
     children: React.createElement("div", { className: "p-4 text-sm" }, "Modal icerigi burada gorunur."),
     footer: React.createElement("div", { className: "flex justify-end gap-2" },
       React.createElement("button", { className: "rounded-lg bg-surface-muted px-3 py-1.5 text-xs" }, "Iptal"),
-      React.createElement("button", { className: "rounded-lg bg-action-primary px-3 py-1.5 text-xs text-white" }, "Onayla"),
+      React.createElement("button", { className: "rounded-lg bg-action-primary px-3 py-1.5 text-xs text-text-inverse" }, "Onayla"),
     ),
   },
   Dialog: {
@@ -2306,21 +2306,21 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
           React.createElement("div", { className: "text-sm font-medium text-[var(--text-primary)]" }, "policy_autonomy.v1"),
           React.createElement("div", { className: "text-xs text-[var(--text-secondary)]" }, "Governance · Aktif"),
         ),
-        React.createElement("span", { className: "rounded-full bg-[var(--status-success-bg,#dcfce7)] px-2 py-0.5 text-[10px] font-medium text-[var(--status-success,#16a34a)]" }, "Ready"),
+        React.createElement("span", { className: "rounded-full bg-[var(--status-success-bg))] px-2 py-0.5 text-[10px] font-medium text-[var(--status-success))]" }, "Ready"),
       ),
       React.createElement("div", { key: "r2", className: "flex items-center justify-between rounded-lg border border-[var(--border-subtle)] p-3" },
         React.createElement("div", null,
           React.createElement("div", { className: "text-sm font-medium text-[var(--text-primary)]" }, "policy_secrets.v1"),
           React.createElement("div", { className: "text-xs text-[var(--text-secondary)]" }, "Security · Aktif"),
         ),
-        React.createElement("span", { className: "rounded-full bg-[var(--status-warning-bg,#fef3c7)] px-2 py-0.5 text-[10px] font-medium text-[var(--status-warning,#d97706)]" }, "Review"),
+        React.createElement("span", { className: "rounded-full bg-[var(--status-warning-bg)] px-2 py-0.5 text-[10px] font-medium text-[var(--status-warning))]" }, "Review"),
       ),
       React.createElement("div", { key: "r3", className: "flex items-center justify-between rounded-lg border border-[var(--border-subtle)] p-3" },
         React.createElement("div", null,
           React.createElement("div", { className: "text-sm font-medium text-[var(--text-primary)]" }, "policy_ui_design_system.v1"),
           React.createElement("div", { className: "text-xs text-[var(--text-secondary)]" }, "UI/UX · Aktif"),
         ),
-        React.createElement("span", { className: "rounded-full bg-[var(--status-success-bg,#dcfce7)] px-2 py-0.5 text-[10px] font-medium text-[var(--status-success,#16a34a)]" }, "Ready"),
+        React.createElement("span", { className: "rounded-full bg-[var(--status-success-bg))] px-2 py-0.5 text-[10px] font-medium text-[var(--status-success))]" }, "Ready"),
       ),
     ],
     summaryItems: [
@@ -2352,7 +2352,7 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
     onReload: () => {},
     toolbar: React.createElement("button", {
       type: "button",
-      className: "inline-flex h-8 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] px-2.5 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-muted,#f1f5f9)]",
+      className: "inline-flex h-8 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] px-2.5 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-muted))]",
     }, React.createElement("svg", { width: 12, height: 12, viewBox: "0 0 12 12", fill: "none", "aria-hidden": "true" },
       React.createElement("path", { d: "M6 1.5V10.5M6 10.5L3 7.5M6 10.5L9 7.5", stroke: "currentColor", strokeWidth: "1.25", strokeLinecap: "round", strokeLinejoin: "round" }),
     ), "Disa Aktar"),
@@ -2434,33 +2434,33 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
       { label: "Kullanicilar" },
     ],
     children: React.createElement("div", { className: "flex flex-col gap-4" },
-      React.createElement("div", { className: "flex items-center justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-3" },
+      React.createElement("div", { className: "flex items-center justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-3" },
         React.createElement("div", { className: "flex items-center gap-3" },
           React.createElement("input", { className: "rounded-lg border border-[var(--border-subtle)] bg-transparent px-3 py-1.5 text-sm", placeholder: "Kullanici ara...", readOnly: true }),
           React.createElement("span", { className: "rounded-full bg-[var(--surface-muted)] px-3 py-1 text-xs" }, "Rol: Tumu"),
           React.createElement("span", { className: "rounded-full bg-[var(--surface-muted)] px-3 py-1 text-xs" }, "Durum: Aktif"),
         ),
-        React.createElement("button", { className: "rounded-lg bg-[var(--action-primary,#2563eb)] px-4 py-1.5 text-xs font-medium text-white" }, "+ Kullanici Ekle"),
+        React.createElement("button", { className: "rounded-lg bg-[var(--action-primary))] px-4 py-1.5 text-xs font-medium text-text-inverse" }, "+ Kullanici Ekle"),
       ),
       React.createElement("div", { className: "grid grid-cols-4 gap-3" },
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-3 text-center" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-3 text-center" },
           React.createElement("div", { className: "text-xl font-bold text-[var(--text-primary)]" }, "1.248"),
           React.createElement("div", { className: "text-xs text-[var(--text-secondary)]" }, "Toplam Kullanici"),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-3 text-center" },
-          React.createElement("div", { className: "text-xl font-bold text-[var(--status-success,#16a34a)]" }, "1.102"),
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-3 text-center" },
+          React.createElement("div", { className: "text-xl font-bold text-[var(--status-success))]" }, "1.102"),
           React.createElement("div", { className: "text-xs text-[var(--text-secondary)]" }, "Aktif"),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-3 text-center" },
-          React.createElement("div", { className: "text-xl font-bold text-[var(--status-warning,#d97706)]" }, "98"),
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-3 text-center" },
+          React.createElement("div", { className: "text-xl font-bold text-[var(--status-warning))]" }, "98"),
           React.createElement("div", { className: "text-xs text-[var(--text-secondary)]" }, "Beklemede"),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-3 text-center" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-3 text-center" },
           React.createElement("div", { className: "text-xl font-bold text-[var(--text-secondary)]" }, "48"),
           React.createElement("div", { className: "text-xs text-[var(--text-secondary)]" }, "Devre Disi"),
         ),
       ),
-      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] overflow-hidden" },
+      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] overflow-hidden" },
         React.createElement("table", { className: "w-full text-sm" },
           React.createElement("thead", null,
             React.createElement("tr", { className: "border-b border-[var(--border-subtle)] bg-[var(--surface-muted)]" },
@@ -2475,19 +2475,19 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
               React.createElement("td", { className: "px-4 py-2.5 font-medium" }, "Ayse Demir"),
               React.createElement("td", { className: "px-4 py-2.5 text-[var(--text-secondary)]" }, "ayse@sirket.com"),
               React.createElement("td", { className: "px-4 py-2.5" }, React.createElement("span", { className: "rounded-full bg-[var(--surface-muted)] px-2 py-0.5 text-xs" }, "Yonetici")),
-              React.createElement("td", { className: "px-4 py-2.5" }, React.createElement("span", { className: "inline-block h-2 w-2 rounded-full bg-[var(--status-success,#16a34a)]" }), " Aktif"),
+              React.createElement("td", { className: "px-4 py-2.5" }, React.createElement("span", { className: "inline-block h-2 w-2 rounded-full bg-[var(--status-success))]" }), " Aktif"),
             ),
             React.createElement("tr", { className: "border-b border-[var(--border-subtle)]" },
               React.createElement("td", { className: "px-4 py-2.5 font-medium" }, "Mehmet Kaya"),
               React.createElement("td", { className: "px-4 py-2.5 text-[var(--text-secondary)]" }, "mehmet@sirket.com"),
               React.createElement("td", { className: "px-4 py-2.5" }, React.createElement("span", { className: "rounded-full bg-[var(--surface-muted)] px-2 py-0.5 text-xs" }, "Duzenleyici")),
-              React.createElement("td", { className: "px-4 py-2.5" }, React.createElement("span", { className: "inline-block h-2 w-2 rounded-full bg-[var(--status-success,#16a34a)]" }), " Aktif"),
+              React.createElement("td", { className: "px-4 py-2.5" }, React.createElement("span", { className: "inline-block h-2 w-2 rounded-full bg-[var(--status-success))]" }), " Aktif"),
             ),
             React.createElement("tr", null,
               React.createElement("td", { className: "px-4 py-2.5 font-medium" }, "Fatma Celik"),
               React.createElement("td", { className: "px-4 py-2.5 text-[var(--text-secondary)]" }, "fatma@sirket.com"),
               React.createElement("td", { className: "px-4 py-2.5" }, React.createElement("span", { className: "rounded-full bg-[var(--surface-muted)] px-2 py-0.5 text-xs" }, "Izleyici")),
-              React.createElement("td", { className: "px-4 py-2.5" }, React.createElement("span", { className: "inline-block h-2 w-2 rounded-full bg-[var(--status-warning,#d97706)]" }), " Beklemede"),
+              React.createElement("td", { className: "px-4 py-2.5" }, React.createElement("span", { className: "inline-block h-2 w-2 rounded-full bg-[var(--status-warning))]" }), " Beklemede"),
             ),
           ),
         ),
@@ -2504,29 +2504,29 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
     ],
     children: React.createElement("div", { className: "flex flex-col gap-4" },
       React.createElement("div", { className: "grid grid-cols-4 gap-3" },
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "text-xs font-medium uppercase tracking-wider text-[var(--text-secondary)]" }, "Gelir"),
           React.createElement("div", { className: "mt-1 text-2xl font-bold text-[var(--text-primary)]" }, "\u20BA1.24M"),
-          React.createElement("div", { className: "mt-1 text-xs text-[var(--status-success,#16a34a)]" }, "\u2191 %12.3 gecen aya gore"),
+          React.createElement("div", { className: "mt-1 text-xs text-[var(--status-success))]" }, "\u2191 %12.3 gecen aya gore"),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "text-xs font-medium uppercase tracking-wider text-[var(--text-secondary)]" }, "Aktif Kullanici"),
           React.createElement("div", { className: "mt-1 text-2xl font-bold text-[var(--text-primary)]" }, "8.432"),
-          React.createElement("div", { className: "mt-1 text-xs text-[var(--status-success,#16a34a)]" }, "\u2191 %5.7 gecen aya gore"),
+          React.createElement("div", { className: "mt-1 text-xs text-[var(--status-success))]" }, "\u2191 %5.7 gecen aya gore"),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "text-xs font-medium uppercase tracking-wider text-[var(--text-secondary)]" }, "Calisma Suresi"),
-          React.createElement("div", { className: "mt-1 text-2xl font-bold text-[var(--status-success,#16a34a)]" }, "%99.97"),
+          React.createElement("div", { className: "mt-1 text-2xl font-bold text-[var(--status-success))]" }, "%99.97"),
           React.createElement("div", { className: "mt-1 text-xs text-[var(--text-secondary)]" }, "Son 30 gun"),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "text-xs font-medium uppercase tracking-wider text-[var(--text-secondary)]" }, "Acik Talepler"),
-          React.createElement("div", { className: "mt-1 text-2xl font-bold text-[var(--status-warning,#d97706)]" }, "23"),
-          React.createElement("div", { className: "mt-1 text-xs text-[var(--status-error,#dc2626)]" }, "\u2191 3 dunden beri"),
+          React.createElement("div", { className: "mt-1 text-2xl font-bold text-[var(--status-warning))]" }, "23"),
+          React.createElement("div", { className: "mt-1 text-xs text-[var(--status-error))]" }, "\u2191 3 dunden beri"),
         ),
       ),
       React.createElement("div", { className: "grid grid-cols-2 gap-4" },
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "mb-3 text-sm font-semibold text-[var(--text-primary)]" }, "Son Etkinlik"),
           React.createElement("div", { className: "flex flex-col gap-2" },
             React.createElement("div", { className: "flex items-center justify-between rounded-lg bg-[var(--surface-muted)] px-3 py-2 text-xs" },
@@ -2543,20 +2543,20 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
             ),
           ),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "mb-3 text-sm font-semibold text-[var(--text-primary)]" }, "Sistem Sagligi"),
           React.createElement("div", { className: "flex flex-col gap-3" },
             React.createElement("div", null,
-              React.createElement("div", { className: "flex justify-between text-xs mb-1" }, React.createElement("span", null, "API Sunucusu"), React.createElement("span", { className: "text-[var(--status-success,#16a34a)]" }, "Saglikli")),
-              React.createElement("div", { className: "h-2 rounded-full bg-[var(--surface-muted)]" }, React.createElement("div", { className: "h-2 rounded-full bg-[var(--status-success,#16a34a)]", style: { width: "99%" } })),
+              React.createElement("div", { className: "flex justify-between text-xs mb-1" }, React.createElement("span", null, "API Sunucusu"), React.createElement("span", { className: "text-[var(--status-success))]" }, "Saglikli")),
+              React.createElement("div", { className: "h-2 rounded-full bg-[var(--surface-muted)]" }, React.createElement("div", { className: "h-2 rounded-full bg-[var(--status-success))]", style: { width: "99%" } })),
             ),
             React.createElement("div", null,
-              React.createElement("div", { className: "flex justify-between text-xs mb-1" }, React.createElement("span", null, "Veritabani"), React.createElement("span", { className: "text-[var(--status-success,#16a34a)]" }, "Saglikli")),
-              React.createElement("div", { className: "h-2 rounded-full bg-[var(--surface-muted)]" }, React.createElement("div", { className: "h-2 rounded-full bg-[var(--status-success,#16a34a)]", style: { width: "95%" } })),
+              React.createElement("div", { className: "flex justify-between text-xs mb-1" }, React.createElement("span", null, "Veritabani"), React.createElement("span", { className: "text-[var(--status-success))]" }, "Saglikli")),
+              React.createElement("div", { className: "h-2 rounded-full bg-[var(--surface-muted)]" }, React.createElement("div", { className: "h-2 rounded-full bg-[var(--status-success))]", style: { width: "95%" } })),
             ),
             React.createElement("div", null,
-              React.createElement("div", { className: "flex justify-between text-xs mb-1" }, React.createElement("span", null, "CDN"), React.createElement("span", { className: "text-[var(--status-warning,#d97706)]" }, "Dusuk Performans")),
-              React.createElement("div", { className: "h-2 rounded-full bg-[var(--surface-muted)]" }, React.createElement("div", { className: "h-2 rounded-full bg-[var(--status-warning,#d97706)]", style: { width: "78%" } })),
+              React.createElement("div", { className: "flex justify-between text-xs mb-1" }, React.createElement("span", null, "CDN"), React.createElement("span", { className: "text-[var(--status-warning))]" }, "Dusuk Performans")),
+              React.createElement("div", { className: "h-2 rounded-full bg-[var(--surface-muted)]" }, React.createElement("div", { className: "h-2 rounded-full bg-[var(--status-warning))]", style: { width: "78%" } })),
             ),
           ),
         ),
@@ -2571,13 +2571,13 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
       { label: "#SIP-2024-1847" },
     ],
     children: React.createElement("div", { className: "flex flex-col gap-4" },
-      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
         React.createElement("div", { className: "flex items-center justify-between mb-3" },
           React.createElement("div", null,
             React.createElement("div", { className: "text-base font-semibold text-[var(--text-primary)]" }, "Acme Teknoloji A.S."),
             React.createElement("div", { className: "text-sm text-[var(--text-secondary)]" }, "Kurumsal Musteri \u2014 Istanbul, TR"),
           ),
-          React.createElement("span", { className: "rounded-full bg-[color-mix(in_oklab,var(--status-success,#16a34a)_10%,transparent)] px-3 py-1 text-xs font-medium text-[var(--status-success,#16a34a)]" }, "Teslim Edildi"),
+          React.createElement("span", { className: "rounded-full bg-[color-mix(in_oklab,var(--status-success))_10%,transparent)] px-3 py-1 text-xs font-medium text-[var(--status-success))]" }, "Teslim Edildi"),
         ),
         React.createElement("div", { className: "grid grid-cols-3 gap-4 text-sm" },
           React.createElement("div", null, React.createElement("span", { className: "text-xs text-[var(--text-secondary)]" }, "Siparis Tarihi"), React.createElement("div", { className: "font-medium" }, "2024-03-15")),
@@ -2585,7 +2585,7 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
           React.createElement("div", null, React.createElement("span", { className: "text-xs text-[var(--text-secondary)]" }, "Odeme"), React.createElement("div", { className: "font-medium" }, "Havale/EFT")),
         ),
       ),
-      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
         React.createElement("div", { className: "text-sm font-semibold text-[var(--text-primary)] mb-3" }, "Kalemler"),
         React.createElement("div", { className: "flex flex-col gap-2" },
           React.createElement("div", { className: "flex items-center justify-between rounded-lg bg-[var(--surface-muted)] px-3 py-2 text-xs" },
@@ -2627,12 +2627,12 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
     ],
     children: React.createElement("div", { className: "flex flex-col gap-4" },
       React.createElement("div", { className: "flex gap-4 border-b border-[var(--border-subtle)] pb-2 text-sm" },
-        React.createElement("span", { className: "border-b-2 border-[var(--action-primary,#2563eb)] pb-2 font-medium text-[var(--action-primary,#2563eb)]" }, "Genel"),
+        React.createElement("span", { className: "border-b-2 border-[var(--action-primary))] pb-2 font-medium text-[var(--action-primary))]" }, "Genel"),
         React.createElement("span", { className: "pb-2 text-[var(--text-secondary)] cursor-pointer" }, "Guvenlik"),
         React.createElement("span", { className: "pb-2 text-[var(--text-secondary)] cursor-pointer" }, "Bildirimler"),
         React.createElement("span", { className: "pb-2 text-[var(--text-secondary)] cursor-pointer" }, "Entegrasyonlar"),
       ),
-      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
         React.createElement("div", { className: "text-sm font-semibold text-[var(--text-primary)] mb-4" }, "Organizasyon Profili"),
         React.createElement("div", { className: "flex flex-col gap-3" },
           React.createElement("div", { className: "flex items-center justify-between" },
@@ -2654,8 +2654,8 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
               React.createElement("div", { className: "text-sm font-medium" }, "Iki Faktorlu Dogrulama"),
               React.createElement("div", { className: "text-xs text-[var(--text-secondary)]" }, "Tum yonetici kullanicilar icin zorunlu"),
             ),
-            React.createElement("div", { className: "h-5 w-9 rounded-full bg-[var(--status-success,#16a34a)] relative" },
-              React.createElement("div", { className: "absolute right-0.5 top-0.5 h-4 w-4 rounded-full bg-[var(--surface-default,#fff)] shadow-xs" }),
+            React.createElement("div", { className: "h-5 w-9 rounded-full bg-[var(--status-success))] relative" },
+              React.createElement("div", { className: "absolute right-0.5 top-0.5 h-4 w-4 rounded-full bg-[var(--surface-default))] shadow-xs" }),
             ),
           ),
         ),
@@ -2672,35 +2672,35 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
       { label: "Komutlar" },
     ],
     children: React.createElement("div", { className: "flex flex-col gap-4" },
-      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-3" },
+      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-3" },
         React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2" },
           React.createElement("span", { className: "text-[var(--text-secondary)]" }, "\u{1F50D}"),
           React.createElement("span", { className: "text-sm text-[var(--text-secondary)]" }, "Komut, varlik veya islem ara..."),
-          React.createElement("span", { className: "ml-auto rounded-xs border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] px-1.5 py-0.5 text-[10px] text-[var(--text-secondary)]" }, "⌘K"),
+          React.createElement("span", { className: "ml-auto rounded-xs border border-[var(--border-subtle)] bg-[var(--surface-default))] px-1.5 py-0.5 text-[10px] text-[var(--text-secondary)]" }, "⌘K"),
         ),
       ),
       React.createElement("div", { className: "grid grid-cols-2 gap-4" },
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "mb-3 text-sm font-semibold text-[var(--text-primary)]" }, "Son Calismalar"),
           React.createElement("div", { className: "flex flex-col gap-2" },
             React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2 text-xs cursor-pointer" },
-              React.createElement("span", { className: "rounded-xs bg-[color-mix(in_oklab,var(--action-primary,#2563eb)_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--action-primary,#2563eb)]" }, "SIPARIS"),
+              React.createElement("span", { className: "rounded-xs bg-[color-mix(in_oklab,var(--action-primary))_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--action-primary))]" }, "SIPARIS"),
               React.createElement("span", { className: "font-medium" }, "#SIP-2024-1847"),
               React.createElement("span", { className: "ml-auto text-[var(--text-secondary)]" }, "2 dk once"),
             ),
             React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2 text-xs cursor-pointer" },
-              React.createElement("span", { className: "rounded-xs bg-[color-mix(in_oklab,var(--status-success,#16a34a)_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-success,#16a34a)]" }, "KULLANICI"),
+              React.createElement("span", { className: "rounded-xs bg-[color-mix(in_oklab,var(--status-success))_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-success))]" }, "KULLANICI"),
               React.createElement("span", { className: "font-medium" }, "Ayse Demir"),
               React.createElement("span", { className: "ml-auto text-[var(--text-secondary)]" }, "15 dk once"),
             ),
             React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2 text-xs cursor-pointer" },
-              React.createElement("span", { className: "rounded-xs bg-[color-mix(in_oklab,var(--status-warning,#d97706)_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-warning,#d97706)]" }, "TALEP"),
+              React.createElement("span", { className: "rounded-xs bg-[color-mix(in_oklab,var(--status-warning))_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-warning))]" }, "TALEP"),
               React.createElement("span", { className: "font-medium" }, "TLP-5523 CDN gecikmesi"),
               React.createElement("span", { className: "ml-auto text-[var(--text-secondary)]" }, "1 saat once"),
             ),
           ),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "mb-3 text-sm font-semibold text-[var(--text-primary)]" }, "Hizli Islemler"),
           React.createElement("div", { className: "grid grid-cols-2 gap-2" },
             React.createElement("button", { className: "rounded-lg border border-[var(--border-subtle)] px-3 py-2 text-xs text-left hover:bg-[var(--surface-muted)]" }, "Yeni Rapor"),
@@ -2777,7 +2777,7 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
   NavigationMenu: {
     items: [
       { value: "dashboard", label: "Kontrol Paneli", icon: React.createElement("span", { style: { fontSize: 14 } }, "\u{1F4CA}") },
-      { value: "orders", label: "Siparisler", icon: React.createElement("span", { style: { fontSize: 14 } }, "\u{1F4E6}"), badge: React.createElement("span", { className: "rounded-full bg-[var(--status-error,#dc2626)] px-1.5 py-0.5 text-[10px] text-white" }, "3") },
+      { value: "orders", label: "Siparisler", icon: React.createElement("span", { style: { fontSize: 14 } }, "\u{1F4E6}"), badge: React.createElement("span", { className: "rounded-full bg-[var(--status-error))] px-1.5 py-0.5 text-[10px] text-text-inverse" }, "3") },
       { value: "customers", label: "Musteriler", icon: React.createElement("span", { style: { fontSize: 14 } }, "\u{1F465}") },
       { value: "products", label: "Urunler", icon: React.createElement("span", { style: { fontSize: 14 } }, "\u{1F4E6}") },
       { value: "reports", label: "Raporlar", icon: React.createElement("span", { style: { fontSize: 14 } }, "\u{1F4C8}") },
@@ -2815,7 +2815,7 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
           ),
           React.createElement("div", { className: "flex justify-between" },
             React.createElement("span", { className: "text-[var(--text-secondary)]" }, "Durum"),
-            React.createElement("span", { className: "rounded-full bg-[color-mix(in_oklab,var(--status-success,#16a34a)_10%,transparent)] px-2 py-0.5 text-xs font-medium text-[var(--status-success,#16a34a)]" }, "Tamamlandi"),
+            React.createElement("span", { className: "rounded-full bg-[color-mix(in_oklab,var(--status-success))_10%,transparent)] px-2 py-0.5 text-xs font-medium text-[var(--status-success))]" }, "Tamamlandi"),
           ),
         ),
       },
@@ -2834,7 +2834,7 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
         ),
       },
     ],
-    tags: React.createElement("span", { className: "rounded-full bg-[color-mix(in_oklab,var(--status-success,#16a34a)_10%,transparent)] px-2 py-0.5 text-xs font-medium text-[var(--status-success,#16a34a)]" }, "Onaylandi"),
+    tags: React.createElement("span", { className: "rounded-full bg-[color-mix(in_oklab,var(--status-success))_10%,transparent)] px-2 py-0.5 text-xs font-medium text-[var(--status-success))]" }, "Onaylandi"),
   },
   FormDrawer: {
     open: true,
@@ -2863,7 +2863,7 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
     ),
     footer: React.createElement("div", { className: "flex justify-end gap-2 p-4 border-t border-[var(--border-subtle)]" },
       React.createElement("button", { className: "rounded-lg border border-[var(--border-subtle)] px-4 py-1.5 text-xs" }, "Iptal"),
-      React.createElement("button", { className: "rounded-lg bg-[var(--action-primary,#2563eb)] px-4 py-1.5 text-xs font-medium text-white" }, "Kaydet"),
+      React.createElement("button", { className: "rounded-lg bg-[var(--action-primary))] px-4 py-1.5 text-xs font-medium text-text-inverse" }, "Kaydet"),
     ),
   },
 
@@ -3022,7 +3022,7 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
   "Navigation Menu": {
     items: [
       { value: "dashboard", label: "Kontrol Paneli", icon: React.createElement("span", { style: { fontSize: 14 } }, "\u{1F4CA}") },
-      { value: "orders", label: "Siparisler", icon: React.createElement("span", { style: { fontSize: 14 } }, "\u{1F4E6}"), badge: React.createElement("span", { className: "rounded-full bg-[var(--status-error,#dc2626)] px-1.5 py-0.5 text-[10px] text-white" }, "3") },
+      { value: "orders", label: "Siparisler", icon: React.createElement("span", { style: { fontSize: 14 } }, "\u{1F4E6}"), badge: React.createElement("span", { className: "rounded-full bg-[var(--status-error))] px-1.5 py-0.5 text-[10px] text-text-inverse" }, "3") },
       { value: "customers", label: "Musteriler", icon: React.createElement("span", { style: { fontSize: 14 } }, "\u{1F465}") },
       { value: "products", label: "Urunler", icon: React.createElement("span", { style: { fontSize: 14 } }, "\u{1F4E6}") },
       { value: "reports", label: "Raporlar", icon: React.createElement("span", { style: { fontSize: 14 } }, "\u{1F4C8}") },
@@ -3068,29 +3068,29 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
       { label: "Kullanicilar" },
     ],
     children: React.createElement("div", { className: "flex flex-col gap-4" },
-      React.createElement("div", { className: "flex items-center justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-3" },
+      React.createElement("div", { className: "flex items-center justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-3" },
         React.createElement("div", { className: "flex items-center gap-3" },
           React.createElement("input", { className: "rounded-lg border border-[var(--border-subtle)] bg-transparent px-3 py-1.5 text-sm", placeholder: "Kullanici ara...", readOnly: true }),
           React.createElement("span", { className: "rounded-full bg-[var(--surface-muted)] px-3 py-1 text-xs" }, "Rol: Tumu"),
           React.createElement("span", { className: "rounded-full bg-[var(--surface-muted)] px-3 py-1 text-xs" }, "Durum: Aktif"),
         ),
-        React.createElement("button", { className: "rounded-lg bg-[var(--action-primary,#2563eb)] px-4 py-1.5 text-xs font-medium text-white" }, "+ Kullanici Ekle"),
+        React.createElement("button", { className: "rounded-lg bg-[var(--action-primary))] px-4 py-1.5 text-xs font-medium text-text-inverse" }, "+ Kullanici Ekle"),
       ),
       React.createElement("div", { className: "grid grid-cols-3 gap-3" },
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-3 text-center" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-3 text-center" },
           React.createElement("div", { className: "text-xl font-bold text-[var(--text-primary)]" }, "248"),
           React.createElement("div", { className: "text-xs text-[var(--text-secondary)]" }, "Toplam Kullanici"),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-3 text-center" },
-          React.createElement("div", { className: "text-xl font-bold text-[var(--status-success,#16a34a)]" }, "210"),
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-3 text-center" },
+          React.createElement("div", { className: "text-xl font-bold text-[var(--status-success))]" }, "210"),
           React.createElement("div", { className: "text-xs text-[var(--text-secondary)]" }, "Aktif"),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-3 text-center" },
-          React.createElement("div", { className: "text-xl font-bold text-[var(--status-warning,#d97706)]" }, "38"),
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-3 text-center" },
+          React.createElement("div", { className: "text-xl font-bold text-[var(--status-warning))]" }, "38"),
           React.createElement("div", { className: "text-xs text-[var(--text-secondary)]" }, "Beklemede"),
         ),
       ),
-      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] overflow-hidden" },
+      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] overflow-hidden" },
         React.createElement("table", { className: "w-full text-sm" },
           React.createElement("thead", null,
             React.createElement("tr", { className: "border-b border-[var(--border-subtle)] bg-[var(--surface-muted)]" },
@@ -3125,25 +3125,25 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
     ],
     children: React.createElement("div", { className: "flex flex-col gap-4" },
       React.createElement("div", { className: "grid grid-cols-4 gap-3" },
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "text-xs font-medium uppercase tracking-wider text-[var(--text-secondary)]" }, "Gelir"),
           React.createElement("div", { className: "mt-1 text-2xl font-bold text-[var(--text-primary)]" }, "₺1.24M"),
-          React.createElement("div", { className: "mt-1 text-xs text-[var(--status-success,#16a34a)]" }, "\u{2191} %12.3 gecen aya gore"),
+          React.createElement("div", { className: "mt-1 text-xs text-[var(--status-success))]" }, "\u{2191} %12.3 gecen aya gore"),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "text-xs font-medium uppercase tracking-wider text-[var(--text-secondary)]" }, "Aktif Kullanici"),
           React.createElement("div", { className: "mt-1 text-2xl font-bold text-[var(--text-primary)]" }, "8.432"),
-          React.createElement("div", { className: "mt-1 text-xs text-[var(--status-success,#16a34a)]" }, "\u{2191} %5.7 gecen aya gore"),
+          React.createElement("div", { className: "mt-1 text-xs text-[var(--status-success))]" }, "\u{2191} %5.7 gecen aya gore"),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "text-xs font-medium uppercase tracking-wider text-[var(--text-secondary)]" }, "Calisma Suresi"),
-          React.createElement("div", { className: "mt-1 text-2xl font-bold text-[var(--status-success,#16a34a)]" }, "%99.97"),
+          React.createElement("div", { className: "mt-1 text-2xl font-bold text-[var(--status-success))]" }, "%99.97"),
           React.createElement("div", { className: "mt-1 text-xs text-[var(--text-secondary)]" }, "Son 30 gun"),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "text-xs font-medium uppercase tracking-wider text-[var(--text-secondary)]" }, "Acik Talepler"),
-          React.createElement("div", { className: "mt-1 text-2xl font-bold text-[var(--status-warning,#d97706)]" }, "23"),
-          React.createElement("div", { className: "mt-1 text-xs text-[var(--status-error,#dc2626)]" }, "\u{2191} 3 dunden beri"),
+          React.createElement("div", { className: "mt-1 text-2xl font-bold text-[var(--status-warning))]" }, "23"),
+          React.createElement("div", { className: "mt-1 text-xs text-[var(--status-error))]" }, "\u{2191} 3 dunden beri"),
         ),
       ),
     ),
@@ -3156,13 +3156,13 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
       { label: "#SIP-2024-1847" },
     ],
     children: React.createElement("div", { className: "flex flex-col gap-4" },
-      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
         React.createElement("div", { className: "flex items-center justify-between mb-3" },
           React.createElement("div", null,
             React.createElement("div", { className: "text-base font-semibold text-[var(--text-primary)]" }, "Acme Teknoloji A.S."),
             React.createElement("div", { className: "text-sm text-[var(--text-secondary)]" }, "Kurumsal Musteri — Istanbul, TR"),
           ),
-          React.createElement("span", { className: "rounded-full bg-[color-mix(in_oklab,var(--status-success,#16a34a)_10%,transparent)] px-3 py-1 text-xs font-medium text-[var(--status-success,#16a34a)]" }, "Teslim Edildi"),
+          React.createElement("span", { className: "rounded-full bg-[color-mix(in_oklab,var(--status-success))_10%,transparent)] px-3 py-1 text-xs font-medium text-[var(--status-success))]" }, "Teslim Edildi"),
         ),
         React.createElement("div", { className: "grid grid-cols-3 gap-4 text-sm" },
           React.createElement("div", null, React.createElement("span", { className: "text-xs text-[var(--text-secondary)]" }, "Siparis Tarihi"), React.createElement("div", { className: "font-medium" }, "2024-03-15")),
@@ -3182,11 +3182,11 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
     ],
     children: React.createElement("div", { className: "flex flex-col gap-4" },
       React.createElement("div", { className: "flex gap-4 border-b border-[var(--border-subtle)] pb-2 text-sm" },
-        React.createElement("span", { className: "border-b-2 border-[var(--action-primary,#2563eb)] pb-2 font-medium text-[var(--action-primary,#2563eb)]" }, "Genel"),
+        React.createElement("span", { className: "border-b-2 border-[var(--action-primary))] pb-2 font-medium text-[var(--action-primary))]" }, "Genel"),
         React.createElement("span", { className: "pb-2 text-[var(--text-secondary)] cursor-pointer" }, "Guvenlik"),
         React.createElement("span", { className: "pb-2 text-[var(--text-secondary)] cursor-pointer" }, "Bildirimler"),
       ),
-      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
         React.createElement("div", { className: "text-sm font-semibold text-[var(--text-primary)] mb-4" }, "Organizasyon Profili"),
         React.createElement("div", { className: "flex flex-col gap-3" },
           React.createElement("div", { className: "flex items-center justify-between" },
@@ -3217,30 +3217,30 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
       { label: "Komutlar" },
     ],
     children: React.createElement("div", { className: "flex flex-col gap-4" },
-      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-3" },
+      React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-3" },
         React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2" },
           React.createElement("span", { className: "text-[var(--text-secondary)]" }, "\u{1F50D}"),
           React.createElement("span", { className: "text-sm text-[var(--text-secondary)]" }, "Komut, varlik veya islem ara..."),
-          React.createElement("span", { className: "ml-auto rounded-xs border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] px-1.5 py-0.5 text-[10px] text-[var(--text-secondary)]" }, "\u{2318}K"),
+          React.createElement("span", { className: "ml-auto rounded-xs border border-[var(--border-subtle)] bg-[var(--surface-default))] px-1.5 py-0.5 text-[10px] text-[var(--text-secondary)]" }, "\u{2318}K"),
         ),
       ),
       React.createElement("div", { className: "grid grid-cols-2 gap-4" },
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "mb-3 text-sm font-semibold text-[var(--text-primary)]" }, "Son Calismalar"),
           React.createElement("div", { className: "flex flex-col gap-2" },
             React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2 text-xs cursor-pointer" },
-              React.createElement("span", { className: "rounded-xs bg-[color-mix(in_oklab,var(--action-primary,#2563eb)_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--action-primary,#2563eb)]" }, "SIPARIS"),
+              React.createElement("span", { className: "rounded-xs bg-[color-mix(in_oklab,var(--action-primary))_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--action-primary))]" }, "SIPARIS"),
               React.createElement("span", { className: "font-medium" }, "#SIP-2024-1847"),
               React.createElement("span", { className: "ml-auto text-[var(--text-secondary)]" }, "2 dk once"),
             ),
             React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2 text-xs cursor-pointer" },
-              React.createElement("span", { className: "rounded-xs bg-[color-mix(in_oklab,var(--status-success,#16a34a)_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-success,#16a34a)]" }, "KULLANICI"),
+              React.createElement("span", { className: "rounded-xs bg-[color-mix(in_oklab,var(--status-success))_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-success))]" }, "KULLANICI"),
               React.createElement("span", { className: "font-medium" }, "Ayse Demir"),
               React.createElement("span", { className: "ml-auto text-[var(--text-secondary)]" }, "15 dk once"),
             ),
           ),
         ),
-        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] p-4" },
+        React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default))] p-4" },
           React.createElement("div", { className: "mb-3 text-sm font-semibold text-[var(--text-primary)]" }, "Hizli Islemler"),
           React.createElement("div", { className: "grid grid-cols-2 gap-2" },
             React.createElement("button", { className: "rounded-lg border border-[var(--border-subtle)] px-3 py-2 text-xs text-left hover:bg-[var(--surface-muted)]" }, "Yeni Rapor"),
@@ -3260,14 +3260,14 @@ DEFAULT_PROPS.StatWidget = { label: "API Cagrilari", value: 45230, previousValue
 DEFAULT_PROPS.SparklineChart = { data: [10, 12, 8, 15, 13, 17, 20, 18, 22], type: "area" };
 DEFAULT_PROPS.MiniChart = { data: [{ label: "Oca", value: 45 }, { label: "Sub", value: 52 }, { label: "Mar", value: 48 }], type: "bar" };
 DEFAULT_PROPS.ChartContainer = { title: "Grafik Basligi", description: "Aciklama metni", height: 200, children: React.createElement("div", { className: "flex h-full items-center justify-center text-sm text-[var(--text-secondary)]" }, "Grafik icerigi burada gorunur") };
-DEFAULT_PROPS.ChartLegend = { items: [{ label: "Web", color: "var(--action-primary,#3b82f6)", value: "45%" }, { label: "Mobile", color: "var(--state-success-text,#16a34a)", value: "30%" }, { label: "API", color: "var(--state-warning-text,#d97706)", value: "25%" }], direction: "horizontal" };
+DEFAULT_PROPS.ChartLegend = { items: [{ label: "Web", color: "var(--action-primary))", value: "45%" }, { label: "Mobile", color: "var(--state-success-text))", value: "30%" }, { label: "API", color: "var(--state-warning-text))", value: "25%" }], direction: "horizontal" };
 DEFAULT_PROPS.ChartDashboard = { columns: 3, gap: "md", children: React.createElement(React.Fragment, null, React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default)] p-4 text-sm" }, "Kart 1"), React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default)] p-4 text-sm" }, "Kart 2"), React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default)] p-4 text-sm" }, "Kart 3")) };
 DEFAULT_PROPS.GaugeChart = { value: 72, min: 0, max: 100, label: "Performans" };
 DEFAULT_PROPS.RadarChart = { data: [{ label: "Hiz", value: 80 }, { label: "Guvenilirlik", value: 90 }, { label: "Olceklenebilirlik", value: 70 }, { label: "Kullanilabilirlik", value: 85 }, { label: "Guvenlik", value: 75 }], categories: ["Hiz", "Guvenilirlik", "Olceklenebilirlik", "Kullanilabilirlik", "Guvenlik"] };
 
 /* ---- X-Data-Grid default props ---- */
 DEFAULT_PROPS.DataGridFilterChips = { filters: [{ id: "1", field: "status", label: "Durum", value: "Aktif" }, { id: "2", field: "role", label: "Rol", value: "Admin" }], onRemove: () => {}, onClearAll: () => {} };
-DEFAULT_PROPS.DataGridSelectionBar = { selectedCount: 3, onClearSelection: () => {}, children: React.createElement("button", { className: "rounded-xs bg-[var(--action-primary,#3b82f6)] px-3 py-1 text-xs text-white" }, "Toplu Sil") };
+DEFAULT_PROPS.DataGridSelectionBar = { selectedCount: 3, onClearSelection: () => {}, children: React.createElement("button", { className: "rounded-xs bg-[var(--action-primary))] px-3 py-1 text-xs text-text-inverse" }, "Toplu Sil") };
 
 /* ---- X-Editor default props ---- */
 DEFAULT_PROPS.RichTextEditor = { placeholder: "Icerik yazin...", minHeight: 200 };
@@ -3300,15 +3300,15 @@ DEFAULT_PROPS.RowGroupingGrid = { gridId: "demo-group", columnDefs: [{ field: "d
 /* ---- X-Scheduler (calendar components) ---- */
 DEFAULT_PROPS.SchedulerToolbar = { view: "week", date: new Date(), onViewChange: () => {}, onDateChange: () => {} };
 DEFAULT_PROPS.EventForm = { onSave: () => {}, onCancel: () => {} };
-DEFAULT_PROPS.Scheduler = { events: [{ id: "1", title: "Toplanti", start: new Date(2025, 2, 21, 10, 0), end: new Date(2025, 2, 21, 11, 30), color: "#3b82f6" }, { id: "2", title: "Ogle Yemegi", start: new Date(2025, 2, 21, 12, 0), end: new Date(2025, 2, 21, 13, 0), color: "#16a34a" }], view: "day", date: new Date(2025, 2, 21) };
-DEFAULT_PROPS.SchedulerEvent = { event: { id: "1", title: "Toplanti", start: new Date(2025, 2, 21, 10, 0), end: new Date(2025, 2, 21, 11, 30), color: "#3b82f6" } };
-DEFAULT_PROPS.AgendaView = { events: [{ id: "1", title: "Sabah Toplantisi", start: new Date(2025, 2, 21, 9, 0), end: new Date(2025, 2, 21, 10, 0), color: "#3b82f6" }, { id: "2", title: "Sprint Planlama", start: new Date(2025, 2, 21, 14, 0), end: new Date(2025, 2, 21, 15, 30), color: "#8b5cf6" }, { id: "3", title: "Kod Inceleme", start: new Date(2025, 2, 22, 11, 0), end: new Date(2025, 2, 22, 12, 0), color: "#16a34a" }], startDate: new Date(2025, 2, 21), endDate: new Date(2025, 2, 23) };
-DEFAULT_PROPS.ResourceView = { events: [{ id: "1", title: "Toplanti", start: new Date(2025, 2, 21, 10, 0), end: new Date(2025, 2, 21, 11, 0), resourceId: "r1", color: "#3b82f6" }], resources: [{ id: "r1", name: "Toplanti Odasi A" }, { id: "r2", name: "Toplanti Odasi B" }], date: new Date(2025, 2, 21) };
+DEFAULT_PROPS.Scheduler = { events: [{ id: "1", title: "Toplanti", start: new Date(2025, 2, 21, 10, 0), end: new Date(2025, 2, 21, 11, 30), color: "var(--action-primary)" }, { id: "2", title: "Ogle Yemegi", start: new Date(2025, 2, 21, 12, 0), end: new Date(2025, 2, 21, 13, 0), color: "var(--state-success-text)" }], view: "day", date: new Date(2025, 2, 21) };
+DEFAULT_PROPS.SchedulerEvent = { event: { id: "1", title: "Toplanti", start: new Date(2025, 2, 21, 10, 0), end: new Date(2025, 2, 21, 11, 30), color: "var(--action-primary)" } };
+DEFAULT_PROPS.AgendaView = { events: [{ id: "1", title: "Sabah Toplantisi", start: new Date(2025, 2, 21, 9, 0), end: new Date(2025, 2, 21, 10, 0), color: "var(--action-primary)" }, { id: "2", title: "Sprint Planlama", start: new Date(2025, 2, 21, 14, 0), end: new Date(2025, 2, 21, 15, 30), color: "var(--action-primary)" }, { id: "3", title: "Kod Inceleme", start: new Date(2025, 2, 22, 11, 0), end: new Date(2025, 2, 22, 12, 0), color: "var(--state-success-text)" }], startDate: new Date(2025, 2, 21), endDate: new Date(2025, 2, 23) };
+DEFAULT_PROPS.ResourceView = { events: [{ id: "1", title: "Toplanti", start: new Date(2025, 2, 21, 10, 0), end: new Date(2025, 2, 21, 11, 0), resourceId: "r1", color: "var(--action-primary)" }], resources: [{ id: "r1", name: "Toplanti Odasi A" }, { id: "r2", name: "Toplanti Odasi B" }], date: new Date(2025, 2, 21) };
 
 /* ---- X-Kanban (board components) ---- */
 DEFAULT_PROPS.KanbanBoard = { columns: [{ id: "todo", title: "Yapilacak" }, { id: "doing", title: "Yapiliyor" }, { id: "done", title: "Tamamlandi" }], cards: [{ id: "1", columnId: "todo", title: "API entegrasyonu", priority: "high", tags: ["backend"] }, { id: "2", columnId: "todo", title: "UI tasarimi", priority: "medium", tags: ["frontend"] }, { id: "3", columnId: "doing", title: "Test yazimi", priority: "low", tags: ["qa"] }, { id: "4", columnId: "done", title: "Dokumantasyon", priority: "low" }] };
 DEFAULT_PROPS.KanbanColumn = { column: { id: "todo", title: "Yapilacak" }, cards: [{ id: "1", columnId: "todo", title: "API entegrasyonu", priority: "high" }, { id: "2", columnId: "todo", title: "UI tasarimi", priority: "medium" }] };
-DEFAULT_PROPS.KanbanSwimlane = { swimlane: { id: "s1", title: "Sprint 42", color: "#3b82f6" }, columns: [{ id: "todo", title: "Yapilacak" }, { id: "doing", title: "Yapiliyor" }], cards: [{ id: "1", columnId: "todo", title: "Gorev 1", swimlaneId: "s1" }] };
+DEFAULT_PROPS.KanbanSwimlane = { swimlane: { id: "s1", title: "Sprint 42", color: "var(--action-primary)" }, columns: [{ id: "todo", title: "Yapilacak" }, { id: "doing", title: "Yapiliyor" }], cards: [{ id: "1", columnId: "todo", title: "Gorev 1", swimlaneId: "s1" }] };
 DEFAULT_PROPS.KanbanCardDetail = { card: { id: "1", title: "API Entegrasyonu", description: "REST API endpoint'lerini entegre et", columnId: "doing", priority: "high", assignee: "AY", tags: ["backend", "api"], dueDate: "2025-04-01" }, columns: [{ id: "todo", title: "Yapilacak" }, { id: "doing", title: "Yapiliyor" }, { id: "done", title: "Tamamlandi" }], onUpdate: () => {}, onClose: () => {} };
 
 /* ---- X-Editor (dialogs & sub-components) ---- */
@@ -3329,7 +3329,7 @@ DEFAULT_PROPS.HStack = { gap: "md", children: React.createElement(React.Fragment
 DEFAULT_PROPS.VStack = { gap: "md", children: React.createElement(React.Fragment, null, React.createElement("div", { className: "rounded-lg border border-border-subtle px-3 py-2 text-sm" }, "Oge 1"), React.createElement("div", { className: "rounded-lg border border-border-subtle px-3 py-2 text-sm" }, "Oge 2"), React.createElement("div", { className: "rounded-lg border border-border-subtle px-3 py-2 text-sm" }, "Oge 3")) };
 DEFAULT_PROPS.CardHeader = { children: React.createElement("div", { className: "text-sm font-semibold" }, "Kart Basligi") };
 DEFAULT_PROPS.CardBody = { children: React.createElement("div", { className: "text-sm" }, "Kart govde icerigi burada yer alir.") };
-DEFAULT_PROPS.CardFooter = { children: React.createElement("div", { className: "flex justify-end gap-2" }, React.createElement("button", { className: "rounded-lg border border-border-subtle px-3 py-1.5 text-xs" }, "Iptal"), React.createElement("button", { className: "rounded-lg bg-action-primary px-3 py-1.5 text-xs text-white" }, "Kaydet")) };
+DEFAULT_PROPS.CardFooter = { children: React.createElement("div", { className: "flex justify-end gap-2" }, React.createElement("button", { className: "rounded-lg border border-border-subtle px-3 py-1.5 text-xs" }, "Iptal"), React.createElement("button", { className: "rounded-lg bg-action-primary px-3 py-1.5 text-xs text-text-inverse" }, "Kaydet")) };
 DEFAULT_PROPS.Slot = { children: React.createElement("div", { className: "rounded-lg border border-dashed border-border-subtle p-4 text-sm text-center text-text-secondary" }, "Slot icerigi — alt bilesenler burada birlestirilir") };
 
 /* ---- Components (missing) ---- */
@@ -3359,7 +3359,7 @@ DEFAULT_PROPS.FieldRegistry = { fields: [{ id: "text", type: "text", label: "Met
 /* ---- Enterprise (missing) ---- */
 DEFAULT_PROPS.AgingBuckets = { title: "Vade Analizi", buckets: [{ label: "0-30 gun", value: 45200, count: 12 }, { label: "31-60 gun", value: 23100, count: 8 }, { label: "61-90 gun", value: 12800, count: 5 }, { label: "90+ gun", value: 8400, count: 3 }] };
 DEFAULT_PROPS.ApprovalWorkflow = { title: "Onay Is Akisi", steps: [{ id: "s1", label: "Talep", status: "completed", actor: "Ahmet Y." }, { id: "s2", label: "Yonetici Onayi", status: "completed", actor: "Elif D." }, { id: "s3", label: "Finans Onayi", status: "current", actor: "Mehmet K." }, { id: "s4", label: "CEO Onayi", status: "pending" }] };
-DEFAULT_PROPS.BulletChart = { title: "Performans", value: 275, target: 300, max: 400, ranges: [{ value: 150, color: "var(--state-error-bg,#fecaca)" }, { value: 250, color: "var(--state-warning-bg,#fef3c7)" }, { value: 400, color: "var(--state-success-bg,#dcfce7)" }] };
+DEFAULT_PROPS.BulletChart = { title: "Performans", value: 275, target: 300, max: 400, ranges: [{ value: 150, color: "var(--state-error-bg)" }, { value: 250, color: "var(--state-warning-bg)" }, { value: 400, color: "var(--state-success-bg))" }] };
 DEFAULT_PROPS.AuditLog = { title: "Denetim Kayitlari", entries: [{ id: "1", action: "Kullanici olusturuldu", actor: "Sistem", timestamp: "2024-03-15 09:00", level: "info" }, { id: "2", action: "Rol degistirildi", actor: "Ahmet Y.", timestamp: "2024-03-15 10:30", level: "warning" }, { id: "3", action: "Erisim reddedildi", actor: "Bilinmeyen", timestamp: "2024-03-15 11:15", level: "error" }] };
 DEFAULT_PROPS.TenantSwitcher = { tenants: [{ id: "t1", name: "Acme A.S.", active: true }, { id: "t2", name: "Beta Ltd." }, { id: "t3", name: "Gamma Holding" }] };
 DEFAULT_PROPS.OnboardingChecklist = { title: "Baslangic Rehberi", items: [{ id: "1", label: "Hesap olustur", completed: true }, { id: "2", label: "Profil tamamla", completed: true }, { id: "3", label: "Ekip uyeleri ekle", completed: false }, { id: "4", label: "Ilk projeyi baslat", completed: false }] };
@@ -3371,7 +3371,7 @@ DEFAULT_PROPS.AutoComplete = { label: "Sehir", placeholder: "Sehir ara...", opti
 DEFAULT_PROPS.Calendar = { defaultDate: new Date(2025, 2, 21) };
 DEFAULT_PROPS.Carousel = { items: [{ id: "1", content: React.createElement("div", { className: "flex h-40 items-center justify-center rounded-lg bg-surface-muted text-sm" }, "Slayt 1") }, { id: "2", content: React.createElement("div", { className: "flex h-40 items-center justify-center rounded-lg bg-surface-muted text-sm" }, "Slayt 2") }, { id: "3", content: React.createElement("div", { className: "flex h-40 items-center justify-center rounded-lg bg-surface-muted text-sm" }, "Slayt 3") }] };
 DEFAULT_PROPS.Cascader = { label: "Kategori", placeholder: "Kategori secin...", options: [{ value: "elektronik", label: "Elektronik", children: [{ value: "telefon", label: "Telefon" }, { value: "bilgisayar", label: "Bilgisayar" }] }, { value: "giyim", label: "Giyim", children: [{ value: "erkek", label: "Erkek" }, { value: "kadin", label: "Kadin" }] }] };
-DEFAULT_PROPS.ColorPicker = { label: "Renk", defaultValue: "#3b82f6", description: "Tema rengi secin." };
+DEFAULT_PROPS.ColorPicker = { label: "Renk", defaultValue: "var(--action-primary)", description: "Tema rengi secin." };
 DEFAULT_PROPS.DateRangePicker = { label: "Tarih Araligi", startPlaceholder: "Baslangic", endPlaceholder: "Bitis", description: "Rapor tarih araligini secin." };
 DEFAULT_PROPS.FileUploadZone = { label: "Dosya Yukle", accept: ".pdf,.png,.jpg,.xlsx", maxSize: 10485760, description: "Dosyalari surukleyip birakin veya secin. Maks 10MB." };
 DEFAULT_PROPS.FloatButton = { icon: React.createElement("span", { style: { fontSize: 18 } }, "+"), label: "Ekle" };

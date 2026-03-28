@@ -160,7 +160,7 @@ export const BadPage = (props) => {
   }, []);
 
   return (
-    <div style={{ color: '#ff0000' }}>
+    <div style={{ color: 'var(--state-danger-text)' }}>
       <h1> Bu bir cok uzun Turkce test cumlesidir </h1>
       <button>click me</button>
       <input type="text" />
@@ -182,7 +182,7 @@ export const DashboardCard = forwardRef<HTMLDivElement, Props>((props, ref) => {
   return (
     <Card ref={ref}>
       <Button aria-label="Action">Click</Button>
-      <div style={{ color: '#333' }}>
+      <div style={{ color: 'var(--text-primary)' }}>
         <span className="ml-2">Content</span>
       </div>
     </Card>

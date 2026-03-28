@@ -24,8 +24,8 @@ const getCSSVar = (varName: string, fallback: string): string => {
 
 export const getChartThemeOverrides = (): ChartThemeOverrides => {
   const fontFamily = getCSSVar('--font-family-sans', 'Inter, system-ui, sans-serif');
-  const textPrimary = getCSSVar('--text-primary', '#1e293b');
-  const textSecondary = getCSSVar('--text-secondary', '#64748b');
+  const textPrimary = getCSSVar('--text-primary', 'var(--text-primary)');
+  const textSecondary = getCSSVar('--text-secondary', 'var(--text-secondary)');
 
   return {
     common: {
@@ -42,14 +42,14 @@ export const getChartThemeOverrides = (): ChartThemeOverrides => {
 };
 
 export const getChartColorPalette = (): string[] => [
-  getCSSVar('--action-primary', '#3b82f6'),
-  getCSSVar('--state-success-text', '#16a34a'),
-  getCSSVar('--state-warning-text', '#d97706'),
-  getCSSVar('--state-error-text', '#dc2626'),
-  getCSSVar('--state-info-text', '#0891b2'),
-  getCSSVar('--action-secondary', '#8b5cf6'),
-  '#f59e0b',
-  '#ec4899',
-  '#06b6d4',
-  '#84cc16',
+  getCSSVar('--action-primary', 'var(--action-primary)'),
+  getCSSVar('--state-success-text', 'var(--state-success-text)'),
+  getCSSVar('--state-warning-text', 'var(--state-warning-text)'),
+  getCSSVar('--state-error-text', 'var(--state-danger-text)'),
+  getCSSVar('--state-info-text', 'var(--state-info-text)'),
+  getCSSVar('--action-secondary', 'var(--action-primary)'),
+  'var(--state-warning-text)',
+  'var(--state-danger-text)',
+  'var(--state-info-text)',
+  'var(--state-success-text)',
 ];

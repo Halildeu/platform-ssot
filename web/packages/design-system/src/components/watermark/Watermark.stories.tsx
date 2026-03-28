@@ -51,7 +51,7 @@ export const CustomStyle: Story = {
     rotate: -30,
     fontSize: 20,
     opacity: 0.25,
-    fontColor: '#3b82f6',
+    fontColor: 'var(--action-primary)',
     children: (
       <div style={{ height: 200, padding: 24, border: '1px solid var(--border-subtle)', borderRadius: 12 }}>
         <p style={{ fontSize: 14 }}>Ozel stilli filigran.</p>

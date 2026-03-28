@@ -24,15 +24,15 @@ type SearchResult = {
 };
 
 const TYPE_BADGE_STYLES: Record<SearchResult["type"], string> = {
-  token: "bg-rose-100 text-rose-700",
-  primitive: "bg-teal-100 text-teal-700",
+  token: "bg-state-danger-bg text-state-danger-text",
+  primitive: "bg-state-success-bg text-state-success-text",
   component: "bg-state-info-bg text-state-info-text",
   pattern: "bg-state-warning-bg text-state-warning-text",
-  advanced: "bg-orange-100 text-orange-700",
-  api: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300",
+  advanced: "bg-state-warning-bg text-state-warning-text",
+  api: "bg-state-info-bg text-state-info-text dark:bg-state-info-text/30 dark:text-state-info-text",
   recipe: "bg-state-success-bg text-state-success-text",
-  ecosystem: "bg-purple-100 text-purple-700",
-  command: "bg-indigo-100 text-indigo-700",
+  ecosystem: "bg-action-primary/10 text-action-primary",
+  command: "bg-action-primary/10 text-action-primary",
   recent: "bg-[var(--surface-muted)] text-[var(--text-secondary)]",
 };
 
@@ -460,7 +460,7 @@ export const DesignLabSearchModal: React.FC<DesignLabSearchModalProps> = ({
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-xs"
+        className="absolute inset-0 bg-surface-inverse/40 backdrop-blur-xs"
         onClick={onClose}
         aria-hidden
       />

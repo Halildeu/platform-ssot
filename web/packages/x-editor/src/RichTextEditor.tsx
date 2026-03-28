@@ -63,9 +63,9 @@ export interface RichTextEditorProps {
 /* ------------------------------------------------------------------ */
 
 const wrapperStyles: React.CSSProperties = {
-  border: '1px solid var(--border-subtle, #e2e8f0)',
+  border: '1px solid var(--border-subtle))',
   borderRadius: '8px',
-  backgroundColor: 'var(--surface-default, #ffffff)',
+  backgroundColor: 'var(--surface-default))',
   overflow: 'hidden',
   position: 'relative',
 };
@@ -80,7 +80,7 @@ const editorStyles = (
   overflowY: maxHeight ? 'auto' : undefined,
   padding: '12px 16px',
   outline: 'none',
-  color: 'var(--text-primary, #1e293b)',
+  color: 'var(--text-primary))',
   fontSize: '14px',
   lineHeight: 1.6,
   cursor: readOnly ? 'default' : 'text',
@@ -91,7 +91,7 @@ const placeholderStyles: React.CSSProperties = {
   position: 'absolute',
   top: '12px',
   left: '16px',
-  color: 'var(--text-muted, #94a3b8)',
+  color: 'var(--text-muted))',
   fontSize: '14px',
   lineHeight: '1.6',
   pointerEvents: 'none',

@@ -1631,7 +1631,7 @@ Yedi renk varyanti, sekiz boyut, dort font agirligi, \`truncate\`, \`lineClamp\`
 Baslik gorunumlu bir metin icin \`as="span"\` kullanmak; \`as="h2"\` gibi dogru elemani secin.
 
 **❌ Dogrudan stil vermek yerine token kullanmamak**
-\`className="text-red-500"\` yerine \`variant="error"\` kullanin; tema degisimlerinde tutarlilik saglanir.
+\`className="text-state-danger-text"\` yerine \`variant="error"\` kullanin; tema degisimlerinde tutarlilik saglanir.
 
 **❌ Her yerde \`weight="bold"\` kullanmak**
 Asiri kalin metin okunabilirligi dusurur. Hiyerarsi icin \`weight\` ve \`size\` kombinasyonlarini kullanin.

@@ -17,7 +17,7 @@ function AnimatePresenceDemo({ exitDuration = 200 }: { exitDuration?: number }) 
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       <button
         onClick={addItem}
-        style={{ padding: '6px 14px', background: '#22c55e', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', width: 'fit-content' }}
+        style={{ padding: '6px 14px', background: 'var(--state-success-text)', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', width: 'fit-content' }}
       >
         Add Item
       </button>
@@ -28,8 +28,8 @@ function AnimatePresenceDemo({ exitDuration = 200 }: { exitDuration?: number }) 
             className="animate-in fade-in-0 slide-in-from-left-2"
             style={{
               padding: '12px 16px',
-              background: '#f0fdf4',
-              border: '1px solid #bbf7d0',
+              background: 'var(--state-success-bg)',
+              border: '1px solid var(--state-success-bg)',
               borderRadius: 8,
               display: 'flex',
               justifyContent: 'space-between',
@@ -40,7 +40,7 @@ function AnimatePresenceDemo({ exitDuration = 200 }: { exitDuration?: number }) 
             {item}
             <button
               onClick={() => removeItem(i)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', fontSize: 16 }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--state-danger-text)', fontSize: 16 }}
             >
               x
             </button>
