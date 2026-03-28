@@ -5,7 +5,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Filter, X, Trash2, Check } from 'lucide-react';
 import type { ColDef, GridApi } from 'ag-grid-community';
-import { useFilterBuilder } from './useFilterBuilder';
+import { useFilterBuilder, createEmptyGroup } from './useFilterBuilder';
 import { treeToFilterModel, filterModelToTree } from './filterModelConverter';
 import { FilterGroupNode } from './FilterGroupNode';
 
