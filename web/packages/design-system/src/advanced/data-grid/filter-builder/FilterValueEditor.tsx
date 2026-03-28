@@ -25,6 +25,10 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
   setValues = [],
   onChange,
 }) => {
+  // Hooks must be called unconditionally at top level
+  const [pasteMode, setPasteMode] = React.useState(false);
+  const [pasteText, setPasteText] = React.useState('');
+
   // Blank/notBlank operators need no value
   if (operator === 'blank' || operator === 'notBlank') {
     return <span className="text-[11px] italic text-text-subtle">Değer gerekmiyor</span>;
@@ -101,8 +105,6 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
 
     case 'set': {
       const selected = Array.isArray(value) ? (value as string[]) : [];
-      const [pasteMode, setPasteMode] = React.useState(false);
-      const [pasteText, setPasteText] = React.useState('');
 
       const handlePaste = () => {
         if (!pasteText.trim()) return;
