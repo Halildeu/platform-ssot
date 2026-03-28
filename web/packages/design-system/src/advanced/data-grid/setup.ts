@@ -34,6 +34,10 @@ import {
   RowNumbersModule,
   PinnedRowModule,
   SparklinesModule,
+  MasterDetailModule,
+  RichSelectModule,
+  HighlightChangesModule,
+  GridStateModule,
 } from "ag-grid-enterprise";
 import { setupAgGridLicense } from "../../lib/ag-grid-license";
 
@@ -118,6 +122,22 @@ ModuleRegistry.registerModules([
 
   // Sparklines (mini inline charts in cells)
   SparklinesModule,
+
+  // Master-Detail (expand row to show child grid)
+  // Activate per-grid: masterDetail: true + detailCellRendererParams in gridOptions
+  MasterDetailModule,
+
+  // Rich Select (dropdown cell editor with search/grouping)
+  // Activate per-column: cellEditor: 'agRichSelectCellEditor' in colDef
+  RichSelectModule,
+
+  // Highlight Changes (flash cells on value update)
+  // Activate per-grid: enableCellChangeFlash: true in gridOptions
+  HighlightChangesModule,
+
+  // Grid State (serialize/restore full grid state)
+  // Use: gridApi.getState() / initialState prop
+  GridStateModule,
 
   // Integrated Charts (AG Charts 12.3.1)
   // Enables chart creation from grid range selection.
