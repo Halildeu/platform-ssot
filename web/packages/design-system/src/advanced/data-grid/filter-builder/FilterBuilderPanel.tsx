@@ -5,93 +5,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Filter, X, Trash2, Check } from 'lucide-react';
 import type { ColDef, GridApi } from 'ag-grid-community';
-import { useFilterBuilder, createEmptyGroup } from './useFilterBuilder';
+import { useFilterBuilder } from './useFilterBuilder';
 import { treeToFilterModel, filterModelToTree } from './filterModelConverter';
 import { FilterGroupNode } from './FilterGroupNode';
-
-/**
- * Extract comma-separated text values as multiSearch terms.
- * Returns a cleaned root (single values only) + array of multi-search terms.
- */
-function extractMultiValueTerms(group: import('./useFilterBuilder').FilterGroup): {
-  singleValueRoot: import('./useFilterBuilder').FilterGroup;
-  multiSearchTerms: string[];
-} {
-  const terms: string[] = [];
-  const newChildren: import('./useFilterBuilder').FilterNode[] = [];
-
-  for (const child of group.children) {
-    if (child.type === 'group') {
-      const sub = extractMultiValueTerms(child);
-      terms.push(...sub.multiSearchTerms);
-      newChildren.push(sub.singleValueRoot);
-    } else if (
-      child.type === 'condition' &&
-      child.filterType === 'text' &&
-      typeof child.value === 'string' &&
-      child.value.includes(',')
-    ) {
-      const parts = child.value.split(',').map((s) => s.trim()).filter(Boolean);
-      if (parts.length > 1) {
-        terms.push(...parts);
-        // Don't add to filterModel — handled via multiSearch param
-      } else {
-        newChildren.push(child);
-      }
-    } else {
-      newChildren.push(child);
-    }
-  }
-
-  return {
-    singleValueRoot: { ...group, children: newChildren },
-    multiSearchTerms: terms,
-  };
-}
-
-/**
- * Expand comma-separated text values into separate OR conditions.
- * "Admin 1, Admin User" → OR group with 2 conditions.
- */
-function expandMultiValueConditions(group: import('./useFilterBuilder').FilterGroup): import('./useFilterBuilder').FilterGroup {
-  const newChildren: import('./useFilterBuilder').FilterNode[] = [];
-
-  for (const child of group.children) {
-    if (child.type === 'group') {
-      newChildren.push(expandMultiValueConditions(child));
-    } else if (
-      child.type === 'condition' &&
-      child.filterType === 'text' &&
-      typeof child.value === 'string' &&
-      child.value.includes(',')
-    ) {
-      const parts = child.value.split(',').map((s) => s.trim()).filter(Boolean);
-      if (parts.length > 1) {
-        // Create an OR sub-group with one condition per value
-        const orGroup: import('./useFilterBuilder').FilterGroup = {
-          type: 'group',
-          id: `${child.id}_expanded`,
-          logic: 'OR',
-          children: parts.map((part, i) => ({
-            type: 'condition' as const,
-            id: `${child.id}_${i}`,
-            colId: child.colId,
-            filterType: child.filterType,
-            operator: child.operator,
-            value: part,
-          })),
-        };
-        newChildren.push(orGroup);
-      } else {
-        newChildren.push(child);
-      }
-    } else {
-      newChildren.push(child);
-    }
-  }
-
-  return { ...group, children: newChildren };
-}
 
 export interface FilterBuilderPanelProps {
   gridApi: GridApi | null;
@@ -118,28 +34,6 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
       const imported = Object.keys(model).length > 0
         ? filterModelToTree(model, columnDefs)
         : createEmptyGroup();
-
-      // Re-inject multiSearch terms as a text condition with comma-separated values
-      const multiSearch = (gridApi as any).__multiSearch as string | undefined;
-      if (multiSearch) {
-        const terms = multiSearch.split('|').filter(Boolean);
-        if (terms.length > 0) {
-          // Find which colId was used — default to first text column
-          const textCol = columnDefs.find((c) =>
-            c.field && c.filter !== 'agSetColumnFilter' && c.filter !== 'agNumberColumnFilter' && c.filter !== 'agDateColumnFilter'
-          );
-          const colId = textCol?.field ?? 'fullName';
-          imported.children.push({
-            type: 'condition' as const,
-            id: `fb_multi_${Date.now()}`,
-            colId,
-            filterType: 'text' as const,
-            operator: 'contains',
-            value: terms.join(', '),
-          });
-        }
-      }
-
       setRoot(imported);
     }
     prevOpenRef.current = open;
@@ -160,18 +54,7 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
 
   const handleApply = useCallback(() => {
     if (!gridApi) return;
-
-    // Extract multi-value text conditions → send as multiSearch param to backend
-    const { singleValueRoot, multiSearchTerms } = extractMultiValueTerms(root);
-    const model = treeToFilterModel(singleValueRoot);
-
-    // Set multiSearch as a custom grid option that SSRM datasource can read
-    if (multiSearchTerms.length > 0) {
-      (gridApi as any).__multiSearch = multiSearchTerms.join('|');
-    } else {
-      delete (gridApi as any).__multiSearch;
-    }
-
+    const model = treeToFilterModel(root);
     gridApi.setFilterModel(model);
     gridApi.onFilterChanged();
     onClose();

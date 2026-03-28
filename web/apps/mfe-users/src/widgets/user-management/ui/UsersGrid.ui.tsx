@@ -569,21 +569,28 @@ const UsersGrid: React.FC<UsersGridProps> = ({
                 if (roleFilter?.values && roleFilter.values.length > 0) {
                   next.role = String(roleFilter.values[0]) as UsersQueryParams['role'];
                 }
-                const nameFilter = (model as typeof params.request.filterModel).fullName as { filter?: unknown } | undefined;
+                const nameFilter = (model as typeof params.request.filterModel).fullName as { filter?: unknown; operator?: string; conditions?: Array<{ filter?: unknown }> } | undefined;
                 const emailFilter = (model as typeof params.request.filterModel).email as { filter?: unknown } | undefined;
-                const textFilterValue = nameFilter?.filter ?? emailFilter?.filter;
-                if (typeof textFilterValue === 'string' && textFilterValue.trim().length > 0) {
-                  next.search = textFilterValue.trim();
+                // Check for multi-condition OR (from filter builder bulk paste)
+                if (nameFilter?.operator === 'OR' && Array.isArray(nameFilter.conditions)) {
+                  const terms = nameFilter.conditions.map((c) => String(c.filter ?? '')).filter(Boolean);
+                  if (terms.length > 0) {
+                    (next as any).multiSearch = terms.join('|');
+                  }
+                } else {
+                  const textFilterValue = nameFilter?.filter ?? emailFilter?.filter;
+                  if (typeof textFilterValue === 'string' && textFilterValue.trim().length > 0) {
+                    // Check for comma-separated (from chip paste)
+                    if (textFilterValue.includes(',')) {
+                      (next as any).multiSearch = textFilterValue.split(',').map((s) => s.trim()).filter(Boolean).join('|');
+                    } else {
+                      next.search = textFilterValue.trim();
+                    }
+                  }
                 }
                 return next;
               },
             }) as UsersQueryParams;
-
-            // Attach multiSearch from filter builder (if any)
-            const multiSearch = (params.api as any)?.__multiSearch;
-            if (multiSearch) {
-              (baseParams as any).multiSearch = multiSearch;
-            }
 
             const response = await fetchUsers(baseParams);
             const reason = response.meta?.reason;
