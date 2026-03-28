@@ -34,50 +34,95 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
     return <span className="text-[11px] italic text-text-subtle">Değer gerekmiyor</span>;
   }
 
+  // Bulk paste helper for text/number
+  const renderBulkPaste = (inputEl: React.ReactNode) => (
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center gap-1">
+        <div className="min-w-0 flex-1">{inputEl}</div>
+        <button
+          type="button"
+          onClick={() => setPasteMode(!pasteMode)}
+          className={`shrink-0 rounded p-1.5 text-[10px] transition ${
+            pasteMode ? 'bg-action-primary text-white' : 'bg-surface-muted text-text-secondary hover:bg-surface-raised'
+          }`}
+          title="Excel'den toplu yapıştır"
+        >
+          📋
+        </button>
+      </div>
+      {pasteMode && (
+        <div className="flex flex-col gap-1">
+          <textarea
+            className={`${INPUT_CLASS} h-16 resize-none py-1.5`}
+            placeholder="Excel'den yapıştırın... (satır, virgül veya tab ile)"
+            value={pasteText}
+            onChange={(e) => setPasteText(e.target.value)}
+            autoFocus
+          />
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] text-text-subtle">
+              {pasteText.split(/[\n\r\t;,]+/).filter((s) => s.trim()).length} değer
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                const values = pasteText.split(/[\n\r\t;,]+/).map((s) => s.trim()).filter(Boolean);
+                if (values.length > 0) {
+                  onChange(values.join(', '));
+                }
+                setPasteText('');
+                setPasteMode(false);
+              }}
+              disabled={!pasteText.trim()}
+              className="rounded bg-action-primary px-2 py-0.5 text-[10px] font-semibold text-white disabled:opacity-50"
+            >
+              Uygula
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
   switch (filterType) {
     case 'text':
-      return (
+      return renderBulkPaste(
         <input
           type="text"
           className={INPUT_CLASS}
           placeholder="Değer girin..."
           value={String(value ?? '')}
           onChange={(e) => onChange(e.target.value)}
-          onPaste={(e) => {
-            const text = e.clipboardData?.getData('text') ?? '';
-            const lines = text.split(/[\n\r\t]+/).map((s) => s.trim()).filter(Boolean);
-            if (lines.length > 1) {
-              // Multi-line paste → join with pipe for display, actual filtering uses first value
-              e.preventDefault();
-              onChange(lines.join(', '));
-            }
-          }}
-        />
+        />,
       );
 
     case 'number':
-      return (
+      return operator === 'inRange' ? (
         <div className="flex items-center gap-1.5">
           <input
             type="number"
             className={INPUT_CLASS}
-            placeholder="Değer"
+            placeholder="Başlangıç"
             value={value != null ? String(value) : ''}
             onChange={(e) => onChange(e.target.value ? Number(e.target.value) : null, valueTo)}
           />
-          {operator === 'inRange' && (
-            <>
-              <span className="text-[10px] text-text-subtle">—</span>
-              <input
-                type="number"
-                className={INPUT_CLASS}
-                placeholder="Bitiş"
-                value={valueTo != null ? String(valueTo) : ''}
-                onChange={(e) => onChange(value, e.target.value ? Number(e.target.value) : null)}
-              />
-            </>
-          )}
+          <span className="text-[10px] text-text-subtle">—</span>
+          <input
+            type="number"
+            className={INPUT_CLASS}
+            placeholder="Bitiş"
+            value={valueTo != null ? String(valueTo) : ''}
+            onChange={(e) => onChange(value, e.target.value ? Number(e.target.value) : null)}
+          />
         </div>
+      ) : renderBulkPaste(
+        <input
+          type="number"
+          className={INPUT_CLASS}
+          placeholder="Değer"
+          value={value != null ? String(value) : ''}
+          onChange={(e) => onChange(e.target.value ? Number(e.target.value) : null)}
+        />,
       );
 
     case 'date':
