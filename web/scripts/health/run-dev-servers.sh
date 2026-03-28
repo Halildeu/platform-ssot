@@ -26,8 +26,7 @@ WEB_BACKEND_GUARD_REPORT="${WEB_BACKEND_GUARD_REPORT:-$REPO_ROOT/.cache/reports/
 WEB_BACKEND_WAIT_SECONDS="${WEB_BACKEND_WAIT_SECONDS:-120}"
 WEB_BACKEND_POLL_INTERVAL="${WEB_BACKEND_POLL_INTERVAL:-2}"
 BACKEND_GUARD_SCRIPT="$ROOT_DIR/scripts/health/check-backend-runtime-guard.py"
-
-capture_session_env_json() {
+SESSION_ENV_JSON="$(
   python3 <<'PY'
 import json
 import os
@@ -51,38 +50,7 @@ for key in keys:
         payload[key] = value
 print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
 PY
-}
-
-apply_env_default() {
-  local key="$1"
-  local value="$2"
-  if [[ -z "${!key:-}" ]]; then
-    export "$key=$value"
-  fi
-}
-
-apply_profile_env_defaults() {
-  case "$WEB_RUNTIME_PROFILE" in
-    shell-only)
-      apply_env_default AUTH_MODE "permitAll"
-      apply_env_default VITE_AUTH_MODE "permitAll"
-      apply_env_default VITE_ENABLE_FAKE_AUTH "1"
-      apply_env_default VITE_FAKE_AUTH_PERMISSIONS "THEME_ADMIN"
-      apply_env_default VITE_SHELL_SKIP_REMOTE_SERVICES "1"
-      apply_env_default SHELL_SKIP_REMOTE_SERVICES "1"
-      ;;
-    auth-business-routes)
-      apply_env_default AUTH_MODE "permitAll"
-      apply_env_default VITE_AUTH_MODE "permitAll"
-      apply_env_default VITE_ENABLE_FAKE_AUTH "1"
-      apply_env_default VITE_FAKE_AUTH_PERMISSIONS "THEME_ADMIN,access-read,audit-read,VIEW_REPORTS,user-read,user-update"
-      apply_env_default VITE_SHELL_ENABLE_SUGGESTIONS_REMOTE "0"
-      apply_env_default SHELL_ENABLE_SUGGESTIONS_REMOTE "0"
-      apply_env_default VITE_SHELL_ENABLE_ETHIC_REMOTE "0"
-      apply_env_default SHELL_ENABLE_ETHIC_REMOTE "0"
-      ;;
-  esac
-}
+)"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -96,9 +64,6 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
-
-apply_profile_env_defaults
-SESSION_ENV_JSON="$(capture_session_env_json)"
 
 mkdir -p "$LOG_DIR" "$LOG_ARCHIVE_DIR" "$STATE_DIR"
 : > "$SESSION_TSV"
@@ -276,12 +241,6 @@ if should_wait_for_backend_guard && [[ -f "$BACKEND_GUARD_SCRIPT" ]]; then
   echo "[ok] Backend guard hazir: $WEB_BACKEND_GUARD_REPORT"
 else
   echo "[info] Backend guard bekleme atlandi (WEB_RUNTIME_REQUIRE_BACKEND_GUARD=$WEB_RUNTIME_REQUIRE_BACKEND_GUARD, profile=$WEB_RUNTIME_PROFILE)"
-fi
-
-# ── Reuse guard: if shell port is already listening, skip restart ──
-if [[ "${WEB_RUNTIME_FORCE_RESTART:-0}" != "1" ]] && lsof -iTCP:3000 -sTCP:LISTEN -P -n >/dev/null 2>&1; then
-  echo "[run-web] port 3000 zaten dinleniyor — mevcut server kullaniliyor (yeniden baslatmak icin WEB_RUNTIME_FORCE_RESTART=1)"
-  exit 0
 fi
 
 WEB_RUNTIME_STOP_SILENT=1 "$ROOT_DIR/scripts/health/stop-dev-servers.sh" >/dev/null 2>&1 || true
