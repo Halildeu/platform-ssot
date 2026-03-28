@@ -10,7 +10,7 @@
  * This is the main public API for grid consumers in the monorepo.
  * AG Grid v34.3.1 compatible.
  */
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import type {
   ColDef as AgColDef,
   GridOptions as AgGridOptions,
@@ -311,6 +311,32 @@ export function EntityGridTemplate<
   const [density, setDensity] = useState<GridDensity>("comfortable");
   const [activeVariantId, setActiveVariantId] = useState<string | null>(initialVariantId ?? null);
   const gridShellRef = useRef<GridShellApi<RowData>>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isContainerFullscreen, setIsContainerFullscreen] = useState(false);
+
+  // ── Fullscreen (grid-scoped) ─────────────────────────────────
+  const handleToggleFullscreen = useCallback(() => {
+    if (typeof document === 'undefined') return;
+    const el = containerRef.current;
+    if (!el) return;
+
+    if (!document.fullscreenElement) {
+      el.requestFullscreen?.().catch(() => {});
+    } else {
+      document.exitFullscreen?.().catch(() => {});
+    }
+  }, []);
+
+  useEffect(() => {
+    const handler = () => {
+      setIsContainerFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handler);
+    return () => document.removeEventListener('fullscreenchange', handler);
+  }, []);
+
+  const effectiveFullscreen = isFullscreen || isContainerFullscreen;
+  const effectiveFullscreenHandler = onRequestFullscreen ?? handleToggleFullscreen;
 
   // ── Datasource mode adapter ────────────────────────────────────
   const { rowModelType, attachDatasource } = useDatasourceModeAdapter({
@@ -451,8 +477,9 @@ export function EntityGridTemplate<
 
   return (
     <div
+      ref={containerRef}
       data-access-state={accessState.state}
-      className={`relative flex flex-col ${accessStyles(accessState.state)}`}
+      className={`relative flex flex-col ${isContainerFullscreen ? 'h-screen w-screen bg-surface-default p-4' : ''} ${accessStyles(accessState.state)}`}
       data-component="entity-grid-template"
       data-grid-id={gridId}
       title={accessReason}
@@ -467,8 +494,6 @@ export function EntityGridTemplate<
         onDensityChange={setDensity}
         isServerMode={isServerMode}
         quickFilterInitialValue={quickFilterInitialValue}
-        onRequestFullscreen={onRequestFullscreen}
-        isFullscreen={isFullscreen}
         exportConfig={exportConfig}
         messages={toolbarMessages}
         extras={toolbarExtras}
