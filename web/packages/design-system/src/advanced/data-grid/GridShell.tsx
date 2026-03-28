@@ -236,7 +236,7 @@ function GridShellInner<RowData = unknown>(
           rowGroupPanelShow="always"
           enableRangeSelection
           groupDefaultExpanded={0}
-          groupTotalRow="bottom"
+          // groupTotalRow="bottom" — disabled: duplicates group header values
           pagination={rowModelType === "serverSide"}
           paginationPageSize={rowModelType === "serverSide" ? 50 : undefined}
           paginationPageSizeSelector={rowModelType === "serverSide" ? [25, 50, 100, 200] : undefined}
