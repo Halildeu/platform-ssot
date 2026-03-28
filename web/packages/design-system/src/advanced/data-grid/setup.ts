@@ -27,6 +27,9 @@ import {
   IntegratedChartsModule,
   RowGroupingModule,
   RowGroupingPanelModule,
+  StatusBarModule,
+  PivotModule,
+  RangeSelectionModule,
 } from "ag-grid-enterprise";
 import { setupAgGridLicense } from "../../lib/ag-grid-license";
 
@@ -90,6 +93,15 @@ ModuleRegistry.registerModules([
   // Row Grouping (drag column headers to group panel)
   RowGroupingModule,              // grouping engine
   RowGroupingPanelModule,         // drop zone panel above headers
+
+  // Pivot (rotate grouped data into columns)
+  PivotModule,                    // pivot mode engine
+
+  // Status Bar (row count, selection count, aggregations)
+  StatusBarModule,                // bottom status bar
+
+  // Range Selection (Excel-like cell range select + aggregation)
+  RangeSelectionModule,           // cell range selection
 
   // Integrated Charts (AG Charts 12.3.1)
   // Enables chart creation from grid range selection.

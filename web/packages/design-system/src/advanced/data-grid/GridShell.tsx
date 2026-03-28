@@ -105,6 +105,8 @@ const DEFAULT_COL_DEF: ColDef = {
   floatingFilter: true,
   resizable: true,
   enableRowGroup: true,
+  enablePivot: true,
+  enableValue: true,
   minWidth: 120,
   flex: 1,
   menuTabs: ["generalMenuTab", "filterMenuTab", "columnsMenuTab"],
@@ -232,9 +234,17 @@ function GridShellInner<RowData = unknown>(
           rowSelection={rowSelection}
           animateRows={animateRows}
           rowGroupPanelShow="always"
+          enableRangeSelection
           enableAdvancedFilter
           enableCharts={enableCharts}
           chartThemeOverrides={chartThemeOverrides}
+          statusBar={{
+            statusPanels: [
+              { statusPanel: 'agTotalAndFilteredRowCountComponent', align: 'left' },
+              { statusPanel: 'agSelectedRowCountComponent', align: 'left' },
+              { statusPanel: 'agAggregationComponent', align: 'right' },
+            ],
+          }}
           popupParent={typeof document !== "undefined" ? document.body : undefined}
           onGridReady={handleGridReady}
           onRowDoubleClicked={handleRowDoubleClicked}
