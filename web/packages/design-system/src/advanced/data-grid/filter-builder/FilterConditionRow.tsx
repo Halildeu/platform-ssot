@@ -213,7 +213,7 @@ export const FilterConditionRow: React.FC<FilterConditionRowProps> = ({
             onClick={() => onToggleLock(condition.id)}
             className={[
               'rounded p-1 transition',
-              condition.locked ? 'text-amber-600 hover:bg-amber-50' : 'text-text-subtle hover:bg-surface-muted hover:text-amber-600',
+              condition.locked ? 'text-state-warning-text hover:bg-state-warning-bg' : 'text-text-subtle hover:bg-surface-muted hover:text-state-warning-text',
             ].join(' ')}
             title={condition.locked ? 'Kilidi aç' : 'Kilitle'}
           >
@@ -227,7 +227,7 @@ export const FilterConditionRow: React.FC<FilterConditionRowProps> = ({
             type="button"
             onClick={() => onRemove(condition.id)}
             disabled={isLocked}
-            className="rounded p-1 text-text-subtle hover:bg-rose-50 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded p-1 text-text-subtle hover:bg-state-danger-bg hover:text-state-danger-text disabled:cursor-not-allowed disabled:opacity-40"
             title="Koşulu sil"
           >
             <Trash2 className="h-3.5 w-3.5" />

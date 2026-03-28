@@ -66,7 +66,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
             type="button"
             onClick={() => setPasteMode(!pasteMode)}
             className={`shrink-0 rounded p-1.5 text-[10px] transition ${
-              pasteMode ? 'bg-action-primary text-white' : 'bg-surface-muted text-text-secondary hover:bg-surface-raised'
+              pasteMode ? 'bg-action-primary text-text-inverse' : 'bg-surface-muted text-text-secondary hover:bg-surface-raised'
             }`}
             title="Excel'den toplu yapıştır"
           >
@@ -76,8 +76,8 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
       </div>
 
       {pasteMode && !disabled && (
-        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-blue-300 bg-blue-50/50 p-2">
-          <span className="text-[10px] font-medium text-blue-700">Toplu Yapıştır</span>
+        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-state-info-text/30 bg-state-info-bg p-2">
+          <span className="text-[10px] font-medium text-state-info-text">Toplu Yapıştır</span>
           <textarea
             className="h-16 w-full resize-none rounded border border-border-subtle bg-surface-default px-2 py-1.5 text-xs text-text-primary placeholder:text-text-subtle focus:border-action-primary focus:outline-none"
             placeholder={'Excel\'den kopyaladığınız değerleri yapıştırın...\nHer satır, virgül veya tab bir değer'}
@@ -86,7 +86,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
             autoFocus
           />
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-blue-600">
+            <span className="text-[10px] text-state-info-text">
               {pasteText.split(/[\n\r\t;,]+/).filter((s) => s.trim()).length} yeni değer
             </span>
             <div className="flex gap-1">
@@ -101,7 +101,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
                 type="button"
                 onClick={handleBulkApply}
                 disabled={!pasteText.trim()}
-                className="rounded bg-blue-600 px-2.5 py-0.5 text-[10px] font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+                className="rounded bg-action-primary px-2.5 py-0.5 text-[10px] font-semibold text-text-inverse hover:bg-action-primary/90 disabled:opacity-50"
               >
                 Ekle
               </button>
@@ -118,7 +118,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
               <button
                 type="button"
                 onClick={() => onChange('')}
-                className="rounded px-1.5 py-0.5 text-[10px] text-rose-600 hover:bg-rose-50"
+                className="rounded px-1.5 py-0.5 text-[10px] text-state-danger-text hover:bg-state-danger-bg"
               >
                 Tümünü Temizle
               </button>
@@ -135,7 +135,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
                   <button
                     type="button"
                     onClick={() => removeValue(i)}
-                    className="ml-0.5 rounded-full text-text-subtle opacity-60 hover:bg-rose-100 hover:text-rose-600 hover:opacity-100"
+                    className="ml-0.5 rounded-full text-text-subtle opacity-60 hover:bg-state-danger-bg hover:text-state-danger-text hover:opacity-100"
                   >
                     ✕
                   </button>
@@ -240,7 +240,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
                 type="button"
                 onClick={() => setPasteMode(!pasteMode)}
                 className={`flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition ${
-                  pasteMode ? 'bg-action-primary text-white' : 'bg-surface-muted text-text-secondary hover:bg-surface-raised'
+                  pasteMode ? 'bg-action-primary text-text-inverse' : 'bg-surface-muted text-text-secondary hover:bg-surface-raised'
                 }`}
               >
                 📋 Toplu Yapıştır
@@ -250,7 +250,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
               <button
                 type="button"
                 onClick={() => onChange([])}
-                className="rounded px-1.5 py-0.5 text-[10px] text-rose-600 hover:bg-rose-50"
+                className="rounded px-1.5 py-0.5 text-[10px] text-state-danger-text hover:bg-state-danger-bg"
               >
                 Tümünü Kaldır ({selected.length})
               </button>
@@ -275,7 +275,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
                 type="button"
                 onClick={handlePaste}
                 disabled={!pasteText.trim()}
-                className="self-end rounded bg-action-primary px-3 py-1 text-[10px] font-semibold text-white hover:bg-action-primary/90 disabled:opacity-50"
+                className="self-end rounded bg-action-primary px-3 py-1 text-[10px] font-semibold text-text-inverse hover:bg-action-primary/90 disabled:opacity-50"
               >
                 Uygula ({pasteText.split(/[\n\r\t;,]+/).filter((s) => s.trim()).length} değer)
               </button>

@@ -22,11 +22,11 @@ import type { FilterGroup, FilterCondition, FilterCombinator, FilterTreeNode } f
 import { FilterConditionRow } from './FilterConditionRow';
 import { FilterCombinatorRow } from './FilterCombinatorRow';
 
-// ── Depth color scheme (cycles: blue → violet → amber) ──
+// ── Depth color scheme (cycles: info → success → warning) ──
 const DEPTH_COLORS = [
-  { border: 'border-blue-300', bg: 'bg-blue-50/40', headerBg: 'bg-blue-100/80', branchLine: 'bg-blue-300', notActive: 'bg-blue-600 text-white' },
-  { border: 'border-violet-300', bg: 'bg-violet-50/40', headerBg: 'bg-violet-100/80', branchLine: 'bg-violet-300', notActive: 'bg-violet-600 text-white' },
-  { border: 'border-amber-300', bg: 'bg-amber-50/40', headerBg: 'bg-amber-100/80', branchLine: 'bg-amber-300', notActive: 'bg-amber-600 text-white' },
+  { border: 'border-state-info-text/30', bg: 'bg-state-info-bg', headerBg: 'bg-state-info-bg', branchLine: 'bg-state-info-text/40', notActive: 'bg-action-primary text-text-inverse' },
+  { border: 'border-state-success-text/30', bg: 'bg-state-success-bg', headerBg: 'bg-state-success-bg', branchLine: 'bg-state-success-text/40', notActive: 'bg-state-success-text text-text-inverse' },
+  { border: 'border-state-warning-text/30', bg: 'bg-state-warning-bg', headerBg: 'bg-state-warning-bg', branchLine: 'bg-state-warning-text/40', notActive: 'bg-state-warning-text text-text-inverse' },
 ];
 
 interface FilterGroupNodeProps {
@@ -130,7 +130,7 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
           type="button"
           disabled={isLocked}
           onClick={() => onAddCondition(group.id)}
-          className="flex items-center gap-1 rounded-md bg-blue-600 px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex items-center gap-1 rounded-md bg-action-primary px-2.5 py-1 text-[11px] font-semibold text-text-inverse hover:bg-action-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Plus className="h-3 w-3" />
           Kural
@@ -142,7 +142,7 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
             type="button"
             disabled={isLocked}
             onClick={() => onAddGroup(group.id)}
-            className="flex items-center gap-1 rounded-md bg-violet-600 px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex items-center gap-1 rounded-md bg-action-primary/15 px-2.5 py-1 text-[11px] font-semibold text-action-primary hover:bg-action-primary/25 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <FolderPlus className="h-3 w-3" />
             Grup
@@ -170,7 +170,7 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
             onClick={() => onToggleLock(group.id)}
             className={[
               'rounded p-1 transition',
-              group.locked ? 'text-amber-600 hover:bg-amber-50' : 'text-text-subtle hover:bg-surface-default/60 hover:text-amber-600',
+              group.locked ? 'text-state-warning-text hover:bg-state-warning-bg' : 'text-text-subtle hover:bg-surface-default/60 hover:text-state-warning-text',
             ].join(' ')}
             title={group.locked ? 'Grubu aç' : 'Grubu kilitle'}
           >
@@ -184,7 +184,7 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
             type="button"
             onClick={() => onRemoveNode(group.id)}
             disabled={isLocked}
-            className="rounded p-1 text-text-subtle hover:bg-rose-100 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded p-1 text-text-subtle hover:bg-state-danger-bg hover:text-state-danger-text disabled:cursor-not-allowed disabled:opacity-40"
             title="Grubu sil"
           >
             <Trash2 className="h-3.5 w-3.5" />
