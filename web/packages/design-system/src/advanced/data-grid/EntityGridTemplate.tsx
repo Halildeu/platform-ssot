@@ -495,6 +495,8 @@ export function EntityGridTemplate<
         isServerMode={isServerMode}
         quickFilterInitialValue={quickFilterInitialValue}
         exportConfig={exportConfig}
+        onRequestFullscreen={effectiveFullscreenHandler}
+        isFullscreen={effectiveFullscreen}
         messages={toolbarMessages}
         extras={toolbarExtras}
         variantSlot={
