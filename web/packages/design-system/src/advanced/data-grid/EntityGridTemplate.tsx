@@ -28,6 +28,7 @@ import { GridToolbar, type GridToolbarMessages } from "./GridToolbar";
 import { VariantIntegration, type VariantIntegrationMessages } from "./VariantIntegration";
 import { useDatasourceModeAdapter, type DataSourceMode } from "./DatasourceModeAdapter";
 import { TablePagination, useAgGridTablePagination } from "./TablePagination";
+import { FilterBuilderButton } from "./filter-builder";
 
 /* ------------------------------------------------------------------ */
 /*  Re-exported AG Grid types (convenience for consumers)              */
@@ -501,6 +502,12 @@ export function EntityGridTemplate<
         extras={<>
           {gridApi && (
             <QuickGroupMenu
+              gridApi={gridApi}
+              columnDefs={columnDefs}
+            />
+          )}
+          {gridApi && (
+            <FilterBuilderButton
               gridApi={gridApi}
               columnDefs={columnDefs}
             />
