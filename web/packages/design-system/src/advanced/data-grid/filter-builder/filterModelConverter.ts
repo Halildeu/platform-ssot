@@ -27,39 +27,23 @@ export function treeToFilterModel(root: FilterGroup): Record<string, unknown> {
   }
 
   for (const [colId, conds] of byCol) {
-    // Expand comma-separated text values into Set filter (AG Grid limits OR conditions to 2)
-    const expanded: FilterCondition[] = [];
-    let useSetFilter = false;
-    const setValues: string[] = [];
-
-    for (const c of conds) {
-      if (c.filterType === 'text' && typeof c.value === 'string' && c.value.includes(',')) {
-        const parts = c.value.split(',').map((s) => s.trim()).filter(Boolean);
-        if (parts.length > 1) {
-          useSetFilter = true;
-          setValues.push(...parts);
-          continue;
-        }
-      }
-      expanded.push(c);
-    }
-
-    if (useSetFilter && setValues.length > 0) {
-      // Use Set filter for multi-value text — no AG Grid condition limit
-      model[colId] = { filterType: 'set', values: setValues };
-    } else if (expanded.length === 1) {
-      model[colId] = conditionToAgModel(expanded[0]);
-    } else if (expanded.length === 2) {
-      // AG Grid supports max 2 conditions with operator
+    if (conds.length === 1) {
+      model[colId] = conditionToAgModel(conds[0]);
+    } else if (conds.length === 2) {
+      const parentLogic = findParentLogic(root, colId);
       model[colId] = {
-        filterType: expanded[0].filterType === 'set' ? 'set' : expanded[0].filterType,
-        operator: 'OR',
-        conditions: expanded.map(conditionToAgModel),
+        filterType: conds[0].filterType === 'set' ? 'set' : conds[0].filterType,
+        operator: parentLogic,
+        conditions: conds.map(conditionToAgModel),
       };
     } else {
-      // 3+ conditions: convert to set filter
-      const vals = expanded.map((c) => String(c.value)).filter(Boolean);
-      model[colId] = { filterType: 'set', values: vals };
+      // 3+ conditions: AG Grid limits to 2 — take first two
+      const parentLogic = findParentLogic(root, colId);
+      model[colId] = {
+        filterType: conds[0].filterType === 'set' ? 'set' : conds[0].filterType,
+        operator: parentLogic,
+        conditions: conds.slice(0, 2).map(conditionToAgModel),
+      };
     }
   }
 

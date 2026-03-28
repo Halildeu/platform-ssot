@@ -9,6 +9,50 @@ import { useFilterBuilder } from './useFilterBuilder';
 import { treeToFilterModel, filterModelToTree } from './filterModelConverter';
 import { FilterGroupNode } from './FilterGroupNode';
 
+/**
+ * Expand comma-separated text values into separate OR conditions.
+ * "Admin 1, Admin User" → OR group with 2 conditions.
+ */
+function expandMultiValueConditions(group: import('./useFilterBuilder').FilterGroup): import('./useFilterBuilder').FilterGroup {
+  const newChildren: import('./useFilterBuilder').FilterNode[] = [];
+
+  for (const child of group.children) {
+    if (child.type === 'group') {
+      newChildren.push(expandMultiValueConditions(child));
+    } else if (
+      child.type === 'condition' &&
+      child.filterType === 'text' &&
+      typeof child.value === 'string' &&
+      child.value.includes(',')
+    ) {
+      const parts = child.value.split(',').map((s) => s.trim()).filter(Boolean);
+      if (parts.length > 1) {
+        // Create an OR sub-group with one condition per value
+        const orGroup: import('./useFilterBuilder').FilterGroup = {
+          type: 'group',
+          id: `${child.id}_expanded`,
+          logic: 'OR',
+          children: parts.map((part, i) => ({
+            type: 'condition' as const,
+            id: `${child.id}_${i}`,
+            colId: child.colId,
+            filterType: child.filterType,
+            operator: child.operator,
+            value: part,
+          })),
+        };
+        newChildren.push(orGroup);
+      } else {
+        newChildren.push(child);
+      }
+    } else {
+      newChildren.push(child);
+    }
+  }
+
+  return { ...group, children: newChildren };
+}
+
 export interface FilterBuilderPanelProps {
   gridApi: GridApi | null;
   columnDefs: ColDef[];
@@ -51,7 +95,10 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
 
   const handleApply = useCallback(() => {
     if (!gridApi) return;
-    const model = treeToFilterModel(root);
+
+    // Expand comma-separated text values into separate conditions before building model
+    const expandedRoot = expandMultiValueConditions(root);
+    const model = treeToFilterModel(expandedRoot);
     gridApi.setFilterModel(model);
     gridApi.onFilterChanged();
     onClose();
