@@ -53,7 +53,7 @@ Owner: @team/frontend
   - Then: `var(--x, fallback)` veya hardcoded hex/rgb/px fallback bulunmaz.
   - Kanıt/Evidence:
     - Kod: `web/apps/mfe-shell/src/styles/theme.css`  
-    - Kod: `web/tailwind.config.js`
+    - Kod: `web/apps/mfe-shell/src/index.css` (TW4 CSS-native config)
 
 - [ ] Senaryo 4 – Special-case yok (surface.default.bg hack kaldırıldı):
   - Given: Registry entry `cssVars[]` multi-apply mapping sağlar.  
