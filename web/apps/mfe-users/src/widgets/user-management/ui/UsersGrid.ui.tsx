@@ -579,6 +579,12 @@ const UsersGrid: React.FC<UsersGridProps> = ({
               },
             }) as UsersQueryParams;
 
+            // Attach multiSearch from filter builder (if any)
+            const multiSearch = (params.api as any)?.__multiSearch;
+            if (multiSearch) {
+              (baseParams as any).multiSearch = multiSearch;
+            }
+
             const response = await fetchUsers(baseParams);
             const reason = response.meta?.reason;
             if (reason === 'profile-missing') {

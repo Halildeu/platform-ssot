@@ -619,6 +619,8 @@ const buildQueryString = (params: UsersQueryParams) => {
   if ((params as any).valueCols) qs.set('valueCols', (params as any).valueCols);
   if ((params as any).pivotMode) qs.set('pivotMode', (params as any).pivotMode);
   if ((params as any).pivotCols) qs.set('pivotCols', (params as any).pivotCols);
+  // Multi-value search (from filter builder bulk paste)
+  if ((params as any).multiSearch) qs.set('multiSearch', (params as any).multiSearch);
   const queryString = qs.toString();
   return queryString ? `?${queryString}` : '';
 };

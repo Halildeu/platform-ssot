@@ -10,6 +10,46 @@ import { treeToFilterModel, filterModelToTree } from './filterModelConverter';
 import { FilterGroupNode } from './FilterGroupNode';
 
 /**
+ * Extract comma-separated text values as multiSearch terms.
+ * Returns a cleaned root (single values only) + array of multi-search terms.
+ */
+function extractMultiValueTerms(group: import('./useFilterBuilder').FilterGroup): {
+  singleValueRoot: import('./useFilterBuilder').FilterGroup;
+  multiSearchTerms: string[];
+} {
+  const terms: string[] = [];
+  const newChildren: import('./useFilterBuilder').FilterNode[] = [];
+
+  for (const child of group.children) {
+    if (child.type === 'group') {
+      const sub = extractMultiValueTerms(child);
+      terms.push(...sub.multiSearchTerms);
+      newChildren.push(sub.singleValueRoot);
+    } else if (
+      child.type === 'condition' &&
+      child.filterType === 'text' &&
+      typeof child.value === 'string' &&
+      child.value.includes(',')
+    ) {
+      const parts = child.value.split(',').map((s) => s.trim()).filter(Boolean);
+      if (parts.length > 1) {
+        terms.push(...parts);
+        // Don't add to filterModel — handled via multiSearch param
+      } else {
+        newChildren.push(child);
+      }
+    } else {
+      newChildren.push(child);
+    }
+  }
+
+  return {
+    singleValueRoot: { ...group, children: newChildren },
+    multiSearchTerms: terms,
+  };
+}
+
+/**
  * Expand comma-separated text values into separate OR conditions.
  * "Admin 1, Admin User" → OR group with 2 conditions.
  */
@@ -96,9 +136,17 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
   const handleApply = useCallback(() => {
     if (!gridApi) return;
 
-    // Expand comma-separated text values into separate conditions before building model
-    const expandedRoot = expandMultiValueConditions(root);
-    const model = treeToFilterModel(expandedRoot);
+    // Extract multi-value text conditions → send as multiSearch param to backend
+    const { singleValueRoot, multiSearchTerms } = extractMultiValueTerms(root);
+    const model = treeToFilterModel(singleValueRoot);
+
+    // Set multiSearch as a custom grid option that SSRM datasource can read
+    if (multiSearchTerms.length > 0) {
+      (gridApi as any).__multiSearch = multiSearchTerms.join('|');
+    } else {
+      delete (gridApi as any).__multiSearch;
+    }
+
     gridApi.setFilterModel(model);
     gridApi.onFilterChanged();
     onClose();
