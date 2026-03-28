@@ -39,6 +39,15 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
           placeholder="Değer girin..."
           value={String(value ?? '')}
           onChange={(e) => onChange(e.target.value)}
+          onPaste={(e) => {
+            const text = e.clipboardData?.getData('text') ?? '';
+            const lines = text.split(/[\n\r\t]+/).map((s) => s.trim()).filter(Boolean);
+            if (lines.length > 1) {
+              // Multi-line paste → join with pipe for display, actual filtering uses first value
+              e.preventDefault();
+              onChange(lines.join(', '));
+            }
+          }}
         />
       );
 
@@ -92,31 +101,133 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
 
     case 'set': {
       const selected = Array.isArray(value) ? (value as string[]) : [];
+      const [pasteMode, setPasteMode] = React.useState(false);
+      const [pasteText, setPasteText] = React.useState('');
+
+      const handlePaste = () => {
+        if (!pasteText.trim()) return;
+        // Split by newline, tab, semicolon, or comma — covers Excel copy, CSV, manual entry
+        const pasted = pasteText
+          .split(/[\n\r\t;,]+/)
+          .map((s) => s.trim())
+          .filter(Boolean);
+        // Match against available set values (case-insensitive)
+        const matched = setValues.filter((sv) =>
+          pasted.some((p) => p.toLowerCase() === sv.toLowerCase()),
+        );
+        // Also keep raw values not in set (for free-text scenarios)
+        const unmatched = pasted.filter(
+          (p) => !setValues.some((sv) => sv.toLowerCase() === p.toLowerCase()),
+        );
+        const merged = [...new Set([...selected, ...matched, ...unmatched])];
+        onChange(merged);
+        setPasteText('');
+        setPasteMode(false);
+      };
+
       return (
-        <div className="max-h-32 overflow-auto rounded-md border border-border-subtle bg-surface-default p-1.5">
-          {setValues.length === 0 ? (
-            <span className="text-[10px] text-text-subtle">Seçenek yok</span>
-          ) : (
-            setValues.map((v) => (
-              <label
-                key={v}
-                className="flex cursor-pointer items-center gap-2 rounded px-1.5 py-1 text-xs text-text-primary hover:bg-surface-muted"
+        <div className="flex flex-col gap-1.5">
+          {/* Paste toggle + area */}
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setPasteMode(!pasteMode)}
+              className={`flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition ${
+                pasteMode
+                  ? 'bg-action-primary text-white'
+                  : 'bg-surface-muted text-text-secondary hover:bg-surface-raised'
+              }`}
+            >
+              📋 Toplu Yapıştır
+            </button>
+            {selected.length > 0 && (
+              <button
+                type="button"
+                onClick={() => onChange([])}
+                className="rounded px-1.5 py-0.5 text-[10px] text-rose-600 hover:bg-rose-50"
               >
-                <input
-                  type="checkbox"
-                  className="h-3.5 w-3.5 rounded border-border-subtle text-action-primary focus:ring-action-primary"
-                  checked={selected.includes(v)}
-                  onChange={(e) => {
-                    const next = e.target.checked
-                      ? [...selected, v]
-                      : selected.filter((s) => s !== v);
-                    onChange(next);
-                  }}
-                />
-                {v}
-              </label>
-            ))
+                Tümünü Kaldır ({selected.length})
+              </button>
+            )}
+          </div>
+
+          {pasteMode && (
+            <div className="flex flex-col gap-1">
+              <textarea
+                className={`${INPUT_CLASS} h-20 resize-none py-1.5`}
+                placeholder="Excel'den kopyaladığınız değerleri yapıştırın...&#10;Her satır bir değer veya virgülle ayırın"
+                value={pasteText}
+                onChange={(e) => setPasteText(e.target.value)}
+                onPaste={(e) => {
+                  // Auto-apply on paste
+                  setTimeout(() => {
+                    const text = e.clipboardData?.getData('text') ?? '';
+                    if (text.trim()) {
+                      setPasteText(text);
+                    }
+                  }, 0);
+                }}
+              />
+              <button
+                type="button"
+                onClick={handlePaste}
+                disabled={!pasteText.trim()}
+                className="self-end rounded bg-action-primary px-3 py-1 text-[10px] font-semibold text-white hover:bg-action-primary/90 disabled:opacity-50"
+              >
+                Uygula ({pasteText.split(/[\n\r\t;,]+/).filter((s) => s.trim()).length} değer)
+              </button>
+            </div>
           )}
+
+          {/* Selected chips */}
+          {selected.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {selected.slice(0, 20).map((v) => (
+                <span
+                  key={v}
+                  className="inline-flex items-center gap-1 rounded-full bg-action-primary/10 px-2 py-0.5 text-[10px] font-medium text-action-primary"
+                >
+                  {v}
+                  <button
+                    type="button"
+                    onClick={() => onChange(selected.filter((s) => s !== v))}
+                    className="ml-0.5 hover:text-rose-600"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+              {selected.length > 20 && (
+                <span className="text-[10px] text-text-subtle">+{selected.length - 20} daha</span>
+              )}
+            </div>
+          )}
+
+          {/* Checkbox list */}
+          <div className="max-h-32 overflow-auto rounded-md border border-border-subtle bg-surface-default p-1.5">
+            {setValues.length === 0 ? (
+              <span className="text-[10px] text-text-subtle">Seçenek yok</span>
+            ) : (
+              setValues.map((v) => (
+                <label
+                  key={v}
+                  className="flex cursor-pointer items-center gap-2 rounded px-1.5 py-1 text-xs text-text-primary hover:bg-surface-muted"
+                >
+                  <input
+                    type="checkbox"
+                    className="h-3.5 w-3.5 rounded border-border-subtle text-action-primary focus:ring-action-primary"
+                    checked={selected.includes(v)}
+                    onChange={(e) => {
+                      const next = e.target.checked
+                        ? [...selected, v]
+                        : selected.filter((s) => s !== v);
+                      onChange(next);
+                    }}
+                  />
+                  {v}
+                </label>
+              ))
+            )}
         </div>
       );
     }
