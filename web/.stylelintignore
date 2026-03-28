@@ -1,0 +1,17 @@
+# Build outputs — generated, not hand-written
+**/dist/**
+**/build/**
+**/coverage/**
+**/storybook-static/**
+
+# Node modules
+**/node_modules/**
+**/node_modules_old/**
+**/node_modules_failed_pnpm/**
+**/node_modules_failed_pnpm_hoisted/**
+
+# Docs build output (Astro/Starlight)
+packages/docs/dist/**
+
+# Third-party / generated
+**/.next/**
