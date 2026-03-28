@@ -12,9 +12,7 @@
     "baseUrl": ".",
     "paths": {
       "@mfe/shared-http": ["../shared-http/src"],
-      "@mfe/shared-types": ["../shared-types/src/index.ts"],
-      "react": ["./node_modules/@types/react"],
-      "react-dom": ["./node_modules/@types/react-dom"]
+      "@mfe/shared-types": ["../shared-types/src/index.ts"]
     },
     "outDir": "dist",
     "declaration": true,

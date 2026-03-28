@@ -104,17 +104,13 @@
   },
   "ci_contract": {
     "delivery_sequence": [
-      "backend",
-      "database",
-      "api",
-      "frontend",
+      "unit",
+      "contract",
       "integration",
       "e2e"
     ],
     "required_lanes": [
       "unit",
-      "database",
-      "api",
       "contract",
       "integration",
       "e2e"

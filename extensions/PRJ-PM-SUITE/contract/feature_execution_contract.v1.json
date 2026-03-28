@@ -318,23 +318,19 @@
   },
   "lane_plan": {
     "execution_sequence": [
-      "backend",
-      "database",
-      "api",
-      "frontend",
+      "unit",
+      "contract",
       "integration",
       "e2e"
     ],
     "required_lanes": [
       "unit",
-      "database",
-      "api",
       "contract",
       "integration",
       "e2e"
     ],
     "notes": [
-      "Development starts from backend or database impact first, then API, then frontend, then integration and e2e.",
+      "CI lanes follow module_delivery_lanes.v1.json: unit, contract, integration, e2e.",
       "Auth and permission backbone changes remain server-authoritative; web and mobile consume the same session and authz contracts.",
       "Database lane stays active because auth session persistence and audit coverage may require owned-schema changes."
     ]

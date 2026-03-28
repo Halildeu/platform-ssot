@@ -23,6 +23,8 @@ EXPECTED_STANDARD_SOURCE_KEYS = {
     "secrets_policy",
     "ux_catalog_enforcement_policy",
     "ux_catalog_lock",
+    "coding_standards",
+    "repo_layout",
 }
 
 
@@ -892,7 +894,11 @@ def main(argv: list[str] | None = None) -> int:
         lane_obj = _load_json(lane_cfg_path)
 
     expected_sequence = [str(x) for x in (ci_cfg.get("delivery_sequence") or [])]
-    actual_sequence = [str(x) for x in (lane_obj.get("execution_sequence") or [])] if lane_obj else []
+    actual_sequence = (
+        [str(x) for x in lane_obj["execution_sequence"]]
+        if lane_obj.get("execution_sequence")
+        else list(lane_obj.get("lanes", {}).keys())
+    ) if lane_obj else []
     ci_checks.append(
         _check(
             "ci.delivery.sequence",
