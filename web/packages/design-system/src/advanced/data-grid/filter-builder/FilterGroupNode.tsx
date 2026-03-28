@@ -52,66 +52,53 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
       ? ''
       : `mt-2 rounded-lg border ${style.border} ${style.bg} p-3`
     }>
-      {/* Group header: AND/OR toggle + level indicator */}
-      <div className="mb-2 flex items-center gap-2">
-        {!isRoot && (
+      {/* Group header — only for sub-groups, root is implicit */}
+      {!isRoot && (
+        <div className="mb-2 flex items-center gap-2">
           <span className={`text-[9px] font-bold uppercase ${style.accent}`}>
             Seviye {depth}
           </span>
-        )}
-        <div className="inline-flex rounded-md border border-border-subtle bg-surface-default text-[11px] font-semibold">
-          <button
-            type="button"
-            className={`rounded-l-md px-2.5 py-1 transition ${
-              group.logic === 'AND'
-                ? 'bg-action-primary text-white'
-                : 'text-text-secondary hover:bg-surface-muted'
-            }`}
-            onClick={() => onSetLogic(group.id, 'AND')}
-          >
-            VE
-          </button>
-          <button
-            type="button"
-            className={`rounded-r-md px-2.5 py-1 transition ${
-              group.logic === 'OR'
-                ? 'bg-action-primary text-white'
-                : 'text-text-secondary hover:bg-surface-muted'
-            }`}
-            onClick={() => onSetLogic(group.id, 'OR')}
-          >
-            VEYA
-          </button>
-        </div>
-
-        <span className="text-[10px] text-text-subtle">
-          {group.logic === 'AND' ? 'Tüm koşullar sağlanmalı' : 'Herhangi biri yeterli'}
-        </span>
-
-        {!isRoot && (
-          <button
-            type="button"
-            onClick={() => onRemoveNode(group.id)}
-            className="ml-auto rounded p-1 text-text-subtle hover:bg-rose-100 hover:text-rose-600"
-            title="Grubu sil"
-          >
+          <div className="inline-flex rounded-md border border-border-subtle bg-surface-default text-[11px] font-semibold">
+            <button type="button" className={`rounded-l-md px-2.5 py-1 transition ${group.logic === 'AND' ? 'bg-action-primary text-white' : 'text-text-secondary hover:bg-surface-muted'}`} onClick={() => onSetLogic(group.id, 'AND')}>VE</button>
+            <button type="button" className={`rounded-r-md px-2.5 py-1 transition ${group.logic === 'OR' ? 'bg-action-primary text-white' : 'text-text-secondary hover:bg-surface-muted'}`} onClick={() => onSetLogic(group.id, 'OR')}>VEYA</button>
+          </div>
+          <span className="text-[10px] text-text-subtle">
+            {group.logic === 'AND' ? 'Tüm koşullar sağlanmalı' : 'Herhangi biri yeterli'}
+          </span>
+          <button type="button" onClick={() => onRemoveNode(group.id)} className="ml-auto rounded p-1 text-text-subtle hover:bg-rose-100 hover:text-rose-600" title="Grubu sil">
             <Trash2 className="h-3.5 w-3.5" />
           </button>
-        )}
+        </div>
+      )}
       </div>
+
+      {/* Empty state */}
+      {totalChildren === 0 && (
+        <div className="flex items-center justify-center rounded-lg border-2 border-dashed border-border-subtle py-6 text-center">
+          <div>
+            <p className="text-sm text-text-subtle">Henüz koşul eklenmedi</p>
+            <p className="mt-1 text-[10px] text-text-subtle">Aşağıdaki butonları kullanarak koşul veya grup ekleyin</p>
+          </div>
+        </div>
+      )}
 
       {/* Conditions with logic connectors between them */}
       <div className="flex flex-col gap-1">
         {group.children.map((child, index) => {
           const connector = index > 0 ? (
             <div key={`conn_${child.id}`} className="flex items-center gap-2 py-0.5 pl-2">
-              <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
-                group.logic === 'AND'
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'bg-orange-100 text-orange-700'
-              }`}>
+              <button
+                type="button"
+                onClick={() => onSetLogic(group.id, group.logic === 'AND' ? 'OR' : 'AND')}
+                className={`cursor-pointer rounded-full px-2.5 py-0.5 text-[9px] font-bold transition hover:opacity-80 ${
+                  group.logic === 'AND'
+                    ? 'bg-blue-100 text-blue-700 hover:bg-orange-100 hover:text-orange-700'
+                    : 'bg-orange-100 text-orange-700 hover:bg-blue-100 hover:text-blue-700'
+                }`}
+                title={`Tıkla: ${group.logic === 'AND' ? 'VEYA' : 'VE'} olarak değiştir`}
+              >
                 {group.logic === 'AND' ? 'VE' : 'VEYA'}
-              </span>
+              </button>
               <div className="h-px flex-1 bg-border-subtle" />
             </div>
           ) : null;

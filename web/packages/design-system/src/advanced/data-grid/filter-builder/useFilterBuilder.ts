@@ -50,7 +50,7 @@ export function createEmptyGroup(logic: 'AND' | 'OR' = 'AND'): FilterGroup {
     type: 'group',
     id: uid(),
     logic,
-    children: [createEmptyCondition()],
+    children: [],
   };
 }
 
@@ -246,8 +246,7 @@ export function useFilterBuilder(maxNesting: number = 3): UseFilterBuilderReturn
     setRoot(createEmptyGroup());
   }, []);
 
-  const isEmpty = root.children.length === 0 ||
-    (root.children.length === 1 && root.children[0].type === 'condition' && !(root.children[0] as FilterCondition).colId);
+  const isEmpty = root.children.length === 0;
 
   const maxDepthReached = countDepth(root.children, 1) >= maxNesting;
 
