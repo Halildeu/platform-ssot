@@ -110,14 +110,16 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
     useFilterBuilder(3);
   const [matchCount, setMatchCount] = useState<number | null>(null);
 
-  // Import current grid filters when panel opens
+  // Import current grid filters ONLY when panel first opens (false→true transition)
+  const prevOpenRef = React.useRef(false);
   useEffect(() => {
-    if (open && gridApi) {
+    if (open && !prevOpenRef.current && gridApi) {
       const model = gridApi.getFilterModel?.() ?? {};
       if (Object.keys(model).length > 0) {
         setRoot(filterModelToTree(model, columnDefs));
       }
     }
+    prevOpenRef.current = open;
   }, [open, gridApi, columnDefs, setRoot]);
 
   // Live match count preview
