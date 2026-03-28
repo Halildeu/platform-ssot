@@ -5,6 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { federation } from '@module-federation/vite';
 import path from 'node:path';
 import { readFileSync, existsSync } from 'node:fs';
+import { serviceHealthApi } from './vite-plugins/service-health-api';
 
 /* ------------------------------------------------------------------ */
 /*  Env helpers — replaces webpack's DefinePlugin + InjectRuntimeEnv   */
@@ -67,6 +68,7 @@ function buildRemotes() {
     access: readEnvBoolean(['VITE_SHELL_ENABLE_ACCESS_REMOTE', 'SHELL_ENABLE_ACCESS_REMOTE']),
     audit: readEnvBoolean(['VITE_SHELL_ENABLE_AUDIT_REMOTE', 'SHELL_ENABLE_AUDIT_REMOTE']),
     users: readEnvBoolean(['VITE_SHELL_ENABLE_USERS_REMOTE', 'SHELL_ENABLE_USERS_REMOTE']),
+    reporting: readEnvBoolean(['VITE_SHELL_ENABLE_REPORTING_REMOTE', 'SHELL_ENABLE_REPORTING_REMOTE']),
   };
 
   // All remotes must be declared so MF plugin can resolve their imports
@@ -81,7 +83,7 @@ function buildRemotes() {
     mfe_access:      { type: 'module', name: 'mfe_access',      entry: enabled.access ? 'http://localhost:3005/remoteEntry.js' : STUB },
     mfe_audit:       { type: 'module', name: 'mfe_audit',       entry: enabled.audit ? 'http://localhost:3006/remoteEntry.js' : STUB },
     mfe_users:       { type: 'module', name: 'mfe_users',       entry: enabled.users ? 'http://localhost:3004/remoteEntry.js' : STUB },
-    mfe_reporting:   { type: 'module', name: 'mfe_reporting',   entry: 'http://localhost:3007/remoteEntry.js' },
+    mfe_reporting:   { type: 'module', name: 'mfe_reporting',   entry: enabled.reporting ? 'http://localhost:3007/remoteEntry.js' : STUB },
   };
 }
 
@@ -124,6 +126,8 @@ export default defineConfig(({ mode }) => {
     publicDir: 'public',
 
     plugins: [
+      /* Live service health API — serves /api/services without backend */
+      serviceHealthApi(),
       /* Inject runtime env into HTML */
       {
         name: 'inject-runtime-env',
@@ -184,7 +188,7 @@ export default defineConfig(({ mode }) => {
         '/api/v1/dashboards': { target: 'http://localhost:8095', changeOrigin: true, secure: false },
         '/api/v1/authz': { target: 'http://localhost:8090', changeOrigin: true, secure: false },
         '/api/v1/users': { target: 'http://localhost:8089', changeOrigin: true, secure: false },
-        '/api/services': { target: 'http://localhost:8795', changeOrigin: true, secure: false },
+        // '/api/services' handled by serviceHealthApi() Vite plugin
         '/cockpit-api': {
           target: 'http://localhost:8790',
           changeOrigin: true,
