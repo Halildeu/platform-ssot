@@ -192,6 +192,8 @@ def iter_web_source_files() -> Iterable[Path]:
                 continue
             if rel_str.startswith("web/scripts/ops/"):
                 continue
+            if "/.storybook/" in rel_str:
+                continue
 
             yield p
 
