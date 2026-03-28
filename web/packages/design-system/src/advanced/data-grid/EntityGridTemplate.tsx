@@ -498,7 +498,15 @@ export function EntityGridTemplate<
         onRequestFullscreen={effectiveFullscreenHandler}
         isFullscreen={effectiveFullscreen}
         messages={toolbarMessages}
-        extras={toolbarExtras}
+        extras={<>
+          {gridApi && (
+            <QuickGroupMenu
+              gridApi={gridApi}
+              columnDefs={columnDefs}
+            />
+          )}
+          {toolbarExtras}
+        </>}
         variantSlot={
           <VariantIntegration<RowData>
             gridId={gridId}
@@ -565,3 +573,94 @@ export function EntityGridTemplate<
 EntityGridTemplate.displayName = "EntityGridTemplate";
 
 export default EntityGridTemplate;
+
+/* ── QuickGroupMenu ─────────────────────────────────────────────── */
+
+function QuickGroupMenu<RowData>({
+  gridApi,
+  columnDefs,
+}: {
+  gridApi: GridApi<RowData>;
+  columnDefs: ColDef<RowData>[];
+}) {
+  const [open, setOpen] = React.useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  // Close on outside click
+  React.useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [open]);
+
+  // Get groupable columns (those with field + headerName)
+  const groupableColumns = React.useMemo(() => {
+    return columnDefs
+      .filter((c) => c.field && c.headerName && c.enableRowGroup !== false)
+      .map((c) => ({ field: c.field as string, label: c.headerName as string }));
+  }, [columnDefs]);
+
+  const applyGroup = (fields: string[]) => {
+    const state = gridApi.getColumnState().map((col) => ({
+      ...col,
+      rowGroup: fields.includes(col.colId),
+      rowGroupIndex: fields.indexOf(col.colId) >= 0 ? fields.indexOf(col.colId) : null,
+    }));
+    gridApi.applyColumnState({ state });
+    setOpen(false);
+  };
+
+  const clearGroups = () => {
+    const state = gridApi.getColumnState().map((col) => ({
+      ...col,
+      rowGroup: false,
+      rowGroupIndex: null,
+    }));
+    gridApi.applyColumnState({ state });
+    setOpen(false);
+  };
+
+  if (groupableColumns.length === 0) return null;
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex h-8 items-center gap-1 rounded-md bg-surface-muted px-2.5 text-xs font-medium text-text-secondary hover:bg-surface-raised"
+        title="Hizli gruplama"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
+        </svg>
+        Grupla
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-border-subtle bg-surface-default py-1 shadow-lg">
+          <button
+            type="button"
+            onClick={clearGroups}
+            className="w-full px-3 py-1.5 text-left text-xs text-rose-600 hover:bg-surface-muted"
+          >
+            Gruplamayı kaldır
+          </button>
+          <div className="my-1 border-t border-border-subtle" />
+          {groupableColumns.map((col) => (
+            <button
+              key={col.field}
+              type="button"
+              onClick={() => applyGroup([col.field])}
+              className="w-full px-3 py-1.5 text-left text-xs text-text-primary hover:bg-surface-muted"
+            >
+              {col.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
