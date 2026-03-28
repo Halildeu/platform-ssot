@@ -124,22 +124,22 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
       </div>
 
       {/* Add buttons */}
-      <div className="mt-2 flex items-center gap-2">
+      <div className="mt-3 flex items-center gap-2">
         <button
           type="button"
           onClick={() => onAddCondition(group.id)}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-action-primary-text hover:bg-surface-muted"
+          className="flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100"
         >
-          <Plus className="h-3 w-3" />
+          <Plus className="h-3.5 w-3.5" />
           Koşul Ekle
         </button>
         {!maxDepthReached && (
           <button
             type="button"
             onClick={() => onAddGroup(group.id)}
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-violet-600 hover:bg-violet-50"
+            className="flex items-center gap-1.5 rounded-lg border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-semibold text-violet-700 hover:bg-violet-100"
           >
-            <FolderPlus className="h-3 w-3" />
+            <FolderPlus className="h-3.5 w-3.5" />
             Grup Ekle
           </button>
         )}
