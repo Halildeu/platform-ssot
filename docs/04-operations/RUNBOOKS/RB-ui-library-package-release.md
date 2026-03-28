@@ -42,17 +42,17 @@ Canonical Inputs:
 
 Required Gates:
 
-1. `npm -C web run build:ui-kit`
-2. `npm -C web run build-storybook`
-3. `npm -C web run publish:bundle`
-4. `npm -C web run release:ui-library:manifest`
-5. `npm -C web run audit:ui-library-upgrade-recipes`
-6. `npm -C web run audit:ui-library-codemod-candidates`
-7. `npm -C web run audit:ui-library-codemod-prototypes`
-8. `npm -C web run gate:ui-library-visual`
-9. `npm -C web run gate:ui-library-wave -- --wave wave_11_recipes`
-10. `npm -C web run doctor:frontend -- --preset ui-library`
-11. `npm -C web run gate:ui-library-release`
+- (1) `npm -C web run build:ui-kit`
+- (2) `npm -C web run build-storybook`
+- (3) `npm -C web run publish:bundle`
+- (4) `npm -C web run release:ui-library:manifest`
+- (5) `npm -C web run audit:ui-library-upgrade-recipes`
+- (6) `npm -C web run audit:ui-library-codemod-candidates`
+- (7) `npm -C web run audit:ui-library-codemod-prototypes`
+- (8) `npm -C web run gate:ui-library-visual`
+- (9) `npm -C web run gate:ui-library-wave -- --wave wave_11_recipes`
+- (10) `npm -C web run doctor:frontend -- --preset ui-library`
+- (11) `npm -C web run gate:ui-library-release`
 
 Success Criteria:
 

@@ -3,8 +3,6 @@
   "generated_at": "2026-03-03T00:00:00Z",
   "operating_contract": "docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md",
   "standard_sources": {
-    "coding_standards": "docs/OPERATIONS/CODING-STANDARDS.md",
-    "repo_layout": "docs/OPERATIONS/repo-layout.v1.json",
     "technical_baseline_aistd": "registry/technical_baseline.aistd.v1.json",
     "pm_suite_policy": "policies/policy_pm_suite.v1.json",
     "feature_execution_bridge_policy": "policies/policy_feature_execution_bridge.v1.json",

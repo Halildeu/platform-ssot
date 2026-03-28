@@ -33,10 +33,10 @@ Canonical Inputs:
 
 Review Classes:
 
-1. `patch-safe-lab-only`
-2. `minor-single-app-review`
-3. `minor-beta-external-review`
-4. `major-cross-app-review`
+- (1) `patch-safe-lab-only`
+- (2) `minor-single-app-review`
+- (3) `minor-beta-external-review`
+- (4) `major-cross-app-review`
 
 -------------------------------------------------------------------------------
 3. BAŞLATMA / DURDURMA
@@ -44,14 +44,14 @@ Review Classes:
 
 Default Playbook:
 
-1. Consumer impact artefact'inda etkilenen component ve app sinifini oku.
-2. `singleAppBlastRadius` backlog'u varsa ilgili uygulama sahibini release turuna ekle.
-3. `major-cross-app-review` sinifi varsa semver major review ve rollout notu zorunlu olsun.
-4. Codemod support `dry-run-candidate` oldugu surece migration checklist, prototype preview ve evidence refs eksiksiz tutulur.
-5. Owner registry override yoksa `.github/CODEOWNERS` fallback owner release owner'i olarak kabul edilir.
-6. Tek-app backlog icin generated upgrade recipe artefact'i ve `audit:ui-library-upgrade-recipes` dry-run raporu birlikte okunur.
-7. Codemod candidate backlog'u varsa `audit:ui-library-codemod-candidates` dry-run sonucu recipe audit ile birlikte okunur.
-8. Prototype backlog'u varsa `audit:ui-library-codemod-prototypes` sonucu rewrite preview ve rollback plan kaniti olarak okunur.
+- (1) Consumer impact artefact'inda etkilenen component ve app sinifini oku.
+- (2) `singleAppBlastRadius` backlog'u varsa ilgili uygulama sahibini release turuna ekle.
+- (3) `major-cross-app-review` sinifi varsa semver major review ve rollout notu zorunlu olsun.
+- (4) Codemod support `dry-run-candidate` oldugu surece migration checklist, prototype preview ve evidence refs eksiksiz tutulur.
+- (5) Owner registry override yoksa `.github/CODEOWNERS` fallback owner release owner'i olarak kabul edilir.
+- (6) Tek-app backlog icin generated upgrade recipe artefact'i ve `audit:ui-library-upgrade-recipes` dry-run raporu birlikte okunur.
+- (7) Codemod candidate backlog'u varsa `audit:ui-library-codemod-candidates` dry-run sonucu recipe audit ile birlikte okunur.
+- (8) Prototype backlog'u varsa `audit:ui-library-codemod-prototypes` sonucu rewrite preview ve rollback plan kaniti olarak okunur.
 
 -------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER
