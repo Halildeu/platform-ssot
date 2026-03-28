@@ -100,6 +100,7 @@ function getProcessStats(pid: string): { rssMb: number; cpu: number; uptime: str
 
 // ── Docker compose status (cached) ──
 let dockerCache: Map<string, { status: string; health: string; state: string }> = new Map();
+let dockerStatsCache: Map<string, { rssMb: number; cpu: number }> = new Map();
 let dockerCacheTime = 0;
 const DOCKER_CACHE_TTL = 5000;
 
@@ -108,27 +109,61 @@ function refreshDockerCache(): void {
   if (now - dockerCacheTime < DOCKER_CACHE_TTL) return;
   dockerCacheTime = now;
   dockerCache = new Map();
+  dockerStatsCache = new Map();
 
+  // docker compose ps
   try {
     const out = execSync('docker compose ps --format json 2>/dev/null', {
       encoding: 'utf-8',
       cwd: BACKEND_DIR,
       timeout: 5000,
     }).trim();
-    if (!out) return;
-    for (const line of out.split('\n')) {
-      if (!line.trim()) continue;
-      try {
-        const c = JSON.parse(line);
-        const name = c.Name || c.Service || '';
-        dockerCache.set(name, {
-          status: c.Status || '?',
-          health: c.Health || '',
-          state: c.State || '',
-        });
-      } catch { /* skip bad line */ }
+    if (out) {
+      for (const line of out.split('\n')) {
+        if (!line.trim()) continue;
+        try {
+          const c = JSON.parse(line);
+          const name = c.Name || c.Service || '';
+          dockerCache.set(name, {
+            status: c.Status || '?',
+            health: c.Health || '',
+            state: c.State || '',
+          });
+        } catch { /* skip bad line */ }
+      }
     }
   } catch { /* docker not available */ }
+
+  // docker stats (RAM + CPU for all containers)
+  try {
+    const statsOut = execSync(
+      'docker stats --no-stream --format "{{.Name}}\\t{{.MemUsage}}\\t{{.CPUPerc}}" 2>/dev/null',
+      { encoding: 'utf-8', timeout: 8000 },
+    ).trim();
+    if (statsOut) {
+      for (const line of statsOut.split('\n')) {
+        const parts = line.split('\t');
+        if (parts.length < 3) continue;
+        const name = parts[0].trim();
+        const memStr = parts[1].trim().split('/')[0].trim(); // "448.5MiB" or "1.2GiB"
+        const cpuStr = parts[2].trim().replace('%', '');
+
+        let rssMb = 0;
+        if (memStr.includes('GiB')) {
+          rssMb = Math.round(parseFloat(memStr) * 1024);
+        } else if (memStr.includes('MiB')) {
+          rssMb = Math.round(parseFloat(memStr));
+        } else if (memStr.includes('KiB')) {
+          rssMb = Math.round(parseFloat(memStr) / 1024);
+        }
+
+        dockerStatsCache.set(name, {
+          rssMb,
+          cpu: parseFloat(cpuStr) || 0,
+        });
+      }
+    }
+  } catch { /* docker stats not available */ }
 }
 
 function findDockerInfo(dockerName?: string): { status: string; health: string; containerId: string } | null {
@@ -140,6 +175,16 @@ function findDockerInfo(dockerName?: string): { status: string; health: string; 
         health: info.health,
         containerId: name,
       };
+    }
+  }
+  return null;
+}
+
+function findDockerStats(dockerName?: string): { rssMb: number; cpu: number } | null {
+  if (!dockerName) return null;
+  for (const [name, stats] of dockerStatsCache.entries()) {
+    if (name.toLowerCase().includes(dockerName.toLowerCase())) {
+      return stats;
     }
   }
   return null;
@@ -179,6 +224,7 @@ async function buildServiceInfo(def: ServiceDef): Promise<Record<string, unknown
   const pid = def.type === 'process' ? getPidForPort(def.port) : null;
   const stats = pid ? getProcessStats(pid) : null;
   const docker = def.type === 'docker' ? findDockerInfo(def.dockerName) : null;
+  const dStats = def.type === 'docker' ? findDockerStats(def.dockerName) : null;
 
   let health = 'UNKNOWN';
   if (open) {
@@ -203,8 +249,8 @@ async function buildServiceInfo(def: ServiceDef): Promise<Record<string, unknown
     uptime: stats?.uptime || (docker?.status ? extractUptime(docker.status) : null),
     dockerHealth: docker?.health || null,
     responseTime: open ? responseTime : null,
-    rssMb: stats?.rssMb || null,
-    cpu: stats?.cpu || null,
+    rssMb: stats?.rssMb || dStats?.rssMb || null,
+    cpu: stats?.cpu ?? dStats?.cpu ?? null,
   };
 }
 
