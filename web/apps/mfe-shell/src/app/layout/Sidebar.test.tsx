@@ -93,14 +93,14 @@ describe('Sidebar', () => {
 
     fireEvent.click(screen.getByTestId('sidebar-search'));
 
-    expect(pushNotificationMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        id: 'sidebar-cmd',
-        type: 'info',
-      }),
-    );
-    expect(toggleOpenMock).toHaveBeenCalledWith(true);
-    expect(dispatchMock).toHaveBeenCalledTimes(2);
+    // openCommandPalette now navigates to design-lab with search=open param
+    // instead of dispatching pushNotification
+    expect(screen.getByTestId('location-display')).toHaveTextContent('/admin/design-lab');
+
+    // Re-render at original path to test folders
+    cleanup();
+    window.localStorage.setItem('shell.sidebar.mode', 'collapsed');
+    renderSidebar('/suggestions');
 
     fireEvent.click(screen.getByTestId('nav-folders'));
     expect(screen.getByTestId('nav-folders-all')).toBeInTheDocument();
