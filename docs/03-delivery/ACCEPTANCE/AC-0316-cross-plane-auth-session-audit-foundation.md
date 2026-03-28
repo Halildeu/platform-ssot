@@ -6,7 +6,7 @@ Status: Planned
 Owner: @team/platform
 
 -------------------------------------------------------------------------------
-## 1. AMAC
+## 1. AMAÇ
 -------------------------------------------------------------------------------
 
 - Web, mobil ve backend authz/session omurgasinin tek capability diliyle
@@ -71,7 +71,7 @@ Owner: @team/platform
   temel stale session guvencesi bu kapsamda zorunludur.
 
 -------------------------------------------------------------------------------
-## 5. OZET
+## 5. ÖZET
 -------------------------------------------------------------------------------
 
 - Bu acceptance tamamlandiginda, web ve mobil istemcinin ayni backend auth
@@ -79,7 +79,7 @@ Owner: @team/platform
   izlenebilir oldugu kabul edilir.
 
 -------------------------------------------------------------------------------
-## 6. LINKLER (ISTEGE BAGLI)
+## 6. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
 - Story: docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md  
