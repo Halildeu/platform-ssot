@@ -535,7 +535,8 @@ export function EntityGridTemplate<
         onGridReady={handleGridReady}
         onRowDoubleClick={onRowDoubleClick}
         onPaginationChanged={handlePaginationChanged}
-        height={600}
+        height={effectiveFullscreen ? '100%' : 600}
+        className={effectiveFullscreen ? 'min-h-0 flex-1' : undefined}
       >
         {/* Client-side pagination footer */}
         {!isServerMode && (
