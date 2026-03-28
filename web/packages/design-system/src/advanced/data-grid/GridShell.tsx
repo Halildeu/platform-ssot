@@ -233,7 +233,7 @@ function GridShellInner<RowData = unknown>(
           headerHeight={density === "compact" ? 40 : 48}
           rowSelection={rowSelection}
           animateRows={animateRows}
-          rowGroupPanelShow={rowModelType === "serverSide" ? "never" : "always"}
+          rowGroupPanelShow="always"
           enableRangeSelection
           groupDefaultExpanded={0}
           groupTotalRow="bottom"

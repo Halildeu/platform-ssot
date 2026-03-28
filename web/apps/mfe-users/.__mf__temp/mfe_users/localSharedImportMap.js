@@ -4,21 +4,6 @@
     import {loadShare} from "@module-federation/runtime";
     const importMap = {
       
-        "@mfe/design-system": async () => {
-          let pkg = await import("__mf__virtual/mfe_users__prebuild___mf_0_mfe_mf_1_design_mf_2_system__prebuild__.js");
-            return pkg;
-        }
-      ,
-        "@mfe/i18n-dicts": async () => {
-          let pkg = await import("__mf__virtual/mfe_users__prebuild___mf_0_mfe_mf_1_i18n_mf_2_dicts__prebuild__.js");
-            return pkg;
-        }
-      ,
-        "@mfe/shared-http": async () => {
-          let pkg = await import("__mf__virtual/mfe_users__prebuild___mf_0_mfe_mf_1_shared_mf_2_http__prebuild__.js");
-            return pkg;
-        }
-      ,
         "@reduxjs/toolkit": async () => {
           let pkg = await import("__mf__virtual/mfe_users__prebuild___mf_0_reduxjs_mf_1_toolkit__prebuild__.js");
             return pkg;
@@ -26,21 +11,6 @@
       ,
         "@tanstack/react-query": async () => {
           let pkg = await import("__mf__virtual/mfe_users__prebuild___mf_0_tanstack_mf_1_react_mf_2_query__prebuild__.js");
-            return pkg;
-        }
-      ,
-        "ag-grid-community": async () => {
-          let pkg = await import("__mf__virtual/mfe_users__prebuild__ag_mf_2_grid_mf_2_community__prebuild__.js");
-            return pkg;
-        }
-      ,
-        "ag-grid-enterprise": async () => {
-          let pkg = await import("__mf__virtual/mfe_users__prebuild__ag_mf_2_grid_mf_2_enterprise__prebuild__.js");
-            return pkg;
-        }
-      ,
-        "ag-grid-react": async () => {
-          let pkg = await import("__mf__virtual/mfe_users__prebuild__ag_mf_2_grid_mf_2_react__prebuild__.js");
             return pkg;
         }
       ,
@@ -72,102 +42,6 @@
     }
       const usedShared = {
       
-          "@mfe/design-system": {
-            name: "@mfe/design-system",
-            version: "1.0.0",
-            scope: ["default"],
-            loaded: false,
-            from: "mfe_users",
-            async get () {
-              if (false) {
-                throw new Error(`[Module Federation] Shared module '${"@mfe/design-system"}' must be provided by host`);
-              }
-              usedShared["@mfe/design-system"].loaded = true
-              const {"@mfe/design-system": pkgDynamicImport} = importMap
-              const res = await pkgDynamicImport()
-              const exportModule = false && "@mfe/design-system" === "react"
-                ? (res?.default ?? res)
-                : {...res}
-              // All npm packages pre-built by vite will be converted to esm
-              Object.defineProperty(exportModule, "__esModule", {
-                value: true,
-                enumerable: false
-              })
-              return function () {
-                return exportModule
-              }
-            },
-            shareConfig: {
-              singleton: true,
-              requiredVersion: "^1.0.0",
-              
-            }
-          }
-        ,
-          "@mfe/i18n-dicts": {
-            name: "@mfe/i18n-dicts",
-            version: "0.1.0",
-            scope: ["default"],
-            loaded: false,
-            from: "mfe_users",
-            async get () {
-              if (false) {
-                throw new Error(`[Module Federation] Shared module '${"@mfe/i18n-dicts"}' must be provided by host`);
-              }
-              usedShared["@mfe/i18n-dicts"].loaded = true
-              const {"@mfe/i18n-dicts": pkgDynamicImport} = importMap
-              const res = await pkgDynamicImport()
-              const exportModule = false && "@mfe/i18n-dicts" === "react"
-                ? (res?.default ?? res)
-                : {...res}
-              // All npm packages pre-built by vite will be converted to esm
-              Object.defineProperty(exportModule, "__esModule", {
-                value: true,
-                enumerable: false
-              })
-              return function () {
-                return exportModule
-              }
-            },
-            shareConfig: {
-              singleton: true,
-              requiredVersion: "^0.1.0",
-              
-            }
-          }
-        ,
-          "@mfe/shared-http": {
-            name: "@mfe/shared-http",
-            version: "1.0.0",
-            scope: ["default"],
-            loaded: false,
-            from: "mfe_users",
-            async get () {
-              if (false) {
-                throw new Error(`[Module Federation] Shared module '${"@mfe/shared-http"}' must be provided by host`);
-              }
-              usedShared["@mfe/shared-http"].loaded = true
-              const {"@mfe/shared-http": pkgDynamicImport} = importMap
-              const res = await pkgDynamicImport()
-              const exportModule = false && "@mfe/shared-http" === "react"
-                ? (res?.default ?? res)
-                : {...res}
-              // All npm packages pre-built by vite will be converted to esm
-              Object.defineProperty(exportModule, "__esModule", {
-                value: true,
-                enumerable: false
-              })
-              return function () {
-                return exportModule
-              }
-            },
-            shareConfig: {
-              singleton: true,
-              requiredVersion: "^1.0.0",
-              
-            }
-          }
-        ,
           "@reduxjs/toolkit": {
             name: "@reduxjs/toolkit",
             version: "2.8.2",
@@ -228,102 +102,6 @@
             shareConfig: {
               singleton: true,
               requiredVersion: "^5.90.10",
-              
-            }
-          }
-        ,
-          "ag-grid-community": {
-            name: "ag-grid-community",
-            version: "34.3.1",
-            scope: ["default"],
-            loaded: false,
-            from: "mfe_users",
-            async get () {
-              if (false) {
-                throw new Error(`[Module Federation] Shared module '${"ag-grid-community"}' must be provided by host`);
-              }
-              usedShared["ag-grid-community"].loaded = true
-              const {"ag-grid-community": pkgDynamicImport} = importMap
-              const res = await pkgDynamicImport()
-              const exportModule = false && "ag-grid-community" === "react"
-                ? (res?.default ?? res)
-                : {...res}
-              // All npm packages pre-built by vite will be converted to esm
-              Object.defineProperty(exportModule, "__esModule", {
-                value: true,
-                enumerable: false
-              })
-              return function () {
-                return exportModule
-              }
-            },
-            shareConfig: {
-              singleton: true,
-              requiredVersion: "34.3.1",
-              
-            }
-          }
-        ,
-          "ag-grid-enterprise": {
-            name: "ag-grid-enterprise",
-            version: "34.3.1",
-            scope: ["default"],
-            loaded: false,
-            from: "mfe_users",
-            async get () {
-              if (false) {
-                throw new Error(`[Module Federation] Shared module '${"ag-grid-enterprise"}' must be provided by host`);
-              }
-              usedShared["ag-grid-enterprise"].loaded = true
-              const {"ag-grid-enterprise": pkgDynamicImport} = importMap
-              const res = await pkgDynamicImport()
-              const exportModule = false && "ag-grid-enterprise" === "react"
-                ? (res?.default ?? res)
-                : {...res}
-              // All npm packages pre-built by vite will be converted to esm
-              Object.defineProperty(exportModule, "__esModule", {
-                value: true,
-                enumerable: false
-              })
-              return function () {
-                return exportModule
-              }
-            },
-            shareConfig: {
-              singleton: true,
-              requiredVersion: "34.3.1",
-              
-            }
-          }
-        ,
-          "ag-grid-react": {
-            name: "ag-grid-react",
-            version: "34.3.1",
-            scope: ["default"],
-            loaded: false,
-            from: "mfe_users",
-            async get () {
-              if (false) {
-                throw new Error(`[Module Federation] Shared module '${"ag-grid-react"}' must be provided by host`);
-              }
-              usedShared["ag-grid-react"].loaded = true
-              const {"ag-grid-react": pkgDynamicImport} = importMap
-              const res = await pkgDynamicImport()
-              const exportModule = false && "ag-grid-react" === "react"
-                ? (res?.default ?? res)
-                : {...res}
-              // All npm packages pre-built by vite will be converted to esm
-              Object.defineProperty(exportModule, "__esModule", {
-                value: true,
-                enumerable: false
-              })
-              return function () {
-                return exportModule
-              }
-            },
-            shareConfig: {
-              singleton: true,
-              requiredVersion: "34.3.1",
               
             }
           }

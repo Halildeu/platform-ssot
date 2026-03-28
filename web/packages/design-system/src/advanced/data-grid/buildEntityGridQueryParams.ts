@@ -2,6 +2,7 @@ import type {
   AdvancedFilterModel as AgAdvancedFilterModel,
   IServerSideGetRowsRequest,
   SortModelItem,
+  ColumnVO,
 } from 'ag-grid-community';
 
 export type EntityGridQueryParams = {
@@ -10,6 +11,8 @@ export type EntityGridQueryParams = {
   search?: string;
   sort?: string;
   advancedFilter?: string;
+  rowGroupCols?: string;
+  groupKeys?: string;
 } & Record<string, unknown>;
 
 export type MapAdvancedFilter = (model: AgAdvancedFilterModel | null | undefined) => Record<string, unknown> | null;
@@ -65,6 +68,16 @@ export const buildEntityGridQueryParams = (
   const sortParam = toSortParam((request as { sortModel?: SortModelItem[] }).sortModel);
   if (sortParam) {
     params.sort = sortParam;
+  }
+
+  // Server-side grouping: rowGroupCols = columns being grouped, groupKeys = current drill-down path
+  const rowGroupCols = (request as { rowGroupCols?: ColumnVO[] }).rowGroupCols;
+  const groupKeys = (request as { groupKeys?: string[] }).groupKeys;
+  if (Array.isArray(rowGroupCols) && rowGroupCols.length > 0) {
+    params.rowGroupCols = rowGroupCols.map((c) => c.id).join(',');
+  }
+  if (Array.isArray(groupKeys) && groupKeys.length > 0) {
+    params.groupKeys = groupKeys.join(',');
   }
 
   // AG Grid v34: when enableAdvancedFilter is true, filterModel contains AdvancedFilterModel.

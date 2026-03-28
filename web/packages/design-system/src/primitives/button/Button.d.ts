@@ -72,7 +72,7 @@ export declare const Button: React.ForwardRefExoticComponent<{
      * @example <Button asChild><a href="/login">Login</a></Button>
      */
     asChild?: boolean;
-} & Omit<Omit<React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "ref">, "density" | "size" | "as" | "loading" | "access" | "variant" | "asChild" | "leftIcon" | "rightIcon" | "fullWidth" | "iconOnly" | "accessReason"> & React.RefAttributes<HTMLElement>>;
+} & Omit<Omit<React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "ref">, "loading" | "access" | "density" | "variant" | "size" | "as" | "asChild" | "leftIcon" | "rightIcon" | "fullWidth" | "iconOnly" | "accessReason"> & React.RefAttributes<HTMLElement>>;
 /** Default button props (non-polymorphic) for simple use cases. */
 export interface ButtonDefaultProps extends Omit<ButtonProps<'button'>, keyof React.ComponentPropsWithoutRef<'button'>> {
 }

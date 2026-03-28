@@ -334,10 +334,16 @@ const UsersGrid: React.FC<UsersGridProps> = ({
       cellSelection: true,
       multiSortKey: 'ctrl',
       rowGroupPanelShow: 'always',
-      enableAdvancedFilter: true,
       // AG Grid v34: cacheBlockSize sadece serverSide row modelde geçerli
       ...(dataSourceMode === 'server'
-        ? { cacheBlockSize: SERVER_CACHE_BLOCK_SIZE, maxBlocksInCache: 1, blockLoadDebounceMillis: 25 }
+        ? {
+            cacheBlockSize: SERVER_CACHE_BLOCK_SIZE,
+            maxBlocksInCache: 1,
+            blockLoadDebounceMillis: 25,
+            // SSRM grouping: detect group rows by sessionTimeoutMinutes > 0 (used as childCount)
+            isServerSideGroup: (data: UserSummary) => !!(data as any)._isGroup,
+            getServerSideGroupKey: (data: UserSummary) => (data as any)._groupKey ?? data.name ?? '',
+          }
         : {}),
     }),
     [dataSourceMode],
@@ -602,8 +608,20 @@ const UsersGrid: React.FC<UsersGridProps> = ({
               return;
             }
             setGridState('idle');
-            const items = response.items ?? [];
+            let items = response.items ?? [];
             const total = response.total ?? items.length;
+
+            // Enrich group rows returned by server-side grouping
+            const reqGroupCols = params.request.rowGroupCols ?? [];
+            const reqGroupKeys = params.request.groupKeys ?? [];
+            const isGroupLevel = reqGroupCols.length > 0 && reqGroupKeys.length < reqGroupCols.length;
+            if (isGroupLevel) {
+              items = items.map((item) => ({
+                ...item,
+                _isGroup: true,
+                _groupKey: item.name ?? item.role ?? '',
+              })) as typeof items;
+            }
             debugLog('server:getRows:success', requestLabel, {
               queryParams: baseParams,
               returnedItems: items.length,
@@ -776,21 +794,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
     [handleStreamingCsv, modeSelector],
   );
 
-  const handleRequestFullscreen = useCallback(() => {
-    if (typeof document === 'undefined') {
-      return;
-    }
-    const root = document.documentElement;
-    if (!document.fullscreenElement) {
-      root.requestFullscreen?.().catch(() => {
-        // noop
-      });
-    } else {
-      document.exitFullscreen?.().catch(() => {
-        // noop
-      });
-    }
-  }, []);
+  // Fullscreen is now handled internally by EntityGridTemplate (grid-scoped, not page-scoped)
 
   const handleRetry = useCallback(() => {
     setGridState('idle');
@@ -843,7 +847,6 @@ const UsersGrid: React.FC<UsersGridProps> = ({
           exportConfig={exportConfig}
           onRowDoubleClick={onSelectUser}
           isFullscreen={isFullscreen}
-          onRequestFullscreen={handleRequestFullscreen}
           dataSourceMode={dataSourceMode}
           rowData={dataSourceMode === 'client' ? clientRows : undefined}
           total={dataSourceMode === 'client' ? clientRows.length : undefined}

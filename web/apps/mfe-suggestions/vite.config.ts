@@ -16,10 +16,11 @@ const sharedCore = {
   'react-dom': singleton('react-dom'),
   'react-router': singleton('react-router'),
   'react-router-dom': singleton('react-router-dom'),
-};
-const sharedProdOnly = {
   '@reduxjs/toolkit': singleton('@reduxjs/toolkit'),
   'react-redux': singleton('react-redux'),
+  '@tanstack/react-query': singleton('@tanstack/react-query'),
+};
+const sharedProdOnly = {
   '@mfe/design-system': singleton('@mfe/design-system', false),
   clsx: singleton('clsx'),
   'tailwind-merge': singleton('tailwind-merge'),
@@ -33,13 +34,7 @@ export default defineConfig(({ mode }) => ({
       name: 'mfe_suggestions',
       filename: 'remoteEntry.js',
       dts: false,
-      remotes: {
-        mfe_shell: {
-          type: 'module',
-          name: 'mfe_shell',
-          entry: 'http://localhost:3000/remoteEntry.js',
-        },
-      },
+      remotes: {},
       exposes: {
         './SuggestionsApp': './src/App.tsx',
       },
@@ -70,7 +65,7 @@ export default defineConfig(({ mode }) => ({
       'clsx',
       'tailwind-merge',
     ],
-    exclude: ['mfe_shell'],
+    exclude: [],
   },
 
   server: {
@@ -86,8 +81,6 @@ export default defineConfig(({ mode }) => ({
     outDir: 'dist',
     // MF remote imports resolved at runtime via Module Federation container.
     // Mark as external so rolldown doesn't try to resolve named exports statically.
-    rolldownOptions: {
-      external: [/^mfe_shell\//],
-    },
+    rolldownOptions: {},
   },
 }));
