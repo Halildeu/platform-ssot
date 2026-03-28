@@ -70,7 +70,6 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
           </button>
         </div>
       )}
-      </div>
 
       {/* Empty state */}
       {totalChildren === 0 && (
