@@ -76,7 +76,7 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
       <div className="fixed inset-0 z-40 bg-black/20" onClick={onClose} />
 
       {/* Panel */}
-      <div className="fixed bottom-0 right-0 top-0 z-50 flex w-[480px] flex-col bg-surface-default shadow-2xl">
+      <div className="fixed bottom-0 right-0 top-0 z-50 flex w-[620px] flex-col bg-surface-default shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border-subtle px-6 py-4">
           <div className="flex items-center gap-2.5">
