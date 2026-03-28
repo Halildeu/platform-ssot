@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import type {
   ColDef,
   GridReadyEvent,
@@ -116,6 +116,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
   onLoadingChange,
 }) => {
   const { t, locale } = useUsersI18n();
+  const gridApiRef = useRef<GridApi<UserSummary> | null>(null);
   const [dataSourceMode, setDataSourceMode] = useState<'server' | 'client'>('server');
   const [clientRows, setClientRows] = useState<UserSummary[]>([]);
   const [gridAccessState, setGridAccessState] = useState<GridAccessState>('idle');
@@ -636,6 +637,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
 
   const handleGridReady = useCallback(
     (event: GridReadyEvent<UserSummary>) => {
+      gridApiRef.current = event.api;
       // Runtime debug: grid API'yi pencereden erişilebilir yap
       try {
         window.usersGridApi = event.api;
@@ -757,10 +759,32 @@ const UsersGrid: React.FC<UsersGridProps> = ({
   );
 
   const handleStreamingCsv = useCallback(() => {
-    // Backend streaming export: tüm kayıtları CSV olarak indirir — mevcut filtre/sort ile
     const qs = new URLSearchParams();
-    // TODO: gridApi erişimi olmadığı için şimdilik dataSourceMode'dan basic params
-    // İleride gridApi.getFilterModel() + getColumnState() kullanılacak
+    const api = gridApiRef.current;
+    if (api) {
+      // Sort
+      const sortCols = api.getColumnState().filter((c) => c.sort);
+      if (sortCols.length > 0) {
+        qs.set('sort', sortCols.map((c) => `${c.colId},${c.sort}`).join(';'));
+      }
+      // Column filters → extract known params
+      const filterModel = api.getFilterModel() ?? {};
+      for (const [colId, model] of Object.entries(filterModel)) {
+        const m = model as Record<string, unknown>;
+        if (colId === 'status' && m.values) {
+          qs.set('status', String((m.values as unknown[])[0]));
+        } else if (colId === 'role' && m.values) {
+          qs.set('role', String((m.values as unknown[])[0]));
+        } else if ((colId === 'fullName' || colId === 'email') && m.filter) {
+          qs.set('search', String(m.filter));
+        }
+      }
+      // Quick filter
+      const quickFilter = api.getGridOption('quickFilterText') as string;
+      if (quickFilter?.trim()) {
+        qs.set('search', quickFilter.trim());
+      }
+    }
     const url = `/api/users/export.csv${qs.toString() ? '?' + qs.toString() : ''}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   }, []);
