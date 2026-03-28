@@ -30,7 +30,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "prestart": "npx kill-port 3000 3001 3002 3003 3004 3005 3006 3007 || true",
+    "prestart": "lsof -iTCP:3000 -sTCP:LISTEN -Pn >/dev/null 2>&1 && echo '[prestart] port 3000 zaten dinleniyor, kill atlandi' && exit 0 || npx kill-port 3000 3001 3002 3003 3004 3005 3006 3007 || true",
     "dev:remotes": "bash ./scripts/health/run-dev-servers.sh --profile remotes",
     "dev:shell": "npm start --prefix apps/mfe-shell",
     "dev:users": "npm start --prefix apps/mfe-users",
@@ -158,6 +158,8 @@
     "pw:ci": "PW_MODE=ci npx playwright test --config tests/playwright/playwright.config.ts tests/playwright/scenario-runner.spec.ts --project=chromium --workers=1",
     "pw:nightly": "PW_MODE=nightly npx playwright test --config tests/playwright/playwright.config.ts tests/playwright/scenario-runner.spec.ts --project=chromium --workers=1",
     "doctor:frontend": "node ./scripts/ops/frontend-doctor.mjs",
+    "doctor:federation": "node ./scripts/ops/federation-doctor.mjs",
+    "doctor:federation:json": "node ./scripts/ops/federation-doctor.mjs --json",
     "quality:audit:build": "npm run build:audit",
     "test:bundle": "size-limit",
     "test:perf": "lhci autorun --config=apps/mfe-audit/lighthouserc.json",
