@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useCallback, useState } from "react";
+import React, { useEffect, useMemo, useCallback } from "react";
 import { BrowserRouter, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/store.hooks";
 import { useThemeContext } from "../theme/theme-context.provider";
@@ -55,8 +55,8 @@ const ShellChrome: React.FC = () => {
         {/* Fixed sidebar — rendered outside flow */}
         {showSidebar ? <Sidebar /> : null}
         <div className="flex min-h-0 flex-1">
-          {/* Spacer matching fixed sidebar width */}
-          {showSidebar ? <SidebarSpacer /> : null}
+          {/* Spacer matching fixed sidebar width via CSS variable */}
+          {showSidebar ? <div className="shrink-0" style={{ width: 'var(--shell-sidebar-w, 76px)' }} /> : null}
           <main className="min-w-0 flex-1 px-8 py-8">
           <div className="flex w-full flex-col gap-6">
             <AppRouter />
@@ -186,29 +186,3 @@ export const ShellLayout: React.FC = () => {
   );
 };
 
-/** Invisible spacer that matches the fixed sidebar width so main content doesn't slide under it. */
-const SIDEBAR_KEY = 'sidebar-mode';
-function SidebarSpacer() {
-  const [mode, setMode] = useState<'expanded' | 'collapsed'>(() => {
-    try {
-      const raw = localStorage.getItem(SIDEBAR_KEY);
-      return raw === 'collapsed' ? 'collapsed' : 'expanded';
-    } catch { return 'expanded'; }
-  });
-
-  useEffect(() => {
-    const handler = () => {
-      try {
-        const raw = localStorage.getItem(SIDEBAR_KEY);
-        setMode(raw === 'collapsed' ? 'collapsed' : 'expanded');
-      } catch { /* */ }
-    };
-    // Listen for sidebar toggle (Sidebar writes to localStorage + fires storage event)
-    window.addEventListener('storage', handler);
-    // Also poll briefly since same-tab localStorage changes don't fire storage event
-    const id = setInterval(handler, 300);
-    return () => { window.removeEventListener('storage', handler); clearInterval(id); };
-  }, []);
-
-  return <div className={`shrink-0 ${mode === 'collapsed' ? 'w-[76px]' : 'w-[280px]'}`} />;
-}
