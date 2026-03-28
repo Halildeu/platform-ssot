@@ -45,6 +45,7 @@ export interface GridVariantState {
   sortModel?: unknown[];
   pivotMode?: boolean;
   quickFilterText?: string;
+  paginationPageSize?: number;
 }
 
 export interface GridVariant {
@@ -166,6 +167,7 @@ function collectGridState<RowData>(api: GridApi<RowData>): GridVariantState {
       })),
     pivotMode: api.isPivotMode?.() ?? false,
     quickFilterText: (api.getGridOption?.("quickFilterText") as string) ?? "",
+    paginationPageSize: (api.getGridOption?.("paginationPageSize") as number) ?? undefined,
   };
 }
 
@@ -184,6 +186,9 @@ function applyVariantState<RowData>(api: GridApi<RowData>, state: GridVariantSta
   }
   if (typeof state.quickFilterText === "string") {
     api.setGridOption?.("quickFilterText", state.quickFilterText);
+  }
+  if (typeof state.paginationPageSize === "number" && state.paginationPageSize > 0) {
+    api.setGridOption?.("paginationPageSize", state.paginationPageSize);
   }
   // Refresh SSRM after applying variant state so filters/sort take effect
   const rowModelType = api.getGridOption?.("rowModelType");
