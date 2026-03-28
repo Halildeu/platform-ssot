@@ -93,9 +93,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ dashboardKey }) =>
         value: Number(d.value ?? 0),
       }));
 
+      // Auto-detect if values are large enough to need abbreviation
+      const maxVal = Math.max(...chartData.map((d) => Math.abs(d.value)), 0);
+      const needsAbbrev = maxVal >= 1000;
+
       const chartProps: Record<string, unknown> = {
         size: 'lg' as const,
         animate: true,
+        showValues: true,
+        ...(needsAbbrev ? { valueFormatter: abbreviateNumber } : {}),
         ...(chart.chartConfig || {}),
       };
 
