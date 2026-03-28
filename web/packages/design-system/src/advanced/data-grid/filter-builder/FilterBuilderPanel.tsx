@@ -22,7 +22,7 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
   open,
   onClose,
 }) => {
-  const { root, setRoot, addCondition, addGroup, removeNode, updateCondition, setLogic, clear, isEmpty, maxDepthReached } =
+  const { root, setRoot, addCondition, addGroup, removeNode, updateCondition, setLogic, indentNode, outdentNode, moveNode, clear, isEmpty, maxDepthReached } =
     useFilterBuilder(3);
   const [matchCount, setMatchCount] = useState<number | null>(null);
 
@@ -110,6 +110,9 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
             onRemoveNode={removeNode}
             onUpdateCondition={updateCondition}
             onSetLogic={setLogic}
+            onIndentNode={indentNode}
+            onOutdentNode={outdentNode}
+            onMoveNode={moveNode}
           />
         </div>
 

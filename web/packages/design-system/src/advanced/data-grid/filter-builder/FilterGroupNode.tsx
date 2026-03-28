@@ -18,6 +18,9 @@ interface FilterGroupNodeProps {
   onRemoveNode: (id: string) => void;
   onUpdateCondition: (id: string, updates: Partial<FilterCondition>) => void;
   onSetLogic: (groupId: string, logic: 'AND' | 'OR') => void;
+  onIndentNode?: (id: string) => void;
+  onOutdentNode?: (id: string) => void;
+  onMoveNode?: (id: string, direction: 'up' | 'down') => void;
 }
 
 const DEPTH_STYLES = [
@@ -37,6 +40,9 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
   onRemoveNode,
   onUpdateCondition,
   onSetLogic,
+  onIndentNode,
+  onOutdentNode,
+  onMoveNode,
 }) => {
   const style = DEPTH_STYLES[depth % DEPTH_STYLES.length];
   const totalChildren = group.children.length;
@@ -119,7 +125,12 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
                   columnDefs={columnDefs}
                   onUpdate={onUpdateCondition}
                   onRemove={onRemoveNode}
+                  onIndent={onIndentNode}
+                  onOutdent={onOutdentNode}
+                  onMove={onMoveNode}
                   canRemove={totalChildren > 1}
+                  canIndent={!maxDepthReached}
+                  canOutdent={!isRoot && depth > 0}
                 />
               </React.Fragment>
             );
@@ -138,6 +149,9 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
                   onRemoveNode={onRemoveNode}
                   onUpdateCondition={onUpdateCondition}
                   onSetLogic={onSetLogic}
+                  onIndentNode={onIndentNode}
+                  onOutdentNode={onOutdentNode}
+                  onMoveNode={onMoveNode}
                 />
               </React.Fragment>
             );
