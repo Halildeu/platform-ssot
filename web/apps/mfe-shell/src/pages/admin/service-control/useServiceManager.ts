@@ -14,6 +14,8 @@ export type ServiceInfo = {
   dockerHealth: string | null;
   health: string;
   responseTime: number | null;
+  rssMb: number | null;
+  cpu: number | null;
 };
 
 type ServicesResponse = {

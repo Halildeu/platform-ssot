@@ -8,6 +8,8 @@ import {
   RotateCw,
   ScrollText,
   Loader2,
+  MemoryStick,
+  Cpu,
 } from 'lucide-react';
 import { Text } from '@mfe/design-system';
 import type { ServiceInfo } from './useServiceManager';
@@ -76,7 +78,7 @@ export function ServiceCard({ service, actionPending, onStart, onStop, onRestart
       </div>
 
       {/* Info row */}
-      <div className="mt-3 flex items-center gap-4 text-xs text-text-secondary">
+      <div className="mt-3 flex items-center gap-3 text-xs text-text-secondary">
         {service.port && (
           <span className="font-mono">:{service.port}</span>
         )}
@@ -88,6 +90,36 @@ export function ServiceCard({ service, actionPending, onStart, onStop, onRestart
           <span>{service.uptime}</span>
         )}
       </div>
+
+      {/* Resource usage */}
+      {(service.rssMb != null || service.cpu != null) && (
+        <div className="mt-2 flex items-center gap-3">
+          {service.rssMb != null && (
+            <div className="flex items-center gap-1">
+              <MemoryStick className="h-3 w-3 text-text-secondary" />
+              <span className={`text-[11px] font-semibold ${
+                service.rssMb > 1000 ? 'text-rose-600' : service.rssMb > 500 ? 'text-amber-600' : 'text-emerald-600'
+              }`}>
+                {service.rssMb}MB
+              </span>
+              <div className="h-1.5 w-16 overflow-hidden rounded-full bg-gray-200">
+                <div
+                  className={`h-full rounded-full transition-all ${
+                    service.rssMb > 1000 ? 'bg-rose-500' : service.rssMb > 500 ? 'bg-amber-500' : 'bg-emerald-500'
+                  }`}
+                  style={{ width: `${Math.min(100, (service.rssMb / 1500) * 100)}%` }}
+                />
+              </div>
+            </div>
+          )}
+          {service.cpu != null && service.cpu > 0 && (
+            <div className="flex items-center gap-1">
+              <Cpu className="h-3 w-3 text-text-secondary" />
+              <span className="text-[11px] font-medium text-text-secondary">{service.cpu.toFixed(1)}%</span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Type + health badge */}
       <div className="mt-2 flex items-center gap-1.5">
