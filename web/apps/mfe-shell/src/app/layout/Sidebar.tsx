@@ -245,7 +245,7 @@ export const Sidebar: React.FC = () => {
   return (
     <aside
       data-testid="sidebar-root"
-      className={`flex min-h-0 flex-col border-r border-border-subtle bg-surface-panel shadow-xs ${
+      className={`sticky top-0 flex h-screen min-h-0 flex-col border-r border-border-subtle bg-surface-panel shadow-xs ${
         isCollapsed ? 'w-[76px]' : 'w-[280px]'
       }`}
     >
