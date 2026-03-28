@@ -265,12 +265,16 @@ log_path = Path(sys.argv[2])
 command = sys.argv[3]
 
 with log_path.open("ab", buffering=0) as log_file:
+    # Use subprocess.PIPE instead of DEVNULL for stdin.
+    # Vite listens for stdin "end" event and shuts down when it fires.
+    # DEVNULL gives immediate EOF → triggers shutdown.
+    # PIPE keeps stdin open indefinitely → server stays alive.
     subprocess.Popen(
         command,
         cwd=root_dir,
         shell=True,
         executable="/bin/bash",
-        stdin=subprocess.DEVNULL,
+        stdin=subprocess.PIPE,
         stdout=log_file,
         stderr=log_file,
         start_new_session=True,
