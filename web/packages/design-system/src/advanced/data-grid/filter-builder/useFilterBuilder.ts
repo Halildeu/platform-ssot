@@ -2,54 +2,23 @@
  * useFilterBuilder — State management for the custom filter builder tree.
  *
  * Manages a recursive AND/OR tree of filter conditions.
- * Converts to/from AG Grid FilterModel format.
+ * Supports: add/remove/move/clone/lock/not operations, independent combinators,
+ * and drag-and-drop reordering via @dnd-kit.
  */
 import { useCallback, useState } from 'react';
+import type { FilterType, FilterCondition, FilterCombinator, FilterGroup, FilterNode, FilterTreeNode } from './types';
 
-// ── Types ──
+export type { FilterType, FilterCondition, FilterCombinator, FilterGroup, FilterNode, FilterTreeNode };
 
-export type FilterType = 'text' | 'number' | 'date' | 'set';
+// ── ID generation ──
 
-export interface FilterCondition {
-  type: 'condition';
-  id: string;
-  colId: string;
-  filterType: FilterType;
-  operator: string;
-  value: unknown;
-  valueTo?: unknown; // for inRange
-}
+let _nextId = 1;
+const uid = () => `fb_${_nextId++}`;
 
-export interface FilterCombinator {
-  type: 'combinator';
-  id: string;
-  logic: 'AND' | 'OR';
-}
-
-export interface FilterGroup {
-  type: 'group';
-  id: string;
-  logic: 'AND' | 'OR'; // default for new combinators
-  children: FilterTreeNode[];
-}
-
-export type FilterNode = FilterCondition | FilterGroup;
-export type FilterTreeNode = FilterNode | FilterCombinator;
-
-// ── Helpers ──
-
-let nextId = 1;
-const uid = () => `fb_${nextId++}`;
+// ── Factory helpers ──
 
 export function createEmptyCondition(): FilterCondition {
-  return {
-    type: 'condition',
-    id: uid(),
-    colId: '',
-    filterType: 'text',
-    operator: 'contains',
-    value: '',
-  };
+  return { type: 'condition', id: uid(), colId: '', filterType: 'text', operator: 'contains', value: '' };
 }
 
 export function createCombinator(logic: 'AND' | 'OR' = 'AND'): FilterCombinator {
@@ -57,33 +26,30 @@ export function createCombinator(logic: 'AND' | 'OR' = 'AND'): FilterCombinator 
 }
 
 export function createEmptyGroup(logic: 'AND' | 'OR' = 'AND'): FilterGroup {
-  return {
-    type: 'group',
-    id: uid(),
-    logic,
-    children: [],
-  };
+  return { type: 'group', id: uid(), logic, not: false, children: [] };
 }
 
-// ── Deep tree operations ──
+// ── Deep tree helpers ──
 
-function findAndUpdate(nodes: FilterTreeNode[], targetId: string, updater: (node: FilterTreeNode) => FilterTreeNode | null): FilterTreeNode[] {
+/** Recursively finds a node by id and calls updater. Return null to delete. */
+function findAndUpdate(
+  nodes: FilterTreeNode[],
+  targetId: string,
+  updater: (node: FilterTreeNode) => FilterTreeNode | null,
+): FilterTreeNode[] {
   const result: FilterTreeNode[] = [];
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
     if (node.id === targetId) {
       const updated = updater(node);
-      if (updated) {
+      if (updated !== null) {
         result.push(updated);
       } else {
-        // Removing node — also remove adjacent combinator
-        // If node is after a combinator, remove the combinator before it
+        // Remove node and adjacent combinator
         if (result.length > 0 && result[result.length - 1].type === 'combinator') {
-          result.pop();
-        }
-        // If node is first and next is combinator, skip next combinator
-        else if (i + 1 < nodes.length && nodes[i + 1].type === 'combinator') {
-          i++; // skip next combinator
+          result.pop(); // remove combinator before this node
+        } else if (i + 1 < nodes.length && nodes[i + 1].type === 'combinator') {
+          i++; // skip combinator after this node
         }
       }
     } else if (node.type === 'group') {
@@ -95,21 +61,32 @@ function findAndUpdate(nodes: FilterTreeNode[], targetId: string, updater: (node
   return result;
 }
 
-function getNodeChildren(nodes: FilterTreeNode[]): FilterNode[] {
+function getSubstantialChildren(nodes: FilterTreeNode[]): FilterNode[] {
   return nodes.filter((n) => n.type !== 'combinator') as FilterNode[];
 }
 
 function countDepth(nodes: FilterTreeNode[], current: number = 0): number {
   let max = current;
   for (const node of nodes) {
-    if (node.type === 'group') {
-      max = Math.max(max, countDepth(node.children, current + 1));
-    }
+    if (node.type === 'group') max = Math.max(max, countDepth(node.children, current + 1));
   }
   return max;
 }
 
-// ── Hook ──
+function deepClone<T>(v: T): T {
+  return JSON.parse(JSON.stringify(v)) as T;
+}
+
+/** Assign fresh IDs to an entire subtree (for clone operations). */
+function freshenIds(node: FilterTreeNode): FilterTreeNode {
+  const next = { ...node, id: uid() };
+  if (next.type === 'group') {
+    (next as FilterGroup).children = (next as FilterGroup).children.map(freshenIds);
+  }
+  return next;
+}
+
+// ── Hook interface ──
 
 export interface UseFilterBuilderReturn {
   root: FilterGroup;
@@ -118,10 +95,14 @@ export interface UseFilterBuilderReturn {
   addGroup: (parentId: string) => void;
   removeNode: (id: string) => void;
   updateCondition: (id: string, updates: Partial<FilterCondition>) => void;
-  setLogic: (groupId: string, logic: 'AND' | 'OR') => void;
+  setLogic: (targetId: string, logic: 'AND' | 'OR') => void;
   indentNode: (id: string) => void;
   outdentNode: (id: string) => void;
   moveNode: (id: string, direction: 'up' | 'down') => void;
+  moveNodeDnD: (activeId: string, overId: string) => void;
+  cloneNode: (id: string) => void;
+  toggleLock: (id: string) => void;
+  toggleNot: (groupId: string) => void;
   clear: () => void;
   isEmpty: boolean;
   maxDepthReached: boolean;
@@ -130,68 +111,58 @@ export interface UseFilterBuilderReturn {
 export function useFilterBuilder(maxNesting: number = 3): UseFilterBuilderReturn {
   const [root, setRoot] = useState<FilterGroup>(createEmptyGroup);
 
+  // ── Add condition ──
   const addCondition = useCallback((parentId: string) => {
     setRoot((prev) => {
-      const addToGroup = (group: FilterGroup): FilterGroup => {
+      const addTo = (group: FilterGroup): FilterGroup => {
         if (group.id === parentId) {
-          const hasRules = getNodeChildren(group.children).length > 0;
+          const hasRules = getSubstantialChildren(group.children).length > 0;
           const newItems: FilterTreeNode[] = hasRules
             ? [createCombinator(group.logic), createEmptyCondition()]
             : [createEmptyCondition()];
           return { ...group, children: [...group.children, ...newItems] };
         }
-        return {
-          ...group,
-          children: group.children.map((c) =>
-            c.type === 'group' ? addToGroup(c) : c,
-          ),
-        };
+        return { ...group, children: group.children.map((c) => (c.type === 'group' ? addTo(c) : c)) };
       };
-      return addToGroup(prev);
+      return addTo(prev);
     });
   }, []);
 
+  // ── Add group ──
   const addGroup = useCallback((parentId: string) => {
     setRoot((prev) => {
-      const depth = countDepth(prev.children, 1);
-      if (depth >= maxNesting) return prev;
-      const addToGroup = (group: FilterGroup): FilterGroup => {
+      if (countDepth(prev.children, 1) >= maxNesting) return prev;
+      const addTo = (group: FilterGroup): FilterGroup => {
         if (group.id === parentId) {
-          const hasRules = getNodeChildren(group.children).length > 0;
+          const hasRules = getSubstantialChildren(group.children).length > 0;
           const newGroup = createEmptyGroup('OR');
           const newItems: FilterTreeNode[] = hasRules
             ? [createCombinator(group.logic), newGroup]
             : [newGroup];
           return { ...group, children: [...group.children, ...newItems] };
         }
-        return {
-          ...group,
-          children: group.children.map((c) =>
-            c.type === 'group' ? addToGroup(c) : c,
-          ),
-        };
+        return { ...group, children: group.children.map((c) => (c.type === 'group' ? addTo(c) : c)) };
       };
-      return addToGroup(prev);
+      return addTo(prev);
     });
   }, [maxNesting]);
 
+  // ── Remove node ──
   const removeNode = useCallback((id: string) => {
-    setRoot((prev) => ({
-      ...prev,
-      children: findAndUpdate(prev.children, id, () => null),
-    }));
+    setRoot((prev) => ({ ...prev, children: findAndUpdate(prev.children, id, () => null) }));
   }, []);
 
+  // ── Update condition ──
   const updateCondition = useCallback((id: string, updates: Partial<FilterCondition>) => {
     setRoot((prev) => ({
       ...prev,
-      children: findAndUpdate(prev.children, id, (node) =>
-        node.type === 'condition' ? { ...node, ...updates } : node,
+      children: findAndUpdate(prev.children, id, (n) =>
+        n.type === 'condition' ? { ...n, ...updates } : n,
       ),
     }));
   }, []);
 
-  // setLogic works for both combinator IDs and group IDs
+  // ── Set logic (combinator or group) ──
   const setLogic = useCallback((targetId: string, logic: 'AND' | 'OR') => {
     setRoot((prev) => {
       const update = (children: FilterTreeNode[]): FilterTreeNode[] =>
@@ -208,26 +179,16 @@ export function useFilterBuilder(maxNesting: number = 3): UseFilterBuilderReturn
     });
   }, []);
 
-  // Indent: wrap node in a new OR sub-group (moves it one level deeper)
+  // ── Indent: wrap node in a new OR sub-group ──
   const indentNode = useCallback((id: string) => {
     setRoot((prev) => {
-      const depth = countDepth(prev.children, 1);
-      if (depth >= maxNesting) return prev;
-
-      function doIndent(children: FilterNode[]): FilterNode[] {
+      if (countDepth(prev.children, 1) >= maxNesting) return prev;
+      function doIndent(children: FilterTreeNode[]): FilterTreeNode[] {
         return children.map((child) => {
           if (child.id === id) {
-            // Wrap in a new group
-            return createEmptyGroup('OR') as FilterGroup & { children: FilterNode[] } && {
-              type: 'group' as const,
-              id: uid(),
-              logic: 'OR' as const,
-              children: [child],
-            };
+            return { type: 'group' as const, id: uid(), logic: 'OR' as const, not: false, children: [child] };
           }
-          if (child.type === 'group') {
-            return { ...child, children: doIndent(child.children) };
-          }
+          if (child.type === 'group') return { ...child, children: doIndent(child.children) };
           return child;
         });
       }
@@ -235,22 +196,19 @@ export function useFilterBuilder(maxNesting: number = 3): UseFilterBuilderReturn
     });
   }, [maxNesting]);
 
-  // Outdent: unwrap node from its parent group, move to grandparent
+  // ── Outdent: move node up to grandparent ──
   const outdentNode = useCallback((id: string) => {
     setRoot((prev) => {
-      function doOutdent(children: FilterNode[]): FilterNode[] {
-        const result: FilterNode[] = [];
+      function doOutdent(children: FilterTreeNode[]): FilterTreeNode[] {
+        const result: FilterTreeNode[] = [];
         for (const child of children) {
           if (child.type === 'group') {
-            const targetIdx = child.children.findIndex((c) => c.id === id);
-            if (targetIdx >= 0) {
-              // Found: extract the target from this group
-              const target = child.children[targetIdx];
-              const remaining = child.children.filter((_, i) => i !== targetIdx);
-              if (remaining.length > 0) {
-                result.push({ ...child, children: remaining });
-              }
-              result.push(target); // Move to parent level
+            const idx = child.children.findIndex((c) => c.id === id);
+            if (idx >= 0) {
+              const target = child.children[idx];
+              const remaining = child.children.filter((_, i) => i !== idx);
+              if (remaining.length > 0) result.push({ ...child, children: remaining });
+              result.push(target);
             } else {
               result.push({ ...child, children: doOutdent(child.children) });
             }
@@ -264,17 +222,21 @@ export function useFilterBuilder(maxNesting: number = 3): UseFilterBuilderReturn
     });
   }, []);
 
-  // Move node up/down within its sibling list
+  // ── Move node up/down within siblings ──
   const moveNode = useCallback((id: string, direction: 'up' | 'down') => {
     setRoot((prev) => {
-      function doMove(children: FilterNode[]): FilterNode[] {
-        const idx = children.findIndex((c) => c.id === id);
+      function doMove(children: FilterTreeNode[]): FilterTreeNode[] {
+        // Work only with non-combinator children for index calculation
+        const substantial = children.filter((c) => c.type !== 'combinator');
+        const idx = substantial.findIndex((c) => c.id === id);
         if (idx >= 0) {
           const newIdx = direction === 'up' ? idx - 1 : idx + 1;
-          if (newIdx < 0 || newIdx >= children.length) return children;
-          const arr = [...children];
+          if (newIdx < 0 || newIdx >= substantial.length) return children;
+          const arr = [...substantial];
           [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
-          return arr;
+          // Rebuild the full children array maintaining combinator positions
+          let subIdx = 0;
+          return children.map((c) => (c.type === 'combinator' ? c : arr[subIdx++]));
         }
         return children.map((c) =>
           c.type === 'group' ? { ...c, children: doMove(c.children) } : c,
@@ -284,13 +246,89 @@ export function useFilterBuilder(maxNesting: number = 3): UseFilterBuilderReturn
     });
   }, []);
 
-  const clear = useCallback(() => {
-    setRoot(createEmptyGroup());
+  // ── DnD reorder: swap activeId with overId within same parent ──
+  const moveNodeDnD = useCallback((activeId: string, overId: string) => {
+    if (activeId === overId) return;
+    setRoot((prev) => {
+      function doSwap(children: FilterTreeNode[]): FilterTreeNode[] {
+        const activeIdx = children.findIndex((c) => c.id === activeId);
+        const overIdx = children.findIndex((c) => c.id === overId);
+        if (activeIdx >= 0 && overIdx >= 0) {
+          const arr = [...children];
+          const [removed] = arr.splice(activeIdx, 1);
+          arr.splice(overIdx, 0, removed);
+          return arr;
+        }
+        return children.map((c) =>
+          c.type === 'group' ? { ...c, children: doSwap(c.children) } : c,
+        );
+      }
+      return { ...prev, children: doSwap(prev.children) };
+    });
   }, []);
 
-  const isEmpty = root.children.length === 0;
+  // ── Clone node (deep copy with fresh ids) ──
+  const cloneNode = useCallback((id: string) => {
+    setRoot((prev) => {
+      function doClone(children: FilterTreeNode[]): FilterTreeNode[] {
+        const result: FilterTreeNode[] = [];
+        for (const child of children) {
+          result.push(child);
+          if (child.id === id) {
+            result.push(createCombinator('AND'));
+            result.push(freshenIds(deepClone(child)));
+          } else if (child.type === 'group') {
+            result[result.length - 1] = { ...child, children: doClone(child.children) };
+          }
+        }
+        return result;
+      }
+      return { ...prev, children: doClone(prev.children) };
+    });
+  }, []);
 
+  // ── Toggle locked on a node ──
+  const toggleLock = useCallback((id: string) => {
+    setRoot((prev) => {
+      const toggle = (children: FilterTreeNode[]): FilterTreeNode[] =>
+        children.map((c) => {
+          if (c.id === id) {
+            if (c.type === 'condition') return { ...c, locked: !c.locked };
+            if (c.type === 'group') return { ...c, locked: !c.locked };
+          }
+          if (c.type === 'group') return { ...c, children: toggle(c.children) };
+          return c;
+        });
+      if (prev.id === id) return { ...prev, locked: !prev.locked };
+      return { ...prev, children: toggle(prev.children) };
+    });
+  }, []);
+
+  // ── Toggle NOT on a group ──
+  const toggleNot = useCallback((groupId: string) => {
+    setRoot((prev) => {
+      const toggle = (children: FilterTreeNode[]): FilterTreeNode[] =>
+        children.map((c) => {
+          if (c.id === groupId && c.type === 'group') return { ...c, not: !c.not };
+          if (c.type === 'group') return { ...c, children: toggle(c.children) };
+          return c;
+        });
+      if (prev.id === groupId) return { ...prev, not: !prev.not };
+      return { ...prev, children: toggle(prev.children) };
+    });
+  }, []);
+
+  // ── Clear all ──
+  const clear = useCallback(() => { setRoot(createEmptyGroup()); }, []);
+
+  const isEmpty = root.children.length === 0;
   const maxDepthReached = countDepth(root.children, 1) >= maxNesting;
 
-  return { root, setRoot, addCondition, addGroup, removeNode, updateCondition, setLogic, indentNode, outdentNode, moveNode, clear, isEmpty, maxDepthReached };
+  return {
+    root, setRoot,
+    addCondition, addGroup, removeNode, updateCondition, setLogic,
+    indentNode, outdentNode, moveNode, moveNodeDnD,
+    cloneNode, toggleLock, toggleNot,
+    clear, isEmpty, maxDepthReached,
+  };
 }

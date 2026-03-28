@@ -2,13 +2,13 @@
  * filterModelConverter — Converts between FilterBuilder tree and AG Grid FilterModel.
  *
  * AG Grid FilterModel format (column-keyed):
- *   { role: { filterType:'set', values:['ADMIN'] }, fullName: { filterType:'text', type:'contains', filter:'John' } }
+ *   { role: { filterType:'set', values:['ADMIN'] }, name: { filterType:'text', type:'contains', filter:'John' } }
  *
  * FilterBuilder tree format (recursive AND/OR):
  *   { type:'group', logic:'AND', children: [{ type:'condition', colId:'role', ... }] }
  */
 import type { ColDef } from 'ag-grid-community';
-import type { FilterGroup, FilterCondition, FilterNode, FilterType, FilterTreeNode, FilterCombinator } from './useFilterBuilder';
+import type { FilterGroup, FilterCondition, FilterNode, FilterType, FilterTreeNode } from './types';
 import { createEmptyGroup } from './useFilterBuilder';
 
 // ── Tree → AG Grid FilterModel ──
@@ -17,10 +17,12 @@ export function treeToFilterModel(root: FilterGroup): Record<string, unknown> {
   const model: Record<string, unknown> = {};
   const conditions = flattenConditions(root);
 
-  // Group conditions by colId
   const byCol = new Map<string, FilterCondition[]>();
   for (const c of conditions) {
-    if (!c.colId || c.value === '' || c.value === null || c.value === undefined) continue;
+    if (!c.colId) continue;
+    const isBlankOp = c.operator === 'blank' || c.operator === 'notBlank';
+    if (!isBlankOp && (c.value === '' || c.value === null || c.value === undefined)) continue;
+    if (c.filterType === 'set' && Array.isArray(c.value) && c.value.length === 0) continue;
     const list = byCol.get(c.colId) ?? [];
     list.push(c);
     byCol.set(c.colId, list);
@@ -30,20 +32,12 @@ export function treeToFilterModel(root: FilterGroup): Record<string, unknown> {
     if (conds.length === 1) {
       model[colId] = conditionToAgModel(conds[0]);
     } else if (conds.length === 2) {
-      const parentLogic = findParentLogic(root, colId);
-      model[colId] = {
-        filterType: conds[0].filterType === 'set' ? 'set' : conds[0].filterType,
-        operator: parentLogic,
-        conditions: conds.map(conditionToAgModel),
-      };
+      const logic = findParentLogic(root, colId);
+      model[colId] = { filterType: conds[0].filterType, operator: logic, conditions: conds.map(conditionToAgModel) };
     } else {
-      // 3+ conditions: AG Grid limits to 2 — take first two
-      const parentLogic = findParentLogic(root, colId);
-      model[colId] = {
-        filterType: conds[0].filterType === 'set' ? 'set' : conds[0].filterType,
-        operator: parentLogic,
-        conditions: conds.slice(0, 2).map(conditionToAgModel),
-      };
+      // AG Grid supports max 2 conditions per column — use first two
+      const logic = findParentLogic(root, colId);
+      model[colId] = { filterType: conds[0].filterType, operator: logic, conditions: conds.slice(0, 2).map(conditionToAgModel) };
     }
   }
 
@@ -53,7 +47,7 @@ export function treeToFilterModel(root: FilterGroup): Record<string, unknown> {
 function conditionToAgModel(c: FilterCondition): Record<string, unknown> {
   switch (c.filterType) {
     case 'text':
-      return { filterType: 'text', type: c.operator, filter: String(c.value) };
+      return { filterType: 'text', type: c.operator, filter: String(c.value ?? '') };
     case 'number':
       return {
         filterType: 'number',
@@ -69,12 +63,9 @@ function conditionToAgModel(c: FilterCondition): Record<string, unknown> {
         dateTo: c.valueTo ? String(c.valueTo) : null,
       };
     case 'set':
-      return {
-        filterType: 'set',
-        values: Array.isArray(c.value) ? c.value : [c.value],
-      };
+      return { filterType: 'set', values: Array.isArray(c.value) ? c.value : [c.value] };
     default:
-      return { filterType: 'text', type: 'contains', filter: String(c.value) };
+      return { filterType: 'text', type: 'contains', filter: String(c.value ?? '') };
   }
 }
 
@@ -85,14 +76,13 @@ function flattenConditions(node: FilterNode | FilterTreeNode): FilterCondition[]
 }
 
 function findParentLogic(root: FilterGroup, colId: string): 'AND' | 'OR' {
-  // With independent combinators, find the combinator right before the condition
   function search(children: FilterTreeNode[]): 'AND' | 'OR' | null {
-    let lastCombinator: 'AND' | 'OR' = root.logic;
+    let lastLogic: 'AND' | 'OR' = root.logic;
     for (const child of children) {
       if (child.type === 'combinator') {
-        lastCombinator = child.logic;
+        lastLogic = child.logic;
       } else if (child.type === 'condition' && child.colId === colId) {
-        return lastCombinator;
+        return lastLogic;
       } else if (child.type === 'group') {
         const found = search(child.children);
         if (found) return found;
@@ -109,9 +99,7 @@ export function filterModelToTree(
   model: Record<string, unknown> | null,
   columnDefs: ColDef[],
 ): FilterGroup {
-  if (!model || Object.keys(model).length === 0) {
-    return createEmptyGroup();
-  }
+  if (!model || Object.keys(model).length === 0) return createEmptyGroup();
 
   const colMap = new Map<string, ColDef>();
   for (const col of columnDefs) {
@@ -128,7 +116,6 @@ export function filterModelToTree(
     const colDef = colMap.get(colId);
     const filterType = detectFilterType(m, colDef);
 
-    // Check if it has nested conditions
     if (Array.isArray(m.conditions) && m.conditions.length > 0) {
       const subGroup = createEmptyGroup((m.operator as 'AND' | 'OR') ?? 'AND');
       subGroup.children = (m.conditions as Record<string, unknown>[]).map((cond) =>
@@ -140,10 +127,7 @@ export function filterModelToTree(
     }
   }
 
-  if (root.children.length === 0) {
-    return createEmptyGroup();
-  }
-
+  if (root.children.length === 0) return createEmptyGroup();
   return root;
 }
 
@@ -152,45 +136,28 @@ function agModelToCondition(
   m: Record<string, unknown>,
   filterType: FilterType,
 ): FilterCondition {
-  let nextIdCounter = Date.now();
-  const id = `fb_import_${nextIdCounter++}_${colId}`;
+  const id = `fb_import_${Date.now()}_${colId}`;
 
   switch (filterType) {
     case 'set':
-      return {
-        type: 'condition',
-        id,
-        colId,
-        filterType: 'set',
-        operator: 'in',
-        value: (m.values as unknown[]) ?? [],
-      };
+      return { type: 'condition', id, colId, filterType: 'set', operator: 'in', value: (m.values as unknown[]) ?? [] };
     case 'number':
       return {
-        type: 'condition',
-        id,
-        colId,
-        filterType: 'number',
+        type: 'condition', id, colId, filterType: 'number',
         operator: (m.type as string) ?? 'equals',
         value: m.filter as number,
         valueTo: m.filterTo as number | undefined,
       };
     case 'date':
       return {
-        type: 'condition',
-        id,
-        colId,
-        filterType: 'date',
+        type: 'condition', id, colId, filterType: 'date',
         operator: (m.type as string) ?? 'equals',
         value: m.dateFrom as string,
         valueTo: m.dateTo as string | undefined,
       };
     default:
       return {
-        type: 'condition',
-        id,
-        colId,
-        filterType: 'text',
+        type: 'condition', id, colId, filterType: 'text',
         operator: (m.type as string) ?? 'contains',
         value: (m.filter as string) ?? '',
       };
@@ -203,18 +170,53 @@ function detectFilterType(m: Record<string, unknown>, colDef?: ColDef): FilterTy
   if (m.filterType === 'date' || m.dateFrom !== undefined) return 'date';
   if (m.filterType === 'text') return 'text';
 
-  // Detect from colDef
   if (colDef) {
-    const filter = colDef.filter;
-    if (filter === 'agSetColumnFilter') return 'set';
-    if (filter === 'agNumberColumnFilter') return 'number';
-    if (filter === 'agDateColumnFilter') return 'date';
+    const f = colDef.filter;
+    if (f === 'agSetColumnFilter') return 'set';
+    if (f === 'agNumberColumnFilter') return 'number';
+    if (f === 'agDateColumnFilter') return 'date';
+    if (f === 'agMultiColumnFilter' && colDef.filterParams) {
+      const filters = (colDef.filterParams as Record<string, unknown>).filters as Array<{ filter: string }> | undefined;
+      if (filters?.[0]?.filter === 'agNumberColumnFilter') return 'number';
+      if (filters?.[0]?.filter === 'agDateColumnFilter') return 'date';
+      if (filters?.[0]?.filter === 'agSetColumnFilter') return 'set';
+    }
   }
 
   return 'text';
 }
 
-// ── Operator labels ──
+// ── Multi-search extraction ──
+
+/**
+ * For text columns with 3+ values (comma-separated in value field or multiple conditions),
+ * returns a map of colId → pipe-separated values for backend multiSearch parameter.
+ * AG Grid supports max 2 conditions per column; this captures overflow values.
+ */
+export function extractMultiSearchParams(root: FilterGroup): Record<string, string> {
+  const conditions = flattenConditions(root);
+  const byCol = new Map<string, string[]>();
+
+  for (const c of conditions) {
+    if (!c.colId || c.filterType !== 'text') continue;
+    const raw = String(c.value ?? '').trim();
+    if (!raw) continue;
+    const vals = raw.split(/[,;]+/).map((s) => s.trim()).filter(Boolean);
+    const list = byCol.get(c.colId) ?? [];
+    list.push(...vals);
+    byCol.set(c.colId, list);
+  }
+
+  const result: Record<string, string> = {};
+  for (const [colId, vals] of byCol) {
+    if (vals.length >= 3) {
+      result[colId] = [...new Set(vals)].join('|');
+    }
+  }
+  return result;
+}
+
+// ── Operator label maps (Turkish) ──
 
 export const TEXT_OPERATORS = [
   { value: 'contains', label: 'İçerir' },

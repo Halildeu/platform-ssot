@@ -216,7 +216,6 @@ function GridShellInner<RowData = unknown>(
         className={themeClassName}
         style={{ width: "100%", height: typeof height === "number" ? `${height}px` : height }}
       >
-        {/* @ts-expect-error AG Grid React type compatibility with @types/react */}
         <AgGridReact<RowData>
           key={gridKey}
           rowData={rowModelType === "clientSide" ? rowData : undefined}
