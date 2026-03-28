@@ -238,8 +238,8 @@
     "@testing-library/user-event": "^14.5.0",
     "@tokens-studio/sd-transforms": "^2.0.3",
     "@types/node": "^24.0.14",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/browser-playwright": "^4.1.0",
     "@vitest/coverage-v8": "^4.1.1",
@@ -277,6 +277,8 @@
     "shiki": "^4.0.2"
   },
   "overrides": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "ag-grid-community": "34.3.1",
     "ag-grid-enterprise": "34.3.1",
     "ag-grid-react": "34.3.1",
@@ -287,6 +289,8 @@
   },
   "pnpm": {
     "overrides": {
+      "@types/react": "^18.2.0",
+      "@types/react-dom": "^18.2.0",
       "ag-grid-community": "34.3.1",
       "ag-grid-enterprise": "34.3.1",
       "ag-grid-react": "34.3.1",
