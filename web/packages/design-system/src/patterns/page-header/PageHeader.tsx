@@ -60,7 +60,7 @@ export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(({
     <header
       data-access-state={accessState.state}
       className={cn(
-        "bg-surface-default px-6 pt-4 pb-0",
+        "bg-[var(--surface-default)] px-6 pt-4 pb-0",
         !noBorder && "border-b border-border-subtle",
         sticky && "sticky top-0 z-[100]",
         accessState.isDisabled && "pointer-events-none opacity-50",

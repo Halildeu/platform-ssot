@@ -104,7 +104,7 @@ export function createA11yGuardian(options?: A11yGuardianOptions): A11yGuardian 
   function logViolation(v: RuntimeViolation): void {
     if (!opts.logToConsole) return;
     const badge = SEVERITY_BADGE[v.severity];
-    // eslint-disable-next-line no-console
+     
     console.warn(
       `${badge} [a11y-guardian] ${v.ruleId}: ${v.message}\n` +
         `  Selector: ${v.selector}\n` +

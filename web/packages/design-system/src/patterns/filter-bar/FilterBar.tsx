@@ -55,7 +55,7 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(({
       ref={ref}
       data-access-state={accessState.state}
       className={cn(
-        "border-b border-border-subtle bg-surface-default",
+        "border-b border-border-subtle bg-[var(--surface-default)]",
         accessState.isDisabled && "pointer-events-none opacity-50",
         className,
       )}
