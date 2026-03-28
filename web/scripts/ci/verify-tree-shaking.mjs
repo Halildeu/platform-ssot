@@ -142,8 +142,14 @@ console.log("\n4. Checking dist/ contains ESM and CJS outputs...\n");
 
 const DIST_DIR = join(DS_ROOT, "dist");
 
+const isCI = process.env.CI === "true" || process.env.CI === "1";
+
 if (!existsSync(DIST_DIR)) {
-  fail("dist/ directory does not exist — run `npm run build` first");
+  if (isCI) {
+    fail("dist/ directory does not exist — run `npm run build` first");
+  } else {
+    warn("dist/ directory does not exist — run `npm run build` first (skipped in local dev)");
+  }
 } else {
   pass("dist/ directory exists");
 
@@ -153,14 +159,18 @@ if (!existsSync(DIST_DIR)) {
 
   if (existsSync(esmEntry)) {
     pass("ESM output found: dist/index.js");
-  } else {
+  } else if (isCI) {
     fail("ESM output missing: dist/index.js");
+  } else {
+    warn("ESM output missing: dist/index.js (expected in local dev without build)");
   }
 
   if (existsSync(cjsEntry)) {
     pass("CJS output found: dist/index.cjs");
-  } else {
+  } else if (isCI) {
     fail("CJS output missing: dist/index.cjs");
+  } else {
+    warn("CJS output missing: dist/index.cjs (expected in local dev without build)");
   }
 
   if (existsSync(dtsEntry)) {

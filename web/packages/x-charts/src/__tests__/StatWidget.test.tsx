@@ -131,7 +131,7 @@ describe("StatWidget", () => {
 
     const changeSpan = container.querySelector("span[style]");
     expect(changeSpan).toBeTruthy();
-    expect(changeSpan!.getAttribute("style")).toContain("var(--state-danger-text)");
+    expect(changeSpan!.getAttribute("style")).toContain("var(--state-error-text)");
   });
 
   it("does not show change when previousValue is not provided", () => {

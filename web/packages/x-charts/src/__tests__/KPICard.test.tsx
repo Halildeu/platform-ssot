@@ -97,7 +97,7 @@ describe("KPICard", () => {
 
     const trendSpan = container.querySelector("span[style]");
     expect(trendSpan).toBeTruthy();
-    expect(trendSpan!.getAttribute("style")).toContain("var(--state-danger-text)");
+    expect(trendSpan!.getAttribute("style")).toContain("var(--state-error-text)");
   });
 
   it("allows overriding positive via trend.positive", () => {

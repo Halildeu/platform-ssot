@@ -1,1 +1,1 @@
-export { default } from './designlab';
+export { default } from './designlab/index';

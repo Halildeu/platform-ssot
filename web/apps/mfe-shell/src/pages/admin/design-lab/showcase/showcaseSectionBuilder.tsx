@@ -352,8 +352,6 @@ export function buildDemoShowcaseSections(item: DesignLabIndexItem, scope: Recor
           },
         ];
     }
-  };
-
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -497,5 +495,4 @@ export function buildFamilyWorkspaceShowcaseSections(family: { recipeId: string;
         ),
       },
     ];
-  };
 }

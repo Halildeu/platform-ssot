@@ -544,4 +544,4 @@ export const renderLivePreview = (item: DesignLabIndexItem, ctx: Record<string, 
         );
     }
   };
-};
+
