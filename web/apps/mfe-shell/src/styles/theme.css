@@ -1047,6 +1047,7 @@
   --action-primary-soft: var(--accent-soft);
   --action-secondary: var(--action-secondary-bg);
   /* Surface */
+  --surface-canvas-bg: var(--surface-default-bg);
   --surface-canvas: var(--surface-default-bg);
   --surface-raised: var(--surface-raised-bg);
   --surface-page: var(--surface-page-bg, var(--surface-default-bg));
