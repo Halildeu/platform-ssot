@@ -50,7 +50,4 @@ def _parse_iso8601():      # ❌ from src.shared.utils import parse_iso8601
 - Zaman: `now_iso8601()` kullan, `datetime.now()` doğrudan çağırma
 - Hash: `sha256_text()` veya `sha256_file()` kullan
 - Environment: `env_true()` / `env_str()` kullan
-- Dosya boyutu: script budget limitlerine uy (takip edilen tum UTF-8 metin dosyalari soft: 1200 satir, hard: 2000 satir)
-- Büyük frontend/backend/script dosyaları için repo-özel limitler: [maintainability-guardrails.md](/Users/halilkocoglu/Documents/dev/docs/OPERATIONS/maintainability-guardrails.md)
-- Kanonik konfigürasyon: `ci/script_budget.v1.json`
-- Zorunlu checker: `python3 ci/check_script_budget.py --out .cache/script_budget/report.json`
+- Dosya boyutu: script_budget limitlerine uy (soft: 1200 satır, hard: 2000 satır)

@@ -15,15 +15,12 @@ Amaç: Yeni taşeron repoyu standart lane/gate sistemiyle hızlı ve güvenli ş
 ## 3) Lane Contract Doğrulaması
 - `python3 ci/check_standards_lock.py --repo-root <repo_root>`
 - `python3 ci/check_module_delivery_lanes.py --strict`
-- `ci/module_delivery_lanes.v1.json` icinde `clean_stderr_default=true` kalmalidir.
-- Yapısal şema kaynağı: `schemas/module-delivery-lanes.schema.v1.json`
 
 ## 4) Lane Zinciri (zorunlu sıra)
 - `python3 ci/run_module_delivery_lane.py --lane unit`
 - `python3 ci/run_module_delivery_lane.py --lane contract`
 - `python3 ci/run_module_delivery_lane.py --lane integration`
 - `python3 ci/run_module_delivery_lane.py --lane e2e`
-- Özel durum istisnası: yalnız bilinçli ve geçici kullanım için `--allow-stderr`
 
 ## 5) Branch Protection Kilidi
 Required checks:
@@ -43,7 +40,6 @@ Zorunlu ayarlar:
 - Tekil repo snapshot: `.cache/reports/release-evidence/<repo>_gate_lock_snapshot.v1.json`
 - Portföy snapshot: `.cache/reports/release-evidence/managed_repo_gate_lock_snapshot.v1.json`
 - Lane matrix: `.cache/reports/release-evidence/managed_repo_lane_override_matrix.v1.json`
-- GitHub Actions `module-delivery-lanes` workflow'u her lane icin ilgili `.cache/reports/module_delivery_lanes/<lane>.v1.json` ve bagli guard/log ciktisini artefact olarak yukler.
 
 ## 7) Done Kriteri
 - Lane zinciri yeşil
