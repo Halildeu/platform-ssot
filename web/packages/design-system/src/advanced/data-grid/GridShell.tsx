@@ -245,7 +245,7 @@ function GridShellInner<RowData = unknown>(
           pagination={rowModelType === "serverSide"}
           paginationPageSize={rowModelType === "serverSide" ? 50 : undefined}
           paginationPageSizeSelector={rowModelType === "serverSide" ? [25, 50, 100, 200] : undefined}
-          // enableAdvancedFilter — disabled: conflicts with context menu (AG Grid limitation)
+          enableAdvancedFilter
           enableCharts={enableCharts}
           chartThemeOverrides={chartThemeOverrides}
           statusBar={{
