@@ -235,6 +235,7 @@ function GridShellInner<RowData = unknown>(
           animateRows={animateRows}
           rowGroupPanelShow="always"
           enableRangeSelection
+          groupTotalRow="bottom"
           enableAdvancedFilter
           enableCharts={enableCharts}
           chartThemeOverrides={chartThemeOverrides}
@@ -246,6 +247,14 @@ function GridShellInner<RowData = unknown>(
             ],
           }}
           getContextMenuItems={(params) => {
+            const setAggFunc = (p: typeof params, fn: string | null) => {
+              if (p.column && p.api) {
+                const colId = p.column.getColId();
+                p.api.applyColumnState({
+                  state: [{ colId, aggFunc: fn }],
+                });
+              }
+            };
             const defaults = params.defaultItems ?? [];
             return [
               ...defaults,
@@ -283,6 +292,23 @@ function GridShellInner<RowData = unknown>(
                   params.api?.setGridOption('pinnedTopRowData', []);
                   params.api?.setGridOption('pinnedBottomRowData', []);
                 },
+              },
+              'separator',
+              {
+                name: 'Sütun Hesaplama',
+                icon: '<span style="font-size:12px">∑</span>',
+                disabled: !params.column,
+                subMenu: [
+                  { name: 'Toplam (Sum)', action: () => setAggFunc(params, 'sum') },
+                  { name: 'Ortalama (Avg)', action: () => setAggFunc(params, 'avg') },
+                  { name: 'Sayı (Count)', action: () => setAggFunc(params, 'count') },
+                  { name: 'Min', action: () => setAggFunc(params, 'min') },
+                  { name: 'Max', action: () => setAggFunc(params, 'max') },
+                  { name: 'İlk (First)', action: () => setAggFunc(params, 'first') },
+                  { name: 'Son (Last)', action: () => setAggFunc(params, 'last') },
+                  'separator',
+                  { name: 'Hesaplamayı kaldır', action: () => setAggFunc(params, null) },
+                ],
               },
             ];
           }}
