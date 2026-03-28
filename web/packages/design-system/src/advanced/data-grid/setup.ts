@@ -30,6 +30,10 @@ import {
   StatusBarModule,
   PivotModule,
   RangeSelectionModule,
+  FindModule,
+  RowNumbersModule,
+  PinnedRowModule,
+  SparklinesModule,
 } from "ag-grid-enterprise";
 import { setupAgGridLicense } from "../../lib/ag-grid-license";
 
@@ -102,6 +106,18 @@ ModuleRegistry.registerModules([
 
   // Range Selection (Excel-like cell range select + aggregation)
   RangeSelectionModule,           // cell range selection
+
+  // Find (Ctrl+F in-grid search)
+  FindModule,
+
+  // Row Numbers (automatic row numbering column)
+  RowNumbersModule,
+
+  // Pinned Rows (pin rows to top/bottom)
+  PinnedRowModule,
+
+  // Sparklines (mini inline charts in cells)
+  SparklinesModule,
 
   // Integrated Charts (AG Charts 12.3.1)
   // Enables chart creation from grid range selection.
