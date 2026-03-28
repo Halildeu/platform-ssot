@@ -292,6 +292,30 @@ services:
       retries: 30
       start_period: 5s
 
+  openfga:
+    image: openfga/openfga:latest
+    command: run
+    environment:
+      OPENFGA_DATASTORE_ENGINE: postgres
+      OPENFGA_DATASTORE_URI: "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres-db:5432/${POSTGRES_DB:-users}?sslmode=disable&search_path=openfga"
+      OPENFGA_PLAYGROUND_ENABLED: "true"
+      OPENFGA_LOG_LEVEL: info
+    ports:
+      - "4000:8080"
+      - "4001:8081"
+      - "4002:3000"
+    networks:
+      - microservice-network
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
   permission-service:
     build: ./permission-service
     ports:
