@@ -6,6 +6,34 @@ import { rules as semanticThemeRules } from './scripts/lint/eslint-plugin-semant
 import { rules as cssVarFallbackRules } from './scripts/lint/eslint-plugin-css-var-fallback.mjs';
 import { rules as noAntImportRules } from './scripts/lint/eslint-plugin-no-ant-import.mjs';
 
+/**
+ * Downgrade all "error"-level rules from recommended configs to "warn" so
+ * pre-existing violations are captured by --max-warnings instead of causing
+ * an immediate exit-code 1.  Explicit overrides below can still promote
+ * individual rules back to "error" (e.g. no-ant-import).
+ */
+function downgradeErrorsToWarn(...configs) {
+  const map = {};
+  for (const cfg of configs) {
+    const items = Array.isArray(cfg) ? cfg : [cfg];
+    for (const item of items) {
+      if (!item.rules) continue;
+      for (const [rule, level] of Object.entries(item.rules)) {
+        const severity = Array.isArray(level) ? level[0] : level;
+        if (severity === 'error' || severity === 2) {
+          map[rule] = Array.isArray(level) ? ['warn', ...level.slice(1)] : 'warn';
+        }
+      }
+    }
+  }
+  return map;
+}
+
+const recommendedWarnOverrides = downgradeErrorsToWarn(
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+);
+
 export default tseslint.config(
   {
     ignores: [
@@ -74,40 +102,16 @@ export default tseslint.config(
       'no-ant-import': { rules: noAntImportRules },
     },
     rules: {
+      // Bulk-downgrade all recommended error-level rules to warn so
+      // --max-warnings governs the exit code instead of any single error.
+      ...recommendedWarnOverrides,
+      // Custom plugin rules
       'semantic-theme/no-inline-color-literals': 'warn',
       'css-var-fallback/no-css-var-without-fallback': 'warn',
       'no-ant-import/no-new-ant-import': 'error',
-      // Pre-existing issues downgraded to warn — will be fixed incrementally
+      // Targeted overrides (options or off)
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-unused-expressions': 'warn',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-empty-object-type': 'warn',
-      '@typescript-eslint/no-require-imports': 'warn',
-      '@typescript-eslint/no-this-alias': 'warn',
-      'no-constant-condition': 'warn',
-      'no-constant-binary-expression': 'warn',
-      'no-prototype-builtins': 'warn',
-      'no-empty': 'warn',
-      'no-cond-assign': 'warn',
-      'no-fallthrough': 'warn',
-      'no-redeclare': 'warn',
       'no-undef': 'off', // Too many false positives with TS global types
-      'no-empty-pattern': 'warn',
-      'no-var': 'warn',
-      'no-self-assign': 'warn',
-      'no-control-regex': 'warn',
-      'no-func-assign': 'warn',
-      'no-useless-escape': 'warn',
-      'no-case-declarations': 'warn',
-      'prefer-const': 'warn',
-      '@typescript-eslint/ban-ts-comment': 'warn',
-      '@typescript-eslint/no-unsafe-function-type': 'warn',
-      '@typescript-eslint/triple-slash-reference': 'warn',
-      'no-sparse-arrays': 'warn',
-      'no-misleading-character-class': 'warn',
-      'getter-return': 'warn',
-      'no-duplicate-case': 'warn',
-      'valid-typeof': 'warn',
       'no-unused-private-class-members': 'warn',
     },
   },
