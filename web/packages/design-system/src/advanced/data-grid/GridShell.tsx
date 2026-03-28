@@ -233,8 +233,9 @@ function GridShellInner<RowData = unknown>(
           headerHeight={density === "compact" ? 40 : 48}
           rowSelection={rowSelection}
           animateRows={animateRows}
-          rowGroupPanelShow="always"
+          rowGroupPanelShow={rowModelType === "serverSide" ? "never" : "always"}
           enableRangeSelection
+          groupDefaultExpanded={0}
           groupTotalRow="bottom"
           // enableAdvancedFilter — disabled: conflicts with context menu (AG Grid limitation)
           enableCharts={enableCharts}
