@@ -104,6 +104,7 @@ const DEFAULT_COL_DEF: ColDef = {
   filter: "agMultiColumnFilter",
   floatingFilter: true,
   resizable: true,
+  enableRowGroup: true,
   minWidth: 120,
   flex: 1,
   menuTabs: ["generalMenuTab", "filterMenuTab", "columnsMenuTab"],
