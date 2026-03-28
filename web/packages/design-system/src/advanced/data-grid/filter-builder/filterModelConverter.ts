@@ -27,30 +27,39 @@ export function treeToFilterModel(root: FilterGroup): Record<string, unknown> {
   }
 
   for (const [colId, conds] of byCol) {
-    // Expand comma-separated values into individual OR conditions
+    // Expand comma-separated text values into Set filter (AG Grid limits OR conditions to 2)
     const expanded: FilterCondition[] = [];
+    let useSetFilter = false;
+    const setValues: string[] = [];
+
     for (const c of conds) {
       if (c.filterType === 'text' && typeof c.value === 'string' && c.value.includes(',')) {
         const parts = c.value.split(',').map((s) => s.trim()).filter(Boolean);
         if (parts.length > 1) {
-          for (const part of parts) {
-            expanded.push({ ...c, id: `${c.id}_${part}`, value: part });
-          }
+          useSetFilter = true;
+          setValues.push(...parts);
           continue;
         }
       }
       expanded.push(c);
     }
 
-    if (expanded.length === 1) {
+    if (useSetFilter && setValues.length > 0) {
+      // Use Set filter for multi-value text — no AG Grid condition limit
+      model[colId] = { filterType: 'set', values: setValues };
+    } else if (expanded.length === 1) {
       model[colId] = conditionToAgModel(expanded[0]);
-    } else {
-      // Multiple conditions on same column → use AG Grid's conditions array with OR
+    } else if (expanded.length === 2) {
+      // AG Grid supports max 2 conditions with operator
       model[colId] = {
         filterType: expanded[0].filterType === 'set' ? 'set' : expanded[0].filterType,
         operator: 'OR',
         conditions: expanded.map(conditionToAgModel),
       };
+    } else {
+      // 3+ conditions: convert to set filter
+      const vals = expanded.map((c) => String(c.value)).filter(Boolean);
+      model[colId] = { filterType: 'set', values: vals };
     }
   }
 
