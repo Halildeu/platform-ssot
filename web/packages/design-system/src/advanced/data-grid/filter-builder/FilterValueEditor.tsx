@@ -34,9 +34,34 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
     return <span className="text-[11px] italic text-text-subtle">Değer gerekmiyor</span>;
   }
 
+  // Parse current value into array of individual values
+  const parsedValues = React.useMemo(() => {
+    const raw = String(value ?? '');
+    if (!raw.trim()) return [];
+    return raw.split(/[,;]+/).map((s) => s.trim()).filter(Boolean);
+  }, [value]);
+
+  const hasMultipleValues = parsedValues.length > 1;
+
+  const removeValue = (idx: number) => {
+    const next = parsedValues.filter((_, i) => i !== idx);
+    onChange(next.length > 0 ? next.join(', ') : '');
+  };
+
+  const handleBulkApply = () => {
+    const newValues = pasteText.split(/[\n\r\t;,]+/).map((s) => s.trim()).filter(Boolean);
+    if (newValues.length > 0) {
+      const merged = [...new Set([...parsedValues, ...newValues])];
+      onChange(merged.join(', '));
+    }
+    setPasteText('');
+    setPasteMode(false);
+  };
+
   // Bulk paste helper for text/number
   const renderBulkPaste = (inputEl: React.ReactNode) => (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1.5">
+      {/* Input + paste button */}
       <div className="flex items-center gap-1">
         <div className="min-w-0 flex-1">{inputEl}</div>
         <button
@@ -50,34 +75,72 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
           📋
         </button>
       </div>
+
+      {/* Paste textarea */}
       {pasteMode && (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-blue-300 bg-blue-50/50 p-2">
+          <span className="text-[10px] font-medium text-blue-700">Toplu Yapıştır</span>
           <textarea
-            className={`${INPUT_CLASS} h-16 resize-none py-1.5`}
-            placeholder="Excel'den yapıştırın... (satır, virgül veya tab ile)"
+            className="h-16 w-full resize-none rounded border border-border-subtle bg-surface-default px-2 py-1.5 text-xs text-text-primary placeholder:text-text-subtle focus:border-action-primary focus:outline-none"
+            placeholder="Excel'den kopyaladığınız değerleri yapıştırın...&#10;Her satır, virgül veya tab bir değer"
             value={pasteText}
             onChange={(e) => setPasteText(e.target.value)}
             autoFocus
           />
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-text-subtle">
-              {pasteText.split(/[\n\r\t;,]+/).filter((s) => s.trim()).length} değer
+            <span className="text-[10px] text-blue-600">
+              {pasteText.split(/[\n\r\t;,]+/).filter((s) => s.trim()).length} yeni değer
             </span>
+            <div className="flex gap-1">
+              <button
+                type="button"
+                onClick={() => { setPasteText(''); setPasteMode(false); }}
+                className="rounded px-2 py-0.5 text-[10px] text-text-secondary hover:bg-surface-muted"
+              >
+                İptal
+              </button>
+              <button
+                type="button"
+                onClick={handleBulkApply}
+                disabled={!pasteText.trim()}
+                className="rounded bg-blue-600 px-2.5 py-0.5 text-[10px] font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+              >
+                Ekle
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Value chips — shown when multiple values exist */}
+      {hasMultipleValues && (
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-medium text-text-secondary">{parsedValues.length} değer</span>
             <button
               type="button"
-              onClick={() => {
-                const values = pasteText.split(/[\n\r\t;,]+/).map((s) => s.trim()).filter(Boolean);
-                if (values.length > 0) {
-                  onChange(values.join(', '));
-                }
-                setPasteText('');
-                setPasteMode(false);
-              }}
-              disabled={!pasteText.trim()}
-              className="rounded bg-action-primary px-2 py-0.5 text-[10px] font-semibold text-white disabled:opacity-50"
+              onClick={() => onChange('')}
+              className="rounded px-1.5 py-0.5 text-[10px] text-rose-600 hover:bg-rose-50"
             >
-              Uygula
+              Tümünü Temizle
             </button>
+          </div>
+          <div className="flex max-h-24 flex-wrap gap-1 overflow-auto">
+            {parsedValues.map((v, i) => (
+              <span
+                key={`${v}-${i}`}
+                className="group inline-flex items-center gap-0.5 rounded-md border border-border-subtle bg-surface-default px-1.5 py-0.5 text-[10px] text-text-primary"
+              >
+                {v}
+                <button
+                  type="button"
+                  onClick={() => removeValue(i)}
+                  className="ml-0.5 rounded-full text-text-subtle opacity-60 hover:bg-rose-100 hover:text-rose-600 hover:opacity-100"
+                >
+                  ✕
+                </button>
+              </span>
+            ))}
           </div>
         </div>
       )}
