@@ -25,6 +25,8 @@ import {
   ExcelExportModule,
   ClipboardModule,
   IntegratedChartsModule,
+  RowGroupingModule,
+  RowGroupingPanelModule,
 } from "ag-grid-enterprise";
 import { setupAgGridLicense } from "../../lib/ag-grid-license";
 
@@ -84,6 +86,10 @@ ModuleRegistry.registerModules([
 
   // Clipboard
   ClipboardModule,                // copy/paste
+
+  // Row Grouping (drag column headers to group panel)
+  RowGroupingModule,              // grouping engine
+  RowGroupingPanelModule,         // drop zone panel above headers
 
   // Integrated Charts (AG Charts 12.3.1)
   // Enables chart creation from grid range selection.
