@@ -8,7 +8,7 @@
  *   { type:'group', logic:'AND', children: [{ type:'condition', colId:'role', ... }] }
  */
 import type { ColDef } from 'ag-grid-community';
-import type { FilterGroup, FilterCondition, FilterNode, FilterType } from './useFilterBuilder';
+import type { FilterGroup, FilterCondition, FilterNode, FilterType, FilterTreeNode, FilterCombinator } from './useFilterBuilder';
 import { createEmptyGroup } from './useFilterBuilder';
 
 // ── Tree → AG Grid FilterModel ──
@@ -78,27 +78,29 @@ function conditionToAgModel(c: FilterCondition): Record<string, unknown> {
   }
 }
 
-function flattenConditions(node: FilterNode): FilterCondition[] {
+function flattenConditions(node: FilterNode | FilterTreeNode): FilterCondition[] {
   if (node.type === 'condition') return [node];
-  return node.children.flatMap(flattenConditions);
+  if (node.type === 'combinator') return [];
+  return (node as FilterGroup).children.flatMap(flattenConditions);
 }
 
 function findParentLogic(root: FilterGroup, colId: string): 'AND' | 'OR' {
-  // Find the group that directly contains conditions for this colId
-  function search(group: FilterGroup): 'AND' | 'OR' | null {
-    const directMatch = group.children.some(
-      (c) => c.type === 'condition' && c.colId === colId,
-    );
-    if (directMatch) return group.logic;
-    for (const child of group.children) {
-      if (child.type === 'group') {
-        const found = search(child);
+  // With independent combinators, find the combinator right before the condition
+  function search(children: FilterTreeNode[]): 'AND' | 'OR' | null {
+    let lastCombinator: 'AND' | 'OR' = root.logic;
+    for (const child of children) {
+      if (child.type === 'combinator') {
+        lastCombinator = child.logic;
+      } else if (child.type === 'condition' && child.colId === colId) {
+        return lastCombinator;
+      } else if (child.type === 'group') {
+        const found = search(child.children);
         if (found) return found;
       }
     }
     return null;
   }
-  return search(root) ?? 'AND';
+  return search(root.children) ?? 'AND';
 }
 
 // ── AG Grid FilterModel → Tree ──

@@ -20,14 +20,21 @@ export interface FilterCondition {
   valueTo?: unknown; // for inRange
 }
 
+export interface FilterCombinator {
+  type: 'combinator';
+  id: string;
+  logic: 'AND' | 'OR';
+}
+
 export interface FilterGroup {
   type: 'group';
   id: string;
-  logic: 'AND' | 'OR';
-  children: FilterNode[];
+  logic: 'AND' | 'OR'; // default for new combinators
+  children: FilterTreeNode[];
 }
 
 export type FilterNode = FilterCondition | FilterGroup;
+export type FilterTreeNode = FilterNode | FilterCombinator;
 
 // ── Helpers ──
 
@@ -45,6 +52,10 @@ export function createEmptyCondition(): FilterCondition {
   };
 }
 
+export function createCombinator(logic: 'AND' | 'OR' = 'AND'): FilterCombinator {
+  return { type: 'combinator', id: uid(), logic };
+}
+
 export function createEmptyGroup(logic: 'AND' | 'OR' = 'AND'): FilterGroup {
   return {
     type: 'group',
@@ -56,34 +67,39 @@ export function createEmptyGroup(logic: 'AND' | 'OR' = 'AND'): FilterGroup {
 
 // ── Deep tree operations ──
 
-function findAndUpdate(nodes: FilterNode[], targetId: string, updater: (node: FilterNode) => FilterNode | null): FilterNode[] {
-  return nodes.reduce<FilterNode[]>((acc, node) => {
+function findAndUpdate(nodes: FilterTreeNode[], targetId: string, updater: (node: FilterTreeNode) => FilterTreeNode | null): FilterTreeNode[] {
+  const result: FilterTreeNode[] = [];
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i];
     if (node.id === targetId) {
-      const result = updater(node);
-      if (result) acc.push(result);
-      // null = remove
+      const updated = updater(node);
+      if (updated) {
+        result.push(updated);
+      } else {
+        // Removing node — also remove adjacent combinator
+        // If node is after a combinator, remove the combinator before it
+        if (result.length > 0 && result[result.length - 1].type === 'combinator') {
+          result.pop();
+        }
+        // If node is first and next is combinator, skip next combinator
+        else if (i + 1 < nodes.length && nodes[i + 1].type === 'combinator') {
+          i++; // skip next combinator
+        }
+      }
     } else if (node.type === 'group') {
-      acc.push({ ...node, children: findAndUpdate(node.children, targetId, updater) });
+      result.push({ ...node, children: findAndUpdate(node.children, targetId, updater) });
     } else {
-      acc.push(node);
+      result.push(node);
     }
-    return acc;
-  }, []);
+  }
+  return result;
 }
 
-function findAndInsert(nodes: FilterNode[], parentId: string, newNode: FilterNode): FilterNode[] {
-  return nodes.map((node) => {
-    if (node.type === 'group' && node.id === parentId) {
-      return { ...node, children: [...node.children, newNode] };
-    }
-    if (node.type === 'group') {
-      return { ...node, children: findAndInsert(node.children, parentId, newNode) };
-    }
-    return node;
-  });
+function getNodeChildren(nodes: FilterTreeNode[]): FilterNode[] {
+  return nodes.filter((n) => n.type !== 'combinator') as FilterNode[];
 }
 
-function countDepth(nodes: FilterNode[], current: number = 0): number {
+function countDepth(nodes: FilterTreeNode[], current: number = 0): number {
   let max = current;
   for (const node of nodes) {
     if (node.type === 'group') {
@@ -115,25 +131,47 @@ export function useFilterBuilder(maxNesting: number = 3): UseFilterBuilderReturn
   const [root, setRoot] = useState<FilterGroup>(createEmptyGroup);
 
   const addCondition = useCallback((parentId: string) => {
-    setRoot((prev) => ({
-      ...prev,
-      children: prev.id === parentId
-        ? [...prev.children, createEmptyCondition()]
-        : findAndInsert(prev.children, parentId, createEmptyCondition()),
-    }));
+    setRoot((prev) => {
+      const addToGroup = (group: FilterGroup): FilterGroup => {
+        if (group.id === parentId) {
+          const hasRules = getNodeChildren(group.children).length > 0;
+          const newItems: FilterTreeNode[] = hasRules
+            ? [createCombinator(group.logic), createEmptyCondition()]
+            : [createEmptyCondition()];
+          return { ...group, children: [...group.children, ...newItems] };
+        }
+        return {
+          ...group,
+          children: group.children.map((c) =>
+            c.type === 'group' ? addToGroup(c) : c,
+          ),
+        };
+      };
+      return addToGroup(prev);
+    });
   }, []);
 
   const addGroup = useCallback((parentId: string) => {
     setRoot((prev) => {
       const depth = countDepth(prev.children, 1);
       if (depth >= maxNesting) return prev;
-      const newGroup = createEmptyGroup('OR');
-      return {
-        ...prev,
-        children: prev.id === parentId
-          ? [...prev.children, newGroup]
-          : findAndInsert(prev.children, parentId, newGroup),
+      const addToGroup = (group: FilterGroup): FilterGroup => {
+        if (group.id === parentId) {
+          const hasRules = getNodeChildren(group.children).length > 0;
+          const newGroup = createEmptyGroup('OR');
+          const newItems: FilterTreeNode[] = hasRules
+            ? [createCombinator(group.logic), newGroup]
+            : [newGroup];
+          return { ...group, children: [...group.children, ...newItems] };
+        }
+        return {
+          ...group,
+          children: group.children.map((c) =>
+            c.type === 'group' ? addToGroup(c) : c,
+          ),
+        };
       };
+      return addToGroup(prev);
     });
   }, [maxNesting]);
 
@@ -153,18 +191,22 @@ export function useFilterBuilder(maxNesting: number = 3): UseFilterBuilderReturn
     }));
   }, []);
 
-  const setLogic = useCallback((groupId: string, logic: 'AND' | 'OR') => {
-    if (groupId === root.id) {
-      setRoot((prev) => ({ ...prev, logic }));
-      return;
-    }
-    setRoot((prev) => ({
-      ...prev,
-      children: findAndUpdate(prev.children, groupId, (node) =>
-        node.type === 'group' ? { ...node, logic } : node,
-      ),
-    }));
-  }, [root.id]);
+  // setLogic works for both combinator IDs and group IDs
+  const setLogic = useCallback((targetId: string, logic: 'AND' | 'OR') => {
+    setRoot((prev) => {
+      const update = (children: FilterTreeNode[]): FilterTreeNode[] =>
+        children.map((c) => {
+          if (c.id === targetId) {
+            if (c.type === 'combinator') return { ...c, logic };
+            if (c.type === 'group') return { ...c, logic };
+          }
+          if (c.type === 'group') return { ...c, children: update(c.children) };
+          return c;
+        });
+      if (prev.id === targetId) return { ...prev, logic };
+      return { ...prev, children: update(prev.children) };
+    });
+  }, []);
 
   // Indent: wrap node in a new OR sub-group (moves it one level deeper)
   const indentNode = useCallback((id: string) => {

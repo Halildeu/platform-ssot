@@ -17,7 +17,7 @@
 import React from 'react';
 import { Plus, FolderPlus, Trash2, ChevronUp, ChevronDown, IndentIncrease, IndentDecrease } from 'lucide-react';
 import type { ColDef } from 'ag-grid-community';
-import type { FilterGroup, FilterCondition } from './useFilterBuilder';
+import type { FilterGroup, FilterCondition, FilterCombinator } from './useFilterBuilder';
 import { FilterConditionRow } from './FilterConditionRow';
 
 interface FilterGroupNodeProps {
@@ -112,29 +112,29 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
           </div>
         )}
 
-        {group.children.map((child, index) => (
+        {group.children.map((child) => (
           <React.Fragment key={child.id}>
-            {/* Combinator between rules — clickable AND/OR toggle */}
-            {index > 0 && (
+            {/* Independent combinator — each one toggles independently */}
+            {child.type === 'combinator' ? (
               <div className="flex items-center gap-2 py-1">
                 <div className="h-px flex-1 bg-border-subtle" />
                 <button
                   type="button"
-                  onClick={() => onSetLogic(group.id, group.logic === 'AND' ? 'OR' : 'AND')}
+                  onClick={() => onSetLogic(child.id, child.logic === 'AND' ? 'OR' : 'AND')}
                   className={`rounded-full px-3 py-0.5 text-[10px] font-bold transition ${
-                    group.logic === 'AND'
+                    child.logic === 'AND'
                       ? 'bg-blue-100 text-blue-700 hover:bg-orange-100 hover:text-orange-700'
                       : 'bg-orange-100 text-orange-700 hover:bg-blue-100 hover:text-blue-700'
                   }`}
-                  title={`Tıkla: ${group.logic === 'AND' ? 'VEYA' : 'VE'} olarak değiştir`}
+                  title={`Tıkla: ${child.logic === 'AND' ? 'VEYA' : 'VE'} olarak değiştir`}
                 >
-                  {group.logic === 'AND' ? 'VE' : 'VEYA'}
+                  {child.logic === 'AND' ? 'VE' : 'VEYA'}
                 </button>
                 <div className="h-px flex-1 bg-border-subtle" />
               </div>
-            )}
+            ) : null}
 
-            {/* Rule or sub-group */}
+            {/* Rule */}
             {child.type === 'condition' ? (
               <FilterConditionRow
                 condition={child}
