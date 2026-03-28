@@ -20,10 +20,10 @@ interface FilterGroupNodeProps {
   onSetLogic: (groupId: string, logic: 'AND' | 'OR') => void;
 }
 
-const DEPTH_COLORS = [
-  'border-l-blue-400',
-  'border-l-violet-400',
-  'border-l-amber-400',
+const DEPTH_STYLES = [
+  { border: 'border-blue-200', bg: 'bg-blue-50/40', accent: 'text-blue-700', label: 'border-l-blue-400' },
+  { border: 'border-violet-200', bg: 'bg-violet-50/40', accent: 'text-violet-700', label: 'border-l-violet-400' },
+  { border: 'border-amber-200', bg: 'bg-amber-50/40', accent: 'text-amber-700', label: 'border-l-amber-400' },
 ];
 
 export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
@@ -38,15 +38,21 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
   onUpdateCondition,
   onSetLogic,
 }) => {
-  const borderColor = DEPTH_COLORS[depth % DEPTH_COLORS.length];
-  const conditions = group.children.filter((c) => c.type === 'condition') as FilterCondition[];
-  const subGroups = group.children.filter((c) => c.type === 'group') as FilterGroup[];
+  const style = DEPTH_STYLES[depth % DEPTH_STYLES.length];
   const totalChildren = group.children.length;
 
   return (
-    <div className={`${isRoot ? '' : `ml-2 border-l-2 ${borderColor} pl-3`}`}>
-      {/* Group header: AND/OR toggle */}
+    <div className={isRoot
+      ? ''
+      : `mt-2 rounded-lg border ${style.border} ${style.bg} p-3`
+    }>
+      {/* Group header: AND/OR toggle + level indicator */}
       <div className="mb-2 flex items-center gap-2">
+        {!isRoot && (
+          <span className={`text-[9px] font-bold uppercase ${style.accent}`}>
+            Seviye {depth}
+          </span>
+        )}
         <div className="inline-flex rounded-md border border-border-subtle bg-surface-default text-[11px] font-semibold">
           <button
             type="button"
@@ -88,35 +94,52 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
         )}
       </div>
 
-      {/* Conditions */}
-      <div className="flex flex-col gap-2">
-        {group.children.map((child) => {
+      {/* Conditions with logic connectors between them */}
+      <div className="flex flex-col gap-1">
+        {group.children.map((child, index) => {
+          const connector = index > 0 ? (
+            <div key={`conn_${child.id}`} className="flex items-center gap-2 py-0.5 pl-2">
+              <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                group.logic === 'AND'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'bg-orange-100 text-orange-700'
+              }`}>
+                {group.logic === 'AND' ? 'VE' : 'VEYA'}
+              </span>
+              <div className="h-px flex-1 bg-border-subtle" />
+            </div>
+          ) : null;
+
           if (child.type === 'condition') {
             return (
-              <FilterConditionRow
-                key={child.id}
-                condition={child}
-                columnDefs={columnDefs}
-                onUpdate={onUpdateCondition}
-                onRemove={onRemoveNode}
-                canRemove={totalChildren > 1}
-              />
+              <React.Fragment key={child.id}>
+                {connector}
+                <FilterConditionRow
+                  condition={child}
+                  columnDefs={columnDefs}
+                  onUpdate={onUpdateCondition}
+                  onRemove={onRemoveNode}
+                  canRemove={totalChildren > 1}
+                />
+              </React.Fragment>
             );
           }
           if (child.type === 'group') {
             return (
-              <FilterGroupNode
-                key={child.id}
-                group={child}
-                columnDefs={columnDefs}
-                depth={depth + 1}
-                maxDepthReached={maxDepthReached}
-                onAddCondition={onAddCondition}
-                onAddGroup={onAddGroup}
-                onRemoveNode={onRemoveNode}
-                onUpdateCondition={onUpdateCondition}
-                onSetLogic={onSetLogic}
-              />
+              <React.Fragment key={child.id}>
+                {connector}
+                <FilterGroupNode
+                  group={child}
+                  columnDefs={columnDefs}
+                  depth={depth + 1}
+                  maxDepthReached={maxDepthReached}
+                  onAddCondition={onAddCondition}
+                  onAddGroup={onAddGroup}
+                  onRemoveNode={onRemoveNode}
+                  onUpdateCondition={onUpdateCondition}
+                  onSetLogic={onSetLogic}
+                />
+              </React.Fragment>
             );
           }
           return null;
