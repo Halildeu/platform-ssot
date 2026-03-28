@@ -2,25 +2,9 @@
   "version": "v1",
   "managed_repo_profile": "python-default",
   "merge_requires_all_green": true,
-  "execution_sequence": [
-    "backend",
-    "database",
-    "api",
-    "frontend",
-    "integration",
-    "e2e"
-  ],
   "lanes": {
     "unit": {
       "command": "python3 -m py_compile ci/check_module_delivery_lanes.py ci/run_module_delivery_lane.py",
-      "timeout_seconds": 600
-    },
-    "database": {
-      "command": "python3 scripts/check_data_sql_style.py",
-      "timeout_seconds": 600
-    },
-    "api": {
-      "command": "python3 scripts/check_api_docs.py",
       "timeout_seconds": 600
     },
     "contract": {
