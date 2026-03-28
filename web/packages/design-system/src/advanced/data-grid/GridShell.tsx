@@ -245,6 +245,47 @@ function GridShellInner<RowData = unknown>(
               { statusPanel: 'agAggregationComponent', align: 'right' },
             ],
           }}
+          getContextMenuItems={(params) => {
+            const defaults = params.defaultItems ?? [];
+            return [
+              ...defaults,
+              'separator',
+              {
+                name: 'Bu değere göre filtrele',
+                icon: '<span style="font-size:12px">🔍</span>',
+                disabled: !params.value,
+                action: () => {
+                  if (params.column && params.api) {
+                    const colId = params.column.getColId();
+                    params.api.setColumnFilterModel(colId, {
+                      filterType: 'text',
+                      type: 'equals',
+                      filter: String(params.value),
+                    }).then(() => params.api.onFilterChanged());
+                  }
+                },
+              },
+              {
+                name: 'Satırı üste sabitle',
+                icon: '<span style="font-size:12px">📌</span>',
+                disabled: !params.node?.data,
+                action: () => {
+                  if (params.api && params.node?.data) {
+                    const existing = params.api.getGridOption('pinnedTopRowData') ?? [];
+                    params.api.setGridOption('pinnedTopRowData', [...existing, params.node.data]);
+                  }
+                },
+              },
+              {
+                name: 'Sabitlemeleri kaldır',
+                icon: '<span style="font-size:12px">📌</span>',
+                action: () => {
+                  params.api?.setGridOption('pinnedTopRowData', []);
+                  params.api?.setGridOption('pinnedBottomRowData', []);
+                },
+              },
+            ];
+          }}
           popupParent={typeof document !== "undefined" ? document.body : undefined}
           onGridReady={handleGridReady}
           onRowDoubleClicked={handleRowDoubleClicked}
