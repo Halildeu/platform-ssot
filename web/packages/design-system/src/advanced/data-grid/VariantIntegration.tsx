@@ -173,7 +173,7 @@ function collectGridState<RowData>(api: GridApi<RowData>): GridVariantState {
 
 function applyVariantState<RowData>(api: GridApi<RowData>, state: GridVariantState): void {
   if (state.columnState && Array.isArray(state.columnState)) {
-    api.applyColumnState?.({ state: state.columnState as ColumnState[], applyOrder: true });
+    api.applyColumnState?.({ state: state.columnState as ColumnState[], applyOrder: true, defaultState: { hide: false } });
   }
   if (state.filterModel) {
     api.setFilterModel?.(state.filterModel);
