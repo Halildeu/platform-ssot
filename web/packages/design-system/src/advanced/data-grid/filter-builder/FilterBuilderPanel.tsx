@@ -26,15 +26,22 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
     useFilterBuilder(3);
   const [matchCount, setMatchCount] = useState<number | null>(null);
 
-  // Import current grid filters ONLY when panel first opens (false→true transition)
+  // Import state when panel first opens (false→true transition)
   const prevOpenRef = React.useRef(false);
   useEffect(() => {
     if (open && !prevOpenRef.current && gridApi) {
-      const model = gridApi.getFilterModel?.() ?? {};
-      const imported = Object.keys(model).length > 0
-        ? filterModelToTree(model, columnDefs)
-        : createEmptyGroup();
-      setRoot(imported);
+      // First try: restore exact tree from previous apply (preserves AND/OR logic)
+      const savedTree = (gridApi as any).__filterBuilderTree;
+      if (savedTree && savedTree.children?.length > 0) {
+        setRoot(savedTree);
+      } else {
+        // Fallback: import from AG Grid filterModel
+        const model = gridApi.getFilterModel?.() ?? {};
+        const imported = Object.keys(model).length > 0
+          ? filterModelToTree(model, columnDefs)
+          : createEmptyGroup();
+        setRoot(imported);
+      }
     }
     prevOpenRef.current = open;
   }, [open, gridApi, columnDefs, setRoot]);
@@ -55,6 +62,8 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
   const handleApply = useCallback(() => {
     if (!gridApi) return;
     const model = treeToFilterModel(root);
+    // Persist the full tree so re-opening restores exact state (including AND/OR logic)
+    (gridApi as any).__filterBuilderTree = JSON.parse(JSON.stringify(root));
     gridApi.setFilterModel(model);
     gridApi.onFilterChanged();
     onClose();
@@ -62,6 +71,7 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
 
   const handleClear = useCallback(() => {
     if (!gridApi) return;
+    delete (gridApi as any).__filterBuilderTree;
     gridApi.setFilterModel(null);
     gridApi.onFilterChanged();
     clear();
