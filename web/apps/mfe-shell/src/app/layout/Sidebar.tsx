@@ -5,7 +5,8 @@ import {
   BarChart3,
   ChevronDown,
   ChevronRight,
-  ExternalLink,
+  Maximize2,
+  Minimize2,
   Folder,
   Home,
   LayoutDashboard,
@@ -410,23 +411,7 @@ export const Sidebar: React.FC = () => {
             {!isCollapsed ? <span className="flex-1">Support</span> : null}
           </button>
 
-          <button
-            type="button"
-            onClick={() => {
-              try {
-                window.open(window.location.href, '_blank', 'noopener,noreferrer');
-              } catch {
-                // ignore
-              }
-            }}
-            className={`flex items-center gap-2 rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-secondary hover:bg-surface-muted hover:text-text-primary ${
-              isCollapsed ? 'justify-center px-0' : ''
-            }`}
-            title="Open in new tab"
-          >
-            <ExternalLink className="h-4 w-4" aria-hidden />
-            {!isCollapsed ? <span className="flex-1">Open in browser</span> : null}
-          </button>
+          <FullscreenToggleButton isCollapsed={isCollapsed} />
 
           <div className={`flex items-center justify-between rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-xs font-semibold text-text-secondary ${
             isCollapsed ? 'justify-center px-0' : ''
@@ -442,6 +427,38 @@ export const Sidebar: React.FC = () => {
     </aside>
   );
 };
+
+function FullscreenToggleButton({ isCollapsed }: { isCollapsed: boolean }) {
+  const [isFs, setIsFs] = useState(!!document.fullscreenElement);
+
+  useEffect(() => {
+    const handler = () => setIsFs(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', handler);
+    return () => document.removeEventListener('fullscreenchange', handler);
+  }, []);
+
+  const toggle = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.().catch(() => {});
+    } else {
+      document.exitFullscreen?.().catch(() => {});
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      className={`flex items-center gap-2 rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-secondary hover:bg-surface-muted hover:text-text-primary ${
+        isCollapsed ? 'justify-center px-0' : ''
+      }`}
+      title={isFs ? 'Tam ekrandan cik' : 'Tam ekran'}
+    >
+      {isFs ? <Minimize2 className="h-4 w-4" aria-hidden /> : <Maximize2 className="h-4 w-4" aria-hidden />}
+      {!isCollapsed ? <span className="flex-1">{isFs ? 'Tam Ekrandan Cik' : 'Tam Ekran'}</span> : null}
+    </button>
+  );
+}
 
 const ChevronLeftIcon = () => (
   <svg
