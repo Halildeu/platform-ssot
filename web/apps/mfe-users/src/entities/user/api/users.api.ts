@@ -615,6 +615,10 @@ const buildQueryString = (params: UsersQueryParams) => {
   // Server-side grouping params
   if ((params as any).rowGroupCols) qs.set('rowGroupCols', (params as any).rowGroupCols);
   if ((params as any).groupKeys) qs.set('groupKeys', (params as any).groupKeys);
+  // Server-side aggregation + pivot params
+  if ((params as any).valueCols) qs.set('valueCols', (params as any).valueCols);
+  if ((params as any).pivotMode) qs.set('pivotMode', (params as any).pivotMode);
+  if ((params as any).pivotCols) qs.set('pivotCols', (params as any).pivotCols);
   const queryString = qs.toString();
   return queryString ? `?${queryString}` : '';
 };

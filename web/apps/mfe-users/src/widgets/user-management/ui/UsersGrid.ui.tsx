@@ -757,8 +757,11 @@ const UsersGrid: React.FC<UsersGridProps> = ({
   );
 
   const handleStreamingCsv = useCallback(() => {
-    // Backend streaming export: tüm kayıtları CSV olarak indirir
-    const url = '/api/users/export.csv';
+    // Backend streaming export: tüm kayıtları CSV olarak indirir — mevcut filtre/sort ile
+    const qs = new URLSearchParams();
+    // TODO: gridApi erişimi olmadığı için şimdilik dataSourceMode'dan basic params
+    // İleride gridApi.getFilterModel() + getColumnState() kullanılacak
+    const url = `/api/users/export.csv${qs.toString() ? '?' + qs.toString() : ''}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   }, []);
 

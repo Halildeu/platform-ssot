@@ -80,6 +80,22 @@ export const buildEntityGridQueryParams = (
     params.groupKeys = groupKeys.join(',');
   }
 
+  // Server-side aggregation: valueCols = columns with aggFunc
+  const valueCols = (request as { valueCols?: ColumnVO[] }).valueCols;
+  if (Array.isArray(valueCols) && valueCols.length > 0) {
+    params.valueCols = valueCols
+      .filter((c) => c.id && (c as any).aggFunc)
+      .map((c) => `${c.id}:${(c as any).aggFunc}`)
+      .join(',');
+  }
+
+  // Server-side pivot
+  const pivotCols = (request as { pivotCols?: ColumnVO[] }).pivotCols;
+  if ((request as any).pivotMode && Array.isArray(pivotCols) && pivotCols.length > 0) {
+    params.pivotMode = 'true';
+    params.pivotCols = pivotCols.map((c) => c.id).join(',');
+  }
+
   // AG Grid v34: when enableAdvancedFilter is true, filterModel contains AdvancedFilterModel.
   // When disabled, filterModel contains column FilterModel. Detect and route accordingly.
   const filterModel = request.filterModel;

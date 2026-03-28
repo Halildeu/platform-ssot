@@ -231,12 +231,15 @@ function GridShellInner<RowData = unknown>(
           overlayNoRowsTemplate={overlayNoRowsTemplate}
           rowHeight={resolvedRowHeight}
           headerHeight={density === "compact" ? 40 : 48}
-          rowSelection={rowSelection}
+          rowSelection={rowSelection ?? { mode: 'multiRow' as const, checkboxes: true, headerCheckbox: true }}
           animateRows={animateRows}
           rowGroupPanelShow="always"
           enableRangeSelection
           groupDefaultExpanded={0}
           groupTotalRow="bottom"
+          pagination={rowModelType === "serverSide"}
+          paginationPageSize={rowModelType === "serverSide" ? 50 : undefined}
+          paginationPageSizeSelector={rowModelType === "serverSide" ? [25, 50, 100, 200] : undefined}
           // enableAdvancedFilter — disabled: conflicts with context menu (AG Grid limitation)
           enableCharts={enableCharts}
           chartThemeOverrides={chartThemeOverrides}
