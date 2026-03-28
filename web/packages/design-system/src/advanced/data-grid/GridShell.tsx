@@ -230,6 +230,7 @@ function GridShellInner<RowData = unknown>(
           headerHeight={density === "compact" ? 40 : 48}
           rowSelection={rowSelection}
           animateRows={animateRows}
+          rowGroupPanelShow="always"
           enableAdvancedFilter
           enableCharts={enableCharts}
           chartThemeOverrides={chartThemeOverrides}
