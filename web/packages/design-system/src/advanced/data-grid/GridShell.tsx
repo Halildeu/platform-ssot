@@ -236,7 +236,7 @@ function GridShellInner<RowData = unknown>(
           rowGroupPanelShow="always"
           enableRangeSelection
           groupTotalRow="bottom"
-          enableAdvancedFilter
+          // enableAdvancedFilter — disabled: conflicts with context menu (AG Grid limitation)
           enableCharts={enableCharts}
           chartThemeOverrides={chartThemeOverrides}
           statusBar={{
