@@ -40,13 +40,28 @@ export default function ServiceControlPage() {
   } = useServiceManager();
 
   const [activeTab, setActiveTab] = useState('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'up' | 'down' | 'unknown'>('all');
   const [logTarget, setLogTarget] = useState<string | null>(null);
   const [confirmAction, setConfirmAction] = useState<'start' | 'stop' | 'restart' | null>(null);
 
+  const toggleStatusFilter = (filter: 'up' | 'down' | 'unknown') => {
+    setStatusFilter((prev) => (prev === filter ? 'all' : filter));
+  };
+
   const filtered = useMemo(() => {
-    if (activeTab === 'all') return services;
-    return services.filter((s) => s.category === activeTab);
-  }, [services, activeTab]);
+    let result = services;
+    if (activeTab !== 'all') {
+      result = result.filter((s) => s.category === activeTab);
+    }
+    if (statusFilter === 'up') {
+      result = result.filter((s) => s.health === 'UP');
+    } else if (statusFilter === 'down') {
+      result = result.filter((s) => s.health === 'DOWN' || s.health === 'TIMEOUT');
+    } else if (statusFilter === 'unknown') {
+      result = result.filter((s) => s.health !== 'UP' && s.health !== 'DOWN' && s.health !== 'TIMEOUT');
+    }
+    return result;
+  }, [services, activeTab, statusFilter]);
 
   const upCount = services.filter((s) => s.health === 'UP').length;
   const downCount = services.filter((s) => s.health === 'DOWN' || s.health === 'TIMEOUT').length;
@@ -91,20 +106,49 @@ export default function ServiceControlPage() {
         lastRefresh={lastRefresh}
       />
 
-      {/* Summary strip */}
-      <div className="flex items-center gap-6 rounded-xl border border-border-subtle bg-surface-default px-5 py-3">
-        <div className="flex items-center gap-2">
+      {/* Summary strip — clickable status filters */}
+      <div className="flex items-center gap-2 rounded-xl border border-border-subtle bg-surface-default px-5 py-3">
+        <button
+          onClick={() => toggleStatusFilter('up')}
+          className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition ${
+            statusFilter === 'up'
+              ? 'bg-emerald-100 ring-2 ring-emerald-400'
+              : 'hover:bg-emerald-50'
+          }`}
+        >
           <CheckCircle2 className="h-4 w-4 text-emerald-600" />
           <Text className="text-sm font-medium text-text-primary">{upCount} Healthy</Text>
-        </div>
-        <div className="flex items-center gap-2">
+        </button>
+        <button
+          onClick={() => toggleStatusFilter('down')}
+          className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition ${
+            statusFilter === 'down'
+              ? 'bg-rose-100 ring-2 ring-rose-400'
+              : 'hover:bg-rose-50'
+          }`}
+        >
           <XCircle className="h-4 w-4 text-rose-600" />
           <Text className="text-sm font-medium text-text-primary">{downCount} Down</Text>
-        </div>
-        <div className="flex items-center gap-2">
+        </button>
+        <button
+          onClick={() => toggleStatusFilter('unknown')}
+          className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition ${
+            statusFilter === 'unknown'
+              ? 'bg-gray-200 ring-2 ring-gray-400'
+              : 'hover:bg-gray-50'
+          }`}
+        >
           <HelpCircle className="h-4 w-4 text-text-secondary" />
           <Text className="text-sm font-medium text-text-primary">{unknownCount} Unknown</Text>
-        </div>
+        </button>
+        {statusFilter !== 'all' && (
+          <button
+            onClick={() => setStatusFilter('all')}
+            className="ml-1 rounded-lg px-2 py-1 text-xs text-text-secondary hover:bg-surface-muted"
+          >
+            Filtreyi Kaldir
+          </button>
+        )}
         {lastRefresh && (
           <Text variant="secondary" className="ml-auto text-[10px]">
             Son guncelleme: {new Date(lastRefresh).toLocaleTimeString('tr-TR')}
