@@ -1,4 +1,6 @@
 node_modules
+node_modules_failed_pnpm
+node_modules_old
 package-lock.json
 security-reports
 packages/design-system/dist
@@ -15,3 +17,21 @@ apps/mfe-shell/.env.local
 # Module Federation temp files
 .__mf__temp/
 .mf/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Editor temp files
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+
+# Stryker mutation testing temp
+.stryker-tmp/
+
+# Archive (migrated, no longer needed)
+archive/
