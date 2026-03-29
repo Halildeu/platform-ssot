@@ -13,6 +13,28 @@
   </suppress>
   <suppress>
     <notes><![CDATA[
+    openfga-sdk Java client (dev.openfga:openfga-sdk) icin CVE-2023-35933 bulgusu.
+    Bu CVE aslinda OpenFGA SERVER'a ait (openfga/openfga <= 1.1.0) ve Go/Python SDK'da duzeltilmistir.
+    OWASP Dependency-Check, CPE cpe:2.3:a:openfga:openfga uzerinden Java SDK'yi yanlis eslestirir.
+    Java SDK bu zafiyetten etkilenmez — client library, server-side authorization bypass icermez.
+    Kontrat: docs/02-architecture/context/security-remediation.contract.v1.json
+    ]]></notes>
+    <packageUrl regex="true">^pkg:maven/dev\.openfga/openfga-sdk@.*$</packageUrl>
+    <cve>CVE-2023-35933</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+    openfga-sdk Java client (dev.openfga:openfga-sdk) icin CVE-2023-45810 bulgusu.
+    Bu CVE OpenFGA Go SDK'ya ait (openfga/go-sdk) ve Java SDK'yi etkilemez.
+    OWASP Dependency-Check CPE cpe:2.3:a:openfga:openfga uzerinden genis eslestirme yapar.
+    Java SDK farkli bir artifact olup bu zafiyetten etkilenmez.
+    Kontrat: docs/02-architecture/context/security-remediation.contract.v1.json
+    ]]></notes>
+    <packageUrl regex="true">^pkg:maven/dev\.openfga/openfga-sdk@.*$</packageUrl>
+    <cve>CVE-2023-45810</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
     jackson-databind 2.15.4 için CVE-2023-35116 bulgusu NVD tarafında 2.16.0 altına geniş eşleşiyor.
     Aynı kayıttaki vendor notu bunun harici saldırganın tetikleyebileceği geçerli bir model olmadığını belirtir.
     Repo Spring Boot 3.2.x baseline kullandığı için bu bulgu fail-open gizlenmiyor; review tarihli residual-risk sözleşmesi altında taşınıyor.

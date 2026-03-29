@@ -29,9 +29,9 @@
       ],
       "actions": [
         {
-          "problem": "openfga-sdk 0.7.2: CVE-2023-35933 (7.5), CVE-2023-45810 (7.5) — OWASP CPE match; blocking CVSS >= 7.0 gate.",
-          "remediation": "Upgraded openfga-sdk from 0.7.2 to 0.9.7 in common-auth/pom.xml.",
-          "evidence": ["backend/common-auth/pom.xml"]
+          "problem": "openfga-sdk 0.7.2: CVE-2023-35933 (7.5), CVE-2023-45810 (7.5) — OWASP CPE false-positive match; blocking CVSS >= 7.0 gate.",
+          "remediation": "Upgraded openfga-sdk from 0.7.2 to 0.9.7 in common-auth/pom.xml. CVE-2023-35933 and CVE-2023-45810 are OpenFGA SERVER/Go-SDK vulnerabilities (not Java SDK) but OWASP CPE cpe:2.3:a:openfga:openfga matches broadly. Suppression added to dependency-check-suppressions.xml for these false positives.",
+          "evidence": ["backend/common-auth/pom.xml", "backend/scripts/ci/security/dependency-check-suppressions.xml"]
         },
         {
           "problem": "mssql-jdbc 12.10.1.jre11: CVE-2025-59250 (8.1) — HIGH severity SQL Server JDBC driver vulnerability.",
@@ -126,6 +126,42 @@
     }
   ],
   "governed_residual_risks": [
+    {
+      "id": "false-positive-openfga-sdk-cve-2023-35933",
+      "package": "pkg:maven/dev.openfga/openfga-sdk@0.9.7",
+      "cve": "CVE-2023-35933",
+      "severity": "HIGH",
+      "status": "false-positive-suppression",
+      "justification": "CVE-2023-35933 OpenFGA server authorization bypass zafiyetidir (openfga/openfga <= 1.1.0). Java SDK (dev.openfga:openfga-sdk) bir CLIENT kutuphanesidir ve server-side authorization logic icermez. OWASP Dependency-Check CPE cpe:2.3:a:openfga:openfga uzerinden yanlis eslesme yapar.",
+      "suppression_file": "backend/scripts/ci/security/dependency-check-suppressions.xml",
+      "review_on_or_before": "2026-06-30",
+      "exit_criteria": [
+        "OWASP Dependency-Check NVD CPE eslesmesi duzeltildiginde suppression kaldirilir.",
+        "OpenFGA Java SDK icin ayri bir CVE yayinlanirsa bu kayit guncellenir."
+      ],
+      "evidence": [
+        "backend/scripts/ci/security/dependency-check-suppressions.xml",
+        "backend/common-auth/pom.xml"
+      ]
+    },
+    {
+      "id": "false-positive-openfga-sdk-cve-2023-45810",
+      "package": "pkg:maven/dev.openfga/openfga-sdk@0.9.7",
+      "cve": "CVE-2023-45810",
+      "severity": "HIGH",
+      "status": "false-positive-suppression",
+      "justification": "CVE-2023-45810 OpenFGA Go SDK zafiyetidir (openfga/go-sdk). Java SDK (dev.openfga:openfga-sdk) farkli bir artifact olup bu zafiyetten etkilenmez. OWASP Dependency-Check CPE cpe:2.3:a:openfga:openfga uzerinden genis eslestirme yapar.",
+      "suppression_file": "backend/scripts/ci/security/dependency-check-suppressions.xml",
+      "review_on_or_before": "2026-06-30",
+      "exit_criteria": [
+        "OWASP Dependency-Check NVD CPE eslesmesi duzeltildiginde suppression kaldirilir.",
+        "OpenFGA Java SDK icin ayri bir CVE yayinlanirsa bu kayit guncellenir."
+      ],
+      "evidence": [
+        "backend/scripts/ci/security/dependency-check-suppressions.xml",
+        "backend/common-auth/pom.xml"
+      ]
+    },
     {
       "id": "residual-commons-configuration-cve-2025-46392",
       "package": "pkg:maven/commons-configuration/commons-configuration@1.10",
