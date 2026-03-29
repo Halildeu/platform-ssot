@@ -167,6 +167,7 @@ export default defineConfig(({ mode }) => {
       alias: [
         { find: '@platform/capabilities', replacement: path.resolve(__dirname, '../../packages/platform-capabilities/src') },
         { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
+        { find: '@mfe/x-charts', replacement: path.resolve(__dirname, '../../packages/x-charts/src') },
         { find: '@mfe/i18n-dicts', replacement: path.resolve(__dirname, '../../packages/i18n-dicts/src') },
         { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
       ],
@@ -192,6 +193,12 @@ export default defineConfig(({ mode }) => {
         '/api/v1/dashboards': { target: 'http://localhost:8095', changeOrigin: true, secure: false },
         '/api/v1/authz': { target: 'http://localhost:8089', changeOrigin: true, secure: false },
         '/api/v1/users': { target: 'http://localhost:8089', changeOrigin: true, secure: false },
+        '/api/v1/companies': { target: 'http://localhost:8092', changeOrigin: true, secure: false },
+        '/api/v1/themes': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
+        '/api/v1/theme-registry': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
+        '/api/v1/me/theme': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
+        '/api/v1/variants': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
+        '/api/audit': { target: 'http://localhost:8089', changeOrigin: true, secure: false },
         // '/api/services' handled by serviceHealthApi() Vite plugin
         '/cockpit-api': {
           target: 'http://localhost:8790',
@@ -232,7 +239,7 @@ export default defineConfig(({ mode }) => {
         '@sentry/react',
         'lucide-react',
         // Monorepo packages — resolved via alias, pre-bundle for speed
-        '@mfe/design-system',
+        // '@mfe/design-system' excluded — barrel re-exports too deep for esbuild optimizer
         '@mfe/shared-http',
         '@mfe/i18n-dicts',
         '@platform/capabilities',
