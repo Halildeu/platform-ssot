@@ -29,7 +29,7 @@ public class OpenFgaAuthzConfig {
             OpenFgaAuthzService authzService, OpenFgaProperties props) {
         var reg = new FilterRegistrationBean<>(new ScopeContextFilter(authzService, props));
         reg.addUrlPatterns("/api/*");
-        reg.setOrder(Ordered.HIGHEST_PRECEDENCE + 10);
+        reg.setOrder(Ordered.LOWEST_PRECEDENCE - 10);
         return reg;
     }
 }

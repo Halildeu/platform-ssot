@@ -79,6 +79,10 @@ public class CompanyController {
     }
 
     private void requirePermission(String relation, String module) {
+        // Dev/local mode: OpenFGA disabled → all checks pass
+        if (!authzService.isEnabled()) {
+            return;
+        }
         ScopeContext ctx = ScopeContextHolder.get();
         if (ctx != null && ctx.superAdmin()) {
             return;

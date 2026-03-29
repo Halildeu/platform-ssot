@@ -64,11 +64,18 @@ services:
       # Ek issuer/JWKS listesi Keycloak serban realm'ini işaret eder
       SECURITY_JWT_JWK_SET_URIS: http://keycloak:8080/realms/serban/protocol/openid-connect/certs
       SECURITY_JWT_ISSUERS: http://keycloak:8080/realms/serban,http://localhost:8081/realms/serban
+      # OpenFGA authorization
+      ERP_OPENFGA_ENABLED: "true"
+      ERP_OPENFGA_API_URL: http://openfga:8080
+      ERP_OPENFGA_STORE_ID: ${OPENFGA_STORE_ID}
+      ERP_OPENFGA_MODEL_ID: ${OPENFGA_MODEL_ID}
     depends_on:
       discovery-server:
         condition: service_healthy
       postgres-db:
         condition: service_healthy
+      openfga:
+        condition: service_started
       vault:
         condition: service_healthy
     healthcheck:
@@ -141,6 +148,10 @@ services:
       VARIANT_DB_PASSWORD: ${VARIANT_DB_PASSWORD}
       VARIANT_DB_SCHEMA: ${VARIANT_DB_SCHEMA:-variant_service}
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+      ERP_OPENFGA_ENABLED: "true"
+      ERP_OPENFGA_API_URL: http://openfga:8080
+      ERP_OPENFGA_STORE_ID: ${OPENFGA_STORE_ID}
+      ERP_OPENFGA_MODEL_ID: ${OPENFGA_MODEL_ID}
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -171,6 +182,9 @@ services:
       - SECURITY_JWT_JWK_SET_URI=${SECURITY_JWT_JWK_SET_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}
       - SECURITY_JWT_ISSUER=${SECURITY_JWT_ISSUER:-http://keycloak:8080/realms/serban}
       - SECURITY_JWT_AUDIENCE=${CORE_DATA_SECURITY_JWT_AUDIENCE:-frontend,user-service,core-data-service}
+      - ERP_OPENFGA_ENABLED=false
+      - ERP_OPENFGA_API_URL=http://openfga:8080
+      - ERP_OPENFGA_STORE_ID=${OPENFGA_STORE_ID}
     depends_on:
       discovery-server:
         condition: service_healthy
