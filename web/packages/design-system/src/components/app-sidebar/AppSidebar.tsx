@@ -193,9 +193,9 @@ const AppSidebarRoot = React.forwardRef<HTMLElement, AppSidebarPropsBase>(({
         data-access-state={accessState}
         aria-label="Sidebar"
         title={accessReason}
-        style={{ width: width > 2000 ? '100%' : width, position: 'relative' }}
+        style={{ width: width > 2000 ? '100%' : width }}
         className={cn(
-          'flex h-full flex-col',
+          'relative flex h-full flex-col',
           'bg-[var(--surface-default)] bg-surface-default text-text-primary border-r border-[var(--border-subtle)]',
           resizeState.isResizing ? '' : 'transition-all duration-200',
           accessStyles(accessState),
