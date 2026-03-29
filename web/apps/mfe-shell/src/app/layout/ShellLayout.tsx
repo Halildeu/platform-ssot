@@ -3,7 +3,6 @@ import { BrowserRouter, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/store.hooks";
 import { useThemeContext } from "../theme/theme-context.provider";
 import { useToast } from "@mfe/design-system";
-import { isPermitAllMode } from "../auth/auth-config";
 import {
   _isSuggestionsRemoteEnabled,
   _isEthicRemoteEnabled,
@@ -32,8 +31,7 @@ const ShellChrome: React.FC = () => {
   const colors = currentTheme.colors;
   const authState = useAppSelector((state) => state.auth);
   const { token, initialized } = authState;
-  const permitAllMode = isPermitAllMode();
-  const showSidebar = Boolean(token) || permitAllMode;
+  const showSidebar = Boolean(token);
   const location = useLocation();
   const showAuditSummary =
     initialized && location.pathname.startsWith("/audit");
@@ -41,28 +39,29 @@ const ShellChrome: React.FC = () => {
   return (
     <div
       style={{
-        minHeight: "100vh",
         background: colors.background,
         color: colors.text,
       }}
       className="flex min-h-screen flex-col"
     >
-      {/* Fixed header — takes space via pt below */}
+      {/* Fixed header */}
       <ShellHeader />
-      {/* Push content below fixed header */}
-      <div className="pt-[var(--shell-header-h)]">
+
+      {/* Fixed sidebar — rendered outside normal flow */}
+      {showSidebar ? <Sidebar /> : null}
+
+      {/* Main content area — offset by header height and sidebar width */}
+      <div
+        className="flex flex-1 flex-col"
+        style={{
+          paddingTop: 'var(--shell-header-h, 0px)',
+          paddingLeft: showSidebar ? 'var(--shell-sidebar-w, 0px)' : undefined,
+        }}
+      >
         {showAuditSummary ? <AuditSummaryStrip /> : null}
-        {/* Fixed sidebar — rendered outside flow */}
-        {showSidebar ? <Sidebar /> : null}
-        <div className="flex min-h-0 flex-1">
-          {/* Spacer matching fixed sidebar width via CSS variable */}
-          {showSidebar ? <div className="shrink-0" style={{ width: 'var(--shell-sidebar-w)' }} /> : null}
-          <main className="min-w-0 flex-1 px-8 py-8">
-          <div className="flex w-full flex-col gap-6">
-            <AppRouter />
-          </div>
+        <main className="flex min-h-0 flex-1 flex-col px-8 py-6">
+          <AppRouter />
         </main>
-      </div>
       </div>
     </div>
   );
@@ -185,4 +184,3 @@ export const ShellLayout: React.FC = () => {
     </BrowserRouter>
   );
 };
-
