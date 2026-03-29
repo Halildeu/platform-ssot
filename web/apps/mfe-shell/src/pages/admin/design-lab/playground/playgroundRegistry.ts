@@ -96,6 +96,7 @@ export const COMPONENT_ALIASES: Record<string, string> = {
   SettingsTemplate: "PageLayout",
   CommandWorkspace: "PageLayout",
   // Components documented under different name than export
+  AutoComplete: "Autocomplete",
   SectionTabs: "DetailSectionTabs",
 };
 

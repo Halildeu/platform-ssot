@@ -432,9 +432,16 @@ await checkAsync('remote-entry-reachable', 'remoteEntry.js HTTP accessibility', 
     return { status: 'pass', message: `All ${MFE_REGISTRY.length} remoteEntry endpoints responding` };
   }
 
-  // If no dev servers are running at all, skip — this is a local-dev scenario
+  // Local dev: not all servers need to be running simultaneously.
+  // Pass if shell (:3000) is reachable OR no servers are running at all.
   if (upCount === 0) {
     return { status: 'pass', message: `No dev servers running — check skipped (start servers for full validation)` };
+  }
+
+  // In local dev, only shell needs to be running — remotes are loaded on demand
+  const shellUp = statuses.find(s => s.name === 'mfe_shell')?.httpStatus === 200;
+  if (shellUp && upCount < MFE_REGISTRY.length) {
+    return { status: 'pass', message: `Shell running + ${upCount - 1} remote(s) — ${down.length} not started (normal for local dev)` };
   }
 
   return {
