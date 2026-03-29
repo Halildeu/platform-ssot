@@ -69,7 +69,7 @@ function buildRemotes() {
     audit: readEnvBoolean(['VITE_SHELL_ENABLE_AUDIT_REMOTE', 'SHELL_ENABLE_AUDIT_REMOTE']),
     users: readEnvBoolean(['VITE_SHELL_ENABLE_USERS_REMOTE', 'SHELL_ENABLE_USERS_REMOTE']),
     reporting: readEnvBoolean(['VITE_SHELL_ENABLE_REPORTING_REMOTE', 'SHELL_ENABLE_REPORTING_REMOTE']),
-    schemaExplorer: readEnvBoolean(['VITE_SHELL_ENABLE_SCHEMA_EXPLORER_REMOTE', 'SHELL_ENABLE_SCHEMA_EXPLORER_REMOTE'], false),
+    schemaExplorer: readEnvBoolean(['VITE_SHELL_ENABLE_SCHEMA_EXPLORER_REMOTE', 'SHELL_ENABLE_SCHEMA_EXPLORER_REMOTE']),
   };
 
   // All remotes must be declared so MF plugin can resolve their imports
@@ -106,7 +106,9 @@ const sharedCore = {
   'react-router-dom': singleton('react-router-dom'),
   '@reduxjs/toolkit': singleton('@reduxjs/toolkit'),
   'react-redux': singleton('react-redux'),
-  '@tanstack/react-query': singleton('@tanstack/react-query'),
+  // @tanstack/react-query excluded from MF shared — loadShare async wrapper
+  // causes "QueryCache is not a constructor" with Vite 8 + MF v1.13.5.
+  // Context sharing handled via window.__SHELL_QUERY_CLIENT__ bridge.
 };
 const sharedProdOnly = {
   clsx: singleton('clsx'),
@@ -136,7 +138,7 @@ export default defineConfig(({ mode }) => {
         transformIndexHtml(html) {
           return html.replace(
             'window.__env__ = window.__env__ || {};',
-            `window.__env__ = Object.assign({}, ${JSON.stringify(runtimeEnv)});`,
+            `window.__env__ = Object.assign({}, ${JSON.stringify(runtimeEnv)}, window.__env__ || {});`,
           );
         },
       },
@@ -188,7 +190,7 @@ export default defineConfig(({ mode }) => {
         },
         '/api/v1/reports': { target: 'http://localhost:8095', changeOrigin: true, secure: false },
         '/api/v1/dashboards': { target: 'http://localhost:8095', changeOrigin: true, secure: false },
-        '/api/v1/authz': { target: 'http://localhost:8090', changeOrigin: true, secure: false },
+        '/api/v1/authz': { target: 'http://localhost:8089', changeOrigin: true, secure: false },
         '/api/v1/users': { target: 'http://localhost:8089', changeOrigin: true, secure: false },
         // '/api/services' handled by serviceHealthApi() Vite plugin
         '/cockpit-api': {
