@@ -67,6 +67,9 @@ export default tseslint.config(
       // Packages with eslint-disable comments referencing unloaded plugins (react-hooks, jsx-a11y)
       'packages/x-kanban/**',
       'packages/x-editor/**',
+      '.__mf__temp/**',
+      '.mf/**',
+      'scripts/theme/**',
     ],
   },
   /* ---- Linter options ---- */
@@ -110,10 +113,20 @@ export default tseslint.config(
       ...recommendedWarnOverrides,
       // Custom plugin rules
       'semantic-theme/no-inline-color-literals': 'warn',
-      'css-var-fallback/no-css-var-without-fallback': 'warn',
+      // Disabled: conflicts with check_no_hardcoded_theme_styles (fallback hex = violation).
+      // Token system is reliable — var(--token) without fallback is the correct pattern.
+      'css-var-fallback/no-css-var-without-fallback': 'off',
       'no-ant-import/no-new-ant-import': 'error',
       // Targeted overrides (options or off)
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      // TS handles unused vars — disable vanilla rule to avoid double-counting
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['warn', {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+        destructuredArrayIgnorePattern: '^_',
+        ignoreRestSiblings: true,
+      }],
       'no-undef': 'off', // Too many false positives with TS global types
       'no-unused-private-class-members': 'warn',
     },
