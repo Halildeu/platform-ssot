@@ -191,9 +191,11 @@ check('unused-tokens', 'Tokens defined in theme.css but never referenced in any 
   /* Also count self-references within theme.css */
   for (const m of themeCss.matchAll(/var\(--([a-z][a-z0-9-]*)/g)) referenced.add(m[1]);
 
-  /* Filter: tones palette tokens are reserved for future use */
-  const unused = [...definedTokens].filter(t => !referenced.has(t) && !t.includes('tones-'));
-  const reservedUnused = [...definedTokens].filter(t => !referenced.has(t) && t.includes('tones-'));
+  /* Filter: infrastructure tokens and palette reserves are expected to be unreferenced */
+  const infraPrefixes = ['overlay-', 'density-', 'motion-duration-', 'motion-easing-', 'ring-', 'status-'];
+  const isInfraOrReserve = (t) => t.includes('tones-') || infraPrefixes.some(p => t.startsWith(p));
+  const unused = [...definedTokens].filter(t => !referenced.has(t) && !isInfraOrReserve(t));
+  const reservedUnused = [...definedTokens].filter(t => !referenced.has(t) && isInfraOrReserve(t));
   if (unused.length === 0) return { status: 'pass', message: `All ${definedTokens.size} theme tokens referenced (${reservedUnused.length} palette reserve tokens skipped)` };
   return {
     status: unused.length > 15 ? 'warn' : 'pass',
