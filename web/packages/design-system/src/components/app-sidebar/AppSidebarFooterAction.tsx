@@ -75,7 +75,7 @@ export const AppSidebarFooterAction = React.forwardRef<
     const { isCollapsed } = useSidebar();
 
     const sharedClasses = cn(
-      'group relative flex items-center gap-2 rounded-xl py-2 text-sm cursor-pointer',
+      'group relative flex w-full items-center gap-2 rounded-xl py-2 text-sm cursor-pointer',
       'border border-border-subtle bg-surface-default',
       'transition-all duration-200 outline-hidden',
       'focus-visible:ring-2 focus-visible:ring-[var(--action-primary)]',

@@ -30,7 +30,7 @@ export const AppSidebarTrigger = React.forwardRef<HTMLButtonElement, AppSidebarT
       onClick={toggle}
       aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       className={cn(
-        'flex h-8 w-8 items-center justify-center rounded-md cursor-pointer',
+        'flex h-9 w-9 items-center justify-center rounded-xl cursor-pointer',
         'text-[var(--text-secondary)] hover:bg-[var(--surface-canvas)] hover:text-[var(--text-primary)]',
         'transition-colors duration-200 outline-hidden',
         'focus-visible:ring-2 focus-visible:ring-[var(--action-primary)]',
