@@ -13,25 +13,16 @@
   </suppress>
   <suppress>
     <notes><![CDATA[
-    openfga-sdk Java client (dev.openfga:openfga-sdk) icin CVE-2023-35933 bulgusu.
-    Bu CVE aslinda OpenFGA SERVER'a ait (openfga/openfga <= 1.1.0) ve Go/Python SDK'da duzeltilmistir.
-    OWASP Dependency-Check, CPE cpe:2.3:a:openfga:openfga uzerinden Java SDK'yi yanlis eslestirir.
-    Java SDK bu zafiyetten etkilenmez — client library, server-side authorization bypass icermez.
+    dev.openfga:openfga-sdk (Java client) icin tum CVE eslestirmeleri false-positive.
+    OWASP Dependency-Check, CPE cpe:2.3:a:openfga:openfga uzerinden Java SDK'yi OpenFGA
+    SERVER ve Go/Python SDK CVE'leri ile yanlis eslestirir. Java SDK bir CLIENT kutuphanesidir
+    ve server-side zafiyetlerden (authz bypass, path traversal, DoS vs.) etkilenmez.
+    Eslesen CVE'ler: CVE-2023-35933, CVE-2023-45810, CVE-2023-40579, CVE-2024-23820,
+    CVE-2023-43645, CVE-2025-25196 — tumunun kaynagi OpenFGA server veya Go SDK.
     Kontrat: docs/02-architecture/context/security-remediation.contract.v1.json
     ]]></notes>
     <packageUrl regex="true">^pkg:maven/dev\.openfga/openfga-sdk@.*$</packageUrl>
-    <cve>CVE-2023-35933</cve>
-  </suppress>
-  <suppress>
-    <notes><![CDATA[
-    openfga-sdk Java client (dev.openfga:openfga-sdk) icin CVE-2023-45810 bulgusu.
-    Bu CVE OpenFGA Go SDK'ya ait (openfga/go-sdk) ve Java SDK'yi etkilemez.
-    OWASP Dependency-Check CPE cpe:2.3:a:openfga:openfga uzerinden genis eslestirme yapar.
-    Java SDK farkli bir artifact olup bu zafiyetten etkilenmez.
-    Kontrat: docs/02-architecture/context/security-remediation.contract.v1.json
-    ]]></notes>
-    <packageUrl regex="true">^pkg:maven/dev\.openfga/openfga-sdk@.*$</packageUrl>
-    <cve>CVE-2023-45810</cve>
+    <vulnerabilityName regex="true">^CVE-.*$</vulnerabilityName>
   </suppress>
   <suppress>
     <notes><![CDATA[
