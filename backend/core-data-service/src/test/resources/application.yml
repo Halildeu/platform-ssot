@@ -59,3 +59,13 @@ logging:
 
 server:
   port: 0
+
+# OpenFGA disabled in tests — ScopeContext uses dev fallback
+erp:
+  openfga:
+    enabled: false
+    dev-scope:
+      company-ids: 1
+      project-ids: 1,2
+      warehouse-ids: 1
+      super-admin: true

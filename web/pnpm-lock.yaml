@@ -687,7 +687,7 @@ importers:
   packages/auth:
     dependencies:
       '@mfe/shared-http':
-        specifier: workspace:*
+        specifier: '*'
         version: link:../shared-http
       react:
         specifier: ^18.0.0 || ^19.0.0
