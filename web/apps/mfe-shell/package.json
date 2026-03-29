@@ -17,6 +17,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@mfe/auth": "*",
     "@mfe/design-system": "*",
     "@mfe/i18n-dicts": "*",
     "@mfe/shared-http": "*",

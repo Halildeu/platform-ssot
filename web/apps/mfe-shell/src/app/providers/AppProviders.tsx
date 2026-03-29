@@ -3,16 +3,25 @@ import { Provider } from "react-redux";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ToastProvider } from "@mfe/design-system";
+import { PermissionProvider } from "@mfe/auth";
 import { store } from "../store/store";
 import { ThemeProvider } from "../theme/theme-context.provider";
 import { I18nProvider, i18n } from "../i18n";
 import { queryClient, shouldShowQueryDevtools } from "../config/query-config";
 import { AuthBootstrapper } from "./AuthBootstrapper";
+import { api } from "@mfe/shared-http";
+import { isPermitAllMode } from "../auth/auth-config";
 
 // Side-effect imports — order matters
 import "../config/http-config";
 import "../config/shell-services-wiring";
 import "../config/i18n-config";
+
+const PermissionProviderWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <PermissionProvider httpGet={api.get} permitAll={isPermitAllMode()}>
+    {children}
+  </PermissionProvider>
+);
 
 /* ------------------------------------------------------------------ */
 /*  AppProviders — Composes all shell-level providers                  */
@@ -42,7 +51,9 @@ export const AppProviders: React.FC<{ children: React.ReactNode }> = ({
               maxVisible={4}
             >
               <AuthBootstrapper>
-                {children}
+                <PermissionProviderWrapper>
+                  {children}
+                </PermissionProviderWrapper>
               </AuthBootstrapper>
             </ToastProvider>
             {shouldShowQueryDevtools ? (
