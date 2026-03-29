@@ -143,7 +143,6 @@ export default tseslint.config(
     files: [
       '**/__tests__/**/*.{ts,tsx,js,jsx}',
       '**/*.{spec,test}.{ts,tsx,js,jsx}',
-      'cypress/**/*.{ts,tsx,js,jsx}',
       'tests/**/*.{ts,tsx,js,jsx}',
       'docs/tests/**/*.{ts,tsx,js,jsx}',
     ],
