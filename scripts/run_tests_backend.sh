@@ -100,8 +100,13 @@ if [[ ! -x "$BACKEND_DIR/mvnw" ]]; then
 fi
 
 if [[ ! -f "$MOCKITO_AGENT_JAR" ]]; then
-  echo "[run_tests_backend] HATA: Mockito agent jar bulunamadı: $MOCKITO_AGENT_JAR" >&2
-  exit 1
+  echo "[run_tests_backend] Mockito agent jar bulunamadı, Maven ile indiriliyor..."
+  (cd "$BACKEND_DIR" && ./mvnw -q dependency:get -Dartifact=org.mockito:mockito-core:5.17.0:jar 2>/dev/null) || true
+  if [[ ! -f "$MOCKITO_AGENT_JAR" ]]; then
+    echo "[run_tests_backend] HATA: Mockito agent jar indirilemedi: $MOCKITO_AGENT_JAR" >&2
+    exit 1
+  fi
+  echo "[run_tests_backend] Mockito agent jar indirildi: $MOCKITO_AGENT_JAR"
 fi
 
 cd "$BACKEND_DIR"

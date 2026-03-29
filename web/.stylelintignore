@@ -1,5 +1,6 @@
 # Build outputs — generated, not hand-written
 **/dist/**
+**/dist-quality/**
 **/build/**
 **/coverage/**
 **/storybook-static/**
