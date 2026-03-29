@@ -84,7 +84,7 @@ def scan_file(path: Path) -> List[Issue]:
 def main() -> int:
     sql_files = iter_sql_files()
     if not sql_files:
-        print("[check_data_sql_style] data/ altında .sql dosyası bulunamadı (skip).")
+        print("[check_data_sql_style] data/ altında doğrulanacak .sql dosyası bulunmadı; kontrol temiz tamamlandı ✅")
         return 0
 
     all_issues: List[Issue] = []
@@ -107,4 +107,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

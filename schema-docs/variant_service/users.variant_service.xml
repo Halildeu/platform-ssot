@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="users" schema="variant_service" type="PostgreSQL - 18.3 (Debian 18.3-1.pgdg12+1)">
+   <sequences>
+      <sequence increment="1" name="variant_visibility_id_seq" startValue="1"/>
+   </sequences>
+   <tables>
+      <table name="theme_overrides" remarks="" schema="variant_service" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="theme_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="id" foreignKey="theme_overrides_theme_id_fkey" implied="false" onDeleteCascade="true" schema="variant_service" table="themes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="registry_key" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="value" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="theme_id" sequenceNumberInPK="1"/>
+         <primaryKey column="registry_key" sequenceNumberInPK="2"/>
+         <index name="theme_overrides_pkey" unique="true">
+            <column ascending="true" name="theme_id"/>
+            <column ascending="true" name="registry_key"/>
+         </index>
+      </table>
+      <table name="theme_registry" numRows="51" remarks="" schema="variant_service" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="registry_id" foreignKey="theme_registry_css_vars_registry_id_fkey" implied="false" onDeleteCascade="true" schema="variant_service" table="theme_registry_css_vars"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="key" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="label" nullable="false" remarks="" size="256" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="group_name" nullable="false" remarks="" size="64" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="control_type" nullable="false" remarks="" size="16" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="editable_by" nullable="false" remarks="" size="16" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="default_source" nullable="true" remarks="" size="256" type="varchar" typeCode="12"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="theme_registry_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="theme_registry_key_key" unique="true">
+            <column ascending="true" name="key"/>
+         </index>
+      </table>
+      <table name="theme_registry_css_vars" numRows="55" remarks="" schema="variant_service" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="registry_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="id" foreignKey="theme_registry_css_vars_registry_id_fkey" implied="false" onDeleteCascade="true" schema="variant_service" table="theme_registry"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="css_var" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+      </table>
+      <table name="themes" remarks="" schema="variant_service" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="theme_id" foreignKey="theme_overrides_theme_id_fkey" implied="false" onDeleteCascade="true" schema="variant_service" table="theme_overrides"/>
+            <child column="theme_id" foreignKey="user_theme_selections_theme_id_fkey" implied="false" onDeleteCascade="false" schema="variant_service" table="user_theme_selections"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="type" nullable="false" remarks="" size="16" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="base_theme_id" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="appearance" nullable="false" remarks="" size="64" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="surface_tone" nullable="true" remarks="" size="64" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="density" nullable="true" remarks="" size="32" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="radius" nullable="true" remarks="" size="32" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="elevation" nullable="true" remarks="" size="32" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="motion" nullable="true" remarks="" size="32" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="10" name="is_global" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="owner_user_id" nullable="true" remarks="" size="128" type="varchar" typeCode="12">
+            <parent column="user_id" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="variant_service" table="user_theme_selections"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="version" nullable="true" remarks="" size="32" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="13" name="published_at" nullable="true" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="active_flag" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="visibility" nullable="true" remarks="" size="64" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="16" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="17" name="updated_at" nullable="true" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="18" name="accent" nullable="true" remarks="" size="32" type="varchar" typeCode="12"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="themes_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="user_grid_variant_preferences" remarks="" schema="variant_service" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="user_id" nullable="false" remarks="" size="19" type="int8" typeCode="-5">
+            <parent column="id" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="variant_service" table="variant_visibility"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="grid_id" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="variant_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="id" foreignKey="user_grid_variant_preferences_variant_id_fkey" implied="false" onDeleteCascade="true" schema="variant_service" table="user_grid_variants"/>
+         </column>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="4" name="is_default" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="5" name="is_selected" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="6" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="preference_type" nullable="false" remarks="" size="64" type="varchar" typeCode="12"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="user_grid_variant_preferences_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_user_grid_variant_pref_default" unique="true">
+            <column ascending="true" name="user_id"/>
+            <column ascending="true" name="grid_id"/>
+         </index>
+         <index name="idx_user_grid_variant_pref_selected" unique="true">
+            <column ascending="true" name="user_id"/>
+            <column ascending="true" name="grid_id"/>
+         </index>
+         <index name="idx_user_grid_variant_pref_variant" unique="false">
+            <column ascending="true" name="variant_id"/>
+         </index>
+         <index name="idx_user_grid_variant_preferences_user_grid" unique="false">
+            <column ascending="true" name="user_id"/>
+            <column ascending="true" name="grid_id"/>
+         </index>
+         <index name="uk_user_grid_pref_user_grid_type" unique="true">
+            <column ascending="true" name="user_id"/>
+            <column ascending="true" name="grid_id"/>
+            <column ascending="true" name="preference_type"/>
+         </index>
+      </table>
+      <table name="user_grid_variants" remarks="" schema="variant_service" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="variant_id" foreignKey="user_grid_variant_preferences_variant_id_fkey" implied="false" onDeleteCascade="true" schema="variant_service" table="user_grid_variant_preferences"/>
+            <child column="variant_id" foreignKey="fk_variant_visibility_variant" implied="false" onDeleteCascade="true" schema="variant_service" table="variant_visibility"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="user_id" nullable="false" remarks="" size="19" type="int8" typeCode="-5">
+            <parent column="id" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="variant_service" table="variant_visibility"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="grid_id" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="name" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="4" name="is_default" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="5" name="is_global" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="6" name="is_global_default" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="state_json" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="1" digits="0" id="8" name="schema_version" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="9" name="is_compatible" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="0" digits="0" id="10" name="sort_order" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="11" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="12" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="user_grid_variants_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_user_grid_variants_global" unique="false">
+            <column ascending="true" name="grid_id"/>
+         </index>
+         <index name="idx_user_grid_variants_grid_user" unique="false">
+            <column ascending="true" name="grid_id"/>
+            <column ascending="true" name="user_id"/>
+         </index>
+         <index name="idx_user_grid_variants_sort" unique="false">
+            <column ascending="true" name="grid_id"/>
+            <column ascending="true" name="sort_order"/>
+         </index>
+         <index name="user_grid_variants_user_id_grid_id_name_key" unique="true">
+            <column ascending="true" name="user_id"/>
+            <column ascending="true" name="grid_id"/>
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="user_theme_selections" remarks="" schema="variant_service" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="user_id" nullable="false" remarks="" size="128" type="varchar" typeCode="12">
+            <child column="owner_user_id" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="variant_service" table="themes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="theme_id" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="id" foreignKey="user_theme_selections_theme_id_fkey" implied="false" onDeleteCascade="false" schema="variant_service" table="themes"/>
+         </column>
+         <primaryKey column="user_id" sequenceNumberInPK="1"/>
+         <index name="user_theme_selections_pkey" unique="true">
+            <column ascending="true" name="user_id"/>
+         </index>
+      </table>
+      <table name="variant_flyway_history" remarks="" schema="variant_service" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="installed_rank" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="version" nullable="true" remarks="" size="50" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="description" nullable="false" remarks="" size="200" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="type" nullable="false" remarks="" size="20" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="script" nullable="false" remarks="" size="1000" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="checksum" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="installed_by" nullable="false" remarks="" size="100" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="installed_on" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="execution_time" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="success" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <primaryKey column="installed_rank" sequenceNumberInPK="1"/>
+         <index name="variant_flyway_history_pk" unique="true">
+            <column ascending="true" name="installed_rank"/>
+         </index>
+         <index name="variant_flyway_history_s_idx" unique="false">
+            <column ascending="true" name="success"/>
+         </index>
+      </table>
+      <table name="variant_visibility" remarks="" schema="variant_service" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('variant_service.variant_visibility_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="bigserial" typeCode="-5">
+            <child column="user_id" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="variant_service" table="user_grid_variant_preferences"/>
+            <child column="user_id" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="variant_service" table="user_grid_variants"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="variant_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="id" foreignKey="fk_variant_visibility_variant" implied="false" onDeleteCascade="true" schema="variant_service" table="user_grid_variants"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="visibility_type" nullable="false" remarks="" size="32" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="ref_id" nullable="true" remarks="" size="64" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="4" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="created_by" nullable="true" remarks="" size="64" type="varchar" typeCode="12"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="variant_visibility_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_variant_vis_type_ref" unique="false">
+            <column ascending="true" name="visibility_type"/>
+            <column ascending="true" name="ref_id"/>
+         </index>
+         <index name="idx_variant_vis_variant" unique="false">
+            <column ascending="true" name="variant_id"/>
+         </index>
+         <checkConstraint constraint="((visibility_type)::text = ANY ((ARRAY['GLOBAL'::character varying, 'COMPANY'::character varying, 'USER'::character varying, 'ROLE'::character varying])::text[]))" name="chk_visibility_type"/>
+      </table>
+   </tables>
+</database>

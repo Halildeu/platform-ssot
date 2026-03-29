@@ -9,7 +9,8 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "types": ["vitest/globals"],
     "baseUrl": ".",
     "paths": {
       "mfe_shell/i18n": ["../mfe-shell/src/app/i18n/index.ts"],

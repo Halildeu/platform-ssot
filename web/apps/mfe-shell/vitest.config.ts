@@ -2,6 +2,7 @@ import { defineConfig } from 'vitest/config';
 import path from 'path';
 
 export default defineConfig({
+  root: __dirname,
   resolve: {
     alias: {
       '@mfe/design-system': path.resolve(__dirname, '../../packages/design-system/src'),
@@ -11,6 +12,8 @@ export default defineConfig({
     },
   },
   test: {
+    root: __dirname,
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
     environment: 'jsdom',
     globals: true,
   },

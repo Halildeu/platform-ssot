@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { federation } from '@module-federation/vite';
@@ -28,11 +28,15 @@ const sharedProdOnly = {
   '@mfe/shared-http': singleton('@mfe/shared-http', false),
 };
 
+const isTest = !!process.env['VITEST'];
+const isQualityBuild = process.env['QUALITY_AUDIT_BUILD'] === '1';
+const isQualityRemoteBuild = process.env['QUALITY_AUDIT_BUILD_REMOTE'] === '1';
+
 export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     tailwindcss(),
-    federation({
+    ...((isTest || isQualityBuild) ? [] : [federation({
       name: 'mfe_audit',
       filename: 'remoteEntry.js',
       dts: false,
@@ -51,14 +55,16 @@ export default defineConfig(({ mode }) => ({
         ...sharedCore,
         ...(mode === 'production' ? sharedProdOnly : {}),
       },
-    }),
+    })]),
   ],
 
   resolve: {
-    alias: [
-      { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
-      { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
-    ],
+    alias: isQualityRemoteBuild
+      ? {}
+      : {
+          '@mfe/design-system': path.resolve(__dirname, '../../packages/design-system/src'),
+          '@mfe/shared-http': path.resolve(__dirname, '../../packages/shared-http/src'),
+        },
   },
 
   optimizeDeps: {
@@ -89,6 +95,13 @@ export default defineConfig(({ mode }) => ({
 
   build: {
     target: 'esnext',
-    outDir: 'dist',
+    outDir: isQualityBuild ? 'dist-quality' : 'dist',
+    chunkSizeWarningLimit: 3072,
+  },
+
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test-setup.ts'],
   },
 }));

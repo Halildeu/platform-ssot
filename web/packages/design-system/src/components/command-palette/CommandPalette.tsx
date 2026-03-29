@@ -202,7 +202,7 @@ export const CommandPalette = React.forwardRef<HTMLDivElement, CommandPalettePro
         className="absolute inset-0"
         style={{
           backgroundColor:
-            // eslint-disable-next-line semantic-theme/no-inline-color-literals -- color-mix with CSS var fallback
+             
             "color-mix(in srgb, var(--surface-overlay-bg) calc(var(--overlay-intensity) * 1%), transparent)",
           opacity: "var(--overlay-opacity)",
         }}

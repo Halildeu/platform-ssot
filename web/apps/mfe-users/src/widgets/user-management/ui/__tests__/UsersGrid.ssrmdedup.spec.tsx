@@ -1,54 +1,69 @@
+// @vitest-environment jsdom
 import React from 'react';
-import { render } from '@testing-library/react';
-
-// Test target
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { render, waitFor } from '@testing-library/react';
 import UsersGrid from '../UsersGrid.ui';
 
-// Capture props passed to EntityGridTemplate
-let capturedProps: any = null;
-
-jest.mock('@mfe/design-system', () => ({
-  EntityGridTemplate: (props: any) => {
-    capturedProps = props;
-    return null;
-  },
+vi.mock('../../../../i18n/useUsersI18n', () => ({
+  useUsersI18n: () => ({ t: (k: string) => k, locale: 'tr' }),
 }));
 
+// Capture props passed to EntityGridTemplate
+let mockCapturedProps: any = null;
+
+const mockFetchUsers = vi.hoisted(() => vi.fn());
+
+vi.mock('../../../../entities/user/api/users.api', async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return { ...actual, fetchUsers: mockFetchUsers };
+});
+
+vi.mock('@mfe/design-system', async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return {
+    ...actual,
+    EntityGridTemplate: (props: any) => {
+      mockCapturedProps = props;
+      return null;
+    },
+  };
+});
+
 describe('UsersGrid SSRM dedup', () => {
-  const originalFetch = global.fetch;
-
   beforeEach(() => {
-    capturedProps = null;
-    jest.resetAllMocks();
-    // Mock fetch to emulate /api/users/all
-    global.fetch = jest.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => ({ items: [{ id: '1', email: 'john@example.com' }], total: 1 }),
-    })) as unknown as typeof fetch;
+    mockCapturedProps = null;
+    mockFetchUsers.mockResolvedValue({
+      items: [{ id: '1', email: 'john@example.com' }],
+      total: 1,
+      page: 1,
+      pageSize: 50,
+      meta: { reason: 'success' },
+    });
   });
 
-  afterEach(() => {
-    global.fetch = originalFetch as any;
-  });
-
-  it('aynı blok için eşzamanlı iki getRows çağrısını tek ağ çağrısına indirger', async () => {
+  it('aynı blok için eşzamanlı iki getRows çağrısını tek fetchUsers çağrısına indirger', async () => {
     render(<UsersGrid onSelectUser={() => {}} />);
 
-    // createServerSideDatasource props üzerinden alınır
-    expect(typeof capturedProps?.createServerSideDatasource).toBe('function');
+    // Access probe tamamlanıp EntityGridTemplate render edilene kadar bekle
+    await waitFor(() => expect(mockCapturedProps).not.toBeNull());
 
-    const ds = capturedProps.createServerSideDatasource({ gridApi: {} });
+    // createServerSideDatasource props üzerinden alınır
+    expect(typeof mockCapturedProps?.createServerSideDatasource).toBe('function');
+
+    const ds = mockCapturedProps.createServerSideDatasource({ gridApi: {} });
+
+    // Access probe çağrısını temizle
+    mockFetchUsers.mockClear();
 
     const paramsA: any = {
       request: { startRow: 0, endRow: 50, filterModel: {}, sortModel: [] },
-      success: jest.fn(),
-      fail: jest.fn(),
+      success: vi.fn(),
+      fail: vi.fn(),
     };
     const paramsB: any = {
       request: { startRow: 0, endRow: 50, filterModel: {}, sortModel: [] },
-      success: jest.fn(),
-      fail: jest.fn(),
+      success: vi.fn(),
+      fail: vi.fn(),
     };
 
     // İki çağrıyı eşzamanlı tetikle
@@ -57,8 +72,8 @@ describe('UsersGrid SSRM dedup', () => {
 
     await Promise.all([p1, p2]);
 
-    // Ağ sadece 1 kez çağrılmalı
-    expect((global.fetch as jest.Mock).mock.calls.length).toBe(1);
+    // fetchUsers sadece 1 kez çağrılmalı (dedup çalışıyor)
+    expect(mockFetchUsers.mock.calls.length).toBe(1);
 
     // Başarı callback'leri her iki çağrı için de çalışmalı
     expect(paramsA.success).toHaveBeenCalledTimes(1);
@@ -67,4 +82,3 @@ describe('UsersGrid SSRM dedup', () => {
     expect(paramsB.fail).not.toHaveBeenCalled();
   });
 });
-

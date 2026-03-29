@@ -5,15 +5,14 @@
   "additionalProperties": false,
   "required": [
     "version",
-    "tracked_text_file_limits",
     "grandfathered_files",
-    "file_line_limits",
     "function_line_limits",
     "function_scan_paths"
   ],
   "properties": {
     "version": { "const": "v1" },
-    "tracked_text_file_limits": { "$ref": "#/$defs/tracked_text_file_limits" },
+    "python_file_limits": { "$ref": "#/$defs/python_file_limits" },
+    "tracked_text_file_limits": { "$ref": "#/$defs/python_file_limits" },
     "grandfathered_files": {
       "type": "array",
       "items": { "$ref": "#/$defs/grandfathered_file" }
@@ -27,10 +26,14 @@
       "type": "array",
       "minItems": 1,
       "items": { "type": "string", "minLength": 1 }
+    },
+    "excluded_patterns": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
     }
   },
   "$defs": {
-    "tracked_text_file_limits": {
+    "python_file_limits": {
       "type": "object",
       "additionalProperties": false,
       "required": ["soft_lines", "hard_lines"],

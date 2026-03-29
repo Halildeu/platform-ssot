@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
 import layerContractMatrixRaw from "../design-lab.layer-contract-matrix.v1.json";
 

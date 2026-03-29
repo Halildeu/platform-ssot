@@ -1,15 +1,11 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
+// @vitest-environment node
+import { test, expect } from 'vitest';
 import React from 'react';
 import TestRenderer, { act } from 'react-test-renderer';
 import type { AccessLevel } from '../../../features/access-management/model/access.types';
+import BulkPermissionModal from './BulkPermissionModal.ui';
 
 test('BulkPermissionModal level secimini Segmented uzerinden surdurur ve submit eder', async () => {
-  const require = createRequire(import.meta.url);
-  (require.extensions as Record<string, () => void>)['.css'] = () => {};
-  const { default: BulkPermissionModal } = await import('./BulkPermissionModal.ui');
-
   const submissions: Array<{ moduleKey: string; level: AccessLevel }> = [];
 
   const renderer = TestRenderer.create(
@@ -44,7 +40,7 @@ test('BulkPermissionModal level secimini Segmented uzerinden surdurur ve submit 
 
   root = renderer.root;
   moduleSelect = root.findByType('select');
-  assert.equal(moduleSelect.props.value, 'erp.users');
+  expect(moduleSelect.props.value).toBe('erp.users');
 
   let manageButton = root.findByProps({ 'data-testid': 'bulk-permission-level-manage' });
 
@@ -54,7 +50,7 @@ test('BulkPermissionModal level secimini Segmented uzerinden surdurur ve submit 
 
   root = renderer.root;
   manageButton = root.findByProps({ 'data-testid': 'bulk-permission-level-manage' });
-  assert.equal(manageButton.props['aria-checked'], true);
+  expect(manageButton.props['aria-checked']).toBe(true);
 
   const submitButton = root.findByProps({ children: 'access.bulk.okText' });
 
@@ -62,8 +58,8 @@ test('BulkPermissionModal level secimini Segmented uzerinden surdurur ve submit 
     submitButton.props.onClick();
   });
 
-  assert.equal(submissions.length, 1);
-  assert.deepEqual(submissions[0], {
+  expect(submissions.length).toBe(1);
+  expect(submissions[0]).toEqual({
     moduleKey: 'erp.users',
     level: 'MANAGE',
   });

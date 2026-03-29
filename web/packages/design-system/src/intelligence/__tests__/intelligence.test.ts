@@ -6,7 +6,7 @@ import { calculateContrastRatio, checkContrast, suggestContrastFix } from '../a1
 
 describe('Design Review', () => {
   it('detects hardcoded colors', () => {
-    const result = reviewCode('const color = "var(--state-danger-text)";');
+    const result = reviewCode('const color = "#ff5500";');
     expect(result.issues.some(i => i.rule === 'hardcoded-color')).toBe(true);
     expect(result.score).toBeLessThan(100);
   });
@@ -32,7 +32,7 @@ describe('Design Review', () => {
   });
 
   it('includes line numbers', () => {
-    const result = reviewCode('line1\nvar(--state-danger-text)\nline3');
+    const result = reviewCode('line1\ncolor: #ff5500;\nline3');
     const colorIssue = result.issues.find(i => i.rule === 'hardcoded-color');
     expect(colorIssue?.line).toBe(2);
   });
@@ -73,34 +73,34 @@ describe('Pattern Detection', () => {
 describe('A11y Guardian', () => {
   it('calculates contrast ratio correctly', () => {
     // Black on white = 21:1
-    const ratio = calculateContrastRatio('var(--text-primary)', 'var(--surface-default)');
+    const ratio = calculateContrastRatio('#000000', '#ffffff');
     expect(ratio).toBeCloseTo(21, 0);
   });
 
   it('white on white = 1:1', () => {
-    const ratio = calculateContrastRatio('var(--surface-default)', 'var(--surface-default)');
+    const ratio = calculateContrastRatio('#ffffff', '#ffffff');
     expect(ratio).toBeCloseTo(1, 0);
   });
 
   it('checkContrast passes for good contrast', () => {
-    const issue = checkContrast('var(--text-primary)', 'var(--surface-default)', 'AA');
+    const issue = checkContrast('#000000', '#ffffff', 'AA');
     expect(issue).toBeNull();
   });
 
   it('checkContrast fails for poor contrast', () => {
-    const issue = checkContrast('var(--border-default)', 'var(--surface-default)', 'AA');
+    const issue = checkContrast('#999999', '#ffffff', 'AA');
     expect(issue).not.toBeNull();
     expect(issue?.ratio).toBeLessThan(4.5);
   });
 
   it('suggestContrastFix returns valid hex color', () => {
-    const fixed = suggestContrastFix('var(--border-default)', 'var(--surface-default)', 'AA');
+    const fixed = suggestContrastFix('#999999', '#ffffff', 'AA');
     expect(fixed).toMatch(/^#[0-9a-f]{6}$/);
   });
 
   it('suggested fix meets contrast requirement', () => {
-    const fixed = suggestContrastFix('var(--border-default)', 'var(--surface-default)', 'AA');
-    const ratio = calculateContrastRatio(fixed, 'var(--surface-default)');
+    const fixed = suggestContrastFix('#999999', '#ffffff', 'AA');
+    const ratio = calculateContrastRatio(fixed, '#ffffff');
     expect(ratio).toBeGreaterThanOrEqual(4.5);
   });
 });

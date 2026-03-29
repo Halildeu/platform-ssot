@@ -6,9 +6,7 @@
     "start": "npx kill-port 3004 || true && vite",
     "build": "vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "test": "npm-run-all test:users test:variants",
-    "test:variants": "bash -lc 'shopt -s nullglob; files=(../../packages/design-system/src/lib/grid-variants/__tests__/*.test.ts); if [ ${#files[@]} -eq 0 ]; then echo \"[mfe-users] no variants tests found (skip)\"; exit 0; fi; tsx --test \"${files[@]}\"'",
-    "test:users": "bash -lc 'shopt -s nullglob; files=(src/entities/user/api/__tests__/*.test.ts); if [ ${#files[@]} -eq 0 ]; then echo \"[mfe-users] no tests found (skip)\"; exit 0; fi; tsx --test \"${files[@]}\"'"
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
@@ -32,13 +30,13 @@
     "react-router-dom": "^6.27.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "@types/node": "^24.0.14",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "eslint": "^9.13.0",
-    "npm-run-all": "^4.1.5",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.20.6",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "*"
   }
 }

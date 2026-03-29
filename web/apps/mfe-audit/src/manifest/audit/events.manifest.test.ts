@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { auditEventsManifest } from './events.manifest';
 
 describe('auditEventsManifest', () => {

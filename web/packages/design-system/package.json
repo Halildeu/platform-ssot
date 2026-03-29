@@ -101,6 +101,14 @@
       "types": "./dist/internal/overlay-engine/index.d.ts",
       "import": "./dist/esm/internal/overlay-engine/index.js",
       "require": "./dist/cjs/internal/overlay-engine/index.cjs"
+    },
+    "./lib/auth": {
+      "types": "./src/lib/auth/index.ts",
+      "default": "./src/lib/auth/index.ts"
+    },
+    "./advanced/data-grid/TablePagination": {
+      "types": "./src/advanced/data-grid/TablePagination.d.ts",
+      "default": "./src/advanced/data-grid/TablePagination.tsx"
     }
   },
   "files": [

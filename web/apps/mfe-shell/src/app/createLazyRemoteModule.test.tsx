@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import React, { Suspense } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import "@testing-library/jest-dom/vitest";

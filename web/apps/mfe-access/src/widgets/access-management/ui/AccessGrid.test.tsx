@@ -1,14 +1,11 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
+// @vitest-environment jsdom
+import { test, expect } from 'vitest';
 import React from 'react';
 import TestRenderer, { act } from 'react-test-renderer';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
+import AccessGrid from './AccessGrid.ui';
 
 test('AccessGrid grid selection, row click ve pagination wiring akisini surdurur', async () => {
-  const require = createRequire(import.meta.url);
-  (require.extensions as Record<string, () => void>)['.css'] = () => {};
-  const { default: AccessGrid } = await import('./AccessGrid.ui');
   const rows: AccessRole[] = [
     {
       id: 'role-admin',
@@ -148,24 +145,24 @@ test('AccessGrid grid selection, row click ve pagination wiring akisini surdurur
     await Promise.resolve();
   });
 
-  let root = renderer.root;
+  const root = renderer.root;
   const tablePagination = root.find(
     (node) => node.props.pageSizeOptions != null && node.props.onPageSizeChange != null,
   );
-  assert.equal(tablePagination.props.pageSize, 10);
-  assert.equal(typeof tablePagination.props.onPageSizeChange, 'function');
+  expect(tablePagination.props.pageSize).toBe(10);
+  expect(typeof tablePagination.props.onPageSizeChange).toBe('function');
 
   const selectAdminButton = root.findByProps({ 'data-testid': 'access-grid-select-role-admin' });
   await act(async () => {
     selectAdminButton.props.onClick();
   });
 
-  assert.deepEqual(selectionChanges.at(-1), ['role-admin']);
+  expect(selectionChanges.at(-1)).toEqual(['role-admin']);
 
   const clickViewerButton = root.findByProps({ 'data-testid': 'access-grid-click-role-viewer' });
   await act(async () => {
     clickViewerButton.props.onClick();
   });
 
-  assert.deepEqual(clickedRows, ['role-viewer']);
+  expect(clickedRows).toEqual(['role-viewer']);
 });

@@ -1,20 +1,22 @@
+// @vitest-environment jsdom
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FetchAuditEventsParams } from './audit-api';
 
 // Mock external modules before imports
-jest.mock('@mfe/shared-http', () => ({
+vi.mock('@mfe/shared-http', () => ({
   api: {
-    get: jest.fn(),
-    post: jest.fn(),
+    get: vi.fn(),
+    post: vi.fn(),
   },
 }));
 
-jest.mock('./shell-services', () => ({
-  getShellServices: jest.fn(() => {
+vi.mock('./shell-services', () => ({
+  getShellServices: vi.fn(() => {
     throw new Error('not configured');
   }),
 }));
 
-jest.mock('../../mocks/fallback-events', () => ({
+vi.mock('../../mocks/fallback-events', () => ({
   fallbackAuditEvents: [
     {
       id: 'fb-1',
@@ -46,7 +48,7 @@ jest.mock('../../mocks/fallback-events', () => ({
 import { api } from '@mfe/shared-http';
 import { fetchAuditEvents, resolveHttpClient } from './audit-api';
 
-const mockApi = api as jest.Mocked<typeof api>;
+const mockApi = api as import('vitest').Mocked<typeof api>;
 
 describe('resolveHttpClient', () => {
   it('falls back to api when shell services are not configured', () => {
@@ -57,7 +59,7 @@ describe('resolveHttpClient', () => {
 
 describe('fetchAuditEvents', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     // Ensure mock mode is off
     (window as any).__AUDIT_USE_MOCK__ = undefined;
   });

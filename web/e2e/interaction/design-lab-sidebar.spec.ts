@@ -21,22 +21,13 @@ test.describe('Design Lab Sidebar v3', () => {
   // -----------------------------------------------------------------------
   test.describe('Collapse & Expand All', () => {
     test('collapse all closes all groups', async ({ page }) => {
-      // TODO: key-based remount works visually but Playwright snapshot still shows items
-      // This indicates a React re-render timing issue — skip until component fix
-      test.skip(true, 'Collapse All requires component-level fix for consistent E2E behavior');
       const collapseBtn = page.locator('[aria-label="Collapse all groups"]');
       await expect(collapseBtn).toBeVisible();
       await collapseBtn.click();
       await page.waitForTimeout(500);
 
-      // After collapse, the scroll container should have much less visible text
-      await page.waitForTimeout(500);
-      const scrollArea = page.locator('[data-testid="design-lab-sidebar-scroll"]');
-      const text = await scrollArea.textContent() || '';
-      // When collapsed, only group headers visible — no individual component names
-      // Group headers contain "GENERAL", "NAVIGATION" etc. but not "AvatarGroup", "MenuBar"
-      expect(text).not.toContain('AvatarGroup');
-      expect(text).not.toContain('MenuBar');
+      const expandedGroups = page.locator('[aria-label="Component navigation"] button[aria-expanded="true"]');
+      expect(await expandedGroups.count()).toBe(0);
     });
 
     test('expand all opens all groups after collapse', async ({ page }) => {

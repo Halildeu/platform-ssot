@@ -7,6 +7,30 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Overlay Components - Interaction Tests', () => {
+  async function openComponentDetail(
+    page: import('@playwright/test').Page,
+    componentName: string,
+  ): Promise<void> {
+    await page.goto('/admin/design-lab/components', { waitUntil: 'networkidle' });
+    await page.waitForSelector('[data-testid="design-lab-sidebar-scroll"]', { timeout: 15_000 });
+
+    const searchInput = page.locator(
+      '[data-testid="design-lab-search"], input[placeholder*="ara" i], input[placeholder*="search" i]',
+    ).first();
+    await searchInput.fill(componentName);
+    await page.waitForTimeout(300);
+
+    const item = page
+      .locator('[data-sidebar-item]')
+      .filter({ hasText: new RegExp(componentName, 'i') })
+      .first();
+
+    await expect(item).toBeVisible({ timeout: 10_000 });
+    await item.click();
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('main').first()).toBeVisible();
+  }
+
   // -----------------------------------------------------------------------
   // Helper — dismiss any already-open dialogs so they don't intercept clicks
   // -----------------------------------------------------------------------
@@ -58,28 +82,8 @@ test.describe('Overlay Components - Interaction Tests', () => {
   // Modal / Dialog
   // -----------------------------------------------------------------------
   test.describe('Modal / Dialog', () => {
-    // The Design Lab might not have a dedicated "Modal" page — adjust the path
-    // if your catalogue names it differently (e.g., Dialog, AlertDialog).
-    const MODAL_PATHS = [
-      '/admin/design-lab/components/overlay/Modal',
-      '/admin/design-lab/components/overlay/Dialog',
-      '/admin/design-lab/components/feedback/Modal',
-      '/admin/design-lab/components/feedback/Dialog',
-    ];
-
     test('modal opens and closes', async ({ page }) => {
-      let loaded = false;
-      for (const path of MODAL_PATHS) {
-        const response = await page.goto(path, { waitUntil: 'networkidle' });
-        if (response && response.status() < 400) {
-          loaded = true;
-          break;
-        }
-      }
-      if (!loaded) {
-        test.skip();
-        return;
-      }
+      await openComponentDetail(page, 'Modal');
 
       await clickTrigger(page, ['Open', 'Show', 'Open Modal', 'Aç', 'Modal Aç']);
 
@@ -101,18 +105,7 @@ test.describe('Overlay Components - Interaction Tests', () => {
     });
 
     test('modal closes on Escape key', async ({ page }) => {
-      let loaded = false;
-      for (const path of MODAL_PATHS) {
-        const response = await page.goto(path, { waitUntil: 'networkidle' });
-        if (response && response.status() < 400) {
-          loaded = true;
-          break;
-        }
-      }
-      if (!loaded) {
-        test.skip();
-        return;
-      }
+      await openComponentDetail(page, 'Modal');
 
       await clickTrigger(page, ['Open', 'Show', 'Open Modal', 'Aç']);
 
@@ -129,24 +122,8 @@ test.describe('Overlay Components - Interaction Tests', () => {
   // Drawer
   // -----------------------------------------------------------------------
   test.describe('Drawer', () => {
-    const DRAWER_PATHS = [
-      '/admin/design-lab/components/overlay/Drawer',
-      '/admin/design-lab/components/feedback/Drawer',
-    ];
-
     test('drawer slides in and can be closed', async ({ page }) => {
-      let loaded = false;
-      for (const path of DRAWER_PATHS) {
-        const response = await page.goto(path, { waitUntil: 'networkidle' });
-        if (response && response.status() < 400) {
-          loaded = true;
-          break;
-        }
-      }
-      if (!loaded) {
-        test.skip();
-        return;
-      }
+      await openComponentDetail(page, 'DetailDrawer');
 
       await clickTrigger(page, ['Open Drawer', 'Show Drawer', 'Drawer Aç', 'Open', 'Aç']);
 
@@ -168,25 +145,8 @@ test.describe('Overlay Components - Interaction Tests', () => {
   // Tooltip
   // -----------------------------------------------------------------------
   test.describe('Tooltip', () => {
-    const TOOLTIP_PATHS = [
-      '/admin/design-lab/components/overlay/Tooltip',
-      '/admin/design-lab/components/feedback/Tooltip',
-      '/admin/design-lab/components/general_identity/Tooltip',
-    ];
-
     test('tooltip appears on hover', async ({ page }) => {
-      let loaded = false;
-      for (const path of TOOLTIP_PATHS) {
-        const response = await page.goto(path, { waitUntil: 'networkidle' });
-        if (response && response.status() < 400) {
-          loaded = true;
-          break;
-        }
-      }
-      if (!loaded) {
-        test.skip();
-        return;
-      }
+      await openComponentDetail(page, 'Tooltip');
 
       // Find an element with a tooltip trigger
       const triggerCandidates = page.locator(
@@ -210,9 +170,7 @@ test.describe('Overlay Components - Interaction Tests', () => {
   // -----------------------------------------------------------------------
   test.describe('CommandPalette', () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto('/admin/design-lab/components/ai_native_helpers/CommandPalette', {
-        waitUntil: 'networkidle',
-      });
+      await openComponentDetail(page, 'CommandPalette');
     });
 
     test('command palette can be opened and searched', async ({ page }) => {

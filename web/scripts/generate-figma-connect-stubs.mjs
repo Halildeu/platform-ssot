@@ -108,7 +108,7 @@ function extractProps(source) {
 
   while ((match = propRegex.exec(propsBlock)) !== null) {
     const propName = match[1];
-    let propType = match[2].trim();
+    const propType = match[2].trim();
 
     // Skip callback props, ReactNode (slots), complex types, internal props
     if (propName.startsWith('on') && propName.length > 2 && propName[2] === propName[2].toUpperCase()) continue;

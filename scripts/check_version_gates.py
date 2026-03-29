@@ -76,6 +76,10 @@ def parse_node_major(version_text: str) -> Optional[int]:
     return int(m.group(1)) if m else None
 
 
+def parse_allowed_node_majors(engine_text: str) -> List[int]:
+    return sorted({int(value) for value in re.findall(r"(\d+)(?:\s*\.x)?", engine_text or "")})
+
+
 def parse_maven_wrapper_version(props_text: str) -> str:
     # distributionUrl=.../apache-maven-3.9.10-bin.zip
     m = re.search(r"apache-maven-([0-9]+(?:\.[0-9]+){1,3})", props_text)
@@ -256,6 +260,10 @@ def main(argv: List[str]) -> int:
     pnpm_code, pnpm_out = run_capture(["pnpm", "-v"], cwd=ROOT)
 
     node_major = parse_node_major(node_out) if node_code == 0 else None
+    web_package = read_json(WEB_DIR / "package.json") or {}
+    allowed_node_majors = parse_allowed_node_majors(
+        str(((web_package.get("engines") or {}) if isinstance(web_package.get("engines"), dict) else {}).get("node") or "")
+    )
 
     if node_major is None:
         if mode == "ci":
@@ -267,9 +275,13 @@ def main(argv: List[str]) -> int:
             findings.append(
                 Finding("FAIL", "Node major uyumsuz", f"Beklenen: {EXPECTED_NODE_MAJOR_CI}, Bulunan: {node_major} ({node_out})")
             )
-        elif mode == "local" and node_major != EXPECTED_NODE_MAJOR_CI:
+        elif mode == "local" and allowed_node_majors and node_major not in allowed_node_majors:
             findings.append(
-                Finding("WARN", "Node major farklı", f"Beklenen (CI): {EXPECTED_NODE_MAJOR_CI}, Bulunan: {node_major} ({node_out})")
+                Finding(
+                    "WARN",
+                    "Node major farklı",
+                    f"Beklenen: {allowed_node_majors}, Bulunan: {node_major} ({node_out})",
+                )
             )
 
     java_code, java_out = run_capture(["java", "-version"], cwd=ROOT)
@@ -281,7 +293,6 @@ def main(argv: List[str]) -> int:
     if maven_wrapper_props.exists():
         maven_wrapper_version = parse_maven_wrapper_version(maven_wrapper_props.read_text(encoding="utf-8", errors="ignore"))
 
-    web_package = read_json(WEB_DIR / "package.json") or {}
     ts_version = ""
     dev_deps = web_package.get("devDependencies")
     if isinstance(dev_deps, dict) and isinstance(dev_deps.get("typescript"), str):
@@ -292,16 +303,24 @@ def main(argv: List[str]) -> int:
     # -------------------------------------------------------------------------
     web_package_lock = WEB_DIR / "package-lock.json"
     web_pnpm_lock = WEB_DIR / "pnpm-lock.yaml"
+    is_pnpm_workspace = (WEB_DIR / "pnpm-workspace.yaml").exists()
 
-    if not web_package_lock.exists():
+    if is_pnpm_workspace:
+        if not web_pnpm_lock.exists():
+            if mode == "ci":
+                findings.append(Finding("FAIL", "web/pnpm-lock.yaml yok", "pnpm workspace için lockfile zorunlu"))
+            else:
+                findings.append(Finding("BLOCKED", "web/pnpm-lock.yaml yok", "pnpm install --frozen-lockfile çalışmayacak"))
+    elif not web_package_lock.exists():
         if mode == "ci":
-            findings.append(Finding("FAIL", "web/package-lock.json yok", "CI için npm SSOT lockfile zorunlu"))
+            findings.append(Finding("FAIL", "web/package-lock.json yok", "npm workspace için lockfile zorunlu"))
         else:
             findings.append(Finding("BLOCKED", "web/package-lock.json yok", "npm ci çalışmayacak; lockfile eklenmeden L2/L3 koşma"))
 
     changed_files, diff_notes = get_changed_files(mode=mode)
     if changed_files is None:
-        findings.append(Finding("WARN", "git diff unavailable", "; ".join(diff_notes) if diff_notes else "diff bulunamadı"))
+        if mode == "ci":
+            findings.append(Finding("WARN", "git diff unavailable", "; ".join(diff_notes) if diff_notes else "diff bulunamadı"))
     else:
         pnpm_changed = "web/pnpm-lock.yaml" in changed_files
         root_lock_changed = "web/package-lock.json" in changed_files
@@ -311,12 +330,12 @@ def main(argv: List[str]) -> int:
             if p.startswith("web/") and p.endswith("package-lock.json") and p != "web/package-lock.json"
         ]
 
-        if web_pnpm_lock.exists():
+        if web_pnpm_lock.exists() and not is_pnpm_workspace:
             findings.append(Finding("WARN", "web/pnpm-lock.yaml mevcut", "SSOT npm ise pnpm lock drift yaratabilir"))
             if mode == "ci" and pnpm_changed:
                 findings.append(Finding("FAIL", "pnpm-lock.yaml PR diff içinde değişmiş", "SSOT npm: pnpm lock değişikliği yasak"))
 
-        if mode == "ci" and nested_locks_changed and not root_lock_changed:
+        if mode == "ci" and not is_pnpm_workspace and nested_locks_changed and not root_lock_changed:
             examples = ", ".join(nested_locks_changed[:3])
             more = f" (+{len(nested_locks_changed)-3})" if len(nested_locks_changed) > 3 else ""
             findings.append(

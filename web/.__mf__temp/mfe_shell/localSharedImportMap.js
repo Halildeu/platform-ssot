@@ -5,82 +5,82 @@
     const importMap = {
       
         "@mfe/design-system": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild___mf_0_mfe_mf_1_design_mf_2_system__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild___mf_0_mfe_mf_1_design_mf_2_system__prebuild__.js");
             return pkg;
         }
       ,
         "@mfe/i18n-dicts": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild___mf_0_mfe_mf_1_i18n_mf_2_dicts__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild___mf_0_mfe_mf_1_i18n_mf_2_dicts__prebuild__.js");
             return pkg;
         }
       ,
         "@mfe/shared-http": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild___mf_0_mfe_mf_1_shared_mf_2_http__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild___mf_0_mfe_mf_1_shared_mf_2_http__prebuild__.js");
             return pkg;
         }
       ,
         "@platform/capabilities": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild___mf_0_platform_mf_1_capabilities__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild___mf_0_platform_mf_1_capabilities__prebuild__.js");
             return pkg;
         }
       ,
         "@reduxjs/toolkit": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild___mf_0_reduxjs_mf_1_toolkit__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild___mf_0_reduxjs_mf_1_toolkit__prebuild__.js");
             return pkg;
         }
       ,
         "@tanstack/react-query": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild___mf_0_tanstack_mf_1_react_mf_2_query__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild___mf_0_tanstack_mf_1_react_mf_2_query__prebuild__.js");
             return pkg;
         }
       ,
         "ag-grid-community": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild__ag_mf_2_grid_mf_2_community__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild__ag_mf_2_grid_mf_2_community__prebuild__.js");
             return pkg;
         }
       ,
         "ag-grid-enterprise": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild__ag_mf_2_grid_mf_2_enterprise__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild__ag_mf_2_grid_mf_2_enterprise__prebuild__.js");
             return pkg;
         }
       ,
         "ag-grid-react": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild__ag_mf_2_grid_mf_2_react__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild__ag_mf_2_grid_mf_2_react__prebuild__.js");
             return pkg;
         }
       ,
         "clsx": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild__clsx__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild__clsx__prebuild__.js");
             return pkg;
         }
       ,
         "react": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild__react__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild__react__prebuild__.js");
             return pkg;
         }
       ,
         "react-dom": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild__react_mf_2_dom__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild__react_mf_2_dom__prebuild__.js");
             return pkg;
         }
       ,
         "react-redux": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild__react_mf_2_redux__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild__react_mf_2_redux__prebuild__.js");
             return pkg;
         }
       ,
         "react-router": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild__react_mf_2_router__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild__react_mf_2_router__prebuild__.js");
             return pkg;
         }
       ,
         "react-router-dom": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild__react_mf_2_router_mf_2_dom__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild__react_mf_2_router_mf_2_dom__prebuild__.js");
             return pkg;
         }
       ,
         "tailwind-merge": async () => {
-          let pkg = await import("__mf__virtual/mfe_shell__prebuild__tailwind_mf_2_merge__prebuild__.js");
+          const pkg = await import("__mf__virtual/mfe_shell__prebuild__tailwind_mf_2_merge__prebuild__.js");
             return pkg;
         }
       

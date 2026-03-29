@@ -1,0 +1,11 @@
+permissions
+roles
+scopes
+user_role_assignments
+role_permissions
+user_permission_scope
+audit_export_jobs
+authz_audit_log
+permission_audit_events
+permission_flyway_history
+user_audit_events

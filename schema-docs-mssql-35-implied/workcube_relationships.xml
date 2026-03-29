@@ -1,0 +1,126 @@
+<schemaMeta xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://schemaspy.org/xsd/6/schemameta.xsd">
+  <comments>Workcube implicit relationships extracted from report-service queries</comments>
+
+  <tables>
+    <table name="ACCOUNT_CARD_ROWS">
+      <column name="CARD_ID">
+        <foreignKey table="ACCOUNT_CARD" column="CARD_ID"/>
+      </column>
+      <column name="ACCOUNT_ID">
+        <foreignKey table="ACCOUNT_PLAN" column="ACCOUNT_CODE"/>
+      </column>
+    </table>
+
+    <table name="ACCOUNT_CARD">
+      <column name="ACC_COMPANY_ID">
+        <foreignKey table="COMPANY" column="COMPANY_ID"/>
+      </column>
+      <column name="ACC_EMPLOYEE_ID">
+        <foreignKey table="EMPLOYEES" column="EMPLOYEE_ID"/>
+      </column>
+    </table>
+
+    <table name="INVOICE_ROW">
+      <column name="INVOICE_ID">
+        <foreignKey table="INVOICE" column="INVOICE_ID"/>
+      </column>
+    </table>
+
+    <table name="INVOICE">
+      <column name="COMPANY_ID">
+        <foreignKey table="COMPANY" column="COMPANY_ID"/>
+      </column>
+    </table>
+
+    <table name="CARI_ACTIONS">
+      <column name="TO_CMP_ID">
+        <foreignKey table="COMPANY" column="COMPANY_ID"/>
+      </column>
+      <column name="FROM_CMP_ID">
+        <foreignKey table="COMPANY" column="COMPANY_ID"/>
+      </column>
+      <column name="PROJECT_ID">
+        <foreignKey table="PRO_PROJECTS" column="PROJECT_ID"/>
+      </column>
+    </table>
+
+    <table name="STOCK_FIS_ROW">
+      <column name="FIS_ID">
+        <foreignKey table="STOCK_FIS" column="FIS_ID"/>
+      </column>
+    </table>
+
+    <table name="STOCK_FIS">
+      <column name="PROJECT_ID">
+        <foreignKey table="PRO_PROJECTS" column="PROJECT_ID"/>
+      </column>
+    </table>
+
+    <table name="EXPENSE_ITEM_PLANS">
+      <column name="EXPENSE_COST_TYPE">
+        <foreignKey table="EXPENSE_ITEMS" column="EXPENSE_ITEM_ID"/>
+      </column>
+      <column name="CH_COMPANY_ID">
+        <foreignKey table="COMPANY" column="COMPANY_ID"/>
+      </column>
+      <column name="PROJECT_ID">
+        <foreignKey table="PRO_PROJECTS" column="PROJECT_ID"/>
+      </column>
+    </table>
+
+    <table name="BANK_ACTIONS">
+      <column name="COMPANY_ID">
+        <foreignKey table="COMPANY" column="COMPANY_ID"/>
+      </column>
+    </table>
+
+    <table name="EMPLOYEES_IN_OUT">
+      <column name="DEPARTMENT_ID">
+        <foreignKey table="DEPARTMENT" column="DEPARTMENT_ID"/>
+      </column>
+      <column name="BRANCH_ID">
+        <foreignKey table="BRANCH" column="BRANCH_ID"/>
+      </column>
+    </table>
+
+    <table name="EMPLOYEES_DETAIL">
+      <column name="HOMECITY">
+        <foreignKey table="SETUP_CITY" column="CITY_ID"/>
+      </column>
+    </table>
+
+    <table name="EMPLOYEE_POSITIONS">
+      <column name="EMPLOYEE_ID">
+        <foreignKey table="EMPLOYEES_IN_OUT" column="EMPLOYEE_ID"/>
+      </column>
+      <column name="ORGANIZATION_STEP_ID">
+        <foreignKey table="SETUP_ORGANIZATION_STEPS" column="ORGANIZATION_STEP_ID"/>
+      </column>
+    </table>
+
+    <table name="EMPLOYEES_PUANTAJ_ROWS">
+      <column name="PUANTAJ_ID">
+        <foreignKey table="EMPLOYEES_PUANTAJ" column="PUANTAJ_ID"/>
+      </column>
+    </table>
+
+    <table name="EMPLOYEES_SALARY">
+      <column name="IN_OUT_ID">
+        <foreignKey table="EMPLOYEES_IN_OUT" column="IN_OUT_ID"/>
+      </column>
+    </table>
+
+    <table name="OFFTIME">
+      <column name="OFFTIMECAT_ID">
+        <foreignKey table="SETUP_OFFTIME" column="OFFTIMECAT_ID"/>
+      </column>
+    </table>
+
+    <table name="BRANCH">
+      <column name="COMPANY_ID">
+        <foreignKey table="OUR_COMPANY" column="COMP_ID"/>
+      </column>
+    </table>
+  </tables>
+</schemaMeta>

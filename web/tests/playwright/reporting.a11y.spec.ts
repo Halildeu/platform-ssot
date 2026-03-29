@@ -11,9 +11,8 @@ test.describe('Reporting shell guard & deep-link', () => {
     await authenticateAndNavigate(page, baseURL, '/admin/reports/users', ['VIEW_REPORTS']);
     await page.waitForURL('**/admin/reports/**', { timeout: 30000 });
 
-    // In permitAll mode the variant select may not render without backend data.
-    // Verify either the variant select or the page container loads without crash.
-    const variantSelect = page.locator('[data-testid="report-variant-select"]');
+    // Current report toolbar renders the variant selector via the shared grid contract.
+    const variantSelect = page.locator('[data-component="variant-selector"] select');
     const reportPage = page.locator('[data-testid="report-page-users"]');
     const gridRoot = page.locator('.ag-root');
     await expect(

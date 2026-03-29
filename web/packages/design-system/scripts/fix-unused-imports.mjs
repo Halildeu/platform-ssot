@@ -56,7 +56,7 @@ let totalFixed = 0;
 let totalFiles = 0;
 
 for (const [filePath, unusedVars] of fileFixMap) {
-  let content = readFileSync(filePath, 'utf8');
+  const content = readFileSync(filePath, 'utf8');
   const originalContent = content;
   const lines = content.split('\n');
   const linesToRemove = new Set();

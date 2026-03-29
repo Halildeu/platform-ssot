@@ -44,7 +44,7 @@
       
           "@reduxjs/toolkit": {
             name: "@reduxjs/toolkit",
-            version: "2.10.1",
+            version: "2.11.2",
             scope: ["default"],
             loaded: false,
             from: "mfe_reporting",
@@ -69,7 +69,7 @@
             },
             shareConfig: {
               singleton: true,
-              requiredVersion: "^2.10.1",
+              requiredVersion: "^2.11.2",
               
             }
           }

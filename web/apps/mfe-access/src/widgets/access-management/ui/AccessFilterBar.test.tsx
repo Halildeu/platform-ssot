@@ -1,14 +1,10 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
+import { test, expect } from 'vitest';
 import React from 'react';
 import TestRenderer, { act } from 'react-test-renderer';
 import type { AccessFilters } from '../../../features/access-management/model/access.types';
+import AccessFilterBar from './AccessFilterBar.ui';
 
 test('AccessFilterBar level filtresini Segmented uzerinden surdurur', async () => {
-  const require = createRequire(import.meta.url);
-  (require.extensions as Record<string, () => void>)['.css'] = () => {};
-  const { default: AccessFilterBar } = await import('./AccessFilterBar.ui');
   const changes: AccessFilters[] = [];
 
   const renderer = TestRenderer.create(
@@ -34,8 +30,8 @@ test('AccessFilterBar level filtresini Segmented uzerinden surdurur', async () =
     viewButton.props.onClick();
   });
 
-  assert.equal(changes.length, 1);
-  assert.deepEqual(changes[0], {
+  expect(changes.length).toBe(1);
+  expect(changes[0]).toEqual({
     search: '',
     moduleKey: 'ALL',
     level: 'VIEW',
@@ -47,8 +43,8 @@ test('AccessFilterBar level filtresini Segmented uzerinden surdurur', async () =
     resetButton.props.onClick();
   });
 
-  assert.equal(changes.length, 2);
-  assert.deepEqual(changes[1], {
+  expect(changes.length).toBe(2);
+  expect(changes[1]).toEqual({
     search: '',
     moduleKey: 'ALL',
     level: 'ALL',

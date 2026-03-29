@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -9,16 +9,18 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "types": ["vitest/globals"],
     "baseUrl": ".",
     "paths": {
       "@mfe/design-system": ["../../packages/design-system/src"],
-      "@mfe/design-system/*": ["../../packages/design-system/src/*"]
+      "@mfe/design-system/*": ["../../packages/design-system/src/*"],
+      "mfe_shell/i18n": ["../mfe-shell/src/app/i18n/index.ts"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "__mocks__"]
 }

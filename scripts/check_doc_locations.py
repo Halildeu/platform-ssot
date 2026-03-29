@@ -29,6 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LEGACY_ROOTS = [
     ROOT / "backend" / "docs" / "legacy",
 ]
+SKIP_DIRS = {"node_modules", ".git", "dist", "build", "coverage", "storybook-static", "playwright-report", "test-results"}
 
 
 def is_under(path: Path, root: Path) -> bool:
@@ -118,7 +119,11 @@ RULES: List[Rule] = [
 
 
 def iter_matches(pattern: str) -> List[Path]:
-    return sorted(p for p in ROOT.rglob(pattern) if p.is_file())
+    return sorted(
+        p
+        for p in ROOT.rglob(pattern)
+        if p.is_file() and not any(part in SKIP_DIRS for part in p.parts)
+    )
 
 
 def main(argv: List[str]) -> int:
@@ -155,4 +160,3 @@ def main(argv: List[str]) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv))
-

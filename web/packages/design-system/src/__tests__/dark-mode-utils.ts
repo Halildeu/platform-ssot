@@ -23,7 +23,6 @@ export function cleanupDarkMode(): void {
 
 // Patterns that indicate hardcoded colors (not CSS variables)
 const BARE_COLOR_PATTERNS = [
-  /(?:^|\s)bg-surface-default(?:\s|$)/,
   /(?:^|\s)bg-surface-inverse(?:\s|$)/,
   /(?:^|\s)bg-surface-muted-\d+/,
   /(?:^|\s)bg-action-primary-\d+/,

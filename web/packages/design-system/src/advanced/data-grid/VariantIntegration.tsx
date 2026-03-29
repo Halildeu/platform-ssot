@@ -197,6 +197,17 @@ function applyVariantState<RowData>(api: GridApi<RowData>, state: GridVariantSta
   }
 }
 
+function dispatchVariantToast(type: "error" | "success" | "warning" | "info", text: string): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+  try {
+    window.dispatchEvent(new CustomEvent("app:toast", { detail: { type, text } }));
+  } catch {
+    // ignore toast dispatch failures in non-browser or test runtimes
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /*  Chevron icon                                                       */
 /* ------------------------------------------------------------------ */
@@ -298,20 +309,23 @@ export const VariantIntegration = <RowData = unknown,>({
   useEffect(() => {
     if (!gridApi || variants.length === 0 || appliedRef.current) return;
 
-    // Priority: user selected → user default → global default → first compatible
+    // Priority: requested initial variant → user selected → user default → global default → first compatible
+    const requested = activeId
+      ? variants.find((v) => v.id === activeId && v.isCompatible !== false)
+      : null;
     const selected = variants.find((v) => v.isUserSelected);
     const userDefault = variants.find((v) => v.isUserDefault);
     const globalDefault = variants.find((v) => v.isGlobalDefault);
     const firstCompatible = variants.find((v) => v.isCompatible !== false);
 
-    const target = selected ?? userDefault ?? globalDefault ?? firstCompatible;
+    const target = requested ?? selected ?? userDefault ?? globalDefault ?? firstCompatible;
     if (target) {
       applyVariantState(gridApi, target.state);
       appliedRef.current = target.id;
       setInternalActiveId(target.id);
       onActiveVariantChange?.(target.id);
     }
-  }, [gridApi, variants, onActiveVariantChange]);
+  }, [activeId, gridApi, variants, onActiveVariantChange]);
 
   // ── Close manager on outside click ─────────────────────────────────
   const managerRef = useRef<HTMLDivElement>(null);
@@ -336,18 +350,41 @@ export const VariantIntegration = <RowData = unknown,>({
   // ── Handlers ───────────────────────────────────────────────────────
 
   const handleSelect = useCallback(
-    (variantId: string) => {
+    async (variantId: string) => {
       const variant = variants.find((v) => v.id === variantId);
       if (!variant || !gridApi) return;
+      const previousActiveId = activeId;
+      const previousVariant = previousActiveId
+        ? variants.find((item) => item.id === previousActiveId) ?? null
+        : null;
 
       applyVariantState(gridApi, variant.state);
       appliedRef.current = variantId;
       setInternalActiveId(variantId);
       onActiveVariantChange?.(variantId);
 
-      updateVariantPreference({ variantId, isSelected: true, gridId }).catch(() => {});
+      try {
+        const updated = await updateVariantPreference({ variantId, isSelected: true, gridId });
+        if (updated.isUserSelected) {
+          return;
+        }
+      } catch {
+        // Revert below when server-side preference sync fails.
+      }
+
+      if (previousVariant) {
+        applyVariantState(gridApi, previousVariant.state);
+        appliedRef.current = previousVariant.id;
+        setInternalActiveId(previousVariant.id);
+        onActiveVariantChange?.(previousVariant.id);
+      } else {
+        setInternalActiveId(null);
+        appliedRef.current = null;
+        onActiveVariantChange?.(null);
+      }
+      dispatchVariantToast("error", m.variantPreferenceUpdateFailedLabel ?? "Varyant tercihi güncellenemedi");
     },
-    [gridApi, variants, onActiveVariantChange],
+    [activeId, gridApi, gridId, m.variantPreferenceUpdateFailedLabel, onActiveVariantChange, variants],
   );
 
   const handleClear = useCallback(() => {
@@ -798,6 +835,7 @@ export const VariantIntegration = <RowData = unknown,>({
             if (val) handleSelect(val);
             else handleClear();
           }}
+          disabled={loading || variants.length === 0}
           className="h-8 min-w-[160px] rounded-md border border-border-default bg-surface-default px-2 text-sm text-text-primary"
           aria-label={m.variantLabel ?? "Grid variant"}
         >

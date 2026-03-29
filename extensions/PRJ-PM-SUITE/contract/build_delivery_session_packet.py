@@ -221,15 +221,6 @@ def main(argv: list[str] | None = None) -> int:
             "change_map_path": "extensions/PRJ-UX-NORTH-STAR/contract/ux_change_map.v1.json",
             "artifacts": ux_contract.get("artifacts") if isinstance(ux_contract.get("artifacts"), list) else [],
         },
-        "required_roles": _unique(
-            [str(item) for item in (lane_plan.get("required_roles") or []) if isinstance(item, str)]
-            or ["planner", "implementer", "reviewer", "verifier"]
-        ),
-        "target_id": str(delivery_scope.get("target_id") or "").strip() or None,
-        "pre_gates": _unique(
-            [str(item) for item in (lane_plan.get("pre_gates") or []) if isinstance(item, str)]
-            or ["ai-entry-pack-build", "execution-target-resolve", "policy-check --source both"]
-        ),
         "stop_conditions": [
             "scope_expansion_requires_packet_rebuild",
             "frontend_without_ux_mapping_blocked",

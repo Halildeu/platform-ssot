@@ -9,7 +9,7 @@
     "releaseNotesPath": "docs/04-operations/RELEASE-NOTES/RELEASE-NOTES-ui-library.md",
     "versionScheme": "semver",
     "requiredScripts": [
-      "build:ui-kit",
+      "build:design-system",
       "build-storybook",
       "chromatic",
       "publish:bundle",

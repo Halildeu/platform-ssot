@@ -37,11 +37,11 @@
       "framework_line": "18.x",
       "runtime": "node",
       "node_major": 20,
-      "package_manager": "npm",
+      "package_manager": "pnpm",
       "mfe_architecture": "module-federation",
       "style_system": [
         "design-tokens",
-        "ui-kit",
+        "design-system",
         "tailwind"
       ],
       "design_contract": {
@@ -104,13 +104,17 @@
   },
   "ci_contract": {
     "delivery_sequence": [
-      "unit",
-      "contract",
+      "backend",
+      "database",
+      "api",
+      "frontend",
       "integration",
       "e2e"
     ],
     "required_lanes": [
       "unit",
+      "database",
+      "api",
       "contract",
       "integration",
       "e2e"

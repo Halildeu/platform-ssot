@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-25T01:24:15.284Z",
+  "generatedAt": "2026-03-28T22:45:36.526Z",
   "summary": {
     "total": 302,
     "inSync": 21,
@@ -1519,8 +1519,8 @@
       "resolution": "code-only",
       "winner": "code",
       "figmaValue": null,
-      "codeValue": "--state-error-bg",
-      "resolvedValue": "--state-error-bg"
+      "codeValue": "--state-danger-bg",
+      "resolvedValue": "--state-danger-bg"
     },
     {
       "path": "color.semanticColorTokens.state-error-text",
@@ -1528,8 +1528,8 @@
       "resolution": "code-only",
       "winner": "code",
       "figmaValue": null,
-      "codeValue": "--state-error-text",
-      "resolvedValue": "--state-error-text"
+      "codeValue": "--state-danger-text",
+      "resolvedValue": "--state-danger-text"
     },
     {
       "path": "color.semanticColorTokens.state-info-bg",
@@ -2707,8 +2707,8 @@
       "resolution": "code-only",
       "winner": "code",
       "figmaValue": null,
-      "codeValue": "var(--focus-ring, var(--focus-outline, #2c5282))",
-      "resolvedValue": "var(--focus-ring, var(--focus-outline, #2c5282))"
+      "codeValue": "var(--focus-ring, var(--focus-outline, var(--accent-primary)))",
+      "resolvedValue": "var(--focus-ring, var(--focus-outline, var(--accent-primary)))"
     },
     {
       "path": "focusRing.focusRing.style",
@@ -2725,8 +2725,8 @@
       "resolution": "code-only",
       "winner": "code",
       "figmaValue": null,
-      "codeValue": "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]/30 focus-visible:ring-offset-2",
-      "resolvedValue": "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]/30 focus-visible:ring-offset-2"
+      "codeValue": "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[color-mix(in_oklab,var(--focus-ring)_30%,transparent)] focus-visible:ring-offset-2",
+      "resolvedValue": "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[color-mix(in_oklab,var(--focus-ring)_30%,transparent)] focus-visible:ring-offset-2"
     }
   ]
 }

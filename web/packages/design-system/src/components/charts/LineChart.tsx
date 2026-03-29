@@ -74,7 +74,6 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       showDots = true,
       showGrid = true,
       showLegend = false,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       showArea = false,
       curved = false,
       valueFormatter,
@@ -113,10 +112,12 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       });
 
       const agSeries: AgChartOptions["series"] = seriesData.map((s, i) => ({
-        type: "line" as const,
+        type: showArea ? ("area" as const) : ("line" as const),
         xKey: "label",
         yKey: s.name,
         yName: s.name,
+        fill: showArea ? (s.color ?? palette[i % palette.length]) : undefined,
+        fillOpacity: showArea ? 0.18 : undefined,
         stroke: s.color ?? palette[i % palette.length],
         marker: { enabled: showDots, size: 6 },
         interpolation: curved ? { type: "smooth" as const } : undefined,
@@ -145,7 +146,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         ],
         legend: { enabled: showLegend || seriesData.length > 1 },
       } as AgChartOptions;
-    }, [seriesData, labels, showDots, showGrid, showLegend, curved, valueFormatter, animate, title, description, isEmpty]);
+    }, [seriesData, labels, showDots, showGrid, showLegend, showArea, curved, valueFormatter, animate, title, description, isEmpty]);
 
     if (isEmpty) {
       return (

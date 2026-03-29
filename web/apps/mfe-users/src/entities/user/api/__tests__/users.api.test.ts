@@ -1,5 +1,5 @@
-import { test, beforeEach, after } from 'node:test';
-import assert from 'node:assert/strict';
+// @vitest-environment node
+import { afterAll, beforeEach, expect, test } from 'vitest';
 import { fetchUsers, fetchUserDetail } from '../users.api';
 import { registerTokenResolver } from '../../lib/token-resolver.lib';
 import { configureShellServices } from '../../../../app/services/shell-services';
@@ -47,7 +47,7 @@ beforeEach(() => {
   registerTokenResolver();
 });
 
-after(() => {
+afterAll(() => {
   (globalThis as any).fetch = originalFetch;
   (globalThis as any).window = originalWindow;
   if (originalLocalStorage !== undefined) {
@@ -70,11 +70,11 @@ test('fetchUsers 403 dönerse boş liste ve varsayılan sayfalama ile döner', a
     }) as Response;
 
   const result = await fetchUsers(params);
-  assert.equal(result.items.length, 0);
-  assert.equal(result.total, 0);
-  assert.equal(result.page, 1);
-  assert.equal(result.pageSize, 25);
-  assert.equal(result.meta?.reason, 'unauthorized');
+  expect(result.items.length).toBe(0);
+  expect(result.total).toBe(0);
+  expect(result.page).toBe(1);
+  expect(result.pageSize).toBe(25);
+  expect(result.meta?.reason).toBe('unauthorized');
 });
 
 test('fetchUsers ağ hatasında boş liste döndürür', async () => {
@@ -83,10 +83,10 @@ test('fetchUsers ağ hatasında boş liste döndürür', async () => {
   };
 
   const result = await fetchUsers({ page: 3, pageSize: 50 });
-  assert.equal(result.items.length, 0);
-  assert.equal(result.page, 3);
-  assert.equal(result.pageSize, 50);
-  assert.equal(result.meta?.reason, 'network-error');
+  expect(result.items.length).toBe(0);
+  expect(result.page).toBe(3);
+  expect(result.pageSize).toBe(50);
+  expect(result.meta?.reason).toBe('network-error');
 });
 
 test('fetchUserDetail 403 dönerse fallback kullanıcı bilgisi sağlar', async () => {
@@ -97,10 +97,10 @@ test('fetchUserDetail 403 dönerse fallback kullanıcı bilgisi sağlar', async 
     }) as Response;
 
   const result = await fetchUserDetail({ id: '1', email: 'demo@example.com' });
-  assert.equal(result.id, '1');
-  assert.equal(result.email, 'demo@example.com');
-  assert.equal(result.fullName, 'demo@example.com');
-  assert.equal(result.modulePermissions.length, 0);
+  expect(result.id).toBe('1');
+  expect(result.email).toBe('demo@example.com');
+  expect(result.fullName).toBe('demo@example.com');
+  expect(result.modulePermissions.length).toBe(0);
 });
 
 test('fetchUserDetail ağ hatasında fallback kullanıcı bilgisi sağlar', async () => {
@@ -109,9 +109,9 @@ test('fetchUserDetail ağ hatasında fallback kullanıcı bilgisi sağlar', asyn
   };
 
   const result = await fetchUserDetail({ id: '2', email: 'offline@example.com' });
-  assert.equal(result.id, '2');
-  assert.equal(result.email, 'offline@example.com');
-  assert.equal(result.status, 'ACTIVE');
+  expect(result.id).toBe('2');
+  expect(result.email).toBe('offline@example.com');
+  expect(result.status).toBe('ACTIVE');
 });
 
 test('fetchUsers sorgu parametrelerini ve başlıklarını doğru gönderir', async () => {
@@ -141,19 +141,15 @@ test('fetchUsers sorgu parametrelerini ve başlıklarını doğru gönderir', as
     search: 'demo',
   });
 
-  assert.equal(requestLog.length, 1, 'fetch çağrısı yapılmalı');
+  expect(requestLog.length).toBe(1);
   const [{ input, init }] = requestLog;
   const url = new URL(input.toString());
-  assert.equal(url.pathname, '/api/v1/users', 'Path /api/v1/users olmalı');
-  assert.equal(
-    url.searchParams.toString(),
-    'search=demo&status=ACTIVE&role=ADMIN&page=2&pageSize=50',
-    'Sorgu parametreleri beklenen sıralama ile gönderilmeli',
-  );
+  expect(url.pathname).toBe('/api/v1/users');
+  expect(url.searchParams.toString()).toBe('search=demo&status=ACTIVE&role=ADMIN&page=2&pageSize=50');
   const headers = (init?.headers ?? {}) as Record<string, string>;
-  assert.equal(headers.Authorization, 'Bearer dummy-token');
-  assert.equal(headers['Content-Type'], 'application/json');
-  assert.equal(headers['X-Internal-Api-Key'], 'internal-key');
+  expect(headers.Authorization).toBe('Bearer dummy-token');
+  expect(headers['Content-Type']).toBe('application/json');
+  expect(headers['X-Internal-Api-Key']).toBe('internal-key');
 });
 
 test('fetchUsers auth header kurarken shell tokenini localStorage tokenine tercih eder', async () => {
@@ -183,9 +179,9 @@ test('fetchUsers auth header kurarken shell tokenini localStorage tokenine terci
 
   await fetchUsers({ page: 1, pageSize: 25 });
 
-  assert.equal(requestLog.length, 1);
+  expect(requestLog.length).toBe(1);
   const headers = (requestLog[0]?.init?.headers ?? {}) as Record<string, string>;
-  assert.equal(headers.Authorization, 'Bearer fresh-shell-token');
+  expect(headers.Authorization).toBe('Bearer fresh-shell-token');
 });
 
 test("fetchUsers shell token literal 'undefined' ise localStorage tokenine geri düşer", async () => {
@@ -215,9 +211,9 @@ test("fetchUsers shell token literal 'undefined' ise localStorage tokenine geri 
 
   await fetchUsers({ page: 1, pageSize: 25 });
 
-  assert.equal(requestLog.length, 1);
+  expect(requestLog.length).toBe(1);
   const headers = (requestLog[0]?.init?.headers ?? {}) as Record<string, string>;
-  assert.equal(headers.Authorization, 'Bearer persisted-real-token');
+  expect(headers.Authorization).toBe('Bearer persisted-real-token');
 });
 
 test('permitAll fake auth modunda fetchUsers backend yerine mock veri döndürür', async () => {
@@ -234,10 +230,10 @@ test('permitAll fake auth modunda fetchUsers backend yerine mock veri döndürü
 
   const result = await fetchUsers({ page: 1, pageSize: 25, search: 'selin' });
 
-  assert.equal(fetchCallCount, 0);
-  assert.equal(result.meta?.reason, 'success');
-  assert.equal(result.total, 1);
-  assert.equal(result.items[0]?.email, 'selin.aydin@example.com');
+  expect(fetchCallCount).toBe(0);
+  expect(result.meta?.reason).toBe('success');
+  expect(result.total).toBe(1);
+  expect(result.items[0]?.email).toBe('selin.aydin@example.com');
 });
 
 test('permitAll fake auth modunda fetchUserDetail mock detay döndürür', async () => {
@@ -254,9 +250,9 @@ test('permitAll fake auth modunda fetchUserDetail mock detay döndürür', async
 
   const result = await fetchUserDetail({ id: 'mock-user-002', email: 'emir.kara@example.com' });
 
-  assert.equal(fetchCallCount, 0);
-  assert.equal(result.fullName, 'Emir Kara');
-  assert.equal(result.modulePermissions[0]?.level, 'EDIT');
+  expect(fetchCallCount).toBe(0);
+  expect(result.fullName).toBe('Emir Kara');
+  expect(result.modulePermissions[0]?.level).toBe('EDIT');
 });
 
 test('shell auth token .shell ile bitiyorsa runtime env olmasa da mock veri döndürür', async () => {
@@ -275,9 +271,9 @@ test('shell auth token .shell ile bitiyorsa runtime env olmasa da mock veri dön
 
   const result = await fetchUsers({ page: 1, pageSize: 25 });
 
-  assert.equal(fetchCallCount, 0);
-  assert.equal(result.meta?.reason, 'success');
-  assert.equal(result.total, 3);
+  expect(fetchCallCount).toBe(0);
+  expect(result.meta?.reason).toBe('success');
+  expect(result.total).toBe(3);
 });
 
 test('permitAll modunda fake flag olmasa da mock veri döndürür', async () => {
@@ -293,9 +289,9 @@ test('permitAll modunda fake flag olmasa da mock veri döndürür', async () => 
 
   const result = await fetchUsers({ page: 1, pageSize: 25 });
 
-  assert.equal(fetchCallCount, 0);
-  assert.equal(result.meta?.reason, 'success');
-  assert.equal(result.total, 3);
+  expect(fetchCallCount).toBe(0);
+  expect(result.meta?.reason).toBe('success');
+  expect(result.total).toBe(3);
 });
 
 test('runtime test user profili varsa backend yerine mock veri döndürür', async () => {
@@ -317,9 +313,9 @@ test('runtime test user profili varsa backend yerine mock veri döndürür', asy
 
   const result = await fetchUsers({ page: 1, pageSize: 25 });
 
-  assert.equal(fetchCallCount, 0);
-  assert.equal(result.meta?.reason, 'success');
-  assert.equal(result.total, 3);
+  expect(fetchCallCount).toBe(0);
+  expect(result.meta?.reason).toBe('success');
+  expect(result.total).toBe(3);
 });
 
 test('dev fallback explicit kapatıldıysa runtime test user olsa bile backend çağrısı yapar', async () => {
@@ -353,7 +349,7 @@ test('dev fallback explicit kapatıldıysa runtime test user olsa bile backend �
 
   const result = await fetchUsers({ page: 1, pageSize: 25 });
 
-  assert.equal(fetchCallCount, 1);
-  assert.equal(result.meta?.reason, 'success');
-  assert.equal(result.total, 0);
+  expect(fetchCallCount).toBe(1);
+  expect(result.meta?.reason).toBe('success');
+  expect(result.total).toBe(0);
 });

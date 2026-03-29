@@ -262,7 +262,7 @@ function generateMarkdown(fileResults, overallScore) {
 /* ------------------------------------------------------------------ */
 
 function main() {
-  let fileResults = [];
+  const fileResults = [];
 
   if (testMode) {
     const samples = getTestSampleFiles();

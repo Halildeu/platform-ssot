@@ -1,6 +1,6 @@
 ## Report Preferences API Sozlesmesi
 
-Amac: Web ve mobil raporlama yuzeylerinin ayni rapor kimligini kullanirken
+Amaç: Web ve mobil raporlama yuzeylerinin ayni rapor kimligini kullanirken
 favori raporlar ve kayitli filtreler icin tek bir persistence sozlesmesine
 baglanmasini saglamak.
 
@@ -129,7 +129,33 @@ Kurallar:
   disinda davranis uretmez.
 
 -------------------------------------------------------------------------------
-8) Baglantilar
+8) Hata Modeli
+-------------------------------------------------------------------------------
+
+- Hata cevabi `ErrorResponse` semantigine uyar ve en az su alanlari tasir:
+  - `code`
+  - `message`
+  - `timestamp`
+  - `path`
+- Beklenen hata durumlari:
+  - `400 Bad Request`: gecersiz `gridId`, bozuk filtre modeli veya soft limit ihlali
+  - `401 Unauthorized`: kimlik dogrulama eksik veya gecersiz
+  - `403 Forbidden`: `VARIANTS_READ` / `VARIANTS_WRITE` yetkisi yok
+  - `404 Not Found`: istenen varyant kaydi bulunamadi
+  - `409 Conflict`: ayni kullanici + ayni key icin eszamanli guncelleme cakismasi
+
+-------------------------------------------------------------------------------
+9) Guvenlik
+-------------------------------------------------------------------------------
+
+- Güvenlik:
+  - Tum endpointler Bearer JWT ile korunur.
+  - Okuma icin `VARIANTS_READ`, yazma icin `VARIANTS_WRITE` gerekir.
+  - Kullaniciya ozel varyantlar baska kullanicilar adina okunamaz veya yazilamaz.
+  - Channel ve `reportId` kombinasyonlari canonical katalog ile dogrulanir.
+
+-------------------------------------------------------------------------------
+10) Baglantilar
 -------------------------------------------------------------------------------
 
 - Shared catalog: `web/packages/platform-capabilities/src/index.ts`

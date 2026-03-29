@@ -181,7 +181,7 @@ async function main() {
   const grandTotal = rows.reduce((sum, r) => sum + r.total, 0);
 
   // Budget check
-  let budgetViolations = [];
+  const budgetViolations = [];
   let budget = null;
   if (hasBudgetFlag) {
     try {

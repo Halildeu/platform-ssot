@@ -20,6 +20,8 @@ BACKEND_DIR="$ROOT_DIR/backend"
 WITH_UPSTREAM="${BACKEND_TEST_INCLUDE_UPSTREAM:-0}"
 RUN_ID="${BACKEND_TEST_RUN_ID:-}"
 MODULE=""
+MOCKITO_AGENT_JAR="${HOME}/.m2/repository/org/mockito/mockito-core/5.17.0/mockito-core-5.17.0.jar"
+SUREFIRE_ARG_LINE="-Xshare:off -javaagent:${MOCKITO_AGENT_JAR} -Dnet.bytebuddy.experimental=true"
 
 usage() {
   cat <<'EOF'
@@ -97,6 +99,11 @@ if [[ ! -x "$BACKEND_DIR/mvnw" ]]; then
   exit 1
 fi
 
+if [[ ! -f "$MOCKITO_AGENT_JAR" ]]; then
+  echo "[run_tests_backend] HATA: Mockito agent jar bulunamadı: $MOCKITO_AGENT_JAR" >&2
+  exit 1
+fi
+
 cd "$BACKEND_DIR"
 
 if [[ -n "$MODULE" ]]; then
@@ -110,6 +117,7 @@ if [[ -n "$MODULE" ]]; then
     MVN_ARGS+=(-am)
   fi
   MVN_ARGS+=(
+    "-DargLine=${SUREFIRE_ARG_LINE}"
     "-DtempDir=surefire-${SAFE_RUN_ID}"
     "-Dsurefire.reportNameSuffix=${SAFE_RUN_ID}"
     test
@@ -118,8 +126,8 @@ if [[ -n "$MODULE" ]]; then
   echo "[run_tests_backend] ./mvnw ${MVN_ARGS[*]} (cwd=$BACKEND_DIR)"
   ./mvnw "${MVN_ARGS[@]}"
 else
-  echo "[run_tests_backend] ./mvnw -q test (cwd=$BACKEND_DIR)"
-  ./mvnw -q test
+  echo "[run_tests_backend] ./mvnw -q -DargLine=${SUREFIRE_ARG_LINE} test (cwd=$BACKEND_DIR)"
+  ./mvnw -q "-DargLine=${SUREFIRE_ARG_LINE}" test
 fi
 
 echo "[run_tests_backend] Backend testleri başarıyla tamamlandı ✅"

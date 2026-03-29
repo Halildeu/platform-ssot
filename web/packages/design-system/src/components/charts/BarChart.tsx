@@ -115,6 +115,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       const barSeries: any[] = hasMultiSeries
         ? seriesDef!.map((s, i) => ({
             type: "bar" as const,
+            direction: _isHorizontal ? "horizontal" : "vertical",
             xKey: "label",
             yKey: s.field,
             yName: s.name,
@@ -124,6 +125,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         : [
             {
               type: "bar" as const,
+              direction: _isHorizontal ? "horizontal" : "vertical",
               xKey: "label",
               yKey: "value",
               fills: chartData.map((d: any) => d._fill),

@@ -59,7 +59,7 @@
       "web/apps/mfe-shell/src/widgets/app-shell/**/*",
       "web/apps/mfe-audit/src/**/*",
       "web/packages/shared-http/**/*",
-      "web/packages/ui-kit/src/lib/auth/**/*",
+      "web/packages/design-system/src/lib/auth/**/*",
       "docs/03-delivery/api/auth.api.md",
       "docs/03-delivery/api/permission.api.md",
       "docs/03-delivery/api/audit-events.api.md",
@@ -85,7 +85,7 @@
       "mfe-shell",
       "mfe-audit",
       "web-shared-http",
-      "ui-kit",
+      "design-system",
       "permission-service",
       "user-service"
     ]
@@ -120,7 +120,7 @@
         "ux_subtheme_id": "orientation_and_wayfinding"
       },
       {
-        "path_glob": "web/packages/ui-kit/src/lib/auth/**/*",
+        "path_glob": "web/packages/design-system/src/lib/auth/**/*",
         "ux_theme_id": "consistency_and_pattern_governance",
         "ux_subtheme_id": "single_component_source_of_truth"
       },
@@ -208,7 +208,7 @@
         "web/apps/mfe-shell/src/widgets/app-shell/**/*",
         "web/apps/mfe-audit/src/**/*",
         "web/packages/shared-http/**/*",
-        "web/packages/ui-kit/src/lib/auth/**/*"
+        "web/packages/design-system/src/lib/auth/**/*"
       ],
       "mobile": [
         "mobile/App.tsx",
@@ -318,19 +318,23 @@
   },
   "lane_plan": {
     "execution_sequence": [
-      "unit",
-      "contract",
+      "backend",
+      "database",
+      "api",
+      "frontend",
       "integration",
       "e2e"
     ],
     "required_lanes": [
       "unit",
+      "database",
+      "api",
       "contract",
       "integration",
       "e2e"
     ],
     "notes": [
-      "CI lanes follow module_delivery_lanes.v1.json: unit, contract, integration, e2e.",
+      "CI lanes follow module_delivery_lanes.v1.json: backend,database,api,frontend,integration,e2e execution order with unit/database/api/contract/integration/e2e lane ids.",
       "Auth and permission backbone changes remain server-authoritative; web and mobile consume the same session and authz contracts.",
       "Database lane stays active because auth session persistence and audit coverage may require owned-schema changes."
     ]

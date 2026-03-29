@@ -158,7 +158,7 @@ function collectCoverage() {
 
 function collectCompatibility() {
   const wfExists = workflowExists('compatibility-matrix.yml');
-  let matrix = { node: ['20', '22'], react: ['18.2', '18.3'] };
+  const matrix = { node: ['20', '22'], react: ['18.2', '18.3'] };
 
   if (wfExists) {
     const wfPath = join(ROOT, '.github', 'workflows', 'compatibility-matrix.yml');

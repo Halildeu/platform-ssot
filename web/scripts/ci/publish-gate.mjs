@@ -24,7 +24,7 @@ const CRITICAL_COMPONENTS = [
   { name: "Select", path: "packages/design-system/src/primitives/select/__tests__/Select.test.tsx" },
 ];
 
-let failures = [];
+const failures = [];
 
 // ── Step 1: Verify critical component test files exist ───────────────
 console.log("\n🔍 Checking critical component test files...\n");

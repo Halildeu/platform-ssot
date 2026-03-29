@@ -1,13 +1,14 @@
-import { test } from 'node:test';
-import assert from 'node:assert/strict';
+// @vitest-environment jsdom
+import { test, expect, vi } from 'vitest';
 import React from 'react';
 import TestRenderer, { act } from 'react-test-renderer';
 import type { ReactTestRenderer } from 'react-test-renderer';
+
 import {
   I18nManager,
   I18nProvider,
   type LoadDictionaryResult,
-} from 'mfe_shell/i18n';
+} from '../../../../mfe-shell/src/app/i18n/index.ts';
 import { getDictionary } from '@mfe/i18n-dicts';
 import { useAccessI18n, type AccessI18n } from '../useAccessI18n';
 
@@ -76,43 +77,30 @@ test('useAccessI18n sözlükleri yükler ve locale değişimini takip eder', asy
     await flushMicrotasks();
   });
 
-  assert.ok(latest?.ready);
-  assert.equal(latest?.t('access.actions.clone'), 'Rolü Klonla');
+  expect(latest?.ready).toBeTruthy();
+  expect(latest?.t('access.actions.clone')).toBe('Rolü Klonla');
 
-  // formatNumber/formatDate gerçek değer döner; sadece locale izlerini doğruluyoruz.
   latest?.formatNumber(42);
   latest?.formatDate(new Date('2025-01-02T03:00:00Z'), { timeZone: 'UTC' });
 
-  assert.deepEqual(manager.preloadCalls[0], { locale: 'tr', namespace: 'access' });
-  assert.deepEqual(
-    manager.formatNumberCalls.map((entry) => entry.locale),
-    ['tr'],
-  );
-  assert.deepEqual(
-    manager.formatDateCalls.map((entry) => entry.locale),
-    ['tr'],
-  );
+  expect(manager.preloadCalls[0]).toEqual({ locale: 'tr', namespace: 'access' });
+  expect(manager.formatNumberCalls.map((entry) => entry.locale)).toEqual(['tr']);
+  expect(manager.formatDateCalls.map((entry) => entry.locale)).toEqual(['tr']);
 
   await act(async () => {
     manager.setLocale('en');
     await flushMicrotasks();
   });
 
-  assert.equal(latest?.t('access.actions.clone'), 'Clone Role');
+  expect(latest?.t('access.actions.clone')).toBe('Clone Role');
 
   latest?.formatNumber(24);
   latest?.formatDate(new Date('2025-01-02T03:00:00Z'), { timeZone: 'UTC' });
 
   const lastPreloadCall = manager.preloadCalls[manager.preloadCalls.length - 1];
-  assert.equal(lastPreloadCall.locale, 'en');
-  assert.deepEqual(
-    manager.formatNumberCalls.map((entry) => entry.locale),
-    ['tr', 'en'],
-  );
-  assert.deepEqual(
-    manager.formatDateCalls.map((entry) => entry.locale),
-    ['tr', 'en'],
-  );
+  expect(lastPreloadCall.locale).toBe('en');
+  expect(manager.formatNumberCalls.map((entry) => entry.locale)).toEqual(['tr', 'en']);
+  expect(manager.formatDateCalls.map((entry) => entry.locale)).toEqual(['tr', 'en']);
 
   await act(async () => {
     renderer.unmount();
@@ -133,9 +121,9 @@ test('useAccessI18n provider olmadığında fallback manager ile çalışır', a
     await flushMicrotasks();
   });
 
-  assert.ok(latest?.ready);
-  assert.equal(latest?.t('access.actions.clone'), 'Rolü Klonla');
-  assert.equal(latest?.formatNumber(5), new Intl.NumberFormat('tr').format(5));
+  expect(latest?.ready).toBeTruthy();
+  expect(latest?.t('access.actions.clone')).toBe('Rolü Klonla');
+  expect(latest?.formatNumber(5)).toBe(new Intl.NumberFormat('tr').format(5));
 
   await act(async () => {
     renderer.unmount();

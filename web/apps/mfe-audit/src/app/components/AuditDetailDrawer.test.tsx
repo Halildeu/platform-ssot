@@ -1,10 +1,12 @@
+// @vitest-environment jsdom
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { AuditDetailDrawer, AuditDetailDrawerProps } from './AuditDetailDrawer';
 import { AuditEvent } from '../types/audit-event';
 
 // Mock design-system DetailDrawer
-jest.mock('@mfe/design-system', () => ({
+vi.mock('@mfe/design-system', () => ({
   DetailDrawer: ({
     open,
     onClose,
@@ -53,11 +55,13 @@ const baseEvent: AuditEvent = {
   after: { active: false },
 };
 
+afterEach(() => { cleanup(); });
+
 describe('AuditDetailDrawer', () => {
   const defaultProps: AuditDetailDrawerProps = {
     event: baseEvent,
     open: true,
-    onClose: jest.fn(),
+    onClose: vi.fn(),
   };
 
   it('renders nothing when open is false', () => {
@@ -66,7 +70,7 @@ describe('AuditDetailDrawer', () => {
   });
 
   it('shows placeholder text when event is null', () => {
-    render(<AuditDetailDrawer event={null} open={true} onClose={jest.fn()} />);
+    render(<AuditDetailDrawer event={null} open={true} onClose={vi.fn()} />);
     expect(screen.getByText(/Henüz bir kayıt seçilmedi/)).toBeTruthy();
   });
 

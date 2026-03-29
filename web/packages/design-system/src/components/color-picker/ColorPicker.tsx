@@ -459,7 +459,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
               className="w-full h-3 rounded-full appearance-none cursor-pointer"
               style={{
                 background:
-                  // eslint-disable-next-line semantic-theme/no-inline-color-literals -- Hue spectrum requires literal color stops
+                   
                   "linear-gradient(to right, var(--state-danger-text), var(--state-warning-text), var(--state-success-text), var(--state-info-text), var(--action-primary), var(--action-primary), var(--state-danger-text))",
               }}
               aria-label="Ton"

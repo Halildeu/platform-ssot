@@ -20,11 +20,12 @@ afterAll(() => {
 });
 
 describe("SSR Safety", () => {
-  it.skip("main entry point is importable without DOM errors (flaky — chunk loading)", async () => {
+  it("main entry point is importable without DOM errors", async () => {
     // Dynamic import to catch module-level errors
     const mod = await import("../index");
     expect(mod).toBeDefined();
-  });
+    expect(mod.PageLayout).toBeDefined();
+  }, 30000);
 
   it("data-grid setup is importable without DOM errors", async () => {
     try {

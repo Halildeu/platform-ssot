@@ -1,0 +1,4 @@
+auth_audit_events
+auth_flyway_history
+email_verification_tokens
+password_reset_tokens

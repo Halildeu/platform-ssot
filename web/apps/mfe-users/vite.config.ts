@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { federation } from '@module-federation/vite';
 import path from 'node:path';
@@ -65,6 +65,8 @@ const sharedProdOnly = {
   '@mfe/i18n-dicts': singleton('@mfe/i18n-dicts', false),
 };
 
+const isTest = !!process.env['VITEST'];
+
 /* ------------------------------------------------------------------ */
 /*  Vite Config                                                         */
 /* ------------------------------------------------------------------ */
@@ -78,7 +80,7 @@ export default defineConfig(({ mode }) => {
 
     plugins: [
       react(),
-      federation({
+      ...(isTest ? [] : [federation({
         name: 'mfe_users',
         filename: 'remoteEntry.js',
         dts: false,
@@ -94,13 +96,15 @@ export default defineConfig(({ mode }) => {
           ...sharedCore,
           ...(mode === 'production' ? sharedProdOnly : {}),
         },
-      }),
+      })]),
     ],
 
     resolve: {
       alias: [
         { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
         { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
+        { find: 'mfe_shell/i18n', replacement: path.resolve(__dirname, '__mocks__/mfe-shell-i18n.ts') },
+        { find: /^mfe_reporting\/(.*)$/, replacement: path.resolve(__dirname, '__mocks__/mfe-reporting-$1.ts') },
       ],
     },
 
@@ -143,6 +147,12 @@ export default defineConfig(({ mode }) => {
       target: 'esnext',
       outDir: 'dist',
       sourcemap: mode === 'development',
+    },
+
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: ['./src/test-setup.ts'],
     },
   };
 });

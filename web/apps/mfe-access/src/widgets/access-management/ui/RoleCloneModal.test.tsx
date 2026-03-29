@@ -1,15 +1,11 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
+// @vitest-environment node
+import { test, expect } from 'vitest';
 import React from 'react';
 import TestRenderer, { act } from 'react-test-renderer';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
+import RoleCloneModal from './RoleCloneModal.ui';
 
 test('RoleCloneModal modal ve switch yuzeyini surdurur', async () => {
-  const require = createRequire(import.meta.url);
-  (require.extensions as Record<string, () => void>)['.css'] = () => {};
-  const { default: RoleCloneModal } = await import('./RoleCloneModal.ui');
-
   const submissions: Array<{ name: string; description?: string; copyMemberCount: boolean }> = [];
   const cancels: string[] = [];
 
@@ -47,7 +43,7 @@ test('RoleCloneModal modal ve switch yuzeyini surdurur', async () => {
   const textInputs = root.findAllByType('input').filter((node) => node.props.type === 'text');
   const nameInput = textInputs[0];
 
-  assert.equal(nameInput.props.value, 'Kopya Admin');
+  expect(nameInput.props.value).toBe('Kopya Admin');
 
   const switchInput = root.findByProps({ role: 'switch' });
 
@@ -62,8 +58,8 @@ test('RoleCloneModal modal ve switch yuzeyini surdurur', async () => {
     submitButton.props.onClick();
   });
 
-  assert.equal(submissions.length, 1);
-  assert.deepEqual(submissions[0], {
+  expect(submissions.length).toBe(1);
+  expect(submissions[0]).toEqual({
     name: 'Kopya Admin',
     description: 'Core administrators',
     copyMemberCount: true,
@@ -75,5 +71,5 @@ test('RoleCloneModal modal ve switch yuzeyini surdurur', async () => {
     cancelButton.props.onClick();
   });
 
-  assert.equal(cancels.length, 1);
+  expect(cancels.length).toBe(1);
 });

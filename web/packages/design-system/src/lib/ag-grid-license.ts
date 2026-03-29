@@ -1,4 +1,4 @@
-/* eslint-disable no-console -- intentionally wrapping/filtering console for license noise */
+ 
 import { LicenseManager } from 'ag-grid-enterprise';
 
 type EnvRecord = Record<string, string | undefined>;
@@ -126,7 +126,7 @@ export const setupAgGridLicense = (): boolean => {
   const nextKey = resolveAgGridLicenseKey();
   if (typeof window !== 'undefined' && !(window as unknown as Record<string, unknown>).__agLicenseDebugDone) {
     (window as unknown as Record<string, unknown>).__agLicenseDebugDone = true;
-    // eslint-disable-next-line no-console
+     
     console.debug('[ag-grid-license] resolved key:', nextKey ? `found (${nextKey.length} chars)` : 'NOT FOUND',
       '| window.__env__:', typeof (window as unknown as Record<string, unknown>).__env__,
       '| process.env:', typeof process !== 'undefined' ? 'defined' : 'undefined');

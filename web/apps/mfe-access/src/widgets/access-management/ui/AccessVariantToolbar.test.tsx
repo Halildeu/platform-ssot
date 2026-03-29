@@ -1,14 +1,9 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
+import { test, expect } from 'vitest';
 import React from 'react';
 import TestRenderer, { act } from 'react-test-renderer';
+import AccessVariantToolbar from './AccessVariantToolbar.ui';
 
 test('AccessVariantToolbar variant secim ve aksiyon davranisini surdurur', async () => {
-  const require = createRequire(import.meta.url);
-  (require.extensions as Record<string, () => void>)['.css'] = () => {};
-  const { default: AccessVariantToolbar } = await import('./AccessVariantToolbar.ui');
-
   const selectedValues: Array<string | null> = [];
   let saveCount = 0;
   let saveAsCount = 0;
@@ -23,30 +18,24 @@ test('AccessVariantToolbar variant secim ve aksiyon davranisini surdurur', async
       ]}
       isDirty
       onSelectVariant={(value) => selectedValues.push(value)}
-      onSaveVariant={() => {
-        saveCount += 1;
-      }}
-      onSaveAsVariant={() => {
-        saveAsCount += 1;
-      }}
-      onDeleteVariant={() => {
-        deleteCount += 1;
-      }}
+      onSaveVariant={() => { saveCount += 1; }}
+      onSaveAsVariant={() => { saveAsCount += 1; }}
+      onDeleteVariant={() => { deleteCount += 1; }}
       t={(key) => key}
     />,
   );
 
   let root = renderer.root;
   const select = root.findByType('select');
-  assert.equal(select.props.value, 'variant-1');
-  assert.ok(root.findByProps({ children: 'access.variants.saveChanges' }));
-  assert.ok(root.findByProps({ children: 'access.variants.unsavedChanges' }));
+  expect(select.props.value).toBe('variant-1');
+  expect(root.findByProps({ children: 'access.variants.saveChanges' })).toBeTruthy();
+  expect(root.findByProps({ children: 'access.variants.unsavedChanges' })).toBeTruthy();
 
   await act(async () => {
     select.props.onChange({ target: { value: '' } });
   });
 
-  assert.deepEqual(selectedValues, [null]);
+  expect(selectedValues).toEqual([null]);
 
   const saveButton = root.findByProps({ children: 'access.variants.saveChanges' });
   const saveAsButton = root.findByProps({ children: 'access.variants.saveAs' });
@@ -58,9 +47,9 @@ test('AccessVariantToolbar variant secim ve aksiyon davranisini surdurur', async
     deleteButton.props.onClick();
   });
 
-  assert.equal(saveCount, 1);
-  assert.equal(saveAsCount, 1);
-  assert.equal(deleteCount, 1);
+  expect(saveCount).toBe(1);
+  expect(saveAsCount).toBe(1);
+  expect(deleteCount).toBe(1);
 
   renderer.update(
     <AccessVariantToolbar
@@ -71,21 +60,15 @@ test('AccessVariantToolbar variant secim ve aksiyon davranisini surdurur', async
       ]}
       isDirty={false}
       onSelectVariant={(value) => selectedValues.push(value)}
-      onSaveVariant={() => {
-        saveCount += 1;
-      }}
-      onSaveAsVariant={() => {
-        saveAsCount += 1;
-      }}
-      onDeleteVariant={() => {
-        deleteCount += 1;
-      }}
+      onSaveVariant={() => { saveCount += 1; }}
+      onSaveAsVariant={() => { saveAsCount += 1; }}
+      onDeleteVariant={() => { deleteCount += 1; }}
       t={(key) => key}
     />,
   );
 
   root = renderer.root;
   const disabledDeleteButton = root.findByProps({ children: 'access.variants.delete' });
-  assert.equal(disabledDeleteButton.props.disabled, true);
-  assert.ok(root.findByProps({ children: 'access.variants.save' }));
+  expect(disabledDeleteButton.props.disabled).toBe(true);
+  expect(root.findByProps({ children: 'access.variants.save' })).toBeTruthy();
 });
