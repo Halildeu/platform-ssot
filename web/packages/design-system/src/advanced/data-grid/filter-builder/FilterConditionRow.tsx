@@ -25,7 +25,7 @@ interface FilterConditionRowProps {
 }
 
 const SELECT_CLASS =
-  'h-8 rounded-md border border-border-subtle bg-surface-default px-2 text-xs text-text-primary focus:border-action-primary focus:outline-none focus:ring-1 focus:ring-action-primary disabled:cursor-not-allowed disabled:opacity-60';
+  'h-8 rounded-md border border-border-subtle bg-surface-default px-2 text-xs text-text-primary focus:border-action-primary focus:outline-hidden focus:ring-1 focus:ring-action-primary disabled:cursor-not-allowed disabled:opacity-60';
 
 function detectFilterType(colDef?: ColDef): FilterType {
   if (!colDef) return 'text';
@@ -237,3 +237,4 @@ export const FilterConditionRow: React.FC<FilterConditionRowProps> = ({
     </div>
   );
 };
+FilterConditionRow.displayName = 'FilterConditionRow';

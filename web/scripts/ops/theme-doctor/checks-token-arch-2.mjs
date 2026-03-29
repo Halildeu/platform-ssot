@@ -22,6 +22,8 @@ export function register(ctx) {
    *  - data-display: table, list, grid → needs border-border-* + hover row
    *  - feedback: alert, toast, banner → needs bg-state-* + border-state-* + text-state-*
    */
+// 39. Component Style Completeness — detect missing essential styles per component role
+check('component-style-completeness', 'Components have essential styles for their role (focus, hover, bg, border)', () => {
   const rolePatterns = [
     {
       role: 'interactive',

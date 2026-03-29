@@ -290,3 +290,4 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
     </div>
   );
 };
+FilterGroupNode.displayName = 'FilterGroupNode';

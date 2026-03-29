@@ -48,3 +48,4 @@ export const FilterCombinatorRow: React.FC<FilterCombinatorRowProps> = ({
     </div>
   );
 };
+FilterCombinatorRow.displayName = 'FilterCombinatorRow';

@@ -234,7 +234,7 @@ export default function ServiceControlPage() {
               onClick={() => setActiveTab(cat.key)}
               className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition ${
                 activeTab === cat.key
-                  ? 'bg-action-primary text-text-inverse shadow-sm'
+                  ? 'bg-action-primary text-text-inverse shadow-xs'
                   : 'text-text-secondary hover:bg-surface-muted'
               }`}
             >

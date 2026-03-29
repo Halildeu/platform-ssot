@@ -16,7 +16,7 @@ interface FilterValueEditorProps {
 }
 
 const INPUT_CLASS =
-  'h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2.5 text-xs text-text-primary placeholder:text-text-subtle focus:border-action-primary focus:outline-none focus:ring-1 focus:ring-action-primary disabled:cursor-not-allowed disabled:opacity-60';
+  'h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2.5 text-xs text-text-primary placeholder:text-text-subtle focus:border-action-primary focus:outline-hidden focus:ring-1 focus:ring-action-primary disabled:cursor-not-allowed disabled:opacity-60';
 
 export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
   filterType,
@@ -79,7 +79,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
         <div className="flex flex-col gap-1 rounded-lg border border-dashed border-state-info-text/30 bg-state-info-bg p-2">
           <span className="text-[10px] font-medium text-state-info-text">Toplu Yapıştır</span>
           <textarea
-            className="h-16 w-full resize-none rounded border border-border-subtle bg-surface-default px-2 py-1.5 text-xs text-text-primary placeholder:text-text-subtle focus:border-action-primary focus:outline-none"
+            className="h-16 w-full resize-none rounded border border-border-subtle bg-surface-default px-2 py-1.5 text-xs text-text-primary placeholder:text-text-subtle focus:border-action-primary focus:outline-hidden"
             placeholder={'Excel\'den kopyaladığınız değerleri yapıştırın...\nHer satır, virgül veya tab bir değer'}
             value={pasteText}
             onChange={(e) => setPasteText(e.target.value)}
@@ -347,3 +347,4 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
       );
   }
 };
+FilterValueEditor.displayName = 'FilterValueEditor';

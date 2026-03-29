@@ -188,7 +188,7 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
               type="button"
               onClick={handleApply}
               disabled={isEmpty}
-              className="flex items-center gap-1.5 rounded-lg bg-action-primary px-4 py-2 text-xs font-semibold text-text-inverse shadow-sm hover:bg-action-primary/90 disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-lg bg-action-primary px-4 py-2 text-xs font-semibold text-text-inverse shadow-xs hover:bg-action-primary/90 disabled:opacity-50"
             >
               <Check className="h-3.5 w-3.5" />
               Uygula
@@ -251,3 +251,4 @@ export const FilterBuilderButton: React.FC<{
     </>
   );
 };
+FilterBuilderPanel.displayName = 'FilterBuilderPanel';
