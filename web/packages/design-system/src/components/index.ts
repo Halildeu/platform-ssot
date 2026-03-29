@@ -27,6 +27,8 @@ export { Pagination } from "./pagination";
 export type { PaginationProps, PaginationSize } from "./pagination";
 export { Steps } from "./steps";
 export type { StepsProps, StepItem, StepsSize, StepsDirection } from "./steps";
+export { MobileStepper } from "./mobile-stepper";
+export type { MobileStepperProps, MobileStepperVariant, MobileStepperSize, MobileStepperPosition } from "./mobile-stepper";
 export { Timeline } from "./timeline";
 export type { TimelineProps, TimelineItemProps, TimelineColor, TimelineMode, TimelineSize } from "./timeline";
 
