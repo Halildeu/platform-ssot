@@ -59,12 +59,12 @@ export const Sidebar: React.FC = () => {
     const homePath = resolveDefaultShellPath({ permissions });
 
     return [
-      { key: 'home', label: 'Home', href: homePath, icon: <Home className="h-4 w-4" aria-hidden />, dataTestId: 'nav-home' },
-      { key: 'dashboard', label: 'Dashboard', href: canAudit ? '/audit/events' : undefined, icon: <LayoutDashboard className="h-4 w-4" aria-hidden />, dataTestId: 'nav-dashboard', disabled: !canAudit },
-      { key: 'projects', label: 'Projects', href: canAccess ? '/access/roles' : undefined, icon: <Folder className="h-4 w-4" aria-hidden />, dataTestId: 'nav-projects', disabled: !canAccess },
-      { key: 'reporting', label: 'Reporting', href: canReport ? defaultReportingRoute : undefined, icon: <BarChart3 className="h-4 w-4" aria-hidden />, dataTestId: 'nav-reporting', disabled: !canReport },
-      { key: 'services', label: 'Services', href: canThemeAdmin ? '/admin/services' : undefined, icon: <Server className="h-4 w-4" aria-hidden />, dataTestId: 'nav-services', disabled: !canThemeAdmin },
-      { key: 'schema-explorer', label: 'Schema Explorer', href: '/admin/schema-explorer', icon: <Database className="h-4 w-4" aria-hidden />, dataTestId: 'nav-schema-explorer' },
+      { key: 'home', label: 'Home', href: homePath, icon: <Home aria-hidden />, dataTestId: 'nav-home' },
+      { key: 'dashboard', label: 'Dashboard', href: canAudit ? '/audit/events' : undefined, icon: <LayoutDashboard aria-hidden />, dataTestId: 'nav-dashboard', disabled: !canAudit },
+      { key: 'projects', label: 'Projects', href: canAccess ? '/access/roles' : undefined, icon: <Folder aria-hidden />, dataTestId: 'nav-projects', disabled: !canAccess },
+      { key: 'reporting', label: 'Reporting', href: canReport ? defaultReportingRoute : undefined, icon: <BarChart3 aria-hidden />, dataTestId: 'nav-reporting', disabled: !canReport },
+      { key: 'services', label: 'Services', href: canThemeAdmin ? '/admin/services' : undefined, icon: <Server aria-hidden />, dataTestId: 'nav-services', disabled: !canThemeAdmin },
+      { key: 'schema-explorer', label: 'Schema Explorer', href: '/admin/schema-explorer', icon: <Database aria-hidden />, dataTestId: 'nav-schema-explorer' },
     ];
   }, [hasPermission]);
 
@@ -88,7 +88,7 @@ export const Sidebar: React.FC = () => {
       {
         key: 'settings',
         label: 'Settings',
-        icon: <Settings className="h-4 w-4" aria-hidden />,
+        icon: <Settings aria-hidden />,
         href: hasPermission(PERMISSIONS.THEME_ADMIN) ? '/admin/themes' : undefined,
         disabled: !hasPermission(PERMISSIONS.THEME_ADMIN),
         dataTestId: 'nav-settings',
@@ -96,7 +96,7 @@ export const Sidebar: React.FC = () => {
       {
         key: 'support',
         label: 'Support',
-        icon: <LifeBuoy className="h-4 w-4" aria-hidden />,
+        icon: <LifeBuoy aria-hidden />,
         onClick: () => {
           dispatch(
             pushNotification({

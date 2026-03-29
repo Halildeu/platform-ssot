@@ -89,7 +89,7 @@ export const AppSidebarFooterAction = React.forwardRef<
 
     const content = (
       <>
-        <span className="shrink-0">{icon}</span>
+        <span className="flex shrink-0 items-center justify-center [&>svg]:h-[18px] [&>svg]:w-[18px]">{icon}</span>
         {!isCollapsed && <span className="min-w-0 flex-1 truncate">{label}</span>}
         {!isCollapsed && badge && <span className="shrink-0">{badge}</span>}
         {isCollapsed && (
