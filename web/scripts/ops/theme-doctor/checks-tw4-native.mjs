@@ -128,12 +128,17 @@ check('tw4-directives', 'No deprecated TW3 CSS directives (@apply, @screen, @var
   };
 });
 
-// 13. PostCSS config
-check('postcss-tw4', 'PostCSS uses @tailwindcss/postcss (TW4 native)', () => {
+// 13. Tailwind CSS v4 integration (Vite plugin or PostCSS)
+check('postcss-tw4', 'Tailwind CSS v4 integration (@tailwindcss/vite or @tailwindcss/postcss)', () => {
+  // TW4 can be integrated via Vite plugin (preferred) or PostCSS plugin
+  const shellViteConfig = readSafe(join(ROOT, 'apps', 'mfe-shell', 'vite.config.ts'));
+  if (shellViteConfig.includes('@tailwindcss/vite')) {
+    return { status: 'pass', message: '@tailwindcss/vite plugin active in shell — PostCSS not needed' };
+  }
   const config = readSafe(join(ROOT, 'postcss.config.js')) + readSafe(join(ROOT, 'postcss.config.cjs')) + readSafe(join(ROOT, 'postcss.config.mjs'));
   if (config.includes('@tailwindcss/postcss')) return { status: 'pass', message: 'PostCSS uses @tailwindcss/postcss plugin' };
-  if (config.includes('tailwindcss')) return { status: 'warn', message: 'PostCSS uses legacy tailwindcss plugin — migrate to @tailwindcss/postcss' };
-  return { status: 'fail', message: 'No Tailwind plugin found in postcss config' };
+  if (config.includes('tailwindcss')) return { status: 'warn', message: 'PostCSS uses legacy tailwindcss plugin — migrate to @tailwindcss/postcss or @tailwindcss/vite' };
+  return { status: 'fail', message: 'No Tailwind integration found (need @tailwindcss/vite or @tailwindcss/postcss)' };
 });
 
 /* ================================================================== */

@@ -18,6 +18,7 @@ const sharedCore = {
   'react-router-dom': singleton('react-router-dom'),
   '@reduxjs/toolkit': singleton('@reduxjs/toolkit'),
   'react-redux': singleton('react-redux'),
+  '@tanstack/react-query': singleton('@tanstack/react-query'),
 };
 const sharedProdOnly = {
   '@mfe/design-system': singleton('@mfe/design-system', false),
