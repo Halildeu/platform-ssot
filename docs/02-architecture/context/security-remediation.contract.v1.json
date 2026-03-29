@@ -30,7 +30,7 @@
       "actions": [
         {
           "problem": "openfga-sdk 0.7.2: CVE-2023-35933 (7.5), CVE-2023-45810 (7.5) — OWASP CPE match; blocking CVSS >= 7.0 gate.",
-          "remediation": "Upgraded openfga-sdk from 0.7.2 to 0.8.1 in common-auth/pom.xml.",
+          "remediation": "Upgraded openfga-sdk from 0.7.2 to 0.9.7 in common-auth/pom.xml.",
           "evidence": ["backend/common-auth/pom.xml"]
         },
         {
