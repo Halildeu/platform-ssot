@@ -156,8 +156,6 @@ export const NON_COMPONENT_ENTRIES: Record<string, NonComponentType> = {
   resetTokenResolver: "theme-api",
   subscribeThemeAxes: "theme-api",
   updateThemeAxes: "theme-api",
-  // MobileStepper is exported — use registry resolution
-  MobileStepper: undefined,
   // X-Suite hooks & utilities
   useScheduler: "hook",
   useRecurrence: "hook",
@@ -212,7 +210,16 @@ export function resolveComponentKey(name: string): string {
 
 export const componentRegistry = new Proxy(_rawRegistry, {
   get(target, prop: string) {
-    return target[resolveComponentKey(prop)];
+    const key = resolveComponentKey(prop);
+    const entry = target[key];
+    // If registry entry is undefined, fallback to @mfe/design-system barrel export
+    if (entry === undefined && key in target) {
+      const kit = MfeUiKit as unknown as Record<string, unknown>;
+      if (typeof kit[key] === "function" || (kit[key] && typeof kit[key] === "object")) {
+        return kit[key];
+      }
+    }
+    return entry;
   },
 });
 
