@@ -39,7 +39,9 @@ export default tseslint.config(
     ignores: [
       'dist',
       'apps/**/dist/**',
+      'apps/**/dist-quality/**',
       'packages/**/dist/**',
+      'archive/**',
       'storybook-static',
       '.storybook/**',
       'reports',
