@@ -133,6 +133,11 @@ export function createTiptapEditorCore(
   const extensions = [
     StarterKit.configure({
       heading: { levels: [1, 2, 3, 4, 5, 6] },
+      // v3: StarterKit includes link and underline by default —
+      // disable them here to avoid duplicate extension errors,
+      // we configure them separately below with custom options.
+      link: false,
+      underline: false,
     }),
     Link.configure({ openOnClick: false }),
     Image,

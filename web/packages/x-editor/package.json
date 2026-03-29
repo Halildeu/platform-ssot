@@ -39,22 +39,24 @@
   },
   "peerDependencies": {
     "@mfe/design-system": "*",
-    "@tiptap/extension-code-block-lowlight": "^2.0.0",
-    "@tiptap/extension-highlight": "^2.0.0",
-    "@tiptap/extension-image": "^2.0.0",
-    "@tiptap/extension-link": "^2.0.0",
-    "@tiptap/extension-mention": "^2.0.0",
-    "@tiptap/extension-placeholder": "^2.0.0",
-    "@tiptap/extension-table": "^2.0.0",
-    "@tiptap/extension-table-cell": "^2.0.0",
-    "@tiptap/extension-table-header": "^2.0.0",
-    "@tiptap/extension-table-row": "^2.0.0",
-    "@tiptap/extension-task-item": "^2.0.0",
-    "@tiptap/extension-task-list": "^2.0.0",
-    "@tiptap/extension-text-align": "^2.0.0",
-    "@tiptap/extension-underline": "^2.0.0",
-    "@tiptap/react": "^2.0.0",
-    "@tiptap/starter-kit": "^2.0.0",
+    "@tiptap/extension-code-block-lowlight": "^3.21.0",
+    "@tiptap/extension-highlight": "^3.21.0",
+    "@tiptap/extension-image": "^3.21.0",
+    "@tiptap/extension-link": "^3.21.0",
+    "@tiptap/extension-mention": "^3.21.0",
+    "@tiptap/extension-placeholder": "^3.21.0",
+    "@tiptap/extension-table": "^3.21.0",
+    "@tiptap/extension-table-cell": "^3.21.0",
+    "@tiptap/extension-table-header": "^3.21.0",
+    "@tiptap/extension-table-row": "^3.21.0",
+    "@tiptap/extension-task-item": "^3.21.0",
+    "@tiptap/extension-task-list": "^3.21.0",
+    "@tiptap/extension-text-align": "^3.21.0",
+    "@tiptap/extension-underline": "^3.21.0",
+    "@tiptap/pm": "^3.21.0",
+    "@tiptap/react": "^3.21.0",
+    "@tiptap/suggestion": "^3.21.0",
+    "@tiptap/starter-kit": "^3.21.0",
     "react": "^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
@@ -105,15 +107,21 @@
     },
     "@tiptap/extension-text-align": {
       "optional": true
+    },
+    "@tiptap/pm": {
+      "optional": true
+    },
+    "@tiptap/suggestion": {
+      "optional": true
     }
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^16.3.0",
-    "@tiptap/extension-highlight": "^2.27.2",
-    "@tiptap/extension-task-item": "^2.27.2",
-    "@tiptap/extension-task-list": "^2.27.2",
-    "@tiptap/extension-text-align": "^2.27.2",
+    "@tiptap/extension-highlight": "^3.21.0",
+    "@tiptap/extension-task-item": "^3.21.0",
+    "@tiptap/extension-task-list": "^3.21.0",
+    "@tiptap/extension-text-align": "^3.21.0",
     "@vitejs/plugin-react": "^6.0.1",
     "typescript": "^5.0.0",
     "vitest": "^4.1.0"

@@ -44,3 +44,11 @@ declare module '@tiptap/extension-table-header' {
   const _default: any;
   export default _default;
 }
+declare module '@tiptap/pm' {
+  const _default: any;
+  export default _default;
+}
+declare module '@tiptap/suggestion' {
+  const _default: any;
+  export default _default;
+}

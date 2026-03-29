@@ -234,7 +234,13 @@ export const TiptapEditor = forwardRef<TiptapEditorHandle, TiptapEditorProps>(
 
     const extensions = useMemo(
       () => [
-        _StarterKit!.configure({ heading: { levels: [1, 2, 3, 4, 5, 6] } }),
+        _StarterKit!.configure({
+          heading: { levels: [1, 2, 3, 4, 5, 6] },
+          // v3: StarterKit includes link and underline by default —
+          // disable to avoid duplicate extension errors.
+          link: false,
+          underline: false,
+        }),
         _Link!.configure({ openOnClick: false }),
         _Image!,
         _Underline!,
@@ -251,6 +257,7 @@ export const TiptapEditor = forwardRef<TiptapEditorHandle, TiptapEditorProps>(
       extensions,
       content: value ?? '',
       editable: !readOnly,
+      immediatelyRender: false,
       autofocus: autoFocus ? 'end' : false,
       onUpdate: ({ editor: e }: { editor: any }) => {
         onChange?.(e.getHTML());
@@ -260,7 +267,7 @@ export const TiptapEditor = forwardRef<TiptapEditorHandle, TiptapEditorProps>(
     // Sync external value changes
     useEffect(() => {
       if (editor && value !== undefined && editor.getHTML() !== value) {
-        editor.commands.setContent(value, false);
+        editor.commands.setContent(value, { emitUpdate: false });
       }
     }, [editor, value]);
 
