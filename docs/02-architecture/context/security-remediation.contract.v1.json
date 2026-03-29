@@ -184,6 +184,50 @@
       ]
     },
     {
+      "id": "residual-commons-compress-cve-2024-25710",
+      "package": "pkg:maven/org.apache.commons/commons-compress@1.25.0",
+      "cve": "CVE-2024-25710",
+      "severity": "MEDIUM",
+      "status": "accepted-residual",
+      "justification": "Commons Compress 1.25.0 Spring Boot BOM uzerinden geliyor. CVE-2024-25710 crafted tar arsiviyle DoS riski olup repo'da harici/guvenilmeyen arsiv ingest akisi yok.",
+      "review_on_or_before": "2026-06-30",
+      "exit_criteria": ["Spring Boot BOM commons-compress >= 1.26.0 oldugunda kayit kaldirilir."],
+      "evidence": ["backend/test-results/security/dependency-check/dependency-check-report.json"]
+    },
+    {
+      "id": "residual-commons-compress-cve-2024-26308",
+      "package": "pkg:maven/org.apache.commons/commons-compress@1.25.0",
+      "cve": "CVE-2024-26308",
+      "severity": "MEDIUM",
+      "status": "accepted-residual",
+      "justification": "Commons Compress 1.25.0 Spring Boot BOM uzerinden geliyor. CVE-2024-26308 crafted tar arsiviyle DoS riski olup repo'da harici/guvenilmeyen arsiv ingest akisi yok.",
+      "review_on_or_before": "2026-06-30",
+      "exit_criteria": ["Spring Boot BOM commons-compress >= 1.26.0 oldugunda kayit kaldirilir."],
+      "evidence": ["backend/test-results/security/dependency-check/dependency-check-report.json"]
+    },
+    {
+      "id": "residual-netty-transport-cve-2025-67735",
+      "package": "pkg:maven/io.netty/netty-transport@4.1.127.Final",
+      "cve": "CVE-2025-67735",
+      "severity": "MEDIUM",
+      "status": "accepted-residual",
+      "justification": "Netty 4.1.127 Spring Boot BOM tarafindan yonetiliyor. Transitif bagimliliktir ve dogrudan kullanilmiyor.",
+      "review_on_or_before": "2026-06-30",
+      "exit_criteria": ["Spring Boot BOM netty-bom >= 4.1.128 oldugunda kayit kaldirilir."],
+      "evidence": ["backend/test-results/security/dependency-check/dependency-check-report.json"]
+    },
+    {
+      "id": "residual-poi-cve-2025-31672",
+      "package": "pkg:maven/org.apache.poi/poi@5.2.5",
+      "cve": "CVE-2025-31672",
+      "severity": "MEDIUM",
+      "status": "accepted-residual",
+      "justification": "Apache POI 5.2.5 report-service Excel export icin kullaniliyor. CVE-2025-31672 crafted OOXML icerigi riski tasir; repo'da yalniz sunucu tarafli trusted sablonlar kullaniliyor.",
+      "review_on_or_before": "2026-06-30",
+      "exit_criteria": ["poi >= 5.3.0 veya patch surumunde CVE duzeltildiginde upgrade uygulanir."],
+      "evidence": ["backend/test-results/security/dependency-check/dependency-check-report.json"]
+    },
+    {
       "id": "residual-jackson-databind-cve-2023-35116",
       "package": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.15.4",
       "cve": "CVE-2023-35116",
