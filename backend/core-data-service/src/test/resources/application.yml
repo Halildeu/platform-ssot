@@ -60,7 +60,7 @@ logging:
 server:
   port: 0
 
-# OpenFGA disabled in tests — ScopeContext uses dev fallback
+# OpenFGA disabled in tests — ScopeContext uses dev fallback (no super-admin)
 erp:
   openfga:
     enabled: false
@@ -68,4 +68,4 @@ erp:
       company-ids: 1
       project-ids: 1,2
       warehouse-ids: 1
-      super-admin: true
+      super-admin: false
