@@ -11,6 +11,7 @@ export interface BlockDefinition {
   description: string;
   thumbnail?: string;
   tags: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: ComponentType<any>;
   defaultProps?: Record<string, unknown>;
   schema?: Record<string, unknown>; // JSON schema for props

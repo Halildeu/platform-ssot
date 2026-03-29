@@ -7,7 +7,9 @@ import React from 'react';
 // design-system (separate chunk) can read them at runtime.
 // Vite's define config replaces process.env with a JSON object.
 if (typeof window !== 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (window as any).__env__ = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...(window as any).__env__,
     ...((typeof process !== 'undefined' && process.env) || {}),
   };

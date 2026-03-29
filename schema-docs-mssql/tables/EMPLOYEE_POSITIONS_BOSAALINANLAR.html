@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>EMPLOYEE_POSITIONS_BOSAALINANLAR</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;color:#333;padding:20px 30px}
+.back{color:#1a73e8;text-decoration:none;font-size:14px}
+h1{margin:15px 0;font-size:22px}
+.info{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.info .badge{padding:8px 16px;border-radius:6px;font-size:13px}
+.badge-blue{background:#e8f4fd;color:#1a73e8} .badge-orange{background:#fef3e2;color:#e67e22} .badge-green{background:#e8f8e8;color:#27ae60}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+th{background:#1a1a2e;color:#fff;text-align:left;padding:10px 15px;font-size:12px}
+td{padding:8px 15px;border-bottom:1px solid #eee;font-size:13px}
+tr:hover{background:#f5f9ff}
+.pk{color:#e67e22;font-weight:700} .fk{color:#1a73e8;text-decoration:none} .fk:hover{text-decoration:underline} .nullable{color:#aaa}
+.rels{margin-top:25px} .rels h2{margin-bottom:12px;font-size:18px;border-bottom:2px solid #1a73e8;padding-bottom:8px}
+.rel-card{background:#fff;padding:10px 18px;border-radius:6px;margin:6px 0;box-shadow:0 1px 3px rgba(0,0,0,.1);display:flex;align-items:center;gap:8px}
+.rel-card .arrow{color:#1a73e8;font-weight:700;font-size:16px}
+.rel-card a{color:#1a73e8;text-decoration:none;font-weight:600} .rel-card a:hover{text-decoration:underline}
+</style></head><body>
+<a class="back" href="../index.html">← Tum Tablolar</a>
+<h1>EMPLOYEE_POSITIONS_BOSAALINANLAR</h1>
+<div class="info">
+<div class="badge badge-blue">85 kolon</div>
+<div class="badge badge-orange">7 FK iliskisi</div>
+<div class="badge badge-green">0 referans alan tablo</div>
+</div>
+<table><tr><th>#</th><th>Kolon</th><th>Tip</th><th>Max Len</th><th>Nullable</th><th>PK</th><th>Iliski</th></tr>
+<tr><td>1</td><td>POSITION_ID</td><td>int</td><td>4</td><td>NOT NULL</td><td></td><td></td></tr>
+<tr><td>2</td><td>POSITION_CAT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>3</td><td>T_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>4</td><td>UPPER_POSITION_CODE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>5</td><td>UPPER_POSITION_CODE2</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>6</td><td>IS_MASTER</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>7</td><td>POSITION_CODE</td><td>int</td><td>4</td><td>NOT NULL</td><td></td><td></td></tr>
+<tr><td>8</td><td>EMPLOYEE_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="EMPLOYEES.html">→ EMPLOYEES</a></td></tr>
+<tr><td>9</td><td>EMPLOYEE_NAME</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>10</td><td>EMPLOYEE_SURNAME</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>11</td><td>EMPLOYEE_EMAIL</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>12</td><td>POSITION_NAME</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>13</td><td>POSITION_STATUS</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>14</td><td>DETAIL</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>15</td><td>DEPARTMENT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="DEPARTMENT.html">→ DEPARTMENT</a></td></tr>
+<tr><td>16</td><td>LEVEL_ID</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>17</td><td>LEVEL_EXTRA_ID</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>18</td><td>USER_GROUP_ID</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="USER_GROUP.html">→ USER_GROUP</a></td></tr>
+<tr><td>19</td><td>VALID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>20</td><td>VALID_MEMBER</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>21</td><td>VALIDATOR_MEMBER</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>22</td><td>VALID_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>23</td><td>ONGR_UCRET</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>24</td><td>MONEY_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>25</td><td>ACIKLAMA1</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>26</td><td>ACIKLAMA2</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>27</td><td>ACIKLAMA3</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>28</td><td>ACIKLAMA4</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>29</td><td>ACIKLAMA5</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>30</td><td>RAKAM1</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>31</td><td>RAKAM2</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>32</td><td>RAKAM3</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>33</td><td>RAKAM4</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>34</td><td>RAKAM5</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>35</td><td>ON_MALIYET</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>36</td><td>ON_HOUR</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>37</td><td>POS_ENT_DETAIL</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>38</td><td>ANNOUNCE_COM</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>39</td><td>ANNOUNCE_PUBLIC</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>40</td><td>EHESAP</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>41</td><td>IS_VEKALETEN</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>42</td><td>VEKALETEN_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>43</td><td>PERIOD_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="SETUP_DUTY_PERIOD.html">→ SETUP_DUTY_PERIOD</a></td></tr>
+<tr><td>44</td><td>TITLE_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>45</td><td>HIERARCHY</td><td>nvarchar</td><td>400</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>46</td><td>UPDATE_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>47</td><td>UPDATE_IP</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>48</td><td>UPDATE_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>49</td><td>ADMIN_STATUS</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>50</td><td>OZEL_KOD</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>51</td><td>IS_CRITICAL</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>52</td><td>ORGANIZATION_STEP_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="SETUP_ORGANIZATION_STEPS.html">→ SETUP_ORGANIZATION_STEPS</a></td></tr>
+<tr><td>53</td><td>ON_MALIYET_YIL</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>54</td><td>IS_ORG_VIEW</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>55</td><td>COLLAR_TYPE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>56</td><td>FUNC_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>57</td><td>BRANCH_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="BRANCH.html">→ BRANCH</a></td></tr>
+<tr><td>58</td><td>OUR_COMPANY_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="OUR_COMPANY.html">→ OUR_COMPANY</a></td></tr>
+<tr><td>59</td><td>IN_COMPANY_REASON_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>60</td><td>POWER_USER</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>61</td><td>POWER_USER_LEVEL_ID</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>62</td><td>DISCOUNT_VALID</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>63</td><td>PRICE_DISPLAY_VALID</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>64</td><td>COST_DISPLAY_VALID</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>65</td><td>DYNAMIC_HIERARCHY</td><td>nvarchar</td><td>400</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>66</td><td>DYNAMIC_HIERARCHY_ADD</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>67</td><td>CONSUMER_PRIORITY</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>68</td><td>PRICE_VALID</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>69</td><td>POSITION_STAGE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>70</td><td>MEMBER_VIEW_CONTROL</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>71</td><td>MEMBER_DIRECT_DENIED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>72</td><td>ON_HOUR_DAILY</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>73</td><td>DUEDATE_VALID</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>74</td><td>IS_OBSERVATION</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>75</td><td>OBSERVATION_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>76</td><td>IS_TRIAL</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>77</td><td>TRIAL_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>78</td><td>RATE_VALID</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>79</td><td>TIME_COST_CONTROL</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>80</td><td>WRK_MENU</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>81</td><td>THEIR_RECORDS_ONLY</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>82</td><td>REPORT_USER_LEVEL</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>83</td><td>SENSITIVE_USER_LEVEL</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>84</td><td>DATA_LEVEL</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>85</td><td>CITYS</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+</table><div class="rels"><h2>Bu tablonun FK iliskileri</h2><div class="rel-card">EMPLOYEE_POSITIONS_BOSAALINANLAR.BRANCH_ID <span class="arrow">→</span> <a href="BRANCH.html">BRANCH</a></div><div class="rel-card">EMPLOYEE_POSITIONS_BOSAALINANLAR.DEPARTMENT_ID <span class="arrow">→</span> <a href="DEPARTMENT.html">DEPARTMENT</a></div><div class="rel-card">EMPLOYEE_POSITIONS_BOSAALINANLAR.EMPLOYEE_ID <span class="arrow">→</span> <a href="EMPLOYEES.html">EMPLOYEES</a></div><div class="rel-card">EMPLOYEE_POSITIONS_BOSAALINANLAR.ORGANIZATION_STEP_ID <span class="arrow">→</span> <a href="SETUP_ORGANIZATION_STEPS.html">SETUP_ORGANIZATION_STEPS</a></div><div class="rel-card">EMPLOYEE_POSITIONS_BOSAALINANLAR.OUR_COMPANY_ID <span class="arrow">→</span> <a href="OUR_COMPANY.html">OUR_COMPANY</a></div><div class="rel-card">EMPLOYEE_POSITIONS_BOSAALINANLAR.PERIOD_ID <span class="arrow">→</span> <a href="SETUP_DUTY_PERIOD.html">SETUP_DUTY_PERIOD</a></div><div class="rel-card">EMPLOYEE_POSITIONS_BOSAALINANLAR.USER_GROUP_ID <span class="arrow">→</span> <a href="USER_GROUP.html">USER_GROUP</a></div></div></body></html>

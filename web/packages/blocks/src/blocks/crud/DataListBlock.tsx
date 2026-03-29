@@ -8,6 +8,7 @@ import type { ReactNode } from 'react';
 export interface DataListColumn<T> {
   key: keyof T;
   label: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   render?: (value: any, item: T) => ReactNode;
 }
 
@@ -24,6 +25,7 @@ export interface DataListBlockProps<T> {
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function DataListBlock<T extends Record<string, any>>({
   items,
   columns,

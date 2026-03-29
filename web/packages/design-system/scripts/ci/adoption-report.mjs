@@ -31,7 +31,7 @@ const appsDirIdx = args.indexOf("--apps-dir");
 const APPS_DIR = appsDirIdx >= 0 ? args[appsDirIdx + 1] : join(MONOREPO_ROOT, "apps");
 
 // Import patterns to detect
-const IMPORT_PATTERNS = [
+const _IMPORT_PATTERNS = [
   // import { Foo } from '@mfe/design-system'
   /from\s+['"]@mfe\/design-system['"]/,
   // import { Foo } from '@mfe/design-system/primitives/button'

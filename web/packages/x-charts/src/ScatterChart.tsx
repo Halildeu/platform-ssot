@@ -112,12 +112,14 @@ export const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
               stroke: palette[0],
             },
             tooltip: {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               renderer: (params: any) => ({
                 content: valueFormatter
                   ? `(${valueFormatter(params.datum.x)}, ${valueFormatter(params.datum.y)})`
                   : `(${params.datum.x}, ${params.datum.y})${params.datum.label ? ` — ${params.datum.label}` : ""}`,
               }),
             },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         ],
         axes: [
@@ -127,6 +129,7 @@ export const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
             title: xLabel ? { text: xLabel } : undefined,
             label: {
               ...themeOverrides.common?.axes?.number?.label,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               formatter: valueFormatter ? (p: any) => valueFormatter(p.value) : undefined,
             },
             gridLine: { enabled: showGrid },
@@ -137,6 +140,7 @@ export const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
             title: yLabel ? { text: yLabel } : undefined,
             label: {
               ...themeOverrides.common?.axes?.number?.label,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               formatter: valueFormatter ? (p: any) => valueFormatter(p.value) : undefined,
             },
             gridLine: { enabled: showGrid },

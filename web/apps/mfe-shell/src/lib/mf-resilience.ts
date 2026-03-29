@@ -31,6 +31,7 @@ interface MFResilienceConfig {
 }
 
 interface MFResilience {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   loadRemote: (name: string, module: string) => Promise<React.ComponentType<any>>;
   getRemoteHealth: () => RemoteHealth[];
   checkHealth: () => Promise<RemoteHealth[]>;
@@ -121,6 +122,7 @@ export function createMFResilience(config: MFResilienceConfig): MFResilience {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function loadRemote(name: string, module: string): Promise<React.ComponentType<any>> {
     const remoteUrl = remotes[name];
     if (!remoteUrl) {
@@ -148,10 +150,12 @@ export function createMFResilience(config: MFResilienceConfig): MFResilience {
         });
 
         // Module Federation container access
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const container = (window as any)[name];
         if (!container) {
           throw new Error(`Container '${name}' not found on window`);
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await container.init((window as any).__webpack_share_scopes__?.default ?? {});
         const factory = await container.get(module);
         const mod = factory();

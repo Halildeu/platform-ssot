@@ -450,6 +450,7 @@ export const PlaygroundPreview: React.FC<PlaygroundPreviewProps> = ({
             payload: args.map(safeSerializeArg),
             componentName,
           });
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
           return (value as Function)(...args);
         };
       } else {

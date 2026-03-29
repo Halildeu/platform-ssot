@@ -112,17 +112,20 @@ export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartPro
             },
             label: showValues
               ? {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   formatter: (p: any) =>
                     valueFormatter ? valueFormatter(p.value) : String(p.value),
                 }
               : undefined,
             tooltip: {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               renderer: (params: any) => ({
                 content: valueFormatter
                   ? `${params.datum.label}: ${valueFormatter(params.datum.value)}`
                   : `${params.datum.label}: ${params.datum.value}`,
               }),
             },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         ],
         axes: [
@@ -136,6 +139,7 @@ export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartPro
             position: "left",
             label: {
               ...themeOverrides.common?.axes?.number?.label,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               formatter: valueFormatter ? (p: any) => valueFormatter(p.value) : undefined,
             },
             gridLine: { enabled: showGrid },

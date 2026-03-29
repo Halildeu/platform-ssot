@@ -28,8 +28,10 @@ function getRating(name: string, value: number): WebVitalMetric['rating'] {
 
 function reportMetric(metric: WebVitalMetric): void {
   // Send to Sentry as custom measurement
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (typeof window !== 'undefined' && (window as any).__SENTRY__) {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const Sentry = (window as any).__SENTRY__;
       Sentry.setMeasurement?.(metric.name, metric.value, 'millisecond');
     } catch {
@@ -71,6 +73,7 @@ export function initRUM(): void {
   try {
     const fidObserver = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const fid = (entry as any).processingStart - entry.startTime;
         reportMetric({
           name: 'FID',
@@ -88,7 +91,9 @@ export function initRUM(): void {
     let clsValue = 0;
     const clsObserver = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (!(entry as any).hadRecentInput) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           clsValue += (entry as any).value;
         }
       }

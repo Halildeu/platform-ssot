@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "schemalens",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "--port", "4173"],
+      "port": 4173
+    }
+  ]
+}

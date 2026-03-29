@@ -129,7 +129,7 @@ if (orphaned.length > 0) {
 
 if (mismatched.length > 0) {
   console.log(`  VALUE MISMATCH: ${mismatched.length}`);
-  for (const { figmaKey, dtcgKey, figmaVal, dtcgVal } of mismatched.slice(0, 20)) {
+  for (const { figmaKey, dtcgKey: _dtcgKey, figmaVal, dtcgVal } of mismatched.slice(0, 20)) {
     console.log(`    ~ ${figmaKey}`);
     console.log(`      Figma: ${figmaVal}`);
     console.log(`      Code:  ${dtcgVal}`);

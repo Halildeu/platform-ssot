@@ -613,13 +613,19 @@ const buildQueryString = (params: UsersQueryParams) => {
   if (params.page) qs.set('page', params.page.toString());
   if (params.pageSize != null) qs.set('pageSize', params.pageSize.toString());
   // Server-side grouping params
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((params as any).rowGroupCols) qs.set('rowGroupCols', (params as any).rowGroupCols);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((params as any).groupKeys) qs.set('groupKeys', (params as any).groupKeys);
   // Server-side aggregation + pivot params
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((params as any).valueCols) qs.set('valueCols', (params as any).valueCols);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((params as any).pivotMode) qs.set('pivotMode', (params as any).pivotMode);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((params as any).pivotCols) qs.set('pivotCols', (params as any).pivotCols);
   // Multi-value search (from filter builder bulk paste)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((params as any).multiSearch) qs.set('multiSearch', (params as any).multiSearch);
   const queryString = qs.toString();
   return queryString ? `?${queryString}` : '';

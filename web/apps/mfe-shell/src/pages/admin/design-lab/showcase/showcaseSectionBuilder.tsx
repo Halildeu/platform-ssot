@@ -25,7 +25,7 @@ import { PreviewPanel } from './showcaseHelpers';
  * The `scope` parameter provides all state values, setters, locale text,
  * and helper functions from the parent component closure.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export function buildDemoShowcaseSections(item: DesignLabIndexItem, scope: Record<string, any>): ComponentShowcaseSection[] {
   const {
     PreviewPanel: _PreviewPanel,
@@ -242,7 +242,7 @@ export function buildDemoShowcaseSections(item: DesignLabIndexItem, scope: Recor
       setSelectedAuditId,
       setSelectedCitationId,
       themePresetGalleryItems,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- cross-package ReactNode compat (React 19 vs 18 types)
+       
       themePresetSummary: themePresetSummary as any,
     });
     if (themeRecipeSections) {
@@ -354,7 +354,7 @@ export function buildDemoShowcaseSections(item: DesignLabIndexItem, scope: Recor
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export function buildFamilyWorkspaceShowcaseSections(family: { recipeId: string; title?: string; clusterTitle?: string; clusterDescription?: string; intent: string; ownerBlocks: string[] }, scope: Record<string, any>): ComponentShowcaseSection[] {
   const { renderRecipeComponentPreview, t } = scope;
 

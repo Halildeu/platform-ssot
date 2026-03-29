@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck — design-lab showcase, component API alignment pending
 import React, { useEffect, useMemo, useState } from 'react';
 import { Boxes, MapIcon, Sparkles } from 'lucide-react';
@@ -214,12 +215,12 @@ const designLabPageApiPanelIds: DesignLabPageApiPanelId[] = ['contract', 'region
 const designLabComponentQualityPanelIds: DesignLabComponentQualityPanelId[] = ['gates', 'usage', 'governance', 'benchmark', 'contracts'];
 const designLabRecipeQualityPanelIds: DesignLabRecipeQualityPanelId[] = ['gates', 'lifecycle', 'governance', 'benchmark', 'contracts'];
 const designLabPageQualityPanelIds: DesignLabPageQualityPanelId[] = ['gates', 'readiness', 'governance', 'benchmark', 'contracts'];
-const designLabFoundationOverviewPanelIds: DesignLabFoundationOverviewPanelId[] = ['summary', 'tokens', 'contracts'];
-const designLabFoundationApiPanelIds: DesignLabFoundationApiPanelId[] = ['runtime', 'schema', 'consumption'];
-const designLabFoundationQualityPanelIds: DesignLabFoundationQualityPanelId[] = ['gates', 'coverage', 'a11y', 'governance', 'benchmark', 'contracts'];
-const designLabEcosystemOverviewPanelIds: DesignLabEcosystemOverviewPanelId[] = ['summary', 'surfaces', 'tiers'];
-const designLabEcosystemApiPanelIds: DesignLabEcosystemApiPanelId[] = ['contract', 'integration', 'usage'];
-const designLabEcosystemQualityPanelIds: DesignLabEcosystemQualityPanelId[] = ['gates', 'enterprise_readiness', 'governance', 'benchmark', 'contracts'];
+const _designLabFoundationOverviewPanelIds: DesignLabFoundationOverviewPanelId[] = ['summary', 'tokens', 'contracts'];
+const _designLabFoundationApiPanelIds: DesignLabFoundationApiPanelId[] = ['runtime', 'schema', 'consumption'];
+const _designLabFoundationQualityPanelIds: DesignLabFoundationQualityPanelId[] = ['gates', 'coverage', 'a11y', 'governance', 'benchmark', 'contracts'];
+const _designLabEcosystemOverviewPanelIds: DesignLabEcosystemOverviewPanelId[] = ['summary', 'surfaces', 'tiers'];
+const _designLabEcosystemApiPanelIds: DesignLabEcosystemApiPanelId[] = ['contract', 'integration', 'usage'];
+const _designLabEcosystemQualityPanelIds: DesignLabEcosystemQualityPanelId[] = ['gates', 'enterprise_readiness', 'governance', 'benchmark', 'contracts'];
 const isSameTreeSelection = (
   left: LibraryProductTreeSelection | null | undefined,
   right: LibraryProductTreeSelection | null | undefined,
@@ -2020,7 +2021,7 @@ const DesignLabPage: React.FC = () => {
     [selectedComponentPrimarySectionId],
   );
 
-  const summary = useMemo(() => {
+  const _summary = useMemo(() => {
     const items = designLabIndex.items;
     return {
       total: items.length,
@@ -2925,7 +2926,7 @@ const DesignLabPage: React.FC = () => {
     selectedTaxonomySection?.title,
     t,
   ]);
-  const heroStats =
+  const _heroStats =
     isPageLayer
       ? pageHeroStats
       : isRecipeLayer

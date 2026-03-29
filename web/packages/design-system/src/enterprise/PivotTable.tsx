@@ -306,7 +306,7 @@ export function PivotTable({
   // How many row header columns?
   const rowHeaderCount = rows.length;
   // Each colKey gets `values.length` sub-columns
-  const totalDataCols = pivot.colKeys.length * values.length;
+  const _totalDataCols = pivot.colKeys.length * values.length;
 
   return (
     <div

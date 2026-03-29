@@ -219,7 +219,7 @@ export function useEventDrag(options: UseEventDragOptions): UseEventDragReturn {
             document.removeEventListener('mouseup', handleMouseUp);
 
             if (resizeOrigin.current && onEventResize) {
-              const origin = resizeOrigin.current;
+              const _origin = resizeOrigin.current;
               // Use latest dragPreview from state — but since state is async, re-compute
               const el = document.elementFromPoint(0, 0); // dummy — we use the stored ref
               void el; // unused

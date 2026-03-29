@@ -224,6 +224,7 @@ export interface EntityGridTemplateProps<RowData extends Record<string, unknown>
  */
 export declare function EntityGridTemplate<RowData extends Record<string, unknown> = Record<string, unknown>>(props: EntityGridTemplateProps<RowData>): React.ReactElement;
 export declare namespace EntityGridTemplate {
+    // eslint-disable-next-line no-var
     var displayName: string;
 }
 export default EntityGridTemplate;

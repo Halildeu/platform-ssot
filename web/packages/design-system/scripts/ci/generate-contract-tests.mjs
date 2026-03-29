@@ -118,7 +118,7 @@ function generateRequiredPropsObj(requiredProps) {
 }
 
 function generateTestFile(component, parsed) {
-  const { name, dir, subdir } = component;
+  const { name, dir: _dir, subdir } = component;
   const importPath = subdir ? `../${subdir}/${name}` : `../${name}`;
 
   const imports = [`import { ${name} } from '${importPath}';`];

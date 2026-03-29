@@ -39,7 +39,7 @@ import { PreviewPanel } from './showcaseHelpers';
  * The `ctx` parameter is a Record containing all the state values,
  * setters, and locale text objects from the parent component scope.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export const renderLivePreview = (item: DesignLabIndexItem, ctx: Record<string, any>): React.ReactNode => {
   const {
     t, anchorTocLocaleText, anchorValue, emptyMessages, setAnchorValue,

@@ -88,6 +88,7 @@ export const HeatmapChart = React.forwardRef<HTMLDivElement, HeatmapChartProps>(
             colorKey: "value",
             colorName: "Value",
             tooltip: {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               renderer: (params: any) => ({
                 content: valueFormatter
                   ? `${params.datum.x} / ${params.datum.y}: ${valueFormatter(params.datum.value)}`
@@ -102,6 +103,7 @@ export const HeatmapChart = React.forwardRef<HTMLDivElement, HeatmapChartProps>(
                     "var(--action-primary))",
                   ],
                 }),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         ],
         axes: [

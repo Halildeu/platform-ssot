@@ -309,7 +309,7 @@ export const PreviewWorkspace: React.FC<{
                     ))),
                   ]}
                 >
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- cross-package ReactNode compat */}
+                  { }
                   {section.content as any}
                 </LibraryShowcaseCard>
               </div>

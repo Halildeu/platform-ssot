@@ -21,7 +21,7 @@ export function Example() {
           children: [
             { key: 'components', label: 'components', description: 'UI bileseleri', badges: ['14 dosya'] },
             { key: 'utils', label: 'utils', description: 'Yardimci fonksiyonlar' },
-            { key: 'hooks', label: 'hooks', description: 'React hook\'lari', badges: ['Yeni'] },
+            { key: 'hooks', label: 'hooks', description: "React hook'lari", badges: ['Yeni'] },
           ],
         },
         { key: 'package', label: 'package.json', meta: '2.1 KB' },

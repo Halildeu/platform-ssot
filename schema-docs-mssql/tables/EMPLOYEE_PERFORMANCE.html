@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>EMPLOYEE_PERFORMANCE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;color:#333;padding:20px 30px}
+.back{color:#1a73e8;text-decoration:none;font-size:14px}
+h1{margin:15px 0;font-size:22px}
+.info{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.info .badge{padding:8px 16px;border-radius:6px;font-size:13px}
+.badge-blue{background:#e8f4fd;color:#1a73e8} .badge-orange{background:#fef3e2;color:#e67e22} .badge-green{background:#e8f8e8;color:#27ae60}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+th{background:#1a1a2e;color:#fff;text-align:left;padding:10px 15px;font-size:12px}
+td{padding:8px 15px;border-bottom:1px solid #eee;font-size:13px}
+tr:hover{background:#f5f9ff}
+.pk{color:#e67e22;font-weight:700} .fk{color:#1a73e8;text-decoration:none} .fk:hover{text-decoration:underline} .nullable{color:#aaa}
+.rels{margin-top:25px} .rels h2{margin-bottom:12px;font-size:18px;border-bottom:2px solid #1a73e8;padding-bottom:8px}
+.rel-card{background:#fff;padding:10px 18px;border-radius:6px;margin:6px 0;box-shadow:0 1px 3px rgba(0,0,0,.1);display:flex;align-items:center;gap:8px}
+.rel-card .arrow{color:#1a73e8;font-weight:700;font-size:16px}
+.rel-card a{color:#1a73e8;text-decoration:none;font-weight:600} .rel-card a:hover{text-decoration:underline}
+</style></head><body>
+<a class="back" href="../index.html">← Tum Tablolar</a>
+<h1>EMPLOYEE_PERFORMANCE</h1>
+<div class="info">
+<div class="badge badge-blue">130 kolon</div>
+<div class="badge badge-orange">4 FK iliskisi</div>
+<div class="badge badge-green">0 referans alan tablo</div>
+</div>
+<table><tr><th>#</th><th>Kolon</th><th>Tip</th><th>Max Len</th><th>Nullable</th><th>PK</th><th>Iliski</th></tr>
+<tr><td>1</td><td class="pk">PER_ID</td><td>int</td><td>4</td><td>NOT NULL</td><td><span class="pk">PK</span></td><td></td></tr>
+<tr><td>2</td><td>PER_TYPE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>3</td><td>EMP_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="EMPLOYEES.html">→ EMPLOYEES</a></td></tr>
+<tr><td>4</td><td>POSITION_CODE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>5</td><td>TARGET_PLAN_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>6</td><td>EMP_POSITION_NAME</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>7</td><td>APP_EMP_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>8</td><td>START_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>9</td><td>FINISH_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>10</td><td>MANAGER_1_POS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>11</td><td>MANAGER_2_POS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>12</td><td>MANAGER_3_POS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>13</td><td>MANAGER_1_EMP_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>14</td><td>MANAGER_2_EMP_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>15</td><td>MANAGER_3_EMP_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>16</td><td>VALID_1</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>17</td><td>VALID_2</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>18</td><td>VALID_3</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>19</td><td>VALID_1_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>20</td><td>VALID_2_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>21</td><td>VALID_3_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>22</td><td>VALID_1_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>23</td><td>VALID_2_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>24</td><td>VALID_3_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>25</td><td>POWERFUL_ASPECTS</td><td>nvarchar</td><td>2000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>26</td><td>TRAIN_NEED_ASPECTS</td><td>nvarchar</td><td>2000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>27</td><td>MANAGER_2_EVALUATION</td><td>nvarchar</td><td>2000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>28</td><td>DEVELOPMENT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>29</td><td>POSSIBLE_PROMOTE_POS</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>30</td><td>POSSIBLE_PROMOTE_TIME</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>31</td><td>MAX_POSSIBLE_PROMOTE_POS</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>32</td><td>MAX_POSSIBLE_PROMOTE_TIME</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>33</td><td>ROTATION_POS</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>34</td><td>LUCK_TRAIN_SUBJECT_1</td><td>nvarchar</td><td>250</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>35</td><td>LUCK_TRAIN_SUBJECT_2</td><td>nvarchar</td><td>250</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>36</td><td>LUCK_TRAIN_SUBJECT_3</td><td>nvarchar</td><td>250</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>37</td><td>LUCK_TRAIN_SUBJECT_4</td><td>nvarchar</td><td>250</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>38</td><td>LUCK_TRAIN_SUBJECT_5</td><td>nvarchar</td><td>250</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>39</td><td>LUCK_TRAIN_SUBJECT_6</td><td>nvarchar</td><td>250</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>40</td><td>LUCK_TRAIN_SUBJECT_7</td><td>nvarchar</td><td>250</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>41</td><td>LUCK_TRAIN_SUBJECT_8</td><td>nvarchar</td><td>250</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>42</td><td>EMPLOYEE_OPINION</td><td>nvarchar</td><td>2000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>43</td><td>EMPLOYEE_OPINION_ID</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>44</td><td>PERFORM_POINT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>45</td><td>PERFORM_POINT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>46</td><td>EMP_PERFORM_POINT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>47</td><td>MANAGER_PERFORM_POINT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>48</td><td>USER_POINT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>49</td><td>USER_POINT_OVER_5</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>50</td><td>EMP_POINT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>51</td><td>EMP_POINT_OVER_5</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>52</td><td>MANAGER_POINT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>53</td><td>MANAGER_POINT_OVER_5</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>54</td><td>IS_PERF_SALARY</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>55</td><td>IS_PERF_SALARY_RESULTING</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>56</td><td>EMPLOYEE_OPINION_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>57</td><td>EMPLOYEE_OPINION_EMP_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>58</td><td>RESULT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>59</td><td>EVAL_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>60</td><td>EMP_CAREER_STATUS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>61</td><td>EMP_CAREER_EXP</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>62</td><td>OTHER_CAREER_EXP</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>63</td><td>MANAGER_CAREER_STATUS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>64</td><td>MANAGER_CAREER_EXP</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>65</td><td>EMP_TRAINING_CAT</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>66</td><td>EMP_TRAINING_EXP</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>67</td><td>OTHER_TRAINING_EXP</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>68</td><td>MANAGER_TRAINING_CAT</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>69</td><td>MANAGER_TRAINING_EXP</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>70</td><td>RECORD_TYPE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>71</td><td>RECORD_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>72</td><td>RECORD_KEY</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>73</td><td>RECORD_IP</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>74</td><td>UPDATE_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>75</td><td>UPDATE_KEY</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>76</td><td>UPDATE_IP</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>77</td><td>MANAGER3_PERFORM_POINT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>78</td><td>MANAGER3_POINT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>79</td><td>MANAGER3_POINT_OVER_5</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>80</td><td>MAN_EMP_PERFORM_POINT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>81</td><td>MAN_EMP_POINT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>82</td><td>MAN_EMP_POINT_OVER_5</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>83</td><td>PER_STAGE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>84</td><td>VALID</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>85</td><td>VALID_4</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>86</td><td>MANAGER_3_EVALUATION</td><td>nvarchar</td><td>2000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>87</td><td>MANAGER_3_CAREER_STATUS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>88</td><td>MANAGER_3_CAREER_EXP</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>89</td><td>MANAGER_3_TRAINING_CAT</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>90</td><td>MANAGER_3_TRAINING_EXP</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>91</td><td>IS_CLOSED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>92</td><td>IS_SHOW</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>93</td><td>HR_INFO</td><td>nvarchar</td><td>2000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>94</td><td>HR_CAREER_INFO</td><td>nvarchar</td><td>2000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>95</td><td>POSITION_CAT_ID_1</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>96</td><td>POSITION_CAT_ID_2</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>97</td><td>POSITION_CAT_ID_3</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>98</td><td>MANAGER_2_CAREER_STATUS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>99</td><td>MANAGER_2_CAREER_EXP</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>100</td><td>MANAGER_2_TRAINING_CAT</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>101</td><td>MANAGER_2_TRAINING_EXP</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>102</td><td>POSITION_CAT_ID_2_1</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>103</td><td>POSITION_CAT_ID_2_2</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>104</td><td>POSITION_CAT_ID_2_3</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>105</td><td>MANAGER2_POINT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>106</td><td>MANAGER2_POINT_OVER_5</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>107</td><td>MANAGER_1_COMMENT</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>108</td><td>MANAGER_2_COMMENT</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>109</td><td>EMPLOYEE_COMMENT</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>110</td><td>TARGET_SCORE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>111</td><td>EMP_TARGET_RESULT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>112</td><td>REQ_TYPE_SCORE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>113</td><td>EMP_REQ_TYPE_RESULT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>114</td><td>EMP_PERF_RESULT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>115</td><td>EMP_PERF_RESULT2</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>116</td><td>COMP_PERF_RESULT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>117</td><td>PERF_RESULT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>118</td><td>COMP_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="COMPANY.html">→ COMPANY</a></td></tr>
+<tr><td>119</td><td>BRANCH_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="BRANCH.html">→ BRANCH</a></td></tr>
+<tr><td>120</td><td>DEPARTMENT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="DEPARTMENT.html">→ DEPARTMENT</a></td></tr>
+<tr><td>121</td><td>POSITION_CAT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>122</td><td>TITLE_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>123</td><td>FUNC_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>124</td><td>STAGE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>125</td><td>VALID_4_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>126</td><td>VALID_4_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>127</td><td>VALID_5</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>128</td><td>VALID_5_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>129</td><td>VALID_5_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>130</td><td>CONSULTANT_COMMENT</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+</table><div class="rels"><h2>Bu tablonun FK iliskileri</h2><div class="rel-card">EMPLOYEE_PERFORMANCE.BRANCH_ID <span class="arrow">→</span> <a href="BRANCH.html">BRANCH</a></div><div class="rel-card">EMPLOYEE_PERFORMANCE.COMP_ID <span class="arrow">→</span> <a href="COMPANY.html">COMPANY</a></div><div class="rel-card">EMPLOYEE_PERFORMANCE.DEPARTMENT_ID <span class="arrow">→</span> <a href="DEPARTMENT.html">DEPARTMENT</a></div><div class="rel-card">EMPLOYEE_PERFORMANCE.EMP_ID <span class="arrow">→</span> <a href="EMPLOYEES.html">EMPLOYEES</a></div></div></body></html>

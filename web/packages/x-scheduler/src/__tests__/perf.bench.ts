@@ -10,6 +10,7 @@ describe('useRecurrence perf', () => {
       events.push({ id: `e_${events.length}`, start: new Date(current), end: new Date(current.getTime() + 3600000) });
       current = new Date(current.getTime() + 86400000);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     events.length; // 365 events
   });
 

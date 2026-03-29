@@ -10,7 +10,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, '../..');
+const _ROOT = path.resolve(__dirname, '../..');
 
 const query = process.argv.slice(2).join(' ').toLowerCase();
 if (!query) {

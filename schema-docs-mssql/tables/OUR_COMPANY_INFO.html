@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>OUR_COMPANY_INFO</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;color:#333;padding:20px 30px}
+.back{color:#1a73e8;text-decoration:none;font-size:14px}
+h1{margin:15px 0;font-size:22px}
+.info{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.info .badge{padding:8px 16px;border-radius:6px;font-size:13px}
+.badge-blue{background:#e8f4fd;color:#1a73e8} .badge-orange{background:#fef3e2;color:#e67e22} .badge-green{background:#e8f8e8;color:#27ae60}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+th{background:#1a1a2e;color:#fff;text-align:left;padding:10px 15px;font-size:12px}
+td{padding:8px 15px;border-bottom:1px solid #eee;font-size:13px}
+tr:hover{background:#f5f9ff}
+.pk{color:#e67e22;font-weight:700} .fk{color:#1a73e8;text-decoration:none} .fk:hover{text-decoration:underline} .nullable{color:#aaa}
+.rels{margin-top:25px} .rels h2{margin-bottom:12px;font-size:18px;border-bottom:2px solid #1a73e8;padding-bottom:8px}
+.rel-card{background:#fff;padding:10px 18px;border-radius:6px;margin:6px 0;box-shadow:0 1px 3px rgba(0,0,0,.1);display:flex;align-items:center;gap:8px}
+.rel-card .arrow{color:#1a73e8;font-weight:700;font-size:16px}
+.rel-card a{color:#1a73e8;text-decoration:none;font-weight:600} .rel-card a:hover{text-decoration:underline}
+</style></head><body>
+<a class="back" href="../index.html">← Tum Tablolar</a>
+<h1>OUR_COMPANY_INFO</h1>
+<div class="info">
+<div class="badge badge-blue">136 kolon</div>
+<div class="badge badge-orange">1 FK iliskisi</div>
+<div class="badge badge-green">0 referans alan tablo</div>
+</div>
+<table><tr><th>#</th><th>Kolon</th><th>Tip</th><th>Max Len</th><th>Nullable</th><th>PK</th><th>Iliski</th></tr>
+<tr><td>1</td><td>COMP_ID</td><td>int</td><td>4</td><td>NOT NULL</td><td></td><td><a class="fk" href="COMPANY.html">→ COMPANY</a></td></tr>
+<tr><td>2</td><td>IS_BARCOD_REQUIRED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>3</td><td>WORKCUBE_SECTOR</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>4</td><td>LOGO_TYPE</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>5</td><td>IS_ED_PUBLISHED_ON_PP_WW</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>6</td><td>IS_PRODUCT_CONFIGURATOR</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>7</td><td>IS_GUARANTY_FOLLOWUP</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>8</td><td>IS_PROJECT_FOLLOWUP</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>9</td><td>IS_ASSET_FOLLOWUP</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>10</td><td>IS_SALES_ZONE_FOLLOWUP</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>11</td><td>IS_SMS</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>12</td><td>IS_UNCONDITIONAL_LIST</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>13</td><td>IS_DETAIL_FILTER_OPEN</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>14</td><td>IS_SUBSCRIPTION_CONTRACT</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>15</td><td>IS_ACCOUNT_CARD_UPDATE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>16</td><td>IS_BRAND_TO_CODE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>17</td><td>COMP_VIZYON</td><td>nvarchar</td><td>4000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>18</td><td>EMAIL</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>19</td><td>SPECT_TYPE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>20</td><td>IS_COST</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>21</td><td>COST_CALC_TYPE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>22</td><td>IS_TIME</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>23</td><td>IS_RATE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>24</td><td>IS_RATE_FROM_PRE_PAPER</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>25</td><td>WORK_STOCK_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>26</td><td>IS_SERIAL_CONTROL</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>27</td><td>IS_SHIP_CONTROL</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>28</td><td>IS_PAPER_CLOSER</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>29</td><td>CARGO_CUSTOMER_CODE</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>30</td><td>CARGO_CUSTOMER_PASSWORD</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>31</td><td>IS_CONTENT_FOLLOW</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>32</td><td>IS_ORDER_UPDATE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>33</td><td>IS_SHIP_UPDATE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>34</td><td>IS_USE_IFRS</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>35</td><td>PUBLIC_ACCOUNT_CODE</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>36</td><td>RATE_ROUND_NUM</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>37</td><td>PURCHASE_PRICE_ROUND_NUM</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>38</td><td>SALES_PRICE_ROUND_NUM</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>39</td><td>IS_MULTI_ANALYSIS_RESULT</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>40</td><td>IS_MAXROWS_CONTROL_OFF</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>41</td><td>IS_STORE_FOLLOWUP</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>42</td><td>IS_DELETE_BASKET</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>43</td><td>IS_USE_SMS_WEBSERVICE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>44</td><td>SMS_CUSTOMERNO</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>45</td><td>SMS_USERNAME</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>46</td><td>SMS_PASSWORD</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>47</td><td>SMS_SERVICECODE</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>48</td><td>SMS_ALPHANUMERIC</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>49</td><td>RECORD_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>50</td><td>RECORD_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>51</td><td>RECORD_IP</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>52</td><td>UPDATE_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>53</td><td>UPDATE_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>54</td><td>UPDATE_IP</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>55</td><td>IS_TIME_STYLE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>56</td><td>IS_DETAILED_RISK_INFO</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>57</td><td>IS_SELECT_RISK_MONEY</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>58</td><td>IS_LOCATION_FOLLOW</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>59</td><td>IS_PROD_COST_TYPE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>60</td><td>IS_REMAINING_AMOUNT</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>61</td><td>IS_STOCK_BASED_COST</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>62</td><td>IS_FILE_SIZE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>63</td><td>FILE_SIZE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>64</td><td>SMS_COMPANY</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>65</td><td>IS_PROJECT_GROUP</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>66</td><td>SPECIAL_MENU_FILE</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>67</td><td>TIME_CONTROL_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>68</td><td>IS_ADD_INFORMATIONS</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>69</td><td>IS_EFATURA</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>70</td><td class="pk">OUR_COMPANY_INFO_ID</td><td>int</td><td>4</td><td>NOT NULL</td><td><span class="pk">PK</span></td><td></td></tr>
+<tr><td>71</td><td>EINVOICE_TYPE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>72</td><td>EINVOICE_TEST_SYSTEM</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>73</td><td>EINVOICE_COMPANY_CODE</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>74</td><td>EINVOICE_USER_NAME</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>75</td><td>EINVOICE_PASSWORD</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>76</td><td>EINVOICE_SIGNATURE_URL</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>77</td><td>EINVOICE_SENDER_ALIAS</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>78</td><td>EINVOICE_RECEIVER_ALIAS</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>79</td><td>IS_EDEFTER</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>80</td><td>EFATURA_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>81</td><td>IS_PRODUCT_COMPANY</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>82</td><td>IS_LOT_NO</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>83</td><td>IS_OTHER_MONEY</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>84</td><td>IS_SERIAL_CONTROL_LOCATION</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>85</td><td>IS_EARCHIVE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>86</td><td>EARCHIVE_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>87</td><td>IS_CONTROL_BRANCH_PROJECT</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>88</td><td>IS_COST_LOCATION</td><td>smallint</td><td>2</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>89</td><td>IS_ENCRYPTED_SALARY</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>90</td><td>IS_SUBSCRIPTION_AUTHORITY</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>91</td><td>IS_PURCHASE_ORDER_UPDATE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>92</td><td>IS_ESHIPMENT</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>93</td><td>ESHIPMENT_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>94</td><td>STOCK_RESERVE_CLEAN_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>95</td><td>IS_WATALOGY_INTEGRATED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>96</td><td>IS_CTI_INTEGRATED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>97</td><td>OPERATOR</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>98</td><td>EXTENSION_LIMIT</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>99</td><td>LINE_LIMIT</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>100</td><td>TEL_NUMBERS</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>101</td><td>API_KEY</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>102</td><td>PROD</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>103</td><td>GOOGLE_CLIENT_SECRET</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>104</td><td>ACCOUNTER_DOMAIN</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>105</td><td>GOOGLE_CLIENT_ID</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>106</td><td>EINVOICE_TYPE_ALIAS</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>107</td><td>IS_ACCOUNTER_INTEGRATED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>108</td><td>ACCOUNTER_KEY</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>109</td><td>GOOGLE_API_KEY</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>110</td><td>GOOGLE_LANGUAGE</td><td>varchar</td><td>150</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>111</td><td>IS_EPRODUCER_RECEIPT</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>112</td><td>EPRODUCER_RECEIPT_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>113</td><td>IS_EVOUCHER</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>114</td><td>EVOUCHER_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>115</td><td>WATALOGY_MEMBER_CODE</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>116</td><td>IS_SENDGRID_INTEGRATED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>117</td><td>MAIL_API_KEY</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>118</td><td>SENDER_MAIL</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>119</td><td>IS_KEP_INTEGRATED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>120</td><td>KEP_API_KEY</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>121</td><td>COMPANY_KEP_ADRESS</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>122</td><td>CLIENT_SECRET</td><td>bigint</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>123</td><td>KEP_CLIENT_ID</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>124</td><td>KEP_CLIENT_SECRET</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>125</td><td>SERVER_URL</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>126</td><td>SENDGRID_GROUP_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>127</td><td>COMMON_SUBSCRIPTION_USAGE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>128</td><td>WORKPAY_TOKEN_URL</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>129</td><td>WORKPAY_TOKEN_POS_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>130</td><td>WORKPAY_TOKEN_RSP_URL</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>131</td><td>COMPANY_SECRET_KEY</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>132</td><td>GOOGLE_PROJECT_ID</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>133</td><td>ADOBE_CLIENT_ID</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>134</td><td>RECAPTCHA_SITE_KEY</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>135</td><td>COMPANY_WEB3_ADDRESS</td><td>nvarchar</td><td>400</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>136</td><td>COIN_MARKET_CAP_ID</td><td>nvarchar</td><td>400</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+</table><div class="rels"><h2>Bu tablonun FK iliskileri</h2><div class="rel-card">OUR_COMPANY_INFO.COMP_ID <span class="arrow">→</span> <a href="COMPANY.html">COMPANY</a></div></div></body></html>

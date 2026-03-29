@@ -4,8 +4,8 @@
  * Backend API (port 8795) olmadan çalışır.
  */
 import type { Plugin, ViteDevServer } from 'vite';
-import { execSync } from 'child_process';
-import { existsSync } from 'fs';
+import { execSync, spawn, ChildProcess } from 'child_process';
+import { existsSync, mkdirSync, createWriteStream } from 'fs';
 import { join } from 'path';
 import * as net from 'net';
 
@@ -47,7 +47,108 @@ const SERVICES: ServiceDef[] = [
 ];
 
 const BACKEND_DIR = join(process.env.HOME || '', 'Documents/dev/backend');
-const WEB_LOG_DIR = join(process.env.HOME || '', 'Documents/dev/web/logs');
+const WEB_DIR = join(process.env.HOME || '', 'Documents/dev/web');
+const WEB_LOG_DIR = join(WEB_DIR, 'logs');
+
+// ── Process management for frontend MFEs ──
+const managedProcesses = new Map<string, ChildProcess>();
+
+function getMfeDir(serviceName: string): string | null {
+  const def = SERVICES.find(s => s.name === serviceName && s.type === 'process');
+  if (!def) return null;
+  const dir = join(WEB_DIR, 'apps', serviceName);
+  return existsSync(dir) ? dir : null;
+}
+
+function killProcessOnPort(port: number, signal: NodeJS.Signals = 'SIGTERM'): boolean {
+  const pid = getPidForPort(port);
+  if (!pid) return false;
+  try {
+    process.kill(parseInt(pid, 10), signal);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function waitForPortClose(port: number, timeoutMs = 4000): Promise<boolean> {
+  const start = Date.now();
+  return new Promise((resolve) => {
+    const check = async () => {
+      const { open } = await checkPort(port, 300);
+      if (!open) return resolve(true);
+      if (Date.now() - start > timeoutMs) return resolve(false);
+      setTimeout(check, 300);
+    };
+    check();
+  });
+}
+
+async function processStart(serviceName: string): Promise<{ ok: boolean; error?: string }> {
+  const def = SERVICES.find(s => s.name === serviceName);
+  if (!def) return { ok: false, error: `Service ${serviceName} not found` };
+
+  const mfeDir = getMfeDir(serviceName);
+  if (!mfeDir) return { ok: false, error: `Directory for ${serviceName} not found` };
+
+  // Already running?
+  const { open } = await checkPort(def.port, 500);
+  if (open) return { ok: true };
+
+  // Ensure log directory exists
+  mkdirSync(WEB_LOG_DIR, { recursive: true });
+  const logFile = join(WEB_LOG_DIR, `${serviceName.replace('mfe-', '')}.log`);
+  const logStream = createWriteStream(logFile, { flags: 'a' });
+  logStream.write(`\n--- ${serviceName} started at ${new Date().toISOString()} ---\n`);
+
+  const child = spawn('npx', ['vite'], {
+    cwd: mfeDir,
+    detached: true,
+    stdio: ['ignore', 'pipe', 'pipe'],
+    env: { ...process.env, FORCE_COLOR: '0' },
+  });
+
+  child.stdout?.pipe(logStream);
+  child.stderr?.pipe(logStream);
+  child.unref();
+
+  managedProcesses.set(serviceName, child);
+
+  child.on('exit', () => {
+    managedProcesses.delete(serviceName);
+  });
+
+  return { ok: true };
+}
+
+async function processStop(serviceName: string): Promise<{ ok: boolean; error?: string }> {
+  const def = SERVICES.find(s => s.name === serviceName);
+  if (!def) return { ok: false, error: `Service ${serviceName} not found` };
+
+  // Kill managed child first
+  const managed = managedProcesses.get(serviceName);
+  if (managed && !managed.killed) {
+    try { process.kill(-managed.pid!, 'SIGTERM'); } catch { /* */ }
+    managedProcesses.delete(serviceName);
+  }
+
+  // Also kill by port (handles externally started processes)
+  killProcessOnPort(def.port);
+
+  const closed = await waitForPortClose(def.port);
+  if (!closed) {
+    // Force kill
+    killProcessOnPort(def.port, 'SIGKILL');
+    await waitForPortClose(def.port, 2000);
+  }
+
+  return { ok: true };
+}
+
+async function processRestart(serviceName: string): Promise<{ ok: boolean; error?: string }> {
+  await processStop(serviceName);
+  return processStart(serviceName);
+}
 
 // ── Port check ──
 function checkPort(port: number, timeout = 500): Promise<{ open: boolean; responseTime: number }> {
@@ -209,6 +310,7 @@ function getLogTail(serviceName: string, tail: number): string {
           cwd: BACKEND_DIR,
           timeout: 5000,
         });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         return e.message || 'Log alinamadi';
       }
@@ -270,6 +372,7 @@ function dockerAction(containerName: string, action: 'start' | 'stop' | 'restart
     });
     dockerCacheTime = 0; // invalidate cache
     return { ok: true };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     return { ok: false, error: e.message };
   }
@@ -325,20 +428,31 @@ export function serviceHealthApi(): Plugin {
         if (req.method === 'POST' && actionMatch) {
           refreshDockerCache();
           const [, name, action] = actionMatch;
-          const dockerSvcName = findDockerServiceName(name);
-
-          if (!dockerSvcName) {
-            res.writeHead(400, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({
-              ok: false,
-              action,
-              name,
-              error: 'Process tipi servisler icin npm scripts kullanin',
-            }));
+          const def = SERVICES.find(s => s.name === name);
+          if (!def) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ok: false, action, name, error: 'Unknown service' }));
             return;
           }
 
-          const result = dockerAction(dockerSvcName, action as 'start' | 'stop' | 'restart');
+          let result: { ok: boolean; error?: string };
+
+          if (def.type === 'process') {
+            // Frontend MFE — manage via spawn/kill
+            if (action === 'start') result = await processStart(name);
+            else if (action === 'stop') result = await processStop(name);
+            else result = await processRestart(name);
+          } else {
+            // Docker service
+            const dockerSvcName = findDockerServiceName(name);
+            if (!dockerSvcName) {
+              res.writeHead(400, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ ok: false, action, name, error: 'Docker service not found' }));
+              return;
+            }
+            result = dockerAction(dockerSvcName, action as 'start' | 'stop' | 'restart');
+          }
+
           res.writeHead(result.ok ? 200 : 500, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ ...result, action, name }));
           return;
@@ -364,6 +478,7 @@ export function serviceHealthApi(): Plugin {
 
               res.writeHead(200, { 'Content-Type': 'application/json' });
               res.end(JSON.stringify({ action, results }));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (e: any) {
               res.writeHead(400, { 'Content-Type': 'application/json' });
               res.end(JSON.stringify({ error: e.message }));

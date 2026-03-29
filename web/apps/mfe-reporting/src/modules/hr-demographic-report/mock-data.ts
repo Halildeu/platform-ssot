@@ -243,7 +243,7 @@ export function computeSummary(rows: HrDemographicRow[]): DemographicSummary {
   const total = rows.length;
   const males = rows.filter((r) => r.gender === 'Erkek').length;
   const females = rows.filter((r) => r.gender === 'Kadın').length;
-  const others = total - males - females;
+  const _others = total - males - females;
 
   const malePercent = Math.round((males / total) * 100);
   const femalePercent = Math.round((females / total) * 100);

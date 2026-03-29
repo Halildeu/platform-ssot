@@ -22,6 +22,7 @@ export interface DesignSystemProviderProps {
 /** Root provider composing theme, locale, and direction for the entire design system. */
 export declare function DesignSystemProvider({ defaultTheme, locale, direction, children, }: DesignSystemProviderProps): import("react/jsx-runtime").JSX.Element;
 export declare namespace DesignSystemProvider {
+    // eslint-disable-next-line no-var
     var displayName: string;
 }
 /** Type alias for DesignSystemProvider ref. */

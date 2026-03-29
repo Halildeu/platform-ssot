@@ -49,13 +49,13 @@ const TEST_FILE_PATTERNS = [
  *
  * We use a negative lookahead to reject matches that have a comma (indicating a fallback).
  */
-const CSS_VAR_WITHOUT_FALLBACK = /var\(\s*(--[\w-]+)\s*\)/g;
+const _CSS_VAR_WITHOUT_FALLBACK = /var\(\s*(--[\w-]+)\s*\)/g;
 
 /**
  * Regex to find ALL var(--...) patterns (with or without fallback).
  * Used to determine which matches actually have fallbacks.
  */
-const CSS_VAR_ALL = /var\(\s*--[\w-]+[\s,)]/g;
+const _CSS_VAR_ALL = /var\(\s*--[\w-]+[\s,)]/g;
 
 /**
  * More precise check: find var(--prop) calls without a comma before the closing paren.

@@ -12,8 +12,6 @@ describe('AIGuidedAuthoring — contract', () => {
   const defaultProps = {
     id: undefined as any,
     item: undefined as any,
-    id: undefined as any,
-    item: undefined as any,
   };
 
   it('renders without crash', () => {

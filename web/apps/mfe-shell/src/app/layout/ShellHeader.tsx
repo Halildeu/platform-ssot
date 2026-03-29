@@ -200,7 +200,7 @@ export const ShellHeader: React.FC = () => {
                         detail: { locale: nextLocale },
                       }),
                     );
-                  } catch {}
+                  } catch { /* intentionally empty */ }
                 }
               }}
             >

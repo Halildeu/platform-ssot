@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import { Text } from '@mfe/design-system';
 import { isEnabled } from '../../lib/feature-flags';

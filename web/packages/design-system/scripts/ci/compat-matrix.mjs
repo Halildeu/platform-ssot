@@ -271,7 +271,7 @@ const _checkInput: InputType extends FC<any> ? true : never = true;
     record("TypeScript types (tsc --noEmit)", ok, ok ? "" : output.substring(0, 200));
     return ok;
   } finally {
-    try { rmSync(testFile, { force: true }); } catch {}
+    try { rmSync(testFile, { force: true }); } catch { /* intentionally empty */ }
   }
 }
 

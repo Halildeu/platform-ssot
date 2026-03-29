@@ -6,6 +6,13 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["start", "--prefix", "web/apps/mfe-shell"],
       "port": 3000
+    },
+    {
+      "name": "schemalens",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "--port", "4173"],
+      "port": 4173,
+      "cwd": "tools/schema-explorer/frontend"
     }
   ]
 }

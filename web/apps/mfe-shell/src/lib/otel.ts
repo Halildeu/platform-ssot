@@ -136,8 +136,10 @@ export function createSpan(name: string): { end: () => void } {
       }
 
       // Report to Sentry as custom measurement if available
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (typeof window !== 'undefined' && (window as any).__SENTRY__) {
         try {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (window as any).__SENTRY__.setMeasurement?.(
             `otel.${name}`,
             duration,

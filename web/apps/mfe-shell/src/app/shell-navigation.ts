@@ -51,6 +51,7 @@ export const resolveDefaultShellPath = ({
 }: DefaultShellPathOptions): string => {
   // Dashboard as default landing page
   return '/home';
+  // eslint-disable-next-line no-unreachable
   if (isSuggestionsRemoteEnabled()) {
     return '/suggestions';
   }

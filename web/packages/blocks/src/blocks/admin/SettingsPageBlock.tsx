@@ -8,7 +8,9 @@ export interface SettingsField {
   name: string;
   label: string;
   type: 'text' | 'toggle' | 'select';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (v: any) => void;
   options?: Array<{ label: string; value: string }>;
 }

@@ -32,6 +32,7 @@ const PermissionContext = createContext<PermissionContextValue>({
 interface PermissionProviderProps {
   children: React.ReactNode;
   /** HTTP GET function (from shared-http or axios) */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   httpGet: (url: string) => Promise<{ data: any }>;
   /** If true, all permissions are granted (dev/permitAll mode) */
   permitAll?: boolean;

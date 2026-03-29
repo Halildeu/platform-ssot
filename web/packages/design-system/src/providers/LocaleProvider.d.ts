@@ -30,5 +30,6 @@ export interface LocaleProviderProps {
 /** Provides locale and text-direction context to the component subtree, auto-detecting RTL for Arabic, Hebrew, Farsi, and Urdu locales. */
 export declare function LocaleProvider({ locale, direction, children, }: LocaleProviderProps): import("react/jsx-runtime").JSX.Element;
 export declare namespace LocaleProvider {
+    // eslint-disable-next-line no-var
     var displayName: string;
 }

@@ -87,13 +87,16 @@ export const buildEntityGridQueryParams = (
   const valueCols = (request as { valueCols?: ColumnVO[] }).valueCols;
   if (Array.isArray(valueCols) && valueCols.length > 0) {
     params.valueCols = valueCols
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .filter((c) => c.id && (c as any).aggFunc)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((c) => `${c.id}:${(c as any).aggFunc}`)
       .join(',');
   }
 
   // Server-side pivot
   const pivotCols = (request as { pivotCols?: ColumnVO[] }).pivotCols;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((request as any).pivotMode && Array.isArray(pivotCols) && pivotCols.length > 0) {
     params.pivotMode = 'true';
     params.pivotCols = pivotCols.map((c) => c.id).join(',');

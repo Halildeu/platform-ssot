@@ -501,7 +501,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
           console.warn('[UsersGrid] SSRM success handler not found');
         }
       };
-      const ssrmFailFor = (p: IServerSideGetRowsParams<UserSummary>) => {
+      const _ssrmFailFor = (p: IServerSideGetRowsParams<UserSummary>) => {
         const paramsWithCallbacks = p as ServerSideParamsWithCallbacks;
         if (typeof paramsWithCallbacks.fail === 'function') {
           paramsWithCallbacks.fail();

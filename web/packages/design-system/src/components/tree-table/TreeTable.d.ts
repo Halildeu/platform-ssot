@@ -73,6 +73,7 @@ export interface TreeTableProps<RowData extends Record<string, unknown> = Record
 /** Hierarchical tree with tabular data columns, expand/collapse, sorting, and row selection. */
 export declare function TreeTable<RowData extends Record<string, unknown> = Record<string, unknown>>({ nodes, columns, treeColumnLabel, title, description, density, emptyStateLabel, loading, selectedKey, onNodeSelect, defaultExpandedKeys, expandedKeys, onExpandedKeysChange, fullWidth, localeText, access, accessReason, }: TreeTableProps<RowData>): import("react/jsx-runtime").JSX.Element | null;
 export declare namespace TreeTable {
+    // eslint-disable-next-line no-var
     var displayName: string;
 }
 /**

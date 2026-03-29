@@ -73,6 +73,7 @@ export default function ServiceControlPage() {
     const byCategory: Record<string, { ram: number; count: number }> = {};
     let totalRam = 0;
     for (const s of services) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const ram = (s as any).rssMb ?? 0;
       totalRam += ram;
       if (!byCategory[s.category]) byCategory[s.category] = { ram: 0, count: 0 };

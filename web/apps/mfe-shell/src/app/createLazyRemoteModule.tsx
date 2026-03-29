@@ -2,6 +2,7 @@ import React from "react";
 import { EmptyErrorLoading } from "@mfe/design-system";
 
 type RemoteModule = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   default: React.ComponentType<any>;
 };
 

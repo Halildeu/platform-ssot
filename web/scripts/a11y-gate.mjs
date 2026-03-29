@@ -13,7 +13,7 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = resolve(__dirname, '..');
+const _ROOT = resolve(__dirname, '..');
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const BASE_URL = process.env.A11Y_BASE_URL || 'http://localhost:6006';

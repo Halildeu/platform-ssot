@@ -102,7 +102,7 @@ function extractPropsFromFile(filePath) {
   }
 
   // Check for Omit<..., "size"> which means size is removed from HTML attrs
-  const omitMatch = extendsClause.match(/Omit<[^>]+,\s*["']([^"']+)["']/);
+  const _omitMatch = extendsClause.match(/Omit<[^>]+,\s*["']([^"']+)["']/);
 
   // Check for size-related props with non-standard names
   const sizeAliases = {};

@@ -1384,7 +1384,6 @@ describe("${pascal} -- accessibility", () => {
 });
 `;
 
-    case "interactive-access":
     default:
       return `${commonImports}
 // ── Temel render ──

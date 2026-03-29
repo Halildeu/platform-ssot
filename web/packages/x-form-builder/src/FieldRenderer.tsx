@@ -116,7 +116,7 @@ export const TextFieldRenderer: React.FC<FieldRendererProps & Record<string, unk
 /* ---- Number ---- */
 
 export const NumberFieldRenderer: React.FC<FieldRendererProps & Record<string, unknown>> = (props) => {
-  const { field, value, readOnly, onChange, onBlur } = props;
+  const { field, value, readOnly: _readOnly, onChange, onBlur: _onBlur } = props;
   const ip = inputProps(props);
   return (
     <input
@@ -136,7 +136,7 @@ export const NumberFieldRenderer: React.FC<FieldRendererProps & Record<string, u
 /* ---- Select ---- */
 
 export const SelectFieldRenderer: React.FC<FieldRendererProps & Record<string, unknown>> = (props) => {
-  const { field, value, readOnly, onChange, onBlur } = props;
+  const { field, value, readOnly: _readOnly, onChange: _onChange, onBlur: _onBlur } = props;
   const ip = inputProps(props);
   return (
     <select {...ip} value={(value as string) ?? ''}>
@@ -157,7 +157,7 @@ export const SelectFieldRenderer: React.FC<FieldRendererProps & Record<string, u
 /* ---- Multiselect ---- */
 
 export const MultiselectFieldRenderer: React.FC<FieldRendererProps & Record<string, unknown>> = (props) => {
-  const { field, value, readOnly, onChange, onBlur } = props;
+  const { field, value, readOnly: _readOnly, onChange, onBlur: _onBlur } = props;
   const ip = inputProps(props);
   const selected = Array.isArray(value) ? value : [];
   return (

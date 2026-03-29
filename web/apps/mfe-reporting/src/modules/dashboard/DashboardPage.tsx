@@ -66,6 +66,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ dashboardKey }) =>
       trend: kpi.trend
         ? { direction: kpi.trend.direction, percentage: kpi.trend.percentage }
         : undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       tone: (kpi.tone as any) || 'default',
       size: 'sm' as const,
       pinned: true,

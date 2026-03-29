@@ -29,5 +29,6 @@ export interface ThemeProviderProps {
 /** Theme context provider with persistent axis storage and CSS variable injection. */
 export declare function ThemeProvider({ defaultAxes, children }: ThemeProviderProps): import("react/jsx-runtime").JSX.Element;
 export declare namespace ThemeProvider {
+    // eslint-disable-next-line no-var
     var displayName: string;
 }

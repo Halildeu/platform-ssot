@@ -36,9 +36,10 @@ metricKeys.forEach(k => {
 });
 
 // 3. Count test files and tests
-let testFiles = 0, testCount = 0;
+let testFiles = 0;
+const _testCount = 0;
 try {
-  const testOutput = execSync('npx vitest run --reporter=json 2>/dev/null || true', { cwd: ROOT, encoding: 'utf-8', timeout: 120000 });
+  const _testOutput = execSync('npx vitest run --reporter=json 2>/dev/null || true', { cwd: ROOT, encoding: 'utf-8', timeout: 120000 });
   // Fallback: count test files
   const testFileList = execSync('find src -name "*.test.tsx" -o -name "*.test.ts" | wc -l', { cwd: ROOT, encoding: 'utf-8' }).trim();
   testFiles = parseInt(testFileList) || 0;

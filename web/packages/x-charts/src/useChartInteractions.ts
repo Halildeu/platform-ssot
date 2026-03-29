@@ -152,7 +152,7 @@ export function useChartInteractions(
     (e: React.MouseEvent) => {
       const rect = e.currentTarget.getBoundingClientRect();
       const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const _y = e.clientY - rect.top;
 
       // Brush takes priority when zoom is at 1 or brush is explicitly enabled and pan is not
       if (enableBrush && (!enablePan || zoomLevel <= 1)) {

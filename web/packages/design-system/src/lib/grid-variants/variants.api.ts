@@ -579,7 +579,7 @@ export const fetchGridVariants = async (gridId: string): Promise<GridVariant[]> 
   // Kişisel variant'lar her zaman local'dan okunabilir (hızlı)
   // Global variant'lar cache süresi dolmuşsa server'dan yenilenir
   const localVariants = readLocalVariants(gridId);
-  const personalLocal = localVariants.filter((v) => !v.isGlobal);
+  const _personalLocal = localVariants.filter((v) => !v.isGlobal);
   const globalCacheOk = !isGlobalCacheExpired(gridId);
 
   // Global cache hâlâ taze ve local'da veri var → hızlı dönüş

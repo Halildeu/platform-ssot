@@ -74,7 +74,7 @@ function generatePropsTable(props) {
 }
 
 function generateMdx(component) {
-  const { name, description, props, category } = component;
+  const { name, description, props, category: _category } = component;
 
   const sections = [
     '---',

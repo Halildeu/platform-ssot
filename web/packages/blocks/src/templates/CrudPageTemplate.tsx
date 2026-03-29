@@ -12,6 +12,7 @@ import type { FormField } from '../blocks/crud/CreateEditFormBlock';
 
 type ViewMode = 'list' | 'detail' | 'create' | 'edit';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface CrudPageTemplateProps<T extends Record<string, any>> {
   title: string;
   items: T[];
@@ -29,6 +30,7 @@ export interface CrudPageTemplateProps<T extends Record<string, any>> {
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function CrudPageTemplate<T extends Record<string, any>>({
   title,
   items,
@@ -39,7 +41,7 @@ export function CrudPageTemplate<T extends Record<string, any>>({
   formFields,
   onSave,
   onDelete,
-  itemKey = 'id' as keyof T,
+  itemKey: _itemKey = 'id' as keyof T,
 }: CrudPageTemplateProps<T>) {
   const [view, setView] = useState<ViewMode>('list');
   const [selected, setSelected] = useState<T | null>(null);

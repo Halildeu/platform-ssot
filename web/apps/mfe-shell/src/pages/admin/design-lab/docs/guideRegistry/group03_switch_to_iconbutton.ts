@@ -533,7 +533,7 @@ Tehlikeli aksiyonlar menunun sonunda olmalidir; kazara tiklama riskini azaltir.`
 
   IconButton: {
     componentName: "IconButton",
-    summary: "IconButton, yalnizca ikon iceren kare seklinde bir buton bilesenidir; erisim icin zorunlu \`label\` prop'u gerektirir.",
+    summary: "IconButton, yalnizca ikon iceren kare seklinde bir buton bilesenidir; erisim icin zorunlu `label` prop'u gerektirir.",
     sections: [
       {
         id: "overview",

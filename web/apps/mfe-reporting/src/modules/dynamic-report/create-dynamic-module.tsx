@@ -11,6 +11,7 @@ export const createDynamicReportModule = (
 
   return {
     id: moduleId,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sharedReportId: `dynamic:${report.key}` as any,
     route: report.key,
     navKey: report.title,

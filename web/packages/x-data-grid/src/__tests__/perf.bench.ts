@@ -22,6 +22,7 @@ describe('useColumnBuilder perf', () => {
       filter: true,
       flex: 1,
     }));
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     columns.length; // force materialisation
   });
 
@@ -35,6 +36,7 @@ describe('useColumnBuilder perf', () => {
       flex: 1,
       cellRenderer: i % 5 === 0 ? 'customRenderer' : undefined,
     }));
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     columns.length;
   });
 });

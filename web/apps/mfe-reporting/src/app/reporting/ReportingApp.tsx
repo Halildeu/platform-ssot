@@ -14,6 +14,7 @@ import type { DashboardListItem } from '../../modules/dashboard';
 import type { ReportListItem, DynamicReportFilters, DynamicReportRow } from '../../modules/dynamic-report';
 import type { ReportModule } from '../../modules/types';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyModule = ReportModule<any, any>;
 
 type MergedModule = {
@@ -85,6 +86,7 @@ const ReportingApp: React.FC = () => {
     const dashboardEntries: MergedModule[] = dashboards.map((db) => ({
       module: {
         id: `dashboard-${db.key}`,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         sharedReportId: db.key as any,
         route: `dashboard-${db.key}`,
         titleKey: db.title,

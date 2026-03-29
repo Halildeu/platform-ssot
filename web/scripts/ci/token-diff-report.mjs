@@ -285,7 +285,7 @@ async function main() {
   console.log(`[token-diff]   ${Object.keys(codeTokens).length} code tokens`);
 
   console.log('[token-diff] Loading sync state...');
-  const syncState = loadSyncState();
+  const _syncState = loadSyncState();
 
   // Build last-sync token map from hashes (we only have hashes, not values,
   // so we use an empty map — the diff will treat unknown sync state as "assume figma was source")

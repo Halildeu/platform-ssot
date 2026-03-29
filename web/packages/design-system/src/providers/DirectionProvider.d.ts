@@ -25,6 +25,7 @@ export interface DirectionProviderProps {
 /** Provides an explicit LTR/RTL direction override for a subtree, wrapping children in a directional container. */
 export declare function DirectionProvider({ direction, children, className, id, style, ...rest }: DirectionProviderProps): import("react/jsx-runtime").JSX.Element;
 export declare namespace DirectionProvider {
+    // eslint-disable-next-line no-var
     var displayName: string;
 }
 /** Type alias for DirectionProvider ref. */

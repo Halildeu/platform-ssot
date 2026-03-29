@@ -275,10 +275,10 @@ for (const dep of warnDeprecations) {
 }
 
 // Read baseline for export surface info
-let baseline = { values: [], types: [] };
+let _baseline = { values: [], types: [] };
 if (existsSync(BASELINE_PATH)) {
   try {
-    baseline = JSON.parse(readFileSync(BASELINE_PATH, "utf-8"));
+    _baseline = JSON.parse(readFileSync(BASELINE_PATH, "utf-8"));
   } catch {
     console.warn("Warning: Could not read export baseline.");
   }
@@ -360,7 +360,7 @@ lines.push("");
 
 for (const comp of sortedComponents) {
   const data = componentMap.get(comp);
-  const hasActionable = data.jsdoc.some(
+  const _hasActionable = data.jsdoc.some(
     (d) => classifyDeprecation(d.message) !== "ignored-compat"
   );
   const hasCompat = data.jsdoc.some(

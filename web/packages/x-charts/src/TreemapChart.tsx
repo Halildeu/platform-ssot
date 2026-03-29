@@ -87,12 +87,14 @@ export const TreemapChart = React.forwardRef<HTMLDivElement, TreemapChartProps>(
             childrenKey: "children",
             fills: palette,
             tooltip: {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               renderer: (params: any) => ({
                 content: valueFormatter
                   ? `${params.datum.label}: ${valueFormatter(params.datum.value)}`
                   : `${params.datum.label}: ${params.datum.value ?? ""}`,
               }),
             },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         ],
       } as AgChartOptions;

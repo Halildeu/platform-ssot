@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>EMPLOYEES_IN_OUT</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;color:#333;padding:20px 30px}
+.back{color:#1a73e8;text-decoration:none;font-size:14px}
+h1{margin:15px 0;font-size:22px}
+.info{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.info .badge{padding:8px 16px;border-radius:6px;font-size:13px}
+.badge-blue{background:#e8f4fd;color:#1a73e8} .badge-orange{background:#fef3e2;color:#e67e22} .badge-green{background:#e8f8e8;color:#27ae60}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+th{background:#1a1a2e;color:#fff;text-align:left;padding:10px 15px;font-size:12px}
+td{padding:8px 15px;border-bottom:1px solid #eee;font-size:13px}
+tr:hover{background:#f5f9ff}
+.pk{color:#e67e22;font-weight:700} .fk{color:#1a73e8;text-decoration:none} .fk:hover{text-decoration:underline} .nullable{color:#aaa}
+.rels{margin-top:25px} .rels h2{margin-bottom:12px;font-size:18px;border-bottom:2px solid #1a73e8;padding-bottom:8px}
+.rel-card{background:#fff;padding:10px 18px;border-radius:6px;margin:6px 0;box-shadow:0 1px 3px rgba(0,0,0,.1);display:flex;align-items:center;gap:8px}
+.rel-card .arrow{color:#1a73e8;font-weight:700;font-size:16px}
+.rel-card a{color:#1a73e8;text-decoration:none;font-weight:600} .rel-card a:hover{text-decoration:underline}
+</style></head><body>
+<a class="back" href="../index.html">← Tum Tablolar</a>
+<h1>EMPLOYEES_IN_OUT</h1>
+<div class="info">
+<div class="badge badge-blue">199 kolon</div>
+<div class="badge badge-orange">4 FK iliskisi</div>
+<div class="badge badge-green">0 referans alan tablo</div>
+</div>
+<table><tr><th>#</th><th>Kolon</th><th>Tip</th><th>Max Len</th><th>Nullable</th><th>PK</th><th>Iliski</th></tr>
+<tr><td>1</td><td class="pk">IN_OUT_ID</td><td>int</td><td>4</td><td>NOT NULL</td><td><span class="pk">PK</span></td><td></td></tr>
+<tr><td>2</td><td>BRANCH_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="BRANCH.html">→ BRANCH</a></td></tr>
+<tr><td>3</td><td>DEPARTMENT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="DEPARTMENT.html">→ DEPARTMENT</a></td></tr>
+<tr><td>4</td><td>BUSINESS_CODE_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>5</td><td>EMPLOYEE_ID</td><td>int</td><td>4</td><td>NOT NULL</td><td></td><td><a class="fk" href="EMPLOYEES.html">→ EMPLOYEES</a></td></tr>
+<tr><td>6</td><td>START_DATE</td><td>datetime</td><td>8</td><td>NOT NULL</td><td></td><td></td></tr>
+<tr><td>7</td><td>FINISH_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>8</td><td>IHBAR_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>9</td><td>VALIDATOR_POSITION_CODE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>10</td><td>VALID_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>11</td><td>VALID_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>12</td><td>VALID</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>13</td><td>DETAIL</td><td>nvarchar</td><td>600</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>14</td><td>SALARY</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>15</td><td>IHBAR_DAYS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>16</td><td>IHBAR_AMOUNT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>17</td><td>KIDEM_YEARS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>18</td><td>KIDEM_AMOUNT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>19</td><td>TOTAL_DENEME_DAYS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>20</td><td>TOTAL_SSK_DAYS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>21</td><td>TOTAL_SSK_MONTHS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>22</td><td>HAKEDILEN_YILLIK_IZIN</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>23</td><td>KULLANILMAYAN_IZIN_COUNT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>24</td><td>KULLANILMAYAN_IZIN_AMOUNT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>25</td><td>EXPLANATION_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>26</td><td>IS_5084</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>27</td><td>RECORD_DATE</td><td>datetime</td><td>8</td><td>NOT NULL</td><td></td><td></td></tr>
+<tr><td>28</td><td>RECORD_IP</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>29</td><td>RECORD_EMP</td><td>int</td><td>4</td><td>NOT NULL</td><td></td><td></td></tr>
+<tr><td>30</td><td>UPDATE_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>31</td><td>UPDATE_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>32</td><td>UPDATE_IP</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>33</td><td>IN_COMPANY_REASON_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>34</td><td>SOCIALSECURITY_NO</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>35</td><td>DUTY_TYPE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>36</td><td>EFFECTED_CORPORATE_CHANGE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>37</td><td>PAYMETHOD_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="SETUP_PAYMETHOD.html">→ SETUP_PAYMETHOD</a></td></tr>
+<tr><td>38</td><td>ALLOCATION_DEDUCTION</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>39</td><td>ALLOCATION_DEDUCTION_MONEY</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>40</td><td>GROSS_NET</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>41</td><td>SALARY_TYPE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>42</td><td>SABIT_PRIM</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>43</td><td>SALARY1</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>44</td><td>MONEY</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>45</td><td>CUMULATIVE_TAX_TOTAL</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>46</td><td>RETIRED_SGDP_NUMBER</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>47</td><td>USE_SSK</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>48</td><td>USE_TAX</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>49</td><td>TRADE_UNION</td><td>nvarchar</td><td>400</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>50</td><td>TRADE_UNION_NO</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>51</td><td>TRADE_UNION_DEDUCTION</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>52</td><td>TRADE_UNION_DEDUCTION_MONEY</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>53</td><td>SSK_STATUTE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>54</td><td>DEFECTION_LEVEL</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>55</td><td>SALARY_VISIBLE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>56</td><td>FIRST_SSK_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>57</td><td>OLD_COMPANY_START_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>58</td><td>START_CUMULATIVE_TAX</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>59</td><td>SURELI_IS_AKDI</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>60</td><td>SURELI_IS_FINISHDATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>61</td><td>IS_VARDIYA</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>62</td><td>PDKS_NUMBER</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>63</td><td>IS_SSK_ISVEREN</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>64</td><td>OZEL_GIDER_INDIRIM</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>65</td><td>OZEL_GIDER_VERGI</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>66</td><td>MAHSUP_IADE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>67</td><td>FAZLA_MESAI_SAAT</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>68</td><td>FIS_TOPLAM</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>69</td><td>IS_SAKAT_KONTROL</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>70</td><td>POSITION_CODE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>71</td><td>IS_TAX_FREE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>72</td><td>SHIFT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>73</td><td>IS_DISCOUNT_OFF</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>74</td><td>IS_USE_506</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>75</td><td>IS_PUANTAJ_OFF</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>76</td><td>DAYS_506</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>77</td><td>DOC_REPEAT</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>78</td><td>IS_5510</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>79</td><td>IS_START_CUMULATIVE_TAX</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>80</td><td>GROSS_COUNT_TYPE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>81</td><td>IS_EMPTY_POSITION</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>82</td><td>LAW_NUMBERS</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>83</td><td>PDKS_TYPE_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>84</td><td>TRANSPORT_TYPE_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>85</td><td>IS_KISMI_ISTIHDAM</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>86</td><td>KISMI_ISTIHDAM_GUN</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>87</td><td>KISMI_ISTIHDAM_HS_GUN</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>88</td><td>IS_DAMGA_FREE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>89</td><td>DATE_5763</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>90</td><td>KISMI_ISTIHDAM_GT_GUN</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>91</td><td>DAYS_5746</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>92</td><td>USE_PDKS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>93</td><td>DUTY_TYPE_COMPANY_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>94</td><td>ENTRY_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>95</td><td>ENTRY_BRANCH_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>96</td><td>ENTRY_DEPARTMENT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>97</td><td>IS_SALARY_TRANSFER</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>98</td><td>IS_SALARY_DETAIL_TRANSFER</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>99</td><td>IS_ACCOUNTING_TRANSFER</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>100</td><td>EX_IN_OUT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>101</td><td>IS_UPDATE_POSITION</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>102</td><td>DATE_6111</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>103</td><td>DATE_6111_SELECT</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>104</td><td>PUANTAJ_GROUP_IDS</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>105</td><td>IS_6486</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>106</td><td>IS_6322</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>107</td><td>KISMI_ISTIHDAM_SAAT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>108</td><td>IS_KIDEM_BAZ</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>109</td><td>IS_25510</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>110</td><td>IS_14857</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>111</td><td>IN_OUT_STAGE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>112</td><td>NEW_CARD_ACCOUNT_BILL_TYPE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>113</td><td>DAYS_4691</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>114</td><td>IS_KIDEM_IHBAR_ALL_TOTAL</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>115</td><td>WORKING_ABROAD</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>116</td><td>IS_6645</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>117</td><td>START_MON_6645</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>118</td><td>START_YEAR_6645</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>119</td><td>END_MON_6645</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>120</td><td>END_YEAR_6645</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>121</td><td>IS_46486</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>122</td><td>IS_56486</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>123</td><td>IS_66486</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>124</td><td>IS_TAX_FREE_687</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>125</td><td>BENEFIT_MONTH_7103</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>126</td><td>DEFECTION_RATE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>127</td><td>IS_STATUS_EMPLOYEE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>128</td><td>_IS_IHBAR_HESAP</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>129</td><td>_IS_FLIGHT_TICKET</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>130</td><td>_IS_KIDEM_HESAP</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>131</td><td>_OUT_STAGE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>132</td><td>_PROJECT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>133</td><td>_IS_STORE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>134</td><td>BENEFIT_DAY_7252</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>135</td><td>STARTDATE_7256</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>136</td><td>FINISHDATE_7256</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>137</td><td>MONTHLY_AVERAGE_NET</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>138</td><td>IS_EDUCATION_ALLOWANCE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>139</td><td>STEP_NORMAL</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>140</td><td>IS_AUDIT_COMPENSATION</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>141</td><td>SUSPENSION_FINISHDATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>142</td><td>FINANCIAL_RESPONSIBILITY</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>143</td><td>SEVERANCE_PENSION_SCORE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>144</td><td>IS_PENANCE_DEDUCTION</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>145</td><td>DEFECTION_FINISHDATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>146</td><td>ADMINISTRATIVE_ACADEMIC</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>147</td><td>BUSINESS_RISK_EMP</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>148</td><td>IS_VETERAN</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>149</td><td>JUL_DIFFICULTIES</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>150</td><td>IS_SUSPENSION</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>151</td><td>WORK_DIFFICULTY</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>152</td><td>DEFECTION_STARTDATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>153</td><td>ADDITIONAL_INDICATOR_COMPENSATION</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>154</td><td>ADDITIONAL_SCORE_NORMAL</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>155</td><td>AUDIT_COMPENSATION</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>156</td><td>GRADE_NORMAL</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>157</td><td>SUSPENSION_STARTDATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>158</td><td>LANGUAGE_ALLOWANCE_1</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>159</td><td>EXECUTIVE_INDICATOR_SCORE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>160</td><td>UNIVERSITY_ALLOWANCE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>161</td><td>LANGUAGE_ALLOWANCE_5</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>162</td><td>LANGUAGE_ALLOWANCE_4</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>163</td><td>DIRECTOR_SHARE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>164</td><td>LANGUAGE_ALLOWANCE_3</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>165</td><td>LANGUAGE_ALLOWANCE_2</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>166</td><td>ACADEMIC_INCENTIVE_ALLOWANCE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>167</td><td>STARTDATE_SHIFT</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>168</td><td>FINISHDATE_SHIFT</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>169</td><td>MINIMUM_COURSE_HOURS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>170</td><td>ADMINISTRATIVE_INDICATOR_SCORE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>171</td><td>HIGH_EDUCATION_COMPENSATION</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>172</td><td>ADDITIONAL_SCORE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>173</td><td>STEP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>174</td><td>PRIVATE_SERVICE_SCORE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>175</td><td>ADDITIONAL_COURSE_POSITION</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>176</td><td>LANGUAGE_ID_5</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>177</td><td>EMPLOYEE_SHARE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>178</td><td>GRADE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>179</td><td>LANGUAGE_ID_1</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>180</td><td>LANGUAGE_ID_2</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>181</td><td>LANGUAGE_ID_3</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>182</td><td>ADMINISTRATIVE_FUNCTION_ALLOWANCE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>183</td><td>LANGUAGE_ID_4</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>184</td><td>PERQUISITE_SCORE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>185</td><td>REGISTRY_NO</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>186</td><td>RETIRED_REGISTRY_NO</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>187</td><td>LAND_COMPENSATION_SCORE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>188</td><td>LAND_COMPENSATION_PERIOD</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>189</td><td>SERVICE_CLASS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>190</td><td>SERVICE_TITLE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>191</td><td>JURY_MEMBERSHIP</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>192</td><td>PAST_AGI_DAY</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>193</td><td>JURY_MEMBERSHIP_PERIOD</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>194</td><td>JURY_NUMBER</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>195</td><td>USE_MINIMUM_WAGE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>196</td><td>START_CUMULATIVE_WAGE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>197</td><td>START_CUMULATIVE_WAGE_TOTAL</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>198</td><td>IS_RETIRED_5510</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>199</td><td>IS_NO_5510</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+</table><div class="rels"><h2>Bu tablonun FK iliskileri</h2><div class="rel-card">EMPLOYEES_IN_OUT.BRANCH_ID <span class="arrow">→</span> <a href="BRANCH.html">BRANCH</a></div><div class="rel-card">EMPLOYEES_IN_OUT.DEPARTMENT_ID <span class="arrow">→</span> <a href="DEPARTMENT.html">DEPARTMENT</a></div><div class="rel-card">EMPLOYEES_IN_OUT.EMPLOYEE_ID <span class="arrow">→</span> <a href="EMPLOYEES.html">EMPLOYEES</a></div><div class="rel-card">EMPLOYEES_IN_OUT.PAYMETHOD_ID <span class="arrow">→</span> <a href="SETUP_PAYMETHOD.html">SETUP_PAYMETHOD</a></div></div></body></html>

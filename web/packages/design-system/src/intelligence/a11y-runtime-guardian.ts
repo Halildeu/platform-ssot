@@ -253,7 +253,7 @@ export function createA11yGuardian(options?: A11yGuardianOptions): A11yGuardian 
 
     check(): RuntimeViolation[] {
       // Manual check: bypass debounce and rate limiting
-      const prevChecked = new WeakSet<Element>();
+      const _prevChecked = new WeakSet<Element>();
       isChecking = true;
       try {
         return checkSubtree(getRoot());

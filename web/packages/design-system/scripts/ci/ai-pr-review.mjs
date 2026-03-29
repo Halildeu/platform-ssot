@@ -47,7 +47,7 @@ for (const file of changedFiles) {
 
   // Rule 1: Hardcoded hex colors
   const hexMatches = content.match(/#[0-9a-fA-F]{3,8}(?!\w)/g) || [];
-  const nonTokenHex = hexMatches.filter(_h => !content.includes(`var(--`) || true); // Simplified
+  const _nonTokenHex = hexMatches.filter(_h => !content.includes(`var(--`) || true); // Simplified
   if (hexMatches.length > 3) {
     fileIssues.push({ severity: 'warning', rule: 'no-hardcoded-colors', message: `${hexMatches.length} hardcoded hex colors found \u2014 use var(--semantic-token)` });
   }
@@ -94,7 +94,7 @@ for (const file of changedFiles) {
 }
 
 // Score
-const totalIssues = issues.reduce((s, f) => s + f.issues.length, 0);
+const _totalIssues = issues.reduce((s, f) => s + f.issues.length, 0);
 const errors = issues.reduce((s, f) => s + f.issues.filter(i => i.severity === 'error').length, 0);
 const warnings = issues.reduce((s, f) => s + f.issues.filter(i => i.severity === 'warning').length, 0);
 const infos = issues.reduce((s, f) => s + f.issues.filter(i => i.severity === 'info').length, 0);

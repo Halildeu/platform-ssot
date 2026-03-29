@@ -40,6 +40,7 @@ export interface VirtualListProps<T> {
  */
 export declare function VirtualList<T>({ items, itemHeight, overscan, containerHeight, renderItem, onEndReached, endReachedThreshold, className, 'aria-label': ariaLabel, }: VirtualListProps<T>): React.ReactElement;
 export declare namespace VirtualList {
+    // eslint-disable-next-line no-var
     var displayName: string;
 }
 /** Type alias for VirtualList ref. */

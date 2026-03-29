@@ -224,7 +224,7 @@ export function buildVariableLookup(apiResponse) {
 
     // Build the token path from the variable name (Figma uses "/" separators)
     const pathParts = variable.name.split('/').map((p) => p.trim());
-    const collectionPrefix = collection.name.toLowerCase().replace(/\s+/g, '-');
+    const _collectionPrefix = collection.name.toLowerCase().replace(/\s+/g, '-');
 
     // Key with collection prefix to match figma.tokens.json structure
     const tokenPath = pathParts.join('.');
@@ -430,7 +430,7 @@ async function main() {
 
   /* --- Load tokens ------------------------------------------------ */
 
-  let codeFlat, figmaFlat, syncState;
+  let codeFlat, figmaFlat;
 
   try {
     codeFlat = loadCodeTokens();
@@ -446,7 +446,7 @@ async function main() {
     process.exit(1);
   }
 
-  syncState = loadSyncState();
+  const syncState = loadSyncState();
 
   if (opts.verbose) {
     console.log(`Code tokens:  ${Object.keys(codeFlat).length} entries`);

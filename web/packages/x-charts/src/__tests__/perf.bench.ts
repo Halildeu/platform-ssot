@@ -124,6 +124,7 @@ describe('Chart interactions perf', () => {
     }
     const avg = sum / selected.length;
     // Return summary (simulating what a callback would receive)
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     ({ startIdx, endIdx, count: selected.length, avg, min, max });
   });
 

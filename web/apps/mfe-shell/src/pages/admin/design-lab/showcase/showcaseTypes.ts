@@ -25,7 +25,7 @@ export type DesignLabTranslate = (key: string, params?: Record<string, unknown>)
  
 export type PreviewPanelComponent = React.ComponentType<{
   title: string;
-  children: any; // eslint-disable-line @typescript-eslint/no-explicit-any -- cross-package ReactNode compat
+  children: any;  
   className?: string;
   kind?: DemoSurfaceKind;
 }>;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck — design-lab showcase, component API alignment pending
 import React from 'react';
 import clsx from 'clsx';

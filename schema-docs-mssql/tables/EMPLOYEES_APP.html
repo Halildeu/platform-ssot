@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>EMPLOYEES_APP</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;color:#333;padding:20px 30px}
+.back{color:#1a73e8;text-decoration:none;font-size:14px}
+h1{margin:15px 0;font-size:22px}
+.info{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.info .badge{padding:8px 16px;border-radius:6px;font-size:13px}
+.badge-blue{background:#e8f4fd;color:#1a73e8} .badge-orange{background:#fef3e2;color:#e67e22} .badge-green{background:#e8f8e8;color:#27ae60}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+th{background:#1a1a2e;color:#fff;text-align:left;padding:10px 15px;font-size:12px}
+td{padding:8px 15px;border-bottom:1px solid #eee;font-size:13px}
+tr:hover{background:#f5f9ff}
+.pk{color:#e67e22;font-weight:700} .fk{color:#1a73e8;text-decoration:none} .fk:hover{text-decoration:underline} .nullable{color:#aaa}
+.rels{margin-top:25px} .rels h2{margin-bottom:12px;font-size:18px;border-bottom:2px solid #1a73e8;padding-bottom:8px}
+.rel-card{background:#fff;padding:10px 18px;border-radius:6px;margin:6px 0;box-shadow:0 1px 3px rgba(0,0,0,.1);display:flex;align-items:center;gap:8px}
+.rel-card .arrow{color:#1a73e8;font-weight:700;font-size:16px}
+.rel-card a{color:#1a73e8;text-decoration:none;font-weight:600} .rel-card a:hover{text-decoration:underline}
+</style></head><body>
+<a class="back" href="../index.html">← Tum Tablolar</a>
+<h1>EMPLOYEES_APP</h1>
+<div class="info">
+<div class="badge badge-blue">216 kolon</div>
+<div class="badge badge-orange">7 FK iliskisi</div>
+<div class="badge badge-green">0 referans alan tablo</div>
+</div>
+<table><tr><th>#</th><th>Kolon</th><th>Tip</th><th>Max Len</th><th>Nullable</th><th>PK</th><th>Iliski</th></tr>
+<tr><td>1</td><td>APP_STATUS</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>2</td><td class="pk">EMPAPP_ID</td><td>int</td><td>4</td><td>NOT NULL</td><td><span class="pk">PK</span></td><td><a class="fk" href="EMPLOYEES_APP_EDU_INFO.html">→ EMPLOYEES_APP_EDU_INFO</a></td></tr>
+<tr><td>3</td><td>EMPLOYEE_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="EMPLOYEES.html">→ EMPLOYEES</a></td></tr>
+<tr><td>4</td><td>APP_NO</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>5</td><td>APP_COLOR_STATUS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>6</td><td>NAME</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>7</td><td>SURNAME</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>8</td><td>EMPAPP_PASSWORD</td><td>nvarchar</td><td>600</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>9</td><td>TAX_NUMBER</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>10</td><td>TAX_OFFICE</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>11</td><td>IMMIGRANT</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>12</td><td>SEX</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>13</td><td>PHOTO</td><td>nvarchar</td><td>510</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>14</td><td>VALID</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>15</td><td>VALID_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>16</td><td>VALID_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>17</td><td>VALIDATOR_POSITION_CODE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>18</td><td>COMMETHOD_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="SETUP_COMMETHOD.html">→ SETUP_COMMETHOD</a></td></tr>
+<tr><td>19</td><td>HOMEADDRESS</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>20</td><td>HOMEPOSTCODE</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>21</td><td>HOMECOUNTY</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>22</td><td>HOMECITY</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>23</td><td>HOMECOUNTRY</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>24</td><td>EMAIL</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>25</td><td>IMCAT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>26</td><td>IM</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>27</td><td>WORKTELCODE</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>28</td><td>WORKTEL</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>29</td><td>EXTENSION</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>30</td><td>IDENTYCARD_CAT</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>31</td><td>IDENTYCARD_NO</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>32</td><td>SOCIALSECURITY_NO</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>33</td><td>HOMETELCODE</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>34</td><td>HOMETEL</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>35</td><td>MOBILCODE</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>36</td><td>MOBIL</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>37</td><td>MOBILCODE2</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>38</td><td>MOBIL2</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>39</td><td>EDU4_YEAR</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>40</td><td>EDU4_YEAR_2</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>41</td><td>TOOLS</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>42</td><td>CHILD</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>43</td><td>PARTNER_COMPANY</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>44</td><td>PARTNER_POSITION</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>45</td><td>IS_EXP</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>46</td><td>DEFECTED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>47</td><td>DEFECTED_PROBABILITY</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>48</td><td>DEFECTED_LEVEL</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>49</td><td>MILITARY_STATUS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>50</td><td>MILITARY_DELAY_REASON</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>51</td><td>MILITARY_DELAY_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>52</td><td>MILITARY_START_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>53</td><td>MILITARY_FINISH_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>54</td><td>MILITARY_FINISHDATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>55</td><td>MILITARY_EXEMPT_DETAIL</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>56</td><td>MILITARY_MONTH</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>57</td><td>MILITARY_RANK</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>58</td><td>PREFERED_CITY</td><td>nvarchar</td><td>500</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>59</td><td>IS_TRIP</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>60</td><td>KURS1</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>61</td><td>KURS1_YIL</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>62</td><td>KURS1_YER</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>63</td><td>KURS1_GUN</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>64</td><td>KURS2</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>65</td><td>KURS2_YIL</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>66</td><td>KURS2_YER</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>67</td><td>KURS2_GUN</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>68</td><td>KURS3</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>69</td><td>KURS3_YIL</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>70</td><td>KURS3_YER</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>71</td><td>KURS3_GUN</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>72</td><td>COMP_EXP</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>73</td><td>APPNOT</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>74</td><td>SALARY_WANTED</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>75</td><td>SALARY_WANTED_MONEY</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>76</td><td>STARTDATE_IF_ACCEPTED</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>77</td><td>APPLICANT_NOTES</td><td>nvarchar</td><td>600</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>78</td><td>RECORD_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>79</td><td>RECORD_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>80</td><td>RECORD_IP</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>81</td><td>RECORD_APP_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>82</td><td>RECORD_APP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>83</td><td>RECORD_APP_IP</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>84</td><td>UPDATE_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>85</td><td>UPDATE_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>86</td><td>UPDATE_IP</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>87</td><td>UPDATE_APP_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>88</td><td>UPDATE_APP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>89</td><td>UPDATE_APP_IP</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>90</td><td>TC_IDENTY_NO</td><td>nvarchar</td><td>150</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>91</td><td>LICENCECAT_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>92</td><td>LICENCE_START_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>93</td><td>DRIVER_LICENCE</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>94</td><td>DRIVER_LICENCE_ACTIVED</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>95</td><td>SENTENCED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>96</td><td>STEP_NO</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>97</td><td>ILLNESS_PROBABILITY</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>98</td><td>ILLNESS_DETAIL</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>99</td><td>SURGICAL_OPERATION</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>100</td><td>INVESTIGATION</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>101</td><td>TEST_TIME</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>102</td><td>TEST_DETAIL</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>103</td><td>CAUTION_TIME</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>104</td><td>CAUTION_EMP</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>105</td><td>TRAINING_LEVEL</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>106</td><td>QUIZ_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="QUIZ.html">→ QUIZ</a></td></tr>
+<tr><td>107</td><td>ACQUAINTANCE</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>108</td><td>PARTNER_NAME</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>109</td><td>COMPANY_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="COMPANY.html">→ COMPANY</a></td></tr>
+<tr><td>110</td><td>NATIONALITY</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>111</td><td>CLUB</td><td>nvarchar</td><td>600</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>112</td><td>HOBBY</td><td>nvarchar</td><td>600</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>113</td><td>USE_CIGARETTE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>114</td><td>MARTYR_RELATIVE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>115</td><td>HOME_STATUS</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>116</td><td>WORK_STARTED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>117</td><td>WORK_FINISHED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>118</td><td>IS_OTHER_CITY</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>119</td><td>PHOTO_SERVER_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>120</td><td>EXPECTED_PRICE</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>121</td><td>EXPECTED_MONEY_TYPE</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>122</td><td>HEAD_CV</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>123</td><td>PREFERENCE_BRANCH</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>124</td><td>CV_TYPE</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>125</td><td>CV_STAGE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>126</td><td>REFERENCE_NAME</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>127</td><td>REFERENCE_SURNAME</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>128</td><td>REFERENCE_POSITION</td><td>nvarchar</td><td>300</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>129</td><td>RELATED_BRANCH_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="BRANCH.html">→ BRANCH</a></td></tr>
+<tr><td>130</td><td>CV_RECORDER_EMP_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>131</td><td>CV_RECORDER_EMP_NAME</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>132</td><td>INTERVIEW_RESULT</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>133</td><td>COM_PACKET_PRO</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>134</td><td>ELECTRONIC_TOOLS</td><td>nvarchar</td><td>1000</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>135</td><td>IS_PSICOTECHNIC</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>136</td><td>RELATED_REF_NAME</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>137</td><td>RELATED_REF_COMPANY</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>138</td><td>WORK_START_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>139</td><td>POSITION_CAT_ID1</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>140</td><td>POSITION_CAT_ID2</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>141</td><td>POSITION_CAT_ID3</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>142</td><td>CV_SOURCE_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>143</td><td>PREFERENCE_ZONE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>144</td><td>HAVE_CHILDREN</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>145</td><td>CONTACT</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>146</td><td>CONTACT_RELATION</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>147</td><td>CONTACT_EMAIL</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>148</td><td>CONTACT_TELCODE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>149</td><td>CONTACT_TEL</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>150</td><td>_REF1_EMP</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>151</td><td>_REF2_COMPANY</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>152</td><td>_LANG2_MEAN</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>153</td><td>_LANG1_WHERE</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>154</td><td>_LANG4_WRITE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>155</td><td>_REF2_EMP</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>156</td><td>_REF2_EMAIL</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>157</td><td>_REF1</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>158</td><td>_LANG1_SPEAK</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>159</td><td>_LANG4_WHERE</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>160</td><td>_REF2</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>161</td><td>_LANG4_SPEAK</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>162</td><td>_REF1_COMPANY_EMP</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>163</td><td>_REF2_TELCODE_EMP</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>164</td><td>_LANG1_WRITE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>165</td><td>_LANG5_WHERE</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>166</td><td>_REF1_TELCODE</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>167</td><td>_REF2_COMPANY_EMP</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>168</td><td>_REF1_TEL_EMP</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>169</td><td>_REF2_EMAIL_EMP</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>170</td><td>_LANG5_WRITE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>171</td><td>_REF2_POSITION_EMP</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>172</td><td>_LANG3_MEAN</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>173</td><td>_REF1_EMAIL</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>174</td><td>_REF1_POSITION_EMP</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>175</td><td>_REF1_TELCODE_EMP</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>176</td><td>_REF1_COMPANY</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>177</td><td>_LANG2_WHERE</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>178</td><td>_REF2_TEL</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>179</td><td>_LANG3_SPEAK</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>180</td><td>_LANG2_WRITE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>181</td><td>_LANG5_MEAN</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>182</td><td>_REF1_EMAIL_EMP</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>183</td><td>_REF1_TEL</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>184</td><td>_LANG1_MEAN</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>185</td><td>_LANG4_MEAN</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>186</td><td>_LANG5</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>187</td><td>_REF2_TELCODE</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>188</td><td>_LANG3_WHERE</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>189</td><td>_LANG3_WRITE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>190</td><td>_LANG3</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>191</td><td>_REF2_POSITION</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>192</td><td>_LANG4</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>193</td><td>_LANG1</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>194</td><td>_LANG2</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>195</td><td>_REF2_TEL_EMP</td><td>nvarchar</td><td>86</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>196</td><td>_LANG2_SPEAK</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>197</td><td>_REF1_POSITION</td><td>nvarchar</td><td>80</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>198</td><td>_LANG5_SPEAK</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>199</td><td>WANT_EMAIL</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>200</td><td>WANT_SMS</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>201</td><td>WANT_CALL</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>202</td><td>RESOURCE_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>203</td><td>RESUME_TEXT</td><td>nvarchar</td><td>-1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>204</td><td>EMPAPP_USERNAME</td><td>nvarchar</td><td>100</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>205</td><td>MAIN_LANGUAGE</td><td>nvarchar</td><td>40</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>206</td><td>BIRTH_PLACE</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>207</td><td>BIRTH_DATE</td><td>datetime</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>208</td><td>MARRIED</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>209</td><td>SURGICAL_PROBABILITY</td><td>bit</td><td>1</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>210</td><td>CONSUMER_ID</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td><a class="fk" href="CONSUMER.html">→ CONSUMER</a></td></tr>
+<tr><td>211</td><td>TWINHUB_ROLE</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>212</td><td>TWINHUB_URL</td><td>nvarchar</td><td>400</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>213</td><td>APP_POSITION</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>214</td><td>COMPETENCY_POINT</td><td>float</td><td>8</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>215</td><td>EMAIL2</td><td>nvarchar</td><td>200</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+<tr><td>216</td><td>KVKK_ONAY</td><td>int</td><td>4</td><td><span class="nullable">NULL</span></td><td></td><td></td></tr>
+</table><div class="rels"><h2>Bu tablonun FK iliskileri</h2><div class="rel-card">EMPLOYEES_APP.COMMETHOD_ID <span class="arrow">→</span> <a href="SETUP_COMMETHOD.html">SETUP_COMMETHOD</a></div><div class="rel-card">EMPLOYEES_APP.COMPANY_ID <span class="arrow">→</span> <a href="COMPANY.html">COMPANY</a></div><div class="rel-card">EMPLOYEES_APP.CONSUMER_ID <span class="arrow">→</span> <a href="CONSUMER.html">CONSUMER</a></div><div class="rel-card">EMPLOYEES_APP.EMPAPP_ID <span class="arrow">→</span> <a href="EMPLOYEES_APP_EDU_INFO.html">EMPLOYEES_APP_EDU_INFO</a></div><div class="rel-card">EMPLOYEES_APP.EMPLOYEE_ID <span class="arrow">→</span> <a href="EMPLOYEES.html">EMPLOYEES</a></div><div class="rel-card">EMPLOYEES_APP.QUIZ_ID <span class="arrow">→</span> <a href="QUIZ.html">QUIZ</a></div><div class="rel-card">EMPLOYEES_APP.RELATED_BRANCH_ID <span class="arrow">→</span> <a href="BRANCH.html">BRANCH</a></div></div></body></html>

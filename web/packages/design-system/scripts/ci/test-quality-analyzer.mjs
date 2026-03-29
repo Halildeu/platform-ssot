@@ -265,7 +265,7 @@ if (isJSON) {
 const grades = { A: 0, B: 0, C: 0, D: 0, F: 0 };
 for (const r of results) grades[r.grade]++;
 
-const shallowCount = results.filter(r => r.shallowFlags.length > 0).length;
+const _shallowCount = results.filter(r => r.shallowFlags.length > 0).length;
 const avgScore = Math.round(results.reduce((s, r) => s + r.totalScore, 0) / results.length);
 const totalTests = results.reduce((s, r) => s + r.testCount, 0);
 

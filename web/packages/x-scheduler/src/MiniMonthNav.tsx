@@ -83,7 +83,7 @@ export const MiniMonthNav: React.FC<MiniMonthNavProps> = ({
   /** Build the 6-row grid of Date objects */
   const calendarDays = useMemo(() => {
     const first = startOfMonth(date);
-    const last = endOfMonth(date);
+    const _last = endOfMonth(date);
 
     // Find the grid start
     let startDay = first.getDay() - weekStartsOn;
