@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 import { test, expect } from 'vitest';
 import React from 'react';
-import TestRenderer, { act } from 'react-test-renderer';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { act } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { configureShellServices } from '../../../app/services/shell-services';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
@@ -52,7 +53,7 @@ test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async ()
     lastModifiedBy: 'system',
   };
 
-  const renderer = TestRenderer.create(
+  render(
     <QueryClientProvider client={queryClient}>
       <AccessRoleDrawer
         open
@@ -81,20 +82,16 @@ test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async ()
     await new Promise((resolve) => setTimeout(resolve, 0));
   });
 
-  let root = renderer.root;
-  const permissionCheckbox = root.find(
-    (node) => node.type === 'input' && node.props['data-testid'] === 'access-role-permission-perm.manage',
-  );
+  const permissionCheckbox = screen.getByTestId('access-role-permission-perm.manage') as HTMLInputElement;
 
   await act(async () => {
-    permissionCheckbox.props.onChange({ target: { checked: true } });
+    fireEvent.change(permissionCheckbox, { target: { checked: true } });
   });
 
-  root = renderer.root;
-  const saveButton = root.findByProps({ 'data-testid': 'access-role-drawer-save' });
+  const saveButton = screen.getByTestId('access-role-drawer-save');
 
   await act(async () => {
-    saveButton.props.onClick();
+    fireEvent.click(saveButton);
   });
 
   expect(saves.length).toBe(1);
@@ -103,13 +100,12 @@ test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async ()
     permissionIds: ['perm.manage', 'perm.view'],
   });
 
-  const cancelButton = root.findByProps({ children: 'access.clone.cancelText' });
+  const cancelButton = screen.getByText('access.clone.cancelText');
 
   await act(async () => {
-    cancelButton.props.onClick();
+    fireEvent.click(cancelButton);
   });
 
   expect(closes.length).toBe(1);
-  renderer.unmount();
   queryClient.clear();
 });

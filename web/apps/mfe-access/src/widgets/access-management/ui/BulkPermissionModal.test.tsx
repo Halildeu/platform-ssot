@@ -1,14 +1,15 @@
-// @vitest-environment node
+// @vitest-environment jsdom
 import { test, expect } from 'vitest';
 import React from 'react';
-import TestRenderer, { act } from 'react-test-renderer';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { act } from 'react';
 import type { AccessLevel } from '../../../features/access-management/model/access.types';
 import BulkPermissionModal from './BulkPermissionModal.ui';
 
 test('BulkPermissionModal level secimini Segmented uzerinden surdurur ve submit eder', async () => {
   const submissions: Array<{ moduleKey: string; level: AccessLevel }> = [];
 
-  const renderer = TestRenderer.create(
+  render(
     <BulkPermissionModal
       open
       roleCount={3}
@@ -31,31 +32,26 @@ test('BulkPermissionModal level secimini Segmented uzerinden surdurur ve submit 
 
   await act(async () => {});
 
-  let root = renderer.root;
-  let moduleSelect = root.findByType('select');
+  const moduleSelect = screen.getByRole('combobox') as HTMLSelectElement;
 
   await act(async () => {
-    moduleSelect.props.onChange({ target: { value: 'erp.users' }, currentTarget: { value: 'erp.users' } });
+    fireEvent.change(moduleSelect, { target: { value: 'erp.users' } });
   });
 
-  root = renderer.root;
-  moduleSelect = root.findByType('select');
-  expect(moduleSelect.props.value).toBe('erp.users');
+  expect((screen.getByRole('combobox') as HTMLSelectElement).value).toBe('erp.users');
 
-  let manageButton = root.findByProps({ 'data-testid': 'bulk-permission-level-manage' });
+  const manageButton = screen.getByTestId('bulk-permission-level-manage');
 
   await act(async () => {
-    manageButton.props.onClick();
+    fireEvent.click(manageButton);
   });
 
-  root = renderer.root;
-  manageButton = root.findByProps({ 'data-testid': 'bulk-permission-level-manage' });
-  expect(manageButton.props['aria-checked']).toBe(true);
+  expect(screen.getByTestId('bulk-permission-level-manage').getAttribute('aria-checked')).toBe('true');
 
-  const submitButton = root.findByProps({ children: 'access.bulk.okText' });
+  const submitButton = screen.getByText('access.bulk.okText');
 
   await act(async () => {
-    submitButton.props.onClick();
+    fireEvent.click(submitButton);
   });
 
   expect(submissions.length).toBe(1);

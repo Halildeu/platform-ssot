@@ -1,13 +1,15 @@
+// @vitest-environment jsdom
 import { test, expect } from 'vitest';
 import React from 'react';
-import TestRenderer, { act } from 'react-test-renderer';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { act } from 'react';
 import type { AccessFilters } from '../../../features/access-management/model/access.types';
 import AccessFilterBar from './AccessFilterBar.ui';
 
 test('AccessFilterBar level filtresini Segmented uzerinden surdurur', async () => {
   const changes: AccessFilters[] = [];
 
-  const renderer = TestRenderer.create(
+  render(
     <AccessFilterBar
       filters={{
         search: '',
@@ -23,11 +25,10 @@ test('AccessFilterBar level filtresini Segmented uzerinden surdurur', async () =
     />,
   );
 
-  const root = renderer.root;
-  const viewButton = root.findByProps({ 'data-testid': 'access-filter-level-view' });
+  const viewButton = screen.getByTestId('access-filter-level-view');
 
   act(() => {
-    viewButton.props.onClick();
+    fireEvent.click(viewButton);
   });
 
   expect(changes.length).toBe(1);
@@ -37,10 +38,10 @@ test('AccessFilterBar level filtresini Segmented uzerinden surdurur', async () =
     level: 'VIEW',
   });
 
-  const resetButton = root.findByProps({ children: 'access.filter.reset' });
+  const resetButton = screen.getByText('access.filter.reset');
 
   act(() => {
-    resetButton.props.onClick();
+    fireEvent.click(resetButton);
   });
 
   expect(changes.length).toBe(2);

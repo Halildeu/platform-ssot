@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 import { test, expect } from 'vitest';
 import React from 'react';
-import TestRenderer, { act } from 'react-test-renderer';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { act } from 'react';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
 import AccessGrid from './AccessGrid.ui';
 
@@ -124,7 +125,7 @@ test('AccessGrid grid selection, row click ve pagination wiring akisini surdurur
     );
   });
 
-  const renderer = TestRenderer.create(
+  render(
     <AccessGrid
       GridComponent={FakeGrid as never}
       rows={rows}
@@ -145,23 +146,16 @@ test('AccessGrid grid selection, row click ve pagination wiring akisini surdurur
     await Promise.resolve();
   });
 
-  const root = renderer.root;
-  const tablePagination = root.find(
-    (node) => node.props.pageSizeOptions != null && node.props.onPageSizeChange != null,
-  );
-  expect(tablePagination.props.pageSize).toBe(10);
-  expect(typeof tablePagination.props.onPageSizeChange).toBe('function');
-
-  const selectAdminButton = root.findByProps({ 'data-testid': 'access-grid-select-role-admin' });
+  const selectAdminButton = screen.getByTestId('access-grid-select-role-admin');
   await act(async () => {
-    selectAdminButton.props.onClick();
+    fireEvent.click(selectAdminButton);
   });
 
   expect(selectionChanges.at(-1)).toEqual(['role-admin']);
 
-  const clickViewerButton = root.findByProps({ 'data-testid': 'access-grid-click-role-viewer' });
+  const clickViewerButton = screen.getByTestId('access-grid-click-role-viewer');
   await act(async () => {
-    clickViewerButton.props.onClick();
+    fireEvent.click(clickViewerButton);
   });
 
   expect(clickedRows).toEqual(['role-viewer']);

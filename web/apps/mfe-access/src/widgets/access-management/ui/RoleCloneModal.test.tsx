@@ -1,7 +1,8 @@
-// @vitest-environment node
+// @vitest-environment jsdom
 import { test, expect } from 'vitest';
 import React from 'react';
-import TestRenderer, { act } from 'react-test-renderer';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { act } from 'react';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
 import RoleCloneModal from './RoleCloneModal.ui';
 
@@ -19,7 +20,7 @@ test('RoleCloneModal modal ve switch yuzeyini surdurur', async () => {
     lastModifiedBy: 'system',
   };
 
-  const renderer = TestRenderer.create(
+  render(
     <RoleCloneModal
       open
       role={role}
@@ -39,23 +40,19 @@ test('RoleCloneModal modal ve switch yuzeyini surdurur', async () => {
 
   await act(async () => {});
 
-  let root = renderer.root;
-  const textInputs = root.findAllByType('input').filter((node) => node.props.type === 'text');
-  const nameInput = textInputs[0];
+  const nameInput = screen.getAllByRole('textbox')[0] as HTMLInputElement;
+  expect(nameInput.value).toBe('Kopya Admin');
 
-  expect(nameInput.props.value).toBe('Kopya Admin');
-
-  const switchInput = root.findByProps({ role: 'switch' });
+  const switchInput = screen.getByRole('switch');
 
   await act(async () => {
-    switchInput.props.onChange({ target: { checked: true } });
+    fireEvent.click(switchInput);
   });
 
-  root = renderer.root;
-  const submitButton = root.findByProps({ children: 'access.clone.okText' });
+  const submitButton = screen.getByText('access.clone.okText');
 
   await act(async () => {
-    submitButton.props.onClick();
+    fireEvent.click(submitButton);
   });
 
   expect(submissions.length).toBe(1);
@@ -65,10 +62,10 @@ test('RoleCloneModal modal ve switch yuzeyini surdurur', async () => {
     copyMemberCount: true,
   });
 
-  const cancelButton = root.findByProps({ children: 'access.clone.cancelText' });
+  const cancelButton = screen.getByText('access.clone.cancelText');
 
   await act(async () => {
-    cancelButton.props.onClick();
+    fireEvent.click(cancelButton);
   });
 
   expect(cancels.length).toBe(1);

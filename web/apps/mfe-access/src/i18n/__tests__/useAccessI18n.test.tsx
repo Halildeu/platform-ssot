@@ -1,8 +1,7 @@
 // @vitest-environment jsdom
 import { test, expect, vi } from 'vitest';
 import React from 'react';
-import TestRenderer, { act } from 'react-test-renderer';
-import type { ReactTestRenderer } from 'react-test-renderer';
+import { render, cleanup } from '@testing-library/react';
 
 import {
   I18nManager,
@@ -11,6 +10,7 @@ import {
 } from '../../../../mfe-shell/src/app/i18n/index.ts';
 import { getDictionary } from '@mfe/i18n-dicts';
 import { useAccessI18n, type AccessI18n } from '../useAccessI18n';
+import { act } from 'react';
 
 const flushMicrotasks = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
@@ -61,7 +61,6 @@ test('useAccessI18n sözlükleri yükler ve locale değişimini takip eder', asy
   });
 
   let latest: AccessI18n | undefined;
-  let renderer: ReactTestRenderer;
 
   const TestComponent: React.FC = () => {
     latest = useAccessI18n();
@@ -69,7 +68,7 @@ test('useAccessI18n sözlükleri yükler ve locale değişimini takip eder', asy
   };
 
   await act(async () => {
-    renderer = TestRenderer.create(
+    render(
       <I18nProvider manager={manager}>
         <TestComponent />
       </I18nProvider>,
@@ -102,14 +101,11 @@ test('useAccessI18n sözlükleri yükler ve locale değişimini takip eder', asy
   expect(manager.formatNumberCalls.map((entry) => entry.locale)).toEqual(['tr', 'en']);
   expect(manager.formatDateCalls.map((entry) => entry.locale)).toEqual(['tr', 'en']);
 
-  await act(async () => {
-    renderer.unmount();
-  });
+  cleanup();
 });
 
 test('useAccessI18n provider olmadığında fallback manager ile çalışır', async () => {
   let latest: AccessI18n | undefined;
-  let renderer: ReactTestRenderer;
 
   const TestComponent: React.FC = () => {
     latest = useAccessI18n();
@@ -117,7 +113,7 @@ test('useAccessI18n provider olmadığında fallback manager ile çalışır', a
   };
 
   await act(async () => {
-    renderer = TestRenderer.create(<TestComponent />);
+    render(<TestComponent />);
     await flushMicrotasks();
   });
 
@@ -125,7 +121,5 @@ test('useAccessI18n provider olmadığında fallback manager ile çalışır', a
   expect(latest?.t('access.actions.clone')).toBe('Rolü Klonla');
   expect(latest?.formatNumber(5)).toBe(new Intl.NumberFormat('tr').format(5));
 
-  await act(async () => {
-    renderer.unmount();
-  });
+  cleanup();
 });
