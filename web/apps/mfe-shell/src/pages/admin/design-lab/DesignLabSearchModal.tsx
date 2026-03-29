@@ -1,6 +1,28 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, X, Clock, Zap, GitFork, BarChart3, Moon, Sun, Palette, Figma, Image, History, Target, Activity, Blocks } from "lucide-react";
+import { Search, X, Clock, Zap, GitFork, BarChart3, Moon, Sun, Palette, Image, History, Target, Activity, Blocks } from "lucide-react";
+
+/** Figma brand icon — removed from lucide-react >=1.x, inlined as SVG. */
+function Figma({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z" />
+      <path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z" />
+      <path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z" />
+      <path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z" />
+      <path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z" />
+    </svg>
+  );
+}
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "./DesignLabProvider";
 import { PRIMITIVE_NAMES, ADVANCED_NAMES, API_NAMES } from "./DesignLabSidebarRouter";
