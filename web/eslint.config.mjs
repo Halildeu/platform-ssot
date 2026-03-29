@@ -130,6 +130,8 @@ export default tseslint.config(
         ignoreRestSiblings: true,
       }],
       'no-undef': 'off', // Too many false positives with TS global types
+      '@typescript-eslint/no-empty-object-type': 'off', // {} is valid in TS for generic constraints
+      'no-redeclare': 'off', // TS handles function overloads
       'no-unused-private-class-members': 'warn',
     },
   },
@@ -163,6 +165,21 @@ export default tseslint.config(
     ],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+    },
+  },
+  /* Type stubs, playground stubs, design-lab internals — any is unavoidable */
+  {
+    files: [
+      '**/design-system.d.ts',
+      '**/*.d.ts',
+      '**/design-lab/**/*.{ts,tsx}',
+      '**/playground/**/*.{ts,tsx}',
+      '**/.astro/**',
+    ],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
 );

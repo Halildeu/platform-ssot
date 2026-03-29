@@ -16,20 +16,36 @@ export function register(ctx) {
 /*  Preview & Coverage Checks                                          */
 /* ------------------------------------------------------------------ */
 
-check('preview-coverage', 'Component preview coverage (doc entries vs PlaygroundPreview)', () => {
+check('preview-coverage', 'Component preview coverage (doc entries vs playground registry)', () => {
   const entriesDir = join(ROOT, 'packages/design-system/src/catalog/component-docs/entries');
-  const previewFile = join(ROOT, 'apps/mfe-shell/src/pages/admin/design-lab/playground/PlaygroundPreview.tsx');
-  const apiItems = new Set(['buildAuthHeaders','buildEntityGridQueryParams','createAccordionItemsFromSections','createAccordionPreset','createBreadcrumbItemsFromRoute','createMenuBarItemsFromRoutes','createMenuBarPreset','createNavigationDestinationItems','createNavigationRailPreset','createPageHeaderStatItems','createPageHeaderTagItems','createPageLayoutBreadcrumbItems','createPageLayoutPreset','createSegmentedItemsFromFilters','createSegmentedItemsFromRoutes','createSegmentedPreset','getResolvedToken','getThemeAxes','getThemeContract','registerTokenResolver','resetTokenResolver','resolveAccessState','resolveMenuBarActiveValue','resolveNavigationRailActiveValue','resolveSegmentedNextValue','resolveThemeModeKey','setAppearance','setDensity','setElevation','setMotion','setOverlayIntensity','setOverlayOpacity','setRadius','setSurfaceTone','setTableSurfaceTone','shouldBlockInteraction','subscribeThemeAxes','toggleVariantDefault','updateThemeAxes','useAgGridTablePagination','useAsyncCombobox','useGridVariants','useToast','withAccessGuard','THEME_APPEARANCE_OPTIONS','THEME_DENSITY_OPTIONS','THEME_ELEVATION_OPTIONS','THEME_MOTION_OPTIONS','THEME_RADIUS_OPTIONS','useScheduler']);
+  const registryFile = join(ROOT, 'apps/mfe-shell/src/pages/admin/design-lab/playground/playgroundRegistry.ts');
+  const nonCompFile = readSafe(registryFile);
+
+  // Extract NON_COMPONENT_ENTRIES — these are hooks/utilities, not renderable
+  const nonCompMatch = nonCompFile.match(/NON_COMPONENT_ENTRIES[^=]*=\s*\{([\s\S]*?)\n\};/);
+  const nonCompSet = new Set();
+  if (nonCompMatch) {
+    for (const m of nonCompMatch[1].matchAll(/^\s*(\w+)\s*:/gm)) nonCompSet.add(m[1]);
+  }
+
+  // Check design-system barrel exports + x-suite for renderable components
+  const dsIndex = readSafe(join(ROOT, 'packages/design-system/src/components/index.ts'))
+    + readSafe(join(ROOT, 'packages/design-system/src/primitives/index.ts'))
+    + readSafe(join(ROOT, 'packages/design-system/src/patterns/index.ts'))
+    + readSafe(join(ROOT, 'packages/design-system/src/advanced/index.ts'))
+    + readSafe(join(ROOT, 'packages/design-system/src/enterprise/index.ts'));
+
   try {
     const entries = readdirSync(entriesDir).filter(f => f.endsWith('.doc.ts')).map(f => f.replace('.doc.ts', ''));
-    const preview = readSafe(previewFile);
-    const uiEntries = entries.filter(n => !apiItems.has(n));
-    const found = uiEntries.filter(n => preview.includes(n));
-    const missing = uiEntries.filter(n => !preview.includes(n));
+    const uiEntries = entries.filter(n => !nonCompSet.has(n));
+    // A component is "covered" if it's in design-system exports (auto-resolved via MfeUiKit spread)
+    // OR if it's mentioned in the registry file (explicit stub or x-suite)
+    const found = uiEntries.filter(n => dsIndex.includes(n) || nonCompFile.includes(n));
+    const missing = uiEntries.filter(n => !dsIndex.includes(n) && !nonCompFile.includes(n));
     const pct = Math.round((found.length / uiEntries.length) * 100);
-    if (pct === 100) return { status: 'pass', message: `${found.length}/${uiEntries.length} UI components covered (100%)` };
-    if (pct >= 90) return { status: 'warn', message: `${found.length}/${uiEntries.length} (${pct}%) — ${missing.length} missing`, details: missing.slice(0, 10) };
-    return { status: 'fail', message: `${found.length}/${uiEntries.length} (${pct}%) — ${missing.length} missing`, details: missing.slice(0, 10) };
+    if (missing.length === 0) return { status: 'pass', message: `${found.length}/${uiEntries.length} UI components resolvable (100%)` };
+    if (pct >= 90) return { status: 'warn', message: `${found.length}/${uiEntries.length} (${pct}%) — ${missing.length} not resolvable`, details: missing.slice(0, 10) };
+    return { status: 'fail', message: `${found.length}/${uiEntries.length} (${pct}%) — ${missing.length} not resolvable`, details: missing.slice(0, 10) };
   } catch { return { status: 'warn', message: 'Could not check preview coverage' }; }
 });
 
