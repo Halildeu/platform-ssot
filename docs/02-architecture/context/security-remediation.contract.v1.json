@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "contract_id": "security-remediation-contract-v1",
-  "last_verified": "2026-03-08",
+  "last_verified": "2026-03-29",
   "purpose": "Backend security gate'inde bloklayici CVE'lerin nasil kapatildigini ve residual risklerin hangi kuralla yonetildigini kanonik olarak tanimlar.",
   "blocking_policy": {
     "dependency_check_fail_cvss": 7.0,
@@ -13,6 +13,48 @@
     ]
   },
   "remediation_waves": [
+    {
+      "id": "wave-cve-upgrades-2026-03-29",
+      "status": "implemented",
+      "scope": [
+        "backend/common-auth/pom.xml",
+        "backend/api-gateway/pom.xml",
+        "backend/auth-service/pom.xml",
+        "backend/core-data-service/pom.xml",
+        "backend/discovery-server/pom.xml",
+        "backend/permission-service/pom.xml",
+        "backend/report-service/pom.xml",
+        "backend/user-service/pom.xml",
+        "backend/variant-service/pom.xml"
+      ],
+      "actions": [
+        {
+          "problem": "openfga-sdk 0.7.2: CVE-2023-35933 (7.5), CVE-2023-45810 (7.5) — OWASP CPE match; blocking CVSS >= 7.0 gate.",
+          "remediation": "Upgraded openfga-sdk from 0.7.2 to 0.8.1 in common-auth/pom.xml.",
+          "evidence": ["backend/common-auth/pom.xml"]
+        },
+        {
+          "problem": "mssql-jdbc 12.10.1.jre11: CVE-2025-59250 (8.1) — HIGH severity SQL Server JDBC driver vulnerability.",
+          "remediation": "Overrode mssql-jdbc.version to 12.10.2.jre11 in report-service/pom.xml properties.",
+          "evidence": ["backend/report-service/pom.xml"]
+        },
+        {
+          "problem": "tomcat-embed-core 10.1.46: CVE-2025-66614 (9.1), CVE-2026-24734 (7.5) — CRITICAL/HIGH Tomcat vulnerabilities.",
+          "remediation": "Overrode tomcat.version to 10.1.53 in all Spring Boot module pom.xml properties sections.",
+          "evidence": [
+            "backend/api-gateway/pom.xml",
+            "backend/auth-service/pom.xml",
+            "backend/common-auth/pom.xml",
+            "backend/core-data-service/pom.xml",
+            "backend/discovery-server/pom.xml",
+            "backend/permission-service/pom.xml",
+            "backend/report-service/pom.xml",
+            "backend/user-service/pom.xml",
+            "backend/variant-service/pom.xml"
+          ]
+        }
+      ]
+    },
     {
       "id": "wave-eureka-transitives-2026-03-06",
       "status": "superseded",
