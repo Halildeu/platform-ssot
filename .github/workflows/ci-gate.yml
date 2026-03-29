@@ -33,8 +33,10 @@ jobs:
         if: steps.changes.outputs.web_changed == 'true' || steps.changes.outputs.workflows_changed == 'true'
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: web/package-lock.json
+
+      - name: Install pnpm
+        if: steps.changes.outputs.web_changed == 'true' || steps.changes.outputs.workflows_changed == 'true'
+        run: corepack enable && corepack prepare pnpm@latest --activate
 
       - uses: actions/setup-java@v4
         if: steps.changes.outputs.backend_changed == 'true' || steps.changes.outputs.workflows_changed == 'true'
