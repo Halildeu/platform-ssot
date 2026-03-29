@@ -54,6 +54,7 @@
       "mobile/services/**/*",
       "mobile/packages/**/*",
       "web/apps/mfe-shell/src/app/auth/**/*",
+      "web/apps/mfe-shell/src/app/providers/**",
       "web/apps/mfe-shell/src/features/auth/**/*",
       "web/apps/mfe-shell/src/pages/unauthorized/**/*",
       "web/apps/mfe-shell/src/widgets/app-shell/**/*",
@@ -100,6 +101,11 @@
         "path_glob": "web/apps/mfe-shell/src/app/auth/**",
         "ux_theme_id": "task_completion_architecture",
         "ux_subtheme_id": "critical_path_minimization"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/providers/**",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
       },
       {
         "path_glob": "web/apps/mfe-shell/src/features/auth/**",
@@ -215,6 +221,7 @@
     "plane_path_globs": {
       "web": [
         "web/apps/mfe-shell/src/app/auth/**/*",
+        "web/apps/mfe-shell/src/app/providers/**",
         "web/apps/mfe-shell/src/features/auth/**/*",
         "web/apps/mfe-shell/src/pages/unauthorized/**/*",
         "web/apps/mfe-shell/src/widgets/app-shell/**/*",
