@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { getGuideForComponent } from "./guideRegistry";
-import type { GuideSection, ComponentGuide } from "./guideRegistry";
+import type { GuideSection } from "./guideRegistry";
 
 /* ------------------------------------------------------------------ */
 /*  GuideTab — Narrative documentation with mini-TOC                    */
@@ -100,7 +100,7 @@ function renderMarkdownContent(content: string): React.ReactNode {
       elements.push(
         <pre
           key={`code-${i}`}
-          className="my-2 overflow-x-auto rounded-xl bg-gray-900 p-4 text-xs leading-relaxed text-gray-200 font-mono"
+          className="my-2 overflow-x-auto rounded-xl bg-surface-inverse p-4 text-xs leading-relaxed text-border-subtle font-mono"
         >
           {codeLines.join("\n")}
         </pre>,
@@ -156,7 +156,7 @@ function renderInline(text: string): React.ReactNode {
       parts.push(
         <code
           key={match.index}
-          className="rounded-xs bg-surface-muted px-1.5 py-0.5 text-[11px] font-mono text-rose-600"
+          className="rounded-xs bg-surface-muted px-1.5 py-0.5 text-[11px] font-mono text-state-danger-text"
         >
           {token.slice(1, -1)}
         </code>,
@@ -291,7 +291,7 @@ export const GuideTab: React.FC<GuideTabProps> = ({ componentName }) => {
       {/* Main content */}
       <div className="flex flex-col min-w-0 flex-1 gap-6">
         {/* Summary card */}
-        <div className="rounded-2xl border border-border-subtle bg-linear-to-r from-blue-500/5 to-transparent p-5">
+        <div className="rounded-2xl border border-border-subtle bg-linear-to-r from-action-primary/5 to-transparent p-5">
           <Text as="div" className="text-sm leading-relaxed text-text-primary">
             {guide.summary}
           </Text>

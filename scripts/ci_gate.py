@@ -298,6 +298,16 @@ def append_ci_gate_markdown(text: str) -> None:
     append_ci_gate_report(text)
 
 
+def web_install_command() -> list[str]:
+    if (ROOT / "web" / "pnpm-workspace.yaml").exists():
+        return [
+            "bash",
+            "-lc",
+            "if command -v pnpm >/dev/null 2>&1; then pnpm -C web install --frozen-lockfile; else corepack pnpm -C web install --frozen-lockfile; fi",
+        ]
+    return ["npm", "-C", "web", "ci"]
+
+
 def run_gate(name: str, commands: List[Tuple[List[str], Optional[Path]]]) -> GateResult:
     gha_group(f"{name} gate")
     try:
@@ -420,7 +430,7 @@ def main(argv: List[str]) -> int:
                 "web",
                 [
                     (["python3", "scripts/check_version_gates.py", "--mode", version_gates_mode], ROOT),
-                    (["npm", "-C", "web", "ci"], ROOT),
+                    (web_install_command(), ROOT),
                     (["npm", "-C", "web", "run", "tokens:build", "--", "--check"], ROOT),
                     (["bash", "scripts/run_lint_web.sh"], ROOT),
                     (["bash", "scripts/run_tests_web.sh"], ROOT),

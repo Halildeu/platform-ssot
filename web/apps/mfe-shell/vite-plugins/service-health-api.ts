@@ -5,7 +5,7 @@
  */
 import type { Plugin, ViteDevServer } from 'vite';
 import { execSync } from 'child_process';
-import { existsSync, statSync, readFileSync } from 'fs';
+import { existsSync } from 'fs';
 import { join } from 'path';
 import * as net from 'net';
 

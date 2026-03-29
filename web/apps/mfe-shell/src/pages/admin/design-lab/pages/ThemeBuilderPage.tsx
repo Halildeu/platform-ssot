@@ -159,7 +159,7 @@ export default function ThemeBuilderPage() {
                       className={[
                         "rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all duration-200",
                         axes[config.id] === opt
-                          ? "bg-action-primary text-white shadow-xs"
+                          ? "bg-action-primary text-text-inverse shadow-xs"
                           : "bg-surface-muted text-text-secondary hover:bg-surface-canvas hover:text-text-primary",
                       ].join(" ")}
                     >
@@ -265,7 +265,7 @@ export default function ThemeBuilderPage() {
                 onClick={handleCopyConfig}
                 className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-default px-3 py-1.5 text-xs font-medium text-text-secondary transition hover:bg-surface-muted hover:text-text-primary"
               >
-                {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                {copied ? <Check className="h-3.5 w-3.5 text-state-success-text" /> : <Copy className="h-3.5 w-3.5" />}
                 {copied ? "Copied!" : "Copy JSON"}
               </button>
             </div>

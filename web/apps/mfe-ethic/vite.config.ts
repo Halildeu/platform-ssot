@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { federation } from '@module-federation/vite';
@@ -18,7 +18,6 @@ const sharedCore = {
   'react-router-dom': singleton('react-router-dom'),
   '@reduxjs/toolkit': singleton('@reduxjs/toolkit'),
   'react-redux': singleton('react-redux'),
-  '@tanstack/react-query': singleton('@tanstack/react-query'),
 };
 const sharedProdOnly = {
   '@mfe/design-system': singleton('@mfe/design-system', false),
@@ -26,11 +25,13 @@ const sharedProdOnly = {
   'tailwind-merge': singleton('tailwind-merge'),
 };
 
+const isTest = !!process.env['VITEST'];
+
 export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     tailwindcss(),
-    federation({
+    ...(isTest ? [] : [federation({
       name: 'mfe_ethic',
       filename: 'remoteEntry.js',
       dts: false,
@@ -42,7 +43,7 @@ export default defineConfig(({ mode }) => ({
         ...sharedCore,
         ...(mode === 'production' ? sharedProdOnly : {}),
       },
-    }),
+    })]),
   ],
 
   resolve: {
@@ -80,5 +81,16 @@ export default defineConfig(({ mode }) => ({
     target: 'esnext',
     outDir: 'dist',
     rolldownOptions: {},
+  },
+
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test-setup.ts'],
+    resolve: {
+      alias: {
+        'mfe_shell/logic': '/src/__mocks__/mfe-shell.ts',
+      },
+    },
   },
 }));

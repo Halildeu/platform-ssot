@@ -15,7 +15,7 @@
  */
 
 import { readdir, stat, readFile } from "node:fs/promises";
-import { join, extname } from "node:path";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -181,7 +181,7 @@ async function main() {
   const grandTotal = rows.reduce((sum, r) => sum + r.total, 0);
 
   // Budget check
-  let budgetViolations = [];
+  const budgetViolations = [];
   let budget = null;
   if (hasBudgetFlag) {
     try {

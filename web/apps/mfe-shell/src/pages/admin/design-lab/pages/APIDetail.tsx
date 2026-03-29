@@ -39,12 +39,12 @@ const API_TAB_META: Array<{ id: ApiDetailTab; label: string; icon: React.ReactNo
 /* ---- Kind badge color mapping ---- */
 
 const KIND_BADGE_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
-  hook: { bg: "bg-blue-500/10", text: "text-blue-600", dot: "bg-blue-500" },
-  function: { bg: "bg-violet-500/10", text: "text-violet-600", dot: "bg-violet-500" },
-  const: { bg: "bg-amber-500/10", text: "text-amber-600", dot: "bg-amber-500" },
-  "theme-api": { bg: "bg-emerald-500/10", text: "text-emerald-600", dot: "bg-emerald-500" },
-  "theme-setter": { bg: "bg-cyan-500/10", text: "text-cyan-600", dot: "bg-cyan-500" },
-  hoc: { bg: "bg-pink-500/10", text: "text-pink-600", dot: "bg-pink-500" },
+  hook: { bg: "bg-action-primary/10", text: "text-action-primary", dot: "bg-action-primary" },
+  function: { bg: "bg-action-primary/10", text: "text-action-primary", dot: "bg-action-primary" },
+  const: { bg: "bg-state-warning-text/10", text: "text-state-warning-text", dot: "bg-state-warning-text" },
+  "theme-api": { bg: "bg-state-success-text/10", text: "text-state-success-text", dot: "bg-state-success-text" },
+  "theme-setter": { bg: "bg-state-info-text/10", text: "text-state-info-text", dot: "bg-state-info-text" },
+  hoc: { bg: "bg-state-danger-text/10", text: "text-state-danger-text", dot: "bg-state-danger-text" },
 };
 
 const KIND_LABELS: Record<string, string> = {
@@ -264,20 +264,20 @@ export default function APIDetail() {
                 className={[
                   "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold",
                   indexItem.lifecycle === "stable"
-                    ? "bg-emerald-500/10 text-emerald-600"
+                    ? "bg-state-success-text/10 text-state-success-text"
                     : indexItem.lifecycle === "beta"
-                      ? "bg-amber-500/10 text-amber-600"
-                      : "bg-blue-500/10 text-blue-600",
+                      ? "bg-state-warning-text/10 text-state-warning-text"
+                      : "bg-action-primary/10 text-action-primary",
                 ].join(" ")}
               >
                 <span
                   className={[
                     "h-1.5 w-1.5 rounded-full",
                     indexItem.lifecycle === "stable"
-                      ? "bg-emerald-500"
+                      ? "bg-state-success-text"
                       : indexItem.lifecycle === "beta"
-                        ? "bg-amber-500"
-                        : "bg-blue-500",
+                        ? "bg-state-warning-text"
+                        : "bg-action-primary",
                   ].join(" ")}
                 />
                 {indexItem.lifecycle}
@@ -312,7 +312,7 @@ export default function APIDetail() {
             <IconButton
               icon={
                 copied ? (
-                  <Check className="h-3.5 w-3.5 text-emerald-500" />
+                  <Check className="h-3.5 w-3.5 text-state-success-text" />
                 ) : (
                   <Copy className="h-3.5 w-3.5" />
                 )
@@ -337,7 +337,7 @@ export default function APIDetail() {
               className={[
                 "flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                 activeTab === id
-                  ? "bg-action-primary text-white shadow-xs"
+                  ? "bg-action-primary text-text-inverse shadow-xs"
                   : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
               ].join(" ")}
             >
@@ -402,8 +402,8 @@ function OverviewTab({
         {props.length > 0 && (
           <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-500/10">
-                <FileCode2 className="h-3.5 w-3.5 text-blue-600" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-action-primary/10">
+                <FileCode2 className="h-3.5 w-3.5 text-action-primary" />
               </div>
               <Text as="div" className="text-sm font-semibold text-text-primary">
                 Parametreler
@@ -421,7 +421,7 @@ function OverviewTab({
                   <code className="text-xs font-semibold text-text-primary">
                     {prop.name}
                   </code>
-                  <code className="truncate text-[11px] text-blue-600/70">
+                  <code className="truncate text-[11px] text-action-primary/70">
                     {prop.type}
                   </code>
                 </div>
@@ -439,8 +439,8 @@ function OverviewTab({
         {stateModel.length > 0 && (
           <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-500/10">
-                <Layers className="h-3.5 w-3.5 text-violet-600" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-action-primary/10">
+                <Layers className="h-3.5 w-3.5 text-action-primary" />
               </div>
               <Text as="div" className="text-sm font-semibold text-text-primary">
                 State Model
@@ -463,8 +463,8 @@ function OverviewTab({
         {(indexItem?.whereUsed ?? []).length > 0 && (
           <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10">
-                <Globe className="h-3.5 w-3.5 text-emerald-600" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-state-success-text/10">
+                <Globe className="h-3.5 w-3.5 text-state-success-text" />
               </div>
               <Text as="div" className="text-sm font-semibold text-text-primary">
                 Kullanildigi Yerler
@@ -587,7 +587,7 @@ function ApiParamsTab({
       {/* Parameters / Arguments table */}
       {props.length > 0 && (
         <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
-          <div className="border-b border-border-subtle bg-linear-to-r from-blue-500/5 to-transparent px-5 py-4">
+          <div className="border-b border-border-subtle bg-linear-to-r from-action-primary/5 to-transparent px-5 py-4">
             <Text as="div" className="text-sm font-semibold text-text-primary">
               {kind === "hook" ? "Parametreler" : kind === "const" ? "Anahtarlar" : "Argumanlar"}
             </Text>
@@ -624,7 +624,7 @@ function ApiParamsTab({
                       </code>
                     </td>
                     <td className="px-5 py-3">
-                      <code className="text-xs text-blue-600/80">
+                      <code className="text-xs text-action-primary/80">
                         {prop.type}
                       </code>
                     </td>
@@ -633,7 +633,7 @@ function ApiParamsTab({
                         {kind === "hook"
                           ? (prop.default || "-")
                           : (prop.required ? (
-                              <span className="rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] font-semibold text-red-600">
+                              <span className="rounded-full bg-state-danger-text/10 px-2 py-0.5 text-[10px] font-semibold text-state-danger-text">
                                 Zorunlu
                               </span>
                             ) : (
@@ -658,7 +658,7 @@ function ApiParamsTab({
       {/* Return value / State model table (for hooks) */}
       {kind === "hook" && stateModel.length > 0 && (
         <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
-          <div className="border-b border-border-subtle bg-linear-to-r from-violet-500/5 to-transparent px-5 py-4">
+          <div className="border-b border-border-subtle bg-linear-to-r from-action-primary/5 to-transparent px-5 py-4">
             <Text as="div" className="text-sm font-semibold text-text-primary">
               Donus Degerleri
             </Text>
@@ -735,8 +735,8 @@ function RelatedTab({
       {whereUsed.length > 0 && (
         <div className="rounded-2xl border border-border-subtle bg-surface-default p-6">
           <div className="mb-4 flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10">
-              <Globe className="h-3.5 w-3.5 text-emerald-600" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-state-success-text/10">
+              <Globe className="h-3.5 w-3.5 text-state-success-text" />
             </div>
             <Text as="div" className="text-sm font-semibold text-text-primary">
               Bu API&apos;yi Kullanan Bilesenler
@@ -776,8 +776,8 @@ function RelatedTab({
       {sameGroupItems.length > 0 && (
         <div className="rounded-2xl border border-border-subtle bg-surface-default p-6">
           <div className="mb-4 flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-500/10">
-              <Layers className="h-3.5 w-3.5 text-blue-600" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-action-primary/10">
+              <Layers className="h-3.5 w-3.5 text-action-primary" />
             </div>
             <Text as="div" className="text-sm font-semibold text-text-primary">
               Ayni Gruptaki API&apos;ler
@@ -869,10 +869,10 @@ function QualityTab({
     <div className="flex flex-col gap-6">
       <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
         {/* Header with score */}
-        <div className="flex items-center justify-between border-b border-border-subtle bg-linear-to-r from-violet-500/5 to-transparent px-5 py-4">
+        <div className="flex items-center justify-between border-b border-border-subtle bg-linear-to-r from-action-primary/5 to-transparent px-5 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/10">
-              <ShieldCheck className="h-4 w-4 text-violet-600" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-action-primary/10">
+              <ShieldCheck className="h-4 w-4 text-action-primary" />
             </div>
             <Text as="div" className="text-sm font-semibold text-text-primary">
               Kalite Kontrol Listesi
@@ -883,7 +883,7 @@ function QualityTab({
               <div
                 className={[
                   "h-full rounded-full transition-all duration-500",
-                  pct >= 80 ? "bg-emerald-500" : pct >= 50 ? "bg-amber-500" : "bg-red-500",
+                  pct >= 80 ? "bg-state-success-text" : pct >= 50 ? "bg-state-warning-text" : "bg-state-danger-text",
                 ].join(" ")}
                 style={{ width: `${pct}%` }}
               />
@@ -892,7 +892,7 @@ function QualityTab({
               as="span"
               className={[
                 "text-sm font-bold tabular-nums",
-                pct >= 80 ? "text-emerald-600" : pct >= 50 ? "text-amber-600" : "text-red-600",
+                pct >= 80 ? "text-state-success-text" : pct >= 50 ? "text-state-warning-text" : "text-state-danger-text",
               ].join(" ")}
             >
               {passCount}/{total}
@@ -911,8 +911,8 @@ function QualityTab({
                 className={[
                   "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs",
                   check.pass
-                    ? "bg-emerald-500/10 text-emerald-600"
-                    : "bg-red-500/10 text-red-500",
+                    ? "bg-state-success-text/10 text-state-success-text"
+                    : "bg-state-danger-text/10 text-state-danger-text",
                 ].join(" ")}
               >
                 {check.pass ? (

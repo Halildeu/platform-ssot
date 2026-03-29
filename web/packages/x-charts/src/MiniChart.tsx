@@ -42,10 +42,10 @@ function TrendIndicator({
   const isDown = trend === "down";
 
   const color = isUp
-    ? "var(--state-success-text, #22c55e)"
+    ? "var(--state-success-text))"
     : isDown
-      ? "var(--state-error-text, #ef4444)"
-      : "var(--text-secondary, #64748b)";
+      ? "var(--state-error-text))"
+      : "var(--text-secondary))";
 
   return (
     <span
@@ -122,7 +122,7 @@ function renderLineSVG(
           cy={coords[coords.length - 1].y}
           r="3"
           fill={color}
-          stroke="var(--surface-default, #fff)"
+          stroke="var(--surface-default))"
           strokeWidth="1.5"
         />
       )}
@@ -184,10 +184,10 @@ function DonutChart({
 
   const COLORS = [
     color,
-    "var(--state-success-text, #22c55e)",
-    "var(--state-warning-text, #f59e0b)",
-    "var(--state-error-text, #ef4444)",
-    "var(--text-tertiary, #94a3b8)",
+    "var(--state-success-text))",
+    "var(--state-warning-text))",
+    "var(--state-error-text))",
+    "var(--text-tertiary))",
   ];
 
   let cumulativeAngle = -90; // start from top
@@ -234,7 +234,7 @@ function DonutChart({
         cy={cy}
         r={r}
         fill="none"
-        stroke="var(--border-subtle, #e2e8f0)"
+        stroke="var(--border-subtle))"
         strokeWidth={strokeW}
       />
       {arcs}
@@ -252,7 +252,7 @@ export const MiniChart = React.forwardRef<HTMLDivElement, MiniChartProps>(
       data,
       type = "line",
       height = 120,
-      color = "var(--action-primary, #3b82f6)",
+      color = "var(--action-primary))",
       trend,
       trendValue,
       className,

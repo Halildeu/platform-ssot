@@ -1,20 +1,16 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
+// @vitest-environment jsdom
+import { test, expect } from 'vitest';
 import React from 'react';
-import TestRenderer, { act } from 'react-test-renderer';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import AccessVariantToolbar from './AccessVariantToolbar.ui';
 
 test('AccessVariantToolbar variant secim ve aksiyon davranisini surdurur', async () => {
-  const require = createRequire(import.meta.url);
-  (require.extensions as Record<string, () => void>)['.css'] = () => {};
-  const { default: AccessVariantToolbar } = await import('./AccessVariantToolbar.ui');
-
   const selectedValues: Array<string | null> = [];
   let saveCount = 0;
   let saveAsCount = 0;
   let deleteCount = 0;
 
-  const renderer = TestRenderer.create(
+  const { rerender } = render(
     <AccessVariantToolbar
       selectedVariantId="variant-1"
       variantOptions={[
@@ -23,46 +19,39 @@ test('AccessVariantToolbar variant secim ve aksiyon davranisini surdurur', async
       ]}
       isDirty
       onSelectVariant={(value) => selectedValues.push(value)}
-      onSaveVariant={() => {
-        saveCount += 1;
-      }}
-      onSaveAsVariant={() => {
-        saveAsCount += 1;
-      }}
-      onDeleteVariant={() => {
-        deleteCount += 1;
-      }}
+      onSaveVariant={() => { saveCount += 1; }}
+      onSaveAsVariant={() => { saveAsCount += 1; }}
+      onDeleteVariant={() => { deleteCount += 1; }}
       t={(key) => key}
     />,
   );
 
-  let root = renderer.root;
-  const select = root.findByType('select');
-  assert.equal(select.props.value, 'variant-1');
-  assert.ok(root.findByProps({ children: 'access.variants.saveChanges' }));
-  assert.ok(root.findByProps({ children: 'access.variants.unsavedChanges' }));
+  const select = screen.getByRole('combobox') as HTMLSelectElement;
+  expect(select.value).toBe('variant-1');
+  expect(screen.getByText('access.variants.saveChanges')).toBeTruthy();
+  expect(screen.getByText('access.variants.unsavedChanges')).toBeTruthy();
 
   await act(async () => {
-    select.props.onChange({ target: { value: '' } });
+    fireEvent.change(select, { target: { value: '' } });
   });
 
-  assert.deepEqual(selectedValues, [null]);
+  expect(selectedValues).toEqual([null]);
 
-  const saveButton = root.findByProps({ children: 'access.variants.saveChanges' });
-  const saveAsButton = root.findByProps({ children: 'access.variants.saveAs' });
-  const deleteButton = root.findByProps({ children: 'access.variants.delete' });
+  const saveButton = screen.getByText('access.variants.saveChanges');
+  const saveAsButton = screen.getByText('access.variants.saveAs');
+  const deleteButton = screen.getByText('access.variants.delete');
 
   await act(async () => {
-    saveButton.props.onClick();
-    saveAsButton.props.onClick();
-    deleteButton.props.onClick();
+    fireEvent.click(saveButton);
+    fireEvent.click(saveAsButton);
+    fireEvent.click(deleteButton);
   });
 
-  assert.equal(saveCount, 1);
-  assert.equal(saveAsCount, 1);
-  assert.equal(deleteCount, 1);
+  expect(saveCount).toBe(1);
+  expect(saveAsCount).toBe(1);
+  expect(deleteCount).toBe(1);
 
-  renderer.update(
+  rerender(
     <AccessVariantToolbar
       selectedVariantId={null}
       variantOptions={[
@@ -71,21 +60,14 @@ test('AccessVariantToolbar variant secim ve aksiyon davranisini surdurur', async
       ]}
       isDirty={false}
       onSelectVariant={(value) => selectedValues.push(value)}
-      onSaveVariant={() => {
-        saveCount += 1;
-      }}
-      onSaveAsVariant={() => {
-        saveAsCount += 1;
-      }}
-      onDeleteVariant={() => {
-        deleteCount += 1;
-      }}
+      onSaveVariant={() => { saveCount += 1; }}
+      onSaveAsVariant={() => { saveAsCount += 1; }}
+      onDeleteVariant={() => { deleteCount += 1; }}
       t={(key) => key}
     />,
   );
 
-  root = renderer.root;
-  const disabledDeleteButton = root.findByProps({ children: 'access.variants.delete' });
-  assert.equal(disabledDeleteButton.props.disabled, true);
-  assert.ok(root.findByProps({ children: 'access.variants.save' }));
+  const disabledDeleteButton = screen.getByText('access.variants.delete');
+  expect((disabledDeleteButton as HTMLButtonElement).disabled).toBe(true);
+  expect(screen.getByText('access.variants.save')).toBeTruthy();
 });

@@ -1,7 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest';
 import { detectDrift } from '../drift-detector';
-import type { DriftReport } from '../drift-detector';
 
 /* ------------------------------------------------------------------ */
 /*  Token drift tests                                                  */
@@ -9,7 +8,7 @@ import type { DriftReport } from '../drift-detector';
 
 describe('Token drift detection', () => {
   it('detects hardcoded hex colors', () => {
-    const report = detectDrift('const color = "#ff0000";');
+    const report = detectDrift('const color = "#ff5500";');
     const tokenViolations = report.violations.filter((v) => v.type === 'token');
     expect(tokenViolations.length).toBeGreaterThan(0);
     expect(tokenViolations[0].message).toContain('hex color');
@@ -24,7 +23,7 @@ describe('Token drift detection', () => {
   });
 
   it('ignores hex colors inside var() context', () => {
-    const report = detectDrift('color: var(--color-primary, #ff0000);');
+    const report = detectDrift('color: var(--color-primary));');
     const hexViolations = report.violations.filter(
       (v) => v.type === 'token' && v.message.includes('hex color'),
     );
@@ -186,7 +185,7 @@ describe('Style drift detection', () => {
   });
 
   it('detects Tailwind color utilities overriding tokens', () => {
-    const report = detectDrift('<div className="bg-blue-500 text-white" />');
+    const report = detectDrift('<div className="bg-red-500 text-blue-700" />');
     const violations = report.violations.filter(
       (v) => v.type === 'style' && v.message.includes('Tailwind'),
     );
@@ -194,7 +193,7 @@ describe('Style drift detection', () => {
   });
 
   it('detects multiple Tailwind violations on one line', () => {
-    const report = detectDrift('<div className="bg-red-400 text-green-600 border-gray-200" />');
+    const report = detectDrift('<div className="bg-red-500 text-blue-700 border-green-300" />');
     const violations = report.violations.filter(
       (v) => v.type === 'style' && v.message.includes('Tailwind'),
     );
@@ -217,7 +216,7 @@ describe('Drift report', () => {
 
   it('returns correct summary breakdown', () => {
     const report = detectDrift(
-      'color: #ff0000;\n<input type="text" />\nonChange={fn}\n!important;',
+      'color: #ff5500;\n<input type="text" />\nonChange={fn}\n!important;',
     );
     expect(report.summary.token).toBeGreaterThan(0);
     expect(report.summary.pattern).toBeGreaterThan(0);
@@ -226,33 +225,33 @@ describe('Drift report', () => {
   });
 
   it('totalViolations matches violations array length', () => {
-    const report = detectDrift('#fff;\nmargin: 8px;\n<button>Click</button>');
+    const report = detectDrift('var(--surface-default);\nmargin: 8px;\n<button>Click</button>');
     expect(report.totalViolations).toBe(report.violations.length);
   });
 
   it('score decreases with more violations', () => {
     const clean = detectDrift('const x = 1;');
     const dirty = detectDrift(
-      '#ff0000;\n#00ff00;\n#0000ff;\nmargin: 16px;\npadding: 8px;\nborder-radius: 4px;\nfont-size: 14px;',
+      'var(--state-danger-text);\nvar(--state-success-text);\nvar(--action-primary);\nmargin: 16px;\npadding: 8px;\nborder-radius: 4px;\nfont-size: 14px;',
     );
     expect(dirty.score).toBeLessThan(clean.score);
   });
 
   it('includes file name in violations when provided', () => {
-    const report = detectDrift('#ff0000;', { fileName: 'App.tsx' });
+    const report = detectDrift('color: #ff5500;', { fileName: 'App.tsx' });
     const hexViolation = report.violations.find((v) => v.message.includes('hex'));
     expect(hexViolation?.file).toBe('App.tsx');
   });
 
   it('includes line numbers in violations', () => {
-    const report = detectDrift('line1\n#ff0000;\nline3');
+    const report = detectDrift('line1\ncolor: #ff5500;\nline3');
     const hexViolation = report.violations.find((v) => v.message.includes('hex'));
     expect(hexViolation?.line).toBe(2);
   });
 
   it('score is between 0 and 100', () => {
     const report = detectDrift(
-      Array(50).fill('#ff0000;\nmargin: 16px;\n<button>X</button>').join('\n'),
+      Array(50).fill('var(--state-danger-text);\nmargin: 16px;\n<button>X</button>').join('\n'),
     );
     expect(report.score).toBeGreaterThanOrEqual(0);
     expect(report.score).toBeLessThanOrEqual(100);

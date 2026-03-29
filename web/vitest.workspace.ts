@@ -10,4 +10,7 @@ export default defineWorkspace([
   'packages/x-scheduler/vitest.config.ts',
   'packages/blocks/vitest.config.ts',
   'apps/mfe-shell/vitest.config.ts',
+  'apps/mfe-audit/vitest.config.ts',
+  'apps/mfe-access/vitest.config.ts',
+  'apps/mfe-users/vitest.config.ts',
 ]);

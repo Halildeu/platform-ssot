@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Zap, Trash2, Copy, Check, ChevronDown, ChevronRight, Filter, Code2 } from "lucide-react";
+import { Zap, Trash2, Check, ChevronDown, ChevronRight, Filter, Code2 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { subscribeToActionLog } from "./PlaygroundPreview";
 import type { ActionLogEntry } from "./PlaygroundPreview";
@@ -22,13 +22,13 @@ const NOISY_EVENTS = new Set(["onMouseEnter", "onMouseLeave", "onMouseMove", "on
 
 /* ---- Event color coding ---- */
 const EVENT_COLORS: Record<string, string> = {
-  onClick: "text-blue-600",
-  onChange: "text-emerald-600",
-  onFocus: "text-amber-600",
+  onClick: "text-action-primary",
+  onChange: "text-state-success-text",
+  onFocus: "text-state-warning-text",
   onBlur: "text-[var(--text-subtle)]",
-  onKeyDown: "text-purple-600",
-  onKeyUp: "text-purple-500",
-  onSubmit: "text-red-600",
+  onKeyDown: "text-action-primary",
+  onKeyUp: "text-action-primary",
+  onSubmit: "text-state-danger-text",
 };
 
 type ActionsPanelProps = {
@@ -91,10 +91,10 @@ export const ActionsPanel: React.FC<ActionsPanelProps> = ({ expanded, onToggle }
         onClick={onToggle}
         className="flex w-full items-center gap-2 px-4 py-2.5 text-left transition hover:bg-surface-muted/50"
       >
-        <Zap className="h-3.5 w-3.5 text-indigo-500" />
+        <Zap className="h-3.5 w-3.5 text-action-primary" />
         <Text className="text-xs font-semibold text-text-primary">Actions</Text>
         {entryCount > 0 && (
-          <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-bold text-indigo-700">
+          <span className="rounded-full bg-action-primary/10 px-2 py-0.5 text-[10px] font-bold text-action-primary">
             {entryCount}
           </span>
         )}
@@ -106,7 +106,7 @@ export const ActionsPanel: React.FC<ActionsPanelProps> = ({ expanded, onToggle }
                 onClick={(e) => { e.stopPropagation(); setHideNoisy(!hideNoisy); }}
                 className={[
                   "rounded-md p-1 transition",
-                  hideNoisy ? "bg-indigo-100 text-indigo-600" : "text-text-tertiary hover:text-text-secondary",
+                  hideNoisy ? "bg-action-primary/10 text-action-primary" : "text-text-tertiary hover:text-text-secondary",
                 ].join(" ")}
                 title={hideNoisy ? "Showing important events" : "Showing all events"}
               >
@@ -185,7 +185,7 @@ export const ActionsPanel: React.FC<ActionsPanelProps> = ({ expanded, onToggle }
                         title="Copy test assertion"
                       >
                         {copiedId === entry.id ? (
-                          <Check className="h-2.5 w-2.5 text-emerald-500" />
+                          <Check className="h-2.5 w-2.5 text-state-success-text" />
                         ) : (
                           <Code2 className="h-2.5 w-2.5" />
                         )}
@@ -215,7 +215,7 @@ function generateTestAssertion(entry: ActionLogEntry): string {
   const handler = `handle${entry.eventName.slice(2)}`;
   const lines = [
     `// Test assertion for ${entry.eventName} on ${entry.componentName}`,
-    `const ${handler} = jest.fn();`,
+    `const ${handler} = vi.fn();`,
     `render(<${entry.componentName} ${entry.eventName}={${handler}} />);`,
     ``,
     `// Simulate interaction`,

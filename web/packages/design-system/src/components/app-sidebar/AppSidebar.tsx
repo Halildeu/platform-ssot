@@ -3,7 +3,7 @@ import { cn } from '../../utils/cn';
 import {
   resolveAccessState,
   accessStyles,
-  type AccessControlledProps,
+  type _AccessControlledProps,
 } from '../../internal/access-controller';
 import { SidebarContext } from './useSidebar';
 import { AppSidebarHeader } from './AppSidebarHeader';

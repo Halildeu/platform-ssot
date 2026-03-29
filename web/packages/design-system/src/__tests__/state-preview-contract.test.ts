@@ -18,7 +18,8 @@ import * as path from "path";
  * This ensures the contract test and runtime ComponentDetail always stay in sync.
  */
 const STATE_PROP_MAP_SOURCE = path.resolve(
-  "/Users/halilkocoglu/Documents/dev/web/apps/mfe-shell/src/pages/admin/design-lab/shared/statePropMap.ts",
+  __dirname,
+  "../../../../apps/mfe-shell/src/pages/admin/design-lab/shared/statePropMap.ts",
 );
 
 function loadStatePropMapKeys(): Set<string> {
@@ -48,7 +49,8 @@ const STATE_PROP_MAP_KEYS = loadStatePropMapKeys();
 
 /* ---- Load all doc entries from the canonical dev repo ---- */
 const ENTRIES_DIR = path.resolve(
-  "/Users/halilkocoglu/Documents/dev/web/packages/design-system/src/catalog/component-docs/entries",
+  __dirname,
+  "../catalog/component-docs/entries",
 );
 
 type DocEntry = {

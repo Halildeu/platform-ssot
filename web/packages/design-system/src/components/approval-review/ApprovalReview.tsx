@@ -13,7 +13,7 @@ import {
 } from "../ai-action-audit-timeline/AIActionAuditTimeline";
 import { Text } from "../../primitives/text/Text";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 

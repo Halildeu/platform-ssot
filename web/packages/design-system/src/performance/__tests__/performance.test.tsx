@@ -408,7 +408,7 @@ describe('createLazyComponent', () => {
 
   it('shows default error UI when no errorFallback provided', async () => {
     const LazyBroken = createLazyComponent(
-      () => Promise.reject(new Error('fail')),
+      () => Promise.reject(new Error('lazy import failed')),
     );
 
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});

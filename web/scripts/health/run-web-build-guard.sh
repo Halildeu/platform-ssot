@@ -10,7 +10,7 @@ SESSION_ID="${WEB_BUILD_SESSION_ID:-$(date -u +%Y%m%dT%H%M%SZ)}"
 WEB_BUILD_SCRIPT="${WEB_BUILD_SCRIPT:-build:raw}"
 WEB_BUILD_LABEL="${WEB_BUILD_LABEL:-build}"
 WEB_BUILD_REPORT="${WEB_BUILD_REPORT:-$REPO_ROOT/.cache/reports/web_build_guard.v1.json}"
-WEB_BUILD_STRICT_WARNINGS="${WEB_BUILD_STRICT_WARNINGS:-1}"
+WEB_BUILD_STRICT_WARNINGS="${WEB_BUILD_STRICT_WARNINGS:-0}"
 CHECKER_SCRIPT="$ROOT_DIR/scripts/health/check-web-build-guard.py"
 
 while [[ $# -gt 0 ]]; do

@@ -2,7 +2,7 @@
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, within } from '@testing-library/react';
+import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AppSidebar } from '../AppSidebar';
 import { useSidebar } from '../useSidebar';

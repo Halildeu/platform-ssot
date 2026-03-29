@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  FilterBar — Horizontal filter strip with collapsible "More" area   */
@@ -55,7 +55,7 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(({
       ref={ref}
       data-access-state={accessState.state}
       className={cn(
-        "border-b border-border-subtle bg-surface-default",
+        "border-b border-border-subtle bg-[var(--surface-default)]",
         accessState.isDisabled && "pointer-events-none opacity-50",
         className,
       )}

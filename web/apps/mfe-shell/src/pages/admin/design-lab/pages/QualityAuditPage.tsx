@@ -135,17 +135,17 @@ function hasComponentTests(item: DesignLabIndexItem): boolean {
 }
 
 function scoreColor(score: number): string {
-  if (score >= 80) return "text-emerald-600";
-  if (score >= 60) return "text-amber-600";
-  if (score >= 40) return "text-orange-600";
-  return "text-red-600";
+  if (score >= 80) return "text-state-success-text";
+  if (score >= 60) return "text-state-warning-text";
+  if (score >= 40) return "text-state-warning-text";
+  return "text-state-danger-text";
 }
 
 function scoreBg(score: number): string {
-  if (score >= 80) return "bg-emerald-500";
-  if (score >= 60) return "bg-amber-500";
-  if (score >= 40) return "bg-orange-500";
-  return "bg-red-500";
+  if (score >= 80) return "bg-state-success-text";
+  if (score >= 60) return "bg-state-warning-text";
+  if (score >= 40) return "bg-state-warning-text";
+  return "bg-state-danger-text";
 }
 
 /* ------------------------------------------------------------------ */
@@ -256,8 +256,8 @@ export default function QualityAuditPage() {
     <div className="flex flex-col mx-auto max-w-7xl gap-6 p-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500/20 to-teal-500/20">
-          <ShieldCheck className="h-5 w-5 text-emerald-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-state-success-text/20 to-state-success-text/20">
+          <ShieldCheck className="h-5 w-5 text-state-success-text" />
         </div>
         <div>
           <div className="flex items-center gap-2">
@@ -274,12 +274,12 @@ export default function QualityAuditPage() {
 
       {/* KPI Summary Cards */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-        <KpiCard label="Toplam Bilesen" value={String(kpis.total)} icon={<BarChart3 className="h-4 w-4 text-indigo-500" />} color="bg-indigo-50" />
-        <KpiCard label="Rehber Kapsami" value={`%${kpis.guide}`} icon={<BookOpen className="h-4 w-4 text-blue-500" />} color="bg-blue-50" pct={kpis.guide} />
-        <KpiCard label="Token Kapsami" value={`%${kpis.tokens}`} icon={<Palette className="h-4 w-4 text-purple-500" />} color="bg-purple-50" pct={kpis.tokens} />
-        <KpiCard label="Ornek Kapsami" value={`%${kpis.examples}`} icon={<Code2 className="h-4 w-4 text-amber-500" />} color="bg-amber-50" pct={kpis.examples} />
-        <KpiCard label="Playground Kapsami" value={`%${kpis.playground}`} icon={<Gamepad2 className="h-4 w-4 text-rose-500" />} color="bg-rose-50" pct={kpis.playground} />
-        <KpiCard label="Genel Puan" value={`%${kpis.overall}`} icon={<ShieldCheck className="h-4 w-4 text-emerald-500" />} color="bg-emerald-50" pct={kpis.overall} />
+        <KpiCard label="Toplam Bilesen" value={String(kpis.total)} icon={<BarChart3 className="h-4 w-4 text-action-primary" />} color="bg-action-primary/10" />
+        <KpiCard label="Rehber Kapsami" value={`%${kpis.guide}`} icon={<BookOpen className="h-4 w-4 text-action-primary" />} color="bg-state-info-bg" pct={kpis.guide} />
+        <KpiCard label="Token Kapsami" value={`%${kpis.tokens}`} icon={<Palette className="h-4 w-4 text-action-primary" />} color="bg-action-primary/10" pct={kpis.tokens} />
+        <KpiCard label="Ornek Kapsami" value={`%${kpis.examples}`} icon={<Code2 className="h-4 w-4 text-state-warning-text" />} color="bg-state-warning-bg" pct={kpis.examples} />
+        <KpiCard label="Playground Kapsami" value={`%${kpis.playground}`} icon={<Gamepad2 className="h-4 w-4 text-state-danger-text" />} color="bg-state-danger-bg" pct={kpis.playground} />
+        <KpiCard label="Genel Puan" value={`%${kpis.overall}`} icon={<ShieldCheck className="h-4 w-4 text-state-success-text" />} color="bg-state-success-bg" pct={kpis.overall} />
       </div>
 
       {/* Toolbar: Search + Filter */}
@@ -303,7 +303,7 @@ export default function QualityAuditPage() {
               className={[
                 "rounded-lg px-3 py-1.5 text-xs font-medium transition",
                 filterGap === opt.key
-                  ? "bg-action-primary text-white shadow-xs"
+                  ? "bg-action-primary text-text-inverse shadow-xs"
                   : "bg-surface-muted text-text-secondary hover:bg-surface-default hover:text-text-primary",
               ].join(" ")}
             >
@@ -423,7 +423,7 @@ function KpiCard({
   return (
     <div className={`rounded-2xl border border-border-subtle ${color} p-4`}>
       <div className="flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.7))]">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--surface-card))]">
           {icon}
         </div>
         <Text variant="secondary" className="text-xs font-medium">
@@ -434,7 +434,7 @@ function KpiCard({
         {value}
       </Text>
       {pct != null && (
-        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[var(--surface-card,rgba(255,255,255,0.6))]">
+        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[var(--surface-card))]">
           <div
             className={`h-full rounded-full transition-all duration-500 ${scoreBg(pct)}`}
             style={{ width: `${pct}%` }}
@@ -447,11 +447,11 @@ function KpiCard({
 
 function CoverageIndicator({ covered }: { covered: boolean }) {
   return covered ? (
-    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-xs text-emerald-600">
+    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-state-success-bg text-xs text-state-success-text">
       &#10003;
     </span>
   ) : (
-    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-red-100 text-xs text-red-500">
+    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-state-danger-bg text-xs text-state-danger-text">
       &#10007;
     </span>
   );
@@ -462,12 +462,12 @@ function ScoreBadge({ score }: { score: number }) {
     <span
       className={`inline-block min-w-[3rem] rounded-full px-2 py-0.5 text-xs font-semibold ${
         score >= 80
-          ? "bg-emerald-100 text-emerald-700"
+          ? "bg-state-success-bg text-state-success-text"
           : score >= 60
-            ? "bg-amber-100 text-amber-700"
+            ? "bg-state-warning-bg text-state-warning-text"
             : score >= 40
-              ? "bg-orange-100 text-orange-700"
-              : "bg-red-100 text-red-700"
+              ? "bg-state-warning-bg text-state-warning-text"
+              : "bg-state-danger-bg text-state-danger-text"
       }`}
     >
       %{score}

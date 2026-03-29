@@ -10,9 +10,9 @@ const singleSeries: ChartSeries[] = [
 ];
 
 const multiSeries: ChartSeries[] = [
-  { name: 'Page Views', data: [1200, 1450, 1380, 1520, 1680, 980, 750], color: '#3b82f6' },
-  { name: 'Unique Visitors', data: [800, 920, 880, 1020, 1100, 620, 480], color: '#22c55e' },
-  { name: 'Bounce Rate %', data: [45, 42, 48, 40, 38, 52, 55], color: '#ef4444' },
+  { name: 'Page Views', data: [1200, 1450, 1380, 1520, 1680, 980, 750], color: 'var(--action-primary)' },
+  { name: 'Unique Visitors', data: [800, 920, 880, 1020, 1100, 620, 480], color: 'var(--state-success-text)' },
+  { name: 'Bounce Rate %', data: [45, 42, 48, 40, 38, 52, 55], color: 'var(--state-danger-text)' },
 ];
 
 const meta: Meta<typeof LineChart> = {

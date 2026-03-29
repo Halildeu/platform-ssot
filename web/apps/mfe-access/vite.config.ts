@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { federation } from '@module-federation/vite';
@@ -28,11 +28,13 @@ const sharedProdOnly = {
   '@mfe/shared-http': singleton('@mfe/shared-http', false),
 };
 
+const isTest = !!process.env['VITEST'];
+
 export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     tailwindcss(),
-    federation({
+    ...(isTest ? [] : [federation({
       name: 'mfe_access',
       filename: 'remoteEntry.js',
       dts: false,
@@ -51,13 +53,14 @@ export default defineConfig(({ mode }) => ({
         ...sharedCore,
         ...(mode === 'production' ? sharedProdOnly : {}),
       },
-    }),
+    })]),
   ],
 
   resolve: {
     alias: [
       { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
       { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
+      { find: 'mfe_shell/i18n', replacement: path.resolve(__dirname, '../mfe-shell/src/app/i18n/index.ts') },
     ],
   },
 
@@ -93,5 +96,11 @@ export default defineConfig(({ mode }) => ({
     rolldownOptions: {
       external: [/^mfe_shell\//],
     },
+  },
+
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test-setup.ts'],
   },
 }));

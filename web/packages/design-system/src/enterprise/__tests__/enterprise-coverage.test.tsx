@@ -1,12 +1,11 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
 // --- Direct utility imports ---
 import { formatValue, getTrendColor, getTrendIcon, getToneClasses } from '../types';
-import type { FormatOptions, EnterpriseTone } from '../types';
+import type { EnterpriseTone } from '../types';
 
 // --- Component imports ---
 import { AgingBuckets } from '../AgingBuckets';

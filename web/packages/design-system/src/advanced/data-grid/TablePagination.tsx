@@ -14,7 +14,7 @@ import {
   type UsePaginationStateOptions,
 } from "./usePaginationState";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
   type AccessLevel,
 } from "../../internal/access-controller";
@@ -127,7 +127,7 @@ const DefaultTablePaginationActions: React.FC<TablePaginationActionsProps> = ({
 }) => (
   <div
     className={[
-      "flex items-center gap-2 rounded-full border border-border-subtle/70 bg-[var(--surface-card,var(--surface-default))] px-2 py-1 shadow-[0_12px_24px_-22px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs",
+      "flex items-center gap-2 rounded-full border border-border-subtle/70 bg-[var(--surface-card))] px-2 py-1 shadow-[0_12px_24px_-22px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs",
       className ?? "",
     ]
       .join(" ")

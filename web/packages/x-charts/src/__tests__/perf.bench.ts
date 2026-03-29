@@ -6,13 +6,13 @@ import { describe, bench } from 'vitest';
 
 describe('SparklineChart perf', () => {
   bench('renders 100 data points', () => {
-    const data = Array.from({ length: 100 }, (_, i) => Math.random() * 100);
+    const data = Array.from({ length: 100 }, (_, _i) => Math.random() * 100);
     const points = data.map((v, i) => `${(i / (data.length - 1)) * 120},${32 - (v / 100) * 32}`);
     points.join(' ');
   });
 
   bench('renders 1000 data points', () => {
-    const data = Array.from({ length: 1000 }, (_, i) => Math.random() * 100);
+    const data = Array.from({ length: 1000 }, (_, _i) => Math.random() * 100);
     const points = data.map((v, i) => `${(i / (data.length - 1)) * 120},${32 - (v / 100) * 32}`);
     points.join(' ');
   });

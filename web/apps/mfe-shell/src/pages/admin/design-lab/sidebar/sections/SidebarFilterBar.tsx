@@ -74,7 +74,7 @@ export const SidebarFilterBar: React.FC<Props> = ({
           >
             {dot && (
               <span
-                className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-white" : dot}`}
+                className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-surface-default" : dot}`}
                 aria-hidden
               />
             )}

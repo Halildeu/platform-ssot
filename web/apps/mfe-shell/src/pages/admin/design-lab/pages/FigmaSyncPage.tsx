@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
 import {
-  Figma,
   RefreshCw,
   Clock,
   CheckCircle2,
@@ -10,10 +9,32 @@ import {
   Type,
   Box,
   Layers,
-  ArrowRight,
+  _ArrowRight,
   ChevronDown,
   ChevronRight,
 } from "lucide-react";
+
+/** Figma brand icon — removed from lucide-react >=1.x, inlined as SVG. */
+function Figma({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z" />
+      <path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z" />
+      <path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z" />
+      <path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z" />
+      <path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z" />
+    </svg>
+  );
+}
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "../DesignLabProvider";
 import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
@@ -85,9 +106,9 @@ function useFigmaSyncData() {
 /* ---- Status badge ---- */
 
 const STATUS_CONFIG: Record<SyncStatus, { label: string; color: string; icon: React.ReactNode }> = {
-  synced: { label: "In Sync", color: "bg-emerald-100 text-emerald-700", icon: <CheckCircle2 className="h-4 w-4" /> },
-  drift: { label: "Drift Detected", color: "bg-amber-100 text-amber-700", icon: <AlertTriangle className="h-4 w-4" /> },
-  error: { label: "Sync Error", color: "bg-red-100 text-red-700", icon: <XCircle className="h-4 w-4" /> },
+  synced: { label: "In Sync", color: "bg-state-success-bg text-state-success-text", icon: <CheckCircle2 className="h-4 w-4" /> },
+  drift: { label: "Drift Detected", color: "bg-state-warning-bg text-state-warning-text", icon: <AlertTriangle className="h-4 w-4" /> },
+  error: { label: "Sync Error", color: "bg-state-danger-bg text-state-danger-text", icon: <XCircle className="h-4 w-4" /> },
   never: { label: "Never Synced", color: "bg-[var(--surface-muted)] text-[var(--text-secondary)]", icon: <Clock className="h-4 w-4" /> },
 };
 
@@ -101,9 +122,9 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
 };
 
 const CHANGE_TYPE_STYLES: Record<TokenChange["type"], string> = {
-  added: "bg-emerald-100 text-emerald-700",
-  removed: "bg-red-100 text-red-700",
-  changed: "bg-amber-100 text-amber-700",
+  added: "bg-state-success-bg text-state-success-text",
+  removed: "bg-state-danger-bg text-state-danger-text",
+  changed: "bg-state-warning-bg text-state-warning-text",
 };
 
 /* ---- Stat Card ---- */
@@ -158,14 +179,14 @@ function TokenCategoryRow({ name, count, total }: { name: string; count: number;
 
 /* ---- Diff Viewer ---- */
 
-function DiffViewer({ changes }: { changes: TokenChange[] }) {
+function _DiffViewer({ changes }: { changes: TokenChange[] }) {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
 
   if (changes.length === 0) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
-          <CheckCircle2 className="mx-auto h-8 w-8 text-emerald-500" />
+          <CheckCircle2 className="mx-auto h-8 w-8 text-state-success-text" />
           <Text className="mt-2 text-sm font-medium text-text-primary">No Changes</Text>
           <Text variant="secondary" className="mt-1 text-xs">
             Design tokens are perfectly in sync with Figma
@@ -212,7 +233,7 @@ function DiffViewer({ changes }: { changes: TokenChange[] }) {
                 <div className="flex flex-col mt-2 gap-1 rounded-lg bg-surface-canvas p-3">
                   {change.before && (
                     <div className="flex items-center gap-2">
-                      <span className="w-12 text-[10px] font-medium text-red-600">Before</span>
+                      <span className="w-12 text-[10px] font-medium text-state-danger-text">Before</span>
                       <code className="text-xs text-text-secondary">{change.before}</code>
                       {change.type === "changed" && change.token.includes("color") && (
                         <span className="h-4 w-4 rounded-xs border border-border-subtle" style={{ backgroundColor: change.before }} />
@@ -221,7 +242,7 @@ function DiffViewer({ changes }: { changes: TokenChange[] }) {
                   )}
                   {change.after && (
                     <div className="flex items-center gap-2">
-                      <span className="w-12 text-[10px] font-medium text-emerald-600">After</span>
+                      <span className="w-12 text-[10px] font-medium text-state-success-text">After</span>
                       <code className="text-xs text-text-secondary">{change.after}</code>
                       {change.type === "changed" && change.token.includes("color") && (
                         <span className="h-4 w-4 rounded-xs border border-border-subtle" style={{ backgroundColor: change.after }} />
@@ -252,7 +273,7 @@ export const FigmaSyncPage: React.FC = () => {
       {/* Page Header */}
       <div>
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-action-primary/10 text-action-primary">
             <Figma className="h-5 w-5" />
           </div>
           <div>
@@ -273,7 +294,7 @@ export const FigmaSyncPage: React.FC = () => {
       </div>
 
       {/* Sync Status Banner */}
-      <div className={["flex items-center gap-3 rounded-2xl border px-5 py-4", (data.syncStatus as string) === "synced" ? "border-emerald-200 bg-emerald-50" : (data.syncStatus as string) === "never" ? "border-[var(--border-subtle)] bg-surface-muted" : (data.syncStatus as string) === "drift" ? "border-amber-200 bg-amber-50" : "border-red-200 bg-red-50"].join(" ")}>
+      <div className={["flex items-center gap-3 rounded-2xl border px-5 py-4", (data.syncStatus as string) === "synced" ? "border-state-success-text/20 bg-state-success-bg" : (data.syncStatus as string) === "never" ? "border-[var(--border-subtle)] bg-surface-muted" : (data.syncStatus as string) === "drift" ? "border-state-warning-text/20 bg-state-warning-bg" : "border-state-danger-text/20 bg-state-danger-bg"].join(" ")}>
         {statusCfg.icon}
         <div className="flex-1">
           <Text className="text-sm font-semibold text-text-primary">
@@ -366,7 +387,7 @@ export const FigmaSyncPage: React.FC = () => {
             { label: "Ek kategoriler", value: data.additionalCategories.join(", ") },
           ].map((item) => (
             <div key={item.label} className="flex items-center gap-2 rounded-xl bg-surface-canvas px-3 py-2.5">
-              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-state-success-text" />
               <div>
                 <Text className="text-xs font-medium text-text-primary">{item.label}</Text>
                 <Text variant="secondary" className="text-[10px]">{item.value}</Text>

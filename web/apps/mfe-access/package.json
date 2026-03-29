@@ -7,8 +7,8 @@
     "start": "npx kill-port 3005 || true && vite",
     "build": "vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "test": "npm run test:unit && npm run build",
-    "test:unit": "tsx --tsconfig ./tsconfig.json --test src/app/App.test.ts src/widgets/access-management/ui/AccessFilterBar.test.tsx src/widgets/access-management/ui/AccessVariantToolbar.test.tsx src/widgets/access-management/ui/BulkPermissionModal.test.tsx src/widgets/access-management/ui/RoleCloneModal.test.tsx src/widgets/access-management/ui/AccessRoleDrawer.test.tsx src/widgets/access-management/ui/AccessGrid.test.tsx src/widgets/permission-registry/PermissionRegistryPanel.test.tsx"
+    "test": "vitest run",
+    "test:unit": "vitest run"
   },
   "dependencies": {
     "@mfe/shared-http": "*",
@@ -25,14 +25,14 @@
     "react-router-dom": "^6.27.0"
   },
   "devDependencies": {
-    "@types/node": "^24.0.14",
+    "@mfe/i18n-dicts": "*",
     "@tanstack/react-query-devtools": "^5.90.10",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@types/node": "^25.5.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "eslint": "^9.13.0",
-    "@mfe/i18n-dicts": "*",
-    "react-test-renderer": "18.2.0",
     "typescript": "^5.8.3",
-    "tsx": "^4.20.6"
+    "vitest": "*"
   }
 }

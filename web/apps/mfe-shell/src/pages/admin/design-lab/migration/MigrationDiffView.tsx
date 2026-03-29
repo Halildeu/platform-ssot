@@ -22,19 +22,19 @@ export const MigrationDiffView: React.FC<MigrationDiffViewProps> = ({ before, af
       <div className="grid grid-cols-2 divide-x divide-border-subtle">
         {/* Before */}
         <div>
-          <div className="border-b border-border-subtle bg-red-50 px-3 py-1.5">
-            <Text className="text-[10px] font-semibold text-red-600">BEFORE (deprecated)</Text>
+          <div className="border-b border-border-subtle bg-state-danger-bg px-3 py-1.5">
+            <Text className="text-[10px] font-semibold text-state-danger-text">BEFORE (deprecated)</Text>
           </div>
-          <pre className="overflow-x-auto bg-red-50/30 p-4 text-xs leading-relaxed text-[var(--text-secondary)] font-mono">
+          <pre className="overflow-x-auto bg-state-danger-bg/30 p-4 text-xs leading-relaxed text-[var(--text-secondary)] font-mono">
             {before}
           </pre>
         </div>
         {/* After */}
         <div>
-          <div className="border-b border-border-subtle bg-emerald-50 px-3 py-1.5">
-            <Text className="text-[10px] font-semibold text-emerald-600">AFTER (recommended)</Text>
+          <div className="border-b border-border-subtle bg-state-success-bg px-3 py-1.5">
+            <Text className="text-[10px] font-semibold text-state-success-text">AFTER (recommended)</Text>
           </div>
-          <pre className="overflow-x-auto bg-emerald-50/30 p-4 text-xs leading-relaxed text-[var(--text-secondary)] font-mono">
+          <pre className="overflow-x-auto bg-state-success-bg/30 p-4 text-xs leading-relaxed text-[var(--text-secondary)] font-mono">
             {after}
           </pre>
         </div>

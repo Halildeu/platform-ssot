@@ -1,6 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from '../../internal/access-controller';
 

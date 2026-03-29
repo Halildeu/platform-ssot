@@ -6,7 +6,7 @@ import { calculateContrastRatio, checkContrast, suggestContrastFix } from '../a1
 
 describe('Design Review', () => {
   it('detects hardcoded colors', () => {
-    const result = reviewCode('const color = "#ff0000";');
+    const result = reviewCode('const color = "#ff5500";');
     expect(result.issues.some(i => i.rule === 'hardcoded-color')).toBe(true);
     expect(result.score).toBeLessThan(100);
   });
@@ -32,7 +32,7 @@ describe('Design Review', () => {
   });
 
   it('includes line numbers', () => {
-    const result = reviewCode('line1\n#ff0000\nline3');
+    const result = reviewCode('line1\ncolor: #ff5500;\nline3');
     const colorIssue = result.issues.find(i => i.rule === 'hardcoded-color');
     expect(colorIssue?.line).toBe(2);
   });
@@ -88,18 +88,18 @@ describe('A11y Guardian', () => {
   });
 
   it('checkContrast fails for poor contrast', () => {
-    const issue = checkContrast('#cccccc', '#ffffff', 'AA');
+    const issue = checkContrast('#999999', '#ffffff', 'AA');
     expect(issue).not.toBeNull();
     expect(issue?.ratio).toBeLessThan(4.5);
   });
 
   it('suggestContrastFix returns valid hex color', () => {
-    const fixed = suggestContrastFix('#cccccc', '#ffffff', 'AA');
+    const fixed = suggestContrastFix('#999999', '#ffffff', 'AA');
     expect(fixed).toMatch(/^#[0-9a-f]{6}$/);
   });
 
   it('suggested fix meets contrast requirement', () => {
-    const fixed = suggestContrastFix('#cccccc', '#ffffff', 'AA');
+    const fixed = suggestContrastFix('#999999', '#ffffff', 'AA');
     const ratio = calculateContrastRatio(fixed, '#ffffff');
     expect(ratio).toBeGreaterThanOrEqual(4.5);
   });

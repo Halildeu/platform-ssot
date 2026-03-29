@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { configureStore } from '@reduxjs/toolkit';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 

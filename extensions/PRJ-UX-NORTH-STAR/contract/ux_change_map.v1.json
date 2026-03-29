@@ -17,6 +17,91 @@
       "path": "web/packages/ui-kit/src/layout/PageLayout/PageLayout.tsx",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-audit/src/app/components/AuditEventFeed.tsx",
+      "ux_theme_id": "navigation_information_scent",
+      "ux_subtheme_id": "orientation_and_wayfinding"
+    },
+    {
+      "path": "web/packages/auth/src/PermissionProvider.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/auth/src/ProtectedRoute.tsx",
+      "ux_theme_id": "task_completion_architecture",
+      "ux_subtheme_id": "critical_path_minimization"
+    },
+    {
+      "path": "web/packages/auth/src/api.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/auth/src/index.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/auth/src/types.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/auth/src/useHasPermission.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/shared-http/src/index.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/app/providers/AppProviders.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/app/providers/AuthBootstrapper.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/auth/src/compat.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/.gitignore",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/.npmrc",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-access/src/features/access-management/model/use-access-roles.model.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/app/config/shell-services-wiring.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-shell/vite-plugins/service-health-api.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-suggestions/src/App.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
     }
   ]
 }

@@ -1,11 +1,9 @@
-/* ------------------------------------------------------------------ */
-/*  AG Grid v34 — Design System Token Mapping                          */
-/*                                                                     */
-/*  Maps AG Grid CSS custom properties to @mfe/design-system tokens.   */
-/*  Import this file alongside AG Grid's built-in theme CSS.           */
-/*                                                                     */
-/*  Supported themes: quartz, balham, alpine, material                 */
-/* ------------------------------------------------------------------ */
+/*
+ * AG Grid v34 — Design System Token Mapping
+ * Maps AG Grid CSS custom properties to @mfe/design-system tokens.
+ * Import this file alongside AG Grid's built-in theme CSS.
+ * Supported themes: quartz, balham, alpine, material
+ */
 
 .ag-theme-quartz,
 .ag-theme-balham,
@@ -85,7 +83,9 @@
 }
 
 /* ── Dark mode support ─────────────────────────────────────────── */
+
 /* Relies on design-system theme provider setting semantic tokens.   */
+
 /* No additional mapping needed — AG Grid inherits via CSS vars.     */
 
 /* ── Elevation override for raised grid containers ─────────────── */

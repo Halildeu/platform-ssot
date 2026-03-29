@@ -758,19 +758,19 @@ describe("Visual Quality — CSS variable usage (no hardcoded colors)", () => {
    * breakage at the component level.
    *
    * NOTE: We test the rendered className strings — not computed styles —
-   * so we accept bg-white / text-white etc. if they appear inside a
-   * dark: variant (e.g. dark:bg-white). The regex below checks for bare
+   * so we accept bg-surface-default / text-text-inverse etc. if they appear inside a
+   * dark: variant (e.g. dark:bg-surface-default). The regex below checks for bare
    * utility usage without a dark: prefix.
    */
   const HARDCODED_PATTERNS = [
-    /* Bare bg-white without dark: prefix — catches light-only backgrounds */
-    /(?<!\w)bg-white(?![\w-])/,
-    /* Bare bg-gray-N without var() */
-    /(?<!\w)bg-gray-\d{2,3}(?![\w-])/,
-    /* Bare text-slate-N — should use CSS variable tokens */
-    /(?<!\w)text-slate-\d{2,3}(?![\w-])/,
-    /* Bare text-gray-N */
-    /(?<!\w)text-gray-\d{2,3}(?![\w-])/,
+    /* Bare bg-surface-default without dark: prefix — catches light-only backgrounds */
+    /(?<!\w)bg-surface-default(?![\w-])/,
+    /* Bare bg-surface-muted-N without var() */
+    /(?<!\w)bg-surface-muted-\d{2,3}(?![\w-])/,
+    /* Bare text-text-secondary-N — should use CSS variable tokens */
+    /(?<!\w)text-text-secondary-\d{2,3}(?![\w-])/,
+    /* Bare text-text-secondary-N */
+    /(?<!\w)text-text-secondary-\d{2,3}(?![\w-])/,
   ];
 
   function assertNoHardcodedColors(container: HTMLElement, name: string) {

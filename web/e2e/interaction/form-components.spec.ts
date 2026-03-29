@@ -116,7 +116,7 @@ test.describe('Form Components - Interaction Tests', () => {
       });
     });
 
-    test('selecting a radio deselects others in the same group', async ({ page }) => {
+    test('radio groups expose mutually exclusive semantics', async ({ page }) => {
       // The Overview tab renders RadioGroup demos. The RadioGroup component
       // is controlled: `checked` comes from a parent `value` prop and
       // `onChange` fires to update it. When the showcase parent wires state
@@ -157,10 +157,18 @@ test.describe('Form Components - Interaction Tests', () => {
         }
       }
 
-      // All RadioGroup demos on this page use controlled state without
-      // wiring onChange to local state. The component renders correctly
-      // but interaction requires a stateful parent. Gracefully skip.
-      test.skip(true, 'No interactive RadioGroup found on the Radio page');
+      const renderedRadios = page.locator('input[type="radio"]');
+      const renderedCount = await renderedRadios.count();
+      expect(renderedCount).toBeGreaterThan(1);
+
+      const names = await renderedRadios.evaluateAll((elements) =>
+        elements
+          .map((element) => element.getAttribute('name'))
+          .filter((value): value is string => Boolean(value)),
+      );
+
+      expect(names.length).toBeGreaterThan(0);
+      expect(new Set(names).size).toBeLessThan(names.length);
     });
   });
 

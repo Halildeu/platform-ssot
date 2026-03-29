@@ -64,8 +64,8 @@ export const Loading: Story = {
 export const CustomColors: Story = {
   args: {
     value: 'https://example.com',
-    color: '#3b82f6',
-    bgColor: '#f0f9ff',
+    color: 'var(--action-primary)',
+    bgColor: 'var(--state-info-bg)',
   },
 };
 

@@ -83,10 +83,10 @@ export type EnterpriseTone = 'default' | 'success' | 'warning' | 'danger' | 'inf
 export function getToneClasses(tone: EnterpriseTone): { bg: string; text: string; border: string } {
   const map: Record<EnterpriseTone, { bg: string; text: string; border: string }> = {
     default: { bg: 'bg-[var(--surface-muted)]', text: 'text-[var(--text-primary)]', border: 'border-[var(--border-default)]' },
-    success: { bg: 'bg-[var(--state-success-bg)]', text: 'text-[var(--state-success-text)]', border: 'border-[var(--state-success-border,var(--state-success-text))]' },
-    warning: { bg: 'bg-[var(--state-warning-bg)]', text: 'text-[var(--state-warning-text)]', border: 'border-[var(--state-warning-border,var(--state-warning-text))]' },
-    danger: { bg: 'bg-[var(--state-error-bg)]', text: 'text-[var(--state-error-text)]', border: 'border-[var(--state-error-border,var(--state-error-text))]' },
-    info: { bg: 'bg-[var(--state-info-bg)]', text: 'text-[var(--state-info-text)]', border: 'border-[var(--state-info-border,var(--state-info-text))]' },
+    success: { bg: 'bg-[var(--state-success-bg)]', text: 'text-[var(--state-success-text)]', border: 'border-[var(--state-success-border))]' },
+    warning: { bg: 'bg-[var(--state-warning-bg)]', text: 'text-[var(--state-warning-text)]', border: 'border-[var(--state-warning-border))]' },
+    danger: { bg: 'bg-[var(--state-error-bg)]', text: 'text-[var(--state-error-text)]', border: 'border-[var(--state-error-border))]' },
+    info: { bg: 'bg-[var(--state-info-bg)]', text: 'text-[var(--state-info-text)]', border: 'border-[var(--state-info-border))]' },
   };
   return map[tone];
 }

@@ -1,9 +1,13 @@
+// @vitest-environment jsdom
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import JsonPreview from './JsonPreview';
 
 // Minimal mock for @testing-library/react's peer dep on react-dom
-jest.mock('@mfe/design-system', () => ({}), { virtual: true });
+vi.mock('@mfe/design-system', () => ({}));
+
+afterEach(() => { cleanup(); });
 
 describe('JsonPreview', () => {
   it('renders a JSON object as pretty-printed string', () => {

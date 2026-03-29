@@ -178,7 +178,7 @@ export default function XSuiteDashboardPage() {
                 {[4500, 5200, 4800, 6100, 5900, 7200].map((v, i) => (
                   <div key={i} className="flex flex-1 flex-col items-center gap-1">
                     <div
-                      className="w-full rounded-t bg-[var(--action-primary,#3b82f6)]"
+                      className="w-full rounded-t bg-[var(--action-primary))]"
                       style={{ height: `${(v / 7200) * 200}px` }}
                     />
                     <span className="text-[10px] text-text-secondary">
@@ -191,16 +191,16 @@ export default function XSuiteDashboardPage() {
             <ChartContainer title="Kategori Dağılımı" height={300}>
               <div className="flex h-full items-center justify-center gap-8 px-4">
                 <svg width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="Pie chart">
-                  <circle cx="80" cy="80" r="60" fill="none" stroke="var(--action-primary,#3b82f6)" strokeWidth="30" strokeDasharray="170 377" strokeDashoffset="0" />
-                  <circle cx="80" cy="80" r="60" fill="none" stroke="var(--state-success-text,#16a34a)" strokeWidth="30" strokeDasharray="113 377" strokeDashoffset="-170" />
-                  <circle cx="80" cy="80" r="60" fill="none" stroke="var(--state-warning-text,#d97706)" strokeWidth="30" strokeDasharray="94 377" strokeDashoffset="-283" />
+                  <circle cx="80" cy="80" r="60" fill="none" stroke="var(--action-primary))" strokeWidth="30" strokeDasharray="170 377" strokeDashoffset="0" />
+                  <circle cx="80" cy="80" r="60" fill="none" stroke="var(--state-success-text))" strokeWidth="30" strokeDasharray="113 377" strokeDashoffset="-170" />
+                  <circle cx="80" cy="80" r="60" fill="none" stroke="var(--state-warning-text))" strokeWidth="30" strokeDasharray="94 377" strokeDashoffset="-283" />
                 </svg>
                 {ChartLegend && (
                   <ChartLegend
                     items={[
-                      { label: 'Web', color: 'var(--action-primary,#3b82f6)', value: '45%' },
-                      { label: 'Mobile', color: 'var(--state-success-text,#16a34a)', value: '30%' },
-                      { label: 'API', color: 'var(--state-warning-text,#d97706)', value: '25%' },
+                      { label: 'Web', color: 'var(--action-primary))', value: '45%' },
+                      { label: 'Mobile', color: 'var(--state-success-text))', value: '30%' },
+                      { label: 'API', color: 'var(--state-warning-text))', value: '25%' },
                     ]}
                     direction="vertical"
                   />
@@ -230,7 +230,7 @@ export default function XSuiteDashboardPage() {
                 selectedCount={3}
                 onClearSelection={() => console.log('clear selection')}
               >
-                <button className="rounded-xs bg-[var(--action-primary,#3b82f6)] px-3 py-1 text-xs text-white">
+                <button className="rounded-xs bg-[var(--action-primary))] px-3 py-1 text-xs text-text-inverse">
                   Toplu Sil
                 </button>
               </DataGridSelectionBar>

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback, useId } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
 import { useScrollLock, registerLayer, unregisterLayer, useEscapeKey, useFocusRestore } from "../../internal/overlay-engine";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  FormDrawer — Slide-in panel for create/edit forms                  */
@@ -68,7 +68,7 @@ export const FormDrawer = React.forwardRef<HTMLDivElement, FormDrawerProps>(({
   className,
   access,
   accessReason,
-}, ref) => {
+}, _ref) => {
   const accessState = resolveAccessState(access);
   const panelRef = useRef<HTMLDivElement>(null);
   const layerId = useId();
@@ -113,7 +113,7 @@ export const FormDrawer = React.forwardRef<HTMLDivElement, FormDrawerProps>(({
       {/* Backdrop */}
       <div
         data-access-state={accessState.state}
-        className="absolute inset-0 bg-black/40 animate-in fade-in-0"
+        className="absolute inset-0 bg-surface-inverse/40 animate-in fade-in-0"
         onClick={handleBackdropClick}
         aria-hidden
       />

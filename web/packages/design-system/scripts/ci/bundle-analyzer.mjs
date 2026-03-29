@@ -82,18 +82,18 @@ const html = `<!DOCTYPE html>
   <title>Bundle Size Report</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, sans-serif; background: #f8fafc; padding: 2rem; color: #1e293b; }
+    body { font-family: -apple-system, sans-serif; background: var(--surface-default); padding: 2rem; color: var(--text-primary); }
     h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-    .subtitle { color: #64748b; margin-bottom: 2rem; }
+    .subtitle { color: var(--text-secondary); margin-bottom: 2rem; }
     .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
     .card { background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    .card .label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; }
+    .card .label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; }
     .card .value { font-size: 1.5rem; font-weight: 700; margin-top: 0.25rem; }
     table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    th { background: #f1f5f9; text-align: left; padding: 0.75rem 1rem; font-size: 0.75rem; text-transform: uppercase; color: #64748b; }
-    td { padding: 0.5rem 1rem; border-top: 1px solid #f1f5f9; }
-    .bar { height: 16px; border-radius: 4px; background: #3b82f6; min-width: 2px; }
-    .footer { text-align: center; color: #94a3b8; font-size: 0.75rem; margin-top: 2rem; }
+    th { background: var(--surface-muted); text-align: left; padding: 0.75rem 1rem; font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); }
+    td { padding: 0.5rem 1rem; border-top: 1px solid var(--surface-muted); }
+    .bar { height: 16px; border-radius: 4px; background: var(--action-primary); min-width: 2px; }
+    .footer { text-align: center; color: var(--text-subtle); font-size: 0.75rem; margin-top: 2rem; }
   </style>
 </head>
 <body>

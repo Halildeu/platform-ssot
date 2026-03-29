@@ -47,8 +47,8 @@ const toolbarStyles: React.CSSProperties = {
   alignItems: 'center',
   gap: '2px',
   padding: '6px 8px',
-  borderBottom: '1px solid var(--border-subtle, #e2e8f0)',
-  backgroundColor: 'var(--surface-subtle, #f8fafc)',
+  borderBottom: '1px solid var(--border-subtle))',
+  backgroundColor: 'var(--surface-subtle))',
   borderTopLeftRadius: 'inherit',
   borderTopRightRadius: 'inherit',
 };
@@ -63,7 +63,7 @@ const buttonStyles: React.CSSProperties = {
   border: '1px solid transparent',
   borderRadius: '4px',
   backgroundColor: 'transparent',
-  color: 'var(--text-primary, #1e293b)',
+  color: 'var(--text-primary))',
   fontSize: '13px',
   fontWeight: 600,
   cursor: 'pointer',
@@ -73,15 +73,15 @@ const buttonStyles: React.CSSProperties = {
 
 const activeButtonStyles: React.CSSProperties = {
   ...buttonStyles,
-  backgroundColor: 'var(--surface-active, #e2e8f0)',
-  borderColor: 'var(--border-subtle, #cbd5e1)',
+  backgroundColor: 'var(--surface-active))',
+  borderColor: 'var(--border-subtle))',
 };
 
 const separatorStyles: React.CSSProperties = {
   width: '1px',
   height: '20px',
   margin: '0 4px',
-  backgroundColor: 'var(--border-subtle, #e2e8f0)',
+  backgroundColor: 'var(--border-subtle))',
 };
 
 export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editorRef, editorCore, className }) => {

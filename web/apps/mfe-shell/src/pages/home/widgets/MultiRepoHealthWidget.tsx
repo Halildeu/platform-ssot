@@ -85,8 +85,8 @@ export const MultiRepoHealthWidget: React.FC<{ onRefresh?: () => void }> = ({ on
                 alignItems: "center",
                 padding: "8px 12px",
                 borderRadius: 8,
-                border: "1px solid var(--border-primary, #e5e7eb)",
-                background: repo.critical ? "var(--state-danger-bg, #fef2f2)" : "transparent",
+                border: "1px solid var(--border-primary))",
+                background: repo.critical ? "var(--state-danger-bg)" : "transparent",
               }}
             >
               <span style={{ fontSize: 13, fontWeight: 500, color: "var(--text-primary)" }}>

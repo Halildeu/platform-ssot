@@ -7,7 +7,7 @@ import type { AgChartOptions } from "ag-charts-community";
 const AgCharts = AgChartsBase as unknown as React.FC<{ options: AgChartOptions; style?: React.CSSProperties; className?: string }>;
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { getChartThemeOverrides, getChartColorPalette } from "../../advanced/data-grid/chart-theme-bridge";
@@ -73,7 +73,6 @@ export const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       showLegend = false,
       showPercentage = false,
       valueFormatter,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       innerLabel,
       animate = true,
       title,
@@ -166,7 +165,7 @@ export const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       <div
         ref={forwardedRef}
         className={cn(
-          "w-full",
+          "relative w-full",
           accessState.isDisabled && "opacity-50",
           className,
         )}
@@ -175,6 +174,14 @@ export const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
         {...rest}
       >
         <AgCharts options={options} style={{ height: dim, width: "100%" }} />
+        {donut && innerLabel ? (
+          <div
+            className="pointer-events-none absolute inset-0 flex items-center justify-center"
+            data-testid="pie-chart-inner-label"
+          >
+            {innerLabel}
+          </div>
+        ) : null}
       </div>
     );
   },

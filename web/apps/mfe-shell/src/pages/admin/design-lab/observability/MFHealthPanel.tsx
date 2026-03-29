@@ -28,18 +28,18 @@ const KNOWN_REMOTES: Record<string, string> = {
 const STATUS_CONFIG: Record<RemoteHealth['status'], { label: string; color: string; dot: string }> = {
   healthy: {
     label: 'Saglikli',
-    color: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400',
-    dot: 'bg-emerald-500',
+    color: 'bg-state-success-bg text-state-success-text dark:bg-state-success-text/20 dark:text-state-success-text',
+    dot: 'bg-state-success-text',
   },
   degraded: {
     label: 'Yavaslamis',
-    color: 'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400',
-    dot: 'bg-amber-500',
+    color: 'bg-state-warning-bg text-state-warning-text dark:bg-state-warning-text/20 dark:text-state-warning-text',
+    dot: 'bg-state-warning-text',
   },
   unavailable: {
     label: 'Erisilemiyor',
-    color: 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400',
-    dot: 'bg-red-500',
+    color: 'bg-state-danger-bg text-state-danger-text dark:bg-state-danger-text/20 dark:text-state-danger-text',
+    dot: 'bg-state-danger-text',
   },
 };
 

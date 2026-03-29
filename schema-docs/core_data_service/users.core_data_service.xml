@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="users" schema="core_data_service" type="PostgreSQL - 18.3 (Debian 18.3-1.pgdg12+1)">
+   <sequences>
+      <sequence increment="1" name="companies_id_seq" startValue="1"/>
+   </sequences>
+   <tables>
+      <table name="companies" remarks="" schema="core_data_service" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('core_data_service.companies_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="bigserial" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="company_code" nullable="false" remarks="" size="64" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="company_name" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="short_name" nullable="true" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="company_type" nullable="true" remarks="" size="32" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="tax_number" nullable="true" remarks="" size="32" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="tax_office" nullable="true" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="country_code" nullable="true" remarks="" size="2" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="city" nullable="true" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="'ACTIVE'::character varying" digits="0" id="9" name="status" nullable="false" remarks="" size="16" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="10" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="created_by" nullable="true" remarks="" size="64" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="12" name="updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="updated_by" nullable="true" remarks="" size="64" type="varchar" typeCode="12"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="companies_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="companies_company_code_key" unique="true">
+            <column ascending="true" name="company_code"/>
+         </index>
+         <index name="idx_companies_code" unique="false">
+            <column ascending="true" name="company_code"/>
+         </index>
+         <index name="idx_companies_status" unique="false">
+            <column ascending="true" name="status"/>
+         </index>
+      </table>
+      <table name="core_data_flyway_history" remarks="" schema="core_data_service" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="installed_rank" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="version" nullable="true" remarks="" size="50" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="description" nullable="false" remarks="" size="200" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="type" nullable="false" remarks="" size="20" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="script" nullable="false" remarks="" size="1000" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="checksum" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="installed_by" nullable="false" remarks="" size="100" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="installed_on" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="execution_time" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="success" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <primaryKey column="installed_rank" sequenceNumberInPK="1"/>
+         <index name="core_data_flyway_history_pk" unique="true">
+            <column ascending="true" name="installed_rank"/>
+         </index>
+         <index name="core_data_flyway_history_s_idx" unique="false">
+            <column ascending="true" name="success"/>
+         </index>
+      </table>
+   </tables>
+</database>

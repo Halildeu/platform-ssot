@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
@@ -33,7 +34,7 @@ describe('ThemeAdminRegistryEditor', () => {
         groupName: 'Text',
         controlType: 'COLOR',
         editableBy: 'USER_ALLOWED',
-        value: '#111111',
+        value: 'var(--text-primary)',
         cssVars: ['--text-primary'],
       },
     ];
@@ -64,8 +65,8 @@ describe('ThemeAdminRegistryEditor', () => {
             rows: groupedRows,
           },
         ]}
-        resolvedPreviewCssVars={{ '--text-primary': '#111111' }}
-        resolvedPreviewDisplayCssVars={{ '--text-primary': '#111111' }}
+        resolvedPreviewCssVars={{ '--text-primary': 'var(--text-primary)' }}
+        resolvedPreviewDisplayCssVars={{ '--text-primary': 'var(--text-primary)' }}
         activeColorPicker={null}
         contrastWarnings={{}}
         onValueChange={vi.fn()}
@@ -83,7 +84,7 @@ describe('ThemeAdminRegistryEditor', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Typography' }));
 
     expect(screen.getByText('Body Text')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('#111111')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('var(--text-primary)')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'themeadmin.shared.group.surface' }));
 

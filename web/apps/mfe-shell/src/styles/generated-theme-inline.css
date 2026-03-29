@@ -1,4 +1,5 @@
 /* ⚠️ Auto-generated via scripts/theme/generate-theme-css.mjs. Do NOT edit manually. */
+
 /* Run: npm run tokens:build:theme to regenerate. */
 
 @theme inline {
@@ -171,7 +172,7 @@
   --color-state-warning-bg-hover: var(--state-warning-bg-hover);
 
   /* Typography & spacing tokens */
-  --font-size-md: var(--font-size-md, 0.875rem);
-  --spacing-1: var(--spacing-1, 0.25rem);
+  --font-size-md: var(--font-size-md);
+  --spacing-1: var(--spacing-1);
 }
 

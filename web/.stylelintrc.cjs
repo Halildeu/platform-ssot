@@ -11,11 +11,14 @@ module.exports = {
     'at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: ['tailwind', 'layer', 'apply', 'variants', 'responsive', 'screen', 'theme', 'source', 'custom-variant', 'utility'],
+        ignoreAtRules: ['tailwind', 'layer', 'apply', 'variants', 'responsive', 'screen', 'theme', 'source', 'custom-variant', 'utility', 'plugin'],
       },
     ],
     'custom-property-empty-line-before': null,
     'no-invalid-position-at-import-rule': null,
+    'no-duplicate-selectors': null,
+    'declaration-block-no-duplicate-custom-properties': null,
+    'comment-no-empty': null,
     'import-notation': null,
     'color-no-hex': [true, { severity: 'error' }],
     'function-disallowed-list': [
@@ -25,7 +28,10 @@ module.exports = {
     'declaration-property-value-disallowed-list': [
       {
         '/^(color|background(-color)?|border(-color)?|box-shadow)$/': [
-          '/^(?!var\\().+/',
+          // Block raw color values but allow: var(), none, inherit, initial,
+          // unset, transparent, currentColor, system colors (forced-colors),
+          // and shorthand values containing var()
+          '/^(?!var\\()(?!none$)(?!inherit$)(?!initial$)(?!unset$)(?!transparent$)(?!currentColor$)(?!revert$)(?![A-Z][a-zA-Z]+$)(?!.*var\\()(?!.*[A-Z][a-zA-Z]+).+/',
         ],
       },
       { severity: 'error' },

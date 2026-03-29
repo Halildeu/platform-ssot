@@ -222,12 +222,12 @@ const ZONE_ICONS: Record<string, React.ReactNode> = {
 };
 
 const ZONE_COLORS: Record<string, string> = {
-  header: "border-blue-500/30 bg-blue-500/5",
-  toolbar: "border-amber-500/30 bg-amber-500/5",
-  main: "border-emerald-500/30 bg-emerald-500/5",
-  sidebar: "border-violet-500/30 bg-violet-500/5",
-  footer: "border-rose-500/30 bg-rose-500/5",
-  utilities: "border-zinc-500/30 bg-zinc-500/5",
+  header: "border-action-primary/30 bg-action-primary/5",
+  toolbar: "border-state-warning-text/30 bg-state-warning-text/5",
+  main: "border-state-success-text/30 bg-state-success-text/5",
+  sidebar: "border-action-primary/30 bg-action-primary/5",
+  footer: "border-state-danger-text/30 bg-state-danger-text/5",
+  utilities: "border-text-subtle/30 bg-text-subtle/5",
 };
 
 function classifyBlock(block: string): string {

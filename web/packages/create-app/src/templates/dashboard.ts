@@ -41,7 +41,7 @@ const linkStyle: React.CSSProperties = {
   textDecoration: 'none',
   fontSize: '0.875rem',
   fontWeight: 500,
-  color: 'var(--color-text-secondary, #64748b)',
+  color: 'var(--color-text-secondary))',
 };
 
 export default function App() {

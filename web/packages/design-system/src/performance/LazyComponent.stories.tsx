@@ -4,9 +4,9 @@ import { createLazyComponent } from './LazyComponent';
 
 // Simulate a lazy-loaded component
 const HeavyComponent: React.FC<{ title: string }> = ({ title }) => (
-  <div style={{ padding: 24, background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8 }}>
+  <div style={{ padding: 24, background: 'var(--state-info-bg)', border: '1px solid var(--state-info-bg)', borderRadius: 8 }}>
     <h3 style={{ margin: 0, fontSize: 16 }}>{title}</h3>
-    <p style={{ margin: '8px 0 0', fontSize: 14, color: '#6b7280' }}>
+    <p style={{ margin: '8px 0 0', fontSize: 14, color: 'var(--text-secondary)' }}>
       This simulates a heavy component that was lazily loaded.
     </p>
   </div>
@@ -36,7 +36,7 @@ export const WithCustomFallback: Story = {
     <LazyHeavy
       title="Widget with Custom Loading"
       fallback={
-        <div style={{ padding: 24, background: '#fef3c7', borderRadius: 8, textAlign: 'center' }}>
+        <div style={{ padding: 24, background: 'var(--state-warning-bg)', borderRadius: 8, textAlign: 'center' }}>
           Loading component...
         </div>
       }
@@ -49,7 +49,7 @@ export const WithErrorFallback: Story = {
     <LazyHeavy
       title="Widget with Error Handling"
       errorFallback={
-        <div style={{ padding: 24, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, color: '#dc2626' }}>
+        <div style={{ padding: 24, background: 'var(--state-danger-bg)', border: '1px solid var(--state-danger-bg)', borderRadius: 8, color: 'var(--state-danger-text)' }}>
           Failed to load component. Please try again.
         </div>
       }

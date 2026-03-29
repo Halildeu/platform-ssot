@@ -9,7 +9,7 @@ import {
   getFieldTone,
   type FieldSize,
 } from "../../primitives/_shared/FieldControlPrimitives";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Autocomplete — Input with dropdown suggestions                     */

@@ -17,14 +17,14 @@ function fromDateTimeLocal(s: string): Date {
 
 /** Design-token-aligned color palette */
 const COLOR_PALETTE = [
-  '#3b82f6', // blue
-  '#10b981', // emerald
-  '#f59e0b', // amber
-  '#ef4444', // red
-  '#8b5cf6', // violet
-  '#ec4899', // pink
-  '#06b6d4', // cyan
-  '#84cc16', // lime
+  'var(--action-primary)', // blue
+  'var(--state-success-text)', // emerald
+  'var(--state-warning-text)', // amber
+  'var(--state-danger-text)', // red
+  'var(--action-primary)', // violet
+  'var(--state-danger-text)', // pink
+  'var(--state-info-text)', // cyan
+  'var(--state-success-text)', // lime
 ] as const;
 
 const RECURRENCE_OPTIONS: { value: RecurrenceRule['frequency'] | 'none'; label: string }[] = [

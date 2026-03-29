@@ -61,13 +61,13 @@ Owner: @team/platform
     - Komut: `npm -C web run publish:bundle`  
 
 - [ ] Senaryo 5 – Prod remote contract (localhost yok):
-  - Given: Prod webpack config’leri repoda bulunur.  
+  - Given: Prod Vite config’leri repoda bulunur.
   - When: “localhost” taraması yapılır.  
   - Then: Prod config’te localhost remote URL kalmamalıdır.  
   - Kanıt/Evidence (önerilen):
-    - Dosya: `web/apps/mfe-shell/webpack.prod.js`  
-    - Dosya: `web/apps/mfe-reporting/webpack.prod.js`  
-    - Dosya: `web/apps/mfe-users/webpack.prod.js`  
+    - Dosya: `web/apps/mfe-shell/vite.config.ts`  
+    - Dosya: `web/apps/mfe-reporting/vite.config.ts`  
+    - Dosya: `web/apps/mfe-users/vite.config.ts`  
 
 ### Backend
 
@@ -120,10 +120,10 @@ Owner: @team/platform
 
 **Keşif Özeti**
 - Netlify publish kökü `web/dist` bekliyor (`web/netlify.toml:7`), SRI artefact path’leri de `dist/**` bekliyor (`web/security/sri-manifest.json:5`); fakat build çıktıları şu an `web/apps/dist/**` + `web/apps/mfe-audit/dist` + `web/apps/mfe-reporting/dist` altında.
-- Shell prod remote URL contract’ı hardcoded ve same-origin path: `web/apps/mfe-shell/webpack.prod.js:19`.
+- Shell prod remote URL contract’ı hardcoded ve same-origin path: `web/apps/mfe-shell/vite.config.ts:19`.
 - Prod config’te iki kritik sapma var:
-  - Reporting → Shell remote’u localhost: `web/apps/mfe-reporting/webpack.prod.js:17`
-  - Users → Reporting remote’u yanlış path: `web/apps/mfe-users/webpack.prod.js:21`
+  - Reporting → Shell remote’u localhost: `web/apps/mfe-reporting/vite.config.ts:17`
+  - Users → Reporting remote’u yanlış path: `web/apps/mfe-users/vite.config.ts:21`
 
 **Tasarım**
 - **1) WEB Publish Bundle Contract v0.1 (canonical root = `web/dist`)**
@@ -141,16 +141,16 @@ Owner: @team/platform
       - `*.js`, `*.css`, `*.map` (index.html/remoteEntry’nin referans ettiği chunk’lar)
   - **Required artefacts**
     - Zorunlu: `index.html`, `/remoteEntry.js`, `/access/remoteEntry.js`, `/ethic/remoteEntry.js`, `/users/remoteEntry.js`, `/suggestions/remoteEntry.js`
-    - Şarta bağlı: `/audit/remoteEntry.js`, `/reports/remoteEntry.js` (shell prod remotes bunları bekliyor: `web/apps/mfe-shell/webpack.prod.js:22` ve `web/apps/mfe-shell/webpack.prod.js:24`)
+    - Şarta bağlı: `/audit/remoteEntry.js`, `/reports/remoteEntry.js` (shell prod remotes bunları bekliyor: `web/apps/mfe-shell/vite.config.ts:22` ve `web/apps/mfe-shell/vite.config.ts:24`)
   - **URL contract (host bağımsız / absolute URL yok)**
     - Shell: `/<root>/remoteEntry.js` (same-origin path)
     - Remotes: `/<root>/<mfe>/remoteEntry.js` (örn. `/users/remoteEntry.js`, `/reports/remoteEntry.js`)
-    - Prod remotes için referans: `web/apps/mfe-shell/webpack.prod.js:19`
+    - Prod remotes için referans: `web/apps/mfe-shell/vite.config.ts:19`
 
 - **2) Publish bundle step – en düşük riskli yaklaşım**
   - Öneri: **bash script** (Netlify/CI için ekstra runtime bağımlılığı eklemez; repo zaten bash CI script’leri kullanıyor).
   - **Temizle davranışı**
-    - Sadece `web/dist` temizlenir (canonical publish root); `web/apps/dist` gibi kaynak output’lar temizlenmez (paralel build nedeniyle race riskini artırır; shell’de `clean:false` bunun için: `web/apps/mfe-shell/webpack.prod.js:13` + paralel build: `web/package.json:48`).
+    - Sadece `web/dist` temizlenir (canonical publish root); `web/apps/dist` gibi kaynak output’lar temizlenmez (paralel build nedeniyle race riskini artırır; shell’de `clean:false` bunun için: `web/apps/mfe-shell/vite.config.ts:13` + paralel build: `web/package.json:48`).
   - **Kopyalama map’i (source → dest)**
     - `web/apps/dist/*` → `web/dist/`
     - `web/apps/mfe-audit/dist/*` → `web/dist/audit/` (varsa/isteniyorsa)
@@ -165,10 +165,10 @@ Owner: @team/platform
     - (opsiyonel/flag) `web/dist/{audit,reports}/remoteEntry.js` var
     - Kopyalama sonrası bu dosyalar yoksa exit code != 0
 
-- **3) webpack.prod.js – minimum patch listesi (relative path contract’a uyum)**
-  - `web/apps/mfe-reporting/webpack.prod.js:17` → `mfe_shell` remote: `http://localhost:3000/remoteEntry.js` yerine `mfe_shell@/remoteEntry.js`
-  - `web/apps/mfe-users/webpack.prod.js:21` → `mfe_reporting` remote: `mfe_reporting@/remoteEntry.js` yerine `mfe_reporting@/reports/remoteEntry.js`
-  - Doğrulama sinyali: shell zaten `/reports/remoteEntry.js` bekliyor (`web/apps/mfe-shell/webpack.prod.js:24`)
+- **3) vite.config.ts – minimum patch listesi (relative path contract’a uyum)**
+  - `web/apps/mfe-reporting/vite.config.ts:17` → `mfe_shell` remote: `http://localhost:3000/remoteEntry.js` yerine `mfe_shell@/remoteEntry.js`
+  - `web/apps/mfe-users/vite.config.ts:21` → `mfe_reporting` remote: `mfe_reporting@/remoteEntry.js` yerine `mfe_reporting@/reports/remoteEntry.js`
+  - Doğrulama sinyali: shell zaten `/reports/remoteEntry.js` bekliyor (`web/apps/mfe-shell/vite.config.ts:24`)
 
 - **4) SRI (sri-manifest.json) gereksinimi değerlendirmesi**
   - Şu an CI/workflow’larda SRI check çalışmıyor (workflow’larda `verify-sri.mjs` referansı yok; script mevcut: `web/scripts/security/verify-sri.mjs:18`).
@@ -180,7 +180,7 @@ Owner: @team/platform
 **Uygulama Adımları**
 - `web/scripts/ci/publish_bundle.sh` → `web/dist` clean + copy map + assert + fail-fast (opsiyonel REQUIRE_* flag’leri)
 - `web/package.json` → `publish:bundle` (ve gerekirse `build:publish`) script’lerini ekle; Netlify/CI bu script’i çağıracak şekilde hizala
-- `web/apps/mfe-reporting/webpack.prod.js` → `mfe_shell` remote’u same-origin path’e çek
-- `web/apps/mfe-users/webpack.prod.js` → `mfe_reporting` remote path’ini `/reports/remoteEntry.js` yap
+- `web/apps/mfe-reporting/vite.config.ts` → `mfe_shell` remote’u same-origin path’e çek
+- `web/apps/mfe-users/vite.config.ts` → `mfe_reporting` remote path’ini `/reports/remoteEntry.js` yap
 - `web/security/sri-manifest.json` → (SRI required olacaksa) `audit`/`reports` artefact kayıtlarını ekle + rotasyon akışını netleştir
 - `.github/workflows/ci-gate.yml` (veya mevcut `web-qa.yml`) → web gate’e `build + publish bundle + artefact assert` adımını ekle

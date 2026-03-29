@@ -19,7 +19,7 @@ import {
   SidebarHealthBanner,
   SidebarBreadcrumb,
   SidebarSearchEnhanced,
-  HighlightedLabel,
+  _HighlightedLabel,
   SidebarFilterBar,
   useFilterState,
   SidebarFavorites,
@@ -29,8 +29,8 @@ import {
   buildComponentMenuItems,
   HoverPreviewProvider,
   useHoverPreview,
-  SidebarQuickActions,
-  SidebarGroupProgress,
+  _SidebarQuickActions,
+  _SidebarGroupProgress,
   type PreviewData,
 } from "./sidebar/sections";
 import {
@@ -255,7 +255,7 @@ export const DesignLabAppSidebar: React.FC = () => {
                 className={[
                   "flex flex-1 items-center justify-center rounded-lg py-2 transition-all duration-200 cursor-pointer",
                   activeLayer === id
-                    ? "bg-action-primary text-white shadow-xs"
+                    ? "bg-action-primary text-text-inverse shadow-xs"
                     : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
                 ].join(" ")}
                 title={t(`designlab.sidebar.title.${id}`)}
@@ -651,7 +651,7 @@ function ScrollableNavItem({
   active,
   label,
   badge,
-  highlightRanges,
+  _highlightRanges,
   pinned,
   onPin,
   onClick,

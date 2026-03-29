@@ -4,7 +4,7 @@ import { EmptyState as Empty } from "../empty-state";
 import { Text } from "../../primitives/text";
 import { ThemePreviewCard } from "../theme-preview-card";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   withAccessGuard,
   type AccessControlledProps,
   type AccessLevel,

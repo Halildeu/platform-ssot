@@ -25,8 +25,8 @@
     {
       "dir": "docs/02-architecture",
       "recursive": false,
-      "file_regex": "^(README|INDEX|SYSTEM-OVERVIEW|DOMAIN-MAP)\\.md$",
-      "note": "Architecture top-level allowlist: README/INDEX + placeholder SSOT files DOMAIN-MAP.md and SYSTEM-OVERVIEW.md."
+      "file_regex": "^(README|INDEX|SYSTEM-OVERVIEW|DOMAIN-MAP|AUTHORIZATION)\\.md$",
+      "note": "Architecture top-level allowlist: README/INDEX + placeholder SSOT files DOMAIN-MAP.md, SYSTEM-OVERVIEW.md, and AUTHORIZATION.md."
     },
     {
       "dir": "docs/03-delivery/guides",

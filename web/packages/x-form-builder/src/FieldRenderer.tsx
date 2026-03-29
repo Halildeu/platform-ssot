@@ -1,5 +1,5 @@
 import React, { useContext, useId } from 'react';
-import type { FieldSchema, FormValues } from './types';
+import type { FieldSchema } from './types';
 import { FieldRegistryContext } from './FieldRegistry';
 
 /* ------------------------------------------------------------------ */
@@ -252,7 +252,7 @@ export const SwitchFieldRenderer: React.FC<FieldRendererProps & Record<string, u
     >
       <span
         aria-hidden="true"
-        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-xs transition-transform ${
+        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface-default shadow-xs transition-transform ${
           checked ? 'translate-x-5' : 'translate-x-0'
         }`}
       />

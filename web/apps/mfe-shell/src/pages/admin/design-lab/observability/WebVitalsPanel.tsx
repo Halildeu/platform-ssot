@@ -66,22 +66,22 @@ function getRating(value: number, thresholds: { good: number; needsImprovement: 
 
 const RATING_COLORS: Record<string, { bg: string; text: string; ring: string; bar: string }> = {
   good: {
-    bg: 'bg-emerald-50 dark:bg-emerald-900/20',
-    text: 'text-emerald-700 dark:text-emerald-400',
-    ring: 'ring-emerald-200 dark:ring-emerald-800',
-    bar: 'bg-emerald-500',
+    bg: 'bg-state-success-bg dark:bg-state-success-text/20',
+    text: 'text-state-success-text dark:text-state-success-text',
+    ring: 'ring-state-success-text/20 dark:ring-state-success-text',
+    bar: 'bg-state-success-text',
   },
   'needs-improvement': {
-    bg: 'bg-amber-50 dark:bg-amber-900/20',
-    text: 'text-amber-700 dark:text-amber-400',
-    ring: 'ring-amber-200 dark:ring-amber-800',
-    bar: 'bg-amber-500',
+    bg: 'bg-state-warning-bg dark:bg-state-warning-text/20',
+    text: 'text-state-warning-text dark:text-state-warning-text',
+    ring: 'ring-state-warning-text/20 dark:ring-state-warning-text',
+    bar: 'bg-state-warning-text',
   },
   poor: {
-    bg: 'bg-red-50 dark:bg-red-900/20',
-    text: 'text-red-700 dark:text-red-400',
-    ring: 'ring-red-200 dark:ring-red-800',
-    bar: 'bg-red-500',
+    bg: 'bg-state-danger-bg dark:bg-state-danger-text/20',
+    text: 'text-state-danger-text dark:text-state-danger-text',
+    ring: 'ring-state-danger-text/20 dark:ring-state-danger-text',
+    bar: 'bg-state-danger-text',
   },
 };
 

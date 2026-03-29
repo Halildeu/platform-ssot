@@ -24,8 +24,8 @@ const MAX_GRID = 8;
 const wrapperStyles: React.CSSProperties = {
   display: 'inline-flex',
   flexDirection: 'column',
-  backgroundColor: 'var(--surface-default, #ffffff)',
-  border: '1px solid var(--border-subtle, #e2e8f0)',
+  backgroundColor: 'var(--surface-default))',
+  border: '1px solid var(--border-subtle))',
   borderRadius: '8px',
   boxShadow: '0 4px 16px rgba(0, 0, 0, 0.12)',
   padding: '8px',
@@ -41,7 +41,7 @@ const gridStyles: React.CSSProperties = {
 const cellStyles: React.CSSProperties = {
   width: '20px',
   height: '20px',
-  border: '1px solid var(--border-subtle, #e2e8f0)',
+  border: '1px solid var(--border-subtle))',
   borderRadius: '2px',
   backgroundColor: 'transparent',
   padding: 0,
@@ -51,13 +51,13 @@ const cellStyles: React.CSSProperties = {
 
 const cellActiveStyles: React.CSSProperties = {
   ...cellStyles,
-  backgroundColor: 'var(--surface-active, #dbeafe)',
-  borderColor: 'var(--border-accent, #3b82f6)',
+  backgroundColor: 'var(--surface-active)',
+  borderColor: 'var(--border-accent))',
 };
 
 const gridLabelStyles: React.CSSProperties = {
   fontSize: '12px',
-  color: 'var(--text-muted, #94a3b8)',
+  color: 'var(--text-muted))',
   textAlign: 'center',
   userSelect: 'none',
   height: '18px',
@@ -67,7 +67,7 @@ const gridLabelStyles: React.CSSProperties = {
 const dividerStyles: React.CSSProperties = {
   width: '100%',
   height: '1px',
-  backgroundColor: 'var(--border-subtle, #e2e8f0)',
+  backgroundColor: 'var(--border-subtle))',
 };
 
 const actionButtonStyles: React.CSSProperties = {
@@ -79,7 +79,7 @@ const actionButtonStyles: React.CSSProperties = {
   border: 'none',
   borderRadius: '4px',
   backgroundColor: 'transparent',
-  color: 'var(--text-primary, #1e293b)',
+  color: 'var(--text-primary))',
   fontSize: '12px',
   textAlign: 'left',
   cursor: 'pointer',
@@ -88,7 +88,7 @@ const actionButtonStyles: React.CSSProperties = {
 
 const destructiveButtonStyles: React.CSSProperties = {
   ...actionButtonStyles,
-  color: 'var(--text-danger, #ef4444)',
+  color: 'var(--text-danger))',
 };
 
 /* ---------- component ---------- */

@@ -43,7 +43,7 @@ const linkStyle: React.CSSProperties = {
   textDecoration: 'none',
   fontSize: '0.875rem',
   fontWeight: 500,
-  color: 'var(--color-text-secondary, #64748b)',
+  color: 'var(--color-text-secondary))',
 };
 
 export default function App() {
@@ -222,7 +222,7 @@ export default function UsersPage() {
         style={{
           fontSize: '1.5rem',
           fontWeight: 700,
-          color: 'var(--color-text-primary, #0f172a)',
+          color: 'var(--color-text-primary))',
           margin: '0 0 1.5rem 0',
         }}
       >

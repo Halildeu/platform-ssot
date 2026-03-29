@@ -36,7 +36,7 @@ export const WithUserInfo: Story = {
   render: () => (
     <AppSidebarFooter>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ width: 24, height: 24, borderRadius: '50%', background: '#3b82f6', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10 }}>HK</span>
+        <span style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--action-primary)', color: 'var(--surface-default)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10 }}>HK</span>
         <span style={{ fontSize: 12 }}>Halil K.</span>
       </div>
     </AppSidebarFooter>
@@ -53,7 +53,7 @@ export const WithActions: Story = {
 
 export const CustomClass: Story = {
   render: () => (
-    <AppSidebarFooter className="bg-blue-50"><span>styled</span></AppSidebarFooter>
+    <AppSidebarFooter className="bg-state-info-bg"><span>styled</span></AppSidebarFooter>
   ),
 };
 

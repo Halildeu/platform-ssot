@@ -7,7 +7,7 @@
  *
  * Usage: node scripts/generate-api-reference.mjs [--json] [--md] [--component Button]
  */
-import { readdir, readFile, writeFile, stat, mkdir } from "node:fs/promises";
+import { readdir, readFile, writeFile, mkdir } from "node:fs/promises";
 import { join, basename, relative } from "node:path";
 
 const SRC_DIR = join(import.meta.dirname, "..", "src");
@@ -184,7 +184,7 @@ function extractBracedBlock(content, startIdx) {
 /**
  * Parse the body of an interface/type into individual prop definitions.
  */
-function parsePropsBody(body, fullContent) {
+function parsePropsBody(body, _fullContent) {
   const props = [];
 
   // Strategy: walk through the body, tracking JSDoc comments and prop lines.

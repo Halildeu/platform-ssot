@@ -14,7 +14,7 @@ export interface EditorLinkDialogProps {
 const overlayStyles: React.CSSProperties = {
   position: 'fixed',
   inset: 0,
-  backgroundColor: 'var(--surface-overlay, rgba(0, 0, 0, 0.3))',
+  backgroundColor: 'var(--surface-overlay))',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -22,8 +22,8 @@ const overlayStyles: React.CSSProperties = {
 };
 
 const dialogStyles: React.CSSProperties = {
-  backgroundColor: 'var(--surface-default, #ffffff)',
-  border: '1px solid var(--border-subtle, #e2e8f0)',
+  backgroundColor: 'var(--surface-default))',
+  border: '1px solid var(--border-subtle))',
   borderRadius: '12px',
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.16)',
   padding: '20px',
@@ -34,7 +34,7 @@ const dialogStyles: React.CSSProperties = {
 const titleStyles: React.CSSProperties = {
   fontSize: '15px',
   fontWeight: 600,
-  color: 'var(--text-primary, #1e293b)',
+  color: 'var(--text-primary))',
   margin: '0 0 16px 0',
 };
 
@@ -48,16 +48,16 @@ const fieldStyles: React.CSSProperties = {
 const labelStyles: React.CSSProperties = {
   fontSize: '12px',
   fontWeight: 500,
-  color: 'var(--text-secondary, #64748b)',
+  color: 'var(--text-secondary))',
 };
 
 const inputStyles: React.CSSProperties = {
   padding: '8px 10px',
-  border: '1px solid var(--border-subtle, #e2e8f0)',
+  border: '1px solid var(--border-subtle))',
   borderRadius: '6px',
   fontSize: '13px',
-  color: 'var(--text-primary, #1e293b)',
-  backgroundColor: 'var(--surface-default, #ffffff)',
+  color: 'var(--text-primary))',
+  backgroundColor: 'var(--surface-default))',
   outline: 'none',
   transition: 'border-color 0.15s',
 };
@@ -68,7 +68,7 @@ const checkboxRowStyles: React.CSSProperties = {
   gap: '8px',
   marginBottom: '16px',
   fontSize: '13px',
-  color: 'var(--text-secondary, #64748b)',
+  color: 'var(--text-secondary))',
 };
 
 const footerStyles: React.CSSProperties = {
@@ -88,23 +88,23 @@ const buttonBaseStyles: React.CSSProperties = {
 
 const cancelButtonStyles: React.CSSProperties = {
   ...buttonBaseStyles,
-  border: '1px solid var(--border-subtle, #e2e8f0)',
-  backgroundColor: 'var(--surface-default, #ffffff)',
-  color: 'var(--text-primary, #1e293b)',
+  border: '1px solid var(--border-subtle))',
+  backgroundColor: 'var(--surface-default))',
+  color: 'var(--text-primary))',
 };
 
 const confirmButtonStyles: React.CSSProperties = {
   ...buttonBaseStyles,
   border: '1px solid transparent',
-  backgroundColor: 'var(--surface-accent, #3b82f6)',
-  color: 'var(--text-inverse, #ffffff)',
+  backgroundColor: 'var(--surface-accent))',
+  color: 'var(--text-inverse))',
 };
 
 const removeButtonStyles: React.CSSProperties = {
   ...buttonBaseStyles,
-  border: '1px solid var(--border-danger, #fca5a5)',
+  border: '1px solid var(--border-danger)',
   backgroundColor: 'transparent',
-  color: 'var(--text-danger, #ef4444)',
+  color: 'var(--text-danger))',
   marginRight: 'auto',
 };
 

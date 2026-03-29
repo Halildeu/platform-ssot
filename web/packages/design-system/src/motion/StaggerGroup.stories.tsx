@@ -6,8 +6,8 @@ const CardItem = ({ label }: { label: string }) => (
   <div
     style={{
       padding: '16px 20px',
-      background: '#ffffff',
-      border: '1px solid #e5e7eb',
+      background: 'var(--surface-default)',
+      border: '1px solid var(--border-subtle)',
       borderRadius: 8,
       boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
     }}

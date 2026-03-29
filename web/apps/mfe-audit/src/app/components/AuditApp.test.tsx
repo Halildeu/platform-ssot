@@ -1,12 +1,16 @@
+// @vitest-environment jsdom
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 
 // Mock child component to isolate AuditApp
-jest.mock('./AuditEventFeed', () => ({
+vi.mock('./AuditEventFeed', () => ({
   AuditEventFeed: () => <div data-testid="mock-audit-event-feed" />,
 }));
 
 import { AuditApp } from './AuditApp';
+
+afterEach(() => { cleanup(); });
 
 describe('AuditApp', () => {
   it('renders the page with correct test id', () => {

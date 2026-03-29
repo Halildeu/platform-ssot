@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>workcube_mikrolink.workcube_mikrolink_35</title>
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
+        <!-- Bootstrap 3.3.5 -->
+        <link rel="stylesheet" href="bower/admin-lte/bootstrap/css/bootstrap.min.css">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="bower/font-awesome/css/font-awesome.min.css">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="bower/ionicons/css/ionicons.min.css">
+        <!-- DataTables -->
+        <link rel="stylesheet" href="bower/datatables.net-bs/css/dataTables.bootstrap.min.css">
+        <link rel="stylesheet" href="bower/datatables.net-buttons-bs/css/buttons.bootstrap.min.css">
+        <!-- Code Mirror -->
+        <link rel="stylesheet" href="bower/codemirror/codemirror.css">
+        <!-- Fonts -->
+        <link href='fonts/indieflower/indie-flower.css' rel='stylesheet' type='text/css'>
+        <link href='fonts/source-sans-pro/source-sans-pro.css' rel='stylesheet' type='text/css'>
+
+        <!-- Theme style -->
+        <link rel="stylesheet" href="bower/admin-lte/dist/css/AdminLTE.min.css">
+        <!-- Salvattore -->
+        <link rel="stylesheet" href="bower/salvattore/salvattore.css">
+        <!-- AdminLTE Skins. Choose a skin from the css/skins
+           folder instead of downloading all of them to reduce the load. -->
+        <link rel="stylesheet" href="bower/admin-lte/dist/css/skins/_all-skins.min.css">
+        <!-- SchemaSpy -->
+        <link rel="stylesheet" href="schemaSpy.css">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="bower/html5shiv/html5shiv.min.js"></script>
+        <script src="bower/respond/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
+    <body class="hold-transition skin-blue layout-top-nav">
+        <div class="wrapper">
+            <header class="main-header">
+                <nav class="navbar navbar-static-top">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <a href="index.html" class="navbar-brand"><b>workcube_mikrolink</b></a><span class="navbar-brand" style="padding-left: 0">.workcube_mikrolink_35</span>
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse"><i class="fa fa-bars"></i></button>
+                        </div>
+
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+                            <ul class="nav navbar-nav">
+                                <li><a href="index.html">Tables <span class="sr-only">(current)</span></a></li>
+                                <li><a href="columns.html" title="All of the columns in the schema">Columns</a></li>
+                                <li><a href="constraints.html" title="Useful for diagnosing error messages that just give constraint name or number">Constraints</a></li>
+                                <li><a href="relationships.html" title="Diagram of table relationships">Relationships</a></li>
+                                <li><a href="orphans.html" title="View of tables with neither parents nor children">Orphan&nbsp;Tables</a></li>
+                                <li><a href="anomalies.html" title="Things that might not be quite right">Anomalies</a></li>
+                                <li><a href="routines.html" title="Procedures and functions">Routines</a></li>
+                            </ul>
+                        </div>
+                        <!-- /.navbar-collapse -->
+                        <!-- Navbar Right Menu -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </header>
+            <!-- Main content -->
+            <!-- Full Width Column -->
+            <div class="content-wrapper">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <h1>Utility Tables</h1>
+                </section>
+                <!-- Main content -->
+                <section class="content">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-code-fork"></i>
+                            <h3 class="box-title">Orphan Tables</h3>
+                        </div>
+                        <div class="box-body">
+<img id="orphans" src="diagrams/orphans/orphans.png" usemap="#orphans" style="max-width:100%;" border="0" align="top">
+<map id="orphans" name="orphans">
+<area shape="rect" id="node1" href="tables/ACCOUNT_CARD_MONEY.html" target="_top" title="ACCOUNT_CARD_MONEY" alt="" coords="9936,12785,10321,12884">
+<area shape="rect" id="node2" href="tables/ACCOUNT_CARD_ROWS.html" target="_top" title="ACCOUNT_CARD_ROWS" alt="" coords="8760,12573,9133,12819">
+<area shape="rect" id="node3" href="tables/ACCOUNTS_BRANCH.html" target="_top" title="ACCOUNTS_BRANCH" alt="" coords="16600,7696,16960,7853">
+<area shape="rect" id="node4" href="tables/ACCOUNTS_OPEN_CONTROL.html" target="_top" title="ACCOUNTS_OPEN_CONTROL" alt="" coords="136,16095,569,16281">
+<area shape="rect" id="node5" href="tables/ACCOUNTS_POSID.html" target="_top" title="ACCOUNTS_POSID" alt="" coords="10459,18127,10807,18372">
+<area shape="rect" id="node6" href="tables/acctable.html" target="_top" title="acctable" alt="" coords="10655,8473,10900,8572">
+<area shape="rect" id="node7" href="tables/ACNIELSEN_REPORTS.html" target="_top" title="ACNIELSEN_REPORTS" alt="" coords="593,14641,973,14975">
+<area shape="rect" id="node8" href="tables/ALTERNATIVE_PRODUCTS.html" target="_top" title="ALTERNATIVE_PRODUCTS" alt="" coords="6800,14875,7303,15824">
+<area shape="rect" id="node9" href="tables/ALTERNATIVE_PRODUCTS_EXCEPT.html" target="_top" title="ALTERNATIVE_PRODUCTS_EXCEPT" alt="" coords="3795,18280,4289,18437">
+<area shape="rect" id="node10" href="tables/ASSEMPTION_AVERAGE_RATES.html" target="_top" title="ASSEMPTION_AVERAGE_RATES" alt="" coords="3076,17705,3548,17980">
+<area shape="rect" id="node11" href="tables/ASSEMPTION_EXPONENTIAL_VALUES.html" target="_top" title="ASSEMPTION_EXPONENTIAL_VALUES" alt="" coords="6212,18084,6737,18241">
+<area shape="rect" id="node12" href="tables/BANK_DISTRIBUTIONS.html" target="_top" title="BANK_DISTRIBUTIONS" alt="" coords="1769,1917,2152,2104">
+<area shape="rect" id="node13" href="tables/BANK_ORDERS_SIGNATURE.html" target="_top" title="BANK_ORDERS_SIGNATURE" alt="" coords="2357,17196,2795,17588">
+<area shape="rect" id="node14" href="tables/BILLS_PROCESS_GROUP.html" target="_top" title="BILLS_PROCESS_GROUP" alt="" coords="9936,2473,10367,2953">
+<area shape="rect" id="node15" href="tables/BRANCH.html" target="_top" title="BRANCH" alt="" coords="13268,17751,13544,17849">
+<area shape="rect" id="node16" href="tables/BUILDING_HAKEDIS.html" target="_top" title="BUILDING_HAKEDIS" alt="" coords="13072,7515,13436,8376">
+<area shape="rect" id="node17" href="tables/BUILDING_HAKEDIS_EKLENTI.html" target="_top" title="BUILDING_HAKEDIS_EKLENTI" alt="" coords="5624,18120,6079,18307">
+<area shape="rect" id="node18" href="tables/BUILDING_HAKEDIS_KESINTI.html" target="_top" title="BUILDING_HAKEDIS_KESINTI" alt="" coords="5036,18120,5487,18307">
+<area shape="rect" id="node19" href="tables/BUILDING_HAKEDIS_ROW.html" target="_top" title="BUILDING_HAKEDIS_ROW" alt="" coords="2292,4859,2715,5632">
+<area shape="rect" id="node20" href="tables/BUILDING_HAKEDIS_ROW_METRAJ.html" target="_top" title="BUILDING_HAKEDIS_ROW_METRAJ" alt="" coords="11504,17160,12008,17523">
+<area shape="rect" id="node21" href="tables/BUILDING_HAKEDIS_WORKGROUP.html" target="_top" title="BUILDING_HAKEDIS_WORKGROUP" alt="" coords="6800,16811,7300,17261">
+<area shape="rect" id="node22" href="tables/BUILDING_METRAJ.html" target="_top" title="BUILDING_METRAJ" alt="" coords="332,2656,684,3019">
+<area shape="rect" id="node23" href="tables/BUILDING_METRAJ_HISTORY.html" target="_top" title="BUILDING_METRAJ_HISTORY" alt="" coords="12288,2764,12735,3215">
+<area shape="rect" id="node24" href="tables/BUILDING_OFFER_DOCUMENT.html" target="_top" title="BUILDING_OFFER_DOCUMENT" alt="" coords="1247,10408,1708,10859">
+<area shape="rect" id="node25" href="tables/BUILDING_OFFERS.html" target="_top" title="BUILDING_OFFERS" alt="" coords="593,6583,961,7004">
+<area shape="rect" id="node26" href="tables/BUILDING_PLAN.html" target="_top" title="BUILDING_PLAN" alt="" coords="1769,6943,2115,7657">
+<area shape="rect" id="node27" href="tables/BUILDING_PLAN_ANALYSE.html" target="_top" title="BUILDING_PLAN_ANALYSE" alt="" coords="4121,15952,4604,16608">
+<area shape="rect" id="node28" href="tables/BUILDING_PROFIL.html" target="_top" title="BUILDING_PROFIL" alt="" coords="267,9516,615,9879">
+<area shape="rect" id="node29" href="tables/BUILDING_TESISAT.html" target="_top" title="BUILDING_TESISAT" alt="" coords="267,9059,625,9421">
+<area shape="rect" id="node30" href="tables/BUILDING_WORK_DIRECTORY.html" target="_top" title="BUILDING_WORK_DIRECTORY" alt="" coords="2880,1947,3327,2104">
+<area shape="rect" id="node31" href="tables/BUILDING_WORKFILES.html" target="_top" title="BUILDING_WORKFILES" alt="" coords="724,8085,1113,8507">
+<area shape="rect" id="node32" href="tables/BUILDING_WORKGROUP.html" target="_top" title="BUILDING_WORKGROUP" alt="" coords="1247,7736,1652,8245">
+<area shape="rect" id="node33" href="tables/BUILDING_WORKGROUP_OPP.html" target="_top" title="BUILDING_WORKGROUP_OPP" alt="" coords="10393,16556,10848,17065">
+<area shape="rect" id="node34" href="tables/CAMPAIGN_ANALYSES.html" target="_top" title="CAMPAIGN_ANALYSES" alt="" coords="14248,8611,14627,8768">
+<area shape="rect" id="node35" href="tables/CAMPAIGN_ASSETS.html" target="_top" title="CAMPAIGN_ASSETS" alt="" coords="7519,2545,7879,3084">
+<area shape="rect" id="node36" href="tables/CAMPAIGN_CATS.html" target="_top" title="CAMPAIGN_CATS" alt="" coords="267,8601,608,8964">
+<area shape="rect" id="node37" href="tables/CAMPAIGN_COMMENT.html" target="_top" title="CAMPAIGN_COMMENT" alt="" coords="6147,16585,6659,17065">
+<area shape="rect" id="node38" href="tables/CAMPAIGN_CONTENT_RELATION.html" target="_top" title="CAMPAIGN_CONTENT_RELATION" alt="" coords="2488,17705,2972,17980">
+<area shape="rect" id="node39" href="tables/CAMPAIGN_DIRECTMAIL_CONT.html" target="_top" title="CAMPAIGN_DIRECTMAIL_CONT" alt="" coords="10851,17160,11375,17523">
+<area shape="rect" id="node40" href="tables/CAMPAIGN_EMAIL_CONT.html" target="_top" title="CAMPAIGN_EMAIL_CONT" alt="" coords="3533,16236,3999,16804">
+<area shape="rect" id="node41" href="tables/CAMPAIGN_EMAIL_LIST.html" target="_top" title="CAMPAIGN_EMAIL_LIST" alt="" coords="1247,7119,1671,7657">
+<area shape="rect" id="node42" href="tables/CAMPAIGN_IMAGES.html" target="_top" title="CAMPAIGN_IMAGES" alt="" coords="593,6060,964,6481">
+<area shape="rect" id="node43" href="tables/CAMPAIGN_NOTES.html" target="_top" title="CAMPAIGN_NOTES" alt="" coords="267,10656,635,10989">
+<area shape="rect" id="node44" href="tables/CAMPAIGN_OPERATION.html" target="_top" title="CAMPAIGN_OPERATION" alt="" coords="2292,8335,2695,9225">
+<area shape="rect" id="node45" href="tables/CAMPAIGN_PAYMETHODS.html" target="_top" title="CAMPAIGN_PAYMETHODS" alt="" coords="15620,5145,16077,5567">
+<area shape="rect" id="node46" href="tables/CAMPAIGN_RELATION.html" target="_top" title="CAMPAIGN_RELATION" alt="" coords="11635,1931,12048,2235">
+<area shape="rect" id="node47" href="tables/CAMPAIGN_SMS_CONT.html" target="_top" title="CAMPAIGN_SMS_CONT" alt="" coords="724,7563,1125,7984">
+<area shape="rect" id="node48" href="tables/CAMPAIGN_SURVEYS.html" target="_top" title="CAMPAIGN_SURVEYS" alt="" coords="5,17532,372,17719">
+<area shape="rect" id="node49" href="tables/CAMPAIGN_TARGET_MARKETS.html" target="_top" title="CAMPAIGN_TARGET_MARKETS" alt="" coords="3076,18091,3541,18307">
+<area shape="rect" id="node50" href="tables/CAMPAIGN_TARGET_PEOPLE.html" target="_top" title="CAMPAIGN_TARGET_PEOPLE" alt="" coords="1051,17705,1527,17980">
+<area shape="rect" id="node51" href="tables/CAMPAIGN_TEAM.html" target="_top" title="CAMPAIGN_TEAM" alt="" coords="136,6533,496,6808">
+<area shape="rect" id="node52" href="tables/CAMPAIGN_TYPES.html" target="_top" title="CAMPAIGN_TYPES" alt="" coords="136,6112,484,6416">
+<area shape="rect" id="node53" href="tables/CAMPAIGN_WEB_CONT.html" target="_top" title="CAMPAIGN_WEB_CONT" alt="" coords="15620,13639,16069,14060">
+<area shape="rect" id="node54" href="tables/CAMPAIGNS.html" target="_top" title="CAMPAIGNS" alt="" coords="2945,9087,3433,10271">
+<area shape="rect" id="node55" href="tables/CARD_TYPES.html" target="_top" title="CARD_TYPES" alt="" coords="10655,8013,10968,8376">
+<area shape="rect" id="node56" href="tables/CARI_ROWS.html" target="_top" title="CARI_ROWS" alt="" coords="15947,8081,16223,8180">
+<area shape="rect" id="node57" href="tables/CATALOG_MONEY.html" target="_top" title="CATALOG_MONEY" alt="" coords="136,2316,483,2561">
+<area shape="rect" id="node58" href="tables/CATALOG_PAGE_TYPES.html" target="_top" title="CATALOG_PAGE_TYPES" alt="" coords="528,17683,923,18045">
+<area shape="rect" id="node59" href="tables/CATALOG_PRICE_LISTS.html" target="_top" title="CATALOG_PRICE_LISTS" alt="" coords="6735,1917,7148,2104">
+<area shape="rect" id="node60" href="tables/CATALOG_PRICE_LISTS_HISTORY.html" target="_top" title="CATALOG_PRICE_LISTS_HISTORY" alt="" coords="15228,1917,15645,2104">
+<area shape="rect" id="node61" href="tables/CATALOG_PROMOTION.html" target="_top" title="CATALOG_PROMOTION" alt="" coords="4121,14875,4628,15824">
+<area shape="rect" id="node62" href="tables/CATALOG_PROMOTION_HISTORY.html" target="_top" title="CATALOG_PROMOTION_HISTORY" alt="" coords="3468,15377,4013,16151">
+<area shape="rect" id="node63" href="tables/CATALOG_PROMOTION_MEMBERS.html" target="_top" title="CATALOG_PROMOTION_MEMBERS" alt="" coords="724,12501,1231,12688">
+<area shape="rect" id="node64" href="tables/CATALOG_PROMOTION_MEMBERS_HISTORY.html" target="_top" title="CATALOG_PROMOTION_MEMBERS_HISTORY" alt="" coords="5559,17793,6100,17980">
+<area shape="rect" id="node65" href="tables/CATALOG_PROMOTION_PLUS.html" target="_top" title="CATALOG_PROMOTION_PLUS" alt="" coords="1573,5733,2083,6155">
+<area shape="rect" id="node66" href="tables/CATALOG_PROMOTION_PRODUCTS.html" target="_top" title="CATALOG_PROMOTION_PRODUCTS" alt="" coords="11765,7335,12285,9487">
+<area shape="rect" id="node67" href="tables/CATALOG_PROMOTION_PRODUCTS_HISTORY.html" target="_top" title="CATALOG_PROMOTION_PRODUCTS_HISTORY" alt="" coords="4513,10467,5111,12296">
+<area shape="rect" id="node68" href="tables/CHAIN_DISTRIBUTION.html" target="_top" title="CHAIN_DISTRIBUTION" alt="" coords="4252,17771,4707,18045">
+<area shape="rect" id="node69" href="tables/CHAIN_RWAT.html" target="_top" title="CHAIN_RWAT" alt="" coords="3860,10701,4408,12296">
+<area shape="rect" id="node70" href="tables/CHAIN_TOKENOMICS.html" target="_top" title="CHAIN_TOKENOMICS" alt="" coords="13464,1960,13845,2235">
+<area shape="rect" id="node71" href="tables/CHEQUE.html" target="_top" title="CHEQUE" alt="" coords="14248,16124,14529,16281">
+<area shape="rect" id="node72" href="tables/COMPANY_REMAINDER.html" target="_top" title="COMPANY_REMAINDER" alt="" coords="13072,8473,13444,8572">
+<area shape="rect" id="node73" href="tables/CONSIGMENT_REPORT_TABLE.html" target="_top" title="CONSIGMENT_REPORT_TABLE" alt="" coords="6669,6359,7129,10271">
+<area shape="rect" id="node74" href="tables/CONTRACT_BLOCKCHAIN.html" target="_top" title="CONTRACT_BLOCKCHAIN" alt="" coords="14771,9444,15216,9748">
+<area shape="rect" id="node75" href="tables/CONTRACT_CAT.html" target="_top" title="CONTRACT_CAT" alt="" coords="16469,8065,16823,8311">
+<area shape="rect" id="node76" href="tables/CONTRACT_CHAIN.html" target="_top" title="CONTRACT_CHAIN" alt="" coords="3664,17457,4084,17849">
+<area shape="rect" id="node77" href="tables/CONTRACT_EXPENSE_CENTER_BUDGET.html" target="_top" title="CONTRACT_EXPENSE_CENTER_BUDGET" alt="" coords="9283,17160,9831,17523">
+<area shape="rect" id="node78" href="tables/CONTRACT_EXPENSE_CENTER_BUDGET_PROJECT.html" target="_top" title="CONTRACT_EXPENSE_CENTER_BUDGET_PROJECT" alt="" coords="1835,10395,2475,10728">
+<area shape="rect" id="node79" href="tables/CONTRACT_INFO_PLUS.html" target="_top" title="CONTRACT_INFO_PLUS" alt="" coords="3403,7101,3799,8637">
+<area shape="rect" id="node80" href="tables/CONTRACT_INFO_PLUS_HISTORY.html" target="_top" title="CONTRACT_INFO_PLUS_HISTORY" alt="" coords="3795,13213,4285,14779">
+<area shape="rect" id="node81" href="tables/CONTRACT_INVOICE_COMMANDS.html" target="_top" title="CONTRACT_INVOICE_COMMANDS" alt="" coords="5036,2359,5523,2692">
+<area shape="rect" id="node82" href="tables/CONTRACT_KAPAK_ROW.html" target="_top" title="CONTRACT_KAPAK_ROW" alt="" coords="14901,3960,15397,4587">
+<area shape="rect" id="node83" href="tables/CONTRACT_PROD_DISCOUNT_DELETED_ROWS.html" target="_top" title="CONTRACT_PROD_DISCOUNT_DELETED_ROWS" alt="" coords="9087,14708,9703,15628">
+<area shape="rect" id="node84" href="tables/CONTRACT_PURCHASE_ACTION_WORTH.html" target="_top" title="CONTRACT_PURCHASE_ACTION_WORTH" alt="" coords="2161,4032,2720,4717">
+<area shape="rect" id="node85" href="tables/CONTRACT_PURCHASE_CAT_PREMIUM.html" target="_top" title="CONTRACT_PURCHASE_CAT_PREMIUM" alt="" coords="14901,4665,15441,5175">
+<area shape="rect" id="node86" href="tables/CONTRACT_PURCHASE_DUE.html" target="_top" title="CONTRACT_PURCHASE_DUE" alt="" coords="15359,5965,15828,6416">
+<area shape="rect" id="node87" href="tables/CONTRACT_PURCHASE_GENERAL_DISCOUNT.html" target="_top" title="CONTRACT_PURCHASE_GENERAL_DISCOUNT" alt="" coords="14901,13805,15501,14256">
+<area shape="rect" id="node88" href="tables/CONTRACT_PURCHASE_GENERAL_DISCO_4ed35fe6.html" target="_top" title="CONTRACT_PURCHASE_GENERAL_DISCOUNT_BRANCHES" alt="" coords="15620,5700,16265,5828">
+<area shape="rect" id="node89" href="tables/CONTRACT_PURCHASE_GENERAL_PREMIUM.html" target="_top" title="CONTRACT_PURCHASE_GENERAL_PREMIUM" alt="" coords="14901,14364,15493,14844">
+<area shape="rect" id="node90" href="tables/CONTRACT_PURCHASE_INVOICE_DISCOUNT.html" target="_top" title="CONTRACT_PURCHASE_INVOICE_DISCOUNT" alt="" coords="12876,14933,13467,15824">
+<area shape="rect" id="node91" href="tables/CONTRACT_PURCHASE_JOIN_WITHOUT.html" target="_top" title="CONTRACT_PURCHASE_JOIN_WITHOUT" alt="" coords="4513,3379,5060,4064">
+<area shape="rect" id="node92" href="tables/CONTRACT_PURCHASE_PHYSICAL.html" target="_top" title="CONTRACT_PURCHASE_PHYSICAL" alt="" coords="2815,15945,3340,16543">
+<area shape="rect" id="node93" href="tables/CONTRACT_PURCHASE_PROD_DISCOUNT.html" target="_top" title="CONTRACT_PURCHASE_PROD_DISCOUNT" alt="" coords="13529,11765,14095,12949">
+<area shape="rect" id="node94" href="tables/CONTRACT_PURCHASE_RETAIL.html" target="_top" title="CONTRACT_PURCHASE_RETAIL" alt="" coords="15359,7700,15856,8180">
+<area shape="rect" id="node95" href="tables/CONTRACT_SALES_ACTION_WORTH.html" target="_top" title="CONTRACT_SALES_ACTION_WORTH" alt="" coords="9936,15821,10477,16477">
+<area shape="rect" id="node96" href="tables/CONTRACT_SALES_CAT_PREMIUM.html" target="_top" title="CONTRACT_SALES_CAT_PREMIUM" alt="" coords="2227,16556,2723,17065">
+<area shape="rect" id="node97" href="tables/CONTRACT_SALES_DUE.html" target="_top" title="CONTRACT_SALES_DUE" alt="" coords="15620,14168,16047,14648">
+<area shape="rect" id="node98" href="tables/CONTRACT_SALES_GENERAL_DISCOUNT.html" target="_top" title="CONTRACT_SALES_GENERAL_DISCOUNT" alt="" coords="2880,16680,3436,17131">
+<area shape="rect" id="node99" href="tables/CONTRACT_SALES_GENERAL_DISCOUNT_BRANCHES.html" target="_top" title="CONTRACT_SALES_GENERAL_DISCOUNT_BRANCHES" alt="" coords="13660,17787,14261,17915">
+<area shape="rect" id="node100" href="tables/CONTRACT_SALES_GENERAL_PREMIUM.html" target="_top" title="CONTRACT_SALES_GENERAL_PREMIUM" alt="" coords="5428,16040,5976,16608">
+<area shape="rect" id="node101" href="tables/CONTRACT_SALES_INVOICE_DISCOUNT.html" target="_top" title="CONTRACT_SALES_INVOICE_DISCOUNT" alt="" coords="5951,14816,6497,15824">
+<area shape="rect" id="node102" href="tables/CONTRACT_SALES_JOIN_WITHOUT.html" target="_top" title="CONTRACT_SALES_JOIN_WITHOUT" alt="" coords="2096,15821,2625,16477">
+<area shape="rect" id="node103" href="tables/CONTRACT_SALES_MANY_CAT_PREMIUM.html" target="_top" title="CONTRACT_SALES_MANY_CAT_PREMIUM" alt="" coords="9348,3068,9911,3607">
+<area shape="rect" id="node104" href="tables/CONTRACT_SALES_PROD_DISCOUNT.html" target="_top" title="CONTRACT_SALES_PROD_DISCOUNT" alt="" coords="9805,14656,10327,15693">
+<area shape="rect" id="node105" href="tables/CONTRACT_SALES_PROD_PRICE_LIST.html" target="_top" title="CONTRACT_SALES_PROD_PRICE_LIST" alt="" coords="1181,18084,1700,18241">
+<area shape="rect" id="node106" href="tables/CONTRACT_SALES_RISK.html" target="_top" title="CONTRACT_SALES_RISK" alt="" coords="1247,5093,1679,5632">
+<area shape="rect" id="node107" href="tables/CONTRACT_SERVICE_WORTH.html" target="_top" title="CONTRACT_SERVICE_WORTH" alt="" coords="3337,3147,3817,3803">
+<area shape="rect" id="node108" href="tables/CONTRACT_SUMMARY_ROW.html" target="_top" title="CONTRACT_SUMMARY_ROW" alt="" coords="12811,16869,13340,17261">
+<area shape="rect" id="node109" href="tables/CORRESPONDENCE_ORDERS_ROW.html" target="_top" title="CORRESPONDENCE_ORDERS_ROW" alt="" coords="528,15680,1021,15955">
+<area shape="rect" id="node110" href="tables/COUPONS.html" target="_top" title="COUPONS" alt="" coords="13529,13043,14037,14256">
+<area shape="rect" id="node111" href="tables/CREDIT_CARD.html" target="_top" title="CREDIT_CARD" alt="" coords="2227,14920,2617,15693">
+<area shape="rect" id="node112" href="tables/CREDIT_CARD_BANK_EXPENSE.html" target="_top" title="CREDIT_CARD_BANK_EXPENSE" alt="" coords="9936,3716,10460,4783">
+<area shape="rect" id="node113" href="tables/CREDIT_CARD_BANK_EXPENSE_MONEY.html" target="_top" title="CREDIT_CARD_BANK_EXPENSE_MONEY" alt="" coords="3860,10352,4396,10597">
+<area shape="rect" id="node114" href="tables/CREDIT_CARD_BANK_EXPENSE_RELATIONS.html" target="_top" title="CREDIT_CARD_BANK_EXPENSE_RELATIONS" alt="" coords="15816,10251,16391,10467">
+<area shape="rect" id="node115" href="tables/CREDIT_CARD_BANK_EXPENSE_ROWS.html" target="_top" title="CREDIT_CARD_BANK_EXPENSE_ROWS" alt="" coords="5624,2388,6159,2692">
+<area shape="rect" id="node116" href="tables/CREDIT_CARD_BANK_PAYMENT_MONEY.html" target="_top" title="CREDIT_CARD_BANK_PAYMENT_MONEY" alt="" coords="15881,10548,16423,10793">
+<area shape="rect" id="node117" href="tables/CREDIT_CARD_BANK_PAYMENTS.html" target="_top" title="CREDIT_CARD_BANK_PAYMENTS" alt="" coords="5951,4555,6543,6677">
+<area shape="rect" id="node118" href="tables/CREDIT_CARD_BANK_PAYMENTS_MULTI.html" target="_top" title="CREDIT_CARD_BANK_PAYMENTS_MULTI" alt="" coords="5493,16745,6047,17196">
+<area shape="rect" id="node119" href="tables/CREDIT_CARD_BANK_PAYMENTS_MULTI_MONEY.html" target="_top" title="CREDIT_CARD_BANK_PAYMENTS_MULTI_MONEY" alt="" coords="1312,12443,1936,12688">
+<area shape="rect" id="node120" href="tables/CREDIT_CARD_BANK_PAYMENTS_ROWS.html" target="_top" title="CREDIT_CARD_BANK_PAYMENTS_ROWS" alt="" coords="4187,16716,4739,17196">
+<area shape="rect" id="node121" href="tables/CREDIT_CONTRACT_MONEY.html" target="_top" title="CREDIT_CONTRACT_MONEY" alt="" coords="16469,8421,16891,8637">
+<area shape="rect" id="node122" href="tables/CREDIT_LIMIT.html" target="_top" title="CREDIT_LIMIT" alt="" coords="9348,9333,9683,9813">
+<area shape="rect" id="node123" href="tables/CREDITCARD_PAYMENT_TYPE.html" target="_top" title="CREDITCARD_PAYMENT_TYPE" alt="" coords="3925,6752,4449,8376">
+<area shape="rect" id="node124" href="tables/CREDITCARD_PAYMENT_TYPE_MEMBER.html" target="_top" title="CREDITCARD_PAYMENT_TYPE_MEMBER" alt="" coords="2945,17255,3496,17588">
+<area shape="rect" id="node125" href="tables/CROSSROAD_CONTROL_MOBILE.html" target="_top" title="CROSSROAD_CONTROL_MOBILE" alt="" coords="11112,2359,11591,2692">
+<area shape="rect" id="node126" href="tables/CUSTOM_DECLERATION.html" target="_top" title="CUSTOM_DECLERATION" alt="" coords="12288,9624,12817,11512">
+<area shape="rect" id="node127" href="tables/DEMAND_ASSEMPTION.html" target="_top" title="DEMAND_ASSEMPTION" alt="" coords="724,10467,1119,10859">
+<area shape="rect" id="node128" href="tables/DEMAND_ASSEMPTION_PRE.html" target="_top" title="DEMAND_ASSEMPTION_PRE" alt="" coords="16339,1960,16771,2235">
+<area shape="rect" id="node129" href="tables/DISPATCH_TEAM_PLANNING.html" target="_top" title="DISPATCH_TEAM_PLANNING" alt="" coords="13137,3147,13639,3803">
+<area shape="rect" id="node130" href="tables/DISPATCH_TEAM_PLANNING_ROW.html" target="_top" title="DISPATCH_TEAM_PLANNING_ROW" alt="" coords="9087,17735,9577,17980">
+<area shape="rect" id="node131" href="tables/DRAWING_PART.html" target="_top" title="DRAWING_PART" alt="" coords="10001,8657,10357,9225">
+<area shape="rect" id="node132" href="tables/DRAWING_PART_ROW.html" target="_top" title="DRAWING_PART_ROW" alt="" coords="11961,6743,12340,7135">
+<area shape="rect" id="node133" href="tables/EARCHIVE_TEMPLATE.html" target="_top" title="EARCHIVE_TEMPLATE" alt="" coords="14313,6177,14693,6481">
+<area shape="rect" id="node134" href="tables/EARCHIVE_TEMPLATES.html" target="_top" title="EARCHIVE_TEMPLATES" alt="" coords="16339,2323,16732,2627">
+<area shape="rect" id="node135" href="tables/EINVOICE_NUMBER.html" target="_top" title="EINVOICE_NUMBER" alt="" coords="16600,11355,16948,11512">
+<area shape="rect" id="node136" href="tables/EINVOICE_TEMPLATES.html" target="_top" title="EINVOICE_TEMPLATES" alt="" coords="16339,9640,16727,9944">
+<area shape="rect" id="node137" href="tables/EMPLOYEES_DETAIL.html" target="_top" title="EMPLOYEES_DETAIL" alt="" coords="15359,8277,15701,8376">
+<area shape="rect" id="node138" href="tables/EMPLOYEES_PUANTAJ_ROWS.html" target="_top" title="EMPLOYEES_PUANTAJ_ROWS" alt="" coords="14771,15921,15199,16020">
+<area shape="rect" id="node139" href="tables/EMPLOYEES_SALARY.html" target="_top" title="EMPLOYEES_SALARY" alt="" coords="16600,11645,16949,11773">
+<area shape="rect" id="node140" href="tables/GENERAL_PAPERS.html" target="_top" title="GENERAL_PAPERS" alt="" coords="7976,2999,8648,17588">
+<area shape="rect" id="node141" href="tables/GET_ALL_INVOICE_ROW_DW.html" target="_top" title="GET_ALL_INVOICE_ROW_DW" alt="" coords="16469,8748,16896,8964">
+<area shape="rect" id="node142" href="tables/GET_ALL_SHIP_ROW_WR.html" target="_top" title="GET_ALL_SHIP_ROW_WR" alt="" coords="16469,9104,16864,9291">
+<area shape="rect" id="node143" href="tables/GET_CV_DENEME.html" target="_top" title="GET_CV_DENEME" alt="" coords="1377,9644,1781,10271">
+<area shape="rect" id="node144" href="tables/get_metarials_get_order_14460.html" target="_top" title="get_metarials_get_order_14460" alt="" coords="1769,2192,2249,2496">
+<area shape="rect" id="node145" href="tables/get_metarials_get_order_18531.html" target="_top" title="get_metarials_get_order_18531" alt="" coords="6865,2192,7345,2496">
+<area shape="rect" id="node146" href="tables/IMPROPER_PRODUCTS.html" target="_top" title="IMPROPER_PRODUCTS" alt="" coords="15359,10545,15748,11055">
+<area shape="rect" id="node147" href="tables/INTERNALDEMAND.html" target="_top" title="INTERNALDEMAND" alt="" coords="4709,14291,5207,15563">
+<area shape="rect" id="node148" href="tables/INTERNALDEMAND_HISTORY.html" target="_top" title="INTERNALDEMAND_HISTORY" alt="" coords="2749,14816,3256,15824">
+<area shape="rect" id="node149" href="tables/INTERNALDEMAND_INFO_PLUS.html" target="_top" title="INTERNALDEMAND_INFO_PLUS" alt="" coords="3533,8735,4007,10271">
+<area shape="rect" id="node150" href="tables/INTERNALDEMAND_INFO_PLUS_HISTORY.html" target="_top" title="INTERNALDEMAND_INFO_PLUS_HISTORY" alt="" coords="8956,13017,9524,14583">
+<area shape="rect" id="node151" href="tables/INTERNALDEMAND_MONEY.html" target="_top" title="INTERNALDEMAND_MONEY" alt="" coords="2553,18061,2979,18307">
+<area shape="rect" id="node152" href="tables/INTERNALDEMAND_RELATION_ROW.html" target="_top" title="INTERNALDEMAND_RELATION_ROW" alt="" coords="10001,3068,10509,3607">
+<area shape="rect" id="node153" href="tables/INTERNALDEMAND_ROW.html" target="_top" title="INTERNALDEMAND_ROW" alt="" coords="11373,4579,11824,7200">
+<area shape="rect" id="node154" href="tables/INTERNALDEMAND_ROW_HISTORY.html" target="_top" title="INTERNALDEMAND_ROW_HISTORY" alt="" coords="11700,11428,12208,13668">
+<area shape="rect" id="node155" href="tables/INTERNALDEMAND_ROW_YEDEK16092024.html" target="_top" title="INTERNALDEMAND_ROW_YEDEK16092024" alt="" coords="5232,4703,5815,7265">
+<area shape="rect" id="node156" href="tables/INTERNALDEMAND_YEDEK16092024.html" target="_top" title="INTERNALDEMAND_YEDEK16092024" alt="" coords="13399,3903,13980,5175">
+<area shape="rect" id="node157" href="tables/INTERNALDEMAND_YEDEK26082024.html" target="_top" title="INTERNALDEMAND_YEDEK26082024" alt="" coords="13529,7496,14111,8768">
+<area shape="rect" id="node158" href="tables/INVENTORY_AMORTIZATION_MAIN.html" target="_top" title="INVENTORY_AMORTIZATION_MAIN" alt="" coords="3599,16905,4107,17327">
+<area shape="rect" id="node159" href="tables/INVENTORY_AMORTIZATON.html" target="_top" title="INVENTORY_AMORTIZATON" alt="" coords="1639,15125,2120,15693">
+<area shape="rect" id="node160" href="tables/INVENTORY_AMORTIZATON_IFRS.html" target="_top" title="INVENTORY_AMORTIZATON_IFRS" alt="" coords="1573,6240,2060,6808">
+<area shape="rect" id="node161" href="tables/INVENTORY_HISTORY.html" target="_top" title="INVENTORY_HISTORY" alt="" coords="1573,4156,2024,4783">
+<area shape="rect" id="node162" href="tables/INVENTORY_VALUATION.html" target="_top" title="INVENTORY_VALUATION" alt="" coords="6408,3457,6856,4260">
+<area shape="rect" id="node163" href="tables/INVOICE_ROW.html" target="_top" title="INVOICE_ROW" alt="" coords="5,15376,323,15563">
+<area shape="rect" id="node164" href="tables/KARMA_PRODUCTS_PRICE.html" target="_top" title="KARMA_PRODUCTS_PRICE" alt="" coords="10589,2719,11013,3345">
+<area shape="rect" id="node165" href="tables/MARKET_SEGMENT.html" target="_top" title="MARKET_SEGMENT" alt="" coords="16469,10055,16883,10271">
+<area shape="rect" id="node166" href="tables/MONEY_HISTORY.html" target="_top" title="MONEY_HISTORY" alt="" coords="9936,16569,10304,17196">
+<area shape="rect" id="node167" href="tables/MONTHLY_SALES_AMOUNT.html" target="_top" title="MONTHLY_SALES_AMOUNT" alt="" coords="16469,14563,16893,14779">
+<area shape="rect" id="node168" href="tables/MULTILEVEL_SALES_PREMIUM.html" target="_top" title="MULTILEVEL_SALES_PREMIUM" alt="" coords="14313,4561,14820,5305">
+<area shape="rect" id="node169" href="tables/OFFER_HISTORY.html" target="_top" title="OFFER_HISTORY" alt="" coords="12811,4139,13285,5763">
+<area shape="rect" id="node170" href="tables/OFFER_INFO_PLUS.html" target="_top" title="OFFER_INFO_PLUS" alt="" coords="8760,9911,9115,11447">
+<area shape="rect" id="node171" href="tables/OFFER_INFO_PLUS_HISTORY.html" target="_top" title="OFFER_INFO_PLUS_HISTORY" alt="" coords="7388,13279,7837,14844">
+<area shape="rect" id="node172" href="tables/OFFER_MONEY.html" target="_top" title="OFFER_MONEY" alt="" coords="16469,14860,16816,15105">
+<area shape="rect" id="node173" href="tables/OFFER_PAGES.html" target="_top" title="OFFER_PAGES" alt="" coords="985,13283,1368,13733">
+<area shape="rect" id="node174" href="tables/OFFER_PLUS.html" target="_top" title="OFFER_PLUS" alt="" coords="15228,12940,15617,13537">
+<area shape="rect" id="node175" href="tables/OFFER_RIVALS.html" target="_top" title="OFFER_RIVALS" alt="" coords="16339,12936,16751,13211">
+<area shape="rect" id="node176" href="tables/OFFER_ROW_DEPARTMENTS.html" target="_top" title="OFFER_ROW_DEPARTMENTS" alt="" coords="16339,16588,16792,16804">
+<area shape="rect" id="node177" href="tables/OFFER_ROW_HISTORY.html" target="_top" title="OFFER_ROW_HISTORY" alt="" coords="10459,12521,10964,14321">
+<area shape="rect" id="node178" href="tables/OFFER_SUB.html" target="_top" title="OFFER_SUB" alt="" coords="5951,6799,6556,10271">
+<area shape="rect" id="node179" href="tables/OFFER_SUB_MONEY.html" target="_top" title="OFFER_SUB_MONEY" alt="" coords="71,17800,425,18045">
+<area shape="rect" id="node180" href="tables/OFFTIME.html" target="_top" title="OFFTIME" alt="" coords="13595,16480,13896,16608">
+<area shape="rect" id="node181" href="tables/OPERATION_TYPES.html" target="_top" title="OPERATION_TYPES" alt="" coords="1312,2653,1743,3280">
+<area shape="rect" id="node182" href="tables/OPPORTUNITIES.html" target="_top" title="OPPORTUNITIES" alt="" coords="12288,11620,12763,13537">
+<area shape="rect" id="node183" href="tables/OPPORTUNITIES_INFO_HISTORY.html" target="_top" title="OPPORTUNITIES_INFO_HISTORY" alt="" coords="2096,14123,2635,14779">
+<area shape="rect" id="node184" href="tables/OPPORTUNITIES_INFO_PLUS.html" target="_top" title="OPPORTUNITIES_INFO_PLUS" alt="" coords="13072,5860,13520,7396">
+<area shape="rect" id="node185" href="tables/OPPORTUNITIES_INFO_PLUS_HISTORY.html" target="_top" title="OPPORTUNITIES_INFO_PLUS_HISTORY" alt="" coords="6604,13213,7147,14779">
+<area shape="rect" id="node186" href="tables/OPPORTUNITIES_PLUS.html" target="_top" title="OPPORTUNITIES_PLUS" alt="" coords="14771,6188,15217,6873">
+<area shape="rect" id="node187" href="tables/OPPORTUNITY_CURRENCY.html" target="_top" title="OPPORTUNITY_CURRENCY" alt="" coords="201,8203,627,8507">
+<area shape="rect" id="node188" href="tables/OPPORTUNITY_HISTORY.html" target="_top" title="OPPORTUNITY_HISTORY" alt="" coords="2815,6561,3279,7657">
+<area shape="rect" id="node189" href="tables/OPPORTUNITY_RIVALS.html" target="_top" title="OPPORTUNITY_RIVALS" alt="" coords="201,7840,613,8115">
+<area shape="rect" id="node190" href="tables/OPPORTUNITY_SUPPLIERS.html" target="_top" title="OPPORTUNITY_SUPPLIERS" alt="" coords="724,5341,1155,5763">
+<area shape="rect" id="node191" href="tables/ORDER_BASKET_ROWS.html" target="_top" title="ORDER_BASKET_ROWS" alt="" coords="528,14155,921,14517">
+<area shape="rect" id="node192" href="tables/ORDER_CASH_POS.html" target="_top" title="ORDER_CASH_POS" alt="" coords="71,15651,412,15955">
+<area shape="rect" id="node193" href="tables/ORDER_DELIVERY_CHANGE_LOG.html" target="_top" title="ORDER_DELIVERY_CHANGE_LOG" alt="" coords="920,11969,1403,12361">
+<area shape="rect" id="node194" href="tables/ORDER_DEMANDS.html" target="_top" title="ORDER_DEMANDS" alt="" coords="8760,11543,9140,12492">
+<area shape="rect" id="node195" href="tables/ORDER_DEMANDS_HISTORY.html" target="_top" title="ORDER_DEMANDS_HISTORY" alt="" coords="11961,3608,12405,4587">
+<area shape="rect" id="node196" href="tables/ORDER_DEMANDS_ROW.html" target="_top" title="ORDER_DEMANDS_ROW" alt="" coords="7257,1823,7651,2039">
+<area shape="rect" id="node197" href="tables/ORDER_FORM.html" target="_top" title="ORDER_FORM" alt="" coords="13725,3645,14027,3803">
+<area shape="rect" id="node198" href="tables/ORDER_FORM_COST.html" target="_top" title="ORDER_FORM_COST" alt="" coords="71,14439,432,14713">
+<area shape="rect" id="node199" href="tables/ORDER_FORM_ROW.html" target="_top" title="ORDER_FORM_ROW" alt="" coords="2553,2757,3083,3149">
+<area shape="rect" id="node200" href="tables/ORDER_FORM_WORK.html" target="_top" title="ORDER_FORM_WORK" alt="" coords="16600,11907,16971,12035">
+<area shape="rect" id="node201" href="tables/ORDER_INFO_PLUS.html" target="_top" title="ORDER_INFO_PLUS" alt="" coords="3337,13700,3696,15236">
+<area shape="rect" id="node202" href="tables/ORDER_INFO_PLUS_HISTORY.html" target="_top" title="ORDER_INFO_PLUS_HISTORY" alt="" coords="12941,8705,13395,10271">
+<area shape="rect" id="node203" href="tables/ORDER_INSURANCE_RELATION.html" target="_top" title="ORDER_INSURANCE_RELATION" alt="" coords="16339,16915,16797,17131">
+<area shape="rect" id="node204" href="tables/ORDER_MONEY.html" target="_top" title="ORDER_MONEY" alt="" coords="71,4995,417,5240">
+<area shape="rect" id="node205" href="tables/ORDER_MONEY_CREDIT_USED.html" target="_top" title="ORDER_MONEY_CREDIT_USED" alt="" coords="16339,18091,16799,18307">
+<area shape="rect" id="node206" href="tables/ORDER_MONEY_CREDITS.html" target="_top" title="ORDER_MONEY_CREDITS" alt="" coords="2292,7413,2704,8245">
+<area shape="rect" id="node207" href="tables/ORDER_OFFER_COST.html" target="_top" title="ORDER_OFFER_COST" alt="" coords="11112,3507,11575,4456">
+<area shape="rect" id="node208" href="tables/ORDER_OFFER_COST_MONEY.html" target="_top" title="ORDER_OFFER_COST_MONEY" alt="" coords="528,4965,971,5240">
+<area shape="rect" id="node209" href="tables/ORDER_PAGES.html" target="_top" title="ORDER_PAGES" alt="" coords="920,3875,1303,4325">
+<area shape="rect" id="node210" href="tables/ORDER_PAYMENT_PLAN.html" target="_top" title="ORDER_PAYMENT_PLAN" alt="" coords="3925,2408,4329,2888">
+<area shape="rect" id="node211" href="tables/ORDER_PAYMENT_PLAN_ROWS.html" target="_top" title="ORDER_PAYMENT_PLAN_ROWS" alt="" coords="15881,14772,16353,15105">
+<area shape="rect" id="node212" href="tables/ORDER_PLUS.html" target="_top" title="ORDER_PLUS" alt="" coords="15424,11133,15813,11643">
+<area shape="rect" id="node213" href="tables/ORDER_PRE_PRODUCTS.html" target="_top" title="ORDER_PRE_PRODUCTS" alt="" coords="659,16608,1077,17000">
+<area shape="rect" id="node214" href="tables/ORDER_PRE_ROWS_LOG.html" target="_top" title="ORDER_PRE_ROWS_LOG" alt="" coords="14771,8641,15175,9356">
+<area shape="rect" id="node215" href="tables/ORDER_PRE_ROWS_SPECIAL.html" target="_top" title="ORDER_PRE_ROWS_SPECIAL" alt="" coords="1835,2633,2281,3084">
+<area shape="rect" id="node216" href="tables/ORDER_PRE_ROWS_SPECS.html" target="_top" title="ORDER_PRE_ROWS_SPECS" alt="" coords="4513,2712,4943,3280">
+<area shape="rect" id="node217" href="tables/ORDER_RELATION_ROW.html" target="_top" title="ORDER_RELATION_ROW" alt="" coords="16077,6367,16541,6612">
+<area shape="rect" id="node218" href="tables/ORDER_RESERVED_TOTAL.html" target="_top" title="ORDER_RESERVED_TOTAL" alt="" coords="528,4485,941,4848">
+<area shape="rect" id="node219" href="tables/ORDER_RESULT_QUALITY.html" target="_top" title="ORDER_RESULT_QUALITY" alt="" coords="4709,15668,5183,16412">
+<area shape="rect" id="node220" href="tables/ORDER_RESULT_QUALITY_ROW.html" target="_top" title="ORDER_RESULT_QUALITY_ROW" alt="" coords="6931,2604,7405,3084">
+<area shape="rect" id="node221" href="tables/ORDER_RESULT_QUALITY_SUCCESS_TYPE.html" target="_top" title="ORDER_RESULT_QUALITY_SUCCESS_TYPE" alt="" coords="15293,16245,15895,16608">
+<area shape="rect" id="node222" href="tables/ORDER_ROW_HISTORY.html" target="_top" title="ORDER_ROW_HISTORY" alt="" coords="6604,10371,7153,13080">
+<area shape="rect" id="node223" href="tables/order_row_reserved_15122021_0949500.html" target="_top" title="order_row_reserved_15122021_0949500" alt="" coords="2096,11676,2655,12361">
+<area shape="rect" id="node224" href="tables/ORDER_ROW_RESERVED_HISTORY.html" target="_top" title="ORDER_ROW_RESERVED_HISTORY" alt="" coords="2096,13280,2592,13995">
+<area shape="rect" id="node225" href="tables/ORDER_ROW_RESERVED_SUMMARY.html" target="_top" title="ORDER_ROW_RESERVED_SUMMARY" alt="" coords="659,7128,1119,7461">
+<area shape="rect" id="node226" href="tables/ORDER_ROW_YEDEK16092024.html" target="_top" title="ORDER_ROW_YEDEK16092024" alt="" coords="9805,9333,10355,12688">
+<area shape="rect" id="node227" href="tables/ORDER_VOUCHER_RELATION.html" target="_top" title="ORDER_VOUCHER_RELATION" alt="" coords="15816,18091,16256,18307">
+<area shape="rect" id="node228" href="tables/ORDERS_DATA.html" target="_top" title="ORDERS_DATA" alt="" coords="7780,1852,8171,2039">
+<area shape="rect" id="node229" href="tables/ORDERS_HISTORY.html" target="_top" title="ORDERS_HISTORY" alt="" coords="10001,4865,10527,8572">
+<area shape="rect" id="node230" href="tables/ORDERS_INVOICE.html" target="_top" title="ORDERS_INVOICE" alt="" coords="201,5655,632,5959">
+<area shape="rect" id="node231" href="tables/ORDERS_SHIP.html" target="_top" title="ORDERS_SHIP" alt="" coords="12484,18061,12911,18307">
+<area shape="rect" id="node232" href="tables/ORDERS_YEDEK16092024.html" target="_top" title="ORDERS_YEDEK16092024" alt="" coords="9348,5225,9873,9225">
+<area shape="rect" id="node233" href="tables/P_ORDER_OPERATIONS_ROW.html" target="_top" title="P_ORDER_OPERATIONS_ROW" alt="" coords="3925,2973,4377,3541">
+<area shape="rect" id="node234" href="tables/P_ORDER_OPERATIONS_ROW_PRODUCT.html" target="_top" title="P_ORDER_OPERATIONS_ROW_PRODUCT" alt="" coords="5493,17291,6048,17653">
+<area shape="rect" id="node235" href="tables/PACKAGE_TASKS.html" target="_top" title="PACKAGE_TASKS" alt="" coords="71,4639,399,4913">
+<area shape="rect" id="node236" href="tables/PAPERS_NO.html" target="_top" title="PAPERS_NO" alt="" coords="2815,3284,3260,3999">
+<area shape="rect" id="node237" href="tables/PAPERS_NO_CHEQUE.html" target="_top" title="PAPERS_NO_CHEQUE" alt="" coords="12680,1852,13068,2039">
+<area shape="rect" id="node238" href="tables/PAYMENT_ORDERS_ROW.html" target="_top" title="PAYMENT_ORDERS_ROW" alt="" coords="2357,1895,2776,2169">
+<area shape="rect" id="node239" href="tables/POS_EQUIPMENT.html" target="_top" title="POS_EQUIPMENT" alt="" coords="10589,3455,11009,4521">
+<area shape="rect" id="node240" href="tables/POS_EQUIPMENT_BANK.html" target="_top" title="POS_EQUIPMENT_BANK" alt="" coords="15293,2712,15693,3280">
+<area shape="rect" id="node241" href="tables/POS_OPERATION_ACTIONS.html" target="_top" title="POS_OPERATION_ACTIONS" alt="" coords="16077,6693,16524,6939">
+<area shape="rect" id="node242" href="tables/POS_OPERATION_HISTORY.html" target="_top" title="POS_OPERATION_HISTORY" alt="" coords="15228,16687,15687,17196">
+<area shape="rect" id="node243" href="tables/POS_OPERATION_ROW_HISTORY.html" target="_top" title="POS_OPERATION_ROW_HISTORY" alt="" coords="15032,5289,15537,5828">
+<area shape="rect" id="node244" href="tables/POS_OPERATION_STATUS.html" target="_top" title="POS_OPERATION_STATUS" alt="" coords="14117,18345,14528,18503">
+<area shape="rect" id="node245" href="tables/PRICE_CAT.html" target="_top" title="PRICE_CAT" alt="" coords="2749,13647,3244,14713">
+<area shape="rect" id="node246" href="tables/PRICE_CAT_EXCEPTIONS.html" target="_top" title="PRICE_CAT_EXCEPTIONS" alt="" coords="14248,6607,14672,7527">
+<area shape="rect" id="node247" href="tables/PRICE_CAT_ROWS.html" target="_top" title="PRICE_CAT_ROWS" alt="" coords="5,14135,357,14321">
+<area shape="rect" id="node248" href="tables/PRICE_CHANGE.html" target="_top" title="PRICE_CHANGE" alt="" coords="1639,16191,1988,16935">
+<area shape="rect" id="node249" href="tables/PRICE_DELETED_ROWS.html" target="_top" title="PRICE_DELETED_ROWS" alt="" coords="1573,14355,1967,15040">
+<area shape="rect" id="node250" href="tables/PRICE_PARTNER_OFFER.html" target="_top" title="PRICE_PARTNER_OFFER" alt="" coords="2423,2264,2880,2627">
+<area shape="rect" id="node251" href="tables/PRICE_RIVAL.html" target="_top" title="PRICE_RIVAL" alt="" coords="7584,3277,7897,3933">
+<area shape="rect" id="node252" href="tables/PRICE_ROW_SUB.html" target="_top" title="PRICE_ROW_SUB" alt="" coords="9217,9911,9668,12884">
+<area shape="rect" id="node253" href="tables/PRINT_DESIGNER.html" target="_top" title="PRINT_DESIGNER" alt="" coords="201,16863,571,17196">
+<area shape="rect" id="node254" href="tables/PRINT_DESIGNER_ROW.html" target="_top" title="PRINT_DESIGNER_ROW" alt="" coords="3272,13204,3713,13537">
+<area shape="rect" id="node255" href="tables/PRINT_DESIGNER_ROW_YEDEK.html" target="_top" title="PRINT_DESIGNER_ROW_YEDEK" alt="" coords="4448,2293,4911,2627">
+<area shape="rect" id="node256" href="tables/PROCESS_CAT_HISTORY_FILE.html" target="_top" title="PROCESS_CAT_HISTORY_FILE" alt="" coords="4187,17291,4699,17653">
+<area shape="rect" id="node257" href="tables/PRODUCT_ASSORTMENTS.html" target="_top" title="PRODUCT_ASSORTMENTS" alt="" coords="8303,1764,8655,2039">
+<area shape="rect" id="node258" href="tables/PRODUCT_CAT_PLACE.html" target="_top" title="PRODUCT_CAT_PLACE" alt="" coords="15489,3983,15873,4521">
+<area shape="rect" id="node259" href="tables/PRODUCT_COMMENT.html" target="_top" title="PRODUCT_COMMENT" alt="" coords="14640,16687,15141,17196">
+<area shape="rect" id="node260" href="tables/PRODUCT_COMP.html" target="_top" title="PRODUCT_COMP" alt="" coords="201,7389,535,7723">
+<area shape="rect" id="node261" href="tables/PRODUCT_COMP_PERM.html" target="_top" title="PRODUCT_COMP_PERM" alt="" coords="11961,18061,12377,18307">
+<area shape="rect" id="node262" href="tables/PRODUCT_CONTENT_RELATION.html" target="_top" title="PRODUCT_CONTENT_RELATION" alt="" coords="6277,2264,6751,2627">
+<area shape="rect" id="node263" href="tables/PRODUCT_EXTRA_COST_DETAIL.html" target="_top" title="PRODUCT_EXTRA_COST_DETAIL" alt="" coords="10459,2293,10931,2627">
+<area shape="rect" id="node264" href="tables/PRODUCT_GUARANTY.html" target="_top" title="PRODUCT_GUARANTY" alt="" coords="14771,10696,15249,11381">
+<area shape="rect" id="node265" href="tables/PRODUCT_INFO_PLUS.html" target="_top" title="PRODUCT_INFO_PLUS" alt="" coords="3403,5497,3787,7004">
+<area shape="rect" id="node266" href="tables/PRODUCT_INFO_PLUS_HISTORY.html" target="_top" title="PRODUCT_INFO_PLUS_HISTORY" alt="" coords="12288,13635,12767,15171">
+<area shape="rect" id="node267" href="tables/PRODUCT_LABEL.html" target="_top" title="PRODUCT_LABEL" alt="" coords="12288,2293,12788,2627">
+<area shape="rect" id="node268" href="tables/PRODUCT_MEMBER_INSPECTION_LEVEL.html" target="_top" title="PRODUCT_MEMBER_INSPECTION_LEVEL" alt="" coords="13464,2323,14019,2627">
+<area shape="rect" id="node269" href="tables/PRODUCT_OPTIONS.html" target="_top" title="PRODUCT_OPTIONS" alt="" coords="5,13808,363,13995">
+<area shape="rect" id="node270" href="tables/PRODUCT_PACKAGE.html" target="_top" title="PRODUCT_PACKAGE" alt="" coords="15555,17647,15933,17980">
+<area shape="rect" id="node271" href="tables/PRODUCT_PACKET.html" target="_top" title="PRODUCT_PACKET" alt="" coords="11439,18061,11831,18307">
+<area shape="rect" id="node272" href="tables/PRODUCT_PERIOD.html" target="_top" title="PRODUCT_PERIOD" alt="" coords="7257,10348,7840,13145">
+<area shape="rect" id="node273" href="tables/PRODUCT_PRICE_DIFFERENCE_INDICES.html" target="_top" title="PRODUCT_PRICE_DIFFERENCE_INDICES" alt="" coords="1573,17036,2123,17457">
+<area shape="rect" id="node274" href="tables/PRODUCT_QUALITY.html" target="_top" title="PRODUCT_QUALITY" alt="" coords="3860,12395,4300,13080">
+<area shape="rect" id="node275" href="tables/PRODUCT_QUALITY_CONTROL_ROW.html" target="_top" title="PRODUCT_QUALITY_CONTROL_ROW" alt="" coords="12484,3313,13031,3999">
+<area shape="rect" id="node276" href="tables/PRODUCT_QUALITY_PARAMETERS.html" target="_top" title="PRODUCT_QUALITY_PARAMETERS" alt="" coords="15489,6553,15989,7004">
+<area shape="rect" id="node277" href="tables/PRODUCT_SAMPLE.html" target="_top" title="PRODUCT_SAMPLE" alt="" coords="7388,14947,7877,15955">
+<area shape="rect" id="node278" href="tables/PRODUCT_SAMPLE_CAT.html" target="_top" title="PRODUCT_SAMPLE_CAT" alt="" coords="14117,2293,14611,2627">
+<area shape="rect" id="node279" href="tables/PRODUCT_SAMPLE_IMAGE.html" target="_top" title="PRODUCT_SAMPLE_IMAGE" alt="" coords="15489,7112,15971,7592">
+<area shape="rect" id="node280" href="tables/PRODUCT_SAMPLE_PRICING.html" target="_top" title="PRODUCT_SAMPLE_PRICING" alt="" coords="15489,11751,15989,12231">
+<area shape="rect" id="node281" href="tables/PRODUCT_SEGMENT_BRANCH.html" target="_top" title="PRODUCT_SEGMENT_BRANCH" alt="" coords="6016,18440,6407,18568">
+<area shape="rect" id="node282" href="tables/PRODUCT_SIZE.html" target="_top" title="PRODUCT_SIZE" alt="" coords="16535,5880,16873,6155">
+<area shape="rect" id="node283" href="tables/PRODUCT_STAGE.html" target="_top" title="PRODUCT_STAGE" alt="" coords="16077,7063,16493,7396">
+<area shape="rect" id="node284" href="tables/PRODUCT_SUPPLIER.html" target="_top" title="PRODUCT_SUPPLIER" alt="" coords="5493,18411,5883,18568">
+<area shape="rect" id="node285" href="tables/PRODUCT_TREE.html" target="_top" title="PRODUCT_TREE" alt="" coords="9348,3720,9797,5109">
+<area shape="rect" id="node286" href="tables/PRODUCT_TREE_BY_PRODUCT.html" target="_top" title="PRODUCT_TREE_BY_PRODUCT" alt="" coords="15489,12368,15945,12819">
+<area shape="rect" id="node287" href="tables/PRODUCT_TREE_CONTENT_RELATION.html" target="_top" title="PRODUCT_TREE_CONTENT_RELATION" alt="" coords="7976,2555,8507,2888">
+<area shape="rect" id="node288" href="tables/PRODUCT_TREE_HISTORY.html" target="_top" title="PRODUCT_TREE_HISTORY" alt="" coords="11700,2849,12149,3476">
+<area shape="rect" id="node289" href="tables/PRODUCT_TREE_INFO_PLUS.html" target="_top" title="PRODUCT_TREE_INFO_PLUS" alt="" coords="3403,3893,3844,5371">
+<area shape="rect" id="node290" href="tables/PRODUCT_TREE_INFO_PLUS_HISTORY.html" target="_top" title="PRODUCT_TREE_INFO_PLUS_HISTORY" alt="" coords="12876,13337,13412,14844">
+<area shape="rect" id="node291" href="tables/PRODUCT_TREE_PROPERTY.html" target="_top" title="PRODUCT_TREE_PROPERTY" alt="" coords="16600,15209,16967,15367">
+<area shape="rect" id="node292" href="tables/PRODUCT_VISION.html" target="_top" title="PRODUCT_VISION" alt="" coords="1181,16337,1532,16935">
+<area shape="rect" id="node293" href="tables/PRODUCT_XML_CAT.html" target="_top" title="PRODUCT_XML_CAT" alt="" coords="12419,16872,12713,17000">
+<area shape="rect" id="node294" href="tables/PRODUCT_ZAIYAT_ORAN.html" target="_top" title="PRODUCT_ZAIYAT_ORAN" alt="" coords="16077,11737,16488,12100">
+<area shape="rect" id="node295" href="tables/PRODUCTGROUP_EMP_PAR.html" target="_top" title="PRODUCTGROUP_EMP_PAR" alt="" coords="16535,10381,16960,10597">
+<area shape="rect" id="node296" href="tables/PRODUCTION_ASSORTMENT.html" target="_top" title="PRODUCTION_ASSORTMENT" alt="" coords="1639,15781,2013,16085">
+<area shape="rect" id="node297" href="tables/PRODUCTION_MATERIAL_ROWS.html" target="_top" title="PRODUCTION_MATERIAL_ROWS" alt="" coords="15947,5952,16427,6285">
+<area shape="rect" id="node298" href="tables/PRODUCTION_OPERATION.html" target="_top" title="PRODUCTION_OPERATION" alt="" coords="14771,15109,15195,15824">
+<area shape="rect" id="node299" href="tables/PRODUCTION_OPERATION_RESULT.html" target="_top" title="PRODUCTION_OPERATION_RESULT" alt="" coords="7388,16047,7896,16673">
+<area shape="rect" id="node300" href="tables/PRODUCTION_OPERATION_RESULT_MAIN.html" target="_top" title="PRODUCTION_OPERATION_RESULT_MAIN" alt="" coords="14640,16099,15208,16608">
+<area shape="rect" id="node301" href="tables/PRODUCTION_ORDER_OPERATIONS.html" target="_top" title="PRODUCTION_ORDER_OPERATIONS" alt="" coords="13987,16461,14500,17000">
+<area shape="rect" id="node302" href="tables/PRODUCTION_ORDER_OPERATIONS_EMPLOYEE.html" target="_top" title="PRODUCTION_ORDER_OPERATIONS_EMPLOYEE" alt="" coords="16012,4364,16628,4521">
+<area shape="rect" id="node303" href="tables/PRODUCTION_ORDER_OPERATIONS_PRODUCT.html" target="_top" title="PRODUCTION_ORDER_OPERATIONS_PRODUCT" alt="" coords="3207,2656,3823,3019">
+<area shape="rect" id="node304" href="tables/PRODUCTION_ORDER_RESULTS.html" target="_top" title="PRODUCTION_ORDER_RESULTS" alt="" coords="2815,5356,3292,6481">
+<area shape="rect" id="node305" href="tables/PRODUCTION_ORDER_RESULTS_MAIN.html" target="_top" title="PRODUCTION_ORDER_RESULTS_MAIN" alt="" coords="16077,12240,16607,12427">
+<area shape="rect" id="node306" href="tables/PRODUCTION_ORDER_RESULTS_ROW.html" target="_top" title="PRODUCTION_ORDER_RESULTS_ROW" alt="" coords="3925,4959,4463,6612">
+<area shape="rect" id="node307" href="tables/PRODUCTION_ORDERS_CASH.html" target="_top" title="PRODUCTION_ORDERS_CASH" alt="" coords="9871,18120,10324,18307">
+<area shape="rect" id="node308" href="tables/PRODUCTION_ORDERS_HISTORY.html" target="_top" title="PRODUCTION_ORDERS_HISTORY" alt="" coords="13529,8845,14017,10205">
+<area shape="rect" id="node309" href="tables/PRODUCTION_ORDERS_MAIN.html" target="_top" title="PRODUCTION_ORDERS_MAIN" alt="" coords="12876,2539,13327,3019">
+<area shape="rect" id="node310" href="tables/PRODUCTION_ORDERS_RELATION.html" target="_top" title="PRODUCTION_ORDERS_RELATION" alt="" coords="9283,18120,9771,18307">
+<area shape="rect" id="node311" href="tables/PRODUCTION_ORDERS_ROW.html" target="_top" title="PRODUCTION_ORDERS_ROW" alt="" coords="16077,12515,16532,12819">
+<area shape="rect" id="node312" href="tables/PRODUCTION_ORDERS_SERIALS.html" target="_top" title="PRODUCTION_ORDERS_SERIALS" alt="" coords="7453,2127,7935,2431">
+<area shape="rect" id="node313" href="tables/PRODUCTION_ORDERS_STOCKS.html" target="_top" title="PRODUCTION_ORDERS_STOCKS" alt="" coords="14248,7645,14725,8507">
+<area shape="rect" id="node314" href="tables/PRODUCTION_ORDERS_STOCKS_HISTORY.html" target="_top" title="PRODUCTION_ORDERS_STOCKS_HISTORY" alt="" coords="5297,15064,5869,15955">
+<area shape="rect" id="node315" href="tables/PROGRESS_BUILDING.html" target="_top" title="PROGRESS_BUILDING" alt="" coords="5820,10357,6468,12949">
+<area shape="rect" id="node316" href="tables/PROGRESS_BUILDING_IHZARAT_ROW.html" target="_top" title="PROGRESS_BUILDING_IHZARAT_ROW" alt="" coords="14313,5433,14901,6089">
+<area shape="rect" id="node317" href="tables/PROGRESS_BUILDING_ROW_HISTORY.html" target="_top" title="PROGRESS_BUILDING_ROW_HISTORY" alt="" coords="2553,10405,3141,11120">
+<area shape="rect" id="node318" href="tables/PROGRESS_BUILDING_SHIPS.html" target="_top" title="PROGRESS_BUILDING_SHIPS" alt="" coords="463,17284,905,17588">
+<area shape="rect" id="node319" href="tables/PROGRESS_CONTRACT_ROW_MONEY.html" target="_top" title="PROGRESS_CONTRACT_ROW_MONEY" alt="" coords="10459,17829,10971,18045">
+<area shape="rect" id="node320" href="tables/PROGRESS_KAPAK_ROW.html" target="_top" title="PROGRESS_KAPAK_ROW" alt="" coords="14117,3507,14613,4456">
+<area shape="rect" id="node321" href="tables/PROGRESS_KESINTI_ROW.html" target="_top" title="PROGRESS_KESINTI_ROW" alt="" coords="13660,6564,14167,7396">
+<area shape="rect" id="node322" href="tables/PROGRESS_KESINTI_ROW_MONEY.html" target="_top" title="PROGRESS_KESINTI_ROW_MONEY" alt="" coords="8303,18156,8787,18372">
+<area shape="rect" id="node323" href="tables/PROGRESS_OTHER_WORKS.html" target="_top" title="PROGRESS_OTHER_WORKS" alt="" coords="1965,3189,2457,3933">
+<area shape="rect" id="node324" href="tables/PROGRESS_PAYMENT.html" target="_top" title="PROGRESS_PAYMENT" alt="" coords="10459,14415,10956,15628">
+<area shape="rect" id="node325" href="tables/PROGRESS_PAYMENT_ROW.html" target="_top" title="PROGRESS_PAYMENT_ROW" alt="" coords="4971,18411,5401,18568">
+<area shape="rect" id="node326" href="tables/PROJECT_DISCOUNT_CONDITIONS.html" target="_top" title="PROJECT_DISCOUNT_CONDITIONS" alt="" coords="7715,18156,8203,18372">
+<area shape="rect" id="node327" href="tables/PROJECT_DISCOUNT_CONDITIONS_HISTORY.html" target="_top" title="PROJECT_DISCOUNT_CONDITIONS_HISTORY" alt="" coords="15555,17277,16137,17523">
+<area shape="rect" id="node328" href="tables/PROJECT_DISCOUNTS.html" target="_top" title="PROJECT_DISCOUNTS" alt="" coords="1769,8641,2188,9356">
+<area shape="rect" id="node329" href="tables/PROJECT_DISCOUNTS_HISTORY.html" target="_top" title="PROJECT_DISCOUNTS_HISTORY" alt="" coords="6996,3189,7469,3933">
+<area shape="rect" id="node330" href="tables/PROJECT_INVENTORY.html" target="_top" title="PROJECT_INVENTORY" alt="" coords="5,13452,375,13668">
+<area shape="rect" id="node331" href="tables/PROJECT_PERIOD.html" target="_top" title="PROJECT_PERIOD" alt="" coords="4579,4181,5063,5893">
+<area shape="rect" id="node332" href="tables/PROMOTION_CONDITIONS.html" target="_top" title="PROMOTION_CONDITIONS" alt="" coords="8041,2127,8493,2431">
+<area shape="rect" id="node333" href="tables/PROMOTION_CONDITIONS_PRODUCTS.html" target="_top" title="PROMOTION_CONDITIONS_PRODUCTS" alt="" coords="15947,7709,16477,7984">
+<area shape="rect" id="node334" href="tables/PROMOTION_RELATED_PROMOTIONS.html" target="_top" title="PROMOTION_RELATED_PROMOTIONS" alt="" coords="4383,18149,4904,18307">
+<area shape="rect" id="node335" href="tables/PROMOTIONS_HISTORY.html" target="_top" title="PROMOTIONS_HISTORY" alt="" coords="11047,11428,11608,13668">
+<area shape="rect" id="node336" href="tables/PROMOTIONS_RELATION.html" target="_top" title="PROMOTIONS_RELATION" alt="" coords="15947,10888,16415,11251">
+<area shape="rect" id="node337" href="tables/PURCHASE_CONDITION.html" target="_top" title="PURCHASE_CONDITION" alt="" coords="12941,10351,13444,11447">
+<area shape="rect" id="node338" href="tables/PURCHASE_SALES_TENDER_TYPE.html" target="_top" title="PURCHASE_SALES_TENDER_TYPE" alt="" coords="16469,9395,16956,9552">
+<area shape="rect" id="node339" href="tables/PURCHASE_TECHNICAL_POINT.html" target="_top" title="PURCHASE_TECHNICAL_POINT" alt="" coords="593,2199,1057,2561">
+<area shape="rect" id="node340" href="tables/QUALITY_CONTROL_ROW.html" target="_top" title="QUALITY_CONTROL_ROW" alt="" coords="10981,16439,11437,17065">
+<area shape="rect" id="node341" href="tables/QUALITY_CONTROL_TYPE.html" target="_top" title="QUALITY_CONTROL_TYPE" alt="" coords="1769,7763,2185,8507">
+<area shape="rect" id="node342" href="tables/QUALITY_SUCCESS.html" target="_top" title="QUALITY_SUCCESS" alt="" coords="12811,17369,13165,17849">
+<area shape="rect" id="node343" href="tables/RELATED_CONTRACT.html" target="_top" title="RELATED_CONTRACT" alt="" coords="10655,4623,11296,7919">
+<area shape="rect" id="node344" href="tables/RELATED_CONTRACT_HISTORY.html" target="_top" title="RELATED_CONTRACT_HISTORY" alt="" coords="12419,6713,12952,8572">
+<area shape="rect" id="node345" href="tables/RELATED_CONTRACT_NO.html" target="_top" title="RELATED_CONTRACT_NO" alt="" coords="15751,13439,16093,13537">
+<area shape="rect" id="node346" href="tables/RELATED_EVENTS.html" target="_top" title="RELATED_EVENTS" alt="" coords="16600,3747,16936,3933">
+<area shape="rect" id="node347" href="tables/RELATED_ORDER_ASSETP.html" target="_top" title="RELATED_ORDER_ASSETP" alt="" coords="4448,18440,4859,18568">
+<area shape="rect" id="node348" href="tables/RELATED_ORDER_ASSETP_ROWS.html" target="_top" title="RELATED_ORDER_ASSETP_ROWS" alt="" coords="14967,17829,15475,18045">
+<area shape="rect" id="node349" href="tables/RELATED_PRODUCT.html" target="_top" title="RELATED_PRODUCT" alt="" coords="16535,10737,16927,10924">
+<area shape="rect" id="node350" href="tables/RELATED_PRODUCT_ASSETP.html" target="_top" title="RELATED_PRODUCT_ASSETP" alt="" coords="659,18185,1096,18372">
+<area shape="rect" id="node351" href="tables/RELATION_PBS_CODE.html" target="_top" title="RELATION_PBS_CODE" alt="" coords="13595,14349,14111,15563">
+<area shape="rect" id="node352" href="tables/RELATION_ROW.html" target="_top" title="RELATION_ROW" alt="" coords="201,16405,565,16739">
+<area shape="rect" id="node353" href="tables/REQUEST_FOR_COLLECTION.html" target="_top" title="REQUEST_FOR_COLLECTION" alt="" coords="855,11447,1353,11839">
+<area shape="rect" id="node354" href="tables/RESPONSIBILITY_MATRIX.html" target="_top" title="RESPONSIBILITY_MATRIX" alt="" coords="15751,12949,16233,13341">
+<area shape="rect" id="node355" href="tables/RESPONSIBILITY_MATRIX_DEGERLER.html" target="_top" title="RESPONSIBILITY_MATRIX_DEGERLER" alt="" coords="7453,17888,8068,18045">
+<area shape="rect" id="node356" href="tables/RIVAL_PRICE_TYPES.html" target="_top" title="RIVAL_PRICE_TYPES" alt="" coords="4187,1836,4553,2169">
+<area shape="rect" id="node357" href="tables/ROUTE_PRODUCT_TREE.html" target="_top" title="ROUTE_PRODUCT_TREE" alt="" coords="201,12443,620,12688">
+<area shape="rect" id="node358" href="tables/ROUTE_ROW.html" target="_top" title="ROUTE_ROW" alt="" coords="16535,15847,16903,16151">
+<area shape="rect" id="node359" href="tables/SALES_CONDITION.html" target="_top" title="SALES_CONDITION" alt="" coords="3272,10416,3775,11512">
+<area shape="rect" id="node360" href="tables/SALES_QUOTAS_MONEY.html" target="_top" title="SALES_QUOTAS_MONEY" alt="" coords="16535,11035,16924,11251">
+<area shape="rect" id="node361" href="tables/SALES_QUOTAS_ROW_RELATION.html" target="_top" title="SALES_QUOTAS_ROW_RELATION" alt="" coords="6865,17865,7341,18111">
+<area shape="rect" id="node362" href="tables/SAMPLE_PRICING_MONEY.html" target="_top" title="SAMPLE_PRICING_MONEY" alt="" coords="15293,2235,15713,2627">
+<area shape="rect" id="node363" href="tables/SAVE_ACCOUNT_TABLES.html" target="_top" title="SAVE_ACCOUNT_TABLES" alt="" coords="1181,2228,1648,2561">
+<area shape="rect" id="node364" href="tables/SCEN_EXPENSE_PERIOD.html" target="_top" title="SCEN_EXPENSE_PERIOD" alt="" coords="1116,15677,1523,16216">
+<area shape="rect" id="node365" href="tables/SCEN_EXPENSE_PERIOD_ROWS.html" target="_top" title="SCEN_EXPENSE_PERIOD_ROWS" alt="" coords="3011,2199,3483,2561">
+<area shape="rect" id="node366" href="tables/SERVICE_20112024.html" target="_top" title="SERVICE_20112024" alt="" coords="5297,7385,5820,10271">
+<area shape="rect" id="node367" href="tables/SERVICE_ACCESSORY.html" target="_top" title="SERVICE_ACCESSORY" alt="" coords="6277,1865,6657,2169">
+<area shape="rect" id="node368" href="tables/SERVICE_APPCAT.html" target="_top" title="SERVICE_APPCAT" alt="" coords="10459,1836,10799,2169">
+<area shape="rect" id="node369" href="tables/SERVICE_APPCAT_SUB.html" target="_top" title="SERVICE_APPCAT_SUB" alt="" coords="463,15200,851,15563">
+<area shape="rect" id="node370" href="tables/SERVICE_APPCAT_SUB_STATUS.html" target="_top" title="SERVICE_APPCAT_SUB_STATUS" alt="" coords="16012,3897,16485,4260">
+<area shape="rect" id="node371" href="tables/SERVICE_CARE.html" target="_top" title="SERVICE_CARE" alt="" coords="14117,8857,14639,9748">
+<area shape="rect" id="node372" href="tables/SERVICE_CARE_CAT.html" target="_top" title="SERVICE_CARE_CAT" alt="" coords="463,13727,845,14060">
+<area shape="rect" id="node373" href="tables/SERVICE_CARE_REPORT.html" target="_top" title="SERVICE_CARE_REPORT" alt="" coords="1769,4917,2200,5632">
+<area shape="rect" id="node374" href="tables/SERVICE_CODE_ROWS.html" target="_top" title="SERVICE_CODE_ROWS" alt="" coords="3272,18411,3665,18568">
+<area shape="rect" id="node375" href="tables/SERVICE_EMPLOYEES.html" target="_top" title="SERVICE_EMPLOYEES" alt="" coords="267,5321,647,5567">
+<area shape="rect" id="node376" href="tables/SERVICE_GUARANTY.html" target="_top" title="SERVICE_GUARANTY" alt="" coords="11047,13775,11473,15105">
+<area shape="rect" id="node377" href="tables/SERVICE_GUARANTY_NEW.html" target="_top" title="SERVICE_GUARANTY_NEW" alt="" coords="4709,8148,5171,10271">
+<area shape="rect" id="node378" href="tables/SERVICE_GUARANTY_NEW_HISTORY.html" target="_top" title="SERVICE_GUARANTY_NEW_HISTORY" alt="" coords="5297,13468,5817,14975">
+<area shape="rect" id="node379" href="tables/SERVICE_GUARANTY_NEW_RETURNS.html" target="_top" title="SERVICE_GUARANTY_NEW_RETURNS" alt="" coords="15947,11368,16472,11643">
+<area shape="rect" id="node380" href="tables/SERVICE_GUARANTY_TEMP.html" target="_top" title="SERVICE_GUARANTY_TEMP" alt="" coords="14117,9844,14579,10793">
+<area shape="rect" id="node381" href="tables/SERVICE_MODUL.html" target="_top" title="SERVICE_MODUL" alt="" coords="16600,4073,16943,4260">
+<area shape="rect" id="node382" href="tables/SERVICE_MONEY.html" target="_top" title="SERVICE_MONEY" alt="" coords="16535,16232,16881,16477">
+<area shape="rect" id="node383" href="tables/SERVICE_OPERATION.html" target="_top" title="SERVICE_OPERATION" alt="" coords="14117,13052,14552,14060">
+<area shape="rect" id="node384" href="tables/SERVICE_PHYSICAL_DAMAGE.html" target="_top" title="SERVICE_PHYSICAL_DAMAGE" alt="" coords="12876,2127,13328,2431">
+<area shape="rect" id="node385" href="tables/SERVICE_PLUS.html" target="_top" title="SERVICE_PLUS" alt="" coords="15293,8497,15693,9095">
+<area shape="rect" id="node386" href="tables/SERVICE_PROD_RETURN.html" target="_top" title="SERVICE_PROD_RETURN" alt="" coords="1573,13600,1980,14256">
+<area shape="rect" id="node387" href="tables/SERVICE_PROD_RETURN_ROWS.html" target="_top" title="SERVICE_PROD_RETURN_ROWS" alt="" coords="1508,11735,1977,12361">
+<area shape="rect" id="node388" href="tables/SERVICE_REPLY.html" target="_top" title="SERVICE_REPLY" alt="" coords="8760,17203,9163,17653">
+<area shape="rect" id="node389" href="tables/SERVICE_SLA_HISTORY.html" target="_top" title="SERVICE_SLA_HISTORY" alt="" coords="12157,1865,12561,2169">
+<area shape="rect" id="node390" href="tables/SERVICE_SPARE_PART.html" target="_top" title="SERVICE_SPARE_PART" alt="" coords="463,13269,849,13603">
+<area shape="rect" id="node391" href="tables/SERVICE_SUBSTATUS.html" target="_top" title="SERVICE_SUBSTATUS" alt="" coords="14705,2097,15123,2431">
+<area shape="rect" id="node392" href="tables/SERVICE_SUPPORT.html" target="_top" title="SERVICE_SUPPORT" alt="" coords="1508,12816,1912,13472">
+<area shape="rect" id="node393" href="tables/SERVICE_TASK.html" target="_top" title="SERVICE_TASK" alt="" coords="1051,6465,1443,7004">
+<area shape="rect" id="node394" href="tables/SERVICE_TEST.html" target="_top" title="SERVICE_TEST" alt="" coords="16143,14148,16600,14452">
+<area shape="rect" id="node395" href="tables/SERVICE_WORKS.html" target="_top" title="SERVICE_WORKS" alt="" coords="16600,7079,16928,7265">
+<area shape="rect" id="node396" href="tables/SETUP_BASIC_INPUT_COST.html" target="_top" title="SETUP_BASIC_INPUT_COST" alt="" coords="13987,1865,14417,2169">
+<area shape="rect" id="node397" href="tables/SETUP_BASKET.html" target="_top" title="SETUP_BASKET" alt="" coords="5167,2784,5660,3411">
+<area shape="rect" id="node398" href="tables/SETUP_BASKET_HISTORY.html" target="_top" title="SETUP_BASKET_HISTORY" alt="" coords="9348,16497,9841,17065">
+<area shape="rect" id="node399" href="tables/SETUP_BASKET_INFO_TYPES.html" target="_top" title="SETUP_BASKET_INFO_TYPES" alt="" coords="14967,17327,15413,17719">
+<area shape="rect" id="node400" href="tables/SETUP_BASKET_ROWS.html" target="_top" title="SETUP_BASKET_ROWS" alt="" coords="855,9820,1239,10271">
+<area shape="rect" id="node401" href="tables/SETUP_BASKET_ROWS_.html" target="_top" title="SETUP_BASKET_ROWS_" alt="" coords="16012,16056,16404,16477">
+<area shape="rect" id="node402" href="tables/SETUP_BASKET_ROWS_HISTORY.html" target="_top" title="SETUP_BASKET_ROWS_HISTORY" alt="" coords="10263,17297,10741,17719">
+<area shape="rect" id="node403" href="tables/SETUP_BRANCH_DISCOUNT.html" target="_top" title="SETUP_BRANCH_DISCOUNT" alt="" coords="789,3287,1225,3737">
+<area shape="rect" id="node404" href="tables/SETUP_BRANCH_SALES.html" target="_top" title="SETUP_BRANCH_SALES" alt="" coords="15816,1865,16227,2169">
+<area shape="rect" id="node405" href="tables/SETUP_BSMV.html" target="_top" title="SETUP_BSMV" alt="" coords="15293,9216,15696,9813">
+<area shape="rect" id="node406" href="tables/SETUP_CAMPAIGN_ROLES.html" target="_top" title="SETUP_CAMPAIGN_ROLES" alt="" coords="397,12028,819,12361">
+<area shape="rect" id="node407" href="tables/SETUP_CANCEL_TYPE.html" target="_top" title="SETUP_CANCEL_TYPE" alt="" coords="659,16085,1037,16477">
+<area shape="rect" id="node408" href="tables/SETUP_CONSCAT_PREMIUM.html" target="_top" title="SETUP_CONSCAT_PREMIUM" alt="" coords="15293,3359,15732,3868">
+<area shape="rect" id="node409" href="tables/SETUP_CONSCAT_SEGMENTATION.html" target="_top" title="SETUP_CONSCAT_SEGMENTATION" alt="" coords="5755,2784,6255,3411">
+<area shape="rect" id="node410" href="tables/SETUP_CONSCAT_SEGMENTATION_ROWS.html" target="_top" title="SETUP_CONSCAT_SEGMENTATION_ROWS" alt="" coords="1835,17924,2393,18111">
+<area shape="rect" id="node411" href="tables/SETUP_COUNTER_TYPE.html" target="_top" title="SETUP_COUNTER_TYPE" alt="" coords="1051,5841,1445,6351">
+<area shape="rect" id="node412" href="tables/SETUP_DISCOUNT_TYPE.html" target="_top" title="SETUP_DISCOUNT_TYPE" alt="" coords="397,4057,800,4391">
+<area shape="rect" id="node413" href="tables/SETUP_IMPROPRIETY_SOURCE.html" target="_top" title="SETUP_IMPROPRIETY_SOURCE" alt="" coords="7388,17392,7853,17784">
+<area shape="rect" id="node414" href="tables/SETUP_INSPECTION_LEVEL.html" target="_top" title="SETUP_INSPECTION_LEVEL" alt="" coords="6800,17363,7288,17784">
+<area shape="rect" id="node415" href="tables/SETUP_INTEREST_RATE.html" target="_top" title="SETUP_INTEREST_RATE" alt="" coords="14705,2539,15196,3019">
+<area shape="rect" id="node416" href="tables/SETUP_INVENTORY_CAT.html" target="_top" title="SETUP_INVENTORY_CAT" alt="" coords="789,2669,1223,3149">
+<area shape="rect" id="node417" href="tables/SETUP_INVENTORY_DEFINITION.html" target="_top" title="SETUP_INVENTORY_DEFINITION" alt="" coords="15555,4623,16068,5044">
+<area shape="rect" id="node418" href="tables/SETUP_INVOICE.html" target="_top" title="SETUP_INVOICE" alt="" coords="14248,2755,14575,3411">
+<area shape="rect" id="node419" href="tables/SETUP_INVOICE_CANCEL_TYPE.html" target="_top" title="SETUP_INVOICE_CANCEL_TYPE" alt="" coords="9348,2061,9815,2365">
+<area shape="rect" id="node420" href="tables/SETUP_INVOICE_PURCHASE.html" target="_top" title="SETUP_INVOICE_PURCHASE" alt="" coords="15293,9899,15727,10467">
+<area shape="rect" id="node421" href="tables/SETUP_OIV.html" target="_top" title="SETUP_OIV" alt="" coords="1051,4440,1445,4979">
+<area shape="rect" id="node422" href="tables/SETUP_OPPORTUNITY_TYPE.html" target="_top" title="SETUP_OPPORTUNITY_TYPE" alt="" coords="11700,2336,12148,2757">
+<area shape="rect" id="node423" href="tables/SETUP_OTV.html" target="_top" title="SETUP_OTV" alt="" coords="14640,12924,15100,13668">
+<area shape="rect" id="node424" href="tables/SETUP_PAYMENT_PLAN_IMPORT_TYPE.html" target="_top" title="SETUP_PAYMENT_PLAN_IMPORT_TYPE" alt="" coords="12157,15283,12756,16085">
+<area shape="rect" id="node425" href="tables/SETUP_PBS_CAT.html" target="_top" title="SETUP_PBS_CAT" alt="" coords="16535,17545,16864,17849">
+<area shape="rect" id="node426" href="tables/SETUP_PBS_CODE.html" target="_top" title="SETUP_PBS_CODE" alt="" coords="13660,5297,14172,6481">
+<area shape="rect" id="node427" href="tables/SETUP_PRINT_FILES.html" target="_top" title="SETUP_PRINT_FILES" alt="" coords="1965,10863,2461,11577">
+<area shape="rect" id="node428" href="tables/SETUP_PRINT_FILES_QUALITY.html" target="_top" title="SETUP_PRINT_FILES_QUALITY" alt="" coords="16404,2767,16863,2953">
+<area shape="rect" id="node429" href="tables/SETUP_PRO_INFO_PLUS_NAMES.html" target="_top" title="SETUP_PRO_INFO_PLUS_NAMES" alt="" coords="8760,5,9241,9813">
+<area shape="rect" id="node430" href="tables/SETUP_PRO_INFO_PLUS_VALUES.html" target="_top" title="SETUP_PRO_INFO_PLUS_VALUES" alt="" coords="16404,3093,16884,3280">
+<area shape="rect" id="node431" href="tables/SETUP_PROBABILITY_RATE.html" target="_top" title="SETUP_PROBABILITY_RATE" alt="" coords="9936,2032,10368,2365">
+<area shape="rect" id="node432" href="tables/SETUP_PROCESS_CAT_FUSENAME.html" target="_top" title="SETUP_PROCESS_CAT_FUSENAME" alt="" coords="13203,18280,13695,18437">
+<area shape="rect" id="node433" href="tables/SETUP_PROCESS_CAT_HISTORY.html" target="_top" title="SETUP_PROCESS_CAT_HISTORY" alt="" coords="5951,13060,6488,14713">
+<area shape="rect" id="node434" href="tables/SETUP_PROCESS_CAT_ROWS.html" target="_top" title="SETUP_PROCESS_CAT_ROWS" alt="" coords="16404,3420,16844,3607">
+<area shape="rect" id="node435" href="tables/SETUP_PROCESS_CAT_ROWS_CAUID.html" target="_top" title="SETUP_PROCESS_CAT_ROWS_CAUID" alt="" coords="3664,17989,4173,18176">
+<area shape="rect" id="node436" href="tables/SETUP_PROD_CANCEL_CATS.html" target="_top" title="SETUP_PROD_CANCEL_CATS" alt="" coords="16208,4609,16652,4913">
+<area shape="rect" id="node437" href="tables/SETUP_PROD_PAUSE.html" target="_top" title="SETUP_PROD_PAUSE" alt="" coords="1443,3408,1853,4064">
+<area shape="rect" id="node438" href="tables/SETUP_PROD_PAUSE_CAT.html" target="_top" title="SETUP_PROD_PAUSE_CAT" alt="" coords="16208,5008,16627,5371">
+<area shape="rect" id="node439" href="tables/SETUP_PROD_PAUSE_TYPE.html" target="_top" title="SETUP_PROD_PAUSE_TYPE" alt="" coords="15816,2277,16247,2757">
+<area shape="rect" id="node440" href="tables/SETUP_PROD_PAUSE_TYPE_ROW.html" target="_top" title="SETUP_PROD_PAUSE_TYPE_ROW" alt="" coords="6539,18345,7016,18503">
+<area shape="rect" id="node441" href="tables/SETUP_PROD_RETURN_CATS.html" target="_top" title="SETUP_PROD_RETURN_CATS" alt="" coords="16208,13429,16655,13733">
+<area shape="rect" id="node442" href="tables/SETUP_PRODUCT_CONFIGURATOR.html" target="_top" title="SETUP_PRODUCT_CONFIGURATOR" alt="" coords="11569,13781,12160,15171">
+<area shape="rect" id="node443" href="tables/SETUP_PRODUCT_CONFIGURATOR_COMPONENTS.html" target="_top" title="SETUP_PRODUCT_CONFIGURATOR_COMPONENTS" alt="" coords="11373,15276,12024,16020">
+<area shape="rect" id="node444" href="tables/SETUP_PRODUCT_CONFIGURATOR_PARAMETER.html" target="_top" title="SETUP_PRODUCT_CONFIGURATOR_PARAMETER" alt="" coords="13268,17379,13900,17653">
+<area shape="rect" id="node445" href="tables/SETUP_PRODUCT_CONFIGURATOR_VARIATION.html" target="_top" title="SETUP_PRODUCT_CONFIGURATOR_VARIATION" alt="" coords="10589,15749,11265,16347">
+<area shape="rect" id="node446" href="tables/SETUP_PRODUCT_FORMULA.html" target="_top" title="SETUP_PRODUCT_FORMULA" alt="" coords="16012,17617,16455,17980">
+<area shape="rect" id="node447" href="tables/SETUP_PRODUCT_FORMULA_COMPONENTS.html" target="_top" title="SETUP_PRODUCT_FORMULA_COMPONENTS" alt="" coords="1639,17539,2217,17784">
+<area shape="rect" id="node448" href="tables/SETUP_PRODUCT_FORMULA_ROWS.html" target="_top" title="SETUP_PRODUCT_FORMULA_ROWS" alt="" coords="15816,2888,16317,3280">
+<area shape="rect" id="node449" href="tables/SETUP_PRODUCT_FORMULA_VARIATION.html" target="_top" title="SETUP_PRODUCT_FORMULA_VARIATION" alt="" coords="16208,13844,16757,14060">
+<area shape="rect" id="node450" href="tables/SETUP_PRODUCT_PERIOD_CAT.html" target="_top" title="SETUP_PRODUCT_PERIOD_CAT" alt="" coords="4579,5985,5121,8049">
+<area shape="rect" id="node451" href="tables/SETUP_PRODUCT_XML_DEFINITION.html" target="_top" title="SETUP_PRODUCT_XML_DEFINITION" alt="" coords="14379,17611,14889,17915">
+<area shape="rect" id="node452" href="tables/SETUP_PRODUCT_XML_DEFINITION_ROW.html" target="_top" title="SETUP_PRODUCT_XML_DEFINITION_ROW" alt="" coords="13007,17960,13567,18176">
+<area shape="rect" id="node453" href="tables/SETUP_PROMO_ICON.html" target="_top" title="SETUP_PROMO_ICON" alt="" coords="397,12783,772,13145">
+<area shape="rect" id="node454" href="tables/SETUP_REFERANCE_STATUS.html" target="_top" title="SETUP_REFERANCE_STATUS" alt="" coords="12288,17647,12732,17980">
+<area shape="rect" id="node455" href="tables/SETUP_SALARY_PAYROLL_ACCOUNTS.html" target="_top" title="SETUP_SALARY_PAYROLL_ACCOUNTS" alt="" coords="14248,14201,14799,14975">
+<area shape="rect" id="node456" href="tables/SETUP_SALEABLE_STOCK_ACTION.html" target="_top" title="SETUP_SALEABLE_STOCK_ACTION" alt="" coords="11700,17617,12199,17980">
+<area shape="rect" id="node457" href="tables/SETUP_SALES_ADD_OPTIONS.html" target="_top" title="SETUP_SALES_ADD_OPTIONS" alt="" coords="11112,17617,11564,17980">
+<area shape="rect" id="node458" href="tables/SETUP_SERVICE_ADD_OPTIONS.html" target="_top" title="SETUP_SERVICE_ADD_OPTIONS" alt="" coords="9675,17647,10148,17980">
+<area shape="rect" id="node459" href="tables/SETUP_SERVICE_CODE.html" target="_top" title="SETUP_SERVICE_CODE" alt="" coords="332,11541,727,11904">
+<area shape="rect" id="node460" href="tables/SETUP_SUBSCRIPTION_ADD_OPTIONS.html" target="_top" title="SETUP_SUBSCRIPTION_ADD_OPTIONS" alt="" coords="855,12812,1391,13145">
+<area shape="rect" id="node461" href="tables/SETUP_SUBSCRIPTION_CANCEL_TYPE.html" target="_top" title="SETUP_SUBSCRIPTION_CANCEL_TYPE" alt="" coords="789,10983,1321,11316">
+<area shape="rect" id="node462" href="tables/SETUP_SUBSCRIPTION_TYPE.html" target="_top" title="SETUP_SUBSCRIPTION_TYPE" alt="" coords="15816,3381,16263,3803">
+<area shape="rect" id="node463" href="tables/SETUP_TEVKIFAT.html" target="_top" title="SETUP_TEVKIFAT" alt="" coords="11569,16105,12073,16673">
+<area shape="rect" id="node464" href="tables/SETUP_TEVKIFAT_ROW.html" target="_top" title="SETUP_TEVKIFAT_ROW" alt="" coords="3599,2025,4045,2300">
+<area shape="rect" id="node465" href="tables/SMS_SEND_RECEIVE.html" target="_top" title="SMS_SEND_RECEIVE" alt="" coords="3925,3635,4415,4848">
+<area shape="rect" id="node466" href="tables/SPECT_MAIN.html" target="_top" title="SPECT_MAIN" alt="" coords="14248,15100,14665,16020">
+<area shape="rect" id="node467" href="tables/SPECT_MAIN_ROW.html" target="_top" title="SPECT_MAIN_ROW" alt="" coords="2815,7751,3291,8964">
+<area shape="rect" id="node468" href="tables/SPECT_MONEY.html" target="_top" title="SPECT_MONEY" alt="" coords="11373,7281,11677,7527">
+<area shape="rect" id="node469" href="tables/SPECT_VARIATION_TYPE.html" target="_top" title="SPECT_VARIATION_TYPE" alt="" coords="11112,2813,11577,3411">
+<area shape="rect" id="node470" href="tables/SPECTS.html" target="_top" title="SPECTS" alt="" coords="11047,8020,11647,11316">
+<area shape="rect" id="node471" href="tables/SPECTS_ROW.html" target="_top" title="SPECTS_ROW" alt="" coords="13529,10312,14005,11643">
+<area shape="rect" id="node472" href="tables/STOCK_RESERVE_ARCHIVE.html" target="_top" title="STOCK_RESERVE_ARCHIVE" alt="" coords="14705,3153,15155,3868">
+<area shape="rect" id="node473" href="tables/STOCK_STRATEGY.html" target="_top" title="STOCK_STRATEGY" alt="" coords="14705,9853,15200,10597">
+<area shape="rect" id="node474" href="tables/STOCKBONDS.html" target="_top" title="STOCKBONDS" alt="" coords="2684,12471,3152,13537">
+<area shape="rect" id="node475" href="tables/STOCKBONDS_INOUT.html" target="_top" title="STOCKBONDS_INOUT" alt="" coords="397,10003,772,10336">
+<area shape="rect" id="node476" href="tables/STOCKBONDS_SALEPURCHASE.html" target="_top" title="STOCKBONDS_SALEPURCHASE" alt="" coords="2815,4085,3301,5240">
+<area shape="rect" id="node477" href="tables/STOCKBONDS_SALEPURCHASE_MONEY.html" target="_top" title="STOCKBONDS_SALEPURCHASE_MONEY" alt="" coords="5624,2084,6159,2300">
+<area shape="rect" id="node478" href="tables/STOCKBONDS_SALEPURCHASE_ROW.html" target="_top" title="STOCKBONDS_SALEPURCHASE_ROW" alt="" coords="5755,3507,6280,4456">
+<area shape="rect" id="node479" href="tables/STOCKBONDS_VALUE_CHANGES.html" target="_top" title="STOCKBONDS_VALUE_CHANGES" alt="" coords="985,17137,1468,17588">
+<area shape="rect" id="node480" href="tables/STOCKBONDS_YIELD_PLAN_ROWS.html" target="_top" title="STOCKBONDS_YIELD_PLAN_ROWS" alt="" coords="14183,10919,14684,11839">
+<area shape="rect" id="node481" href="tables/STOCKBONDS_YIELD_VALUATION.html" target="_top" title="STOCKBONDS_YIELD_VALUATION" alt="" coords="15816,8304,16339,8637">
+<area shape="rect" id="node482" href="tables/SUBSCRIPTION_ADDITIONAL_PRODUCT.html" target="_top" title="SUBSCRIPTION_ADDITIONAL_PRODUCT" alt="" coords="15816,8761,16356,9095">
+<area shape="rect" id="node483" href="tables/SUBSCRIPTION_CONTRACT.html" target="_top" title="SUBSCRIPTION_CONTRACT" alt="" coords="10459,8691,10948,12427">
+<area shape="rect" id="node484" href="tables/SUBSCRIPTION_CONTRACT_INVOICE.html" target="_top" title="SUBSCRIPTION_CONTRACT_INVOICE" alt="" coords="15816,9219,16331,9552">
+<area shape="rect" id="node485" href="tables/SUBSCRIPTION_CONTRACT_MONEY.html" target="_top" title="SUBSCRIPTION_CONTRACT_MONEY" alt="" coords="16273,17212,16775,17457">
+<area shape="rect" id="node486" href="tables/SUBSCRIPTION_CONTRACT_ORDER.html" target="_top" title="SUBSCRIPTION_CONTRACT_ORDER" alt="" coords="1443,18345,1941,18503">
+<area shape="rect" id="node487" href="tables/SUBSCRIPTION_CONTRACT_PARTITION.html" target="_top" title="SUBSCRIPTION_CONTRACT_PARTITION" alt="" coords="13987,17131,14532,17523">
+<area shape="rect" id="node488" href="tables/SUBSCRIPTION_CONTRACT_RELATIONS.html" target="_top" title="SUBSCRIPTION_CONTRACT_RELATIONS" alt="" coords="6147,17196,6696,17588">
+<area shape="rect" id="node489" href="tables/SUBSCRIPTION_CONTRACT_ROW.html" target="_top" title="SUBSCRIPTION_CONTRACT_ROW" alt="" coords="4121,8500,4611,10271">
+<area shape="rect" id="node490" href="tables/SUBSCRIPTION_COUNTER.html" target="_top" title="SUBSCRIPTION_COUNTER" alt="" coords="2749,11207,3172,12361">
+<area shape="rect" id="node491" href="tables/SUBSCRIPTION_COUNTER_METER.html" target="_top" title="SUBSCRIPTION_COUNTER_METER" alt="" coords="985,15112,1480,15563">
+<area shape="rect" id="node492" href="tables/SUBSCRIPTION_COUNTER_PREPAID.html" target="_top" title="SUBSCRIPTION_COUNTER_PREPAID" alt="" coords="2031,12460,2544,13145">
+<area shape="rect" id="node493" href="tables/SUBSCRIPTION_COUNTER_RESULT.html" target="_top" title="SUBSCRIPTION_COUNTER_RESULT" alt="" coords="5232,10349,5735,10859">
+<area shape="rect" id="node494" href="tables/SUBSCRIPTION_COUNTER_RESULT_ROW.html" target="_top" title="SUBSCRIPTION_COUNTER_RESULT_ROW" alt="" coords="4840,17167,5401,17588">
+<area shape="rect" id="node495" href="tables/SUBSCRIPTION_GROUP_PERM.html" target="_top" title="SUBSCRIPTION_GROUP_PERM" alt="" coords="14379,17996,14828,18241">
+<area shape="rect" id="node496" href="tables/SUBSCRIPTION_INFO.html" target="_top" title="SUBSCRIPTION_INFO" alt="" coords="201,18127,575,18372">
+<area shape="rect" id="node497" href="tables/SUBSCRIPTION_INFO_PLUS.html" target="_top" title="SUBSCRIPTION_INFO_PLUS" alt="" coords="11765,9620,12201,11185">
+<area shape="rect" id="node498" href="tables/SUBSCRIPTION_INFO_PLUS_HISTORY.html" target="_top" title="SUBSCRIPTION_INFO_PLUS_HISTORY" alt="" coords="12876,11616,13407,13211">
+<area shape="rect" id="node499" href="tables/SUBSCRIPTION_PAGES.html" target="_top" title="SUBSCRIPTION_PAGES" alt="" coords="9348,2503,9796,2953">
+<area shape="rect" id="node500" href="tables/SUBSCRIPTION_PAYMENT_PLAN.html" target="_top" title="SUBSCRIPTION_PAYMENT_PLAN" alt="" coords="2227,6616,2737,7331">
+<area shape="rect" id="node501" href="tables/SUBSCRIPTION_PAYMENT_PLAN_IMPORT.html" target="_top" title="SUBSCRIPTION_PAYMENT_PLAN_IMPORT" alt="" coords="9087,15756,9684,16412">
+<area shape="rect" id="node502" href="tables/SUBSCRIPTION_PAYMENT_PLAN_IMPORT_ROW.html" target="_top" title="SUBSCRIPTION_PAYMENT_PLAN_IMPORT_ROW" alt="" coords="4383,12420,5091,14191">
+<area shape="rect" id="node503" href="tables/SUBSCRIPTION_PAYMENT_PLAN_ROW.html" target="_top" title="SUBSCRIPTION_PAYMENT_PLAN_ROW" alt="" coords="11961,4724,12669,6612">
+<area shape="rect" id="node504" href="tables/SUBSCRIPTION_PAYMENT_PLAN_ROW_HISTORY.html" target="_top" title="SUBSCRIPTION_PAYMENT_PLAN_ROW_HISTORY" alt="" coords="12092,17160,12723,17523">
+<area shape="rect" id="node505" href="tables/SUBSCRIPTION_PAYMENT_PLAN_ROW_H_92a71dfc.html" target="_top" title="SUBSCRIPTION_PAYMENT_PLAN_ROW_HISTORY_DETAIL" alt="" coords="9609,12981,10348,14517">
+<area shape="rect" id="node506" href="tables/SUBSCRIPTION_TARIFF.html" target="_top" title="SUBSCRIPTION_TARIFF" alt="" coords="1051,14436,1445,14975">
+<area shape="rect" id="node507" href="tables/SUBSCRIPTION_TAX_FUNDS.html" target="_top" title="SUBSCRIPTION_TAX_FUNDS" alt="" coords="16404,5488,16840,5763">
+<area shape="rect" id="node508" href="tables/SUBSCRIPTION_UPGRADES.html" target="_top" title="SUBSCRIPTION_UPGRADES" alt="" coords="8172,17683,8671,18045">
+<area shape="rect" id="node509" href="tables/sysdiagrams.html" target="_top" title="sysdiagrams" alt="" coords="16600,7376,16959,7592">
+<area shape="rect" id="node510" href="tables/TAHAKKUK_PAYMENT_PLAN.html" target="_top" title="TAHAKKUK_PAYMENT_PLAN" alt="" coords="5167,3549,5640,4587">
+<area shape="rect" id="node511" href="tables/TAHAKKUK_PLAN_MONEY.html" target="_top" title="TAHAKKUK_PLAN_MONEY" alt="" coords="16404,15513,16815,15759">
+<area shape="rect" id="node512" href="tables/TAHAKKUK_PLAN_ROW_RELATION.html" target="_top" title="TAHAKKUK_PLAN_ROW_RELATION" alt="" coords="13791,18025,14293,18241">
+<area shape="rect" id="node513" href="tables/TARGET_AUDIENCE_RECORD.html" target="_top" title="TARGET_AUDIENCE_RECORD" alt="" coords="14836,6995,15351,7592">
+<area shape="rect" id="node514" href="tables/TARGET_MARKETS.html" target="_top" title="TARGET_MARKETS" alt="" coords="7257,4012,7857,10271">
+<area shape="rect" id="node515" href="tables/TARGET_SURVEYS.html" target="_top" title="TARGET_SURVEYS" alt="" coords="5624,1787,6047,1973">
+<area shape="rect" id="node516" href="tables/TEMP_PRODUCT_TREE.html" target="_top" title="TEMP_PRODUCT_TREE" alt="" coords="14836,7691,15280,8376">
+<area shape="rect" id="node517" href="tables/test1.html" target="_top" title="test1" alt="" coords="4383,14288,4620,14387">
+<area shape="rect" id="node518" href="tables/test2.html" target="_top" title="test2" alt="" coords="4383,14484,4597,14583">
+<area shape="rect" id="node519" href="tables/test3.html" target="_top" title="test3" alt="" coords="16077,7493,16339,7592">
+<area shape="rect" id="node520" href="tables/TEST_DB_TIGGER.html" target="_top" title="TEST_DB_TIGGER" alt="" coords="11373,7660,11687,7788">
+<area shape="rect" id="node521" href="tables/TEXTILE_ASSORTMENT.html" target="_top" title="TEXTILE_ASSORTMENT" alt="" coords="15816,9660,16212,10140">
+<area shape="rect" id="node522" href="tables/TEXTILE_CAT_SUPLIERS.html" target="_top" title="TEXTILE_CAT_SUPLIERS" alt="" coords="2749,18411,3171,18568">
+<area shape="rect" id="node523" href="tables/TEXTILE_CUSTOMER_VALUES.html" target="_top" title="TEXTILE_CUSTOMER_VALUES" alt="" coords="15228,18156,15681,18372">
+<area shape="rect" id="node524" href="tables/TEXTILE_CUTACTUAL_HEAD.html" target="_top" title="TEXTILE_CUTACTUAL_HEAD" alt="" coords="12419,8655,12856,9487">
+<area shape="rect" id="node525" href="tables/TEXTILE_CUTACTUAL_ROW.html" target="_top" title="TEXTILE_CUTACTUAL_ROW" alt="" coords="13007,15929,13460,16673">
+<area shape="rect" id="node526" href="tables/TEXTILE_CUTACTUAL_SIZE.html" target="_top" title="TEXTILE_CUTACTUAL_SIZE" alt="" coords="267,11113,693,11447">
+<area shape="rect" id="node527" href="tables/TEXTILE_CUTPLAN_HEAD.html" target="_top" title="TEXTILE_CUTPLAN_HEAD" alt="" coords="1900,9468,2312,10271">
+<area shape="rect" id="node528" href="tables/TEXTILE_CUTPLAN_ROW.html" target="_top" title="TEXTILE_CUTPLAN_ROW" alt="" coords="6800,15929,7253,16673">
+<area shape="rect" id="node529" href="tables/TEXTILE_CUTPLAN_SIZE.html" target="_top" title="TEXTILE_CUTPLAN_SIZE" alt="" coords="267,3600,668,3933">
+<area shape="rect" id="node530" href="tables/TEXTILE_CUTSTRETCH_HEAD.html" target="_top" title="TEXTILE_CUTSTRETCH_HEAD" alt="" coords="15816,15533,16265,15955">
+<area shape="rect" id="node531" href="tables/TEXTILE_CUTSTRETCH_ROW.html" target="_top" title="TEXTILE_CUTSTRETCH_ROW" alt="" coords="8825,16497,9268,17065">
+<area shape="rect" id="node532" href="tables/TEXTILE_FABRIC.html" target="_top" title="TEXTILE_FABRIC" alt="" coords="13725,2725,14139,3411">
+<area shape="rect" id="node533" href="tables/TEXTILE_MEASUREMENT_HEADER.html" target="_top" title="TEXTILE_MEASUREMENT_HEADER" alt="" coords="5036,1960,5533,2235">
+<area shape="rect" id="node534" href="tables/TEXTILE_MEASUREMENT_ITEMS.html" target="_top" title="TEXTILE_MEASUREMENT_ITEMS" alt="" coords="4840,16497,5312,17065">
+<area shape="rect" id="node535" href="tables/TEXTILE_MEASUREMENT_ROWS.html" target="_top" title="TEXTILE_MEASUREMENT_ROWS" alt="" coords="15293,14923,15765,15432">
+<area shape="rect" id="node536" href="tables/TEXTILE_PREDEFINED_PROC.html" target="_top" title="TEXTILE_PREDEFINED_PROC" alt="" coords="10916,18185,11356,18372">
+<area shape="rect" id="node537" href="tables/TEXTILE_PREDEFINED_PROC_ROW.html" target="_top" title="TEXTILE_PREDEFINED_PROC_ROW" alt="" coords="14640,18345,15132,18503">
+<area shape="rect" id="node538" href="tables/TEXTILE_PRODUCT_PLAN.html" target="_top" title="TEXTILE_PRODUCT_PLAN" alt="" coords="15293,15524,15707,16151">
+<area shape="rect" id="node539" href="tables/TEXTILE_PRODUCT_TREE.html" target="_top" title="TEXTILE_PRODUCT_TREE" alt="" coords="9348,1787,9749,1973">
+<area shape="rect" id="node540" href="tables/TEXTILE_PRODUCTION_OPERATION.html" target="_top" title="TEXTILE_PRODUCTION_OPERATION" alt="" coords="14836,11473,15347,12100">
+<area shape="rect" id="node541" href="tables/TEXTILE_PRODUCTION_OPERATION_MAIN.html" target="_top" title="TEXTILE_PRODUCTION_OPERATION_MAIN" alt="" coords="13595,15661,14169,16347">
+<area shape="rect" id="node542" href="tables/TEXTILE_PRODUCTION_ORDER_RESULTS_MAIN.html" target="_top" title="TEXTILE_PRODUCTION_ORDER_RESULTS_MAIN" alt="" coords="15881,15216,16497,15432">
+<area shape="rect" id="node543" href="tables/TEXTILE_PRODUCTION_ORDERS_MAIN.html" target="_top" title="TEXTILE_PRODUCTION_ORDERS_MAIN" alt="" coords="14183,11928,14724,12819">
+<area shape="rect" id="node544" href="tables/TEXTILE_SAMPLE_REQUEST.html" target="_top" title="TEXTILE_SAMPLE_REQUEST" alt="" coords="5232,10955,5727,13341">
+<area shape="rect" id="node545" href="tables/TEXTILE_SAMPLE_REQUEST_IMAGE.html" target="_top" title="TEXTILE_SAMPLE_REQUEST_IMAGE" alt="" coords="7127,18215,7631,18372">
+<area shape="rect" id="node546" href="tables/TEXTILE_SAMPLE_REQUEST_MONEY.html" target="_top" title="TEXTILE_SAMPLE_REQUEST_MONEY" alt="" coords="6212,17705,6719,17980">
+<area shape="rect" id="node547" href="tables/TEXTILE_SR_PLUS.html" target="_top" title="TEXTILE_SR_PLUS" alt="" coords="1443,10987,1844,11643">
+<area shape="rect" id="node548" href="tables/TEXTILE_SR_PROCESS.html" target="_top" title="TEXTILE_SR_PROCESS" alt="" coords="1247,8984,1633,9552">
+<area shape="rect" id="node549" href="tables/TEXTILE_SR_PROCESS_TYPE.html" target="_top" title="TEXTILE_SR_PROCESS_TYPE" alt="" coords="15816,16709,16260,17131">
+<area shape="rect" id="node550" href="tables/TEXTILE_SR_SUPLIERS.html" target="_top" title="TEXTILE_SR_SUPLIERS" alt="" coords="2423,9321,2868,10271">
+<area shape="rect" id="node551" href="tables/TEXTILE_STATION_PROCESS.html" target="_top" title="TEXTILE_STATION_PROCESS" alt="" coords="2031,18221,2469,18437">
+<area shape="rect" id="node552" href="tables/TEXTILE_STRETCHING_TEST.html" target="_top" title="TEXTILE_STRETCHING_TEST" alt="" coords="13464,16752,13904,17261">
+<area shape="rect" id="node553" href="tables/TEXTILE_STRETCHING_TEST_GROUP.html" target="_top" title="TEXTILE_STRETCHING_TEST_GROUP" alt="" coords="4840,17676,5357,17980">
+<area shape="rect" id="node554" href="tables/TEXTILE_STRETCHING_TEST_HEAD.html" target="_top" title="TEXTILE_STRETCHING_TEST_HEAD" alt="" coords="2161,5767,2721,6481">
+<area shape="rect" id="node555" href="tables/TEXTILE_STRETCHING_TEST_ROWS.html" target="_top" title="TEXTILE_STRETCHING_TEST_ROWS" alt="" coords="12419,16171,12929,16739">
+<area shape="rect" id="node556" href="tables/TEXTILE_WASH_DEMAND.html" target="_top" title="TEXTILE_WASH_DEMAND" alt="" coords="267,3113,680,3476">
+<area shape="rect" id="node557" href="tables/TEXTILE_WASH_TYPE.html" target="_top" title="TEXTILE_WASH_TYPE" alt="" coords="136,14801,515,15105">
+<area shape="rect" id="node558" href="tables/TEXTILE_WASHING_RECEPIE_HEAD.html" target="_top" title="TEXTILE_WASHING_RECEPIE_HEAD" alt="" coords="7388,16781,7895,17261">
+<area shape="rect" id="node559" href="tables/TEXTILE_WASHING_RECEPIE_ROW.html" target="_top" title="TEXTILE_WASHING_RECEPIE_ROW" alt="" coords="136,1888,631,2104">
+<area shape="rect" id="node560" href="tables/VISITOR_PLANS.html" target="_top" title="VISITOR_PLANS" alt="" coords="724,9232,1125,9683">
+<area shape="rect" id="node561" href="tables/WAREHOUSE_RATES.html" target="_top" title="WAREHOUSE_RATES" alt="" coords="724,8644,1109,9095">
+<area shape="rect" id="node562" href="tables/WAREHOUSE_RATES_ROWS.html" target="_top" title="WAREHOUSE_RATES_ROWS" alt="" coords="1051,13871,1491,14321">
+<area shape="rect" id="node563" href="tables/WAREHOUSE_TASKS.html" target="_top" title="WAREHOUSE_TASKS" alt="" coords="6669,4391,7179,6220">
+<area shape="rect" id="node564" href="tables/WAREHOUSE_TASKS_ACTIONS.html" target="_top" title="WAREHOUSE_TASKS_ACTIONS" alt="" coords="11047,1960,11512,2235">
+<area shape="rect" id="node565" href="tables/WAREHOUSE_TASKS_LOCATION_MANAGEMENT.html" target="_top" title="WAREHOUSE_TASKS_LOCATION_MANAGEMENT" alt="" coords="6081,15909,6708,16477">
+<area shape="rect" id="node566" href="tables/WAREHOUSE_TASKS_LOCATION_MANAGE_630c44a3.html" target="_top" title="WAREHOUSE_TASKS_LOCATION_MANAGEMENT_PRODUCTS" alt="" coords="11569,16791,12303,17065">
+<area shape="rect" id="node567" href="tables/WAREHOUSE_TASKS_PRODUCTS.html" target="_top" title="WAREHOUSE_TASKS_PRODUCTS" alt="" coords="14836,12192,15379,12819">
+<area shape="rect" id="node568" href="tables/WAREHOUSE_TASKS_ROWS.html" target="_top" title="WAREHOUSE_TASKS_ROWS" alt="" coords="14509,1757,14945,1973">
+<area shape="rect" id="node569" href="tables/WORKSTATION_PERIOD.html" target="_top" title="WORKSTATION_PERIOD" alt="" coords="724,1800,1149,2104">
+<area shape="rect" id="node570" href="tables/WORKSTATIONS.html" target="_top" title="WORKSTATIONS" alt="" coords="3272,11603,3728,13080">
+<area shape="rect" id="node571" href="tables/WORKSTATIONS_MACHINE.html" target="_top" title="WORKSTATIONS_MACHINE" alt="" coords="1247,1829,1677,2104">
+<area shape="rect" id="node572" href="tables/WORKSTATIONS_PRODUCTS.html" target="_top" title="WORKSTATIONS_PRODUCTS" alt="" coords="1247,8360,1692,8899">
+<area shape="rect" id="node573" href="tables/WORKSTATIONS_STATES.html" target="_top" title="WORKSTATIONS_STATES" alt="" coords="6343,2719,6813,3345">
+<area shape="rect" id="node574" href="tables/XML_CATEGORIES.html" target="_top" title="XML_CATEGORIES" alt="" coords="136,6932,481,7265">
+</map>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- /.content-wrapper -->
+            <footer class="main-footer">
+                <div>
+                    <div class="pull-right hidden-xs">
+                        <a href="https://github.com/schemaspy/schemaspy" title="GitHub for SchemaSpy"><i class="fa fa-github-square fa-2x"></i></a>
+                        <a href="http://stackoverflow.com/questions/tagged/schemaspy" title="StackOverflow for SchemaSpy"><i class="fa fa-stack-overflow fa-2x"></i></a>
+                    </div>
+                    <strong>Generated by <a href="http://schemaspy.org/" class="logo-text"><i class="fa fa-database"></i> SchemaSpy 7.0.2</a></strong>
+                </div>
+                <!-- /.container -->
+            </footer>
+        </div>
+        <!-- ./wrapper -->
+
+        <!-- jQuery 2.2.3 -->
+        <script src="bower/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+        <script src="bower/admin-lte/plugins/jQueryUI/jquery-ui.min.js"></script>
+        <!-- Bootstrap 3.3.5 -->
+        <script src="bower/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+        <!-- DataTables -->
+        <script src="bower/datatables.net/jquery.dataTables.min.js"></script>
+        <script src="bower/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+        <script src="bower/datatables.net-buttons/dataTables.buttons.min.js"></script>
+        <script src="bower/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+        <script src="bower/datatables.net-buttons/buttons.html5.min.js"></script>
+        <script src="bower/datatables.net-buttons/buttons.print.min.js"></script>
+        <script src="bower/datatables.net-buttons/buttons.colVis.min.js"></script>
+        <!-- SheetJS -->
+        <script src="bower/js-xlsx/xlsx.full.min.js"></script>
+        <!-- pdfmake -->
+        <script src="bower/pdfmake/pdfmake.min.js"></script>
+        <script src="bower/pdfmake/vfs_fonts.js"></script>
+        <!-- SlimScroll -->
+        <script src="bower/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+        <!-- FastClick -->
+        <script src="bower/admin-lte/plugins/fastclick/fastclick.js"></script>
+        <!-- Salvattore -->
+        <script src="bower/salvattore/salvattore.min.js"></script>
+        <!-- AnchorJS -->
+        <script src="bower/anchor-js/anchor.min.js"></script>
+        <!-- CodeMirror -->
+        <script src="bower/codemirror/codemirror.js"></script>
+        <script src="bower/codemirror/sql.js"></script>
+        <!-- AdminLTE App -->
+        <script src="bower/admin-lte/dist/js/app.min.js"></script>
+        <script src=""></script>
+        <script src="schemaSpy.js"></script>
+    </body>
+</html>

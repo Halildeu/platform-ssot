@@ -84,7 +84,7 @@ export const ${componentName} = React.forwardRef<
   ${componentName}Props
 >(({ variant = 'primary', size = 'md', disabled, loading, className, children, ...props }, ref) => {
   const variants = {
-    primary: 'bg-[var(--action-primary)] text-white hover:bg-[var(--action-primary-hover,#1d4ed8)]',
+    primary: 'bg-[var(--action-primary)] text-text-inverse hover:bg-[var(--action-primary-hover))]',
     secondary: 'bg-[var(--surface-muted)] text-[var(--text-primary)] hover:bg-[var(--surface-hover)] border border-[var(--border-subtle)]',
     ghost: 'text-[var(--text-secondary)] hover:bg-[var(--surface-muted)]',
   };
@@ -156,7 +156,7 @@ export const ViewSourceModal: React.FC<ViewSourceModalProps> = ({
   isOpen,
   onClose,
   componentName,
-  importStatement,
+  _importStatement,
 }) => {
   const [activeTab, setActiveTab] = useState<SourceTab>("original");
   const [copied, setCopied] = useState(false);
@@ -182,7 +182,7 @@ export const ViewSourceModal: React.FC<ViewSourceModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-0 bg-surface-inverse/50" onClick={onClose} />
 
       {/* Modal */}
       <div className="relative w-full max-w-3xl max-h-[80vh] overflow-hidden rounded-2xl border border-border-subtle bg-surface-default shadow-2xl">
@@ -200,7 +200,7 @@ export const ViewSourceModal: React.FC<ViewSourceModalProps> = ({
               onClick={handleCopy}
               className="flex items-center gap-1 rounded-lg border border-border-subtle px-2.5 py-1.5 text-[11px] font-medium text-text-secondary hover:text-text-primary transition"
             >
-              {copied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+              {copied ? <Check className="h-3 w-3 text-state-success-text" /> : <Copy className="h-3 w-3" />}
               {copied ? "Copied" : "Copy"}
             </button>
             <button
@@ -238,7 +238,7 @@ export const ViewSourceModal: React.FC<ViewSourceModalProps> = ({
 
         {/* Source code */}
         <div className="max-h-[calc(80vh-120px)] overflow-auto">
-          <pre className="p-5 text-xs leading-relaxed text-gray-200 font-mono bg-gray-900">
+          <pre className="p-5 text-xs leading-relaxed text-border-subtle font-mono bg-surface-inverse">
             {currentSource}
           </pre>
         </div>

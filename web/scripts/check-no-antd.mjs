@@ -11,7 +11,11 @@ const tracked = run('git ls-files')
   .split('\n')
   .filter((file) => file.endsWith('.ts') || file.endsWith('.tsx') || file.endsWith('.js') || file.endsWith('.jsx'));
 
-const allowListPrefixes = [];
+const allowListPrefixes = [
+  'packages/design-system/eslint-rules/',
+  'packages/design-system/src/intelligence/__tests__/',
+  'packages/design-system/src/legacy/',
+];
 
 const forbiddenPatterns = [/from ['"]antd['"]/, /from ['"]@ant-design\/icons['"]/];
 

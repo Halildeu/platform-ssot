@@ -298,11 +298,11 @@ export function EnterpriseReadyChecklist({
   return (
     <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border-subtle bg-linear-to-r from-indigo-500/5 to-transparent px-5 py-4">
+      <div className="flex items-center justify-between border-b border-border-subtle bg-linear-to-r from-action-primary/5 to-transparent px-5 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/10">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-action-primary/10">
             <svg
-              className="h-4 w-4 text-indigo-600"
+              className="h-4 w-4 text-action-primary"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -348,12 +348,12 @@ export function EnterpriseReadyChecklist({
               strokeLinecap="round"
               className={
                 metCount === total
-                  ? 'text-emerald-500'
+                  ? 'text-state-success-text'
                   : metCount >= total * 0.7
-                    ? 'text-indigo-500'
+                    ? 'text-action-primary'
                     : metCount >= total * 0.4
-                      ? 'text-amber-500'
-                      : 'text-red-500'
+                      ? 'text-state-warning-text'
+                      : 'text-state-danger-text'
               }
             />
           </svg>
@@ -370,12 +370,12 @@ export function EnterpriseReadyChecklist({
             className={[
               'h-full rounded-full transition-all duration-500',
               metCount === total
-                ? 'bg-emerald-500'
+                ? 'bg-state-success-text'
                 : metCount >= total * 0.7
-                  ? 'bg-indigo-500'
+                  ? 'bg-action-primary'
                   : metCount >= total * 0.4
-                    ? 'bg-amber-500'
-                    : 'bg-red-500',
+                    ? 'bg-state-warning-text'
+                    : 'bg-state-danger-text',
             ].join(' ')}
             style={{ width: `${pct}%` }}
           />
@@ -403,16 +403,16 @@ export function EnterpriseReadyChecklist({
                 ].join(' ')}
               >
                 {!criterion.applicable ? (
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-500/5">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-text-subtle/5">
                     <span className="text-[8px] font-medium text-text-tertiary">N/A</span>
                   </span>
                 ) : criterion.met ? (
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/10">
-                    <Check className="h-3 w-3 text-emerald-600" />
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-text/10">
+                    <Check className="h-3 w-3 text-state-success-text" />
                   </span>
                 ) : (
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-500/10">
-                    <AlertTriangle className="h-3 w-3 text-amber-600" />
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-warning-text/10">
+                    <AlertTriangle className="h-3 w-3 text-state-warning-text" />
                   </span>
                 )}
                 <div className="flex flex-1 items-center justify-between gap-2">
@@ -432,7 +432,7 @@ export function EnterpriseReadyChecklist({
                     <Text
                       className={[
                         'text-[10px] tabular-nums',
-                        criterion.met ? 'text-emerald-600' : 'text-amber-600',
+                        criterion.met ? 'text-state-success-text' : 'text-state-warning-text',
                       ].join(' ')}
                     >
                       {criterion.detail}

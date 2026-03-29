@@ -6,7 +6,7 @@
 /*  Uses MutationObserver on <html> to detect data-* attribute changes.*/
 /* ------------------------------------------------------------------ */
 
-import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import type { GridThemeParams } from "../theme/adapters/grid-adapter";
 import type { ChartColorConfig } from "../theme/adapters/chart-adapter";
 
@@ -21,14 +21,14 @@ const getCSSVar = (name: string, fallback = ""): string => {
 
 export function cssVarsToGridTheme(): GridThemeParams {
   return {
-    headerBackgroundColor: getCSSVar("--surface-muted-bg", "#f8f9fa"),
-    headerForegroundColor: getCSSVar("--text-primary", "#1e293b"),
-    backgroundColor: getCSSVar("--surface-default-bg", "#ffffff"),
-    foregroundColor: getCSSVar("--text-primary", "#1e293b"),
-    borderColor: getCSSVar("--border-subtle", "#e2e8f0"),
-    rowHoverColor: getCSSVar("--surface-muted-bg", "#f8f9fa"),
-    selectedRowBackgroundColor: getCSSVar("--state-info-bg", "#eff6ff"),
-    oddRowBackgroundColor: getCSSVar("--surface-default-bg", "#ffffff"),
+    headerBackgroundColor: getCSSVar("--surface-muted-bg", "var(--surface-muted)"),
+    headerForegroundColor: getCSSVar("--text-primary", "var(--text-primary)"),
+    backgroundColor: getCSSVar("--surface-default-bg", "var(--surface-default)"),
+    foregroundColor: getCSSVar("--text-primary", "var(--text-primary)"),
+    borderColor: getCSSVar("--border-subtle", "var(--border-subtle)"),
+    rowHoverColor: getCSSVar("--surface-muted-bg", "var(--surface-muted)"),
+    selectedRowBackgroundColor: getCSSVar("--state-info-bg", "var(--state-info-bg)"),
+    oddRowBackgroundColor: getCSSVar("--surface-default-bg", "var(--surface-default)"),
     fontSize: "13px",
     headerFontSize: "12px",
   };
@@ -36,19 +36,19 @@ export function cssVarsToGridTheme(): GridThemeParams {
 
 export function cssVarsToChartColors(): ChartColorConfig {
   return {
-    primaryColor: getCSSVar("--action-primary-bg", "#3b82f6"),
-    backgroundColor: getCSSVar("--surface-default-bg", "#ffffff"),
-    textColor: getCSSVar("--text-primary", "#1e293b"),
-    gridColor: getCSSVar("--border-subtle", "#e2e8f0"),
-    tooltipBg: getCSSVar("--surface-raised-bg", "#ffffff"),
-    tooltipText: getCSSVar("--text-primary", "#1e293b"),
+    primaryColor: getCSSVar("--action-primary-bg", "var(--action-primary)"),
+    backgroundColor: getCSSVar("--surface-default-bg", "var(--surface-default)"),
+    textColor: getCSSVar("--text-primary", "var(--text-primary)"),
+    gridColor: getCSSVar("--border-subtle", "var(--border-subtle)"),
+    tooltipBg: getCSSVar("--surface-raised-bg", "var(--surface-default)"),
+    tooltipText: getCSSVar("--text-primary", "var(--text-primary)"),
     series: [
-      getCSSVar("--action-primary-bg", "#3b82f6"),
-      getCSSVar("--state-success-text", "#16a34a"),
-      getCSSVar("--state-warning-text", "#d97706"),
-      getCSSVar("--state-danger-text", "#dc2626"),
-      getCSSVar("--state-info-text", "#2563eb"),
-      getCSSVar("--text-secondary", "#64748b"),
+      getCSSVar("--action-primary-bg", "var(--action-primary)"),
+      getCSSVar("--state-success-text", "var(--state-success-text)"),
+      getCSSVar("--state-warning-text", "var(--state-warning-text)"),
+      getCSSVar("--state-danger-text", "var(--state-danger-text)"),
+      getCSSVar("--state-info-text", "var(--action-primary)"),
+      getCSSVar("--text-secondary", "var(--text-secondary)"),
     ],
   };
 }

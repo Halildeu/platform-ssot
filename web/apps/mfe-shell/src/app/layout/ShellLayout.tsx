@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useCallback } from "react";
+import React, { useEffect, _useMemo, useCallback } from "react";
 import { BrowserRouter, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/store.hooks";
 import { useThemeContext } from "../theme/theme-context.provider";
 import { useToast } from "@mfe/design-system";
 import { isPermitAllMode } from "../auth/auth-config";
 import {
-  isSuggestionsRemoteEnabled,
-  isEthicRemoteEnabled,
-  resolveDefaultShellPath,
+  _isSuggestionsRemoteEnabled,
+  _isEthicRemoteEnabled,
+  _resolveDefaultShellPath,
 } from "../shell-navigation";
 import { useShellCommonI18n } from "../i18n";
 import { useShellShortcuts } from "../shortcuts/useShellShortcuts.model";
@@ -50,13 +50,13 @@ const ShellChrome: React.FC = () => {
       {/* Fixed header — takes space via pt below */}
       <ShellHeader />
       {/* Push content below fixed header */}
-      <div className="pt-[var(--shell-header-h,56px)]">
+      <div className="pt-[var(--shell-header-h)]">
         {showAuditSummary ? <AuditSummaryStrip /> : null}
         {/* Fixed sidebar — rendered outside flow */}
         {showSidebar ? <Sidebar /> : null}
         <div className="flex min-h-0 flex-1">
           {/* Spacer matching fixed sidebar width via CSS variable */}
-          {showSidebar ? <div className="shrink-0" style={{ width: 'var(--shell-sidebar-w, 76px)' }} /> : null}
+          {showSidebar ? <div className="shrink-0" style={{ width: 'var(--shell-sidebar-w)' }} /> : null}
           <main className="min-w-0 flex-1 px-8 py-8">
           <div className="flex w-full flex-col gap-6">
             <AppRouter />

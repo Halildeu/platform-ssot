@@ -22,6 +22,8 @@ const getArg = (name, fallback = null) => {
 };
 
 const preset = getArg('--preset', 'ui-library');
+const skipStepsRaw = getArg('--skip-steps', process.env.DOCTOR_SKIP_STEPS || '');
+const skipSteps = new Set(skipStepsRaw ? skipStepsRaw.split(',').map((s) => s.trim()) : []);
 const presetSlug = preset.replace(/[^a-z0-9_-]+/gi, '-').toLowerCase();
 const outDir = path.join(doctorRoot, `${stamp}-${presetSlug}`);
 const logDir = path.join(outDir, 'logs');
@@ -528,6 +530,21 @@ const main = async () => {
   const steps = [];
 
   for (const step of activePreset.steps) {
+    if (skipSteps.has(step.id)) {
+      steps.push({
+        id: step.id,
+        label: step.label,
+        command: `${step.cmd} ${step.args.join(' ')}`,
+        status: 'SKIP',
+        exitCode: null,
+        signal: null,
+        startedAt: new Date().toISOString(),
+        endedAt: new Date().toISOString(),
+        logPath: null,
+        retryCount: 0,
+      });
+      continue;
+    }
     steps.push(runStep(step));
   }
 
@@ -547,7 +564,7 @@ const main = async () => {
     ? [path.relative(repoRoot, gatewayArtifact)]
     : [];
 
-  const failedSteps = steps.filter((step) => step.status !== 'PASS');
+  const failedSteps = steps.filter((step) => step.status !== 'PASS' && step.status !== 'SKIP');
   const overallStatus = !baseCheck.ok
     ? 'FAIL'
     : failedSteps.length > 0

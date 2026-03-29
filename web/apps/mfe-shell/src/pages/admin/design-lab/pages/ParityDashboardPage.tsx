@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Target, CheckCircle2, XCircle, BarChart3 } from "lucide-react";
+import { Target, CheckCircle2, XCircle } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "../DesignLabProvider";
 import type { DesignLabComponentDocEntry } from "../DesignLabProvider";
@@ -80,7 +80,7 @@ function ProgressRing({ score, max, size = 60, color }: { score: number; max: nu
   return (
     <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#e2e8f0" strokeWidth={4} />
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--border-subtle)" strokeWidth={4} />
         <circle
           cx={size / 2} cy={size / 2} r={radius}
           fill="none" stroke={color} strokeWidth={4}
@@ -131,8 +131,8 @@ export default function ParityDashboardPage() {
     <div className="flex flex-col mx-auto max-w-5xl gap-6 p-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500/20 to-blue-500/20">
-          <Target className="h-5 w-5 text-emerald-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-state-success-text/20 to-action-primary/20">
+          <Target className="h-5 w-5 text-state-success-text" />
         </div>
         <div>
           <div className="flex items-center gap-2">
@@ -148,13 +148,13 @@ export default function ParityDashboardPage() {
       {/* Score summary */}
       <div className="flex items-center gap-6 rounded-2xl border border-border-subtle bg-surface-default p-5">
         <div className="text-center">
-          <ProgressRing score={totalAchieved} max={totalPossible} size={70} color="#22c55e" />
+          <ProgressRing score={totalAchieved} max={totalPossible} size={70} color="var(--state-success-text)" />
           <Text as="div" className="mt-1 text-xs font-bold text-text-primary">Genel Puan</Text>
         </div>
         <div className="h-12 w-px bg-border-subtle" />
         {dimensionCoverage.map((dim) => (
           <div key={dim.id} className="text-center">
-            <ProgressRing score={dim.count} max={rows.length} size={50} color={dim.pct >= 70 ? "#22c55e" : dim.pct >= 40 ? "#f59e0b" : "#ef4444"} />
+            <ProgressRing score={dim.count} max={rows.length} size={50} color={dim.pct >= 70 ? "var(--state-success-text)" : dim.pct >= 40 ? "var(--state-warning-text)" : "var(--state-danger-text)"} />
             <Text as="div" className="mt-1 text-[10px] font-medium text-text-secondary">{dim.label}</Text>
           </div>
         ))}
@@ -178,7 +178,7 @@ export default function ParityDashboardPage() {
           onClick={() => setFilterCategory("all")}
           className={[
             "rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition",
-            filterCategory === "all" ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary hover:text-text-primary",
+            filterCategory === "all" ? "bg-action-primary text-text-inverse" : "bg-surface-muted text-text-secondary hover:text-text-primary",
           ].join(" ")}
         >
           Tumu ({rows.length})
@@ -190,7 +190,7 @@ export default function ParityDashboardPage() {
             onClick={() => setFilterCategory(cat)}
             className={[
               "rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition",
-              filterCategory === cat ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary hover:text-text-primary",
+              filterCategory === cat ? "bg-action-primary text-text-inverse" : "bg-surface-muted text-text-secondary hover:text-text-primary",
             ].join(" ")}
           >
             {cat}
@@ -222,17 +222,17 @@ export default function ParityDashboardPage() {
                 {DIMENSIONS.map((dim) => (
                   <td key={dim.id} className="px-3 py-2.5 text-center">
                     {row.dimensions[dim.id] ? (
-                      <CheckCircle2 className="mx-auto h-3.5 w-3.5 text-emerald-500" />
+                      <CheckCircle2 className="mx-auto h-3.5 w-3.5 text-state-success-text" />
                     ) : (
-                      <XCircle className="mx-auto h-3.5 w-3.5 text-red-300" />
+                      <XCircle className="mx-auto h-3.5 w-3.5 text-state-danger-text" />
                     )}
                   </td>
                 ))}
                 <td className="px-3 py-2.5 text-center">
                   <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
-                    row.score >= 5 ? "bg-emerald-100 text-emerald-700" :
-                    row.score >= 3 ? "bg-amber-100 text-amber-700" :
-                    "bg-red-100 text-red-700"
+                    row.score >= 5 ? "bg-state-success-bg text-state-success-text" :
+                    row.score >= 3 ? "bg-state-warning-bg text-state-warning-text" :
+                    "bg-state-danger-bg text-state-danger-text"
                   }`}>
                     {row.score}/{maxScore}
                   </span>

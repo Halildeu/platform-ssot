@@ -23,17 +23,16 @@ export function cleanupDarkMode(): void {
 
 // Patterns that indicate hardcoded colors (not CSS variables)
 const BARE_COLOR_PATTERNS = [
-  /(?:^|\s)bg-white(?:\s|$)/,
-  /(?:^|\s)bg-black(?:\s|$)/,
-  /(?:^|\s)bg-gray-\d+/,
-  /(?:^|\s)bg-blue-\d+/,
-  /(?:^|\s)bg-red-\d+/,
-  /(?:^|\s)bg-green-\d+/,
-  /(?:^|\s)bg-yellow-\d+/,
-  /(?:^|\s)text-white(?:\s|$)/,
-  /(?:^|\s)text-black(?:\s|$)/,
-  /(?:^|\s)text-gray-\d+/,
-  /(?:^|\s)border-gray-\d+/,
+  /(?:^|\s)bg-surface-inverse(?:\s|$)/,
+  /(?:^|\s)bg-surface-muted-\d+/,
+  /(?:^|\s)bg-action-primary-\d+/,
+  /(?:^|\s)bg-state-danger-text-\d+/,
+  /(?:^|\s)bg-state-success-text-\d+/,
+  /(?:^|\s)bg-state-warning-text-\d+/,
+  /(?:^|\s)text-text-inverse(?:\s|$)/,
+  /(?:^|\s)text-text-primary(?:\s|$)/,
+  /(?:^|\s)text-text-secondary-\d+/,
+  /(?:^|\s)border-border-default-\d+/,
   /style="[^"]*(?:color|background|border-color)\s*:\s*(?:#[0-9a-fA-F]{3,8}|rgb|rgba|hsl)/,
 ];
 

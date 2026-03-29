@@ -182,7 +182,7 @@ export const EcosystemSidebarRenderer: React.FC<DesignLabSidebarRendererProps> =
             data-testid="design-lab-ecosystem-tier-pro"
           >
             <div className="flex items-center gap-2 min-w-0">
-              <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400" />
+              <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-action-primary" />
               <Text className="text-xs font-medium text-text-primary">Pro</Text>
             </div>
             <Text variant="secondary" className="shrink-0 text-[10px]">
@@ -194,7 +194,7 @@ export const EcosystemSidebarRenderer: React.FC<DesignLabSidebarRendererProps> =
             data-testid="design-lab-ecosystem-tier-enterprise"
           >
             <div className="flex items-center gap-2 min-w-0">
-              <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+              <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-state-warning-text" />
               <Text className="text-xs font-medium text-text-primary">Enterprise</Text>
             </div>
             <Text variant="secondary" className="shrink-0 text-[10px]">
@@ -206,7 +206,7 @@ export const EcosystemSidebarRenderer: React.FC<DesignLabSidebarRendererProps> =
             data-testid="design-lab-ecosystem-tier-community"
           >
             <div className="flex items-center gap-2 min-w-0">
-              <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" />
+              <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-state-success-text" />
               <Text className="text-xs font-medium text-text-primary">Community</Text>
             </div>
             <Text variant="secondary" className="shrink-0 text-[10px]">
@@ -297,10 +297,10 @@ export const EcosystemSidebarRenderer: React.FC<DesignLabSidebarRendererProps> =
                             <div className="mt-1.5 flex items-center gap-1.5">
                               <span className={`inline-block h-1.5 w-1.5 rounded-full ${
                                 tone === "pro"
-                                  ? "bg-violet-400"
+                                  ? "bg-action-primary"
                                   : tone === "enterprise"
-                                    ? "bg-amber-400"
-                                    : "bg-emerald-400"
+                                    ? "bg-state-warning-text"
+                                    : "bg-state-success-text"
                               }`} />
                               <Text variant="secondary" className="text-[10px]">
                                 {tier}

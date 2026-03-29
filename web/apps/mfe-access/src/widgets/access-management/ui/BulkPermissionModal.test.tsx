@@ -1,18 +1,14 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
+// @vitest-environment jsdom
+import { test, expect } from 'vitest';
 import React from 'react';
-import TestRenderer, { act } from 'react-test-renderer';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import type { AccessLevel } from '../../../features/access-management/model/access.types';
+import BulkPermissionModal from './BulkPermissionModal.ui';
 
 test('BulkPermissionModal level secimini Segmented uzerinden surdurur ve submit eder', async () => {
-  const require = createRequire(import.meta.url);
-  (require.extensions as Record<string, () => void>)['.css'] = () => {};
-  const { default: BulkPermissionModal } = await import('./BulkPermissionModal.ui');
-
   const submissions: Array<{ moduleKey: string; level: AccessLevel }> = [];
 
-  const renderer = TestRenderer.create(
+  render(
     <BulkPermissionModal
       open
       roleCount={3}
@@ -35,35 +31,30 @@ test('BulkPermissionModal level secimini Segmented uzerinden surdurur ve submit 
 
   await act(async () => {});
 
-  let root = renderer.root;
-  let moduleSelect = root.findByType('select');
+  const moduleSelect = screen.getByRole('combobox') as HTMLSelectElement;
 
   await act(async () => {
-    moduleSelect.props.onChange({ target: { value: 'erp.users' }, currentTarget: { value: 'erp.users' } });
+    fireEvent.change(moduleSelect, { target: { value: 'erp.users' } });
   });
 
-  root = renderer.root;
-  moduleSelect = root.findByType('select');
-  assert.equal(moduleSelect.props.value, 'erp.users');
+  expect((screen.getByRole('combobox') as HTMLSelectElement).value).toBe('erp.users');
 
-  let manageButton = root.findByProps({ 'data-testid': 'bulk-permission-level-manage' });
+  const manageButton = screen.getByTestId('bulk-permission-level-manage');
 
   await act(async () => {
-    manageButton.props.onClick();
+    fireEvent.click(manageButton);
   });
 
-  root = renderer.root;
-  manageButton = root.findByProps({ 'data-testid': 'bulk-permission-level-manage' });
-  assert.equal(manageButton.props['aria-checked'], true);
+  expect(screen.getByTestId('bulk-permission-level-manage').getAttribute('aria-checked')).toBe('true');
 
-  const submitButton = root.findByProps({ children: 'access.bulk.okText' });
+  const submitButton = screen.getByText('access.bulk.okText');
 
   await act(async () => {
-    submitButton.props.onClick();
+    fireEvent.click(submitButton);
   });
 
-  assert.equal(submissions.length, 1);
-  assert.deepEqual(submissions[0], {
+  expect(submissions.length).toBe(1);
+  expect(submissions[0]).toEqual({
     moduleKey: 'erp.users',
     level: 'MANAGE',
   });

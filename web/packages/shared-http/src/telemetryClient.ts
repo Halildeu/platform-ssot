@@ -78,7 +78,7 @@ export const sendTelemetry = async (event: TelemetryEvent): Promise<void> => {
   if (shouldSkip) {
     if (isDevEnv) {
       // Dev/local ortamında veya endpoint yokken ağ isteği atma.
-      // eslint-disable-next-line no-console
+       
       console.debug('[telemetry] dev veya disabled, istek atılmıyor', {
         endpoint,
       });
@@ -95,7 +95,7 @@ export const sendTelemetry = async (event: TelemetryEvent): Promise<void> => {
   } catch (error: unknown) {
     // Telemetry başarısız olsa bile UI’yi bloklamayalım; yalnızca debug log bırak.
     if (isDevEnv) {
-      // eslint-disable-next-line no-console
+       
       console.debug('[telemetry] gönderilemedi', error);
     }
   }

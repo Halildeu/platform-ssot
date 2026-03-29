@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import React, { useState, useMemo, useCallback, _useEffect, _useRef } from "react";
 import {
   Accessibility,
   AlertTriangle,
@@ -7,7 +7,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronRight,
-  RefreshCw,
+  _RefreshCw,
   ExternalLink,
   Shield,
 } from "lucide-react";
@@ -42,10 +42,10 @@ export type A11yViolation = {
 };
 
 const IMPACT_META: Record<A11yImpact, { label: string; color: string; icon: React.ReactNode; bg: string }> = {
-  critical: { label: "Critical", color: "text-red-600", icon: <AlertCircle className="h-3.5 w-3.5" />, bg: "bg-red-100" },
-  serious: { label: "Serious", color: "text-orange-600", icon: <AlertTriangle className="h-3.5 w-3.5" />, bg: "bg-orange-100" },
-  moderate: { label: "Moderate", color: "text-amber-600", icon: <Info className="h-3.5 w-3.5" />, bg: "bg-amber-100" },
-  minor: { label: "Minor", color: "text-blue-600", icon: <Info className="h-3.5 w-3.5" />, bg: "bg-blue-100" },
+  critical: { label: "Critical", color: "text-state-danger-text", icon: <AlertCircle className="h-3.5 w-3.5" />, bg: "bg-state-danger-bg" },
+  serious: { label: "Serious", color: "text-state-warning-text", icon: <AlertTriangle className="h-3.5 w-3.5" />, bg: "bg-state-warning-bg" },
+  moderate: { label: "Moderate", color: "text-state-warning-text", icon: <Info className="h-3.5 w-3.5" />, bg: "bg-state-warning-bg" },
+  minor: { label: "Minor", color: "text-action-primary", icon: <Info className="h-3.5 w-3.5" />, bg: "bg-state-info-bg" },
 };
 
 /* ---- Built-in accessibility rules engine ---- */
@@ -238,12 +238,12 @@ export const A11yAuditPanel: React.FC<A11yAuditPanelProps> = ({
   }, []);
 
   const scoreColor = violations.length === 0
-    ? "text-emerald-600"
+    ? "text-state-success-text"
     : impactCounts.critical > 0
-      ? "text-red-600"
+      ? "text-state-danger-text"
       : impactCounts.serious > 0
-        ? "text-orange-600"
-        : "text-amber-600";
+        ? "text-state-warning-text"
+        : "text-state-warning-text";
 
   return (
     <div className="border-t border-border-subtle">
@@ -259,11 +259,11 @@ export const A11yAuditPanel: React.FC<A11yAuditPanelProps> = ({
             Accessibility Audit
           </Text>
           {violations.length === 0 ? (
-            <span className="flex items-center gap-1 rounded-md bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
+            <span className="flex items-center gap-1 rounded-md bg-state-success-bg px-1.5 py-0.5 text-[10px] font-semibold text-state-success-text">
               <CheckCircle2 className="h-3 w-3" /> Pass
             </span>
           ) : (
-            <span className={`flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-semibold ${impactCounts.critical > 0 ? "bg-red-100 text-red-700" : "bg-amber-100 text-amber-700"}`}>
+            <span className={`flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-semibold ${impactCounts.critical > 0 ? "bg-state-danger-bg text-state-danger-text" : "bg-state-warning-bg text-state-warning-text"}`}>
               {violations.length} issue{violations.length !== 1 ? "s" : ""}
             </span>
           )}
@@ -305,7 +305,7 @@ export const A11yAuditPanel: React.FC<A11yAuditPanelProps> = ({
                   className={[
                     "rounded-md px-2 py-1 text-[10px] font-medium transition",
                     filterImpact === impact
-                      ? "bg-action-primary text-white"
+                      ? "bg-action-primary text-text-inverse"
                       : "bg-surface-muted text-text-secondary hover:text-text-primary",
                   ].join(" ")}
                 >
@@ -317,9 +317,9 @@ export const A11yAuditPanel: React.FC<A11yAuditPanelProps> = ({
 
           {/* Violations list */}
           {filteredViolations.length === 0 && violations.length === 0 && (
-            <div className="flex items-center gap-2 rounded-xl bg-emerald-50 p-3">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-              <Text className="text-xs text-emerald-700">
+            <div className="flex items-center gap-2 rounded-xl bg-state-success-bg p-3">
+              <CheckCircle2 className="h-4 w-4 text-state-success-text" />
+              <Text className="text-xs text-state-success-text">
                 No accessibility issues detected. Great job!
               </Text>
             </div>
@@ -354,7 +354,7 @@ export const A11yAuditPanel: React.FC<A11yAuditPanelProps> = ({
                       {violation.help}
                     </Text>
                     {violation.fix && (
-                      <pre className="overflow-x-auto rounded-lg bg-gray-900 px-3 py-2 text-[11px] text-gray-200 font-mono">
+                      <pre className="overflow-x-auto rounded-lg bg-surface-inverse px-3 py-2 text-[11px] text-border-subtle font-mono">
                         {violation.fix}
                       </pre>
                     )}

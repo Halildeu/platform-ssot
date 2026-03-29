@@ -69,7 +69,7 @@ export function DataListBlock<T extends Record<string, any>>({
           style={{
             padding: '0.5rem 0.75rem',
             borderRadius: '0.375rem',
-            border: '1px solid var(--color-border, #e2e8f0)',
+            border: '1px solid var(--color-border))',
             fontSize: '0.875rem',
             flex: '1',
             maxWidth: '320px',
@@ -94,8 +94,8 @@ export function DataListBlock<T extends Record<string, any>>({
                 style={{
                   textAlign: 'left',
                   padding: '0.625rem 0.75rem',
-                  borderBottom: '2px solid var(--color-border, #e2e8f0)',
-                  color: 'var(--color-text-secondary, #64748b)',
+                  borderBottom: '2px solid var(--color-border))',
+                  color: 'var(--color-text-secondary))',
                   fontWeight: 600,
                   fontSize: '0.75rem',
                   textTransform: 'uppercase',
@@ -114,7 +114,7 @@ export function DataListBlock<T extends Record<string, any>>({
               onClick={() => onItemClick?.(item)}
               style={{
                 cursor: onItemClick ? 'pointer' : 'default',
-                borderBottom: '1px solid var(--color-border, #e2e8f0)',
+                borderBottom: '1px solid var(--color-border))',
               }}
             >
               {columns.map((col) => (
@@ -122,7 +122,7 @@ export function DataListBlock<T extends Record<string, any>>({
                   key={String(col.key)}
                   style={{
                     padding: '0.625rem 0.75rem',
-                    color: 'var(--color-text-primary, #0f172a)',
+                    color: 'var(--color-text-primary))',
                   }}
                 >
                   {col.render
@@ -139,7 +139,7 @@ export function DataListBlock<T extends Record<string, any>>({
                 style={{
                   padding: '2rem',
                   textAlign: 'center',
-                  color: 'var(--color-text-secondary, #64748b)',
+                  color: 'var(--color-text-secondary))',
                 }}
               >
                 No items found.
@@ -158,7 +158,7 @@ export function DataListBlock<T extends Record<string, any>>({
             alignItems: 'center',
             marginTop: '0.75rem',
             fontSize: '0.8125rem',
-            color: 'var(--color-text-secondary, #64748b)',
+            color: 'var(--color-text-secondary))',
           }}
         >
           <span>
@@ -172,7 +172,7 @@ export function DataListBlock<T extends Record<string, any>>({
               style={{
                 padding: '0.375rem 0.75rem',
                 borderRadius: '0.25rem',
-                border: '1px solid var(--color-border, #e2e8f0)',
+                border: '1px solid var(--color-border))',
                 background: 'transparent',
                 cursor: page === 0 ? 'not-allowed' : 'pointer',
                 opacity: page === 0 ? 0.5 : 1,
@@ -186,7 +186,7 @@ export function DataListBlock<T extends Record<string, any>>({
               style={{
                 padding: '0.375rem 0.75rem',
                 borderRadius: '0.25rem',
-                border: '1px solid var(--color-border, #e2e8f0)',
+                border: '1px solid var(--color-border))',
                 background: 'transparent',
                 cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer',
                 opacity: page >= totalPages - 1 ? 0.5 : 1,

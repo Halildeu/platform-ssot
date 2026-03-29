@@ -11,17 +11,17 @@ import { useDesignLab } from "../DesignLabProvider";
 /* ---- Token data (imported at build time from design-system) ---- */
 
 const PALETTE = {
-  white: "#ffffff", black: "#000000",
-  gray50: "#f9fafb", gray100: "#f3f4f6", gray200: "#e5e7eb", gray300: "#d1d5db",
-  gray400: "#9ca3af", gray500: "#6b7280", gray600: "#4b5563", gray700: "#374151",
-  gray800: "#1f2937", gray900: "#111827",
-  primary50: "#eff6ff", primary100: "#dbeafe", primary200: "#bfdbfe", primary300: "#93c5fd",
-  primary400: "#60a5fa", primary500: "#3b82f6", primary600: "#2563eb", primary700: "#1d4ed8",
-  primary800: "#1e40af", primary900: "#1e3a8a",
-  green50: "#f0fdf4", green500: "#22c55e", green700: "#15803d",
-  amber50: "#fffbeb", amber500: "#f59e0b", amber700: "#b45309",
-  red50: "#fef2f2", red500: "#ef4444", red700: "#b91c1c",
-  blue50: "#eff6ff", blue500: "#3b82f6", blue700: "#1d4ed8",
+  white: "var(--surface-default)", black: "var(--text-primary)",
+  gray50: "var(--surface-muted)", gray100: "var(--surface-muted)", gray200: "var(--border-subtle)", gray300: "var(--border-default)",
+  gray400: "var(--text-subtle)", gray500: "var(--text-secondary)", gray600: "var(--text-secondary)", gray700: "var(--text-primary)",
+  gray800: "var(--text-primary)", gray900: "var(--text-primary)",
+  primary50: "var(--state-info-bg)", primary100: "var(--state-info-bg)", primary200: "var(--state-info-bg)", primary300: "var(--action-primary)",
+  primary400: "var(--action-primary)", primary500: "var(--action-primary)", primary600: "var(--action-primary)", primary700: "var(--action-primary)",
+  primary800: "var(--action-primary)", primary900: "var(--action-primary)",
+  green50: "var(--state-success-bg)", green500: "var(--state-success-text)", green700: "var(--state-success-text)",
+  amber50: "var(--state-warning-bg)", amber500: "var(--state-warning-text)", amber700: "var(--state-warning-text)",
+  red50: "var(--state-danger-bg)", red500: "var(--state-danger-text)", red700: "var(--state-danger-text)",
+  blue50: "var(--state-info-bg)", blue500: "var(--action-primary)", blue700: "var(--action-primary)",
 } as const;
 
 const SEMANTIC_TOKENS: Record<string, { token: string; cssVar: string; category: string }> = {
@@ -105,12 +105,12 @@ const TOKEN_GROUP_ICONS: Record<string, React.ReactNode> = {
 };
 
 const TOKEN_GROUP_ACCENT: Record<string, string> = {
-  colors: "bg-rose-500/10 text-rose-600",
-  typography: "bg-blue-500/10 text-blue-600",
-  spacing: "bg-emerald-500/10 text-emerald-600",
-  radius: "bg-violet-500/10 text-violet-600",
-  motion: "bg-amber-500/10 text-amber-600",
-  zindex: "bg-indigo-500/10 text-indigo-600",
+  colors: "bg-state-danger-text/10 text-state-danger-text",
+  typography: "bg-action-primary/10 text-action-primary",
+  spacing: "bg-state-success-text/10 text-state-success-text",
+  radius: "bg-action-primary/10 text-action-primary",
+  motion: "bg-state-warning-text/10 text-state-warning-text",
+  zindex: "bg-action-primary/10 text-action-primary",
 };
 
 function CopyButton({ value }: { value: string }) {
@@ -127,7 +127,7 @@ function CopyButton({ value }: { value: string }) {
       className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium text-text-secondary transition hover:bg-surface-muted hover:text-text-primary"
       title={`Copy: ${value}`}
     >
-      {copied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+      {copied ? <Check className="h-3 w-3 text-state-success-text" /> : <Copy className="h-3 w-3" />}
     </button>
   );
 }
@@ -409,7 +409,7 @@ function SpacingContent() {
                 </div>
                 <div className="flex-1">
                   <div
-                    className="h-4 rounded-md bg-blue-500/20 transition-all duration-300"
+                    className="h-4 rounded-md bg-action-primary/20 transition-all duration-300"
                     style={{ width: `${Math.min(px, 200)}px` }}
                   />
                 </div>
@@ -441,7 +441,7 @@ function RadiusContent() {
             <div key={name} className="rounded-xl border border-border-subtle bg-surface-default p-5 text-center">
               <div className="mx-auto flex h-20 w-20 items-center justify-center">
                 <div
-                  className="h-16 w-16 border-2 border-blue-500 bg-blue-500/10 transition-all duration-300"
+                  className="h-16 w-16 border-2 border-action-primary bg-action-primary/10 transition-all duration-300"
                   style={{ borderRadius: value }}
                 />
               </div>
@@ -484,7 +484,7 @@ function MotionContent() {
                 <div className="relative flex-1 overflow-hidden rounded-lg bg-surface-canvas">
                   <div className="h-3 w-full" />
                   <div
-                    className="absolute inset-y-0 left-0 rounded-lg bg-amber-500/30"
+                    className="absolute inset-y-0 left-0 rounded-lg bg-state-warning-text/30"
                     style={{ width: `${Math.min((ms / 500) * 100, 100)}%`, transition: `width ${value}` }}
                   />
                 </div>
@@ -512,7 +512,7 @@ function MotionContent() {
             >
               <div className="relative h-16 overflow-hidden rounded-lg bg-surface-canvas">
                 <div
-                  className="absolute left-2 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-amber-500 shadow-md"
+                  className="absolute left-2 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-state-warning-text shadow-md"
                   style={{
                     transform: playing === name ? "translateX(calc(100% + 60px)) translateY(-50%)" : "translateY(-50%)",
                     transition: `transform 600ms ${value}`,
@@ -551,7 +551,7 @@ function ZIndexContent() {
 
         {/* Visual stack */}
         <div className="flex flex-col relative mx-auto max-w-lg gap-2">
-          {[...entries].reverse().map(([name, value], i) => {
+          {[...entries].reverse().map(([name, value], _i) => {
             const width = 40 + ((value / maxZ) * 55);
             return (
               <div key={name} className="flex items-center gap-3">
@@ -559,11 +559,11 @@ function ZIndexContent() {
                   <Text className="text-xs font-medium text-text-secondary">{name}</Text>
                 </div>
                 <div
-                  className="flex h-8 items-center justify-end rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-3 transition-all duration-300 hover:bg-indigo-500/20"
+                  className="flex h-8 items-center justify-end rounded-lg border border-action-primary/20 bg-action-primary/10 px-3 transition-all duration-300 hover:bg-action-primary/20"
                   style={{ width: `${width}%` }}
                 >
                   <div className="flex items-center gap-1">
-                    <Text className="font-mono text-[10px] font-semibold tabular-nums text-indigo-600">{value}</Text>
+                    <Text className="font-mono text-[10px] font-semibold tabular-nums text-action-primary">{value}</Text>
                     <CopyButton value={String(value)} />
                   </div>
                 </div>

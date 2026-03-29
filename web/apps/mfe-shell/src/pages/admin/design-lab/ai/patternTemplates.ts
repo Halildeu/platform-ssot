@@ -75,7 +75,7 @@ export const PATTERN_TEMPLATES: PatternTemplate[] = [
         ${name === "Input" ? 'variant={error ? "error" : "default"}' : ""}
       />
       {error && (
-        <Text variant="error" className="mt-1 text-xs text-red-500">
+        <Text variant="error" className="mt-1 text-xs text-state-danger-text">
           {error}
         </Text>
       )}

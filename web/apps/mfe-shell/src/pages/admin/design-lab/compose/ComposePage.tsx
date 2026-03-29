@@ -4,7 +4,7 @@ import {
   Trash2,
   Copy,
   Check,
-  Download,
+  _Download,
   Code2,
   Grid3X3,
   AlignHorizontalSpaceAround,
@@ -13,7 +13,7 @@ import {
   Save,
   FolderOpen,
   X,
-  Move,
+  _Move,
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { PlaygroundPreview } from "../playground/PlaygroundPreview";
@@ -223,21 +223,21 @@ export default function ComposePage() {
           <button
             type="button"
             onClick={() => setLayout({ ...layout, type: "flex", direction: "row" })}
-            className={`rounded-md p-1.5 transition ${layout.type === "flex" && layout.direction === "row" ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary"}`}
+            className={`rounded-md p-1.5 transition ${layout.type === "flex" && layout.direction === "row" ? "bg-action-primary text-text-inverse" : "bg-surface-muted text-text-secondary"}`}
           >
             <AlignHorizontalSpaceAround className="h-3.5 w-3.5" />
           </button>
           <button
             type="button"
             onClick={() => setLayout({ ...layout, type: "flex", direction: "column" })}
-            className={`rounded-md p-1.5 transition ${layout.type === "flex" && layout.direction === "column" ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary"}`}
+            className={`rounded-md p-1.5 transition ${layout.type === "flex" && layout.direction === "column" ? "bg-action-primary text-text-inverse" : "bg-surface-muted text-text-secondary"}`}
           >
             <AlignVerticalSpaceAround className="h-3.5 w-3.5" />
           </button>
           <button
             type="button"
             onClick={() => setLayout({ ...layout, type: "grid", columns: 2 })}
-            className={`rounded-md p-1.5 transition ${layout.type === "grid" ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary"}`}
+            className={`rounded-md p-1.5 transition ${layout.type === "grid" ? "bg-action-primary text-text-inverse" : "bg-surface-muted text-text-secondary"}`}
           >
             <Grid3X3 className="h-3.5 w-3.5" />
           </button>
@@ -250,7 +250,7 @@ export default function ComposePage() {
                   key={c}
                   type="button"
                   onClick={() => setLayout({ ...layout, columns: c })}
-                  className={`rounded-xs px-1.5 py-0.5 text-[10px] font-medium ${layout.columns === c ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary"}`}
+                  className={`rounded-xs px-1.5 py-0.5 text-[10px] font-medium ${layout.columns === c ? "bg-action-primary text-text-inverse" : "bg-surface-muted text-text-secondary"}`}
                 >
                   {c}
                 </button>
@@ -265,7 +265,7 @@ export default function ComposePage() {
                 key={g}
                 type="button"
                 onClick={() => setLayout({ ...layout, gap: g })}
-                className={`rounded-xs px-1.5 py-0.5 text-[10px] font-medium ${layout.gap === g ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary"}`}
+                className={`rounded-xs px-1.5 py-0.5 text-[10px] font-medium ${layout.gap === g ? "bg-action-primary text-text-inverse" : "bg-surface-muted text-text-secondary"}`}
               >
                 {g}
               </button>
@@ -276,7 +276,7 @@ export default function ComposePage() {
             <button
               type="button"
               onClick={() => setShowCode(!showCode)}
-              className={`flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition ${showCode ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary"}`}
+              className={`flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition ${showCode ? "bg-action-primary text-text-inverse" : "bg-surface-muted text-text-secondary"}`}
             >
               <Code2 className="h-3 w-3" /> Code
             </button>
@@ -285,7 +285,7 @@ export default function ComposePage() {
               onClick={handleCopy}
               className="flex items-center gap-1 rounded-md bg-surface-muted px-2 py-1 text-[10px] font-medium text-text-secondary hover:text-text-primary transition"
             >
-              {copied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+              {copied ? <Check className="h-3 w-3 text-state-success-text" /> : <Copy className="h-3 w-3" />}
               {copied ? "Copied" : "Export"}
             </button>
           </div>
@@ -294,7 +294,7 @@ export default function ComposePage() {
         {/* Canvas area */}
         <div className="flex-1 overflow-auto rounded-2xl border border-border-subtle">
           {showCode ? (
-            <pre className="h-full overflow-auto bg-gray-900 p-4 text-xs leading-relaxed text-gray-200 font-mono">
+            <pre className="h-full overflow-auto bg-surface-inverse p-4 text-xs leading-relaxed text-border-subtle font-mono">
               {exportedCode}
             </pre>
           ) : (
@@ -373,7 +373,7 @@ export default function ComposePage() {
               <button
                 type="button"
                 onClick={() => removeNode(selectedNode.id)}
-                className="ml-auto rounded-xs p-1 text-red-400 hover:text-red-500 hover:bg-red-50 transition"
+                className="ml-auto rounded-xs p-1 text-state-danger-text hover:text-state-danger-text hover:bg-state-danger-bg transition"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -439,7 +439,7 @@ export default function ComposePage() {
       {/* Library modal */}
       {showLibrary && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setShowLibrary(false)} />
+          <div className="absolute inset-0 bg-surface-inverse/40" onClick={() => setShowLibrary(false)} />
           <div className="relative w-full max-w-md rounded-2xl border border-border-subtle bg-surface-default shadow-2xl">
             <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
               <Text as="h2" className="text-sm font-semibold text-text-primary">Saved Compositions</Text>
@@ -470,7 +470,7 @@ export default function ComposePage() {
                       <button
                         type="button"
                         onClick={() => handleDeleteComposition(comp.id)}
-                        className="rounded-md p-1 text-text-tertiary hover:text-red-500 transition"
+                        className="rounded-md p-1 text-text-tertiary hover:text-state-danger-text transition"
                       >
                         <Trash2 className="h-3 w-3" />
                       </button>

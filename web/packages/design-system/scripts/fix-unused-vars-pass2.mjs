@@ -55,7 +55,7 @@ console.log(`Found issues in ${fileIssues.size} files`);
 let totalFixed = 0;
 
 for (const [filePath, issues] of fileIssues) {
-  let content = readFileSync(filePath, 'utf8');
+  const content = readFileSync(filePath, 'utf8');
   const original = content;
   const lines = content.split('\n');
   const linesToRemove = new Set();

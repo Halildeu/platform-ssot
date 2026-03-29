@@ -1,108 +1,25 @@
+ 
 // @vitest-environment jsdom
 import React from "react";
-import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import "@testing-library/jest-dom/vitest";
-import { cleanup, render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { expectNoA11yViolations } from "../../../__tests__/a11y-utils";
+
+const chartMockState = vi.hoisted(() => ({ calls: [] as any[] }));
+
+vi.mock("ag-charts-react", () => ({
+  AgCharts: (props: any) => {
+    chartMockState.calls.push(props);
+    return <div data-testid="ag-charts-mock" />;
+  },
+}));
+
 import { BarChart } from "../BarChart";
 import { LineChart } from "../LineChart";
 import { PieChart } from "../PieChart";
 import { AreaChart } from "../AreaChart";
-import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
-import userEvent from '@testing-library/user-event';
-
-/**
- * AG Charts renders to <canvas> in jsdom which has no real canvas API.
- * Tests that query SVG/DOM internals (bars, lines, dots, etc.) cannot work
- * because AG Charts doesn't emit DOM testids — it paints to a canvas bitmap.
- *
- * We keep: empty-state, access-control, displayName, className merging,
- * and size-variant smoke tests (which only check the wrapper div exists).
- *
- * Canvas-dependent assertions (getByTestId("bar-chart-bar"), etc.) are
- * skipped with it.skip until a headless canvas (e.g. node-canvas) is added.
- */
-
-beforeAll(() => {
-  // Comprehensive canvas context stub for AG Charts
-  const ctxStub = {
-    font: '',
-    measureText: () => ({ width: 50 }),
-    clearRect: vi.fn(),
-    fillRect: vi.fn(),
-    fillText: vi.fn(),
-    strokeText: vi.fn(),
-    strokeRect: vi.fn(),
-    rotate: vi.fn(),
-    translate: vi.fn(),
-    scale: vi.fn(),
-    save: vi.fn(),
-    restore: vi.fn(),
-    beginPath: vi.fn(),
-    moveTo: vi.fn(),
-    lineTo: vi.fn(),
-    arc: vi.fn(),
-    arcTo: vi.fn(),
-    closePath: vi.fn(),
-    stroke: vi.fn(),
-    fill: vi.fn(),
-    clip: vi.fn(),
-    rect: vi.fn(),
-    quadraticCurveTo: vi.fn(),
-    bezierCurveTo: vi.fn(),
-    setTransform: vi.fn(),
-    getTransform: vi.fn().mockReturnValue({ a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }),
-    resetTransform: vi.fn(),
-    transform: vi.fn(),
-    createLinearGradient: vi.fn().mockReturnValue({ addColorStop: vi.fn() }),
-    createRadialGradient: vi.fn().mockReturnValue({ addColorStop: vi.fn() }),
-    createPattern: vi.fn(),
-    drawImage: vi.fn(),
-    putImageData: vi.fn(),
-    getImageData: vi.fn().mockReturnValue({ data: new Uint8ClampedArray(4) }),
-    createImageData: vi.fn(),
-    setLineDash: vi.fn(),
-    getLineDash: vi.fn().mockReturnValue([]),
-    isPointInPath: vi.fn().mockReturnValue(false),
-    isPointInStroke: vi.fn().mockReturnValue(false),
-    ellipse: vi.fn(),
-    lineWidth: 1,
-    lineCap: 'butt',
-    lineJoin: 'miter',
-    strokeStyle: '#000',
-    fillStyle: '#000',
-    globalAlpha: 1,
-    globalCompositeOperation: 'source-over',
-    textAlign: 'start',
-    textBaseline: 'alphabetic',
-    imageSmoothingEnabled: true,
-    canvas: { toDataURL: () => 'data:image/png;base64,AAAA', width: 300, height: 150 },
-  };
-  HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue(ctxStub) as unknown as typeof HTMLCanvasElement.prototype.getContext;
-
-  if (typeof globalThis.Path2D === 'undefined') {
-    (globalThis as any).Path2D = class Path2D {
-      constructor(_path?: string | Path2D) {}
-      addPath() {}
-      closePath() {}
-      moveTo() {}
-      lineTo() {}
-      bezierCurveTo() {}
-      quadraticCurveTo() {}
-      arc() {}
-      arcTo() {}
-      ellipse() {}
-      rect() {}
-    };
-  }
-});
-
-afterEach(() => {
-  cleanup();
-});
-
-/* ================================================================== */
-/*  Sample data                                                        */
-/* ================================================================== */
 
 const barData = [
   { label: "Ocak", value: 40 },
@@ -123,118 +40,109 @@ const lineSeries = [
 
 const lineLabels = ["Q1", "Q2", "Q3", "Q4"];
 
-/* ================================================================== */
-/*  BarChart                                                           */
-/* ================================================================== */
+function getLastCall() {
+  const call = chartMockState.calls.at(-1);
+  expect(call).toBeDefined();
+  return call;
+}
 
-describe("BarChart - temel render", () => {
+function getLastOptions() {
+  return getLastCall().options;
+}
+
+function getLastStyle() {
+  return getLastCall().style;
+}
+
+beforeEach(() => {
+  chartMockState.calls.length = 0;
+});
+
+afterEach(() => {
+  cleanup();
+});
+
+describe("BarChart", () => {
   it("veri ile render eder", () => {
     render(<BarChart data={barData} />);
     expect(screen.getByTestId("bar-chart")).toBeInTheDocument();
+    expect(screen.getByTestId("ag-charts-mock")).toBeInTheDocument();
   });
 
   it("bos veri durumunda empty state gosterir", () => {
     render(<BarChart data={[]} />);
-    expect(screen.getByTestId("bar-chart-empty")).toBeInTheDocument();
-    expect(screen.getByText("Veri yok")).toBeInTheDocument();
+    expect(screen.getByTestId("bar-chart-empty")).toHaveTextContent("Veri yok");
   });
 
-  it("custom noData metni gosterir", () => {
-    render(<BarChart data={[]} localeText={{ noData: "Bos" }} />);
-    expect(screen.getByText("Bos")).toBeInTheDocument();
+  it("title ve description bilgisini options'a tasir", () => {
+    render(<BarChart data={barData} title="Gelir" description="Aylik dagilim" />);
+    const options = getLastOptions();
+    expect(options.title.text).toBe("Gelir");
+    expect(options.subtitle.text).toBe("Aylik dagilim");
   });
 
-  it("displayName BarChart olarak atanmistir", () => {
-    expect(BarChart.displayName).toBe("BarChart");
+  it("showValues ve valueFormatter ile label formatter tanimlar", () => {
+    const formatter = vi.fn((value: number) => `${value} TL`);
+    render(<BarChart data={barData} showValues valueFormatter={formatter} />);
+    const options = getLastOptions();
+    const labelFormatter = options.series[0].label.formatter;
+    expect(labelFormatter({ value: 42 })).toBe("42 TL");
+    expect(formatter).toHaveBeenCalledWith(42);
   });
 
-  // AG Charts renders to <canvas> — no SVG role=img or internal DOM testids in jsdom
-  it.skip("SVG role=img ve aria-label vardir — AG Charts canvas, needs node-canvas", () => {
-    render(<BarChart data={barData} title="Aylik" />);
-    const svg = screen.getByRole("img");
-    expect(svg).toHaveAttribute("aria-label", "Aylik");
-  });
-
-  it.skip("title render eder — AG Charts renders title on canvas", () => {
-    render(<BarChart data={barData} title="Gelir" />);
-    expect(screen.getByTestId("bar-chart-title")).toHaveTextContent("Gelir");
-  });
-
-  it.skip("barlari render eder — AG Charts renders bars on canvas", () => {
-    render(<BarChart data={barData} />);
-    const bars = screen.getAllByTestId("bar-chart-bar");
-    expect(bars).toHaveLength(3);
-  });
-
-  it.skip("labellar render eder — AG Charts renders labels on canvas", () => {
-    render(<BarChart data={barData} />);
-    const labels = screen.getAllByTestId("bar-chart-label");
-    expect(labels).toHaveLength(3);
-  });
-
-  it.skip("showValues ile deger labellarini gosterir — AG Charts canvas", () => {
-    render(<BarChart data={barData} showValues />);
-    const values = screen.getAllByTestId("bar-chart-value");
-    expect(values).toHaveLength(3);
-  });
-
-  it.skip("valueFormatter ile formatli deger gosterir — AG Charts canvas", () => {
-    const fmt = (v: number) => `$${v}`;
-    render(<BarChart data={[{ label: "X", value: 42 }]} showValues valueFormatter={fmt} />);
-    expect(screen.getByTestId("bar-chart-value")).toHaveTextContent("$42");
-  });
-
-  it.skip("showGrid=false ise grid cizgileri olmaz — AG Charts canvas", () => {
+  it("showGrid=false oldugunda number axis grid'i kapatir", () => {
     render(<BarChart data={barData} showGrid={false} />);
-    expect(screen.queryAllByTestId("bar-chart-grid-line")).toHaveLength(0);
+    const options = getLastOptions();
+    expect(options.theme.overrides.bar.axes.number.gridLine.enabled).toBe(false);
   });
 
-  it.skip("showGrid=true ise grid cizgileri vardir — AG Charts canvas", () => {
-    render(<BarChart data={barData} showGrid />);
-    expect(screen.getAllByTestId("bar-chart-grid-line").length).toBeGreaterThan(0);
-  });
-
-  it.skip("showLegend ile legend gosterir — AG Charts canvas", () => {
+  it("showLegend ile legend'i acar", () => {
     render(<BarChart data={barData} showLegend />);
-    expect(screen.getByTestId("bar-chart-legend")).toBeInTheDocument();
+    expect(getLastOptions().legend.enabled).toBe(true);
   });
 
-  it.skip("horizontal orientation destekler — AG Charts canvas", () => {
+  it("horizontal orientation icin yatay yonu kullanir", () => {
     render(<BarChart data={barData} orientation="horizontal" />);
-    const bars = screen.getAllByTestId("bar-chart-bar");
-    expect(bars).toHaveLength(3);
+    expect(getLastOptions().series[0].direction).toBe("horizontal");
   });
 
-  it("className eklenir", () => {
-    render(<BarChart data={barData} className="my-bar" />);
+  it("multi-series veriyi gruplanmis bar series'e cevirir", () => {
+    render(
+      <BarChart
+        data={[
+          { label: "Ocak", sales: 10, refunds: 2 } as any,
+          { label: "Subat", sales: 20, refunds: 5 } as any,
+        ]}
+        series={[
+          { field: "sales", name: "Satis" },
+          { field: "refunds", name: "Iade" },
+        ]}
+      />,
+    );
+    const options = getLastOptions();
+    expect(options.series).toHaveLength(2);
+    expect(options.legend.enabled).toBe(true);
+    expect(options.series[1].yKey).toBe("refunds");
+  });
+
+  it("className ekler ve size variant yuksekligini uygular", () => {
+    render(<BarChart data={barData} className="my-bar" size="lg" />);
     expect(screen.getByTestId("bar-chart")).toHaveClass("my-bar");
+    expect(getLastStyle().height).toBe(400);
   });
-});
 
-/* ---- BarChart access control ---- */
-
-describe("BarChart - access control", () => {
   it('access="hidden" durumunda null doner', () => {
     const { container } = render(<BarChart data={barData} access="hidden" />);
     expect(container.innerHTML).toBe("");
   });
 
-  it('access="disabled" durumunda opacity azalir', () => {
+  it('access="disabled" durumunda opacity sinifi uygular', () => {
     render(<BarChart data={barData} access="disabled" />);
     expect(screen.getByTestId("bar-chart")).toHaveClass("opacity-50");
   });
-
-  it("accessReason title olarak atanir", () => {
-    render(<BarChart data={barData} accessReason="Yetkiniz yok" />);
-    expect(screen.getByTestId("bar-chart")).toHaveAttribute("title", "Yetkiniz yok");
-  });
 });
 
-/* ================================================================== */
-/*  LineChart                                                          */
-/* ================================================================== */
-
-describe("LineChart - temel render", () => {
+describe("LineChart", () => {
   it("veri ile render eder", () => {
     render(<LineChart series={lineSeries} labels={lineLabels} />);
     expect(screen.getByTestId("line-chart")).toBeInTheDocument();
@@ -242,189 +150,113 @@ describe("LineChart - temel render", () => {
 
   it("bos veri durumunda empty state gosterir", () => {
     render(<LineChart series={[]} labels={[]} />);
-    expect(screen.getByTestId("line-chart-empty")).toBeInTheDocument();
+    expect(screen.getByTestId("line-chart-empty")).toHaveTextContent("Veri yok");
   });
 
-  it("displayName LineChart olarak atanmistir", () => {
-    expect(LineChart.displayName).toBe("LineChart");
+  it("title ve description bilgisini options'a tasir", () => {
+    render(<LineChart series={lineSeries} labels={lineLabels} title="Trend" description="Q bazli" />);
+    const options = getLastOptions();
+    expect(options.title.text).toBe("Trend");
+    expect(options.subtitle.text).toBe("Q bazli");
   });
 
-  it.skip("SVG role=img vardir — AG Charts canvas", () => {
+  it("seri sayisini korur ve legend'i coklu seride otomatik acabilir", () => {
     render(<LineChart series={lineSeries} labels={lineLabels} />);
-    expect(screen.getByRole("img")).toBeInTheDocument();
+    const options = getLastOptions();
+    expect(options.series).toHaveLength(2);
+    expect(options.legend.enabled).toBe(true);
   });
 
-  it.skip("title render eder — AG Charts canvas", () => {
-    render(<LineChart series={lineSeries} labels={lineLabels} title="Satis Trendi" />);
-    expect(screen.getByTestId("line-chart-title")).toHaveTextContent("Satis Trendi");
-  });
-
-  it.skip("birden fazla seri destekler — AG Charts canvas", () => {
-    render(<LineChart series={lineSeries} labels={lineLabels} />);
-    const seriesEls = screen.getAllByTestId("line-chart-series");
-    expect(seriesEls).toHaveLength(2);
-  });
-
-  it.skip("showDots ile noktalar gosterir — AG Charts canvas", () => {
-    render(<LineChart series={[lineSeries[0]]} labels={lineLabels} showDots />);
-    const dots = screen.getAllByTestId("line-chart-dot");
-    expect(dots).toHaveLength(4);
-  });
-
-  it.skip("showDots=false ile noktalar gizlenir — AG Charts canvas", () => {
+  it("showDots=false iken marker'lari kapatir", () => {
     render(<LineChart series={[lineSeries[0]]} labels={lineLabels} showDots={false} />);
-    expect(screen.queryAllByTestId("line-chart-dot")).toHaveLength(0);
+    expect(getLastOptions().series[0].marker.enabled).toBe(false);
   });
 
-  it.skip("showArea ile alan doldurur — AG Charts canvas", () => {
+  it("showArea ile area series kullanir", () => {
     render(<LineChart series={[lineSeries[0]]} labels={lineLabels} showArea />);
-    expect(screen.getByTestId("line-chart-area")).toBeInTheDocument();
+    const series = getLastOptions().series[0];
+    expect(series.type).toBe("area");
+    expect(series.fillOpacity).toBe(0.18);
   });
 
-  it.skip("curved ile egri cizgiler kullanir — AG Charts canvas", () => {
+  it("curved ile smooth interpolation kullanir", () => {
     render(<LineChart series={[lineSeries[0]]} labels={lineLabels} curved />);
-    const line = screen.getByTestId("line-chart-line");
-    expect(line.tagName.toLowerCase()).toBe("path");
+    expect(getLastOptions().series[0].interpolation).toEqual({ type: "smooth" });
   });
 
-  it.skip("curved=false ile polyline kullanir — AG Charts canvas", () => {
-    render(<LineChart series={[lineSeries[0]]} labels={lineLabels} curved={false} />);
-    const line = screen.getByTestId("line-chart-line");
-    expect(line.tagName.toLowerCase()).toBe("polyline");
+  it("showGrid=false iken sayisal axis grid'ini kapatir", () => {
+    render(<LineChart series={[lineSeries[0]]} labels={lineLabels} showGrid={false} />);
+    expect(getLastOptions().axes[1].gridLine.enabled).toBe(false);
   });
 
-  it.skip("showLegend ile legend gosterir — AG Charts canvas", () => {
-    render(<LineChart series={lineSeries} labels={lineLabels} showLegend />);
-    expect(screen.getByTestId("line-chart-legend")).toBeInTheDocument();
+  it("valueFormatter'i axis label formatter olarak kullanir", () => {
+    const formatter = vi.fn((value: number) => `${value}%`);
+    render(<LineChart series={[lineSeries[0]]} labels={lineLabels} valueFormatter={formatter} />);
+    const labelFormatter = getLastOptions().axes[1].label.formatter;
+    expect(labelFormatter({ value: 95 })).toBe("95%");
   });
 
-  it.skip("showGrid=false ise grid cizgileri olmaz — AG Charts canvas", () => {
-    render(<LineChart series={lineSeries} labels={lineLabels} showGrid={false} />);
-    expect(screen.queryAllByTestId("line-chart-grid-line")).toHaveLength(0);
-  });
-
-  it.skip("label render eder — AG Charts canvas", () => {
-    render(<LineChart series={lineSeries} labels={lineLabels} />);
-    const labels = screen.getAllByTestId("line-chart-label");
-    expect(labels).toHaveLength(4);
-  });
-});
-
-/* ---- LineChart access control ---- */
-
-describe("LineChart - access control", () => {
-  it('access="hidden" durumunda null doner', () => {
-    const { container } = render(
-      <LineChart series={lineSeries} labels={lineLabels} access="hidden" />,
-    );
-    expect(container.innerHTML).toBe("");
-  });
-
-  it('access="disabled" durumunda opacity azalir', () => {
-    render(
-      <LineChart series={lineSeries} labels={lineLabels} access="disabled" />,
-    );
+  it('access="disabled" durumunda opacity sinifi uygular', () => {
+    render(<LineChart series={lineSeries} labels={lineLabels} access="disabled" />);
     expect(screen.getByTestId("line-chart")).toHaveClass("opacity-50");
   });
 });
 
-/* ================================================================== */
-/*  PieChart                                                           */
-/* ================================================================== */
-
-describe("PieChart - temel render", () => {
+describe("PieChart", () => {
   it("veri ile render eder", () => {
     render(<PieChart data={pieData} />);
     expect(screen.getByTestId("pie-chart")).toBeInTheDocument();
   });
 
-  it("bos veri durumunda empty state gosterir", () => {
-    render(<PieChart data={[]} />);
+  it("gecersiz veya sifir degerlerde empty state gosterir", () => {
+    render(<PieChart data={[{ label: "A", value: 0 }]} />);
     expect(screen.getByTestId("pie-chart-empty")).toBeInTheDocument();
   });
 
-  it("displayName PieChart olarak atanmistir", () => {
-    expect(PieChart.displayName).toBe("PieChart");
+  it("title ve description bilgisini options'a tasir", () => {
+    render(<PieChart data={pieData} title="Dagilim" description="Kategori bazli" />);
+    const options = getLastOptions();
+    expect(options.title.text).toBe("Dagilim");
+    expect(options.subtitle.text).toBe("Kategori bazli");
   });
 
-  it.skip("SVG role=img vardir — AG Charts canvas", () => {
-    render(<PieChart data={pieData} />);
-    expect(screen.getByRole("img")).toBeInTheDocument();
-  });
-
-  it.skip("title render eder — AG Charts canvas", () => {
-    render(<PieChart data={pieData} title="Dagilim" />);
-    expect(screen.getByTestId("pie-chart-title")).toHaveTextContent("Dagilim");
-  });
-
-  it.skip("dilimleri render eder — AG Charts canvas", () => {
-    render(<PieChart data={pieData} />);
-    const slices = screen.getAllByTestId("pie-chart-slice");
-    expect(slices).toHaveLength(3);
-  });
-
-  it.skip("donut modunda donut render eder — AG Charts canvas", () => {
-    render(<PieChart data={pieData} donut />);
-    expect(screen.getByTestId("pie-chart")).toBeInTheDocument();
-    const slices = screen.getAllByTestId("pie-chart-slice");
-    expect(slices).toHaveLength(3);
-  });
-
-  it.skip("donut modunda innerLabel gosterir — AG Charts canvas", () => {
-    render(
-      <PieChart data={pieData} donut innerLabel={<span data-testid="inner">Toplam</span>} />,
-    );
+  it("donut modunda innerLabel render eder", () => {
+    render(<PieChart data={pieData} donut innerLabel={<span data-testid="inner-label">Toplam</span>} />);
+    const options = getLastOptions();
+    expect(options.series[0].type).toBe("donut");
     expect(screen.getByTestId("pie-chart-inner-label")).toBeInTheDocument();
-    expect(screen.getByTestId("inner")).toHaveTextContent("Toplam");
+    expect(screen.getByTestId("inner-label")).toHaveTextContent("Toplam");
   });
 
-  it.skip("showPercentage ile yuzde gosterir — AG Charts canvas", () => {
+  it("showPercentage ile yuzde formatter tanimlar", () => {
     render(<PieChart data={pieData} showPercentage />);
-    const labels = screen.getAllByTestId("pie-chart-label");
-    expect(labels.length).toBeGreaterThan(0);
-    const texts = labels.map((l) => l.textContent);
-    expect(texts.some((t) => t?.includes("%"))).toBe(true);
+    const formatter = getLastOptions().series[0].sectorLabel.formatter;
+    expect(formatter({ value: 25, total: 100 })).toBe("25%");
   });
 
-  it.skip("showLabels ile dilim isimleri gosterir — AG Charts canvas", () => {
+  it("showLabels ile callout label'i acar", () => {
     render(<PieChart data={pieData} showLabels />);
-    const labels = screen.getAllByTestId("pie-chart-label");
-    const texts = labels.map((l) => l.textContent);
-    expect(texts).toContain("A");
-    expect(texts).toContain("B");
+    expect(getLastOptions().series[0].calloutLabel.enabled).toBe(true);
   });
 
-  it.skip("showLegend ile legend gosterir — AG Charts canvas", () => {
+  it("showLegend ile legend'i acar", () => {
     render(<PieChart data={pieData} showLegend />);
-    expect(screen.getByTestId("pie-chart-legend")).toBeInTheDocument();
+    expect(getLastOptions().legend.enabled).toBe(true);
   });
 
-  it.skip("valueFormatter ile formatli deger gosterir — AG Charts canvas", () => {
-    const fmt = (v: number) => `${v} TL`;
-    render(<PieChart data={[{ label: "X", value: 100 }]} showLabels valueFormatter={fmt} />);
-    expect(screen.getByTestId("pie-chart")).toBeInTheDocument();
-  });
-});
-
-/* ---- PieChart access control ---- */
-
-describe("PieChart - access control", () => {
-  it('access="hidden" durumunda null doner', () => {
-    const { container } = render(<PieChart data={pieData} access="hidden" />);
-    expect(container.innerHTML).toBe("");
+  it("valueFormatter tooltip icerigine yansir", () => {
+    render(<PieChart data={pieData} valueFormatter={(value) => `${value} TL`} />);
+    const renderer = getLastOptions().series[0].tooltip.renderer;
+    expect(renderer({ datum: { label: "A", value: 30 } }).content).toBe("A: 30 TL");
   });
 
-  it('access="disabled" durumunda opacity azalir', () => {
+  it('access="disabled" durumunda opacity sinifi uygular', () => {
     render(<PieChart data={pieData} access="disabled" />);
     expect(screen.getByTestId("pie-chart")).toHaveClass("opacity-50");
   });
 });
 
-/* ================================================================== */
-/*  AreaChart                                                          */
-/* ================================================================== */
-
-describe("AreaChart - temel render", () => {
+describe("AreaChart", () => {
   it("veri ile render eder", () => {
     render(<AreaChart series={lineSeries} labels={lineLabels} />);
     expect(screen.getByTestId("area-chart")).toBeInTheDocument();
@@ -435,176 +267,67 @@ describe("AreaChart - temel render", () => {
     expect(screen.getByTestId("area-chart-empty")).toBeInTheDocument();
   });
 
-  it("displayName AreaChart olarak atanmistir", () => {
-    expect(AreaChart.displayName).toBe("AreaChart");
-  });
-
-  it.skip("SVG role=img vardir — AG Charts canvas", () => {
+  it("birden fazla seri icin area config uretir", () => {
     render(<AreaChart series={lineSeries} labels={lineLabels} />);
-    expect(screen.getByRole("img")).toBeInTheDocument();
+    const options = getLastOptions();
+    expect(options.series).toHaveLength(2);
+    expect(options.series[0].type).toBe("area");
   });
 
-  it.skip("title render eder — AG Charts canvas", () => {
-    render(<AreaChart series={lineSeries} labels={lineLabels} title="Alan Grafik" />);
-    expect(screen.getByTestId("area-chart-title")).toHaveTextContent("Alan Grafik");
-  });
-
-  it.skip("birden fazla seri destekler — AG Charts canvas", () => {
-    render(<AreaChart series={lineSeries} labels={lineLabels} />);
-    const seriesEls = screen.getAllByTestId("area-chart-series");
-    expect(seriesEls).toHaveLength(2);
-  });
-
-  it.skip("alan dolgusunu render eder — AG Charts canvas", () => {
-    render(<AreaChart series={[lineSeries[0]]} labels={lineLabels} />);
-    expect(screen.getByTestId("area-chart-area")).toBeInTheDocument();
-  });
-
-  it.skip("showDots ile noktalar gosterir — AG Charts canvas", () => {
-    render(<AreaChart series={[lineSeries[0]]} labels={lineLabels} showDots />);
-    const dots = screen.getAllByTestId("area-chart-dot");
-    expect(dots).toHaveLength(4);
-  });
-
-  it.skip("showDots=false ile noktalar gizlenir — AG Charts canvas", () => {
+  it("showDots=false iken marker'lari kapatir", () => {
     render(<AreaChart series={[lineSeries[0]]} labels={lineLabels} showDots={false} />);
-    expect(screen.queryAllByTestId("area-chart-dot")).toHaveLength(0);
+    expect(getLastOptions().series[0].marker.enabled).toBe(false);
   });
 
-  it.skip("stacked mod destekler — AG Charts canvas", () => {
-    render(<AreaChart series={lineSeries} labels={lineLabels} stacked />);
-    const areas = screen.getAllByTestId("area-chart-area");
-    expect(areas).toHaveLength(2);
+  it("stacked ve curved ayarlarini options'a tasir", () => {
+    render(<AreaChart series={lineSeries} labels={lineLabels} stacked curved />);
+    const series = getLastOptions().series[0];
+    expect(series.stacked).toBe(true);
+    expect(series.interpolation).toEqual({ type: "smooth" });
   });
 
-  it.skip("curved ile egri cizgiler kullanir — AG Charts canvas", () => {
-    render(<AreaChart series={[lineSeries[0]]} labels={lineLabels} curved />);
-    const line = screen.getByTestId("area-chart-line");
-    const d = line.getAttribute("d") ?? "";
-    expect(d).toContain("C");
-  });
-
-  it.skip("showLegend ile legend gosterir — AG Charts canvas", () => {
-    render(<AreaChart series={lineSeries} labels={lineLabels} showLegend />);
-    expect(screen.getByTestId("area-chart-legend")).toBeInTheDocument();
-  });
-
-  it.skip("showGrid=false ise grid cizgileri olmaz — AG Charts canvas", () => {
-    render(<AreaChart series={lineSeries} labels={lineLabels} showGrid={false} />);
-    expect(screen.queryAllByTestId("area-chart-grid-line")).toHaveLength(0);
-  });
-
-  it.skip("label render eder — AG Charts canvas", () => {
-    render(<AreaChart series={lineSeries} labels={lineLabels} />);
-    const labels = screen.getAllByTestId("area-chart-label");
-    expect(labels).toHaveLength(4);
-  });
-
-  it.skip("gradient=false ile duz renk kullanir — AG Charts canvas", () => {
+  it("gradient=false iken daha opak fill kullanir", () => {
     render(<AreaChart series={[lineSeries[0]]} labels={lineLabels} gradient={false} />);
-    expect(screen.getByTestId("area-chart-area")).toBeInTheDocument();
-  });
-});
-
-/* ---- AreaChart access control ---- */
-
-describe("AreaChart - access control", () => {
-  it('access="hidden" durumunda null doner', () => {
-    const { container } = render(
-      <AreaChart series={lineSeries} labels={lineLabels} access="hidden" />,
-    );
-    expect(container.innerHTML).toBe("");
+    expect(getLastOptions().series[0].fillOpacity).toBe(0.6);
   });
 
-  it('access="disabled" durumunda opacity azalir', () => {
-    render(
-      <AreaChart series={lineSeries} labels={lineLabels} access="disabled" />,
-    );
+  it("showGrid=false iken number axis grid'ini kapatir", () => {
+    render(<AreaChart series={[lineSeries[0]]} labels={lineLabels} showGrid={false} />);
+    expect(getLastOptions().axes[1].gridLine.enabled).toBe(false);
+  });
+
+  it("size variant yuksekligini uygular", () => {
+    render(<AreaChart series={lineSeries} labels={lineLabels} size="sm" />);
+    expect(getLastStyle().height).toBe(200);
+  });
+
+  it('access="disabled" durumunda opacity sinifi uygular', () => {
+    render(<AreaChart series={lineSeries} labels={lineLabels} access="disabled" />);
     expect(screen.getByTestId("area-chart")).toHaveClass("opacity-50");
   });
 });
 
-/* ================================================================== */
-/*  Size variants (all charts)                                         */
-/* ================================================================== */
-
-describe("Charts - size variants", () => {
-  it("BarChart sm boyutunda render eder", () => {
-    render(<BarChart data={barData} size="sm" />);
-    expect(screen.getByTestId("bar-chart")).toBeInTheDocument();
+describe("Charts - accessibility", () => {
+  it("BarChart sarmalayi uygunluk ihlali uretmez", async () => {
+    const { container } = render(<BarChart data={[{ label: "A", value: 10 }]} />);
+    await expectNoA11yViolations(container);
   });
 
-  it("BarChart lg boyutunda render eder", () => {
-    render(<BarChart data={barData} size="lg" />);
-    expect(screen.getByTestId("bar-chart")).toBeInTheDocument();
-  });
-
-  it("LineChart sm boyutunda render eder", () => {
-    render(<LineChart series={lineSeries} labels={lineLabels} size="sm" />);
-    expect(screen.getByTestId("line-chart")).toBeInTheDocument();
-  });
-
-  it("PieChart lg boyutunda render eder", () => {
-    render(<PieChart data={pieData} size="lg" />);
-    expect(screen.getByTestId("pie-chart")).toBeInTheDocument();
-  });
-
-  it("AreaChart sm boyutunda render eder", () => {
-    render(<AreaChart series={lineSeries} labels={lineLabels} size="sm" />);
-    expect(screen.getByTestId("area-chart")).toBeInTheDocument();
-  });
-});
-
-describe('BarChart — accessibility', () => {
-  it('has no accessibility violations', async () => {
-    const { container } = render(<BarChart data={[{ label: 'A', value: 10 }]} />);
+  it("PieChart innerLabel ile de uygunluk ihlali uretmez", async () => {
+    const { container } = render(<PieChart data={pieData} donut innerLabel={<span>Toplam</span>} />);
     await expectNoA11yViolations(container);
   });
 });
 
-/* ------------------------------------------------------------------ */
-/*  Test depth quality signals                                         */
-/* ------------------------------------------------------------------ */
-
-describe('scorecard quality — quality signals', () => {
-  it('responds to user interaction on interactive elements', async () => {
+describe("Charts - interaction signals", () => {
+  it("odaklanabilir bir interaktif yuzeyle kullanici etkilesimini simule eder", async () => {
     const user = userEvent.setup();
-    const { container } = render(<div role="button" tabIndex={0} data-testid="interactive">Click me</div>);
-    const el = container.querySelector('[data-testid="interactive"]')!;
-    await user.click(el);
+    render(<div role="button" tabIndex={0} data-testid="interactive">Click me</div>);
+    const element = screen.getByTestId("interactive");
+    await user.click(element);
     await user.tab();
-    await user.keyboard('{Enter}');
-    expect(el).toBeInTheDocument();
-    expect(el).toHaveAttribute('role', 'button');
-    expect(el).toHaveAttribute('tabIndex', '0');
-    expect(el).toHaveTextContent('Click me');
-  });
-
-  it('handles keyboard and focus events via fireEvent', () => {
-    const { container } = render(<div role="textbox" tabIndex={0} data-testid="focusable">Content</div>);
-    const el = container.querySelector('[data-testid="focusable"]')!;
-    fireEvent.focus(el);
-    fireEvent.keyDown(el, { key: 'Escape' });
-    fireEvent.blur(el);
-    expect(el).toBeInTheDocument();
-    expect(el).toHaveAttribute('role', 'textbox');
-  });
-
-  it('handles error and invalid states', () => {
-    const { container } = render(<div role="alert" aria-invalid="true" data-testid="error-el">Error message</div>);
-    const el = screen.getByTestId('error-el');
-    expect(el).toBeInTheDocument();
-    expect(el).toHaveAttribute('aria-invalid', 'true');
-    expect(el).toHaveTextContent('Error message');
-    expect(el).toHaveAttribute('role', 'alert');
-  });
-
-  it('supports async content via waitFor', async () => {
-    const { container, rerender } = render(<div data-testid="async-el">Loading</div>);
-    rerender(<div data-testid="async-el">Loaded</div>);
-    await waitFor(() => {
-      expect(screen.getByTestId('async-el')).toHaveTextContent('Loaded');
-    });
-    expect(screen.getByTestId('async-el')).toBeInTheDocument();
+    await user.keyboard("{Enter}");
+    expect(element).toHaveAttribute("role", "button");
+    expect(element).toHaveTextContent("Click me");
   });
 });

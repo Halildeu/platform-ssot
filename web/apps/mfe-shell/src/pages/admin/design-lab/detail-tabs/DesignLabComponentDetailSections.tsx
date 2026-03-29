@@ -268,12 +268,12 @@ const ComponentApiTab: React.FC<{
 };
 
 const WAYFINDING_ROLE_COLORS: Record<string, string> = {
-  global: 'bg-blue-400',
-  local: 'bg-emerald-400',
-  contextual: 'bg-amber-400',
-  hierarchical: 'bg-violet-400',
-  sequential: 'bg-cyan-400',
-  action: 'bg-red-400',
+  global: 'bg-action-primary',
+  local: 'bg-state-success-text',
+  contextual: 'bg-state-warning-text',
+  hierarchical: 'bg-action-primary',
+  sequential: 'bg-state-info-text',
+  action: 'bg-state-danger-text',
 };
 
 const ComponentUxTab: React.FC<{
@@ -320,7 +320,7 @@ const ComponentUxTab: React.FC<{
             {matchedFamilies.map((family) => (
               <div key={family.familyId} className="rounded-[20px] border border-border-subtle bg-surface-panel p-4">
                 <div className="flex items-center gap-2">
-                  <span className={`inline-block h-2 w-2 shrink-0 rounded-full ${WAYFINDING_ROLE_COLORS[family.wayfindingRole] ?? 'bg-zinc-400'}`} />
+                  <span className={`inline-block h-2 w-2 shrink-0 rounded-full ${WAYFINDING_ROLE_COLORS[family.wayfindingRole] ?? 'bg-border-strong'}`} />
                   <Text className="text-sm font-semibold text-text-primary">{family.title}</Text>
                   <SectionBadge label={family.wayfindingRole} />
                 </div>
@@ -368,7 +368,7 @@ const ComponentUxTab: React.FC<{
           <div className="mt-3 flex flex-wrap gap-1.5">
             {navigationMatrix.navigationFamilies.map((family) => (
               <span key={family.familyId} className="inline-flex items-center gap-1 rounded-md bg-surface-panel px-2 py-1 text-[10px] font-medium text-text-tertiary">
-                <span className={`inline-block h-1.5 w-1.5 rounded-full ${WAYFINDING_ROLE_COLORS[family.wayfindingRole] ?? 'bg-zinc-400'}`} />
+                <span className={`inline-block h-1.5 w-1.5 rounded-full ${WAYFINDING_ROLE_COLORS[family.wayfindingRole] ?? 'bg-border-strong'}`} />
                 {family.title}
               </span>
             ))}
@@ -416,7 +416,7 @@ const ComponentUxTab: React.FC<{
                         key={family.familyId}
                         className="inline-flex items-center gap-1 rounded-md bg-surface-default px-2 py-1 text-[10px] font-medium text-text-secondary"
                       >
-                        <span className={`inline-block h-1.5 w-1.5 rounded-full ${WAYFINDING_ROLE_COLORS[family.wayfindingRole] ?? 'bg-zinc-400'}`} />
+                        <span className={`inline-block h-1.5 w-1.5 rounded-full ${WAYFINDING_ROLE_COLORS[family.wayfindingRole] ?? 'bg-border-strong'}`} />
                         {family.title}
                       </span>
                     ))}
@@ -437,7 +437,7 @@ const ComponentUxTab: React.FC<{
         <div className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-3">
           {Object.entries(navigationMatrix.wayfindingRoles).map(([roleId, description]) => (
             <div key={roleId} className="flex items-start gap-2 rounded-xl bg-surface-panel px-3 py-2">
-              <span className={`mt-1 inline-block h-2 w-2 shrink-0 rounded-full ${WAYFINDING_ROLE_COLORS[roleId] ?? 'bg-zinc-400'}`} />
+              <span className={`mt-1 inline-block h-2 w-2 shrink-0 rounded-full ${WAYFINDING_ROLE_COLORS[roleId] ?? 'bg-border-strong'}`} />
               <div className="min-w-0">
                 <Text className="text-[10px] font-semibold text-text-primary">{roleId}</Text>
                 <Text variant="secondary" className="block text-[10px] leading-4">{description}</Text>

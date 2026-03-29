@@ -1,21 +1,21 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { getSummary, getLiveKPIs, getLiveCharts, isLiveDataAvailable } from './api';
+import { getSummary, getLiveKPIs, getLiveCharts } from './api';
 import type { DemographicSummary } from './types';
 
 // ---------------------------------------------------------------------------
 // Color palette
 // ---------------------------------------------------------------------------
 const SERIES_COLORS = [
-  'var(--action-primary, #3b82f6)',
-  'var(--state-success-text, #22c55e)',
-  'var(--state-warning-text, #f59e0b)',
-  'var(--state-error-text, #ef4444)',
-  'var(--accent-primary, #8b5cf6)',
-  'var(--state-info-text, #06b6d4)',
-  'var(--accent-soft, #ec4899)',
-  'var(--state-success-border, #14b8a6)',
-  'var(--state-warning-border, #f97316)',
-  'var(--accent-focus, #6366f1)',
+  'var(--action-primary)',
+  'var(--state-success-text)',
+  'var(--state-warning-text)',
+  'var(--state-error-text)',
+  'var(--accent-primary)',
+  'var(--state-info-text)',
+  'var(--accent-soft)',
+  'var(--state-success-border)',
+  'var(--state-warning-border)',
+  'var(--accent-focus)',
 ];
 
 // ---------------------------------------------------------------------------
@@ -31,8 +31,8 @@ const KPICard: React.FC<{
     style={{
       padding: '16px 20px',
       borderRadius: 8,
-      border: '1px solid var(--border-subtle, #e5e7eb)',
-      background: 'var(--surface-default, #fff)',
+      border: '1px solid var(--border-subtle)',
+      background: 'var(--surface-default)',
       flex: 1,
       minWidth: 140,
     }}
@@ -40,7 +40,7 @@ const KPICard: React.FC<{
     <div
       style={{
         fontSize: 11,
-        color: 'var(--text-secondary, #6b7280)',
+        color: 'var(--text-secondary)',
         marginBottom: 4,
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
@@ -48,7 +48,7 @@ const KPICard: React.FC<{
     >
       {label}
     </div>
-    <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary, #111827)' }}>
+    <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)' }}>
       {value}
     </div>
     {trend !== undefined && (
@@ -57,10 +57,10 @@ const KPICard: React.FC<{
           fontSize: 12,
           color:
             trend > 0
-              ? 'var(--state-success-text, #16a34a)'
+              ? 'var(--state-success-text)'
               : trend < 0
-                ? 'var(--state-error-text, #dc2626)'
-                : 'var(--text-secondary, #6b7280)',
+                ? 'var(--state-error-text)'
+                : 'var(--text-secondary)',
           marginTop: 4,
         }}
       >
@@ -84,15 +84,15 @@ const ChartCard: React.FC<{
       gridColumn: `span ${span}`,
       padding: 20,
       borderRadius: 12,
-      border: '1px solid var(--border-subtle, #e5e7eb)',
-      background: 'var(--surface-default, #fff)',
+      border: '1px solid var(--border-subtle)',
+      background: 'var(--surface-default)',
     }}
   >
     <h3
       style={{
         fontSize: 14,
         fontWeight: 600,
-        color: 'var(--text-primary, #111827)',
+        color: 'var(--text-primary)',
         marginBottom: 16,
         margin: 0,
         paddingBottom: 16,
@@ -129,8 +129,8 @@ function Legend({
               flexShrink: 0,
             }}
           />
-          <span style={{ color: 'var(--text-secondary, #6b7280)' }}>{d.label}</span>
-          <span style={{ fontWeight: 600, color: 'var(--text-primary, #111827)' }}>
+          <span style={{ color: 'var(--text-secondary)' }}>{d.label}</span>
+          <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
             {d.value}
           </span>
         </div>
@@ -183,7 +183,7 @@ function PieChart({
               key={i}
               d={`M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} Z`}
               fill={d.color}
-              stroke="var(--surface-default, #fff)"
+              stroke="var(--surface-default)"
               strokeWidth="2"
             >
               <title>
@@ -193,14 +193,14 @@ function PieChart({
           );
         })}
         {/* Donut hole */}
-        <circle cx={cx} cy={cy} r={innerR} fill="var(--surface-default, #fff)" />
+        <circle cx={cx} cy={cy} r={innerR} fill="var(--surface-default)" />
         <text
           x={cx}
           y={cy - 6}
           textAnchor="middle"
           fontSize="16"
           fontWeight="700"
-          fill="var(--text-primary, #111827)"
+          fill="var(--text-primary)"
         >
           {total}
         </text>
@@ -209,7 +209,7 @@ function PieChart({
           y={cy + 10}
           textAnchor="middle"
           fontSize="10"
-          fill="var(--text-secondary, #6b7280)"
+          fill="var(--text-secondary)"
         >
           Toplam
         </text>
@@ -249,7 +249,7 @@ function VerticalBarChart({
               y1={y}
               x2={barAreaLeft + barAreaWidth}
               y2={y}
-              stroke="var(--border-subtle, #e5e7eb)"
+              stroke="var(--border-subtle)"
               strokeWidth="0.5"
             />
             <text
@@ -257,7 +257,7 @@ function VerticalBarChart({
               y={y + 3}
               textAnchor="end"
               fontSize="8"
-              fill="var(--text-secondary, #9ca3af)"
+              fill="var(--text-secondary)"
             >
               {Math.round(maxVal * frac)}
             </text>
@@ -282,7 +282,7 @@ function VerticalBarChart({
               textAnchor="middle"
               fontSize="9"
               fontWeight="600"
-              fill="var(--text-primary, #111827)"
+              fill="var(--text-primary)"
             >
               {d.value}
             </text>
@@ -291,7 +291,7 @@ function VerticalBarChart({
               y={barAreaTop + barAreaHeight + 12}
               textAnchor="middle"
               fontSize="8"
-              fill="var(--text-secondary, #6b7280)"
+              fill="var(--text-secondary)"
             >
               {d.label.length > 7 ? d.label.slice(0, 6) + '\u2026' : d.label}
             </text>
@@ -334,7 +334,7 @@ function HorizontalBarChart({
               y={y + barHeight / 2 + 4}
               textAnchor="end"
               fontSize="10"
-              fill="var(--text-secondary, #6b7280)"
+              fill="var(--text-secondary)"
             >
               {d.label.length > 14 ? d.label.slice(0, 13) + '\u2026' : d.label}
             </text>
@@ -348,7 +348,7 @@ function HorizontalBarChart({
               y={y + barHeight / 2 + 4}
               fontSize="10"
               fontWeight="600"
-              fill="var(--text-primary, #111827)"
+              fill="var(--text-primary)"
             >
               {d.value}
             </text>
@@ -438,7 +438,7 @@ function Treemap({ data }: { data: Array<{ label: string; value: number }> }) {
                 textAnchor="middle"
                 fontSize="10"
                 fontWeight="600"
-                fill="var(--surface-default, #fff)"
+                fill="var(--surface-default)"
               >
                 {r.item.label.length > Math.floor(r.w / 7)
                   ? r.item.label.slice(0, Math.floor(r.w / 7) - 1) + '\u2026'
@@ -485,10 +485,10 @@ function Gauge({
 
   const color =
     value >= target
-      ? 'var(--state-success-text, #16a34a)'
+      ? 'var(--state-success-text)'
       : value >= target * 0.7
-        ? 'var(--state-warning-text, #d97706)'
-        : 'var(--state-error-text, #dc2626)';
+        ? 'var(--state-warning-text)'
+        : 'var(--state-error-text)';
 
   // Arc path helper
   const arc = (startAngle: number, endAngle: number) => {
@@ -510,7 +510,7 @@ function Gauge({
       <div
         style={{
           fontSize: 11,
-          color: 'var(--text-secondary, #6b7280)',
+          color: 'var(--text-secondary)',
           marginBottom: 4,
           fontWeight: 500,
         }}
@@ -519,19 +519,19 @@ function Gauge({
       </div>
       <svg viewBox="0 0 160 90" width="100%" style={{ maxWidth: 160, display: 'block', margin: '0 auto' }}>
         {/* Background arc */}
-        <path d={arc(0, maxAngle)} fill="none" stroke="var(--surface-muted, #f3f4f6)" strokeWidth="10" strokeLinecap="round" />
+        <path d={arc(0, maxAngle)} fill="none" stroke="var(--surface-muted)" strokeWidth="10" strokeLinecap="round" />
         {/* Value arc */}
         {valueAngle > 0.01 && (
           <path d={arc(0, valueAngle)} fill="none" stroke={color} strokeWidth="10" strokeLinecap="round" />
         )}
         {/* Target marker */}
-        <circle cx={needleX} cy={needleY} r="3" fill="var(--text-primary, #111827)" />
+        <circle cx={needleX} cy={needleY} r="3" fill="var(--text-primary)" />
         {/* Value text */}
-        <text x={cx} y={cy - 8} textAnchor="middle" fontSize="18" fontWeight="700" fill="var(--text-primary, #111827)">
+        <text x={cx} y={cy - 8} textAnchor="middle" fontSize="18" fontWeight="700" fill="var(--text-primary)">
           {value}
-          <tspan fontSize="10" fill="var(--text-secondary, #6b7280)">{unit}</tspan>
+          <tspan fontSize="10" fill="var(--text-secondary)">{unit}</tspan>
         </text>
-        <text x={cx} y={cy + 4} textAnchor="middle" fontSize="8" fill="var(--text-secondary, #9ca3af)">
+        <text x={cx} y={cy + 4} textAnchor="middle" fontSize="8" fill="var(--text-secondary)">
           Hedef: {target}{unit}
         </text>
       </svg>
@@ -601,7 +601,7 @@ function StackedBar({
                 textAnchor="middle"
                 fontSize="10"
                 fontWeight="600"
-                fill="var(--surface-default, #fff)"
+                fill="var(--surface-default)"
               >
                 {Math.round((d.value / total) * 100)}%
               </text>
@@ -638,10 +638,10 @@ function BulletChart({
 
   const color =
     actual >= target
-      ? 'var(--state-success-text, #16a34a)'
+      ? 'var(--state-success-text)'
       : actual >= target * 0.7
-        ? 'var(--state-warning-text, #d97706)'
-        : 'var(--state-error-text, #dc2626)';
+        ? 'var(--state-warning-text)'
+        : 'var(--state-error-text)';
 
   return (
     <div style={{ marginBottom: 12 }}>
@@ -653,21 +653,21 @@ function BulletChart({
           marginBottom: 4,
         }}
       >
-        <span style={{ fontSize: 12, color: 'var(--text-secondary, #6b7280)' }}>{label}</span>
-        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary, #111827)' }}>
+        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{label}</span>
+        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>
           {actual}{unit}
-          <span style={{ fontSize: 10, fontWeight: 400, color: 'var(--text-secondary, #9ca3af)', marginLeft: 4 }}>
+          <span style={{ fontSize: 10, fontWeight: 400, color: 'var(--text-secondary)', marginLeft: 4 }}>
             / {target}{unit}
           </span>
         </span>
       </div>
       <svg viewBox={`0 0 ${width} ${height}`} width="100%" style={{ display: 'block' }}>
         {/* Background */}
-        <rect x={0} y={8} width={width} height={barH} rx={4} fill="var(--surface-muted, #f3f4f6)" />
+        <rect x={0} y={8} width={width} height={barH} rx={4} fill="var(--surface-muted)" />
         {/* Actual */}
         <rect x={0} y={8} width={actualW} height={barH} rx={4} fill={color} opacity={0.85} />
         {/* Target line */}
-        <line x1={targetX} y1={4} x2={targetX} y2={28} stroke="var(--text-primary, #111827)" strokeWidth="2" />
+        <line x1={targetX} y1={4} x2={targetX} y2={28} stroke="var(--text-primary)" strokeWidth="2" />
       </svg>
     </div>
   );
@@ -690,10 +690,10 @@ function ProgressBar({
   const percentage = Math.min((value / target) * 100, 100);
   const color =
     value >= target
-      ? 'var(--state-success-text, #16a34a)'
+      ? 'var(--state-success-text)'
       : value >= target * 0.8
-        ? 'var(--state-warning-text, #d97706)'
-        : 'var(--state-error-text, #dc2626)';
+        ? 'var(--state-warning-text)'
+        : 'var(--state-error-text)';
 
   return (
     <div style={{ marginBottom: 14 }}>
@@ -705,8 +705,8 @@ function ProgressBar({
           marginBottom: 4,
         }}
       >
-        <span style={{ fontSize: 12, color: 'var(--text-secondary, #6b7280)' }}>{label}</span>
-        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary, #111827)' }}>
+        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{label}</span>
+        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)' }}>
           {value}{unit}
         </span>
       </div>
@@ -715,7 +715,7 @@ function ProgressBar({
           width: '100%',
           height: 8,
           borderRadius: 4,
-          background: 'var(--surface-muted, #f3f4f6)',
+          background: 'var(--surface-muted)',
           overflow: 'hidden',
         }}
       >
@@ -769,7 +769,7 @@ const DashboardSection: React.FC<{
             border: 'none',
             cursor: 'pointer',
             fontSize: 11,
-            color: 'var(--text-secondary, #6b7280)',
+            color: 'var(--text-secondary)',
             padding: '2px 8px',
           }}
         >
@@ -802,10 +802,10 @@ function AgePyramidChart({
     <div>
       <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} width="100%" style={{ display: 'block' }}>
         {/* Header */}
-        <text x={centerX - sideWidth / 2} y={12} textAnchor="middle" fontSize="9" fontWeight="600" fill="var(--action-primary, #3b82f6)">
+        <text x={centerX - sideWidth / 2} y={12} textAnchor="middle" fontSize="9" fontWeight="600" fill="var(--action-primary)">
           Erkek
         </text>
-        <text x={centerX + sideWidth / 2} y={12} textAnchor="middle" fontSize="9" fontWeight="600" fill="var(--accent-soft, #ec4899)">
+        <text x={centerX + sideWidth / 2} y={12} textAnchor="middle" fontSize="9" fontWeight="600" fill="var(--accent-soft)">
           Kadin
         </text>
         {data.map((d, i) => {
@@ -821,7 +821,7 @@ function AgePyramidChart({
                 width={maleW}
                 height={barHeight}
                 rx={3}
-                fill="var(--action-primary, #3b82f6)"
+                fill="var(--action-primary)"
                 opacity={0.8}
               >
                 <title>Erkek {d.ageGroup}: {d.male}</title>
@@ -832,7 +832,7 @@ function AgePyramidChart({
                   y={y + barHeight / 2 + 4}
                   textAnchor="end"
                   fontSize="8"
-                  fill="var(--text-secondary, #6b7280)"
+                  fill="var(--text-secondary)"
                 >
                   {d.male}
                 </text>
@@ -844,7 +844,7 @@ function AgePyramidChart({
                 textAnchor="middle"
                 fontSize="9"
                 fontWeight="500"
-                fill="var(--text-primary, #111827)"
+                fill="var(--text-primary)"
               >
                 {d.ageGroup}
               </text>
@@ -855,7 +855,7 @@ function AgePyramidChart({
                 width={femaleW}
                 height={barHeight}
                 rx={3}
-                fill="var(--accent-soft, #ec4899)"
+                fill="var(--accent-soft)"
                 opacity={0.8}
               >
                 <title>Kadin {d.ageGroup}: {d.female}</title>
@@ -866,7 +866,7 @@ function AgePyramidChart({
                   y={y + barHeight / 2 + 4}
                   textAnchor="start"
                   fontSize="8"
-                  fill="var(--text-secondary, #6b7280)"
+                  fill="var(--text-secondary)"
                 >
                   {d.female}
                 </text>
@@ -880,7 +880,7 @@ function AgePyramidChart({
           y1={16}
           x2={centerX}
           y2={svgHeight}
-          stroke="var(--border-subtle, #e5e7eb)"
+          stroke="var(--border-subtle)"
           strokeWidth="0.5"
         />
       </svg>
@@ -898,8 +898,8 @@ function SectionHeader({ children }: { children: React.ReactNode }) {
         style={{
           fontSize: 16,
           fontWeight: 700,
-          color: 'var(--text-primary, #111827)',
-          borderBottom: '2px solid var(--border-subtle, #e5e7eb)',
+          color: 'var(--text-primary)',
+          borderBottom: '2px solid var(--border-subtle)',
           paddingBottom: 8,
           margin: 0,
         }}
@@ -988,8 +988,8 @@ const DemographicDashboard: React.FC = () => {
           fontSize: 11,
           padding: '2px 8px',
           borderRadius: 4,
-          background: dataSource === 'live' ? 'var(--state-success-bg, #f0fdf4)' : dataSource === 'mock' ? 'var(--state-warning-bg, #fffbeb)' : 'var(--surface-muted, #f3f4f6)',
-          color: dataSource === 'live' ? 'var(--state-success-text, #15803d)' : dataSource === 'mock' ? 'var(--state-warning-text, #b45309)' : 'var(--text-secondary, #6b7280)',
+          background: dataSource === 'live' ? 'var(--state-success-bg)' : dataSource === 'mock' ? 'var(--state-warning-bg)' : 'var(--surface-muted)',
+          color: dataSource === 'live' ? 'var(--state-success-text)' : dataSource === 'mock' ? 'var(--state-warning-text)' : 'var(--text-secondary)',
           fontWeight: 600,
         }}>
           {dataSource === 'live' ? '● Canlı Veri (Workcube SQL)' : dataSource === 'mock' ? '○ Mock Veri' : '◌ Yükleniyor...'}
@@ -1265,10 +1265,10 @@ const DemographicDashboard: React.FC = () => {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               <Gauge value={summary.absenteeismRate} target={3} label="Devamsizlik Orani" />
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 11, color: 'var(--text-secondary, #6b7280)', marginBottom: 4, fontWeight: 500 }}>
+                <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 4, fontWeight: 500 }}>
                   Yeni Ise Alim (12 ay)
                 </div>
-                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary, #111827)' }}>
+                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)' }}>
                   {(() => {
                     const hireData = getChartData('new-hires-12m');
                     if (hireData && hireData.length > 0) return hireData[0].value;
@@ -1281,10 +1281,10 @@ const DemographicDashboard: React.FC = () => {
           <ChartCard title={chartTitle("Ic Transfer & Terfi", "internal-transfers")}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 11, color: 'var(--text-secondary, #6b7280)', marginBottom: 4, fontWeight: 500 }}>
+                <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 4, fontWeight: 500 }}>
                   Ic Transfer (Son 1 Yil)
                 </div>
-                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary, #111827)' }}>
+                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)' }}>
                   {(() => {
                     const trData = getChartData('internal-transfers');
                     if (trData && trData.length > 0) return trData[0].value;
@@ -1318,8 +1318,8 @@ const DemographicDashboard: React.FC = () => {
                 </>
               );
             })()}
-            <div style={{ marginTop: 8, fontSize: 11, color: 'var(--text-secondary, #6b7280)' }}>
-              Kontrol Araligi: <strong style={{ color: 'var(--text-primary, #111827)' }}>{(() => {
+            <div style={{ marginTop: 8, fontSize: 11, color: 'var(--text-secondary)' }}>
+              Kontrol Araligi: <strong style={{ color: 'var(--text-primary)' }}>{(() => {
                 const mrData = getChartData('manager-ratio');
                 if (mrData) {
                   const mgr = mrData.find(d => d.label === 'Yonetici')?.value ?? 0;
@@ -1345,9 +1345,9 @@ const DemographicDashboard: React.FC = () => {
           <ChartCard title={chartTitle("Etik Metrikler")}>
             <ProgressBar label="Etik Egitim Tamamlama" value={summary.ethicsTrainingRate} target={95} />
             <ProgressBar label="Veri Gizliligi Uyumu" value={summary.dataPrivacyComplianceRate} target={100} />
-            <div style={{ marginTop: 8, fontSize: 12, color: 'var(--text-secondary, #6b7280)' }}>
+            <div style={{ marginTop: 8, fontSize: 12, color: 'var(--text-secondary)' }}>
               Ihbar Hatti Basvuru (12 ay):{' '}
-              <strong style={{ color: 'var(--text-primary, #111827)', fontSize: 18 }}>
+              <strong style={{ color: 'var(--text-primary)', fontSize: 18 }}>
                 {summary.whistleblowerCases}
               </strong>
             </div>
@@ -1393,9 +1393,9 @@ const DemographicDashboard: React.FC = () => {
               return (
                 <>
                   <BulletChart label="Cinsiyet Maas Farki" actual={gap} target={0} max={20} />
-                  <div style={{ marginTop: 12, fontSize: 12, color: 'var(--text-secondary, #6b7280)' }}>
+                  <div style={{ marginTop: 12, fontSize: 12, color: 'var(--text-secondary)' }}>
                     Hedef: <strong>%0</strong> fark &mdash; mevcut fark{' '}
-                    <strong style={{ color: 'var(--state-warning-text, #d97706)' }}>%{gap}</strong>
+                    <strong style={{ color: 'var(--state-warning-text)' }}>%{gap}</strong>
                   </div>
                 </>
               );
@@ -1434,16 +1434,16 @@ const DemographicDashboard: React.FC = () => {
               return (
                 <svg viewBox="0 0 280 120" width="100%" style={{ display: 'block' }}>
                   {[0, 30, 60, 90, 120].map((y, i) => (
-                    <line key={i} x1={30} y1={y} x2={270} y2={y} stroke="var(--border-subtle, #e5e7eb)" strokeWidth="0.5" />
+                    <line key={i} x1={30} y1={y} x2={270} y2={y} stroke="var(--border-subtle)" strokeWidth="0.5" />
                   ))}
-                  <polyline points={polyline} fill="none" stroke="var(--state-warning-text, #f59e0b)" strokeWidth="2" strokeLinejoin="round" />
+                  <polyline points={polyline} fill="none" stroke="var(--state-warning-text)" strokeWidth="2" strokeLinejoin="round" />
                   {pts.map((p, idx) => (
                     <g key={idx}>
-                      <circle cx={p.x} cy={p.y} r="3" fill="var(--state-warning-text, #f59e0b)" />
-                      <text x={p.x} y={p.y - 8} textAnchor="middle" fontSize="8" fontWeight="600" fill="var(--text-primary, #111827)">
+                      <circle cx={p.x} cy={p.y} r="3" fill="var(--state-warning-text)" />
+                      <text x={p.x} y={p.y - 8} textAnchor="middle" fontSize="8" fontWeight="600" fill="var(--text-primary)">
                         %{p.v}
                       </text>
-                      <text x={p.x} y={115} textAnchor="middle" fontSize="7" fill="var(--text-secondary, #6b7280)">
+                      <text x={p.x} y={115} textAnchor="middle" fontSize="7" fill="var(--text-secondary)">
                         {p.label}
                       </text>
                     </g>

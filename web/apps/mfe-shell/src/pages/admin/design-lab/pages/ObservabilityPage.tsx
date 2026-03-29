@@ -12,7 +12,7 @@
  * 8. External links (Sentry, Grafana, Loki, Tempo)
  */
 
-import React, { lazy, Suspense, useEffect, useState, useCallback } from 'react';
+import React, { lazy, Suspense, useEffect, useState, _useCallback } from 'react';
 import {
   Activity,
   Heart,
@@ -138,8 +138,8 @@ function ErrorSummaryPanel() {
     <section className="rounded-2xl border border-border-subtle bg-surface-default p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-500/10">
-            <AlertTriangle className="h-4 w-4 text-rose-600" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-state-danger-text/10">
+            <AlertTriangle className="h-4 w-4 text-state-danger-text" />
           </div>
           <div>
             <Text as="h3" className="text-lg font-semibold text-text-primary">
@@ -170,7 +170,7 @@ function ErrorSummaryPanel() {
                 key={i}
                 className="flex items-start gap-2 rounded-lg bg-surface-muted p-2"
               >
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-xs bg-rose-100 text-[10px] font-bold text-rose-700">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-xs bg-state-danger-bg text-[10px] font-bold text-state-danger-text">
                   {err.count}
                 </span>
                 <Text className="text-xs text-text-secondary line-clamp-2 font-mono">
@@ -190,7 +190,7 @@ function ErrorSummaryPanel() {
             {data.trend.map((t) => (
               <div key={t.day} className="flex flex-1 flex-col items-center gap-1">
                 <div
-                  className="w-full rounded-t bg-rose-400 transition-all"
+                  className="w-full rounded-t bg-state-danger-text transition-all"
                   style={{
                     height: `${Math.max((t.count / maxTrend) * 60, 2)}px`,
                   }}
@@ -284,9 +284,9 @@ function getBudgetStatus(
 }
 
 const STATUS_COLORS = {
-  pass: 'bg-emerald-100 text-emerald-700',
-  warn: 'bg-amber-100 text-amber-700',
-  fail: 'bg-rose-100 text-rose-700',
+  pass: 'bg-state-success-bg text-state-success-text',
+  warn: 'bg-state-warning-bg text-state-warning-text',
+  fail: 'bg-state-danger-bg text-state-danger-text',
   measuring: 'bg-surface-muted text-text-secondary',
 };
 
@@ -304,8 +304,8 @@ function PerformanceBudgetPanel() {
     <section className="rounded-2xl border border-border-subtle bg-surface-default p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
-            <Gauge className="h-4 w-4 text-emerald-600" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-state-success-text/10">
+            <Gauge className="h-4 w-4 text-state-success-text" />
           </div>
           <div>
             <Text as="h3" className="text-lg font-semibold text-text-primary">
@@ -457,8 +457,8 @@ function useInfraStatus(): ServiceStatus[] {
 }
 
 const SERVICE_STATUS_ICON: Record<string, React.ReactNode> = {
-  UP: <CheckCircle2 className="h-4 w-4 text-emerald-600" />,
-  DOWN: <XCircle className="h-4 w-4 text-rose-600" />,
+  UP: <CheckCircle2 className="h-4 w-4 text-state-success-text" />,
+  DOWN: <XCircle className="h-4 w-4 text-state-danger-text" />,
   UNKNOWN: <HelpCircle className="h-4 w-4 text-text-secondary" />,
 };
 
@@ -470,8 +470,8 @@ function InfraStatusPanel() {
     <section className="rounded-2xl border border-border-subtle bg-surface-default p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10">
-            <Server className="h-4 w-4 text-blue-600" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-action-primary/10">
+            <Server className="h-4 w-4 text-action-primary" />
           </div>
           <div>
             <Text as="h3" className="text-lg font-semibold text-text-primary">
@@ -517,8 +517,8 @@ function LogStreamPanel() {
     <section className="rounded-2xl border border-border-subtle bg-surface-default p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10">
-            <ScrollText className="h-4 w-4 text-amber-600" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-state-warning-text/10">
+            <ScrollText className="h-4 w-4 text-state-warning-text" />
           </div>
           <div>
             <Text as="h3" className="text-lg font-semibold text-text-primary">
@@ -539,7 +539,7 @@ function LogStreamPanel() {
           rel="noopener noreferrer"
           className="group flex items-center gap-3 rounded-xl border border-border-subtle/50 bg-surface-muted p-3 transition hover:border-border-default hover:shadow-xs"
         >
-          <BarChart3 className="h-5 w-5 text-amber-600" />
+          <BarChart3 className="h-5 w-5 text-state-warning-text" />
           <div className="min-w-0 flex-1">
             <Text className="text-sm font-semibold text-text-primary">
               Grafana Loki
@@ -557,7 +557,7 @@ function LogStreamPanel() {
           rel="noopener noreferrer"
           className="group flex items-center gap-3 rounded-xl border border-border-subtle/50 bg-surface-muted p-3 transition hover:border-border-default hover:shadow-xs"
         >
-          <Activity className="h-5 w-5 text-indigo-600" />
+          <Activity className="h-5 w-5 text-action-primary" />
           <div className="min-w-0 flex-1">
             <Text className="text-sm font-semibold text-text-primary">
               Grafana Tempo
@@ -583,8 +583,8 @@ export default function ObservabilityPage() {
       {/* Header */}
       <div>
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/10">
-            <Activity className="h-5 w-5 text-cyan-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-state-info-text/10">
+            <Activity className="h-5 w-5 text-state-info-text" />
           </div>
           <div>
             <Text as="h1" className="text-2xl font-bold text-text-primary">
@@ -626,8 +626,8 @@ export default function ObservabilityPage() {
       {/* Synthetic Monitor Info */}
       <section className="rounded-2xl border border-border-subtle bg-surface-default p-6">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/10">
-            <Radar className="h-4 w-4 text-violet-600" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-action-primary/10">
+            <Radar className="h-4 w-4 text-action-primary" />
           </div>
           <div>
             <Text as="h3" className="text-lg font-semibold text-text-primary">
@@ -659,8 +659,8 @@ export default function ObservabilityPage() {
           href="#"
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/10">
-            <Heart className="h-5 w-5 text-rose-600" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-state-danger-text/10">
+            <Heart className="h-5 w-5 text-state-danger-text" />
           </div>
           <div className="min-w-0 flex-1">
             <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -679,8 +679,8 @@ export default function ObservabilityPage() {
           rel="noopener noreferrer"
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10">
-            <BarChart3 className="h-5 w-5 text-amber-600" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-state-warning-text/10">
+            <BarChart3 className="h-5 w-5 text-state-warning-text" />
           </div>
           <div className="min-w-0 flex-1">
             <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -699,8 +699,8 @@ export default function ObservabilityPage() {
           rel="noopener noreferrer"
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10">
-            <ScrollText className="h-5 w-5 text-cyan-600" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-state-info-text/10">
+            <ScrollText className="h-5 w-5 text-state-info-text" />
           </div>
           <div className="min-w-0 flex-1">
             <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -719,8 +719,8 @@ export default function ObservabilityPage() {
           rel="noopener noreferrer"
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10">
-            <Activity className="h-5 w-5 text-indigo-600" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-action-primary/10">
+            <Activity className="h-5 w-5 text-action-primary" />
           </div>
           <div className="min-w-0 flex-1">
             <Text as="div" className="text-sm font-semibold text-text-primary">

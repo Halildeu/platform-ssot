@@ -117,7 +117,7 @@ export const FoundationsSidebarRenderer: React.FC<DesignLabSidebarRendererProps>
               data-testid={`design-lab-contract-${contract.id}`}
             >
               <div className="flex items-center gap-2 min-w-0">
-                <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" />
+                <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-state-success-text" />
                 <Text className="text-xs font-medium text-text-primary truncate">
                   {contract.label}
                 </Text>

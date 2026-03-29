@@ -35,7 +35,7 @@ export function SettingsPageTemplate({
           style={{
             fontSize: '1.5rem',
             fontWeight: 700,
-            color: 'var(--color-text-primary, #0f172a)',
+            color: 'var(--color-text-primary))',
             margin: 0,
           }}
         >
@@ -48,8 +48,8 @@ export function SettingsPageTemplate({
             padding: '0.5rem 1rem',
             borderRadius: '0.375rem',
             border: 'none',
-            background: 'var(--color-primary, #2563eb)',
-            color: '#fff',
+            background: 'var(--color-primary))',
+            color: 'var(--surface-default)',
             fontSize: '0.875rem',
             fontWeight: 500,
             cursor: 'pointer',

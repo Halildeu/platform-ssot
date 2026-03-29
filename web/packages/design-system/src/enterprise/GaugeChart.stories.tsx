@@ -37,10 +37,10 @@ export const CustomThresholds: Story = {
     unit: 'MB/s',
     size: 'lg',
     thresholds: [
-      { value: 25, color: '#22c55e', label: 'Low' },
-      { value: 50, color: '#eab308', label: 'Medium' },
-      { value: 75, color: '#f97316', label: 'High' },
-      { value: 100, color: '#ef4444', label: 'Critical' },
+      { value: 25, color: 'var(--state-success-text)', label: 'Low' },
+      { value: 50, color: 'var(--state-warning-text)', label: 'Medium' },
+      { value: 75, color: 'var(--state-warning-text)', label: 'High' },
+      { value: 100, color: 'var(--state-danger-text)', label: 'Critical' },
     ],
   },
 };

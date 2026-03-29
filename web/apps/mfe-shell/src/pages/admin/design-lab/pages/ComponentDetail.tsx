@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, _useCallback } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Copy,
@@ -11,7 +11,7 @@ import {
   FileCode2,
   BookOpen,
   ShieldCheck,
-  ArrowRight,
+  _ArrowRight,
   Globe,
   History,
   BookOpenCheck,
@@ -39,7 +39,7 @@ import {
 } from "../playground";
 import type { PreviewAppearance, PreviewViewport } from "../playground";
 import { PropsTableV2 } from "../api/PropsTableV2";
-import { ExamplesGallery, hasExamples } from "../examples";
+import { ExamplesGallery } from "../examples";
 import { GuideTab } from "../docs";
 import { TokensTab } from "../tabs/TokensTab";
 import { PropsDepsGraph } from "../api/PropsDepsGraph";
@@ -333,12 +333,12 @@ export default function ComponentDetail() {
                   className={[
                     "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold",
                     indexItem.maturity === "enterprise"
-                      ? "bg-violet-500/10 text-violet-600"
+                      ? "bg-action-primary/10 text-action-primary"
                       : indexItem.maturity === "stable"
-                        ? "bg-teal-500/10 text-teal-600"
+                        ? "bg-state-success-text/10 text-state-success-text"
                         : indexItem.maturity === "beta"
-                          ? "bg-orange-500/10 text-orange-600"
-                          : "bg-sky-500/10 text-sky-600",
+                          ? "bg-state-warning-text/10 text-state-warning-text"
+                          : "bg-state-info-text/10 text-state-info-text",
                   ].join(" ")}
                 >
                   {indexItem.maturity === "enterprise" ? "🏢" : indexItem.maturity === "stable" ? "✅" : indexItem.maturity === "beta" ? "🔶" : "🧪"}
@@ -399,7 +399,7 @@ export default function ComponentDetail() {
               className={[
                 "flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                 activeTab === id
-                  ? "bg-action-primary text-white shadow-xs"
+                  ? "bg-action-primary text-text-inverse shadow-xs"
                   : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
               ].join(" ")}
             >
@@ -575,8 +575,8 @@ function OverviewTab({
         {apiItem && (apiItem.variantAxes ?? []).length > 0 && (
           <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-500/10">
-                <Layers className="h-3.5 w-3.5 text-violet-600" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-action-primary/10">
+                <Layers className="h-3.5 w-3.5 text-action-primary" />
               </div>
               <Text as="div" className="text-sm font-semibold text-text-primary">
                 {t("designlab.detail.overview.variants")}
@@ -1103,7 +1103,7 @@ function ComponentExamplesTab({
       )}
 
       {/* Preview focus scenarios */}
-      {previewFocus.map((scenario, idx) => (
+      {previewFocus.map((scenario, _idx) => (
         <ExampleCard
           key={scenario}
           title={scenario}
@@ -1414,10 +1414,10 @@ function QualityTab({
     <div className="flex flex-col gap-6">
       {/* ── A11y Scorecard — Modern card with categories ── */}
       <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
-        <div className="flex items-center justify-between border-b border-border-subtle bg-linear-to-r from-violet-500/5 to-transparent px-5 py-4">
+        <div className="flex items-center justify-between border-b border-border-subtle bg-linear-to-r from-action-primary/5 to-transparent px-5 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/10">
-              <ShieldCheck className="h-4 w-4 text-violet-600" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-action-primary/10">
+              <ShieldCheck className="h-4 w-4 text-action-primary" />
             </div>
             <div>
               <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -1581,7 +1581,7 @@ function QualityTab({
           </Text>
           <Text as="div" className={[
             "mt-2 text-xl font-extrabold capitalize",
-            indexItem.maturity === "enterprise" ? "text-violet-600" : indexItem.maturity === "stable" ? "text-teal-600" : indexItem.maturity === "beta" ? "text-orange-600" : "text-sky-600",
+            indexItem.maturity === "enterprise" ? "text-action-primary" : indexItem.maturity === "stable" ? "text-state-success-text" : indexItem.maturity === "beta" ? "text-state-warning-text" : "text-state-info-text",
           ].join(" ")}>
             {indexItem.maturity ? `${indexItem.maturity === "enterprise" ? "🏢" : indexItem.maturity === "stable" ? "✅" : indexItem.maturity === "beta" ? "🔶" : "🧪"} ${indexItem.maturity}` : "—"}
           </Text>
@@ -1600,7 +1600,7 @@ function QualityTab({
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-widest">
             Where Used
           </Text>
-          <Text as="div" className="mt-2 text-xl font-extrabold tabular-nums text-violet-600">
+          <Text as="div" className="mt-2 text-xl font-extrabold tabular-nums text-action-primary">
             {(indexItem?.whereUsed ?? []).length}
           </Text>
           <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-linear-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
@@ -1609,7 +1609,7 @@ function QualityTab({
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-widest">
             Bundle Impact
           </Text>
-          <Text as="div" className="mt-2 text-xl font-extrabold tabular-nums text-rose-600">
+          <Text as="div" className="mt-2 text-xl font-extrabold tabular-nums text-state-danger-text">
             {estimateBundleSize(indexItem.name, apiItem?.props?.length ?? 0)}
           </Text>
           <Text variant="secondary" className="mt-0.5 text-[9px]">
@@ -1696,7 +1696,7 @@ function ComplexityMetric({
   const pct = Math.min((value / max) * 100, 100);
   const colorMap = {
     blue: { bar: "bg-state-info-text", text: "text-state-info-text", light: "bg-state-info-bg" },
-    violet: { bar: "bg-violet-500", text: "text-violet-600", light: "bg-violet-500/10" },
+    violet: { bar: "bg-action-primary", text: "text-action-primary", light: "bg-action-primary/10" },
     amber: { bar: "bg-state-warning-text", text: "text-state-warning-text", light: "bg-state-warning-bg" },
   };
   const c = colorMap[color];
@@ -1735,7 +1735,7 @@ const CHANGELOG_TYPE_CONFIG: Record<ChangelogEntry["type"], { label: string; col
   fix: { label: "Fix", color: "bg-state-info-bg text-state-info-text", dot: "bg-state-info-text" },
   breaking: { label: "Breaking", color: "bg-state-danger-bg text-state-danger-text", dot: "bg-state-danger-text" },
   deprecation: { label: "Deprecated", color: "bg-state-warning-bg text-state-warning-text", dot: "bg-state-warning-text" },
-  refactor: { label: "Refactor", color: "bg-purple-100 text-purple-700", dot: "bg-purple-500" },
+  refactor: { label: "Refactor", color: "bg-action-primary/10 text-action-primary", dot: "bg-action-primary" },
 };
 
 /**

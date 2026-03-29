@@ -48,19 +48,19 @@ function cellColor(count: number, lifecycle: string): string {
 
   // Red if lifecycle is planned but in use (breaking risk)
   if (lifecycle === "planned" && count > 0) {
-    return "bg-red-100 text-red-700";
+    return "bg-state-danger-bg text-state-danger-text";
   }
 
   // Yellow if beta
   if (lifecycle === "beta") {
     return count > 2
-      ? "bg-amber-200 text-amber-800"
-      : "bg-amber-100 text-amber-700";
+      ? "bg-state-warning-bg text-state-warning-text"
+      : "bg-state-warning-bg text-state-warning-text";
   }
 
   // Green for stable
-  if (count >= 3) return "bg-emerald-200 text-emerald-800";
-  if (count >= 1) return "bg-emerald-100 text-emerald-700";
+  if (count >= 3) return "bg-state-success-bg text-state-success-text";
+  if (count >= 1) return "bg-state-success-bg text-state-success-text";
 
   return "bg-surface-canvas text-text-secondary";
 }
@@ -157,15 +157,15 @@ export default function ConsumerHeatmap() {
       {/* Legend */}
       <div className="flex flex-wrap gap-3">
         <div className="flex items-center gap-1.5">
-          <div className="h-3 w-3 rounded-xs bg-emerald-200" />
+          <div className="h-3 w-3 rounded-xs bg-state-success-bg" />
           <Text className="text-[10px] text-text-secondary">Stable + kullaniliyor</Text>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="h-3 w-3 rounded-xs bg-amber-100" />
+          <div className="h-3 w-3 rounded-xs bg-state-warning-bg" />
           <Text className="text-[10px] text-text-secondary">Beta</Text>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="h-3 w-3 rounded-xs bg-red-100" />
+          <div className="h-3 w-3 rounded-xs bg-state-danger-bg" />
           <Text className="text-[10px] text-text-secondary">Breaking risk</Text>
         </div>
         <div className="flex items-center gap-1.5">
@@ -210,10 +210,10 @@ export default function ConsumerHeatmap() {
                     <span
                       className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${
                         row.lifecycle === "stable"
-                          ? "bg-emerald-100 text-emerald-700"
+                          ? "bg-state-success-bg text-state-success-text"
                           : row.lifecycle === "beta"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-slate-100 text-slate-600"
+                            ? "bg-state-warning-bg text-state-warning-text"
+                            : "bg-surface-muted text-text-secondary"
                       }`}
                     >
                       {row.lifecycle}

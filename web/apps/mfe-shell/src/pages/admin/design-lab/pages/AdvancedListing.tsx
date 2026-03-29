@@ -66,9 +66,9 @@ export default function AdvancedListing() {
             onClick={() => navigate(`/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, '~'))}`)}
             className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
           >
-            <div className="absolute inset-0 bg-linear-to-br from-orange-500/10 to-red-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="absolute inset-0 bg-linear-to-br from-state-warning-text/10 to-state-danger-text/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             <div className="relative">
-              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/10 text-orange-600 transition-[scale] duration-300 group-hover:scale-110">
+              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-state-warning-text/10 text-state-warning-text transition-[scale] duration-300 group-hover:scale-110">
                 <Database className="h-4.5 w-4.5" />
               </div>
               <Text
@@ -99,7 +99,7 @@ export default function AdvancedListing() {
 
         {advancedItems.length === 0 && (
           <div className="col-span-full flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-subtle bg-surface-canvas px-8 py-16 text-center">
-            <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-600">
+            <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-state-warning-text/10 text-state-warning-text">
               <Database className="h-7 w-7" />
             </div>
             <Text

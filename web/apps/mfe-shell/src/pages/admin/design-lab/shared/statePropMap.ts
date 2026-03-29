@@ -92,6 +92,11 @@ export const STATE_PROP_MAP: Record<string, Record<string, unknown>> = {
   "last-step": { current: -1 },
   "final-step": { current: -1 },
 
+  /* ---- Permission / message / toolbar states ---- */
+  "with-admin-permissions": { access: "full" },
+  "custom-messages": {},
+  "compact-in-toolbar": { compact: true },
+
   /* ---- Form / input states ---- */
   filled: { value: "sample" },
   "filled-form": { values: { name: "Sample" } },

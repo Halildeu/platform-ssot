@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "../../utils/cn";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  PageHeader — Standard page-level header with title, actions, tabs  */
@@ -53,14 +53,14 @@ export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(({
   className,
   access,
   accessReason,
-}, ref) => {
+}, _ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
   return (
     <header
       data-access-state={accessState.state}
       className={cn(
-        "bg-surface-default px-6 pt-4 pb-0",
+        "bg-[var(--surface-default)] px-6 pt-4 pb-0",
         !noBorder && "border-b border-border-subtle",
         sticky && "sticky top-0 z-[100]",
         accessState.isDisabled && "pointer-events-none opacity-50",

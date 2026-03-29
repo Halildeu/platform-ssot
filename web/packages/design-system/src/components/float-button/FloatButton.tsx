@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
@@ -161,7 +161,7 @@ export const FloatButton = React.forwardRef<HTMLDivElement, FloatButtonProps>(
     {
       icon,
       label,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+       
       tooltip,
       shape = "circle",
       size = "md",

@@ -42,7 +42,7 @@ export const KanbanToolbar: React.FC<KanbanToolbarProps> = ({
             left: '10px',
             top: '50%',
             transform: 'translateY(-50%)',
-            color: 'var(--text-tertiary, #9ca3af)',
+            color: 'var(--text-tertiary))',
             pointerEvents: 'none',
           }}
         >
@@ -60,21 +60,21 @@ export const KanbanToolbar: React.FC<KanbanToolbarProps> = ({
             height: '36px',
             padding: '0 12px 0 34px',
             fontSize: '13px',
-            border: '1px solid var(--border-subtle, #e5e7eb)',
-            borderRadius: 'var(--radius-md, 8px)',
-            background: 'var(--surface-default, #fff)',
-            color: 'var(--text-primary, #111827)',
+            border: '1px solid var(--border-subtle))',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--surface-default))',
+            color: 'var(--text-primary))',
             outline: 'none',
             transition: 'border-color 0.15s ease',
             boxSizing: 'border-box',
           }}
           onFocus={(e) => {
             (e.target as HTMLInputElement).style.borderColor =
-              'var(--border-accent, #3b82f6)';
+              'var(--border-accent))';
           }}
           onBlur={(e) => {
             (e.target as HTMLInputElement).style.borderColor =
-              'var(--border-subtle, #e5e7eb)';
+              'var(--border-subtle))';
           }}
         />
       </div>
@@ -99,20 +99,20 @@ export const KanbanToolbar: React.FC<KanbanToolbarProps> = ({
             padding: '0 14px',
             fontSize: '13px',
             fontWeight: 500,
-            border: '1px solid var(--border-subtle, #e5e7eb)',
-            borderRadius: 'var(--radius-md, 8px)',
-            background: 'var(--surface-default, #fff)',
-            color: 'var(--text-primary, #111827)',
+            border: '1px solid var(--border-subtle))',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--surface-default))',
+            color: 'var(--text-primary))',
             cursor: 'pointer',
             transition: 'background 0.15s ease, border-color 0.15s ease',
           }}
           onMouseEnter={(e) => {
             (e.currentTarget as HTMLButtonElement).style.background =
-              'var(--surface-hover, #f9fafb)';
+              'var(--surface-hover))';
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLButtonElement).style.background =
-              'var(--surface-default, #fff)';
+              'var(--surface-default))';
           }}
         >
           <span aria-hidden="true" style={{ fontSize: '16px', lineHeight: 1 }}>+</span>

@@ -1,0 +1,4 @@
+users
+user_notification_preferences
+user_audit_events
+user_flyway_history

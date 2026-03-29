@@ -187,7 +187,7 @@ function SelectControl({
             className={[
               "rounded-lg px-2.5 py-1 text-xs font-medium transition",
               value === opt
-                ? "bg-action-primary text-white shadow-xs"
+                ? "bg-action-primary text-text-inverse shadow-xs"
                 : "bg-surface-muted text-text-secondary hover:bg-surface-canvas",
             ].join(" ")}
           >
@@ -222,7 +222,7 @@ function BooleanControl({
       >
         <span
           className={[
-            "pointer-events-none inline-block h-4 w-4 translate-y-0.5 rounded-full bg-[var(--surface-default,#fff)] shadow-xs transition-[translate]",
+            "pointer-events-none inline-block h-4 w-4 translate-y-0.5 rounded-full bg-[var(--surface-default))] shadow-xs transition-[translate]",
             value ? "translate-x-4" : "translate-x-0.5",
           ].join(" ")}
         />

@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>users.public</title>
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
+        <!-- Bootstrap 3.3.5 -->
+        <link rel="stylesheet" href="bower/admin-lte/bootstrap/css/bootstrap.min.css">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="bower/font-awesome/css/font-awesome.min.css">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="bower/ionicons/css/ionicons.min.css">
+        <!-- DataTables -->
+        <link rel="stylesheet" href="bower/datatables.net-bs/css/dataTables.bootstrap.min.css">
+        <link rel="stylesheet" href="bower/datatables.net-buttons-bs/css/buttons.bootstrap.min.css">
+        <!-- Code Mirror -->
+        <link rel="stylesheet" href="bower/codemirror/codemirror.css">
+        <!-- Fonts -->
+        <link href='fonts/indieflower/indie-flower.css' rel='stylesheet' type='text/css'>
+        <link href='fonts/source-sans-pro/source-sans-pro.css' rel='stylesheet' type='text/css'>
+
+        <!-- Theme style -->
+        <link rel="stylesheet" href="bower/admin-lte/dist/css/AdminLTE.min.css">
+        <!-- Salvattore -->
+        <link rel="stylesheet" href="bower/salvattore/salvattore.css">
+        <!-- AdminLTE Skins. Choose a skin from the css/skins
+           folder instead of downloading all of them to reduce the load. -->
+        <link rel="stylesheet" href="bower/admin-lte/dist/css/skins/_all-skins.min.css">
+        <!-- SchemaSpy -->
+        <link rel="stylesheet" href="schemaSpy.css">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="bower/html5shiv/html5shiv.min.js"></script>
+        <script src="bower/respond/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
+    <body class="hold-transition skin-blue layout-top-nav">
+        <div class="wrapper">
+            <header class="main-header">
+                <nav class="navbar navbar-static-top">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <a href="../index.html" class="navbar-brand"><b>users</b></a><span class="navbar-brand" style="padding-left: 0">.public</span>
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse"><i class="fa fa-bars"></i></button>
+                        </div>
+
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+                            <ul class="nav navbar-nav">
+                                <li><a href="index.html">Tables <span class="sr-only">(current)</span></a></li>
+                                <li><a href="columns.html" title="All of the columns in the schema">Columns</a></li>
+                                <li><a href="constraints.html" title="Useful for diagnosing error messages that just give constraint name or number">Constraints</a></li>
+                                <li><a href="relationships.html" title="Diagram of table relationships">Relationships</a></li>
+                                <li><a href="orphans.html" title="View of tables with neither parents nor children">Orphan&nbsp;Tables</a></li>
+                                <li><a href="anomalies.html" title="Things that might not be quite right">Anomalies</a></li>
+                                <li><a href="routines.html" title="Procedures and functions">Routines</a></li>
+                            </ul>
+                        </div>
+                        <!-- /.navbar-collapse -->
+                        <!-- Navbar Right Menu -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </header>
+            <!-- Main content -->
+            <!-- Full Width Column -->
+            <div class="content-wrapper">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <h1>Routines</h1>
+                </section>
+                <!-- Main content -->
+                <section class="content">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-file-code-o" aria-hidden="true"></i>
+                            <h3 class="box-title">Routines</h3>
+                        </div>
+                        <div class="box-body">
+                            <table
+                                    id="routine_table"
+                                    class="table table-bordered table-striped dataTable"
+                                    role="grid"
+                                    data-paging="true"
+                                    data-page-length="50"
+                                    data-length-change="false">
+                                <thead align='left'>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Language</th>
+                                        <th>Deterministic</th>
+                                        <th>Return Type</th>
+                                        <th>Security Restriction</th>
+                                        <th title='Comments' class="toggle"><span>Comments</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="routines/l2_norm_halfvec__d2aa627b.html">l2_norm(halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_negative_inner_product_v_ddc8b83f.html">vector_negative_inner_product(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/avg_vector__fb5bd2f0.html">avg(vector)</a></td>
+                                        <td>AGGREGATE</td>
+                                        <td>internal</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_gt_sparsevec__sparsev_26182f8d.html">sparsevec_gt(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/cosine_distance_vector__vector__7fd196c2.html">cosine_distance(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_eq_halfvec__halfvec__365471ff.html">halfvec_eq(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_send_vector__3409ff22.html">vector_send(vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>bytea</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/array_to_sparsevec_numeric____i_fa61b2c2.html">array_to_sparsevec(numeric[], integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>sparsevec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/hamming_distance_bit__bit__57893120.html">hamming_distance(bit, bit)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/l2_distance_halfvec__halfvec__84a370a3.html">l2_distance(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_cmp_vector__vector__e249e091.html">vector_cmp(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>integer</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/inner_product_halfvec__halfvec__d6d5fdb.html">inner_product(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_spherical_distance_vecto_de86325a.html">vector_spherical_distance(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_add_halfvec__halfvec__6ccf2c78.html">halfvec_add(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_vector__integer__boolean_e4faa177.html">vector(vector, integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_combine_double_precisio_cae33f2c.html">halfvec_combine(double precision[], double precision[])</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision[]</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/ivfflat_bit_support_internal__55585f94.html">ivfflat_bit_support(internal)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>false</td>
+                                        <td>internal</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_ge_sparsevec__sparsev_cd3034be.html">sparsevec_ge(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_mul_vector__vector__ccd94b0f.html">vector_mul(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/l1_distance_sparsevec__sparseve_39c35e64.html">l1_distance(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_accum_double_precision__449856fa.html">halfvec_accum(double precision[], halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision[]</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_sub_vector__vector__7834e98b.html">vector_sub(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_le_halfvec__halfvec__e7c4b98c.html">halfvec_le(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_negative_inner_produc_7ad1435c.html">sparsevec_negative_inner_product(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/l2_normalize_halfvec__dfc0e91c.html">l2_normalize(halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_to_sparsevec_vector__int_675c0120.html">vector_to_sparsevec(vector, integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>sparsevec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_ne_sparsevec__sparsev_b13b1cd7.html">sparsevec_ne(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_add_vector__vector__95ddc1ec.html">vector_add(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_combine_double_precision_a1579dee.html">vector_combine(double precision[], double precision[])</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision[]</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_eq_sparsevec__sparsev_4f80460c.html">sparsevec_eq(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_send_halfvec__72e72e2a.html">halfvec_send(halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>bytea</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_typmod_in_cstring____51781679.html">sparsevec_typmod_in(cstring[])</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>integer</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_sparsevec__integer__b_e8fb507f.html">sparsevec(sparsevec, integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>sparsevec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_avg_double_precision____60422d66.html">vector_avg(double precision[])</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/hnsw_halfvec_support_internal__5980c2a0.html">hnsw_halfvec_support(internal)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>false</td>
+                                        <td>internal</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_sub_halfvec__halfvec__15fae857.html">halfvec_sub(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_l2_squared_distance_hal_6efe08bd.html">halfvec_l2_squared_distance(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_cmp_sparsevec__sparse_6f880fb0.html">sparsevec_cmp(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>integer</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_accum_double_precision____2bb9616.html">vector_accum(double precision[], vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision[]</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/array_to_halfvec_double_precisi_31ec9e09.html">array_to_halfvec(double precision[], integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_to_halfvec_vector__integ_2b4275ed.html">vector_to_halfvec(vector, integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_typmod_in_cstring____2f87238c.html">halfvec_typmod_in(cstring[])</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>integer</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_send_sparsevec__7e7bb60a.html">sparsevec_send(sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>bytea</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_l2_squared_distance_s_b6f8ac90.html">sparsevec_l2_squared_distance(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_ge_vector__vector__3c7deda1.html">vector_ge(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/inner_product_sparsevec__sparse_e943317b.html">inner_product(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sum_vector__f8c18d69.html">sum(vector)</a></td>
+                                        <td>AGGREGATE</td>
+                                        <td>internal</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_concat_halfvec__halfvec_8df96367.html">halfvec_concat(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_gt_vector__vector__f671efb0.html">vector_gt(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_lt_halfvec__halfvec__f4c073db.html">halfvec_lt(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_gt_halfvec__halfvec__6e974400.html">halfvec_gt(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_norm_vector__e60e6b56.html">vector_norm(vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/array_to_halfvec_real____intege_c653fb3a.html">array_to_halfvec(real[], integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/subvector_vector__integer__inte_dedbed61.html">subvector(vector, integer, integer)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/jaccard_distance_bit__bit__e48cc40d.html">jaccard_distance(bit, bit)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_to_vector_halfvec__inte_18128c5d.html">halfvec_to_vector(halfvec, integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_dims_halfvec__ba67ff69.html">vector_dims(halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>integer</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_negative_inner_product__cc2a4fcf.html">halfvec_negative_inner_product(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/hnsw_sparsevec_support_internal_2dceb013.html">hnsw_sparsevec_support(internal)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>false</td>
+                                        <td>internal</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_to_vector_sparsevec__i_d19f477.html">sparsevec_to_vector(sparsevec, integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_out_vector__14953e70.html">vector_out(vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>cstring</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/array_to_halfvec_integer____int_25bb6ec4.html">array_to_halfvec(integer[], integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sum_halfvec__ac201805.html">sum(halfvec)</a></td>
+                                        <td>AGGREGATE</td>
+                                        <td>internal</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_recv_internal__oid__inte_a2d88052.html">vector_recv(internal, oid, integer)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_ge_halfvec__halfvec__619b89b1.html">halfvec_ge(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/array_to_sparsevec_real____inte_511f03ed.html">array_to_sparsevec(real[], integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>sparsevec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_dims_vector__cfed2985.html">vector_dims(vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>integer</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/subvector_halfvec__integer__int_d6edb98d.html">subvector(halfvec, integer, integer)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_cmp_halfvec__halfvec__4eae35dd.html">halfvec_cmp(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>integer</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/inner_product_vector__vector__6bccbc4d.html">inner_product(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_l2_squared_distance_vect_26e12771.html">vector_l2_squared_distance(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_in_cstring__oid__intege_25325ae6.html">halfvec_in(cstring, oid, integer)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/binary_quantize_halfvec__4ce82b21.html">binary_quantize(halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>bit</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_le_vector__vector__1357583c.html">vector_le(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_typmod_in_cstring____4483260a.html">vector_typmod_in(cstring[])</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>integer</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_recv_internal__oid__int_c74fdbd4.html">halfvec_recv(internal, oid, integer)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/l1_distance_halfvec__halfvec__93d26944.html">l1_distance(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_ne_halfvec__halfvec__b708664a.html">halfvec_ne(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_out_halfvec__9c152760.html">halfvec_out(halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>cstring</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/l1_distance_vector__vector__f7870bf6.html">l1_distance(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/l2_normalize_vector__65c6bd72.html">l2_normalize(vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/l2_norm_sparsevec__ffceed28.html">l2_norm(sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_to_float4_halfvec__inte_5df0df28.html">halfvec_to_float4(halfvec, integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>real[]</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/hnswhandler_internal__bce0e004.html">hnswhandler(internal)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>false</td>
+                                        <td>index_am_handler</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_to_halfvec_sparsevec__2de8920b.html">sparsevec_to_halfvec(sparsevec, integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/hnsw_bit_support_internal__2fb1abac.html">hnsw_bit_support(internal)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>false</td>
+                                        <td>internal</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/cosine_distance_sparsevec__spar_25f5a030.html">cosine_distance(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_out_sparsevec__7444f57a.html">sparsevec_out(sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>cstring</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_spherical_distance_half_134e402a.html">halfvec_spherical_distance(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_ne_vector__vector__9c7b1c7a.html">vector_ne(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/l2_distance_sparsevec__sparseve_c1f39e43.html">l2_distance(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_recv_internal__oid__i_ed8991c1.html">sparsevec_recv(internal, oid, integer)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>sparsevec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/l2_normalize_sparsevec__215e4f89.html">l2_normalize(sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>sparsevec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/l2_distance_vector__vector__f9605f15.html">l2_distance(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_lt_sparsevec__sparsev_121ff9e8.html">sparsevec_lt(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/array_to_halfvec_numeric____int_79185c55.html">array_to_halfvec(numeric[], integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_in_cstring__oid__inte_42753419.html">sparsevec_in(cstring, oid, integer)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>sparsevec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/array_to_vector_double_precisio_21e4ee47.html">array_to_vector(double precision[], integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/array_to_vector_numeric____inte_bb3f2e57.html">array_to_vector(numeric[], integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_to_float4_vector__intege_4bdca194.html">vector_to_float4(vector, integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>real[]</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_eq_vector__vector__7b50916f.html">vector_eq(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/ivfflathandler_internal__39835b1c.html">ivfflathandler(internal)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>false</td>
+                                        <td>index_am_handler</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/cosine_distance_halfvec__halfve_33a57110.html">cosine_distance(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>double precision</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_lt_vector__vector__cd4b5a4b.html">vector_lt(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/ivfflat_halfvec_support_interna_235b4288.html">ivfflat_halfvec_support(internal)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>false</td>
+                                        <td>internal</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/array_to_vector_real____integer_c2043878.html">array_to_vector(real[], integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/binary_quantize_vector__ab5ca6cd.html">binary_quantize(vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>bit</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/array_to_sparsevec_integer____i_a704c531.html">array_to_sparsevec(integer[], integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>sparsevec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/avg_halfvec__fcce835e.html">avg(halfvec)</a></td>
+                                        <td>AGGREGATE</td>
+                                        <td>internal</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_concat_vector__vector__18618dd7.html">vector_concat(vector, vector)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_to_sparsevec_halfvec__i_9fd876d8.html">halfvec_to_sparsevec(halfvec, integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>sparsevec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/vector_in_cstring__oid__integer__e6a3728.html">vector_in(cstring, oid, integer)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_avg_double_precision____659c28a4.html">halfvec_avg(double precision[])</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_mul_halfvec__halfvec__d30cf8db.html">halfvec_mul(halfvec, halfvec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/sparsevec_le_sparsevec__sparsev_b937ff19.html">sparsevec_le(sparsevec, sparsevec)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>boolean</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/halfvec_halfvec__integer__boole_4f227625.html">halfvec(halfvec, integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>halfvec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/array_to_sparsevec_double_preci_c209323c.html">array_to_sparsevec(double precision[], integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>sparsevec</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="routines/array_to_vector_integer____inte_67e240c6.html">array_to_vector(integer[], integer, boolean)</a></td>
+                                        <td>FUNCTION</td>
+                                        <td>c</td>
+                                        <td>true</td>
+                                        <td>vector</td>
+                                        <td>INVOKER</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                <script>
+                    var config = {
+                        pagination: true
+                    }
+                </script>
+            </div>
+            <!-- /.content-wrapper -->
+            <footer class="main-footer">
+                <div>
+                    <div class="pull-right hidden-xs">
+                        <a href="https://github.com/schemaspy/schemaspy" title="GitHub for SchemaSpy"><i class="fa fa-github-square fa-2x"></i></a>
+                        <a href="http://stackoverflow.com/questions/tagged/schemaspy" title="StackOverflow for SchemaSpy"><i class="fa fa-stack-overflow fa-2x"></i></a>
+                    </div>
+                    <strong>Generated by <a href="http://schemaspy.org/" class="logo-text"><i class="fa fa-database"></i> SchemaSpy 7.0.2</a></strong>
+                </div>
+                <!-- /.container -->
+            </footer>
+        </div>
+        <!-- ./wrapper -->
+
+        <!-- jQuery 2.2.3 -->
+        <script src="bower/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+        <script src="bower/admin-lte/plugins/jQueryUI/jquery-ui.min.js"></script>
+        <!-- Bootstrap 3.3.5 -->
+        <script src="bower/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+        <!-- DataTables -->
+        <script src="bower/datatables.net/jquery.dataTables.min.js"></script>
+        <script src="bower/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+        <script src="bower/datatables.net-buttons/dataTables.buttons.min.js"></script>
+        <script src="bower/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+        <script src="bower/datatables.net-buttons/buttons.html5.min.js"></script>
+        <script src="bower/datatables.net-buttons/buttons.print.min.js"></script>
+        <script src="bower/datatables.net-buttons/buttons.colVis.min.js"></script>
+        <!-- SheetJS -->
+        <script src="bower/js-xlsx/xlsx.full.min.js"></script>
+        <!-- pdfmake -->
+        <script src="bower/pdfmake/pdfmake.min.js"></script>
+        <script src="bower/pdfmake/vfs_fonts.js"></script>
+        <!-- SlimScroll -->
+        <script src="bower/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+        <!-- FastClick -->
+        <script src="bower/admin-lte/plugins/fastclick/fastclick.js"></script>
+        <!-- Salvattore -->
+        <script src="bower/salvattore/salvattore.min.js"></script>
+        <!-- AnchorJS -->
+        <script src="bower/anchor-js/anchor.min.js"></script>
+        <!-- CodeMirror -->
+        <script src="bower/codemirror/codemirror.js"></script>
+        <script src="bower/codemirror/sql.js"></script>
+        <!-- AdminLTE App -->
+        <script src="bower/admin-lte/dist/js/app.min.js"></script>
+        <script src="routines.js"></script>
+        <script src="schemaSpy.js"></script>
+    </body>
+</html>

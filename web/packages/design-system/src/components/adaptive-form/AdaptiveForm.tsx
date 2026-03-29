@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -101,9 +101,9 @@ const SIZE_CLASSES: Record<FormSize, { input: string; label: string; text: strin
 };
 
 const INPUT_BASE =
-  "w-full rounded-lg border border-border-subtle bg-[var(--surface-default-bg,var(--surface-default))] text-text-primary outline-hidden transition-colors placeholder:text-text-secondary/60 focus:border-[var(--selection-outline,var(--action-primary))] focus:ring-1 focus:ring-[var(--selection-outline,var(--action-primary))]";
+  "w-full rounded-lg border border-border-subtle bg-[var(--surface-default-bg))] text-text-primary outline-hidden transition-colors placeholder:text-text-secondary/60 focus:border-[var(--selection-outline))] focus:ring-1 focus:ring-[var(--selection-outline))]";
 
-const ERROR_CLASS = "border-[var(--danger-color,var(--state-error-text))] focus:border-[var(--danger-color,var(--state-error-text))] focus:ring-[var(--danger-color,var(--state-error-text))]";
+const ERROR_CLASS = "border-[var(--danger-color))] focus:border-[var(--danger-color))] focus:ring-[var(--danger-color))]";
 
 const SKELETON_PULSE =
   "animate-pulse rounded-lg bg-surface-muted";
@@ -257,7 +257,7 @@ const FieldRenderer: React.FC<{
             checked={Boolean(value)}
             onChange={(e) => handleChange(e.target.checked)}
             disabled={disabled}
-            className="h-4 w-4 rounded-xs border-border-subtle text-[var(--action-primary-bg,var(--action-primary))] focus:ring-[var(--selection-outline,var(--action-primary))]"
+            className="h-4 w-4 rounded-xs border-border-subtle text-[var(--action-primary-bg))] focus:ring-[var(--selection-outline))]"
             aria-invalid={hasError}
             aria-describedby={hasError ? `${id}-error` : undefined}
           />
@@ -279,7 +279,7 @@ const FieldRenderer: React.FC<{
                 checked={value === opt.value}
                 onChange={() => handleChange(opt.value)}
                 disabled={disabled}
-                className="h-4 w-4 border-border-subtle text-[var(--action-primary-bg,var(--action-primary))] focus:ring-[var(--selection-outline,var(--action-primary))]"
+                className="h-4 w-4 border-border-subtle text-[var(--action-primary-bg))] focus:ring-[var(--selection-outline))]"
               />
               <span className={cn(sc.text, "text-text-primary")}>
                 {opt.label}
@@ -298,7 +298,7 @@ const FieldRenderer: React.FC<{
           disabled={disabled}
           className={cn(
             sc.input,
-            "w-full cursor-pointer rounded-lg border border-border-subtle bg-[var(--surface-default-bg,var(--surface-default))] text-text-secondary file:me-3 file:rounded-md file:border-0 file:bg-[var(--action-primary-bg,var(--action-primary))] file:px-3 file:py-1 file:text-xs file:font-medium file:text-text-inverse",
+            "w-full cursor-pointer rounded-lg border border-border-subtle bg-[var(--surface-default-bg))] text-text-secondary file:me-3 file:rounded-md file:border-0 file:bg-[var(--action-primary-bg))] file:px-3 file:py-1 file:text-xs file:font-medium file:text-text-inverse",
           )}
           aria-invalid={hasError}
           aria-describedby={hasError ? `${id}-error` : undefined}
@@ -328,7 +328,7 @@ export const AdaptiveForm = React.forwardRef<HTMLDivElement, AdaptiveFormProps>(
   className,
   access = "full",
   accessReason,
-}, ref) => {
+}, _ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
 
@@ -491,7 +491,7 @@ export const AdaptiveForm = React.forwardRef<HTMLDivElement, AdaptiveFormProps>(
                 >
                   {field.label}
                   {field.required && (
-                    <span className="ms-0.5 text-[var(--danger-color,var(--state-error-text))]">
+                    <span className="ms-0.5 text-[var(--danger-color))]">
                       *
                     </span>
                   )}
@@ -524,7 +524,7 @@ export const AdaptiveForm = React.forwardRef<HTMLDivElement, AdaptiveFormProps>(
               {error && (
                 <p
                   id={`${id}-error`}
-                  className="mt-1 text-xs text-[var(--danger-color,var(--state-error-text))]"
+                  className="mt-1 text-xs text-[var(--danger-color))]"
                   role="alert"
                 >
                   {error}
@@ -541,7 +541,7 @@ export const AdaptiveForm = React.forwardRef<HTMLDivElement, AdaptiveFormProps>(
           type="submit"
           disabled={isDisabled}
           className={cn(
-            "rounded-lg bg-[var(--action-primary-bg,var(--action-primary))] font-medium text-text-inverse transition-colors hover:bg-accent-primary-hover disabled:opacity-50",
+            "rounded-lg bg-[var(--action-primary-bg))] font-medium text-text-inverse transition-colors hover:bg-accent-primary-hover disabled:opacity-50",
             sc.input,
           )}
         >

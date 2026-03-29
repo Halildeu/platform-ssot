@@ -5,7 +5,6 @@
  * Runs Stryker on changed files and enforces minimum mutation score.
  */
 import { execSync } from 'child_process';
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -37,7 +36,7 @@ try {
   } else {
     console.log(`\n✅ MUTATION GATE PASSED: ${score}%\n`);
   }
-} catch (error) {
+} catch (_error) {
   // Stryker may not be installed or may fail — warn but don't block
   console.log('  ⚠️  Stryker run failed (may not be installed)');
   console.log('  Skipping mutation gate...\n');

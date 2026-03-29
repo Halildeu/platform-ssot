@@ -12,7 +12,7 @@
  */
 
 import { readdirSync, readFileSync, existsSync } from 'fs';
-import { resolve, dirname, join, basename, relative } from 'path';
+import { resolve, dirname, join, basename } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

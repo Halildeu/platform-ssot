@@ -1,24 +1,33 @@
 /**
- * FilterGroupNode — Recursive AND/OR group inspired by react-querybuilder.
+ * FilterGroupNode — Recursive AND/OR group, react-querybuilder layout.
  *
- * Layout:
- *   ┌─ [+ Rule] [+ Group] [Clone] [Delete]  ───── group header
- *   │  [Field ▼] [Op ▼] [Value]  [↑↓→←🗑]   ───── rule
- *   │            ─── AND ▼ ───                ───── combinator (clickable)
- *   │  [Field ▼] [Op ▼] [Value]  [↑↓→←🗑]   ───── rule
- *   │            ─── AND ▼ ───
- *   │  ┌─ [+ Rule] [+ Group] [Delete]        ───── sub-group
- *   │  │  [Field ▼] [Op ▼] [Value]
- *   │  │            ─── OR ▼ ───
- *   │  │  [Field ▼] [Op ▼] [Value]
- *   │  └──────────────────────────────────
- *   └────────────────────────────────────────
+ * Layout per group:
+ *   ┌─ [NOT] [+ Kural] [+ Grup] [Clone] [Lock] [Delete]  ── group header
+ *   ┃
+ *   ┃── FilterConditionRow (kural)
+ *   ┃── FilterCombinatorRow (VE ▼)
+ *   ┃── FilterConditionRow (kural)
+ *   ┃── [FilterGroupNode] (alt grup — recursive)
+ *   ┃
+ *   └─────────────────────────────────────────────────────
+ *
+ * Features: branch lines, NOT toggle, clone, lock, independent combinators, DnD via SortableContext.
  */
 import React from 'react';
-import { Plus, FolderPlus, Trash2, ChevronUp, ChevronDown, IndentIncrease, IndentDecrease } from 'lucide-react';
+import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Plus, FolderPlus, Trash2, Copy, Lock, Unlock, GripVertical } from 'lucide-react';
 import type { ColDef } from 'ag-grid-community';
-import type { FilterGroup, FilterCondition, FilterCombinator } from './useFilterBuilder';
+import type { FilterGroup, FilterCondition, FilterCombinator, FilterTreeNode } from './types';
 import { FilterConditionRow } from './FilterConditionRow';
+import { FilterCombinatorRow } from './FilterCombinatorRow';
+
+// ── Depth color scheme (cycles: info → success → warning) ──
+const DEPTH_COLORS = [
+  { border: 'border-state-info-text/30', bg: 'bg-state-info-bg', headerBg: 'bg-state-info-bg', branchLine: 'bg-state-info-text/40', notActive: 'bg-action-primary text-text-inverse' },
+  { border: 'border-state-success-text/30', bg: 'bg-state-success-bg', headerBg: 'bg-state-success-bg', branchLine: 'bg-state-success-text/40', notActive: 'bg-state-success-text text-text-inverse' },
+  { border: 'border-state-warning-text/30', bg: 'bg-state-warning-bg', headerBg: 'bg-state-warning-bg', branchLine: 'bg-state-warning-text/40', notActive: 'bg-state-warning-text text-text-inverse' },
+];
 
 interface FilterGroupNodeProps {
   group: FilterGroup;
@@ -30,17 +39,28 @@ interface FilterGroupNodeProps {
   onAddGroup: (parentId: string) => void;
   onRemoveNode: (id: string) => void;
   onUpdateCondition: (id: string, updates: Partial<FilterCondition>) => void;
-  onSetLogic: (groupId: string, logic: 'AND' | 'OR') => void;
-  onIndentNode?: (id: string) => void;
-  onOutdentNode?: (id: string) => void;
-  onMoveNode?: (id: string, direction: 'up' | 'down') => void;
+  onSetLogic: (targetId: string, logic: 'AND' | 'OR') => void;
+  onMoveNode: (id: string, direction: 'up' | 'down') => void;
+  onCloneNode: (id: string) => void;
+  onToggleLock: (id: string) => void;
+  onToggleNot: (groupId: string) => void;
+  parentLocked?: boolean;
 }
 
-const DEPTH_COLORS = [
-  { border: 'border-blue-300', bg: 'bg-blue-50/50', headerBg: 'bg-blue-100', text: 'text-blue-800' },
-  { border: 'border-violet-300', bg: 'bg-violet-50/50', headerBg: 'bg-violet-100', text: 'text-violet-800' },
-  { border: 'border-amber-300', bg: 'bg-amber-50/50', headerBg: 'bg-amber-100', text: 'text-amber-800' },
-];
+// ── Sortable wrapper for non-root groups ──
+const SortableGroupWrapper: React.FC<{
+  id: string;
+  disabled: boolean;
+  children: React.ReactNode;
+}> = ({ id, disabled, children }) => {
+  const { setNodeRef, transform, transition, isDragging } = useSortable({ id, disabled });
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+  return <div ref={setNodeRef} style={style}>{children}</div>;
+};
 
 export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
   group,
@@ -53,46 +73,118 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
   onRemoveNode,
   onUpdateCondition,
   onSetLogic,
-  onIndentNode,
-  onOutdentNode,
   onMoveNode,
+  onCloneNode,
+  onToggleLock,
+  onToggleNot,
+  parentLocked = false,
 }) => {
   const colors = DEPTH_COLORS[depth % DEPTH_COLORS.length];
-  const totalChildren = group.children.length;
+  const isLocked = group.locked || parentLocked;
+  const substantialChildren = group.children.filter((c) => c.type !== 'combinator');
+
+  const sortableIds = group.children
+    .filter((c) => c.type !== 'combinator')
+    .map((c) => c.id);
 
   return (
-    <div className={isRoot ? 'flex flex-col gap-0' : `rounded-lg border ${colors.border} ${colors.bg} overflow-hidden`}>
-      {/* Group header bar — always visible */}
-      <div className={`flex items-center gap-2 px-3 py-2 ${isRoot ? '' : colors.headerBg}`}>
-        {/* Action buttons */}
+    <div
+      className={[
+        isRoot ? 'flex flex-col gap-0' : `overflow-hidden rounded-lg border ${colors.border} ${colors.bg}`,
+        isLocked && !isRoot ? 'opacity-80 ring-1 ring-state-warning-text/30' : '',
+      ].join(' ')}
+    >
+      {/* ── Group header ── */}
+      <div
+        className={[
+          'flex flex-wrap items-center gap-1.5 px-3 py-2',
+          isRoot ? 'rounded-lg bg-surface-muted/60' : colors.headerBg,
+        ].join(' ')}
+      >
+        {/* DnD grip (non-root groups) */}
+        {!isRoot && (
+          <span className={`touch-none text-text-subtle ${isLocked ? 'cursor-not-allowed opacity-40' : 'cursor-grab'}`}>
+            <GripVertical className="h-3.5 w-3.5" />
+          </span>
+        )}
+
+        {/* NOT toggle */}
         <button
           type="button"
+          disabled={isLocked}
+          onClick={() => onToggleNot(group.id)}
+          className={[
+            'rounded px-2 py-0.5 text-[10px] font-bold transition',
+            group.not
+              ? colors.notActive
+              : 'bg-surface-default text-text-subtle ring-1 ring-border-subtle hover:ring-text-subtle',
+            isLocked ? 'cursor-not-allowed opacity-60' : '',
+          ].join(' ')}
+          title={group.not ? 'NOT aktif — tıkla: kaldır' : 'NOT ekle (grubu tersine çevir)'}
+        >
+          DEĞİL
+        </button>
+
+        {/* + Rule */}
+        <button
+          type="button"
+          disabled={isLocked}
           onClick={() => onAddCondition(group.id)}
-          className="flex items-center gap-1 rounded-md bg-blue-600 px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-blue-700"
+          className="flex items-center gap-1 rounded-md bg-action-primary px-2.5 py-1 text-[11px] font-semibold text-text-inverse hover:bg-action-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Plus className="h-3 w-3" />
           Kural
         </button>
+
+        {/* + Group */}
         {!maxDepthReached && (
           <button
             type="button"
+            disabled={isLocked}
             onClick={() => onAddGroup(group.id)}
-            className="flex items-center gap-1 rounded-md bg-violet-600 px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-violet-700"
+            className="flex items-center gap-1 rounded-md bg-action-primary/15 px-2.5 py-1 text-[11px] font-semibold text-action-primary hover:bg-action-primary/25 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <FolderPlus className="h-3 w-3" />
             Grup
           </button>
         )}
 
-        {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Group delete (not root) */}
+        {/* Clone group */}
+        {!isRoot && (
+          <button
+            type="button"
+            onClick={() => onCloneNode(group.id)}
+            className="rounded p-1 text-text-subtle hover:bg-surface-default/60 hover:text-text-secondary"
+            title="Grubu kopyala"
+          >
+            <Copy className="h-3.5 w-3.5" />
+          </button>
+        )}
+
+        {/* Lock group */}
+        {!isRoot && !parentLocked && (
+          <button
+            type="button"
+            onClick={() => onToggleLock(group.id)}
+            className={[
+              'rounded p-1 transition',
+              group.locked ? 'text-state-warning-text hover:bg-state-warning-bg' : 'text-text-subtle hover:bg-surface-default/60 hover:text-state-warning-text',
+            ].join(' ')}
+            title={group.locked ? 'Grubu aç' : 'Grubu kilitle'}
+          >
+            {group.locked ? <Lock className="h-3.5 w-3.5" /> : <Unlock className="h-3.5 w-3.5" />}
+          </button>
+        )}
+
+        {/* Delete group */}
         {!isRoot && (
           <button
             type="button"
             onClick={() => onRemoveNode(group.id)}
-            className="rounded p-1 text-text-subtle hover:bg-rose-100 hover:text-rose-600"
+            disabled={isLocked}
+            className="rounded p-1 text-text-subtle hover:bg-state-danger-bg hover:text-state-danger-text disabled:cursor-not-allowed disabled:opacity-40"
             title="Grubu sil"
           >
             <Trash2 className="h-3.5 w-3.5" />
@@ -100,10 +192,10 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
         )}
       </div>
 
-      {/* Rules + combinators */}
-      <div className={`flex flex-col ${isRoot ? '' : 'px-3 pb-3'}`}>
+      {/* ── Body: rules + combinators + sub-groups ── */}
+      <div className={`flex flex-col ${isRoot ? 'mt-2' : 'p-3'}`}>
         {/* Empty state */}
-        {totalChildren === 0 && (
+        {substantialChildren.length === 0 && (
           <div className="flex items-center justify-center rounded-lg border-2 border-dashed border-border-subtle py-8 text-center">
             <div>
               <p className="text-sm text-text-subtle">Henüz kural eklenmedi</p>
@@ -112,60 +204,88 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
           </div>
         )}
 
-        {group.children.map((child) => (
-          <React.Fragment key={child.id}>
-            {/* Independent combinator — each one toggles independently */}
-            {child.type === 'combinator' ? (
-              <div className="flex items-center gap-2 py-1">
-                <div className="h-px flex-1 bg-border-subtle" />
-                <button
-                  type="button"
-                  onClick={() => onSetLogic(child.id, child.logic === 'AND' ? 'OR' : 'AND')}
-                  className={`rounded-full px-3 py-0.5 text-[10px] font-bold transition ${
-                    child.logic === 'AND'
-                      ? 'bg-blue-100 text-blue-700 hover:bg-orange-100 hover:text-orange-700'
-                      : 'bg-orange-100 text-orange-700 hover:bg-blue-100 hover:text-blue-700'
-                  }`}
-                  title={`Tıkla: ${child.logic === 'AND' ? 'VEYA' : 'VE'} olarak değiştir`}
-                >
-                  {child.logic === 'AND' ? 'VE' : 'VEYA'}
-                </button>
-                <div className="h-px flex-1 bg-border-subtle" />
-              </div>
-            ) : null}
-
-            {/* Rule */}
-            {child.type === 'condition' ? (
-              <FilterConditionRow
-                condition={child}
-                columnDefs={columnDefs}
-                onUpdate={onUpdateCondition}
-                onRemove={onRemoveNode}
-                onIndent={onIndentNode}
-                onOutdent={onOutdentNode}
-                onMove={onMoveNode}
-                canRemove={totalChildren > 1 || !isRoot}
-                canIndent={!maxDepthReached}
-                canOutdent={!isRoot && depth > 0}
-              />
-            ) : (
-              <FilterGroupNode
-                group={child}
-                columnDefs={columnDefs}
-                depth={depth + 1}
-                maxDepthReached={maxDepthReached}
-                onAddCondition={onAddCondition}
-                onAddGroup={onAddGroup}
-                onRemoveNode={onRemoveNode}
-                onUpdateCondition={onUpdateCondition}
-                onSetLogic={onSetLogic}
-                onIndentNode={onIndentNode}
-                onOutdentNode={onOutdentNode}
-                onMoveNode={onMoveNode}
+        {/* Branch container */}
+        {substantialChildren.length > 0 && (
+          <div className="relative flex flex-col gap-0">
+            {/* Vertical branch line */}
+            {!isRoot && (
+              <div
+                className={`absolute bottom-3 top-3 w-0.5 ${colors.branchLine}`}
+                style={{ left: '-12px' }}
               />
             )}
-          </React.Fragment>
-        ))}
+
+            <SortableContext items={sortableIds} strategy={verticalListSortingStrategy}>
+              {group.children.map((child: FilterTreeNode) => {
+                if (child.type === 'combinator') {
+                  return (
+                    <FilterCombinatorRow
+                      key={child.id}
+                      combinator={child as FilterCombinator}
+                      onSetLogic={onSetLogic}
+                      disabled={isLocked}
+                    />
+                  );
+                }
+
+                if (child.type === 'condition') {
+                  return (
+                    <FilterConditionRow
+                      key={child.id}
+                      condition={child}
+                      columnDefs={columnDefs}
+                      onUpdate={onUpdateCondition}
+                      onRemove={onRemoveNode}
+                      onMove={onMoveNode}
+                      onClone={onCloneNode}
+                      onToggleLock={onToggleLock}
+                      canRemove={substantialChildren.length > 1 || !isRoot}
+                      parentLocked={isLocked}
+                    />
+                  );
+                }
+
+                if (child.type === 'group') {
+                  return (
+                    <SortableGroupWrapper
+                      key={child.id}
+                      id={child.id}
+                      disabled={isLocked || (child as FilterGroup).locked === true}
+                    >
+                      <div className={`relative ${!isRoot ? 'ml-3' : ''} mt-2`}>
+                        {/* Horizontal branch connector */}
+                        {!isRoot && (
+                          <div
+                            className={`absolute top-4 h-0.5 w-3 ${colors.branchLine}`}
+                            style={{ left: '-12px' }}
+                          />
+                        )}
+                        <FilterGroupNode
+                          group={child as FilterGroup}
+                          columnDefs={columnDefs}
+                          depth={depth + 1}
+                          maxDepthReached={maxDepthReached}
+                          onAddCondition={onAddCondition}
+                          onAddGroup={onAddGroup}
+                          onRemoveNode={onRemoveNode}
+                          onUpdateCondition={onUpdateCondition}
+                          onSetLogic={onSetLogic}
+                          onMoveNode={onMoveNode}
+                          onCloneNode={onCloneNode}
+                          onToggleLock={onToggleLock}
+                          onToggleNot={onToggleNot}
+                          parentLocked={isLocked}
+                        />
+                      </div>
+                    </SortableGroupWrapper>
+                  );
+                }
+
+                return null;
+              })}
+            </SortableContext>
+          </div>
+        )}
       </div>
     </div>
   );

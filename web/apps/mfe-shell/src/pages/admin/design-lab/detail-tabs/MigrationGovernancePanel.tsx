@@ -42,10 +42,10 @@ export type GovernanceLayerId = 'foundations' | 'components' | 'recipes' | 'page
 /* ── Constants ── */
 
 const MATURITY_COLORS: Record<number, { dot: string; bar: string; text: string }> = {
-  1: { dot: 'bg-zinc-400', bar: 'bg-zinc-300 dark:bg-zinc-600', text: 'text-zinc-600 dark:text-zinc-400' },
-  2: { dot: 'bg-amber-400', bar: 'bg-amber-200 dark:bg-amber-800/40', text: 'text-amber-600 dark:text-amber-400' },
-  3: { dot: 'bg-blue-400', bar: 'bg-blue-200 dark:bg-blue-800/40', text: 'text-blue-600 dark:text-blue-400' },
-  4: { dot: 'bg-emerald-400', bar: 'bg-emerald-200 dark:bg-emerald-800/40', text: 'text-emerald-600 dark:text-emerald-400' },
+  1: { dot: 'bg-border-strong', bar: 'bg-border-default dark:bg-text-secondary', text: 'text-text-secondary dark:text-text-disabled' },
+  2: { dot: 'bg-state-warning-text', bar: 'bg-state-warning-bg dark:bg-state-warning-text/40', text: 'text-state-warning-text dark:text-state-warning-text' },
+  3: { dot: 'bg-action-primary', bar: 'bg-state-info-bg dark:bg-action-primary-800/40', text: 'text-action-primary dark:text-action-primary' },
+  4: { dot: 'bg-state-success-text', bar: 'bg-state-success-bg dark:bg-state-success-text/40', text: 'text-state-success-text dark:text-state-success-text' },
 };
 
 const LANE_STATUS_TONE: Record<string, 'success' | 'warning' | 'info'> = {
@@ -65,7 +65,7 @@ const MaturityBar: React.FC<{ current: number; max: number }> = ({ current, max 
         <div
           key={level}
           className={`h-2 flex-1 rounded-full transition-colors ${
-            filled ? (MATURITY_COLORS[level]?.bar ?? 'bg-emerald-200') : 'bg-zinc-100 dark:bg-zinc-800'
+            filled ? (MATURITY_COLORS[level]?.bar ?? 'bg-state-success-bg') : 'bg-surface-muted dark:bg-surface-inverse'
           }`}
         />
       );
@@ -280,12 +280,12 @@ export const MigrationGovernancePanel: React.FC<MigrationGovernancePanelProps> =
                 key={layerId}
                 className={`flex items-center justify-between gap-3 rounded-xl px-3 py-2 ${
                   isCurrentLayer
-                    ? 'bg-blue-50 dark:bg-blue-900/20 ring-1 ring-blue-200 dark:ring-blue-800'
+                    ? 'bg-state-info-bg dark:bg-action-primary/20 ring-1 ring-action-primary/20 dark:ring-action-primary'
                     : 'bg-surface-default'
                 }`}
               >
                 <div className="flex items-center gap-2 min-w-0">
-                  <Text className={`text-xs font-semibold ${isCurrentLayer ? 'text-blue-600 dark:text-blue-300' : 'text-text-primary'}`}>
+                  <Text className={`text-xs font-semibold ${isCurrentLayer ? 'text-action-primary dark:text-action-primary/60' : 'text-text-primary'}`}>
                     {layerId}
                   </Text>
                 </div>
@@ -293,7 +293,7 @@ export const MigrationGovernancePanel: React.FC<MigrationGovernancePanelProps> =
                   <div className="w-24">
                     <MaturityBar current={Math.round(lPct / 25)} max={4} />
                   </div>
-                  <Text className={`text-xs font-bold tabular-nums ${isCurrentLayer ? 'text-blue-600 dark:text-blue-300' : 'text-text-secondary'}`}>
+                  <Text className={`text-xs font-bold tabular-nums ${isCurrentLayer ? 'text-action-primary dark:text-action-primary/60' : 'text-text-secondary'}`}>
                     {lPct}%
                   </Text>
                 </div>

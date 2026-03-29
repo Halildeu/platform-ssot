@@ -82,10 +82,10 @@ describe("Icon — base component", () => {
 
   it("applies className", () => {
     const { container } = render(
-      <Icon className="text-red-500"><path d="M0 0" /></Icon>,
+      <Icon className="text-state-danger-text"><path d="M0 0" /></Icon>,
     );
     const svg = container.querySelector("svg")!;
-    expect(svg.className.baseVal).toContain("text-red-500");
+    expect(svg.className.baseVal).toContain("text-state-danger-text");
   });
 
   it("passes through extra SVG attributes", () => {
@@ -174,11 +174,11 @@ describe("Individual icons — render smoke", () => {
 
   it("all icons accept size, className, and label", () => {
     const { container } = render(
-      <IconCheck size={20} className="text-green-500" label="Checked" />,
+      <IconCheck size={20} className="text-state-success-text" label="Checked" />,
     );
     const svg = container.querySelector("svg")!;
     expect(svg.getAttribute("width")).toBe("20");
-    expect(svg.className.baseVal).toContain("text-green-500");
+    expect(svg.className.baseVal).toContain("text-state-success-text");
     expect(svg.getAttribute("aria-label")).toBe("Checked");
     expect(svg.getAttribute("role")).toBe("img");
   });

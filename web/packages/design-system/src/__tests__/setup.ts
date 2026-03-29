@@ -35,11 +35,41 @@ const SUPPRESSED_PATTERNS = [
   'Error: Not implemented',
   'Could not parse CSS',
   'React does not recognize',
+  'contract error',
+  'a11y test',
+  'chunk failed',
+  'lazy import failed',
+  'Test error',
+  'callback test',
+  'reset test',
+  'render fn test',
+  'useToast must be used within <ToastProvider>',
+  'useTheme must be used within <ThemeProvider>',
+  'useFormContext must be used within a <FormProvider>',
 ];
 
+const toSearchableText = (value: unknown): string => {
+  if (typeof value === 'string') return value;
+  if (value instanceof Error) {
+    return [value.name, value.message, value.stack].filter(Boolean).join(' ');
+  }
+  if (typeof value === 'object' && value !== null) {
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
+  }
+  return String(value ?? '');
+};
+
+const containsSuppressedPattern = (value: unknown): boolean => {
+  const text = toSearchableText(value);
+  return SUPPRESSED_PATTERNS.some((pattern) => text.includes(pattern));
+};
+
 const isSuppressed = (args: unknown[]): boolean => {
-  const msg = typeof args[0] === 'string' ? args[0] : String(args[0] ?? '');
-  return SUPPRESSED_PATTERNS.some((p) => msg.includes(p));
+  return args.some((arg) => containsSuppressedPattern(arg));
 };
 
 const origWarn = console.warn;
@@ -63,3 +93,86 @@ console.log = (...args: unknown[]) => {
   if (isSuppressed(args)) return;
   origLog.apply(console, args);
 };
+
+const createCanvasContextStub = () => ({
+  fillRect: () => undefined,
+  clearRect: () => undefined,
+  getImageData: () => ({ data: [] }),
+  putImageData: () => undefined,
+  createImageData: () => [],
+  setTransform: () => undefined,
+  drawImage: () => undefined,
+  save: () => undefined,
+  restore: () => undefined,
+  fillText: () => undefined,
+  strokeText: () => undefined,
+  beginPath: () => undefined,
+  moveTo: () => undefined,
+  lineTo: () => undefined,
+  closePath: () => undefined,
+  stroke: () => undefined,
+  translate: () => undefined,
+  scale: () => undefined,
+  rotate: () => undefined,
+  arc: () => undefined,
+  fill: () => undefined,
+  measureText: () => ({ width: 0 }),
+  transform: () => undefined,
+  rect: () => undefined,
+  clip: () => undefined,
+});
+
+const OUTPUT_SUPPRESSED_PATTERNS = [
+  'Could not parse CSS stylesheet',
+  'ag-charts-community/dist/package/main.esm.mjs',
+  'Error: Uncaught [Error: callback test]',
+  'Error: Uncaught [Error: reset test]',
+  'Error: Uncaught [Error: render fn test]',
+  'The above error occurred in the <ThrowingChild> component',
+];
+
+const shouldSuppressOutputChunk = (chunk: unknown): boolean => {
+  const text = toSearchableText(chunk);
+  return OUTPUT_SUPPRESSED_PATTERNS.some((pattern) => text.includes(pattern));
+};
+
+if (typeof HTMLCanvasElement !== 'undefined') {
+  Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
+    configurable: true,
+    value: () => createCanvasContextStub(),
+  });
+
+  Object.defineProperty(HTMLCanvasElement.prototype, 'toDataURL', {
+    configurable: true,
+    value: () => 'data:image/png;base64,',
+  });
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('error', (event) => {
+    if (containsSuppressedPattern(event.error) || containsSuppressedPattern(event.message)) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  });
+
+  window.addEventListener('unhandledrejection', (event) => {
+    if (containsSuppressedPattern(event.reason)) {
+      event.preventDefault();
+    }
+  });
+}
+
+if (typeof process !== 'undefined') {
+  const origStderrWrite = process.stderr.write.bind(process.stderr);
+  process.stderr.write = (((chunk: string | Uint8Array, ...rest: unknown[]) => {
+    if (shouldSuppressOutputChunk(chunk)) {
+      const callback = rest.find((value) => typeof value === 'function');
+      if (typeof callback === 'function') {
+        callback();
+      }
+      return true;
+    }
+    return origStderrWrite(chunk, ...(rest as []));
+  }) as typeof process.stderr.write);
+}

@@ -1,23 +1,19 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
+// @vitest-environment jsdom
+import { test, expect } from 'vitest';
 import React from 'react';
-import TestRenderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
 import {
   permissionRegistry,
   permissionRegistryGeneratedAt,
   permissionRegistryVersion,
 } from '../../data/permissionRegistry.generated';
+import PermissionRegistryPanel from './PermissionRegistryPanel.ui';
 
 test('PermissionRegistryPanel canonical badge ve ozet sayilarini surdurur', async () => {
-  const require = createRequire(import.meta.url);
-  (require.extensions as Record<string, () => void>)['.css'] = () => {};
-  const { default: PermissionRegistryPanel } = await import('./PermissionRegistryPanel.ui');
-
   const activeCount = permissionRegistry.filter((entry) => entry.status === 'active').length;
   const deprecatedCount = permissionRegistry.filter((entry) => entry.status === 'deprecated').length;
 
-  const renderer = TestRenderer.create(
+  const { container } = render(
     <PermissionRegistryPanel
       t={(key, values) => {
         if (key === 'access.registry.subtitle') {
@@ -32,29 +28,26 @@ test('PermissionRegistryPanel canonical badge ve ozet sayilarini surdurur', asyn
     />,
   );
 
-  const root = renderer.root;
-  const section = root.findByProps({ 'data-testid': 'access-permission-registry' });
+  const section = screen.getByTestId('access-permission-registry');
+  expect(section).toBeTruthy();
 
-  assert.ok(section);
-  assert.ok(root.findByProps({ children: activeCount }));
-  assert.ok(root.findByProps({ children: deprecatedCount }));
-  assert.ok(root.findByProps({ children: `access.registry.subtitle:${permissionRegistryVersion}` }));
-  assert.ok(
-    root.findByProps({
-      children: `access.registry.legend:${new Date(permissionRegistryGeneratedAt).toISOString()}`,
-    }),
+  expect(screen.getByText(activeCount)).toBeTruthy();
+  expect(screen.getByText(deprecatedCount)).toBeTruthy();
+  expect(screen.getByText(`access.registry.subtitle:${permissionRegistryVersion}`)).toBeTruthy();
+  expect(screen.getByText(
+    `access.registry.legend:${new Date(permissionRegistryGeneratedAt).toISOString()}`,
+  )).toBeTruthy();
+
+  const activeLabels = container.querySelectorAll('span');
+  const activeStatusSpans = Array.from(activeLabels).filter(
+    (el) => el.textContent === 'access.registry.status.active',
   );
-  assert.equal(
-    root.findAll(
-      (node) => node.type === 'span' && node.props.children === 'access.registry.status.active',
-    ).length,
-    activeCount,
+  expect(activeStatusSpans.length).toBe(activeCount);
+
+  const deprecatedStatusSpans = Array.from(activeLabels).filter(
+    (el) => el.textContent === 'access.registry.status.deprecated',
   );
-  assert.equal(
-    root.findAll(
-      (node) => node.type === 'span' && node.props.children === 'access.registry.status.deprecated',
-    ).length,
-    deprecatedCount,
-  );
-  assert.ok(root.findByProps({ children: permissionRegistry[0]?.key }));
+  expect(deprecatedStatusSpans.length).toBe(deprecatedCount);
+
+  expect(screen.getByText(permissionRegistry[0]?.key)).toBeTruthy();
 });

@@ -1,5 +1,5 @@
-import { test, beforeEach, after } from 'node:test';
-import assert from 'node:assert/strict';
+// @vitest-environment node
+import { afterAll, beforeEach, expect, test } from 'vitest';
 import { fetchUserDetail } from '../users.api';
 import { registerTokenResolver } from '../../lib/token-resolver.lib';
 
@@ -34,7 +34,7 @@ beforeEach(() => {
   registerTokenResolver();
 });
 
-after(() => {
+afterAll(() => {
   (globalThis as any).fetch = originalFetch;
   (globalThis as any).window = originalWindow;
   if (originalLocalStorage !== undefined) {
@@ -91,14 +91,14 @@ test('fetchUserDetail tüm modülleri normalize eder', async () => {
 
   const result = await fetchUserDetail({ id: '10', email: 'multi@example.com' });
 
-  assert.equal(result.modulePermissions.length >= 2, true);
+  expect(result.modulePermissions.length >= 2).toBe(true);
   const userModule = result.modulePermissions.find((item) => item.moduleKey === 'USER_MANAGEMENT');
   const warehouseModule = result.modulePermissions.find((item) => item.moduleKey === 'WAREHOUSE');
   const purchaseModule = result.modulePermissions.find((item) => item.moduleKey === 'PURCHASE');
-  assert.ok(userModule);
-  assert.ok(warehouseModule);
-  assert.ok(purchaseModule);
-  assert.equal(userModule?.level, 'VIEW');
-  assert.equal(warehouseModule?.level, 'MANAGE');
-  assert.equal(purchaseModule?.level, 'NONE');
+  expect(userModule).toBeTruthy();
+  expect(warehouseModule).toBeTruthy();
+  expect(purchaseModule).toBeTruthy();
+  expect(userModule?.level).toBe('VIEW');
+  expect(warehouseModule?.level).toBe('MANAGE');
+  expect(purchaseModule?.level).toBe('NONE');
 });

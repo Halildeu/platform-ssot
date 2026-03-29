@@ -76,7 +76,7 @@ const DefaultSkeleton: React.FC<{ className?: string }> = ({ className }) => (
     style={{
       minHeight: 48,
       background: 'var(--ds-color-surface-secondary)',
-      borderRadius: 'var(--ds-radius-md, 8px)',
+      borderRadius: 'var(--ds-radius-md)',
       animation: 'pulse 1.5s ease-in-out infinite',
     }}
     aria-busy="true"

@@ -59,8 +59,8 @@ export const KanbanSwimlane: React.FC<KanbanSwimlaneProps> = ({
       style={{
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: 'var(--radius-lg, 12px)',
-        border: '1px solid var(--border-subtle, #e5e7eb)',
+        borderRadius: 'var(--radius-lg)',
+        border: '1px solid var(--border-subtle))',
         overflow: 'hidden',
       }}
     >
@@ -75,23 +75,23 @@ export const KanbanSwimlane: React.FC<KanbanSwimlaneProps> = ({
           gap: '10px',
           width: '100%',
           padding: '10px 16px',
-          background: 'var(--surface-subtle, #f3f4f6)',
+          background: 'var(--surface-subtle))',
           border: 'none',
           borderBottom: swimlane.collapsed
             ? 'none'
-            : '1px solid var(--border-subtle, #e5e7eb)',
+            : '1px solid var(--border-subtle))',
           cursor: 'pointer',
           textAlign: 'left',
           fontSize: '13px',
           fontWeight: 600,
-          color: 'var(--text-primary, #111827)',
+          color: 'var(--text-primary))',
           transition: 'background 0.15s ease',
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'var(--surface-hover, #e5e7eb)';
+          e.currentTarget.style.background = 'var(--surface-hover))';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'var(--surface-subtle, #f3f4f6)';
+          e.currentTarget.style.background = 'var(--surface-subtle))';
         }}
       >
         {/* Color indicator */}
@@ -115,7 +115,7 @@ export const KanbanSwimlane: React.FC<KanbanSwimlaneProps> = ({
             transition: 'transform 0.15s ease',
             transform: swimlane.collapsed ? 'rotate(-90deg)' : 'rotate(0deg)',
             fontSize: '12px',
-            color: 'var(--text-tertiary, #9ca3af)',
+            color: 'var(--text-tertiary))',
           }}
         >
           &#x25BC;
@@ -129,9 +129,9 @@ export const KanbanSwimlane: React.FC<KanbanSwimlaneProps> = ({
             fontSize: '11px',
             fontWeight: 600,
             padding: '2px 8px',
-            borderRadius: 'var(--radius-sm, 4px)',
-            background: 'var(--surface-default, #fff)',
-            color: 'var(--text-secondary, #6b7280)',
+            borderRadius: 'var(--radius-sm)',
+            background: 'var(--surface-default))',
+            color: 'var(--text-secondary))',
           }}
         >
           {totalCards}

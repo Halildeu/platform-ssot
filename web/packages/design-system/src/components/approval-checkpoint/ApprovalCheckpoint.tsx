@@ -5,7 +5,7 @@ import { Text } from "../../primitives/text/Text";
 import { Descriptions } from "../descriptions";
 import { List, type ListItem } from "../list";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   withAccessGuard,
   type AccessControlledProps,
   type AccessLevel,

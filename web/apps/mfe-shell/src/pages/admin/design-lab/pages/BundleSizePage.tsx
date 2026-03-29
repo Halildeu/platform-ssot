@@ -86,11 +86,11 @@ function getTier(name: string): ComponentRow["tier"] {
 }
 
 const TIER_COLORS: Record<string, { bg: string; text: string; label: string }> = {
-  primitive: { bg: "bg-blue-500/10", text: "text-blue-600", label: "Primitive" },
-  component: { bg: "bg-violet-500/10", text: "text-violet-600", label: "Component" },
-  advanced: { bg: "bg-orange-500/10", text: "text-orange-600", label: "Advanced" },
-  pattern: { bg: "bg-emerald-500/10", text: "text-emerald-600", label: "Pattern" },
-  provider: { bg: "bg-rose-500/10", text: "text-rose-600", label: "Provider" },
+  primitive: { bg: "bg-action-primary/10", text: "text-action-primary", label: "Primitive" },
+  component: { bg: "bg-action-primary/10", text: "text-action-primary", label: "Component" },
+  advanced: { bg: "bg-state-warning-text/10", text: "text-state-warning-text", label: "Advanced" },
+  pattern: { bg: "bg-state-success-text/10", text: "text-state-success-text", label: "Pattern" },
+  provider: { bg: "bg-state-danger-text/10", text: "text-state-danger-text", label: "Provider" },
 };
 
 /* ================================================================== */
@@ -272,8 +272,8 @@ export default function BundleSizePage() {
                         <span className="font-mono text-xs font-semibold tabular-nums text-text-primary">
                           {row.size.toFixed(1)} KB
                         </span>
-                        {row.size <= 0.5 && <TrendingDown className="h-3 w-3 text-emerald-500" />}
-                        {row.size >= 5 && <TrendingUp className="h-3 w-3 text-amber-500" />}
+                        {row.size <= 0.5 && <TrendingDown className="h-3 w-3 text-state-success-text" />}
+                        {row.size >= 5 && <TrendingUp className="h-3 w-3 text-state-warning-text" />}
                       </span>
                     </td>
                     <td className="px-4 py-3">
@@ -282,7 +282,7 @@ export default function BundleSizePage() {
                           <div
                             className={[
                               "h-2 rounded-full transition-all duration-500",
-                              row.size >= 5 ? "bg-amber-500" : row.size >= 2 ? "bg-blue-500" : "bg-emerald-500",
+                              row.size >= 5 ? "bg-state-warning-text" : row.size >= 2 ? "bg-action-primary" : "bg-state-success-text",
                             ].join(" ")}
                             style={{ width: `${pct}%` }}
                           />

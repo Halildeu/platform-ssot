@@ -17,6 +17,7 @@ function getTokenSourceFiles(): string[] {
       (f) =>
         f.endsWith(".ts") &&
         f !== "index.ts" &&
+        !f.endsWith(".d.ts") &&
         !f.endsWith(".test.ts") &&
         !f.endsWith(".spec.ts"),
     );

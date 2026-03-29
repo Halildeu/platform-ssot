@@ -80,7 +80,7 @@ type AdvancedConditionNode = {
   filterTo?: unknown;
 };
 
-type ServerSideRequestExtras = IServerSideGetRowsParams<UserSummary>['request'] & {
+type _ServerSideRequestExtras = IServerSideGetRowsParams<UserSummary>['request'] & {
   sortModel?: Array<{ colId?: string; sort?: 'asc' | 'desc' }>;
 };
 
@@ -559,6 +559,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
               request: params.request,
               quickFilterText,
               mapAdvancedFilter: mapAdvancedFilterModel,
+              multiSearchParams: (gridApi as unknown as Record<string, unknown>).__multiSearchParams as Record<string, string> | undefined,
               mapFilterModel: (model) => {
                 const next: Partial<UsersQueryParams> = {};
                 const statusFilter = (model as typeof params.request.filterModel).status as { values?: unknown[] } | undefined;
@@ -569,24 +570,11 @@ const UsersGrid: React.FC<UsersGridProps> = ({
                 if (roleFilter?.values && roleFilter.values.length > 0) {
                   next.role = String(roleFilter.values[0]) as UsersQueryParams['role'];
                 }
-                const nameFilter = (model as typeof params.request.filterModel).fullName as { filter?: unknown; operator?: string; conditions?: Array<{ filter?: unknown }> } | undefined;
+                const nameFilter = (model as typeof params.request.filterModel).fullName as { filter?: unknown } | undefined;
                 const emailFilter = (model as typeof params.request.filterModel).email as { filter?: unknown } | undefined;
-                // Check for multi-condition OR (from filter builder bulk paste)
-                if (nameFilter?.operator === 'OR' && Array.isArray(nameFilter.conditions)) {
-                  const terms = nameFilter.conditions.map((c) => String(c.filter ?? '')).filter(Boolean);
-                  if (terms.length > 0) {
-                    (next as any).multiSearch = terms.join('|');
-                  }
-                } else {
-                  const textFilterValue = nameFilter?.filter ?? emailFilter?.filter;
-                  if (typeof textFilterValue === 'string' && textFilterValue.trim().length > 0) {
-                    // Check for comma-separated (from chip paste)
-                    if (textFilterValue.includes(',')) {
-                      (next as any).multiSearch = textFilterValue.split(',').map((s) => s.trim()).filter(Boolean).join('|');
-                    } else {
-                      next.search = textFilterValue.trim();
-                    }
-                  }
+                const textFilterValue = nameFilter?.filter ?? emailFilter?.filter;
+                if (typeof textFilterValue === 'string' && textFilterValue.trim().length > 0) {
+                  next.search = textFilterValue.trim();
                 }
                 return next;
               },

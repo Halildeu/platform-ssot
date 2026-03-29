@@ -19,8 +19,8 @@ const menuStyles: React.CSSProperties = {
   maxWidth: '280px',
   maxHeight: '260px',
   overflowY: 'auto',
-  backgroundColor: 'var(--surface-default, #ffffff)',
-  border: '1px solid var(--border-subtle, #e2e8f0)',
+  backgroundColor: 'var(--surface-default))',
+  border: '1px solid var(--border-subtle))',
   borderRadius: '8px',
   boxShadow: '0 4px 16px rgba(0, 0, 0, 0.12)',
   zIndex: 60,
@@ -35,7 +35,7 @@ const itemStyles: React.CSSProperties = {
   padding: '8px 12px',
   border: 'none',
   backgroundColor: 'transparent',
-  color: 'var(--text-primary, #1e293b)',
+  color: 'var(--text-primary))',
   fontSize: '13px',
   textAlign: 'left',
   cursor: 'pointer',
@@ -44,7 +44,7 @@ const itemStyles: React.CSSProperties = {
 
 const selectedItemStyles: React.CSSProperties = {
   ...itemStyles,
-  backgroundColor: 'var(--surface-active, #f1f5f9)',
+  backgroundColor: 'var(--surface-active))',
 };
 
 const avatarStyles: React.CSSProperties = {
@@ -60,8 +60,8 @@ const avatarPlaceholderStyles: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: 'var(--surface-active, #e2e8f0)',
-  color: 'var(--text-muted, #94a3b8)',
+  backgroundColor: 'var(--surface-active))',
+  color: 'var(--text-muted))',
   fontSize: '11px',
   fontWeight: 600,
 };
@@ -76,14 +76,14 @@ const labelStyles: React.CSSProperties = {
 const typeTagStyles: React.CSSProperties = {
   marginLeft: 'auto',
   fontSize: '11px',
-  color: 'var(--text-muted, #94a3b8)',
+  color: 'var(--text-muted))',
   flexShrink: 0,
 };
 
 const emptyStyles: React.CSSProperties = {
   padding: '16px 12px',
   fontSize: '13px',
-  color: 'var(--text-muted, #94a3b8)',
+  color: 'var(--text-muted))',
   textAlign: 'center',
 };
 

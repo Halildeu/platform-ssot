@@ -65,7 +65,7 @@ export const WithLabels: Story = {
 export const CustomColors: Story = {
   args: {
     defaultValue: 4,
-    colors: ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e'],
+    colors: ['var(--state-danger-text)', 'var(--state-warning-text)', 'var(--state-warning-text)', 'var(--state-success-text)', 'var(--state-success-text)'],
   },
 };
 

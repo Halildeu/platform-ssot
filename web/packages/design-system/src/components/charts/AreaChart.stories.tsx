@@ -10,8 +10,8 @@ const revenueSeries: ChartSeries[] = [
 ];
 
 const multiSeries: ChartSeries[] = [
-  { name: 'Product A', data: [30, 35, 40, 38, 45, 42, 48, 52, 50, 55, 58, 62], color: '#3b82f6' },
-  { name: 'Product B', data: [12, 13, 15, 14, 16, 16, 17, 20, 18, 20, 22, 23], color: '#22c55e' },
+  { name: 'Product A', data: [30, 35, 40, 38, 45, 42, 48, 52, 50, 55, 58, 62], color: 'var(--action-primary)' },
+  { name: 'Product B', data: [12, 13, 15, 14, 16, 16, 17, 20, 18, 20, 22, 23], color: 'var(--state-success-text)' },
 ];
 
 const meta: Meta<typeof AreaChart> = {

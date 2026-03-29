@@ -7,7 +7,7 @@ import {
   getExampleCategories,
   EXAMPLE_CATEGORY_META,
 } from "./registry";
-import type { ExampleCategory, ExampleEntry } from "./registry";
+import type { ExampleCategory } from "./registry";
 
 /* ------------------------------------------------------------------ */
 /*  ExamplesGallery — Curated code examples with category filters       */
@@ -69,8 +69,8 @@ export const ExamplesGallery: React.FC<ExamplesGalleryProps> = ({
       <div className="flex flex-col gap-6">
         {/* Info banner */}
         <div className="flex items-center gap-3 rounded-2xl border border-border-subtle bg-surface-canvas p-4">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10">
-            <Sparkles className="h-4 w-4 text-amber-600" />
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-state-warning-text/10">
+            <Sparkles className="h-4 w-4 text-state-warning-text" />
           </div>
           <div>
             <Text as="div" className="text-xs font-semibold text-text-primary">
@@ -108,12 +108,12 @@ export const ExamplesGallery: React.FC<ExamplesGalleryProps> = ({
             className={[
               "flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition",
               activeCategory === "all"
-                ? "bg-action-primary text-white"
+                ? "bg-action-primary text-text-inverse"
                 : "bg-surface-muted text-text-secondary hover:text-text-primary",
             ].join(" ")}
           >
             All
-            <span className={activeCategory === "all" ? "text-white/70" : "text-text-tertiary"}>
+            <span className={activeCategory === "all" ? "text-text-inverse/70" : "text-text-tertiary"}>
               {allExamples.length}
             </span>
           </button>
@@ -128,12 +128,12 @@ export const ExamplesGallery: React.FC<ExamplesGalleryProps> = ({
                 className={[
                   "flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition",
                   activeCategory === cat
-                    ? "bg-action-primary text-white"
+                    ? "bg-action-primary text-text-inverse"
                     : "bg-surface-muted text-text-secondary hover:text-text-primary",
                 ].join(" ")}
               >
                 {meta.label}
-                <span className={activeCategory === cat ? "text-white/70" : "text-text-tertiary"}>
+                <span className={activeCategory === cat ? "text-text-inverse/70" : "text-text-tertiary"}>
                   {count}
                 </span>
               </button>

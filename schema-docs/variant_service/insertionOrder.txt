@@ -1,0 +1,9 @@
+theme_registry
+themes
+user_grid_variants
+variant_visibility
+user_theme_selections
+theme_overrides
+theme_registry_css_vars
+user_grid_variant_preferences
+variant_flyway_history

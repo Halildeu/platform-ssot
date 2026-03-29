@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { cn } from '@mfe/design-system';
-import type { Resource, SchedulerEvent, TimeSlot } from './types';
+import type { Resource, SchedulerEvent } from './types';
 import { SchedulerEventCard } from './SchedulerEvent';
 
 /* ------------------------------------------------------------------ */

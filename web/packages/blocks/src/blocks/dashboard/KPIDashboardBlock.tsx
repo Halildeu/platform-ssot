@@ -36,14 +36,14 @@ export function KPIDashboardBlock({ metrics }: KPIDashboardBlockProps) {
           style={{
             padding: '1.25rem',
             borderRadius: '0.5rem',
-            border: '1px solid var(--color-border, #e2e8f0)',
-            backgroundColor: 'var(--color-surface, #fff)',
+            border: '1px solid var(--color-border))',
+            backgroundColor: 'var(--color-surface))',
           }}
         >
           <div
             style={{
               fontSize: '0.875rem',
-              color: 'var(--color-text-secondary, #64748b)',
+              color: 'var(--color-text-secondary))',
               marginBottom: '0.5rem',
             }}
           >
@@ -53,7 +53,7 @@ export function KPIDashboardBlock({ metrics }: KPIDashboardBlockProps) {
             style={{
               fontSize: '1.5rem',
               fontWeight: 600,
-              color: 'var(--color-text-primary, #0f172a)',
+              color: 'var(--color-text-primary))',
             }}
           >
             {metric.value}
@@ -65,10 +65,10 @@ export function KPIDashboardBlock({ metrics }: KPIDashboardBlockProps) {
                 fontSize: '0.75rem',
                 color:
                   metric.trend.direction === 'up'
-                    ? 'var(--color-success, #16a34a)'
+                    ? 'var(--color-success))'
                     : metric.trend.direction === 'down'
-                      ? 'var(--color-error, #dc2626)'
-                      : 'var(--color-text-secondary, #64748b)',
+                      ? 'var(--color-error))'
+                      : 'var(--color-text-secondary))',
               }}
             >
               {metric.trend.direction === 'up'

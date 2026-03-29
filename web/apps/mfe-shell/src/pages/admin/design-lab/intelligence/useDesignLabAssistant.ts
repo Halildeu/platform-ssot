@@ -14,7 +14,7 @@
  * - "Select ile Combobox arasindaki fark ne?"
  */
 
-import { useMemo, useCallback } from "react";
+import { useCallback } from "react";
 import { useDesignLab } from "../DesignLabProvider";
 import type {
   DesignLabIndexItem,
@@ -192,7 +192,7 @@ function compareComponentsFn(
 function findByQualityFn(
   minScore: number,
   items: DesignLabIndexItem[],
-  docEntryMap: Map<string, DesignLabComponentDocEntry>,
+  _docEntryMap: Map<string, DesignLabComponentDocEntry>,
 ): AssistantResponse {
   // Quality is approximated from: lifecycle (stable=100, beta=60, planned=20)
   // + availability bonus + whereUsed density

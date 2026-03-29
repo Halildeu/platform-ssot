@@ -1,53 +1,13 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
+// @vitest-environment jsdom
+import { test, expect } from 'vitest';
 import React from 'react';
-import TestRenderer, { act } from 'react-test-renderer';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { configureShellServices } from '../../../app/services/shell-services';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
+import AccessRoleDrawer from './AccessRoleDrawer.ui';
 
 test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async () => {
-  const require = createRequire(import.meta.url);
-  (require.extensions as Record<string, () => void>)['.css'] = () => {};
-
-  // Polyfill minimal document/window for react-test-renderer
-  // (overlay-engine needs document.addEventListener, document.body.style, document.documentElement.clientWidth)
-  if (typeof globalThis.document === 'undefined') {
-    const listeners = new Map<string, Set<EventListener>>();
-    const stubStyle = { overflow: '', paddingRight: '' };
-    (globalThis as Record<string, unknown>).document = {
-      addEventListener: (type: string, listener: EventListener) => {
-        if (!listeners.has(type)) listeners.set(type, new Set());
-        listeners.get(type)!.add(listener);
-      },
-      removeEventListener: (type: string, listener: EventListener) => {
-        listeners.get(type)?.delete(listener);
-      },
-      contains: () => false,
-      body: { contains: () => false, style: stubStyle },
-      documentElement: {
-        clientWidth: 1024,
-        setAttribute: () => {},
-        getAttribute: () => null,
-        style: { setProperty: () => {}, getPropertyValue: () => '', removeProperty: () => '' },
-      },
-      createElement: () => ({ style: {} }),
-    };
-  }
-  if (typeof globalThis.window === 'undefined') {
-    (globalThis as Record<string, unknown>).window = {
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      dispatchEvent: () => true,
-      innerWidth: 1024,
-      location: { href: 'http://localhost', origin: 'http://localhost', protocol: 'http:', host: 'localhost' },
-      getComputedStyle: () => ({}),
-    };
-  }
-
-  const { default: AccessRoleDrawer } = await import('./AccessRoleDrawer.ui');
-
   configureShellServices({
     http: {
       get: async () => ({
@@ -92,7 +52,7 @@ test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async ()
     lastModifiedBy: 'system',
   };
 
-  const renderer = TestRenderer.create(
+  render(
     <QueryClientProvider client={queryClient}>
       <AccessRoleDrawer
         open
@@ -121,35 +81,30 @@ test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async ()
     await new Promise((resolve) => setTimeout(resolve, 0));
   });
 
-  let root = renderer.root;
-  const permissionCheckbox = root.find(
-    (node) => node.type === 'input' && node.props['data-testid'] === 'access-role-permission-perm.manage',
-  );
+  const permissionCheckbox = screen.getByTestId('access-role-permission-perm.manage') as HTMLInputElement;
 
   await act(async () => {
-    permissionCheckbox.props.onChange({ target: { checked: true } });
+    fireEvent.click(permissionCheckbox);
   });
 
-  root = renderer.root;
-  const saveButton = root.findByProps({ 'data-testid': 'access-role-drawer-save' });
+  const saveButton = screen.getByTestId('access-role-drawer-save');
 
   await act(async () => {
-    saveButton.props.onClick();
+    fireEvent.click(saveButton);
   });
 
-  assert.equal(saves.length, 1);
-  assert.deepEqual(saves[0], {
+  expect(saves.length).toBe(1);
+  expect(saves[0]).toEqual({
     roleId: 'role-admin',
     permissionIds: ['perm.manage', 'perm.view'],
   });
 
-  const cancelButton = root.findByProps({ children: 'access.clone.cancelText' });
+  const cancelButton = screen.getByText('access.clone.cancelText');
 
   await act(async () => {
-    cancelButton.props.onClick();
+    fireEvent.click(cancelButton);
   });
 
-  assert.equal(closes.length, 1);
-  renderer.unmount();
+  expect(closes.length).toBe(1);
   queryClient.clear();
 });

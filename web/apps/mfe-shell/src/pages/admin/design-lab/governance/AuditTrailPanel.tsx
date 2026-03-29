@@ -22,14 +22,14 @@ const ACTION_LABELS: Record<AuditAction, string> = {
 };
 
 const ACTION_COLORS: Record<AuditAction, string> = {
-  doc_entry_modified: "bg-blue-100 text-blue-700",
-  quality_override: "bg-amber-100 text-amber-700",
-  deprecation_approved: "bg-red-100 text-red-700",
-  deprecation_proposed: "bg-orange-100 text-orange-700",
-  role_changed: "bg-purple-100 text-purple-700",
-  lifecycle_transition: "bg-emerald-100 text-emerald-700",
-  exception_created: "bg-yellow-100 text-yellow-700",
-  component_published: "bg-teal-100 text-teal-700",
+  doc_entry_modified: "bg-state-info-bg text-state-info-text",
+  quality_override: "bg-state-warning-bg text-state-warning-text",
+  deprecation_approved: "bg-state-danger-bg text-state-danger-text",
+  deprecation_proposed: "bg-state-warning-bg text-state-warning-text",
+  role_changed: "bg-action-primary/10 text-action-primary",
+  lifecycle_transition: "bg-state-success-bg text-state-success-text",
+  exception_created: "bg-state-warning-bg text-state-warning-text",
+  component_published: "bg-state-success-bg text-state-success-text",
 };
 
 function formatRelativeTime(timestamp: string): string {

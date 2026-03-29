@@ -6,7 +6,6 @@
  * Usage: node scripts/ci/component-predictor.mjs "user management dashboard"
  */
 
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 

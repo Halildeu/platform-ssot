@@ -101,7 +101,7 @@ export const ComponentPlayground: React.FC<ComponentPlaygroundProps> = ({
                 className={[
                   "rounded-lg px-2 py-1.5 text-[11px] font-medium transition",
                   showResponsive
-                    ? "bg-indigo-100 text-indigo-700 border border-indigo-300"
+                    ? "bg-action-primary/10 text-action-primary border border-action-primary/30"
                     : "bg-surface-muted text-text-secondary hover:text-text-primary",
                 ].join(" ")}
               >

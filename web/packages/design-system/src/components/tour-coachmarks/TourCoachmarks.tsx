@@ -1,7 +1,7 @@
 import React, { useEffect, useId, useMemo, useState } from "react";
 import { Button } from "../../primitives/button/Button";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 

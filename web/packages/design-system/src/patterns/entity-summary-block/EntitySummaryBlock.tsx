@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { Avatar } from "../../primitives/avatar/Avatar";

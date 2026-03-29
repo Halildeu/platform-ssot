@@ -11,10 +11,10 @@ const quarterlyData: BoxPlotData[] = [
 ];
 
 const teamPerformance: BoxPlotData[] = [
-  { label: 'Gelistirme', min: 60, q1: 72, median: 80, q3: 88, max: 95, color: '#3b82f6' },
-  { label: 'Tasarim', min: 55, q1: 68, median: 76, q3: 85, max: 92, color: '#8b5cf6' },
-  { label: 'QA', min: 50, q1: 65, median: 75, q3: 82, max: 90, color: '#10b981' },
-  { label: 'DevOps', min: 65, q1: 78, median: 85, q3: 92, max: 98, color: '#f59e0b', outliers: [55] },
+  { label: 'Gelistirme', min: 60, q1: 72, median: 80, q3: 88, max: 95, color: 'var(--action-primary)' },
+  { label: 'Tasarim', min: 55, q1: 68, median: 76, q3: 85, max: 92, color: 'var(--action-primary)' },
+  { label: 'QA', min: 50, q1: 65, median: 75, q3: 82, max: 90, color: 'var(--state-success-text)' },
+  { label: 'DevOps', min: 65, q1: 78, median: 85, q3: 92, max: 98, color: 'var(--state-warning-text)', outliers: [55] },
 ];
 
 const meta: Meta<typeof BoxPlot> = {

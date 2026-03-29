@@ -27,24 +27,24 @@ const DashboardDemo = () => (
     <section>
       <h2 className="text-xl font-semibold mb-3">Sayfa Yapısı</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="border rounded-lg p-4 bg-blue-50">
+        <div className="border rounded-lg p-4 bg-state-info-bg">
           <h3 className="font-semibold">KPI Cards</h3>
-          <p className="text-sm text-gray-600">Toplam Satış, Aktif Kullanıcı, Dönüşüm Oranı, Gelir</p>
+          <p className="text-sm text-text-secondary">Toplam Satış, Aktif Kullanıcı, Dönüşüm Oranı, Gelir</p>
         </div>
-        <div className="border rounded-lg p-4 bg-green-50">
+        <div className="border rounded-lg p-4 bg-state-success-bg">
           <h3 className="font-semibold">Charts Section</h3>
-          <p className="text-sm text-gray-600">LineChart (trend), BarChart (karşılaştırma), PieChart (dağılım)</p>
+          <p className="text-sm text-text-secondary">LineChart (trend), BarChart (karşılaştırma), PieChart (dağılım)</p>
         </div>
-        <div className="border rounded-lg p-4 bg-purple-50">
+        <div className="border rounded-lg p-4 bg-action-primary/10">
           <h3 className="font-semibold">Activity Feed</h3>
-          <p className="text-sm text-gray-600">Son işlemler, bildirimler, hızlı filtreler</p>
+          <p className="text-sm text-text-secondary">Son işlemler, bildirimler, hızlı filtreler</p>
         </div>
       </div>
     </section>
 
     <section>
       <h2 className="text-xl font-semibold mb-3">Başlangıç</h2>
-      <pre className="bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
+      <pre className="bg-surface-inverse text-state-success-text p-4 rounded-lg text-sm overflow-x-auto">
         npx @mfe/create-app my-dashboard --template dashboard
       </pre>
     </section>

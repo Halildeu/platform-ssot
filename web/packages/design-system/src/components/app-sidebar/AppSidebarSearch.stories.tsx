@@ -45,7 +45,7 @@ export const CustomPlaceholder: Story = {
 };
 
 export const CustomClass: Story = {
-  render: () => <AppSidebarSearch placeholder="Styled..." className="bg-blue-50" />,
+  render: () => <AppSidebarSearch placeholder="Styled..." className="bg-state-info-bg" />,
 };
 
 export const Interactive: Story = {

@@ -1,6 +1,6 @@
 import React, { forwardRef, useCallback } from "react";
 import { cn } from "../../utils/cn";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  SearchInput — Input with search icon, clear button, loading        */

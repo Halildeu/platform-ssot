@@ -59,7 +59,7 @@ const ColumnHeader: React.FC<{
             margin: 0,
             fontSize: '14px',
             fontWeight: 600,
-            color: 'var(--text-primary, #111827)',
+            color: 'var(--text-primary))',
           }}
         >
           {column.title}
@@ -70,15 +70,15 @@ const ColumnHeader: React.FC<{
           fontSize: '12px',
           fontWeight: 600,
           padding: '2px 8px',
-          borderRadius: 'var(--radius-sm, 4px)',
+          borderRadius: 'var(--radius-sm)',
           background: isOverLimit
-            ? 'var(--color-error, #ef4444)'
+            ? 'var(--color-error))'
             : isAtLimit
-              ? 'var(--color-warning, #f59e0b)'
-              : 'var(--surface-default, #fff)',
+              ? 'var(--color-warning))'
+              : 'var(--surface-default))',
           color: isOverLimit || isAtLimit
-            ? '#fff'
-            : 'var(--text-secondary, #6b7280)',
+            ? 'var(--surface-default)'
+            : 'var(--text-secondary))',
         }}
       >
         {cardCount}
@@ -124,11 +124,11 @@ const DndKitColumnBody: React.FC<{
         minWidth: '300px',
         maxHeight: '100%',
         background: isOver
-          ? 'var(--surface-hover, #f9fafb)'
-          : 'var(--surface-subtle, #f3f4f6)',
-        borderRadius: 'var(--radius-lg, 12px)',
+          ? 'var(--surface-hover))'
+          : 'var(--surface-subtle))',
+        borderRadius: 'var(--radius-lg)',
         border: isOver
-          ? '2px dashed var(--border-accent, #3b82f6)'
+          ? '2px dashed var(--border-accent))'
           : '2px solid transparent',
         transition: 'background 0.15s ease, border-color 0.15s ease',
       }}
@@ -242,11 +242,11 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         minWidth: '300px',
         maxHeight: '100%',
         background: isDragOver
-          ? 'var(--surface-hover, #f9fafb)'
-          : 'var(--surface-subtle, #f3f4f6)',
-        borderRadius: 'var(--radius-lg, 12px)',
+          ? 'var(--surface-hover))'
+          : 'var(--surface-subtle))',
+        borderRadius: 'var(--radius-lg)',
         border: isDragOver
-          ? '2px dashed var(--border-accent, #3b82f6)'
+          ? '2px dashed var(--border-accent))'
           : '2px solid transparent',
         transition: 'background 0.15s ease, border-color 0.15s ease',
       }}
@@ -272,7 +272,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
               <div
                 style={{
                   height: '2px',
-                  background: 'var(--border-accent, #3b82f6)',
+                  background: 'var(--border-accent))',
                   borderRadius: '1px',
                   margin: '0 4px',
                   transition: 'opacity 0.1s ease',
@@ -301,7 +301,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           <div
             style={{
               height: '2px',
-              background: 'var(--border-accent, #3b82f6)',
+              background: 'var(--border-accent))',
               borderRadius: '1px',
               margin: '0 4px',
             }}

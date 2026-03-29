@@ -742,14 +742,14 @@ function resolveDarkValue(tokenName: string): string {
     'action-primary-hover': palette.primary400,
     'action-primary-active': palette.primary300,
     'action-secondary': palette.gray700,
-    'state-success-bg': '#052e16',
-    'state-success-text': '#4ade80',
-    'state-warning-bg': '#451a03',
-    'state-warning-text': '#fbbf24',
-    'state-error-bg': '#450a0a',
-    'state-error-text': '#f87171',
-    'state-info-bg': '#172554',
-    'state-info-text': '#60a5fa',
+    'state-success-bg': 'var(--state-success-text)',
+    'state-success-text': 'var(--state-success-text)',
+    'state-warning-bg': 'var(--state-warning-text)',
+    'state-warning-text': 'var(--state-warning-text)',
+    'state-error-bg': 'var(--state-danger-text)',
+    'state-error-text': 'var(--state-danger-text)',
+    'state-info-bg': 'var(--action-primary)',
+    'state-info-text': 'var(--action-primary)',
   };
   return map[tokenName] ?? 'inherit';
 }

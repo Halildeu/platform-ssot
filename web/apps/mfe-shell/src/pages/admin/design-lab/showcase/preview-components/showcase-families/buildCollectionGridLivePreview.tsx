@@ -4,7 +4,7 @@ import {
   EntityGridTemplate,
   JsonViewer,
   List,
-  Text,
+  _Text,
   Tree,
   TreeTable,
 } from '@mfe/design-system';

@@ -7,7 +7,7 @@ import type { AgChartOptions } from "ag-charts-community";
 const AgCharts = AgChartsBase as unknown as React.FC<{ options: AgChartOptions; style?: React.CSSProperties; className?: string }>;
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { getChartThemeOverrides, getChartColorPalette } from "../../advanced/data-grid/chart-theme-bridge";
@@ -115,6 +115,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       const barSeries: any[] = hasMultiSeries
         ? seriesDef!.map((s, i) => ({
             type: "bar" as const,
+            direction: _isHorizontal ? "horizontal" : "vertical",
             xKey: "label",
             yKey: s.field,
             yName: s.name,
@@ -124,6 +125,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         : [
             {
               type: "bar" as const,
+              direction: _isHorizontal ? "horizontal" : "vertical",
               xKey: "label",
               yKey: "value",
               fills: chartData.map((d: any) => d._fill),

@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { StatWidget } from "../StatWidget";
@@ -24,7 +25,7 @@ vi.mock("@mfe/design-system", () => ({
 
 // Mock SparklineChart since StatWidget imports it
 vi.mock("../SparklineChart", () => ({
-  SparklineChart: ({ data, ...rest }: any) => (
+  SparklineChart: ({ data, ..._rest }: any) => (
     <div data-testid="sparkline-mock" data-points={data?.length ?? 0} />
   ),
 }));
@@ -117,7 +118,7 @@ describe("StatWidget", () => {
     // The change badge uses inline style with success color
     const changeSpan = container.querySelector("span[style]");
     expect(changeSpan).toBeTruthy();
-    expect(changeSpan!.getAttribute("style")).toContain("#22c55e");
+    expect(changeSpan!.getAttribute("style")).toContain("var(--state-success-text)");
   });
 
   it("shows negative change with error color", () => {
@@ -131,7 +132,7 @@ describe("StatWidget", () => {
 
     const changeSpan = container.querySelector("span[style]");
     expect(changeSpan).toBeTruthy();
-    expect(changeSpan!.getAttribute("style")).toContain("#ef4444");
+    expect(changeSpan!.getAttribute("style")).toContain("var(--state-error-text)");
   });
 
   it("does not show change when previousValue is not provided", () => {

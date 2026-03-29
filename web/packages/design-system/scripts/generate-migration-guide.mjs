@@ -82,7 +82,7 @@ const CONSOLE_WARN_RE = /console\.warn\(\s*[`'"](.*deprecated.*)[`'"]/i;
  * Returns { oldProp, newProp } or nulls when extraction fails.
  */
 function extractProps(message) {
-  let oldProp = null;
+  const oldProp = null;
   let newProp = null;
 
   // Pattern: `"oldProp" is deprecated ... use "newProp"`

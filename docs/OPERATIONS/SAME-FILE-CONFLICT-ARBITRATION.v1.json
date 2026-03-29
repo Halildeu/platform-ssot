@@ -21,8 +21,8 @@
     }
   },
   "file_level_arbitration": {
-    "engine_enforced": true,
-    "status": "ACTIVE_MINIMAL_ENFORCEMENT",
+    "engine_enforced": false,
+    "status": "DOCUMENTED_SAFE_DEFAULT",
     "safe_default_rules": [
       {
         "id": "single_writer_per_file",
@@ -48,7 +48,7 @@
   },
   "residual_gap": {
     "status": "OPEN",
-    "summary": "File-level arbitration artik fs_write uzerinde minimal engine enforcement ile devrede; ancak handoff/scope/bulk edit semantikleri hala acik."
+    "summary": "File-level arbitration su an dogrudan engine tarafinda enforce edilmiyor; fail-closed davranis dokuman ve mevcut lease/claim mekanizmalari ile korunuyor."
   },
   "evidence_expectations": [
     "owner_tag",

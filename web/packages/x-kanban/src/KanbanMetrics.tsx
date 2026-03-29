@@ -57,21 +57,21 @@ export const KanbanMetrics: React.FC<KanbanMetricsProps> = ({
     alignItems: 'center',
     gap: '4px',
     padding: '12px 8px',
-    borderRadius: 'var(--radius-md, 8px)',
-    background: 'var(--surface-subtle, #f3f4f6)',
+    borderRadius: 'var(--radius-md)',
+    background: 'var(--surface-subtle))',
   };
 
   const statValueStyle: React.CSSProperties = {
     fontSize: '20px',
     fontWeight: 700,
-    color: 'var(--text-primary, #111827)',
+    color: 'var(--text-primary))',
     lineHeight: 1,
   };
 
   const statLabelStyle: React.CSSProperties = {
     fontSize: '11px',
     fontWeight: 500,
-    color: 'var(--text-tertiary, #9ca3af)',
+    color: 'var(--text-tertiary))',
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
   };
@@ -86,9 +86,9 @@ export const KanbanMetrics: React.FC<KanbanMetricsProps> = ({
         flexDirection: 'column',
         gap: '16px',
         padding: '16px',
-        borderRadius: 'var(--radius-lg, 12px)',
-        border: '1px solid var(--border-subtle, #e5e7eb)',
-        background: 'var(--surface-default, #fff)',
+        borderRadius: 'var(--radius-lg)',
+        border: '1px solid var(--border-subtle))',
+        background: 'var(--surface-default))',
       }}
     >
       {/* Summary stats */}
@@ -103,8 +103,8 @@ export const KanbanMetrics: React.FC<KanbanMetricsProps> = ({
               ...statValueStyle,
               color:
                 metrics.overdueCount > 0
-                  ? 'var(--color-error, #ef4444)'
-                  : 'var(--text-primary, #111827)',
+                  ? 'var(--color-error))'
+                  : 'var(--text-primary))',
             }}
           >
             {metrics.overdueCount}
@@ -117,8 +117,8 @@ export const KanbanMetrics: React.FC<KanbanMetricsProps> = ({
               ...statValueStyle,
               color:
                 metrics.wipViolations > 0
-                  ? 'var(--color-warning, #f59e0b)'
-                  : 'var(--text-primary, #111827)',
+                  ? 'var(--color-warning))'
+                  : 'var(--text-primary))',
             }}
           >
             {metrics.wipViolations}
@@ -133,7 +133,7 @@ export const KanbanMetrics: React.FC<KanbanMetricsProps> = ({
           style={{
             fontSize: '12px',
             fontWeight: 600,
-            color: 'var(--text-secondary, #6b7280)',
+            color: 'var(--text-secondary))',
             marginBottom: '10px',
           }}
         >
@@ -161,7 +161,7 @@ export const KanbanMetrics: React.FC<KanbanMetricsProps> = ({
                     width: '80px',
                     fontSize: '11px',
                     fontWeight: 500,
-                    color: 'var(--text-secondary, #6b7280)',
+                    color: 'var(--text-secondary))',
                     textAlign: 'right',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
@@ -176,8 +176,8 @@ export const KanbanMetrics: React.FC<KanbanMetricsProps> = ({
                   style={{
                     flex: 1,
                     height: '16px',
-                    background: 'var(--surface-subtle, #f3f4f6)',
-                    borderRadius: 'var(--radius-sm, 4px)',
+                    background: 'var(--surface-subtle))',
+                    borderRadius: 'var(--radius-sm)',
                     overflow: 'hidden',
                     position: 'relative',
                   }}
@@ -187,9 +187,9 @@ export const KanbanMetrics: React.FC<KanbanMetricsProps> = ({
                       width: `${barWidth}%`,
                       height: '100%',
                       background: isOver
-                        ? 'var(--color-error, #ef4444)'
-                        : 'var(--color-primary, #3b82f6)',
-                      borderRadius: 'var(--radius-sm, 4px)',
+                        ? 'var(--color-error))'
+                        : 'var(--color-primary))',
+                      borderRadius: 'var(--radius-sm)',
                       transition: 'width 0.3s ease',
                     }}
                   />
@@ -203,7 +203,7 @@ export const KanbanMetrics: React.FC<KanbanMetricsProps> = ({
                         top: 0,
                         bottom: 0,
                         width: '2px',
-                        background: 'var(--color-warning, #f59e0b)',
+                        background: 'var(--color-warning))',
                       }}
                     />
                   )}
@@ -214,8 +214,8 @@ export const KanbanMetrics: React.FC<KanbanMetricsProps> = ({
                     fontSize: '11px',
                     fontWeight: 600,
                     color: isOver
-                      ? 'var(--color-error, #ef4444)'
-                      : 'var(--text-secondary, #6b7280)',
+                      ? 'var(--color-error))'
+                      : 'var(--text-secondary))',
                     flexShrink: 0,
                   }}
                 >

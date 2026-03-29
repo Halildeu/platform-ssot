@@ -18,16 +18,16 @@ function FormContextDemo({ mode = 'onBlur' as const }) {
       <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 400 }}>
         <div>
           <label style={{ display: 'block', fontSize: 13, marginBottom: 4 }}>Name</label>
-          <input style={{ padding: '6px 10px', border: '1px solid #d1d5db', borderRadius: 6, width: '100%' }} placeholder="Enter name" />
+          <input style={{ padding: '6px 10px', border: '1px solid var(--border-default)', borderRadius: 6, width: '100%' }} placeholder="Enter name" />
         </div>
         <div>
           <label style={{ display: 'block', fontSize: 13, marginBottom: 4 }}>Email</label>
-          <input type="email" style={{ padding: '6px 10px', border: '1px solid #d1d5db', borderRadius: 6, width: '100%' }} placeholder="Enter email" />
+          <input type="email" style={{ padding: '6px 10px', border: '1px solid var(--border-default)', borderRadius: 6, width: '100%' }} placeholder="Enter email" />
         </div>
-        <button type="submit" style={{ padding: '8px 16px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer' }}>
+        <button type="submit" style={{ padding: '8px 16px', background: 'var(--action-primary)', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer' }}>
           Submit
         </button>
-        <pre style={{ fontSize: 11, background: '#f3f4f6', padding: 8, borderRadius: 4 }}>
+        <pre style={{ fontSize: 11, background: 'var(--surface-muted)', padding: 8, borderRadius: 4 }}>
           {JSON.stringify({ values, errors }, null, 2)}
         </pre>
       </form>

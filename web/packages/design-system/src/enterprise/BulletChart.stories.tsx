@@ -33,11 +33,11 @@ export const WithCustomRanges: Story = {
     max: 400,
     label: 'Customer Satisfaction',
     ranges: [
-      { limit: 150, label: 'Poor', color: '#ef444440' },
-      { limit: 300, label: 'Acceptable', color: '#eab30840' },
-      { limit: 400, label: 'Excellent', color: '#22c55e40' },
+      { limit: 150, label: 'Poor', color: 'var(--state-danger-bg)' },
+      { limit: 300, label: 'Acceptable', color: 'var(--state-warning-bg)' },
+      { limit: 400, label: 'Excellent', color: 'var(--state-success-bg)' },
     ],
-    barColor: '#3b82f6',
+    barColor: 'var(--action-primary)',
     formatOptions: { style: 'decimal' },
   },
 };

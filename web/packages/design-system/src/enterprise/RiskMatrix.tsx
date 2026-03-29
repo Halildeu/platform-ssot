@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useState } from 'react';
 import { resolveAccessState, accessStyles } from '../internal/access-controller';
-import type { AccessLevel, AccessControlledProps } from '../internal/access-controller';
+import type { AccessLevel } from '../internal/access-controller';
 
 // ---------------------------------------------------------------------------
 // Types

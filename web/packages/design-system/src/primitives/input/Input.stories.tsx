@@ -84,7 +84,7 @@ export const WithTrailingVisual: Story = {
     label: 'Tutar',
     placeholder: '0.00',
     type: 'number',
-    trailingVisual: <span style={{ fontSize: 12, color: '#6b7280' }}>TL</span>,
+    trailingVisual: <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>TL</span>,
   },
 };
 

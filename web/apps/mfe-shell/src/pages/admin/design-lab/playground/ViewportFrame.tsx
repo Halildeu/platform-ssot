@@ -34,7 +34,7 @@ export const ViewportFrame: React.FC<ViewportFrameProps> = ({
       {children}
       {/* Viewport label indicator */}
       {viewport !== "desktop" && (
-        <div className="pointer-events-none absolute bottom-2 right-2 z-10 rounded-full bg-black/40 px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider text-white/80 backdrop-blur-xs">
+        <div className="pointer-events-none absolute bottom-2 right-2 z-10 rounded-full bg-surface-inverse/40 px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider text-text-inverse/80 backdrop-blur-xs">
           {viewport} · {maxWidth}px
         </div>
       )}

@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useId } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Segmented — Multi-mode segmented control                           */
@@ -157,26 +157,26 @@ const appearanceStyles: Record<
   { container: string; active: string; inactive: string }
 > = {
   default: {
-    container: "bg-[var(--segmented-bg,var(--surface-muted))] p-1",
+    container: "bg-[var(--segmented-bg))] p-1",
     active: cn(
-      "bg-[var(--segmented-active-bg,var(--surface-default))]",
-      "text-[var(--segmented-active-text,var(--text-primary))]",
+      "bg-[var(--segmented-active-bg))]",
+      "text-[var(--segmented-active-text))]",
       "shadow-xs",
     ),
     inactive: cn(
-      "text-[var(--segmented-text,var(--text-secondary))]",
+      "text-[var(--segmented-text))]",
       "hover:text-text-primary",
     ),
   },
   outline: {
-    container: "border border-[var(--segmented-border,var(--border-subtle))] p-1",
+    container: "border border-[var(--segmented-border))] p-1",
     active: cn(
-      "border border-[var(--segmented-active-border,var(--action-primary))]",
-      "bg-[color-mix(in_oklab,var(--segmented-active-bg,var(--action-primary))_10%,transparent)]",
-      "text-[var(--segmented-active-text,var(--action-primary))]",
+      "border border-[var(--segmented-active-border))]",
+      "bg-[color-mix(in_oklab,var(--segmented-active-bg))_10%,transparent)]",
+      "text-[var(--segmented-active-text))]",
     ),
     inactive: cn(
-      "text-[var(--segmented-text,var(--text-secondary))]",
+      "text-[var(--segmented-text))]",
       "border border-transparent",
       "hover:text-text-primary",
     ),
@@ -184,11 +184,11 @@ const appearanceStyles: Record<
   ghost: {
     container: "",
     active: cn(
-      "bg-[var(--segmented-active-bg,var(--surface-muted))]",
-      "text-[var(--segmented-active-text,var(--text-primary))]",
+      "bg-[var(--segmented-active-bg))]",
+      "text-[var(--segmented-active-text))]",
     ),
     inactive: cn(
-      "text-[var(--segmented-text,var(--text-secondary))]",
+      "text-[var(--segmented-text))]",
       "hover:bg-surface-muted/50",
       "hover:text-text-primary",
     ),

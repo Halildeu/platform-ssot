@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="users" schema="permission_service" type="PostgreSQL - 18.3 (Debian 18.3-1.pgdg12+1)">
+   <sequences>
+      <sequence increment="1" name="authz_audit_log_id_seq" startValue="1"/>
+      <sequence increment="1" name="permission_audit_events_id_seq" startValue="1"/>
+      <sequence increment="1" name="permissions_id_seq" startValue="1"/>
+      <sequence increment="1" name="role_permissions_id_seq" startValue="1"/>
+      <sequence increment="1" name="roles_id_seq" startValue="1"/>
+      <sequence increment="1" name="scopes_id_seq" startValue="1"/>
+      <sequence increment="1" name="user_permission_scope_id_seq" startValue="1"/>
+      <sequence increment="1" name="user_role_assignments_id_seq" startValue="1"/>
+   </sequences>
+   <tables>
+      <table name="audit_export_jobs" remarks="" schema="permission_service" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="64" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="requested_by" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="status" nullable="false" remarks="" size="32" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="format" nullable="false" remarks="" size="16" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="content_type" nullable="true" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="filename" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="event_count" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="sort_value" nullable="true" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="filter_snapshot" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="error_message" nullable="true" remarks="" size="2000" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="payload" nullable="true" remarks="" size="2147483647" type="bytea" typeCode="-2"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="11" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="12" name="completed_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="audit_export_jobs_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_audit_export_jobs_requested_by" unique="false">
+            <column ascending="true" name="requested_by"/>
+         </index>
+         <index name="idx_audit_export_jobs_status" unique="false">
+            <column ascending="true" name="status"/>
+         </index>
+      </table>
+      <table name="authz_audit_log" remarks="" schema="permission_service" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('permission_service.authz_audit_log_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="bigserial" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="actor_user_id" nullable="true" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="action" nullable="false" remarks="" size="100" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="target_type" nullable="true" remarks="" size="100" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="target_id" nullable="true" remarks="" size="100" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="old_value" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="new_value" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="authz_audit_log_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_authz_audit_target" unique="false">
+            <column ascending="true" name="target_type"/>
+            <column ascending="true" name="target_id"/>
+         </index>
+      </table>
+      <table name="permission_audit_events" remarks="" schema="permission_service" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('permission_service.permission_audit_events_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="bigserial" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="event_type" nullable="false" remarks="" size="100" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="performed_by" nullable="true" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="details" nullable="true" remarks="" size="2000" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="user_email" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="service" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="level" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="action" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="correlation_id" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="metadata" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="before_state" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="after_state" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="12" name="occurred_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="permission_audit_events_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_permission_audit_events_service" unique="false">
+            <column ascending="true" name="service"/>
+         </index>
+         <index name="idx_permission_audit_events_type" unique="false">
+            <column ascending="true" name="event_type"/>
+         </index>
+         <index name="idx_permission_audit_events_user" unique="false">
+            <column ascending="true" name="user_email"/>
+         </index>
+      </table>
+      <table name="permission_flyway_history" remarks="" schema="permission_service" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="installed_rank" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="version" nullable="true" remarks="" size="50" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="description" nullable="false" remarks="" size="200" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="type" nullable="false" remarks="" size="20" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="script" nullable="false" remarks="" size="1000" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="checksum" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="installed_by" nullable="false" remarks="" size="100" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="installed_on" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="execution_time" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="success" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <primaryKey column="installed_rank" sequenceNumberInPK="1"/>
+         <index name="permission_flyway_history_pk" unique="true">
+            <column ascending="true" name="installed_rank"/>
+         </index>
+         <index name="permission_flyway_history_s_idx" unique="false">
+            <column ascending="true" name="success"/>
+         </index>
+      </table>
+      <table name="permissions" numRows="56" remarks="" schema="permission_service" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('permission_service.permissions_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="bigserial" typeCode="-5">
+            <child column="permission_id" foreignKey="role_permissions_permission_id_fkey" implied="false" onDeleteCascade="true" schema="permission_service" table="role_permissions"/>
+            <child column="permission_id" foreignKey="user_permission_scope_permission_id_fkey" implied="false" onDeleteCascade="true" schema="permission_service" table="user_permission_scope"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="code" nullable="false" remarks="" size="150" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="description" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="module_name" nullable="true" remarks="" size="150" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="4" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="permissions_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="uk_permissions_code" unique="true">
+            <column ascending="true" name="code"/>
+         </index>
+      </table>
+      <table name="role_permissions" numRows="86" remarks="" schema="permission_service" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('permission_service.role_permissions_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="bigserial" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="role_id" nullable="false" remarks="" size="19" type="int8" typeCode="-5">
+            <parent column="id" foreignKey="role_permissions_role_id_fkey" implied="false" onDeleteCascade="true" schema="permission_service" table="roles"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="permission_id" nullable="false" remarks="" size="19" type="int8" typeCode="-5">
+            <parent column="id" foreignKey="role_permissions_permission_id_fkey" implied="false" onDeleteCascade="true" schema="permission_service" table="permissions"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="role_permissions_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="uk_role_permissions_role_permission" unique="true">
+            <column ascending="true" name="role_id"/>
+            <column ascending="true" name="permission_id"/>
+         </index>
+      </table>
+      <table name="roles" remarks="" schema="permission_service" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('permission_service.roles_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="bigserial" typeCode="-5">
+            <child column="role_id" foreignKey="role_permissions_role_id_fkey" implied="false" onDeleteCascade="true" schema="permission_service" table="role_permissions"/>
+            <child column="role_id" foreignKey="user_role_assignments_role_id_fkey" implied="false" onDeleteCascade="true" schema="permission_service" table="user_role_assignments"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="" size="100" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="description" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="4" name="updated_at" nullable="true" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="roles_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="uk_roles_name" unique="true">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="scopes" remarks="" schema="permission_service" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('permission_service.scopes_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="bigserial" typeCode="-5">
+            <child column="parent_scope_id" foreignKey="fk_scopes_parent" implied="false" onDeleteCascade="false" schema="permission_service" table="scopes"/>
+            <child column="scope_id" foreignKey="user_permission_scope_scope_id_fkey" implied="false" onDeleteCascade="true" schema="permission_service" table="user_permission_scope"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="scope_type" nullable="false" remarks="" size="50" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="ref_id" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="parent_scope_id" nullable="true" remarks="" size="19" type="int8" typeCode="-5">
+            <parent column="id" foreignKey="fk_scopes_parent" implied="false" onDeleteCascade="false" schema="permission_service" table="scopes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="description" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="5" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="6" name="updated_at" nullable="true" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="scopes_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="uk_scopes_type_ref" unique="true">
+            <column ascending="true" name="scope_type"/>
+            <column ascending="true" name="ref_id"/>
+         </index>
+      </table>
+      <table name="user_audit_events" remarks="" schema="permission_service" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="details" nullable="true" remarks="" size="2000" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="event_type" nullable="false" remarks="" size="100" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="occurred_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="performed_by" nullable="true" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="target_user_id" nullable="true" remarks="" size="19" type="int8" typeCode="-5"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="user_audit_events_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="user_permission_scope" remarks="" schema="permission_service" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('permission_service.user_permission_scope_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="bigserial" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="user_id" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="permission_id" nullable="false" remarks="" size="19" type="int8" typeCode="-5">
+            <parent column="id" foreignKey="user_permission_scope_permission_id_fkey" implied="false" onDeleteCascade="true" schema="permission_service" table="permissions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="scope_id" nullable="false" remarks="" size="19" type="int8" typeCode="-5">
+            <parent column="id" foreignKey="user_permission_scope_scope_id_fkey" implied="false" onDeleteCascade="true" schema="permission_service" table="scopes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="4" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="user_permission_scope_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_user_permission_scope_user" unique="false">
+            <column ascending="true" name="user_id"/>
+         </index>
+         <index name="uk_user_permission_scope" unique="true">
+            <column ascending="true" name="user_id"/>
+            <column ascending="true" name="permission_id"/>
+            <column ascending="true" name="scope_id"/>
+         </index>
+      </table>
+      <table name="user_role_assignments" remarks="" schema="permission_service" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('permission_service.user_role_assignments_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="bigserial" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="user_id" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="company_id" nullable="true" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="project_id" nullable="true" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="warehouse_id" nullable="true" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="role_id" nullable="false" remarks="" size="19" type="int8" typeCode="-5">
+            <parent column="id" foreignKey="user_role_assignments_role_id_fkey" implied="false" onDeleteCascade="true" schema="permission_service" table="roles"/>
+         </column>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="6" name="active" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="assigned_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="assigned_by" nullable="true" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="9" name="revoked_at" nullable="true" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="revoked_by" nullable="true" remarks="" size="19" type="int8" typeCode="-5"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="user_role_assignments_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_user_role_assignments_scope" unique="false">
+            <column ascending="true" name="project_id"/>
+            <column ascending="true" name="warehouse_id"/>
+         </index>
+         <index name="idx_user_role_assignments_user_company" unique="false">
+            <column ascending="true" name="user_id"/>
+            <column ascending="true" name="company_id"/>
+         </index>
+      </table>
+   </tables>
+</database>

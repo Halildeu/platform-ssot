@@ -1,6 +1,5 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
-import { Ruler, Box, Eye, EyeOff } from "lucide-react";
-import { Text } from "@mfe/design-system";
+import React, { useState, _useCallback, useEffect, _useRef } from "react";
+import { Ruler, Box } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
 /*  MeasureOverlay — Measure spacing + Outline elements                 */
@@ -34,7 +33,7 @@ export const MeasureToolbar: React.FC<MeasureOverlayProps> = ({
         className={[
           "flex items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-medium transition",
           outlineEnabled
-            ? "bg-violet-100 text-violet-700 border border-violet-300"
+            ? "bg-action-primary/10 text-action-primary border border-action-primary/30"
             : "bg-surface-muted text-text-secondary hover:text-text-primary",
         ].join(" ")}
         title="Toggle element outlines"
@@ -48,7 +47,7 @@ export const MeasureToolbar: React.FC<MeasureOverlayProps> = ({
         className={[
           "flex items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-medium transition",
           measureEnabled
-            ? "bg-blue-100 text-blue-700 border border-blue-300"
+            ? "bg-state-info-bg text-state-info-text border border-state-info-text/30"
             : "bg-surface-muted text-text-secondary hover:text-text-primary",
         ].join(" ")}
         title="Toggle measure on hover"
@@ -162,7 +161,7 @@ export const MeasureTooltip: React.FC<{
     <>
       {/* Highlight box */}
       <div
-        className="pointer-events-none absolute border-2 border-blue-400 bg-blue-400/10 transition-all duration-75"
+        className="pointer-events-none absolute border-2 border-action-primary bg-action-primary/10 transition-all duration-75"
         style={{
           left: info.x,
           top: info.y,
@@ -172,22 +171,22 @@ export const MeasureTooltip: React.FC<{
       />
       {/* Tooltip */}
       <div
-        className="pointer-events-none absolute z-50 rounded-lg bg-gray-900 px-3 py-2 text-xs text-gray-200 shadow-xl"
+        className="pointer-events-none absolute z-50 rounded-lg bg-surface-inverse px-3 py-2 text-xs text-border-subtle shadow-xl"
         style={{ left: pos.x, top: pos.y, maxWidth: 280 }}
       >
         <div className="flex items-center gap-1.5 mb-1">
-          <span className="text-blue-400 font-mono font-semibold">&lt;{info.tagName}&gt;</span>
-          <span className="text-gray-500 font-mono truncate">{info.className}</span>
+          <span className="text-action-primary font-mono font-semibold">&lt;{info.tagName}&gt;</span>
+          <span className="text-text-subtle font-mono truncate">{info.className}</span>
         </div>
         <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-[10px]">
-          <span className="text-gray-400">Size:</span>
-          <span className="text-white font-mono">{info.width} × {info.height}</span>
-          <span className="text-gray-400">Padding:</span>
-          <span className="text-emerald-400 font-mono">
+          <span className="text-text-disabled">Size:</span>
+          <span className="text-text-inverse font-mono">{info.width} × {info.height}</span>
+          <span className="text-text-disabled">Padding:</span>
+          <span className="text-state-success-text font-mono">
             {info.paddingTop} {info.paddingRight} {info.paddingBottom} {info.paddingLeft}
           </span>
-          <span className="text-gray-400">Margin:</span>
-          <span className="text-amber-400 font-mono">
+          <span className="text-text-disabled">Margin:</span>
+          <span className="text-state-warning-text font-mono">
             {info.marginTop} {info.marginRight} {info.marginBottom} {info.marginLeft}
           </span>
         </div>

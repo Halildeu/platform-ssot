@@ -23,6 +23,7 @@ IGNORED_WARNING_MARKERS = (
     "entrypoint size limit",
     "webpack performance recommendations",
     "[baseline-browser-mapping] The data in this module is over two months old.",
+    "[Module Federation]",
 )
 
 
@@ -53,6 +54,9 @@ def _line_matches_warning(line: str) -> bool:
 
 
 def _line_matches_error(line: str) -> bool:
+    # Module Federation informational messages are never errors
+    if "[Module Federation]" in line:
+        return False
     upper = line.upper()
     if "[ERROR]" in upper or upper.startswith("ERROR:") or " ERROR " in upper:
         return True

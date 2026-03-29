@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "../../utils/cn";
-import type { AccessLevel, AccessControlledProps } from "../../internal/access-controller";
+import type { AccessLevel } from "../../internal/access-controller";
 import { resolveAccessState, accessStyles } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */

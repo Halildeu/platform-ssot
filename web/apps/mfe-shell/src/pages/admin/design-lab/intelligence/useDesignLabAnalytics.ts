@@ -24,7 +24,7 @@ export interface AnalyticsEvent {
   metadata?: Record<string, unknown>;
 }
 
-interface TopItem<T extends string> {
+interface _TopItem<_T extends string> {
   [key: string]: unknown;
 }
 

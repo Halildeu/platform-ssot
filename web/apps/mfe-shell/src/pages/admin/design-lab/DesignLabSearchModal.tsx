@@ -1,6 +1,28 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, X, Clock, Zap, GitFork, BarChart3, Moon, Sun, Palette, Figma, Image, History, Target, Activity, Blocks } from "lucide-react";
+import { Search, X, Clock, Zap, GitFork, BarChart3, Moon, Sun, Palette, Image, History, Target, Activity, Blocks } from "lucide-react";
+
+/** Figma brand icon — removed from lucide-react >=1.x, inlined as SVG. */
+function Figma({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z" />
+      <path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z" />
+      <path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z" />
+      <path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z" />
+      <path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z" />
+    </svg>
+  );
+}
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "./DesignLabProvider";
 import { PRIMITIVE_NAMES, ADVANCED_NAMES, API_NAMES } from "./DesignLabSidebarRouter";
@@ -24,15 +46,15 @@ type SearchResult = {
 };
 
 const TYPE_BADGE_STYLES: Record<SearchResult["type"], string> = {
-  token: "bg-rose-100 text-rose-700",
-  primitive: "bg-teal-100 text-teal-700",
+  token: "bg-state-danger-bg text-state-danger-text",
+  primitive: "bg-state-success-bg text-state-success-text",
   component: "bg-state-info-bg text-state-info-text",
   pattern: "bg-state-warning-bg text-state-warning-text",
-  advanced: "bg-orange-100 text-orange-700",
-  api: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300",
+  advanced: "bg-state-warning-bg text-state-warning-text",
+  api: "bg-state-info-bg text-state-info-text dark:bg-state-info-text/30 dark:text-state-info-text",
   recipe: "bg-state-success-bg text-state-success-text",
-  ecosystem: "bg-purple-100 text-purple-700",
-  command: "bg-indigo-100 text-indigo-700",
+  ecosystem: "bg-action-primary/10 text-action-primary",
+  command: "bg-action-primary/10 text-action-primary",
   recent: "bg-[var(--surface-muted)] text-[var(--text-secondary)]",
 };
 
@@ -460,7 +482,7 @@ export const DesignLabSearchModal: React.FC<DesignLabSearchModalProps> = ({
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-xs"
+        className="absolute inset-0 bg-surface-inverse/40 backdrop-blur-xs"
         onClick={onClose}
         aria-hidden
       />

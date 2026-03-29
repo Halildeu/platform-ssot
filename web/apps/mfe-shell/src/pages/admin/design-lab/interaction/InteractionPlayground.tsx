@@ -1,18 +1,18 @@
-import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import React, { useState, _useMemo, useCallback, useRef, useEffect } from "react";
 import {
   Zap,
-  Play,
+  _Play,
   RotateCcw,
-  ChevronRight,
+  _ChevronRight,
   ArrowRight,
-  Unplug,
+  _Unplug,
   Cable,
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { PlaygroundPreview } from "../playground/PlaygroundPreview";
 import { PreviewThemeWrapper } from "../playground/PreviewThemeWrapper";
 import { SCENARIOS } from "./interactionScenarios";
-import type { InteractionScenario, InteractionNode, InteractionWire } from "./interactionScenarios";
+import type { InteractionScenario } from "./interactionScenarios";
 
 /* ------------------------------------------------------------------ */
 /*  InteractionPlayground — Cross-component interaction demo           */
@@ -105,8 +105,8 @@ export default function InteractionPlayground() {
     <div className="flex flex-col mx-auto max-w-6xl gap-4 p-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-orange-500/20 to-red-500/20">
-          <Zap className="h-5 w-5 text-orange-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-state-warning-text/20 to-state-danger-text/20">
+          <Zap className="h-5 w-5 text-state-warning-text" />
         </div>
         <div>
           <Text as="h1" className="text-xl font-bold text-text-primary">Interaction Playground</Text>
@@ -190,7 +190,7 @@ export default function InteractionPlayground() {
                         y1={y1}
                         x2={x2}
                         y2={y2}
-                        stroke={isActive ? "#f97316" : "#94a3b8"}
+                        stroke={isActive ? "var(--state-warning-text)" : "var(--text-subtle)"}
                         strokeWidth={isActive ? 2.5 : 1.5}
                         strokeDasharray={isActive ? "none" : "4 4"}
                         className="transition-all duration-300"
@@ -200,7 +200,7 @@ export default function InteractionPlayground() {
                         cx={x2}
                         cy={y2}
                         r={3}
-                        fill={isActive ? "#f97316" : "#94a3b8"}
+                        fill={isActive ? "var(--state-warning-text)" : "var(--text-subtle)"}
                       />
                     </g>
                   );
@@ -227,7 +227,7 @@ export default function InteractionPlayground() {
                         {selectedScenario.wires
                           .filter((w) => w.from.nodeId === node.id)
                           .map((w) => (
-                            <span key={w.id} className="flex items-center gap-0.5 text-[9px] text-orange-500">
+                            <span key={w.id} className="flex items-center gap-0.5 text-[9px] text-state-warning-text">
                               <ArrowRight className="h-2.5 w-2.5" />
                               {w.to.nodeId}.{w.to.prop}
                             </span>
@@ -293,7 +293,7 @@ export default function InteractionPlayground() {
           {/* Event log */}
           <div className="rounded-2xl border border-border-subtle overflow-hidden">
             <div className="flex items-center gap-2 border-b border-border-subtle bg-surface-canvas px-4 py-2">
-              <Zap className="h-3.5 w-3.5 text-orange-500" />
+              <Zap className="h-3.5 w-3.5 text-state-warning-text" />
               <Text as="span" className="text-xs font-semibold text-text-primary">Event Log</Text>
               <span className="ml-auto text-[10px] text-text-tertiary">{eventLog.length} events</span>
             </div>
@@ -309,9 +309,9 @@ export default function InteractionPlayground() {
                   {eventLog.map((entry, i) => (
                     <div key={i} className="flex items-center gap-3 px-4 py-1.5 text-[10px]">
                       <span className="font-mono text-text-tertiary">{entry.time}</span>
-                      <code className="font-mono font-medium text-blue-600">{entry.from}</code>
-                      <ArrowRight className="h-3 w-3 text-orange-400" />
-                      <code className="font-mono font-medium text-emerald-600">{entry.to}</code>
+                      <code className="font-mono font-medium text-action-primary">{entry.from}</code>
+                      <ArrowRight className="h-3 w-3 text-state-warning-text" />
+                      <code className="font-mono font-medium text-state-success-text">{entry.to}</code>
                       <span className="ml-auto truncate font-mono text-text-secondary max-w-[120px]">
                         = {entry.value}
                       </span>
@@ -326,15 +326,15 @@ export default function InteractionPlayground() {
           <div className="flex items-center gap-4 rounded-xl border border-border-subtle bg-surface-canvas px-4 py-2">
             <Text variant="secondary" className="text-[10px] font-medium">Legend:</Text>
             <div className="flex items-center gap-1.5">
-              <div className="h-0.5 w-6 bg-orange-400 rounded-xs" />
+              <div className="h-0.5 w-6 bg-state-warning-text rounded-xs" />
               <Text variant="secondary" className="text-[10px]">Active wire</Text>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="h-0.5 w-6 rounded-xs bg-[var(--text-subtle)]" style={{ backgroundImage: "repeating-linear-gradient(90deg, var(--text-subtle, #94a3b8) 0 4px, transparent 4px 8px)" }} />
+              <div className="h-0.5 w-6 rounded-xs bg-[var(--text-subtle)]" style={{ backgroundImage: "repeating-linear-gradient(90deg, var(--text-subtle)) 0 4px, transparent 4px 8px)" }} />
               <Text variant="secondary" className="text-[10px]">Idle wire</Text>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="h-2 w-2 rounded-full bg-orange-400" />
+              <div className="h-2 w-2 rounded-full bg-state-warning-text" />
               <Text variant="secondary" className="text-[10px]">Target node</Text>
             </div>
           </div>

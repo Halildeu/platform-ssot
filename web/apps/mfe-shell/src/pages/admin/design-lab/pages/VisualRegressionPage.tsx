@@ -8,7 +8,7 @@ import {
   GitBranch,
   Clock,
   Filter,
-  ChevronRight,
+  _ChevronRight,
   ExternalLink,
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
@@ -115,10 +115,10 @@ function useVisualRegressionData() {
 /* ---- Status config ---- */
 
 const STATUS_CONFIG: Record<VRStatus, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
-  pass: { label: "Pass", color: "text-emerald-700", bg: "bg-emerald-100", icon: <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> },
-  fail: { label: "Fail", color: "text-red-700", bg: "bg-red-100", icon: <XCircle className="h-3.5 w-3.5 text-red-600" /> },
-  changed: { label: "Changed", color: "text-amber-700", bg: "bg-amber-100", icon: <AlertTriangle className="h-3.5 w-3.5 text-amber-600" /> },
-  new: { label: "New", color: "text-blue-700", bg: "bg-blue-100", icon: <Eye className="h-3.5 w-3.5 text-blue-600" /> },
+  pass: { label: "Pass", color: "text-state-success-text", bg: "bg-state-success-bg", icon: <CheckCircle2 className="h-3.5 w-3.5 text-state-success-text" /> },
+  fail: { label: "Fail", color: "text-state-danger-text", bg: "bg-state-danger-bg", icon: <XCircle className="h-3.5 w-3.5 text-state-danger-text" /> },
+  changed: { label: "Changed", color: "text-state-warning-text", bg: "bg-state-warning-bg", icon: <AlertTriangle className="h-3.5 w-3.5 text-state-warning-text" /> },
+  new: { label: "New", color: "text-state-info-text", bg: "bg-state-info-bg", icon: <Eye className="h-3.5 w-3.5 text-action-primary" /> },
   skipped: { label: "Skipped", color: "text-[var(--text-secondary)]", bg: "bg-[var(--surface-muted)]", icon: <Clock className="h-3.5 w-3.5 text-[var(--text-subtle)]" /> },
 };
 
@@ -144,7 +144,7 @@ function AcceptanceGauge({ rate }: { rate: number }) {
   const radius = 40;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (rate / 100) * circumference;
-  const gaugeColor = rate >= 90 ? "#10b981" : rate >= 70 ? "#f59e0b" : "#ef4444";
+  const gaugeColor = rate >= 90 ? "var(--state-success-text)" : rate >= 70 ? "var(--state-warning-text)" : "var(--state-danger-text)";
 
   return (
     <div className="flex flex-col items-center">
@@ -190,7 +190,7 @@ function ResultRow({ result }: { result: VRResult }) {
         </Text>
       </div>
       {result.changedStories > 0 && (
-        <span className="rounded-md bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+        <span className="rounded-md bg-state-warning-bg px-2 py-0.5 text-[10px] font-semibold text-state-warning-text">
           {result.changedStories} changed
         </span>
       )}
@@ -250,7 +250,7 @@ export const VisualRegressionPage: React.FC = () => {
       {/* Page Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-100 text-rose-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-state-danger-bg text-state-danger-text">
             <Image className="h-5 w-5" />
           </div>
           <div>
@@ -279,33 +279,33 @@ export const VisualRegressionPage: React.FC = () => {
 
       {/* Evidence Status Banner */}
       {data.evidenceStatus === 'no_data' && (
-        <div className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-3">
-          <AlertTriangle className="h-4 w-4 text-amber-600" />
-          <Text className="text-sm text-amber-800">
-            Evidence registry bulunamadi. <code className="rounded-xs bg-amber-100 px-1 text-xs">npm run collect:evidence</code> komutunu calistirin.
+        <div className="flex items-center gap-3 rounded-2xl border border-state-warning-text/20 bg-state-warning-bg px-5 py-3">
+          <AlertTriangle className="h-4 w-4 text-state-warning-text" />
+          <Text className="text-sm text-state-warning-text">
+            Evidence registry bulunamadi. <code className="rounded-xs bg-state-warning-bg px-1 text-xs">npm run collect:evidence</code> komutunu calistirin.
           </Text>
         </div>
       )}
       {data.evidenceStatus === 'configured' && (
-        <div className="flex items-center gap-3 rounded-2xl border border-blue-200 bg-blue-50 px-5 py-3">
-          <Clock className="h-4 w-4 text-blue-600" />
-          <Text className="text-sm text-blue-800">
+        <div className="flex items-center gap-3 rounded-2xl border border-state-info-text/20 bg-state-info-bg px-5 py-3">
+          <Clock className="h-4 w-4 text-action-primary" />
+          <Text className="text-sm text-action-primary">
             Yapilandirilmis — henuz kosulmadi. CI pipeline ilk calistirildiginda sonuclar burada gorunecek.
           </Text>
         </div>
       )}
       {data.evidenceStatus === 'passing' && (
-        <div className="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-3">
-          <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-          <Text className="text-sm text-emerald-800">
+        <div className="flex items-center gap-3 rounded-2xl border border-state-success-text/20 bg-state-success-bg px-5 py-3">
+          <CheckCircle2 className="h-4 w-4 text-state-success-text" />
+          <Text className="text-sm text-state-success-text">
             Tum gorsel regresyon testleri gecti.
           </Text>
         </div>
       )}
       {data.evidenceStatus === 'failing' && (
-        <div className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-5 py-3">
-          <XCircle className="h-4 w-4 text-red-600" />
-          <Text className="text-sm text-red-800">
+        <div className="flex items-center gap-3 rounded-2xl border border-state-danger-text/20 bg-state-danger-bg px-5 py-3">
+          <XCircle className="h-4 w-4 text-state-danger-text" />
+          <Text className="text-sm text-state-danger-text">
             Gorsel regresyon testlerinde basarisizlik var — asagidaki detaylari inceleyin.
           </Text>
         </div>
@@ -324,12 +324,12 @@ export const VisualRegressionPage: React.FC = () => {
             threshold: {data.buildInfo.thresholdPixelRatio}
           </span>
           {data.buildInfo.chromaticWorkflow && (
-            <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+            <span className="rounded-md bg-state-success-bg px-2 py-0.5 text-[10px] font-semibold text-state-success-text">
               Chromatic CI
             </span>
           )}
           {data.buildInfo.playwrightWorkflow && (
-            <span className="rounded-md bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">
+            <span className="rounded-md bg-state-info-bg px-2 py-0.5 text-[10px] font-semibold text-state-info-text">
               Playwright CI
             </span>
           )}
@@ -349,9 +349,9 @@ export const VisualRegressionPage: React.FC = () => {
 
       {/* Stats Row */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <StatCard label="Passed" value={data.passCount} color="text-emerald-600" icon={<CheckCircle2 className="h-4 w-4 text-emerald-500" />} />
-        <StatCard label="Changed" value={data.changedCount} color="text-amber-600" icon={<AlertTriangle className="h-4 w-4 text-amber-500" />} />
-        <StatCard label="Failed" value={data.failCount} color="text-red-600" icon={<XCircle className="h-4 w-4 text-red-500" />} />
+        <StatCard label="Passed" value={data.passCount} color="text-state-success-text" icon={<CheckCircle2 className="h-4 w-4 text-state-success-text" />} />
+        <StatCard label="Changed" value={data.changedCount} color="text-state-warning-text" icon={<AlertTriangle className="h-4 w-4 text-state-warning-text" />} />
+        <StatCard label="Failed" value={data.failCount} color="text-state-danger-text" icon={<XCircle className="h-4 w-4 text-state-danger-text" />} />
         <StatCard label="Snapshots" value={data.totalSnapshots} color="text-text-primary" icon={<Image className="h-4 w-4 text-text-secondary" />} />
         <div className="flex items-center justify-center rounded-2xl border border-border-subtle bg-surface-default p-4">
           <AcceptanceGauge rate={data.acceptanceRate} />
@@ -371,12 +371,12 @@ export const VisualRegressionPage: React.FC = () => {
               className={[
                 "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition",
                 filter === opt.id
-                  ? "bg-action-primary text-white"
+                  ? "bg-action-primary text-text-inverse"
                   : "bg-surface-muted text-text-secondary hover:text-text-primary",
               ].join(" ")}
             >
               {opt.label}
-              <span className={filter === opt.id ? "text-white/70" : "text-text-tertiary"}>
+              <span className={filter === opt.id ? "text-text-inverse/70" : "text-text-tertiary"}>
                 {opt.count}
               </span>
             </button>

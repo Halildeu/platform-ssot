@@ -8,7 +8,7 @@ Upstream: STORY-0019-permission-registry-v1, STORY-0033-auth-rest-dto-v1, STORY-
 Downstream: AC-0316, TP-0316, IC-cross-plane-auth-session-audit-foundation
 
 -------------------------------------------------------------------------------
-## 1. AMAC
+## 1. AMAÇ
 -------------------------------------------------------------------------------
 
 - Mevcut `auth-service`, `permission-service`, `api-gateway` ve `common-auth`
@@ -62,7 +62,7 @@ Haric:
 - Mevcut mikroservis topolojisinin yeniden tasarlanmasi.
 
 -------------------------------------------------------------------------------
-## 4. ACCEPTANCE KRITERLERI
+## 4. ACCEPTANCE KRİTERLERİ
 -------------------------------------------------------------------------------
 
 - [ ] Web shell ve mobil istemci session bootstrap icin ayni
@@ -81,7 +81,7 @@ Haric:
   cross-plane delivery ayni contract ile izlenir.
 
 -------------------------------------------------------------------------------
-## 5. BAGIMLILIKLAR
+## 5. BAĞIMLILIKLAR
 -------------------------------------------------------------------------------
 
 - docs/03-delivery/STORIES/STORY-0019-permission-registry-v1.md  
@@ -97,7 +97,7 @@ Haric:
 - docs/OPERATIONS/MULTI-PLANE-EXECUTION-MODEL.v1.md  
 
 -------------------------------------------------------------------------------
-## 6. OZET
+## 6. ÖZET
 -------------------------------------------------------------------------------
 
 - Bu story, mevcut backend auth/yetki omurgasini kullanarak web ve mobil
@@ -108,7 +108,7 @@ Haric:
   hazir hale getirmektir.
 
 -------------------------------------------------------------------------------
-## 7. LINKLER (ISTEGE BAGLI)
+## 7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
 - Story: docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md  

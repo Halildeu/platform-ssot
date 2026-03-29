@@ -24,7 +24,7 @@ function ConnectedRadioDemo({ defaultValue = 'monthly' }: { defaultValue?: strin
           <ConnectedRadio name="plan" radioValue="enterprise" />
           Enterprise (Custom)
         </label>
-        <pre style={{ fontSize: 11, background: '#f3f4f6', padding: 8, borderRadius: 4 }}>
+        <pre style={{ fontSize: 11, background: 'var(--surface-muted)', padding: 8, borderRadius: 4 }}>
           plan: {String(values.plan)}
         </pre>
       </fieldset>

@@ -4,10 +4,10 @@ import type { KanbanCard as KanbanCardType, KanbanColumn as KanbanColumnType } f
 const PRIORITY_OPTIONS: KanbanCardType['priority'][] = ['low', 'medium', 'high', 'critical'];
 
 const PRIORITY_COLORS: Record<string, string> = {
-  low: 'var(--color-success, #22c55e)',
-  medium: 'var(--color-warning, #f59e0b)',
-  high: 'var(--color-orange, #f97316)',
-  critical: 'var(--color-error, #ef4444)',
+  low: 'var(--color-success))',
+  medium: 'var(--color-warning))',
+  high: 'var(--color-orange)',
+  critical: 'var(--color-error))',
 };
 
 export interface KanbanCardDetailProps {
@@ -66,10 +66,10 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
     height: '36px',
     padding: '0 10px',
     fontSize: '13px',
-    border: '1px solid var(--border-subtle, #e5e7eb)',
-    borderRadius: 'var(--radius-md, 8px)',
-    background: 'var(--surface-default, #fff)',
-    color: 'var(--text-primary, #111827)',
+    border: '1px solid var(--border-subtle))',
+    borderRadius: 'var(--radius-md)',
+    background: 'var(--surface-default))',
+    color: 'var(--text-primary))',
     outline: 'none',
     boxSizing: 'border-box' as const,
   };
@@ -78,7 +78,7 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
     display: 'block',
     fontSize: '12px',
     fontWeight: 600,
-    color: 'var(--text-secondary, #6b7280)',
+    color: 'var(--text-secondary))',
     marginBottom: '4px',
   };
 
@@ -104,7 +104,7 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'var(--surface-overlay, rgba(0, 0, 0, 0.4))',
+          background: 'var(--surface-overlay))',
         }}
       />
 
@@ -116,8 +116,8 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
           maxWidth: '560px',
           maxHeight: '90vh',
           overflowY: 'auto',
-          background: 'var(--surface-default, #fff)',
-          borderRadius: 'var(--radius-lg, 12px)',
+          background: 'var(--surface-default))',
+          borderRadius: 'var(--radius-lg)',
           boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)',
           display: 'flex',
           flexDirection: 'column',
@@ -130,7 +130,7 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '16px 20px',
-            borderBottom: '1px solid var(--border-subtle, #e5e7eb)',
+            borderBottom: '1px solid var(--border-subtle))',
           }}
         >
           <h2
@@ -138,7 +138,7 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
               margin: 0,
               fontSize: '16px',
               fontWeight: 600,
-              color: 'var(--text-primary, #111827)',
+              color: 'var(--text-primary))',
             }}
           >
             Card Detail
@@ -155,14 +155,14 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
               height: '28px',
               border: 'none',
               background: 'transparent',
-              borderRadius: 'var(--radius-sm, 4px)',
+              borderRadius: 'var(--radius-sm)',
               cursor: 'pointer',
               fontSize: '18px',
-              color: 'var(--text-tertiary, #9ca3af)',
+              color: 'var(--text-tertiary))',
               transition: 'background 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--surface-subtle, #f3f4f6)';
+              e.currentTarget.style.background = 'var(--surface-subtle))';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = 'transparent';
@@ -239,7 +239,7 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
                   cursor: 'pointer',
                   color: draft.priority
                     ? PRIORITY_COLORS[draft.priority]
-                    : 'var(--text-primary, #111827)',
+                    : 'var(--text-primary))',
                 }}
               >
                 <option value="">None</option>
@@ -339,9 +339,9 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
                     fontSize: '11px',
                     fontWeight: 500,
                     padding: '2px 8px',
-                    borderRadius: 'var(--radius-sm, 4px)',
-                    background: 'var(--surface-subtle, #f3f4f6)',
-                    color: 'var(--text-secondary, #6b7280)',
+                    borderRadius: 'var(--radius-sm)',
+                    background: 'var(--surface-subtle))',
+                    color: 'var(--text-secondary))',
                   }}
                 >
                   {tag}
@@ -359,7 +359,7 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
                       background: 'transparent',
                       cursor: 'pointer',
                       fontSize: '12px',
-                      color: 'var(--text-tertiary, #9ca3af)',
+                      color: 'var(--text-tertiary))',
                       padding: 0,
                     }}
                   >
@@ -382,9 +382,9 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
             <div
               style={{
                 padding: '16px',
-                borderRadius: 'var(--radius-md, 8px)',
-                background: 'var(--surface-subtle, #f3f4f6)',
-                color: 'var(--text-tertiary, #9ca3af)',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--surface-subtle))',
+                color: 'var(--text-tertiary))',
                 fontSize: '12px',
                 textAlign: 'center',
               }}
@@ -401,7 +401,7 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '12px 20px',
-            borderTop: '1px solid var(--border-subtle, #e5e7eb)',
+            borderTop: '1px solid var(--border-subtle))',
           }}
         >
           {/* Delete */}
@@ -415,20 +415,20 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
                   padding: '0 12px',
                   fontSize: '13px',
                   fontWeight: 500,
-                  border: '1px solid var(--color-error, #ef4444)',
-                  borderRadius: 'var(--radius-md, 8px)',
+                  border: '1px solid var(--color-error))',
+                  borderRadius: 'var(--radius-md)',
                   background: 'transparent',
-                  color: 'var(--color-error, #ef4444)',
+                  color: 'var(--color-error))',
                   cursor: 'pointer',
                   transition: 'background 0.15s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'var(--color-error, #ef4444)';
-                  e.currentTarget.style.color = 'var(--text-inverse, #fff)';
+                  e.currentTarget.style.background = 'var(--color-error))';
+                  e.currentTarget.style.color = 'var(--text-inverse))';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.color = 'var(--color-error, #ef4444)';
+                  e.currentTarget.style.color = 'var(--color-error))';
                 }}
               >
                 Delete
@@ -439,7 +439,7 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
                 <span
                   style={{
                     fontSize: '12px',
-                    color: 'var(--color-error, #ef4444)',
+                    color: 'var(--color-error))',
                     fontWeight: 500,
                   }}
                 >
@@ -457,9 +457,9 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
                     fontSize: '12px',
                     fontWeight: 600,
                     border: 'none',
-                    borderRadius: 'var(--radius-sm, 4px)',
-                    background: 'var(--color-error, #ef4444)',
-                    color: 'var(--text-inverse, #fff)',
+                    borderRadius: 'var(--radius-sm)',
+                    background: 'var(--color-error))',
+                    color: 'var(--text-inverse))',
                     cursor: 'pointer',
                   }}
                 >
@@ -473,10 +473,10 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
                     padding: '0 10px',
                     fontSize: '12px',
                     fontWeight: 500,
-                    border: '1px solid var(--border-subtle, #e5e7eb)',
-                    borderRadius: 'var(--radius-sm, 4px)',
+                    border: '1px solid var(--border-subtle))',
+                    borderRadius: 'var(--radius-sm)',
                     background: 'transparent',
-                    color: 'var(--text-secondary, #6b7280)',
+                    color: 'var(--text-secondary))',
                     cursor: 'pointer',
                   }}
                 >
@@ -496,18 +496,18 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
                 padding: '0 14px',
                 fontSize: '13px',
                 fontWeight: 500,
-                border: '1px solid var(--border-subtle, #e5e7eb)',
-                borderRadius: 'var(--radius-md, 8px)',
-                background: 'var(--surface-default, #fff)',
-                color: 'var(--text-primary, #111827)',
+                border: '1px solid var(--border-subtle))',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--surface-default))',
+                color: 'var(--text-primary))',
                 cursor: 'pointer',
                 transition: 'background 0.15s ease',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'var(--surface-hover, #f9fafb)';
+                e.currentTarget.style.background = 'var(--surface-hover))';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'var(--surface-default, #fff)';
+                e.currentTarget.style.background = 'var(--surface-default))';
               }}
             >
               Cancel
@@ -521,17 +521,17 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
                 fontSize: '13px',
                 fontWeight: 600,
                 border: 'none',
-                borderRadius: 'var(--radius-md, 8px)',
-                background: 'var(--color-primary, #3b82f6)',
-                color: 'var(--text-inverse, #fff)',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--color-primary))',
+                color: 'var(--text-inverse))',
                 cursor: 'pointer',
                 transition: 'background 0.15s ease',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'var(--color-primary-hover, #2563eb)';
+                e.currentTarget.style.background = 'var(--color-primary-hover))';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'var(--color-primary, #3b82f6)';
+                e.currentTarget.style.background = 'var(--color-primary))';
               }}
             >
               Save

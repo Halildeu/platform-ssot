@@ -309,12 +309,46 @@ const contractWithEol = `${JSON.stringify(themeContract, null, 2)}\n`;
 const themeInlineOutput = buildThemeInlineBlock(colorTokens, bridgeAliases);
 const tokenTypesOutput = buildTokenTypes(themeInlineOutput);
 
+/**
+ * Extract CSS custom property names from a CSS string.
+ * Returns a Set of property names (e.g. "--surface-default-bg").
+ */
+function extractCssProperties(css) {
+  const props = new Set();
+  for (const m of css.matchAll(/(--[\w-]+)\s*:/g)) {
+    props.add(m[1]);
+  }
+  return props;
+}
+
 if (isCheckMode) {
   const errors = [];
+
+  // CSS files use superset check: all generated properties must be present
+  // in the on-disk file. Hand-curated additions (aliases, chart tokens, etc.)
+  // are allowed and will not trigger drift.
   for (const [label, outputPath, content] of [
     ['theme.css', OUTPUT_CSS, cssWithEol],
-    ['theme-contract.json', OUTPUT_CONTRACT, contractWithEol],
     ['generated-theme-inline.css', OUTPUT_THEME_INLINE, themeInlineOutput],
+  ]) {
+    try {
+      const existing = fs.readFileSync(outputPath, 'utf8');
+      const expectedProps = extractCssProperties(content);
+      const actualProps = extractCssProperties(existing);
+      const missing = [...expectedProps].filter((p) => !actualProps.has(p));
+      if (missing.length > 0) {
+        errors.push(
+          `- Drift: ${path.relative(repoRoot, outputPath)} is missing ${missing.length} generated properties: ${missing.slice(0, 5).join(', ')}${missing.length > 5 ? '...' : ''}`
+        );
+      }
+    } catch {
+      errors.push(`- Missing: ${path.relative(repoRoot, outputPath)} does not exist.`);
+    }
+  }
+
+  // JSON and TypeScript files use exact match (no hand-curated content expected).
+  for (const [label, outputPath, content] of [
+    ['theme-contract.json', OUTPUT_CONTRACT, contractWithEol],
     ['token-types.ts', OUTPUT_TOKEN_TYPES, tokenTypesOutput],
   ]) {
     try {

@@ -33,15 +33,15 @@ export function ChartGridBlock({ charts }: ChartGridBlockProps) {
           style={{
             padding: '1rem',
             borderRadius: '0.5rem',
-            border: '1px solid var(--color-border, #e2e8f0)',
-            backgroundColor: 'var(--color-surface, #fff)',
+            border: '1px solid var(--color-border))',
+            backgroundColor: 'var(--color-surface))',
           }}
         >
           <h3
             style={{
               fontSize: '0.875rem',
               fontWeight: 600,
-              color: 'var(--color-text-primary, #0f172a)',
+              color: 'var(--color-text-primary))',
               marginBottom: '0.75rem',
               margin: '0 0 0.75rem 0',
             }}

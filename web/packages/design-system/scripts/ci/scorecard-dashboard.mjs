@@ -56,28 +56,28 @@ const html = `<!DOCTYPE html>
   <title>Design System Scorecard Dashboard</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #1e293b; padding: 2rem; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--surface-default); color: var(--text-primary); padding: 2rem; }
     .header { text-align: center; margin-bottom: 2rem; }
     .header h1 { font-size: 1.75rem; font-weight: 700; }
-    .header .subtitle { color: #64748b; margin-top: 0.25rem; }
+    .header .subtitle { color: var(--text-secondary); margin-top: 0.25rem; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
     .card { background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    .card .label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+    .card .label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
     .card .value { font-size: 2rem; font-weight: 700; margin-top: 0.25rem; }
-    .card .bar { height: 6px; background: #e2e8f0; border-radius: 3px; margin-top: 0.5rem; overflow: hidden; }
+    .card .bar { height: 6px; background: var(--border-subtle); border-radius: 3px; margin-top: 0.5rem; overflow: hidden; }
     .card .bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
-    .grade-a { color: #16a34a; } .grade-b { color: #2563eb; } .grade-c { color: #d97706; } .grade-d { color: #dc2626; }
-    .bar-a { background: #16a34a; } .bar-b { background: #2563eb; } .bar-c { background: #d97706; } .bar-d { background: #dc2626; }
+    .grade-a { color: var(--state-success-text); } .grade-b { color: var(--action-primary); } .grade-c { color: var(--state-warning-text); } .grade-d { color: var(--state-danger-text); }
+    .bar-a { background: var(--state-success-text); } .bar-b { background: var(--action-primary); } .bar-c { background: var(--state-warning-text); } .bar-d { background: var(--state-danger-text); }
     .section { margin-bottom: 2rem; }
-    .section h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0; }
+    .section h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-subtle); }
     table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    th { background: #f1f5f9; text-align: left; padding: 0.75rem 1rem; font-size: 0.75rem; text-transform: uppercase; color: #64748b; }
-    td { padding: 0.5rem 1rem; border-top: 1px solid #f1f5f9; font-size: 0.875rem; }
-    tr:hover td { background: #f8fafc; }
+    th { background: var(--surface-muted); text-align: left; padding: 0.75rem 1rem; font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); }
+    td { padding: 0.5rem 1rem; border-top: 1px solid var(--surface-muted); font-size: 0.875rem; }
+    tr:hover td { background: var(--surface-default); }
     .metric-bar { display: inline-block; height: 8px; border-radius: 4px; min-width: 4px; }
     .grade-badge { display: inline-block; width: 28px; height: 28px; border-radius: 6px; text-align: center; line-height: 28px; font-weight: 700; font-size: 0.75rem; color: white; }
-    .badge-a { background: #16a34a; } .badge-b { background: #2563eb; } .badge-c { background: #d97706; } .badge-d { background: #dc2626; }
-    .footer { text-align: center; color: #94a3b8; font-size: 0.75rem; margin-top: 2rem; }
+    .badge-a { background: var(--state-success-text); } .badge-b { background: var(--action-primary); } .badge-c { background: var(--state-warning-text); } .badge-d { background: var(--state-danger-text); }
+    .footer { text-align: center; color: var(--text-subtle); font-size: 0.75rem; margin-top: 2rem; }
   </style>
 </head>
 <body>
@@ -89,7 +89,7 @@ const html = `<!DOCTYPE html>
   <div class="grid">
     ${metricKeys.map(k => {
       const v = metricAvgs[k];
-      const color = v >= 80 ? '#16a34a' : v >= 60 ? '#2563eb' : v >= 40 ? '#d97706' : '#dc2626';
+      const color = v >= 80 ? 'var(--state-success-text)' : v >= 60 ? 'var(--action-primary)' : v >= 40 ? 'var(--state-warning-text)' : 'var(--state-danger-text)';
       const label = k.replace(/([A-Z])/g, ' $1').trim();
       return `<div class="card">
         <div class="label">${label}</div>
@@ -100,7 +100,7 @@ const html = `<!DOCTYPE html>
   </div>
 
   <div class="grid" style="grid-template-columns: repeat(4, 1fr);">
-    ${Object.entries(grades).filter(([,v]) => true).map(([g, cnt]) => {
+    ${Object.entries(grades).filter(([,_v]) => true).map(([g, cnt]) => {
       const cls = g.toLowerCase();
       return `<div class="card" style="text-align:center">
         <div class="label">Grade ${g}</div>
@@ -129,7 +129,7 @@ const html = `<!DOCTYPE html>
           <td><strong>${c.totalScore}</strong></td>
           ${metricKeys.map(k => {
             const v = c.scores?.[k] || 0;
-            const color = v >= 80 ? '#16a34a' : v >= 60 ? '#2563eb' : v >= 40 ? '#d97706' : '#dc2626';
+            const color = v >= 80 ? 'var(--state-success-text)' : v >= 60 ? 'var(--action-primary)' : v >= 40 ? 'var(--state-warning-text)' : 'var(--state-danger-text)';
             return `<td><span class="metric-bar" style="width:${v*0.4}px;background:${color}"></span> ${v}</td>`;
           }).join('')}
         </tr>`).join('')}

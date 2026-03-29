@@ -5,7 +5,7 @@ import type { AgChartOptions } from "ag-charts-community";
 // React 18/19 types compatibility shim
 const AgCharts = AgChartsBase as unknown as React.FC<{ options: AgChartOptions; style?: React.CSSProperties; className?: string }>;
 import { cn } from "@mfe/design-system";
-import { getChartThemeOverrides, getChartColorPalette } from "./chart-theme-bridge";
+import { getChartThemeOverrides } from "./chart-theme-bridge";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -78,9 +78,9 @@ export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartPro
       if (!data || data.length === 0) return { data: [] } as AgChartOptions;
 
       const palette = colors ?? [
-        "var(--state-success-text, #22c55e)", // increase
-        "var(--state-error-text, #ef4444)",   // decrease
-        "var(--action-primary, #3b82f6)",     // total
+        "var(--state-success-text))", // increase
+        "var(--state-error-text))",   // decrease
+        "var(--action-primary))",     // total
       ];
       const themeOverrides = getChartThemeOverrides();
 

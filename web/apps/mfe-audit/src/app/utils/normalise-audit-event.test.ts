@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { normaliseAuditEvent, ApiAuditEvent } from './normalise-audit-event';
 
 describe('normaliseAuditEvent', () => {

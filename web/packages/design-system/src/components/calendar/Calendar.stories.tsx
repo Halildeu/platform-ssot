@@ -83,12 +83,12 @@ export const WithEvents: Story = {
     mode: 'single',
     defaultMonth: new Date(2024, 2, 1),
     events: [
-      { date: new Date(2024, 2, 5), label: 'Toplanti', color: '#3b82f6' },
-      { date: new Date(2024, 2, 5), label: 'Egitim', color: '#10b981' },
-      { date: new Date(2024, 2, 12), label: 'Teslim Tarihi', color: '#ef4444' },
-      { date: new Date(2024, 2, 18), label: 'Izin', color: '#f59e0b' },
-      { date: new Date(2024, 2, 22), label: 'Sprint Demo', color: '#8b5cf6' },
-      { date: new Date(2024, 2, 28), label: 'Denetim', color: '#3b82f6' },
+      { date: new Date(2024, 2, 5), label: 'Toplanti', color: 'var(--action-primary)' },
+      { date: new Date(2024, 2, 5), label: 'Egitim', color: 'var(--state-success-text)' },
+      { date: new Date(2024, 2, 12), label: 'Teslim Tarihi', color: 'var(--state-danger-text)' },
+      { date: new Date(2024, 2, 18), label: 'Izin', color: 'var(--state-warning-text)' },
+      { date: new Date(2024, 2, 22), label: 'Sprint Demo', color: 'var(--action-primary)' },
+      { date: new Date(2024, 2, 28), label: 'Denetim', color: 'var(--action-primary)' },
     ] as CalendarEvent[],
   },
 };

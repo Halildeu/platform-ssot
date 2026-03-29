@@ -65,7 +65,7 @@ export const CustomFallback: Story = {
         style={{
           padding: 24,
           textAlign: 'center',
-          color: 'var(--text-primary, #111827)',
+          color: 'var(--text-primary))',
         }}
       >
         Custom fallback UI — an error occurred.
@@ -79,10 +79,10 @@ export const WithFallback: Story = {
     children: <BrokenChild />,
     fallback: (error: Error, reset: () => void) => (
       <div style={{ padding: 24, textAlign: 'center' }}>
-        <p style={{ fontWeight: 600, color: 'var(--text-primary, #111827)' }}>
+        <p style={{ fontWeight: 600, color: 'var(--text-primary))' }}>
           Error: {error.message}
         </p>
-        <button onClick={reset} style={{ marginTop: 8, padding: '4px 12px', borderRadius: 4, border: '1px solid #ccc' }}>
+        <button onClick={reset} style={{ marginTop: 8, padding: '4px 12px', borderRadius: 4, border: '1px solid var(--border-default)' }}>
           Retry
         </button>
       </div>
@@ -93,10 +93,10 @@ export const WithFallback: Story = {
 export const NestedError: Story = {
   render: () => (
     <ErrorBoundary
-      fallback={<div style={{ padding: 16, textAlign: 'center', color: 'var(--text-primary, #111827)' }}>Outer boundary caught an error</div>}
+      fallback={<div style={{ padding: 16, textAlign: 'center', color: 'var(--text-primary))' }}>Outer boundary caught an error</div>}
     >
       <ErrorBoundary
-        fallback={<div style={{ padding: 16, textAlign: 'center', color: 'var(--text-primary, #111827)' }}>Inner boundary caught an error</div>}
+        fallback={<div style={{ padding: 16, textAlign: 'center', color: 'var(--text-primary))' }}>Inner boundary caught an error</div>}
       >
         <BrokenChild />
       </ErrorBoundary>
@@ -127,7 +127,7 @@ export const WithReset: Story = {
               role="alert"
               style={{
                 padding: 24,
-                border: '1px solid var(--border-default, #e5e7eb)',
+                border: '1px solid var(--border-default))',
                 borderRadius: 8,
                 textAlign: 'center',
               }}

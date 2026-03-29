@@ -1,6 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { resolveAccessState, accessStyles, type AccessControlledProps } from '../../internal/access-controller';
+import { resolveAccessState, type AccessControlledProps } from '../../internal/access-controller';
 import { stateAttrs } from '../../internal/interaction-core';
 import { useOutsideClick } from '../../internal/overlay-engine';
 import {

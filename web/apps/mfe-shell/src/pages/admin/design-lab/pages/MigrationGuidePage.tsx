@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from "react";
 import {
-  ArrowRight,
+  _ArrowRight,
   Search,
   AlertTriangle,
   CheckCircle2,
   ChevronDown,
   ChevronRight,
-  ArrowUpRight,
+  _ArrowUpRight,
   GitBranch,
   Zap,
   BookOpen,
@@ -43,10 +43,10 @@ type MigrationEntry = {
 };
 
 const CHANGE_TYPE_META: Record<ChangeType, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
-  breaking: { label: "Breaking", color: "text-red-600", bg: "bg-red-100", icon: <AlertTriangle className="h-3 w-3" /> },
-  deprecation: { label: "Deprecated", color: "text-amber-600", bg: "bg-amber-100", icon: <AlertTriangle className="h-3 w-3" /> },
-  feature: { label: "Feature", color: "text-blue-600", bg: "bg-blue-100", icon: <Zap className="h-3 w-3" /> },
-  fix: { label: "Fix", color: "text-emerald-600", bg: "bg-emerald-100", icon: <CheckCircle2 className="h-3 w-3" /> },
+  breaking: { label: "Breaking", color: "text-state-danger-text", bg: "bg-state-danger-bg", icon: <AlertTriangle className="h-3 w-3" /> },
+  deprecation: { label: "Deprecated", color: "text-state-warning-text", bg: "bg-state-warning-bg", icon: <AlertTriangle className="h-3 w-3" /> },
+  feature: { label: "Feature", color: "text-action-primary", bg: "bg-state-info-bg", icon: <Zap className="h-3 w-3" /> },
+  fix: { label: "Fix", color: "text-state-success-text", bg: "bg-state-success-bg", icon: <CheckCircle2 className="h-3 w-3" /> },
 };
 
 /* ---- Migration data ---- */
@@ -257,8 +257,8 @@ export default function MigrationGuidePage() {
       {/* Header */}
       <div>
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-orange-500/20 to-red-500/20">
-            <GitBranch className="h-5 w-5 text-orange-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-state-warning-text/20 to-state-danger-text/20">
+            <GitBranch className="h-5 w-5 text-state-warning-text" />
           </div>
           <div>
             <Text as="h1" className="text-xl font-bold text-text-primary">
@@ -277,13 +277,13 @@ export default function MigrationGuidePage() {
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-wider">Total Changes</Text>
           <Text as="div" className="mt-1 text-2xl font-bold text-text-primary">{MIGRATION_ENTRIES.length}</Text>
         </div>
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
-          <Text className="text-[10px] font-semibold uppercase tracking-wider text-red-600">Breaking Changes</Text>
-          <Text as="div" className="mt-1 text-2xl font-bold text-red-600">{breakingCount}</Text>
+        <div className="rounded-2xl border border-state-danger-text/20 bg-state-danger-bg p-4">
+          <Text className="text-[10px] font-semibold uppercase tracking-wider text-state-danger-text">Breaking Changes</Text>
+          <Text as="div" className="mt-1 text-2xl font-bold text-state-danger-text">{breakingCount}</Text>
         </div>
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
-          <Text className="text-[10px] font-semibold uppercase tracking-wider text-amber-600">Deprecations</Text>
-          <Text as="div" className="mt-1 text-2xl font-bold text-amber-600">{deprecationCount}</Text>
+        <div className="rounded-2xl border border-state-warning-text/20 bg-state-warning-bg p-4">
+          <Text className="text-[10px] font-semibold uppercase tracking-wider text-state-warning-text">Deprecations</Text>
+          <Text as="div" className="mt-1 text-2xl font-bold text-state-warning-text">{deprecationCount}</Text>
         </div>
       </div>
 
@@ -308,7 +308,7 @@ export default function MigrationGuidePage() {
               className={[
                 "rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition",
                 filterType === type
-                  ? "bg-action-primary text-white"
+                  ? "bg-action-primary text-text-inverse"
                   : "bg-surface-muted text-text-secondary hover:text-text-primary",
               ].join(" ")}
             >
@@ -398,7 +398,7 @@ export default function MigrationGuidePage() {
                       <Text as="div" className="mb-2 text-xs font-semibold text-text-primary flex items-center gap-1.5">
                         <Zap className="h-3.5 w-3.5" /> Automated Codemod
                       </Text>
-                      <pre className="overflow-x-auto rounded-xl bg-gray-900 p-4 text-xs leading-relaxed text-gray-200 font-mono">
+                      <pre className="overflow-x-auto rounded-xl bg-surface-inverse p-4 text-xs leading-relaxed text-border-subtle font-mono">
                         {entry.codemod}
                       </pre>
                     </div>

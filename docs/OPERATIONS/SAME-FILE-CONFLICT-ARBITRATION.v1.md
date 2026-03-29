@@ -1,7 +1,7 @@
 # Same-File Conflict Arbitration (v1)
 
 Status: ACTIVE
-Mode: minimal engine-enforced + fail-closed
+Mode: documented safe default
 
 ## Amaç
 Ayni dosyaya iki agent'in ayni anda yazmaya calismasi durumunda fail-closed davranisi tek SSOT metinde toplamak.
@@ -18,4 +18,4 @@ Ayni dosyaya iki agent'in ayni anda yazmaya calismasi durumunda fail-closed davr
 4. Handoff owner_tag + owner_session + evidence_paths olmadan tamamlanmis sayilmaz.
 
 ## Residual gap
-File-level arbitration artik `fs_write` yolunda minimal engine enforcement ile devrededir. Ikinci writer fail-closed bloklanir. Ancak handoff kaniti, scope globlari ve bulk edit semantikleri hala aciktir; bu alanlarda varsayilan davranis BLOCK + ESCALATE olmaya devam eder.
+File-level arbitration su an dogrudan engine tarafinda enforce edilmiyor. Bu nedenle mevcut claim/lease/governor mekanizmalari disinda ayni dosya riskinde varsayilan davranis BLOCK + ESCALATE olmaya devam eder.

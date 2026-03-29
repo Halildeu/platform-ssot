@@ -18,8 +18,8 @@
  *   1  Coverage below threshold
  */
 
-import { readdirSync, existsSync, statSync } from "node:fs";
-import { join, relative, basename } from "node:path";
+import { readdirSync, existsSync } from "node:fs";
+import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);

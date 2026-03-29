@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "./styles/generated-theme-inline.css";
+@import "./styles/theme.css";
 
 /* Content scanning for monorepo — TW4 native @source */
 @source "../../../packages/design-system/src/**/*.{ts,tsx}";
@@ -17,7 +19,9 @@
 @source "../../mfe-reporting/src/**/*.{ts,tsx}";
 
 /* ------------------------------------------------------------------ */
+
 /*  TW4 Compatibility Layer — Restore v3 defaults                      */
+
 /* ------------------------------------------------------------------ */
 
 /* Dark mode: use data-mode="dark" attribute (not prefers-color-scheme) */
@@ -26,10 +30,8 @@
 /* Restore v3 ring defaults (3px width, focus-outline color) */
 @theme {
   --default-ring-width: 3px;
-  --default-ring-color: var(--focus-outline, var(--color-blue-500));
+  --default-ring-color: var(--focus-outline);
 }
-
-/* @layer cascade bug fix REMOVED — @tailwindcss/webpack preserves @layer natively */
 
 /* Restore v3 base defaults changed in TW4 */
 @layer base {
@@ -39,7 +41,7 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    border-color: var(--color-gray-200);
   }
 
   /* Button cursor: default → pointer */
@@ -61,23 +63,13 @@
 }
 
 /* ------------------------------------------------------------------ */
-/*  @theme inline — auto-generated from figma.tokens.json              */
-/*  Run: npm run tokens:build:theme to regenerate.                     */
-/*  "inline" ensures TW4 utilities use var() directly, so runtime     */
-/*  theme switches (data-theme attr) cascade correctly.                */
-/* ------------------------------------------------------------------ */
-@import './styles/generated-theme-inline.css';
 
-/* ------------------------------------------------------------------ */
-/*  Theme overrides — runtime CSS vars override @theme static values   */
-/*  theme.css sets :root { --color-surface-default: <actual value> }   */
-/* ------------------------------------------------------------------ */
-@import './styles/theme.css';
-
-/* ------------------------------------------------------------------ */
 /*  Token → TW mapping is now handled by @theme inline above.          */
+
 /*  No separate :root override block needed — @theme inline emits      */
+
 /*  utility classes that directly reference runtime CSS variables.      */
+
 /* ------------------------------------------------------------------ */
 
 /* TW4 preflight handles reset — no manual reset needed */
@@ -113,6 +105,7 @@ body {
 }
 
 /* Elevation aksı */
+
 /* v4 renames: shadow-sm→shadow-xs, shadow→shadow-sm — both old and new covered */
 [data-elevation="raised"] :is(.shadow, .shadow-xs, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl) {
   box-shadow: var(--elevation-surface) !important;
@@ -123,9 +116,13 @@ body {
 }
 
 /* ------------------------------------------------------------------ */
+
 /*  Forced Colors / High Contrast support                              */
+
 /*  Ensures all interactive elements have visible borders when the OS  */
+
 /*  strips background colors in forced-colors mode.                    */
+
 /* ------------------------------------------------------------------ */
 @media (forced-colors: active) {
   button,
@@ -136,6 +133,7 @@ body {
   a {
     border: 1px solid ButtonText;
   }
+
   :focus-visible {
     outline: 2px solid Highlight;
     outline-offset: 2px;
@@ -173,16 +171,16 @@ body {
 
 @media (prefers-contrast: more) {
   :root {
-    --border-subtle: oklch(60% 0 0);
-    --border-default: oklch(80% 0 0);
-    --action-primary: oklch(55% 0.25 265);
-    --text-inverse: oklch(100% 0 0);
+    --border-subtle: oklch(60% 0 0deg);
+    --border-default: oklch(80% 0 0deg);
+    --action-primary: oklch(55% 0.25 265deg);
+    --text-inverse: oklch(100% 0 0deg);
   }
 
   /* Ensure active buttons have strong contrast */
   [aria-current="page"],
   [aria-selected="true"] {
-    outline: 2px solid currentColor;
+    outline: 2px solid currentcolor;
     outline-offset: -2px;
   }
 }

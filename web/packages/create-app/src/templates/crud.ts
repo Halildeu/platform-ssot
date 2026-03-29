@@ -42,7 +42,7 @@ const linkStyle: React.CSSProperties = {
   textDecoration: 'none',
   fontSize: '0.875rem',
   fontWeight: 500,
-  color: 'var(--color-text-secondary, #64748b)',
+  color: 'var(--color-text-secondary))',
 };
 
 export default function App() {
@@ -121,7 +121,7 @@ const columns: DataListColumn<Product>[] = [
     key: 'stock',
     label: 'Stock',
     render: (value: number) => (
-      <span style={{ color: value === 0 ? 'var(--color-error, #dc2626)' : 'inherit' }}>
+      <span style={{ color: value === 0 ? 'var(--color-error))' : 'inherit' }}>
         {value}
       </span>
     ),
@@ -138,16 +138,16 @@ const columns: DataListColumn<Product>[] = [
           fontWeight: 500,
           backgroundColor:
             value === 'active'
-              ? 'var(--color-success-light, #dcfce7)'
+              ? 'var(--color-success-light))'
               : value === 'draft'
-                ? 'var(--color-warning-light, #fef3c7)'
-                : 'var(--color-border, #e2e8f0)',
+                ? 'var(--color-warning-light)'
+                : 'var(--color-border))',
           color:
             value === 'active'
-              ? 'var(--color-success, #16a34a)'
+              ? 'var(--color-success))'
               : value === 'draft'
-                ? 'var(--color-warning, #d97706)'
-                : 'var(--color-text-secondary, #64748b)',
+                ? 'var(--color-warning))'
+                : 'var(--color-text-secondary))',
         }}
       >
         {value}

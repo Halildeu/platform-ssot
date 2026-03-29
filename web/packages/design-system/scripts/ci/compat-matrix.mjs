@@ -129,7 +129,7 @@ function checkNodeVersion() {
 /*  2. React 18 SSR compatibility                                      */
 /* ------------------------------------------------------------------ */
 
-function checkReact18Compat(tmpDir, tarballPath) {
+function checkReact18Compat(tmpDir, _tarballPath) {
   console.log("\n2. React 18 SSR compatibility");
 
   writeFileSync(
@@ -233,7 +233,7 @@ console.log('CJS require OK — typeof Button = ' + typeof primitives.Button);
 /*  5. TypeScript types test                                           */
 /* ------------------------------------------------------------------ */
 
-function checkTypeScriptTypes(tmpDir) {
+function checkTypeScriptTypes(_tmpDir) {
   console.log("\n5. TypeScript types test");
 
   // Check if tsc is available (use project root where typescript is installed)
@@ -296,7 +296,7 @@ function checkSubpathExports(tmpDir) {
   // ESM resolution test
   const esmTestLines = subpaths
     .map(
-      (sp, i) =>
+      (sp, _i) =>
         `try { await import('${sp}'); results.push({ path: '${sp}', ok: true }); } catch(e) { results.push({ path: '${sp}', ok: false, err: e.message }); }`
     )
     .join("\n");

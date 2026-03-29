@@ -160,7 +160,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(({
       {/* Backdrop */}
       {showOverlay && (
         <div
-          className="absolute inset-0 bg-black/40 animate-in fade-in-0"
+          className="absolute inset-0 bg-surface-inverse/40 animate-in fade-in-0"
           onClick={handleOverlayClick}
           data-testid="drawer-overlay"
           aria-hidden

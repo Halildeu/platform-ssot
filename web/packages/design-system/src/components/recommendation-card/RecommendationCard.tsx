@@ -7,7 +7,7 @@ import {
   type ConfidenceLevel,
 } from "../confidence-badge/ConfidenceBadge";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   withAccessGuard,
   type AccessControlledProps,
   type AccessLevel,

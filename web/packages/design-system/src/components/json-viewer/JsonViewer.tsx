@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { Badge, type BadgeVariant } from "../../primitives/badge/Badge";

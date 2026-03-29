@@ -22,7 +22,7 @@ const DEFAULT_FLAGS: FeatureFlag[] = [
   { key: 'rum-web-vitals', enabled: true, description: 'Real User Monitoring', killSwitch: true },
 ];
 
-let flags: Map<string, FeatureFlag> = new Map(DEFAULT_FLAGS.map(f => [f.key, f]));
+const flags: Map<string, FeatureFlag> = new Map(DEFAULT_FLAGS.map(f => [f.key, f]));
 
 export function isEnabled(key: string): boolean {
   const flag = flags.get(key);

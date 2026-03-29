@@ -1,17 +1,14 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
+// @vitest-environment jsdom
+import { test, expect } from 'vitest';
 import React from 'react';
-import TestRenderer, { act } from 'react-test-renderer';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import type { AccessFilters } from '../../../features/access-management/model/access.types';
+import AccessFilterBar from './AccessFilterBar.ui';
 
 test('AccessFilterBar level filtresini Segmented uzerinden surdurur', async () => {
-  const require = createRequire(import.meta.url);
-  (require.extensions as Record<string, () => void>)['.css'] = () => {};
-  const { default: AccessFilterBar } = await import('./AccessFilterBar.ui');
   const changes: AccessFilters[] = [];
 
-  const renderer = TestRenderer.create(
+  render(
     <AccessFilterBar
       filters={{
         search: '',
@@ -27,28 +24,27 @@ test('AccessFilterBar level filtresini Segmented uzerinden surdurur', async () =
     />,
   );
 
-  const root = renderer.root;
-  const viewButton = root.findByProps({ 'data-testid': 'access-filter-level-view' });
+  const viewButton = screen.getByTestId('access-filter-level-view');
 
   act(() => {
-    viewButton.props.onClick();
+    fireEvent.click(viewButton);
   });
 
-  assert.equal(changes.length, 1);
-  assert.deepEqual(changes[0], {
+  expect(changes.length).toBe(1);
+  expect(changes[0]).toEqual({
     search: '',
     moduleKey: 'ALL',
     level: 'VIEW',
   });
 
-  const resetButton = root.findByProps({ children: 'access.filter.reset' });
+  const resetButton = screen.getByText('access.filter.reset');
 
   act(() => {
-    resetButton.props.onClick();
+    fireEvent.click(resetButton);
   });
 
-  assert.equal(changes.length, 2);
-  assert.deepEqual(changes[1], {
+  expect(changes.length).toBe(2);
+  expect(changes[1]).toEqual({
     search: '',
     moduleKey: 'ALL',
     level: 'ALL',

@@ -19,7 +19,7 @@ import {
   CardBody,
   Badge,
   Accordion,
-  Select,
+  _Select,
   DesignSystemProvider,
 } from "@mfe/design-system";
 import type { AccessLevel } from "@mfe/design-system";

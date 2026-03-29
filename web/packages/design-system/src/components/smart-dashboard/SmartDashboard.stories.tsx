@@ -141,8 +141,8 @@ const widgetsWithActions: DashboardWidget[] = [
     type: 'custom',
     content: (
       <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-        <button type="button" style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #e2e8f0', fontSize: 12 }}>Detay</button>
-        <button type="button" style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #e2e8f0', fontSize: 12 }}>Duzenle</button>
+        <button type="button" style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid var(--border-subtle)', fontSize: 12 }}>Detay</button>
+        <button type="button" style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid var(--border-subtle)', fontSize: 12 }}>Duzenle</button>
       </div>
     ),
     onRefresh: () => {},

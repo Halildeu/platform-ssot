@@ -3,7 +3,7 @@ import { EmptyState as Empty } from "../empty-state";
 import { Text } from "../../primitives/text";
 import { ThemePreviewCard } from "../theme-preview-card";
 import { type ThemePresetGalleryItem } from "./ThemePresetGallery";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 export interface ThemePresetCompareProps extends AccessControlledProps {
   /** Left-side preset to compare. */

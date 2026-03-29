@@ -47,7 +47,7 @@ const SampleFooter = () => (
       style={{
         padding: '8px 16px',
         borderRadius: 8,
-        border: '1px solid #ccc',
+        border: '1px solid var(--border-default)',
         background: 'transparent',
         cursor: 'pointer',
       }}
@@ -60,8 +60,8 @@ const SampleFooter = () => (
         padding: '8px 16px',
         borderRadius: 8,
         border: 'none',
-        background: '#2563eb',
-        color: '#fff',
+        background: 'var(--action-primary)',
+        color: 'var(--surface-default)',
         cursor: 'pointer',
       }}
     >
@@ -87,7 +87,7 @@ const DrawerTemplate: React.FC<
         style={{
           padding: '8px 16px',
           borderRadius: 8,
-          border: '1px solid #ccc',
+          border: '1px solid var(--border-default)',
           cursor: 'pointer',
         }}
       >
@@ -222,7 +222,7 @@ export const ControlledOpenClose: Story = {
           style={{
             padding: '8px 16px',
             borderRadius: 8,
-            border: '1px solid #ccc',
+            border: '1px solid var(--border-default)',
             cursor: 'pointer',
           }}
         >
@@ -243,8 +243,8 @@ export const ControlledOpenClose: Story = {
                 padding: '8px 16px',
                 borderRadius: 8,
                 border: 'none',
-                background: '#2563eb',
-                color: '#fff',
+                background: 'var(--action-primary)',
+                color: 'var(--surface-default)',
                 cursor: 'pointer',
               }}
             >
@@ -272,7 +272,7 @@ export const AllPlacements: Story = {
             style={{
               padding: '8px 16px',
               borderRadius: 8,
-              border: '1px solid #ccc',
+              border: '1px solid var(--border-default)',
               cursor: 'pointer',
               textTransform: 'capitalize',
             }}
@@ -308,7 +308,7 @@ export const AllSizes: Story = {
             style={{
               padding: '8px 16px',
               borderRadius: 8,
-              border: '1px solid #ccc',
+              border: '1px solid var(--border-default)',
               cursor: 'pointer',
               textTransform: 'uppercase',
             }}
@@ -333,7 +333,7 @@ export const AllSizes: Story = {
 
 export const CustomClassName: Story = {
   render: () => (
-    <DrawerTemplate title="Ozel Sinif" className="bg-yellow-50">
+    <DrawerTemplate title="Ozel Sinif" className="bg-state-warning-bg">
       <SampleContent />
     </DrawerTemplate>
   ),

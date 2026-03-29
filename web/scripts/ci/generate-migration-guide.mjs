@@ -8,7 +8,7 @@
  * Usage: node scripts/ci/generate-migration-guide.mjs [--output path]
  */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, readdirSync } from "node:fs";
 import { resolve, dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 

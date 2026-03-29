@@ -44,7 +44,7 @@ function Sidebar({ children }: { children: React.ReactNode }) {
       {/* Mobile backdrop */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/30 backdrop-blur-xs sm:hidden"
+          className="fixed inset-0 z-40 bg-surface-inverse/30 backdrop-blur-xs sm:hidden"
           onClick={closeSidebar}
           aria-hidden
         />

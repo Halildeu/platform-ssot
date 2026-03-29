@@ -33,7 +33,7 @@ export const WithLogo: Story = {
   render: () => (
     <AppSidebarHeader
       title="Design Lab"
-      logo={<span style={{ width: 28, height: 28, borderRadius: 6, background: '#3b82f6', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>DL</span>}
+      logo={<span style={{ width: 28, height: 28, borderRadius: 6, background: 'var(--action-primary)', color: 'var(--surface-default)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>DL</span>}
     />
   ),
 };

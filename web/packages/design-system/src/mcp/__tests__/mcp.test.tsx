@@ -514,7 +514,7 @@ describe('MCP v2 Tools', () => {
   // 16. auditTokenUsage
   describe('auditTokenUsage', () => {
     it('detects hardcoded colors', () => {
-      const result = server.handleToolCall('auditTokenUsage', { code: 'color: #ff0000; background: rgb(255,0,0)' }) as any;
+      const result = server.handleToolCall('auditTokenUsage', { code: 'color: var(--state-danger-text); background: rgb(255,0,0)' }) as any;
       expect(result.clean).toBe(false);
       expect(result.violations.length).toBeGreaterThan(0);
     });

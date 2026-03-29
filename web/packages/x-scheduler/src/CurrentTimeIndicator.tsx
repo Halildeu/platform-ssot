@@ -60,7 +60,7 @@ export const CurrentTimeIndicator: React.FC<CurrentTimeIndicatorProps> = ({
           width: 8,
           height: 8,
           borderRadius: '50%',
-          backgroundColor: 'var(--x-scheduler-now-color, #ef4444)',
+          backgroundColor: 'var(--x-scheduler-now-color))',
         }}
       />
       {/* Line */}
@@ -68,7 +68,7 @@ export const CurrentTimeIndicator: React.FC<CurrentTimeIndicatorProps> = ({
         style={{
           display: 'block',
           height: 2,
-          backgroundColor: 'var(--x-scheduler-now-color, #ef4444)',
+          backgroundColor: 'var(--x-scheduler-now-color))',
         }}
       />
     </div>

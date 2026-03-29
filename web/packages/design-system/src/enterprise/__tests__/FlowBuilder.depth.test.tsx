@@ -3,7 +3,7 @@
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, fireEvent, render, screen, within, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FlowBuilder } from '../FlowBuilder';
 import type { FlowNode, FlowEdge } from '../FlowBuilder';

@@ -193,10 +193,10 @@ describe("Infrastructure — W: Tree-Shaking / Named Exports", () => {
 /*  CATEGORY X: CSS Variable Completeness Tests                        */
 /* ================================================================== */
 
-describe("Infrastructure — X: CSS Variable Completeness (no bare bg-white)", () => {
+describe("Infrastructure — X: CSS Variable Completeness (no bare bg-surface-default)", () => {
   // For key components, render and check the innerHTML doesn't contain bare
-  // hardcoded bg-white class (without opacity modifier like bg-white/80).
-  // bg-white without CSS variable wrapper breaks dark-mode theming.
+  // hardcoded bg-surface-default class (without opacity modifier like bg-surface-default/80).
+  // bg-surface-default without CSS variable wrapper breaks dark-mode theming.
 
   const COMPONENTS_TO_CHECK: { name: string; element: React.ReactElement }[] = [
     { name: "SearchFilterListing", element: <SearchFilterListing title="T" /> },
@@ -224,11 +224,11 @@ describe("Infrastructure — X: CSS Variable Completeness (no bare bg-white)", (
   ];
 
   COMPONENTS_TO_CHECK.forEach(({ name, element }) => {
-    it(`${name} rendered output has no bare bg-white class`, () => {
+    it(`${name} rendered output has no bare bg-surface-default class`, () => {
       const { container } = render(element);
       const html = container.innerHTML;
-      // Match class attributes containing bg-white that is NOT followed by /
-      // (i.e. bg-white/80 is OK, bare bg-white is suspicious)
+      // Match class attributes containing bg-surface-default that is NOT followed by /
+      // (i.e. bg-surface-default/80 is OK, bare bg-surface-default is suspicious)
       const allBgWhite = html.match(/\bbg-white\b/g) ?? [];
       const withOpacity = html.match(/\bbg-white\/\d+/g) ?? [];
       const bareCount = allBgWhite.length - withOpacity.length;

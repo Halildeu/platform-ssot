@@ -91,9 +91,9 @@ export default function ServiceControlPage() {
     return (
       <div className="flex flex-col gap-6 pb-12">
         <PageHeader upCount={0} total={0} onRefresh={refresh} />
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-8 text-center">
-          <XCircle className="mx-auto h-8 w-8 text-rose-500" />
-          <Text className="mt-3 text-sm font-medium text-rose-700">
+        <div className="rounded-2xl border border-state-danger-text/20 bg-state-danger-bg p-8 text-center">
+          <XCircle className="mx-auto h-8 w-8 text-state-danger-text" />
+          <Text className="mt-3 text-sm font-medium text-state-danger-text">
             Service Manager API baglantisi kurulamadi
           </Text>
           <Text variant="secondary" className="mt-1 text-xs">
@@ -127,30 +127,30 @@ export default function ServiceControlPage() {
           onClick={() => toggleStatusFilter('up')}
           className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition ${
             statusFilter === 'up'
-              ? 'bg-emerald-100 ring-2 ring-emerald-400'
-              : 'hover:bg-emerald-50'
+              ? 'bg-state-success-bg ring-2 ring-state-success-text'
+              : 'hover:bg-state-success-bg'
           }`}
         >
-          <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+          <CheckCircle2 className="h-4 w-4 text-state-success-text" />
           <Text className="text-sm font-medium text-text-primary">{upCount} Healthy</Text>
         </button>
         <button
           onClick={() => toggleStatusFilter('down')}
           className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition ${
             statusFilter === 'down'
-              ? 'bg-rose-100 ring-2 ring-rose-400'
-              : 'hover:bg-rose-50'
+              ? 'bg-state-danger-bg ring-2 ring-state-danger-text'
+              : 'hover:bg-state-danger-bg'
           }`}
         >
-          <XCircle className="h-4 w-4 text-rose-600" />
+          <XCircle className="h-4 w-4 text-state-danger-text" />
           <Text className="text-sm font-medium text-text-primary">{downCount} Down</Text>
         </button>
         <button
           onClick={() => toggleStatusFilter('unknown')}
           className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition ${
             statusFilter === 'unknown'
-              ? 'bg-gray-200 ring-2 ring-gray-400'
-              : 'hover:bg-gray-50'
+              ? 'bg-surface-raised ring-2 ring-border-strong'
+              : 'hover:bg-surface-muted'
           }`}
         >
           <HelpCircle className="h-4 w-4 text-text-secondary" />
@@ -181,7 +181,7 @@ export default function ServiceControlPage() {
               <div>
                 <Text className="text-[10px] text-text-secondary">Toplam RAM</Text>
                 <Text className={`text-lg font-bold ${
-                  ramStats.totalRam > 8000 ? 'text-rose-600' : ramStats.totalRam > 5000 ? 'text-amber-600' : 'text-text-primary'
+                  ramStats.totalRam > 8000 ? 'text-state-danger-text' : ramStats.totalRam > 5000 ? 'text-state-warning-text' : 'text-text-primary'
                 }`}>
                   {ramStats.totalRam >= 1024
                     ? `${(ramStats.totalRam / 1024).toFixed(1)} GB`
@@ -208,7 +208,7 @@ export default function ServiceControlPage() {
                 >
                   <Text className="text-[10px] text-text-secondary">{cat.label}</Text>
                   <Text className="text-sm font-semibold text-text-primary">{ramLabel}</Text>
-                  <div className="h-1 w-12 overflow-hidden rounded-full bg-gray-200">
+                  <div className="h-1 w-12 overflow-hidden rounded-full bg-surface-raised">
                     <div
                       className="h-full rounded-full bg-action-primary"
                       style={{ width: `${pct}%` }}
@@ -234,13 +234,13 @@ export default function ServiceControlPage() {
               onClick={() => setActiveTab(cat.key)}
               className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition ${
                 activeTab === cat.key
-                  ? 'bg-action-primary text-white shadow-sm'
+                  ? 'bg-action-primary text-text-inverse shadow-sm'
                   : 'text-text-secondary hover:bg-surface-muted'
               }`}
             >
               {cat.label}
               <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${
-                activeTab === cat.key ? 'bg-white/20' : 'bg-surface-muted'
+                activeTab === cat.key ? 'bg-surface-default/20' : 'bg-surface-muted'
               }`}>
                 {count}
               </span>
@@ -286,7 +286,7 @@ export default function ServiceControlPage() {
       {/* Bulk confirm dialog */}
       {confirmAction && (
         <>
-          <div className="fixed inset-0 z-50 bg-black/30" onClick={() => setConfirmAction(null)} />
+          <div className="fixed inset-0 z-50 bg-surface-inverse/30" onClick={() => setConfirmAction(null)} />
           <div className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border-subtle bg-surface-default p-6 shadow-2xl">
             <Text as="h3" className="text-base font-semibold text-text-primary">
               {confirmAction === 'start' && 'Tum servisleri baslat?'}
@@ -307,12 +307,12 @@ export default function ServiceControlPage() {
               </button>
               <button
                 onClick={() => handleBulk(confirmAction)}
-                className={`rounded-lg px-4 py-2 text-sm font-semibold text-white transition ${
+                className={`rounded-lg px-4 py-2 text-sm font-semibold text-text-inverse transition ${
                   confirmAction === 'start'
-                    ? 'bg-emerald-600 hover:bg-emerald-700'
+                    ? 'bg-state-success-text hover:bg-state-success-text'
                     : confirmAction === 'restart'
-                      ? 'bg-blue-600 hover:bg-blue-700'
-                      : 'bg-rose-600 hover:bg-rose-700'
+                      ? 'bg-action-primary hover:bg-action-primary'
+                      : 'bg-state-danger-text hover:bg-state-danger-text'
                 }`}
               >
                 {confirmAction === 'start' ? 'Baslat' : confirmAction === 'restart' ? 'Yeniden Baslat' : 'Durdur'}
@@ -335,7 +335,7 @@ function PageHeader({
   onRestartAll,
   onStopAll,
   actionPending,
-  lastRefresh,
+  _lastRefresh,
 }: {
   upCount: number;
   total: number;
@@ -349,8 +349,8 @@ function PageHeader({
   return (
     <div className="flex items-start justify-between">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10">
-          <Server className="h-5 w-5 text-blue-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-action-primary/10">
+          <Server className="h-5 w-5 text-action-primary" />
         </div>
         <div>
           <div className="flex items-center gap-2">
@@ -360,10 +360,10 @@ function PageHeader({
             {total > 0 && (
               <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
                 upCount === total
-                  ? 'bg-emerald-100 text-emerald-700'
+                  ? 'bg-state-success-bg text-state-success-text'
                   : upCount > 0
-                    ? 'bg-amber-100 text-amber-700'
-                    : 'bg-rose-100 text-rose-700'
+                    ? 'bg-state-warning-bg text-state-warning-text'
+                    : 'bg-state-danger-bg text-state-danger-text'
               }`}>
                 {upCount}/{total} UP
               </span>
@@ -389,7 +389,7 @@ function PageHeader({
           <button
             onClick={onStartAll}
             disabled={!!actionPending}
-            className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg bg-state-success-text px-3 py-2 text-xs font-semibold text-text-inverse transition hover:bg-state-success-text disabled:opacity-50"
           >
             <Play className="h-3.5 w-3.5" />
             Tumu Baslat
@@ -399,7 +399,7 @@ function PageHeader({
           <button
             onClick={onRestartAll}
             disabled={!!actionPending}
-            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg bg-action-primary px-3 py-2 text-xs font-semibold text-text-inverse transition hover:bg-action-primary disabled:opacity-50"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Tumu Restart
@@ -409,7 +409,7 @@ function PageHeader({
           <button
             onClick={onStopAll}
             disabled={!!actionPending}
-            className="flex items-center gap-1.5 rounded-lg bg-rose-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-rose-700 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg bg-state-danger-text px-3 py-2 text-xs font-semibold text-text-inverse transition hover:bg-state-danger-text disabled:opacity-50"
           >
             <Square className="h-3.5 w-3.5" />
             Tumu Durdur

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import React, { useState, useMemo, _useCallback, _useEffect, useRef } from "react";
 import { GitBranch, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import { Text } from "@mfe/design-system";
 
@@ -37,9 +37,9 @@ type GraphData = {
 };
 
 const EDGE_COLORS: Record<EdgeType, string> = {
-  enables: "#22c55e",
-  conflicts: "#ef4444",
-  requires: "#3b82f6",
+  enables: "var(--state-success-text)",
+  conflicts: "var(--state-danger-text)",
+  requires: "var(--action-primary)",
 };
 
 const EDGE_LABELS: Record<EdgeType, string> = {
@@ -324,8 +324,8 @@ export const PropsDepsGraph: React.FC<PropsDepsGraphProps> = ({ componentName })
                   width={70}
                   height={28}
                   rx={8}
-                  fill={isSelected ? "#2563eb" : node.required ? "#dbeafe" : "#f8fafc"}
-                  stroke={isSelected ? "#1d4ed8" : "#e2e8f0"}
+                  fill={isSelected ? "var(--action-primary)" : node.required ? "var(--state-info-bg)" : "var(--surface-default)"}
+                  stroke={isSelected ? "var(--action-primary)" : "var(--border-subtle)"}
                   strokeWidth={isSelected ? 2 : 1}
                 />
                 <text
@@ -335,7 +335,7 @@ export const PropsDepsGraph: React.FC<PropsDepsGraphProps> = ({ componentName })
                   fontSize={10}
                   fontFamily="monospace"
                   fontWeight={isSelected ? 700 : 500}
-                  fill={isSelected ? "#ffffff" : "#334155"}
+                  fill={isSelected ? "var(--surface-default)" : "var(--text-primary)"}
                 >
                   {node.label}
                 </text>
@@ -346,14 +346,14 @@ export const PropsDepsGraph: React.FC<PropsDepsGraphProps> = ({ componentName })
 
         {/* Edge hover tooltip */}
         {hoveredEdge && (
-          <div className="absolute bottom-2 left-2 rounded-lg bg-gray-900 px-3 py-2 text-xs text-gray-200 shadow-xl">
-            <span className="font-mono text-white">{hoveredEdge.from}</span>
+          <div className="absolute bottom-2 left-2 rounded-lg bg-surface-inverse px-3 py-2 text-xs text-border-subtle shadow-xl">
+            <span className="font-mono text-text-inverse">{hoveredEdge.from}</span>
             <span className="mx-1.5" style={{ color: EDGE_COLORS[hoveredEdge.type] }}>
               {EDGE_LABELS[hoveredEdge.type]}
             </span>
-            <span className="font-mono text-white">{hoveredEdge.to}</span>
+            <span className="font-mono text-text-inverse">{hoveredEdge.to}</span>
             {hoveredEdge.description && (
-              <div className="mt-1 text-gray-400">{hoveredEdge.description}</div>
+              <div className="mt-1 text-text-disabled">{hoveredEdge.description}</div>
             )}
           </div>
         )}

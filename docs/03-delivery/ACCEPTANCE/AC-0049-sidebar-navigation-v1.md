@@ -34,7 +34,7 @@ Owner: @team/frontend
   - When: Sayfa reload edilir.  
   - Then: Sidebar mode (collapsed/expanded) kalıcı tercihe göre korunur.  
   - Kanıt/Evidence (önerilen):
-    - Kod: `web/apps/mfe-shell/src/widgets/app-shell/ui/Sidebar.ui.tsx` (localStorage: `shell.sidebar.mode`)  
+    - Kod: `web/apps/mfe-shell/src/app/layout/Sidebar.tsx` (localStorage: `shell.sidebar.mode`)
     - E2E: (plan) Playwright `sidebar_navigation` senaryosu  
 
 - [ ] Senaryo 2 – Keyboard navigation:
@@ -56,8 +56,8 @@ Owner: @team/frontend
   - When: Sidebar ve header nav render edilir.  
   - Then: Yetkisiz item’lar DOM’da render edilmez (hidden policy); kullanıcı navigasyon yapamaz.  
   - Kanıt/Evidence (önerilen):
-    - Kod: `web/apps/mfe-shell/src/app/ShellApp.ui.tsx` (permission gating)  
-    - Kod: `web/apps/mfe-shell/src/widgets/app-shell/ui/Sidebar.ui.tsx`  
+    - Kod: `web/apps/mfe-shell/src/app/ShellApp.tsx` (permission gating)
+    - Kod: `web/apps/mfe-shell/src/app/layout/Sidebar.tsx`
 
 - [ ] Senaryo 5 – Active route doğruluğu:
   - Given: Kullanıcı `/audit/events` gibi bir route üzerindedir.  

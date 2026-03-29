@@ -15,12 +15,12 @@ function ConnectedFormFieldDemo() {
           <input
             type="email"
             placeholder="user@example.com"
-            style={{ width: '100%', padding: '6px 10px', border: '1px solid #d1d5db', borderRadius: 6 }}
+            style={{ width: '100%', padding: '6px 10px', border: '1px solid var(--border-default)', borderRadius: 6 }}
           />
         </ConnectedFormField>
         <ConnectedFormField name="company" label="Company" help="Your organization name">
           <input
-            style={{ width: '100%', padding: '6px 10px', border: '1px solid #d1d5db', borderRadius: 6 }}
+            style={{ width: '100%', padding: '6px 10px', border: '1px solid var(--border-default)', borderRadius: 6 }}
           />
         </ConnectedFormField>
       </div>
@@ -38,7 +38,7 @@ function HorizontalDemo() {
       <div style={{ maxWidth: 500 }}>
         <ConnectedFormField name="fullName" label="Full Name" horizontal>
           <input
-            style={{ width: '100%', padding: '6px 10px', border: '1px solid #d1d5db', borderRadius: 6 }}
+            style={{ width: '100%', padding: '6px 10px', border: '1px solid var(--border-default)', borderRadius: 6 }}
           />
         </ConnectedFormField>
       </div>

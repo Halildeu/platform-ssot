@@ -82,7 +82,7 @@ function collectMetrics() {
     totalTests = parsed.numTotalTests;
     testSuites = parsed.numTotalTestSuites;
     try { execSync(`rm -f ${tmpFile}`); } catch { /* ignore */ }
-  } catch (e) {
+  } catch (_e) {
     // Fallback: try to read the tmp file even if exit code was non-zero
     try {
       const tmpFile = join(ROOT, '.vitest-metrics-tmp.json');

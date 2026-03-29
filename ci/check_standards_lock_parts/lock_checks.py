@@ -107,9 +107,9 @@ def _check_standard_sources(root: Path, standard_sources: dict[str, Any]) -> tup
         if not isinstance(single_ui, dict):
             details["invalid_content"].append("ui_design_system_policy:single_ui_library_missing")
         else:
-            if single_ui.get("package_name") != "mfe-ui-kit":
+            if single_ui.get("package_name") != "@mfe/design-system":
                 details["invalid_content"].append("ui_design_system_policy:single_ui_library.package_name_invalid")
-            if str(single_ui.get("package_manifest_path") or "") != "web/packages/ui-kit/package.json":
+            if str(single_ui.get("package_manifest_path") or "") != "web/packages/design-system/package.json":
                 details["invalid_content"].append(
                     "ui_design_system_policy:single_ui_library.package_manifest_path_invalid"
                 )
@@ -176,7 +176,7 @@ def _check_standard_sources(root: Path, standard_sources: dict[str, Any]) -> tup
                     "ui_design_system_policy:page_modularity.layout_exports_required_missing_"
                     + ",".join(missing_layout_exports)
                 )
-            if str(page_modularity.get("ui_usage_import_prefix") or "") != "from 'mfe-ui-kit'":
+            if str(page_modularity.get("ui_usage_import_prefix") or "") != "from '@mfe/design-system'":
                 details["invalid_content"].append("ui_design_system_policy:page_modularity.ui_usage_import_prefix_invalid")
             if str(page_modularity.get("pages_root") or "") != "web/apps":
                 details["invalid_content"].append("ui_design_system_policy:page_modularity.pages_root_invalid")
@@ -186,12 +186,12 @@ def _check_standard_sources(root: Path, standard_sources: dict[str, Any]) -> tup
         else:
             if (
                 str(parametric_data.get("query_builder_path") or "")
-                != "web/packages/ui-kit/src/components/entity-grid/buildEntityGridQueryParams.ts"
+                != "web/packages/design-system/src/advanced/data-grid/buildEntityGridQueryParams.ts"
             ):
                 details["invalid_content"].append("ui_design_system_policy:parametric_data.query_builder_path_invalid")
             if (
                 str(parametric_data.get("theme_contract_runtime_path") or "")
-                != "web/packages/ui-kit/src/runtime/theme-contract.ts"
+                != "web/packages/design-system/src/theme/core/theme-contract.ts"
             ):
                 details["invalid_content"].append(
                     "ui_design_system_policy:parametric_data.theme_contract_runtime_path_invalid"

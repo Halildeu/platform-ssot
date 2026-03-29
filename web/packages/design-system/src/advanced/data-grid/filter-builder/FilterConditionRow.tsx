@@ -1,10 +1,14 @@
 /**
- * FilterConditionRow — Single filter condition: [Column] [Operator] [Value] [Delete]
+ * FilterConditionRow — Single filter condition row.
+ *
+ * Layout: [⠿ DnD] [↑] [↓]  [Column ▼] [Operator ▼] [Value]  [Clone] [Lock] [Delete]
  */
 import React, { useMemo } from 'react';
-import { Trash2, IndentIncrease, IndentDecrease, ChevronUp, ChevronDown } from 'lucide-react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Trash2, ChevronUp, ChevronDown, Copy, Lock, Unlock, GripVertical } from 'lucide-react';
 import type { ColDef } from 'ag-grid-community';
-import type { FilterCondition, FilterType } from './useFilterBuilder';
+import type { FilterCondition, FilterType } from './types';
 import { TEXT_OPERATORS, NUMBER_OPERATORS, DATE_OPERATORS } from './filterModelConverter';
 import { FilterValueEditor } from './FilterValueEditor';
 
@@ -13,16 +17,15 @@ interface FilterConditionRowProps {
   columnDefs: ColDef[];
   onUpdate: (id: string, updates: Partial<FilterCondition>) => void;
   onRemove: (id: string) => void;
-  onIndent?: (id: string) => void;
-  onOutdent?: (id: string) => void;
-  onMove?: (id: string, direction: 'up' | 'down') => void;
+  onMove: (id: string, direction: 'up' | 'down') => void;
+  onClone: (id: string) => void;
+  onToggleLock: (id: string) => void;
   canRemove: boolean;
-  canIndent?: boolean;
-  canOutdent?: boolean;
+  parentLocked?: boolean;
 }
 
 const SELECT_CLASS =
-  'h-8 rounded-md border border-border-subtle bg-surface-default px-2 text-xs text-text-primary focus:border-action-primary focus:outline-none focus:ring-1 focus:ring-action-primary';
+  'h-8 rounded-md border border-border-subtle bg-surface-default px-2 text-xs text-text-primary focus:border-action-primary focus:outline-none focus:ring-1 focus:ring-action-primary disabled:cursor-not-allowed disabled:opacity-60';
 
 function detectFilterType(colDef?: ColDef): FilterType {
   if (!colDef) return 'text';
@@ -30,7 +33,6 @@ function detectFilterType(colDef?: ColDef): FilterType {
   if (f === 'agSetColumnFilter') return 'set';
   if (f === 'agNumberColumnFilter') return 'number';
   if (f === 'agDateColumnFilter') return 'date';
-  // agMultiColumnFilter wraps others — check inner filter
   if (f === 'agMultiColumnFilter' && colDef.filterParams) {
     const filters = (colDef.filterParams as Record<string, unknown>).filters as Array<{ filter: string }> | undefined;
     if (filters?.[0]?.filter === 'agNumberColumnFilter') return 'number';
@@ -51,8 +53,8 @@ function getOperators(filterType: FilterType) {
 
 function getSetValues(colDef?: ColDef): string[] {
   if (!colDef?.filterParams) return [];
-  const params = colDef.filterParams as Record<string, unknown>;
-  if (Array.isArray(params.values)) return params.values as string[];
+  const p = colDef.filterParams as Record<string, unknown>;
+  if (Array.isArray(p.values)) return p.values as string[];
   return [];
 }
 
@@ -61,13 +63,26 @@ export const FilterConditionRow: React.FC<FilterConditionRowProps> = ({
   columnDefs,
   onUpdate,
   onRemove,
-  onIndent,
-  onOutdent,
   onMove,
+  onClone,
+  onToggleLock,
   canRemove,
-  canIndent = true,
-  canOutdent = false,
+  parentLocked = false,
 }) => {
+  const isLocked = condition.locked || parentLocked;
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: condition.id,
+    disabled: isLocked,
+  });
+
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 10 : undefined,
+  };
+
   const filterableColumns = useMemo(
     () =>
       columnDefs
@@ -82,6 +97,7 @@ export const FilterConditionRow: React.FC<FilterConditionRowProps> = ({
   const setValues = selectedCol ? getSetValues(selectedCol.colDef) : [];
 
   const handleColChange = (colId: string) => {
+    if (isLocked) return;
     const col = filterableColumns.find((c) => c.field === colId);
     const ft = col ? detectFilterType(col.colDef) : 'text';
     const ops = getOperators(ft);
@@ -95,32 +111,72 @@ export const FilterConditionRow: React.FC<FilterConditionRowProps> = ({
   };
 
   return (
-    <div className="flex items-start gap-2 rounded-lg bg-surface-muted/50 px-3 py-2">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={[
+        'flex items-start gap-1.5 rounded-lg px-2 py-2',
+        isLocked ? 'bg-surface-muted/30 opacity-70 ring-1 ring-border-subtle' : 'bg-surface-muted/50',
+        isDragging ? 'shadow-lg' : '',
+      ].join(' ')}
+    >
+      {/* DnD grip */}
+      <button
+        type="button"
+        className={`mt-1 shrink-0 touch-none text-text-subtle ${isLocked ? 'cursor-not-allowed opacity-40' : 'cursor-grab hover:text-text-secondary active:cursor-grabbing'}`}
+        title="Sürükle"
+        disabled={isLocked}
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="h-3.5 w-3.5" />
+      </button>
+
+      {/* Shift up/down */}
+      <div className="mt-0.5 flex shrink-0 flex-col">
+        <button
+          type="button"
+          onClick={() => onMove(condition.id, 'up')}
+          disabled={isLocked}
+          className="rounded p-0.5 text-text-subtle hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-40"
+          title="Yukarı taşı"
+        >
+          <ChevronUp className="h-3 w-3" />
+        </button>
+        <button
+          type="button"
+          onClick={() => onMove(condition.id, 'down')}
+          disabled={isLocked}
+          className="rounded p-0.5 text-text-subtle hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-40"
+          title="Aşağı taşı"
+        >
+          <ChevronDown className="h-3 w-3" />
+        </button>
+      </div>
+
       {/* Column selector */}
       <select
-        className={`${SELECT_CLASS} min-w-[130px]`}
+        className={`${SELECT_CLASS} min-w-[120px]`}
         value={condition.colId}
+        disabled={isLocked}
         onChange={(e) => handleColChange(e.target.value)}
       >
         <option value="">Sütun seçin...</option>
         {filterableColumns.map((col) => (
-          <option key={col.field} value={col.field}>
-            {col.label}
-          </option>
+          <option key={col.field} value={col.field}>{col.label}</option>
         ))}
       </select>
 
       {/* Operator selector */}
       {filterType !== 'set' && (
         <select
-          className={`${SELECT_CLASS} min-w-[120px]`}
+          className={`${SELECT_CLASS} min-w-[110px]`}
           value={condition.operator}
+          disabled={isLocked}
           onChange={(e) => onUpdate(condition.id, { operator: e.target.value })}
         >
           {operators.map((op) => (
-            <option key={op.value} value={op.value}>
-              {op.label}
-            </option>
+            <option key={op.value} value={op.value}>{op.label}</option>
           ))}
         </select>
       )}
@@ -133,35 +189,48 @@ export const FilterConditionRow: React.FC<FilterConditionRowProps> = ({
           value={condition.value}
           valueTo={condition.valueTo}
           setValues={setValues}
+          disabled={isLocked}
           onChange={(val, valTo) => onUpdate(condition.id, { value: val, valueTo: valTo })}
         />
       </div>
 
       {/* Action buttons */}
       <div className="mt-1 flex shrink-0 items-center gap-0.5">
-        {onMove && (
-          <>
-            <button type="button" onClick={() => onMove(condition.id, 'up')} className="rounded p-0.5 text-text-subtle hover:bg-surface-muted" title="Yukarı taşı">
-              <ChevronUp className="h-3 w-3" />
-            </button>
-            <button type="button" onClick={() => onMove(condition.id, 'down')} className="rounded p-0.5 text-text-subtle hover:bg-surface-muted" title="Aşağı taşı">
-              <ChevronDown className="h-3 w-3" />
-            </button>
-          </>
-        )}
-        {canIndent && onIndent && (
-          <button type="button" onClick={() => onIndent(condition.id)} className="rounded p-0.5 text-text-subtle hover:bg-blue-100 hover:text-blue-600" title="Girinti artır (alt gruba taşı)">
-            <IndentIncrease className="h-3 w-3" />
+        {/* Clone */}
+        <button
+          type="button"
+          onClick={() => onClone(condition.id)}
+          className="rounded p-1 text-text-subtle hover:bg-surface-muted hover:text-text-secondary"
+          title="Kopyala"
+        >
+          <Copy className="h-3.5 w-3.5" />
+        </button>
+
+        {/* Lock toggle */}
+        {!parentLocked && (
+          <button
+            type="button"
+            onClick={() => onToggleLock(condition.id)}
+            className={[
+              'rounded p-1 transition',
+              condition.locked ? 'text-state-warning-text hover:bg-state-warning-bg' : 'text-text-subtle hover:bg-surface-muted hover:text-state-warning-text',
+            ].join(' ')}
+            title={condition.locked ? 'Kilidi aç' : 'Kilitle'}
+          >
+            {condition.locked ? <Lock className="h-3.5 w-3.5" /> : <Unlock className="h-3.5 w-3.5" />}
           </button>
         )}
-        {canOutdent && onOutdent && (
-          <button type="button" onClick={() => onOutdent(condition.id)} className="rounded p-0.5 text-text-subtle hover:bg-violet-100 hover:text-violet-600" title="Girinti azalt (üst gruba taşı)">
-            <IndentDecrease className="h-3 w-3" />
-          </button>
-        )}
+
+        {/* Delete */}
         {canRemove && (
-          <button type="button" onClick={() => onRemove(condition.id)} className="rounded p-0.5 text-text-subtle hover:bg-rose-100 hover:text-rose-600" title="Koşulu sil">
-            <Trash2 className="h-3 w-3" />
+          <button
+            type="button"
+            onClick={() => onRemove(condition.id)}
+            disabled={isLocked}
+            className="rounded p-1 text-text-subtle hover:bg-state-danger-bg hover:text-state-danger-text disabled:cursor-not-allowed disabled:opacity-40"
+            title="Koşulu sil"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
           </button>
         )}
       </div>

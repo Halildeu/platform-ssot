@@ -98,18 +98,18 @@ const matchWorkflowPatterns = (recipe: DesignLabRecipeFamily | null): WorkflowPa
 };
 
 const STATE_COLORS: Record<string, string> = {
-  zinc: 'bg-zinc-400',
-  blue: 'bg-blue-400',
-  emerald: 'bg-emerald-400',
-  amber: 'bg-amber-400',
-  violet: 'bg-violet-400',
-  red: 'bg-red-400',
+  zinc: 'bg-border-strong',
+  blue: 'bg-action-primary',
+  emerald: 'bg-state-success-text',
+  amber: 'bg-state-warning-text',
+  violet: 'bg-action-primary',
+  red: 'bg-state-danger-text',
 };
 
 const COMPLEXITY_COLORS: Record<string, { dot: string; bg: string }> = {
-  simple: { dot: 'bg-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
-  moderate: { dot: 'bg-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
-  complex: { dot: 'bg-red-400', bg: 'bg-red-50 dark:bg-red-900/20' },
+  simple: { dot: 'bg-state-success-text', bg: 'bg-state-success-bg dark:bg-state-success-text/20' },
+  moderate: { dot: 'bg-state-warning-text', bg: 'bg-state-warning-bg dark:bg-state-warning-text/20' },
+  complex: { dot: 'bg-state-danger-text', bg: 'bg-state-danger-bg dark:bg-state-danger-text/20' },
 };
 type DesignLabRecipeSubjectKind = 'recipe' | 'page';
 
@@ -383,7 +383,7 @@ const RecipeStateMachineVisualizer: React.FC<{
                 className="flex items-center gap-2 rounded-2xl border border-border-subtle bg-surface-panel px-3 py-2"
                 data-testid={`recipe-state-${state.stateId}`}
               >
-                <span className={`inline-block h-2.5 w-2.5 rounded-full ${STATE_COLORS[state.color] ?? 'bg-zinc-400'}`} />
+                <span className={`inline-block h-2.5 w-2.5 rounded-full ${STATE_COLORS[state.color] ?? 'bg-border-strong'}`} />
                 <div className="min-w-0">
                   <Text className="text-xs font-semibold text-text-primary">{state.label}</Text>
                   <Text variant="secondary" className="block text-[10px] leading-4">
@@ -448,7 +448,7 @@ const RecipeStateMachineVisualizer: React.FC<{
                 </Text>
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
-                <span className={`inline-block h-1.5 w-1.5 rounded-full ${COMPLEXITY_COLORS[primaryPattern.complexity]?.dot ?? 'bg-zinc-400'}`} />
+                <span className={`inline-block h-1.5 w-1.5 rounded-full ${COMPLEXITY_COLORS[primaryPattern.complexity]?.dot ?? 'bg-border-strong'}`} />
                 <Text variant="secondary" className="text-[10px]">{primaryPattern.complexity}</Text>
               </div>
             </div>
@@ -472,7 +472,7 @@ const RecipeStateMachineVisualizer: React.FC<{
               {primaryPattern.ownerBlockPattern.map((block) => (
                 <span
                   key={block}
-                  className="inline-flex items-center rounded-md bg-violet-50 px-1.5 py-0.5 text-[9px] font-medium text-violet-600 dark:bg-violet-900/20 dark:text-violet-300"
+                  className="inline-flex items-center rounded-md bg-action-primary/10 px-1.5 py-0.5 text-[9px] font-medium text-action-primary dark:bg-action-primary/20 dark:text-action-primary/60"
                 >
                   {block}
                 </span>
@@ -483,7 +483,7 @@ const RecipeStateMachineVisualizer: React.FC<{
               {primaryPattern.qualityGates.map((gate) => (
                 <span
                   key={gate}
-                  className="inline-flex items-center rounded-md bg-emerald-50 px-1.5 py-0.5 text-[9px] font-medium text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-300"
+                  className="inline-flex items-center rounded-md bg-state-success-bg px-1.5 py-0.5 text-[9px] font-medium text-state-success-text dark:bg-state-success-text/20 dark:text-state-success-text"
                 >
                   {gate.replace(/_/g, ' ')}
                 </span>
@@ -525,8 +525,8 @@ const RecipeDependencyGraph: React.FC<{
   );
 
   const EDGE_TYPE_COLORS: Record<string, string> = {
-    extends: 'text-violet-500',
-    consumes: 'text-blue-500',
+    extends: 'text-action-primary',
+    consumes: 'text-action-primary',
   };
 
   return (
@@ -558,7 +558,7 @@ const RecipeDependencyGraph: React.FC<{
                         key={pId}
                         className={`inline-flex items-center rounded-md px-1.5 py-0.5 text-[9px] font-medium ${
                           isMatch
-                            ? 'bg-violet-50 text-violet-600 dark:bg-violet-900/20 dark:text-violet-300'
+                            ? 'bg-action-primary/10 text-action-primary dark:bg-action-primary/20 dark:text-action-primary/60'
                             : 'bg-surface-default text-text-secondary'
                         }`}
                       >
@@ -629,7 +629,7 @@ const RecipeDependencyGraph: React.FC<{
                 <div className="flex items-start justify-between gap-2">
                   <Text className="text-xs font-semibold text-text-primary">{pattern.title}</Text>
                   <div className="flex items-center gap-1 shrink-0">
-                    <span className={`inline-block h-1.5 w-1.5 rounded-full ${COMPLEXITY_COLORS[pattern.complexity]?.dot ?? 'bg-zinc-400'}`} />
+                    <span className={`inline-block h-1.5 w-1.5 rounded-full ${COMPLEXITY_COLORS[pattern.complexity]?.dot ?? 'bg-border-strong'}`} />
                     <Text variant="secondary" className="text-[9px]">{pattern.complexity}</Text>
                   </div>
                 </div>
@@ -640,7 +640,7 @@ const RecipeDependencyGraph: React.FC<{
                   <div className="mt-2 flex items-center gap-1">
                     <Text variant="secondary" className="text-[9px]">depends:</Text>
                     {deps.map((d) => (
-                      <span key={d} className="inline-flex items-center rounded-md bg-blue-50 px-1 py-0.5 text-[8px] font-medium text-blue-600 dark:bg-blue-900/20 dark:text-blue-300">
+                      <span key={d} className="inline-flex items-center rounded-md bg-state-info-bg px-1 py-0.5 text-[8px] font-medium text-action-primary dark:bg-action-primary/20 dark:text-action-primary/60">
                         {d.replace(/_/g, ' ')}
                       </span>
                     ))}
@@ -1055,8 +1055,8 @@ const RecipeUxTab: React.FC<{
                       COMPLEXITY_COLORS[primaryPattern.complexity]?.bg ?? 'bg-surface-default'
                     } border-border-subtle`}>
                       <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-bold ${
-                        COMPLEXITY_COLORS[primaryPattern.complexity]?.dot ?? 'bg-zinc-400'
-                      } text-white`}>
+                        COMPLEXITY_COLORS[primaryPattern.complexity]?.dot ?? 'bg-border-strong'
+                      } text-text-inverse`}>
                         {idx + 1}
                       </span>
                       <Text className="text-xs font-medium text-text-primary">
@@ -1080,7 +1080,7 @@ const RecipeUxTab: React.FC<{
                 {lifecycle.map((state, idx) => (
                   <React.Fragment key={state.stateId}>
                     <div className="flex items-center gap-1.5 rounded-xl bg-surface-default px-2.5 py-1.5">
-                      <span className={`inline-block h-2 w-2 rounded-full ${STATE_COLORS[state.color] ?? 'bg-zinc-400'}`} />
+                      <span className={`inline-block h-2 w-2 rounded-full ${STATE_COLORS[state.color] ?? 'bg-border-strong'}`} />
                       <Text className="text-[10px] font-semibold text-text-primary">{state.label}</Text>
                     </div>
                     {idx < lifecycle.length - 1 ? (
@@ -1171,7 +1171,7 @@ const RecipeQualityGatesContent: React.FC<{
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <span className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${
-                    isCrossCutting ? 'bg-blue-400' : isCatalog ? 'bg-emerald-400' : 'bg-amber-400'
+                    isCrossCutting ? 'bg-action-primary' : isCatalog ? 'bg-state-success-text' : 'bg-state-warning-text'
                   }`} />
                   <Text className="text-xs font-medium text-text-primary">
                     {gate.replace(/_/g, ' ')}
@@ -1193,7 +1193,7 @@ const RecipeQualityGatesContent: React.FC<{
           {crossCuttingGates.map((gate) => (
             <span
               key={gate}
-              className="inline-flex items-center rounded-md bg-blue-50 px-1.5 py-0.5 text-[9px] font-medium text-blue-600 dark:bg-blue-900/20 dark:text-blue-300"
+              className="inline-flex items-center rounded-md bg-state-info-bg px-1.5 py-0.5 text-[9px] font-medium text-action-primary dark:bg-action-primary/20 dark:text-action-primary/60"
             >
               {gate.replace(/_/g, ' ')}
             </span>

@@ -42,7 +42,7 @@ export const WithCustomColors: Story = {
   args: {
     stages: salesFunnel.map((s, i) => ({
       ...s,
-      color: ['#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#c084fc'][i],
+      color: ['var(--action-primary)', 'var(--action-primary)', 'var(--action-primary)', 'var(--action-primary)', 'var(--action-primary)'][i],
     })),
     animated: true,
   },

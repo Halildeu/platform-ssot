@@ -12,7 +12,7 @@
 
 import { readFileSync, existsSync } from 'node:fs';
 import { execSync } from 'node:child_process';
-import { resolve, basename } from 'node:path';
+import { resolve } from 'node:path';
 
 /* ------------------------------------------------------------------ */
 /*  CLI arg parsing                                                    */
@@ -160,7 +160,7 @@ export const BadPage = (props) => {
   }, []);
 
   return (
-    <div style={{ color: '#ff0000' }}>
+    <div style={{ color: 'var(--state-danger-text)' }}>
       <h1> Bu bir cok uzun Turkce test cumlesidir </h1>
       <button>click me</button>
       <input type="text" />
@@ -182,7 +182,7 @@ export const DashboardCard = forwardRef<HTMLDivElement, Props>((props, ref) => {
   return (
     <Card ref={ref}>
       <Button aria-label="Action">Click</Button>
-      <div style={{ color: '#333' }}>
+      <div style={{ color: 'var(--text-primary)' }}>
         <span className="ml-2">Content</span>
       </div>
     </Card>
@@ -262,7 +262,7 @@ function generateMarkdown(fileResults, overallScore) {
 /* ------------------------------------------------------------------ */
 
 function main() {
-  let fileResults = [];
+  const fileResults = [];
 
   if (testMode) {
     const samples = getTestSampleFiles();

@@ -9,7 +9,7 @@ export interface ColorPickerPreset {
 export interface ColorPickerProps extends AccessControlledProps {
     /** Controlled color value (hex string). */
     value?: string;
-    /** Default value for uncontrolled usage. @default "#3b82f6" */
+    /** Default value for uncontrolled usage. @default "var(--action-primary)" */
     defaultValue?: string;
     /** Display format for the input. @default "hex" */
     format?: ColorPickerFormat;

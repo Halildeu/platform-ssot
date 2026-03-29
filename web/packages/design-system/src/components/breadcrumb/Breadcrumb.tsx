@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Breadcrumb — Navigation hierarchy                                  */

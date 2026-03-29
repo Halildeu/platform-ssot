@@ -15,7 +15,7 @@
  *   node scripts/ant-exit/audit-ant-usage.mjs
  */
 
-import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 

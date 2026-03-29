@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "contract_id": "security-remediation-contract-v1",
-  "last_verified": "2026-03-08",
+  "last_verified": "2026-03-29",
   "purpose": "Backend security gate'inde bloklayici CVE'lerin nasil kapatildigini ve residual risklerin hangi kuralla yonetildigini kanonik olarak tanimlar.",
   "blocking_policy": {
     "dependency_check_fail_cvss": 7.0,
@@ -13,6 +13,48 @@
     ]
   },
   "remediation_waves": [
+    {
+      "id": "wave-cve-upgrades-2026-03-29",
+      "status": "implemented",
+      "scope": [
+        "backend/common-auth/pom.xml",
+        "backend/api-gateway/pom.xml",
+        "backend/auth-service/pom.xml",
+        "backend/core-data-service/pom.xml",
+        "backend/discovery-server/pom.xml",
+        "backend/permission-service/pom.xml",
+        "backend/report-service/pom.xml",
+        "backend/user-service/pom.xml",
+        "backend/variant-service/pom.xml"
+      ],
+      "actions": [
+        {
+          "problem": "openfga-sdk 0.7.2: CVE-2023-35933 (7.5), CVE-2023-45810 (7.5) — OWASP CPE false-positive match; blocking CVSS >= 7.0 gate.",
+          "remediation": "Upgraded openfga-sdk from 0.7.2 to 0.9.7 in common-auth/pom.xml. CVE-2023-35933 and CVE-2023-45810 are OpenFGA SERVER/Go-SDK vulnerabilities (not Java SDK) but OWASP CPE cpe:2.3:a:openfga:openfga matches broadly. Suppression added to dependency-check-suppressions.xml for these false positives.",
+          "evidence": ["backend/common-auth/pom.xml", "backend/scripts/ci/security/dependency-check-suppressions.xml"]
+        },
+        {
+          "problem": "mssql-jdbc 12.10.1.jre11: CVE-2025-59250 (8.1) — HIGH severity SQL Server JDBC driver vulnerability.",
+          "remediation": "Overrode mssql-jdbc.version to 12.10.2.jre11 in report-service/pom.xml properties.",
+          "evidence": ["backend/report-service/pom.xml"]
+        },
+        {
+          "problem": "tomcat-embed-core 10.1.46: CVE-2025-66614 (9.1), CVE-2026-24734 (7.5) — CRITICAL/HIGH Tomcat vulnerabilities.",
+          "remediation": "Overrode tomcat.version to 10.1.53 in all Spring Boot module pom.xml properties sections.",
+          "evidence": [
+            "backend/api-gateway/pom.xml",
+            "backend/auth-service/pom.xml",
+            "backend/common-auth/pom.xml",
+            "backend/core-data-service/pom.xml",
+            "backend/discovery-server/pom.xml",
+            "backend/permission-service/pom.xml",
+            "backend/report-service/pom.xml",
+            "backend/user-service/pom.xml",
+            "backend/variant-service/pom.xml"
+          ]
+        }
+      ]
+    },
     {
       "id": "wave-eureka-transitives-2026-03-06",
       "status": "superseded",
@@ -85,6 +127,42 @@
   ],
   "governed_residual_risks": [
     {
+      "id": "false-positive-openfga-sdk-cve-2023-35933",
+      "package": "pkg:maven/dev.openfga/openfga-sdk@0.9.7",
+      "cve": "CVE-2023-35933",
+      "severity": "HIGH",
+      "status": "false-positive-suppression",
+      "justification": "CVE-2023-35933 OpenFGA server authorization bypass zafiyetidir (openfga/openfga <= 1.1.0). Java SDK (dev.openfga:openfga-sdk) bir CLIENT kutuphanesidir ve server-side authorization logic icermez. OWASP Dependency-Check CPE cpe:2.3:a:openfga:openfga uzerinden yanlis eslesme yapar.",
+      "suppression_file": "backend/scripts/ci/security/dependency-check-suppressions.xml",
+      "review_on_or_before": "2026-06-30",
+      "exit_criteria": [
+        "OWASP Dependency-Check NVD CPE eslesmesi duzeltildiginde suppression kaldirilir.",
+        "OpenFGA Java SDK icin ayri bir CVE yayinlanirsa bu kayit guncellenir."
+      ],
+      "evidence": [
+        "backend/scripts/ci/security/dependency-check-suppressions.xml",
+        "backend/common-auth/pom.xml"
+      ]
+    },
+    {
+      "id": "false-positive-openfga-sdk-cve-2023-45810",
+      "package": "pkg:maven/dev.openfga/openfga-sdk@0.9.7",
+      "cve": "CVE-2023-45810",
+      "severity": "HIGH",
+      "status": "false-positive-suppression",
+      "justification": "CVE-2023-45810 OpenFGA Go SDK zafiyetidir (openfga/go-sdk). Java SDK (dev.openfga:openfga-sdk) farkli bir artifact olup bu zafiyetten etkilenmez. OWASP Dependency-Check CPE cpe:2.3:a:openfga:openfga uzerinden genis eslestirme yapar.",
+      "suppression_file": "backend/scripts/ci/security/dependency-check-suppressions.xml",
+      "review_on_or_before": "2026-06-30",
+      "exit_criteria": [
+        "OWASP Dependency-Check NVD CPE eslesmesi duzeltildiginde suppression kaldirilir.",
+        "OpenFGA Java SDK icin ayri bir CVE yayinlanirsa bu kayit guncellenir."
+      ],
+      "evidence": [
+        "backend/scripts/ci/security/dependency-check-suppressions.xml",
+        "backend/common-auth/pom.xml"
+      ]
+    },
+    {
       "id": "residual-commons-configuration-cve-2025-46392",
       "package": "pkg:maven/commons-configuration/commons-configuration@1.10",
       "cve": "CVE-2025-46392",
@@ -104,6 +182,50 @@
         "backend/discovery-server/pom.xml",
         "backend/scripts/ci/security/dependency-check-suppressions.xml"
       ]
+    },
+    {
+      "id": "residual-commons-compress-cve-2024-25710",
+      "package": "pkg:maven/org.apache.commons/commons-compress@1.25.0",
+      "cve": "CVE-2024-25710",
+      "severity": "MEDIUM",
+      "status": "accepted-residual",
+      "justification": "Commons Compress 1.25.0 Spring Boot BOM uzerinden geliyor. CVE-2024-25710 crafted tar arsiviyle DoS riski olup repo'da harici/guvenilmeyen arsiv ingest akisi yok.",
+      "review_on_or_before": "2026-06-30",
+      "exit_criteria": ["Spring Boot BOM commons-compress >= 1.26.0 oldugunda kayit kaldirilir."],
+      "evidence": ["backend/test-results/security/dependency-check/dependency-check-report.json"]
+    },
+    {
+      "id": "residual-commons-compress-cve-2024-26308",
+      "package": "pkg:maven/org.apache.commons/commons-compress@1.25.0",
+      "cve": "CVE-2024-26308",
+      "severity": "MEDIUM",
+      "status": "accepted-residual",
+      "justification": "Commons Compress 1.25.0 Spring Boot BOM uzerinden geliyor. CVE-2024-26308 crafted tar arsiviyle DoS riski olup repo'da harici/guvenilmeyen arsiv ingest akisi yok.",
+      "review_on_or_before": "2026-06-30",
+      "exit_criteria": ["Spring Boot BOM commons-compress >= 1.26.0 oldugunda kayit kaldirilir."],
+      "evidence": ["backend/test-results/security/dependency-check/dependency-check-report.json"]
+    },
+    {
+      "id": "residual-netty-transport-cve-2025-67735",
+      "package": "pkg:maven/io.netty/netty-transport@4.1.127.Final",
+      "cve": "CVE-2025-67735",
+      "severity": "MEDIUM",
+      "status": "accepted-residual",
+      "justification": "Netty 4.1.127 Spring Boot BOM tarafindan yonetiliyor. Transitif bagimliliktir ve dogrudan kullanilmiyor.",
+      "review_on_or_before": "2026-06-30",
+      "exit_criteria": ["Spring Boot BOM netty-bom >= 4.1.128 oldugunda kayit kaldirilir."],
+      "evidence": ["backend/test-results/security/dependency-check/dependency-check-report.json"]
+    },
+    {
+      "id": "residual-poi-cve-2025-31672",
+      "package": "pkg:maven/org.apache.poi/poi@5.2.5",
+      "cve": "CVE-2025-31672",
+      "severity": "MEDIUM",
+      "status": "accepted-residual",
+      "justification": "Apache POI 5.2.5 report-service Excel export icin kullaniliyor. CVE-2025-31672 crafted OOXML icerigi riski tasir; repo'da yalniz sunucu tarafli trusted sablonlar kullaniliyor.",
+      "review_on_or_before": "2026-06-30",
+      "exit_criteria": ["poi >= 5.3.0 veya patch surumunde CVE duzeltildiginde upgrade uygulanir."],
+      "evidence": ["backend/test-results/security/dependency-check/dependency-check-report.json"]
     },
     {
       "id": "residual-jackson-databind-cve-2023-35116",

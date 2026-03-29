@@ -26,15 +26,15 @@ Bu doküman, AG Grid tabanlı rapor ekranlarında kullanılan Variant Manager’
 | V7 | Clone → default flag temizliği | Global varyant klonlandığında yeni kayıt `isGlobalDefault=false` başlamalı, kullanıcı defaultları etkilenmemeli. | `cloneGridVariant` response kontrolü. |
 | V8 | Kullanıcı varsayılanını temizleme | Kullanıcı “Unset default” seçince `isUserDefault=false`, global default tekrar uygulanabilir. | `updateVariantPreference` payload `isDefault:false`. |
 
-## 3. Cypress Önerileri
-1. **Fixture Hazırlığı:** `cypress/fixtures/variants/global-default.json` dosyasıyla API cevaplarını stub’layın (msw veya intercept).
-2. **Helper:** `cy.applyVariantFilters(gridId, filters)` fonksiyonu variant’ın grid’e gerçekten uygulandığını doğrular (kolon sayısı, filter chip).
-3. **Test Dizini:** `cypress/e2e/variants/global-default.cy.ts` (bu dosya global varsayılan, kullanıcı varsayılanı ve query param senaryolarını kapsar).
+## 3. Playwright Önerileri
+1. **Fixture Hazırlığı:** `tests/playwright/fixtures/variants/global-default.json` dosyasıyla API cevaplarını stub’layın (MSW veya `page.route()` intercept).
+2. **Helper:** `applyVariantFilters(page, gridId, filters)` fonksiyonu variant’ın grid’e gerçekten uygulandığını doğrular (kolon sayısı, filter chip).
+3. **Test Dizini:** `tests/playwright/variants/global-default.spec.ts` (bu dosya global varsayılan, kullanıcı varsayılanı ve query param senaryolarını kapsar).
 4. **UI Kontrolleri:**
    - Variant dropdown/metni.
    - “Set as default” toggle butonu.
    - Toast mesajları (`message.success|warning`).
-   - Telemetry event’i (opsiyonel): `cy.window().its('__mfeShellServices.telemetry.emit').should(...)`.
+   - Telemetry event’i (opsiyonel): `await page.evaluate(() => window.__mfeShellServices?.telemetry?.emit)`.
 
 ## 4. Regresyon Checklist
 - [ ] Tek global default kuralı ihlal edilmiyor.
@@ -43,4 +43,4 @@ Bu doküman, AG Grid tabanlı rapor ekranlarında kullanılan Variant Manager’
 - [ ] Karanlık/açık tema altında variant dropdown kontrastı uyumlu.
 - [ ] Telemetry/audit event’leri doğru payload’la tetikleniyor (start → success/error).
 
-Bu kapsama göre Cypress senaryolarını ekledikten sonra roadmap’teki “variant yöneticisi için E2E/regresyon senaryoları” maddesini tamamlanmış sayabiliriz.***
+Bu kapsama göre Playwright senaryolarını ekledikten sonra roadmap’teki “variant yöneticisi için E2E/regresyon senaryoları” maddesini tamamlanmış sayabiliriz.

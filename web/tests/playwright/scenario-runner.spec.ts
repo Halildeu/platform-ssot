@@ -673,17 +673,11 @@ test.describe('Playwright YAML scenario runner', () => {
   const targetsPath = path.resolve(webRoot, process.env.PW_TARGETS ?? path.relative(webRoot, defaultTargetsPath));
   const mode = parseMode();
 
-  // Gracefully handle missing YAML targets file (e.g. in permitAll/CI without scenarios)
-  let config: ScenariosFile;
-  try {
-    config = readYamlTargets(targetsPath);
-  } catch {
-    // No scenarios file — register a single skipped test so the suite doesn't crash
-    test('scenarios YAML not found — skipped', () => {
-      test.skip(true, `Scenarios YAML not found at ${targetsPath}`);
-    });
-    return;
+  if (!fs.existsSync(targetsPath)) {
+    throw new Error(`Scenarios YAML not found at ${targetsPath}`);
   }
+
+  const config = readYamlTargets(targetsPath);
 
   const selectedScenarios = config.scenarios.filter((scenario) => (mode === 'nightly' ? true : scenario.level === 1));
   const results: ScenarioRunResult[] = [];

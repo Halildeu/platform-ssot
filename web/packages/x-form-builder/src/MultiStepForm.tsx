@@ -155,7 +155,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
                       onClick={() => handleStepClick(index)}
                       className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors ${
                         isActive
-                          ? 'bg-action-primary text-white'
+                          ? 'bg-action-primary text-text-inverse'
                           : isCompleted
                             ? 'bg-action-primary/20 text-action-primary'
                             : 'bg-surface-muted text-text-secondary'
@@ -277,7 +277,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
           {multi.isLastStep ? (
             <button
               type="submit"
-              className="inline-flex items-center justify-center rounded-md bg-action-primary px-4 py-2 text-sm font-medium text-white hover:bg-action-primary focus:outline-hidden focus:ring-2 focus:ring-accent-focus disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center justify-center rounded-md bg-action-primary px-4 py-2 text-sm font-medium text-text-inverse hover:bg-action-primary focus:outline-hidden focus:ring-2 focus:ring-accent-focus disabled:cursor-not-allowed disabled:opacity-50"
             >
               {schema.submitLabel ?? 'Submit'}
             </button>
@@ -285,7 +285,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
             <button
               type="button"
               onClick={handleNext}
-              className="inline-flex items-center justify-center rounded-md bg-action-primary px-4 py-2 text-sm font-medium text-white hover:bg-action-primary focus:outline-hidden focus:ring-2 focus:ring-accent-focus"
+              className="inline-flex items-center justify-center rounded-md bg-action-primary px-4 py-2 text-sm font-medium text-text-inverse hover:bg-action-primary focus:outline-hidden focus:ring-2 focus:ring-accent-focus"
             >
               Next
               <svg

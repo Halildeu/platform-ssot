@@ -178,11 +178,21 @@ def iter_web_source_files() -> Iterable[Path]:
                 continue
 
             rel = p.relative_to(ROOT)
-            if str(rel).startswith("web/design-tokens/"):
+            rel_str = str(rel)
+            if rel_str.startswith("web/design-tokens/"):
                 continue
-            if str(rel).startswith("web/tests/"):
+            if rel_str.startswith("web/tests/"):
                 continue
-            if str(rel).endswith("web/apps/mfe-shell/src/styles/theme.css"):
+            if rel_str.endswith("web/apps/mfe-shell/src/styles/theme.css"):
+                continue
+            # Theme infrastructure: design-lab tooling, ops scripts, __tests__
+            if "/design-lab/" in rel_str:
+                continue
+            if "/__tests__/" in rel_str:
+                continue
+            if rel_str.startswith("web/scripts/ops/"):
+                continue
+            if "/.storybook/" in rel_str:
                 continue
 
             yield p

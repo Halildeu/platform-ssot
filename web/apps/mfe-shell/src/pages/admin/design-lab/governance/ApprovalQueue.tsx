@@ -19,9 +19,9 @@ const TYPE_LABELS: Record<ApprovalType, string> = {
 };
 
 const TYPE_COLORS: Record<ApprovalType, string> = {
-  deprecation: "bg-red-100 text-red-700",
-  quality_exception: "bg-amber-100 text-amber-700",
-  breaking_change: "bg-orange-100 text-orange-700",
+  deprecation: "bg-state-danger-bg text-state-danger-text",
+  quality_exception: "bg-state-warning-bg text-state-warning-text",
+  breaking_change: "bg-state-warning-bg text-state-warning-text",
 };
 
 function formatAge(createdAt: string): string {
@@ -69,7 +69,7 @@ export function ApprovalQueue({ pendingOnly = true }: ApprovalQueueProps) {
             Approval Queue
           </Text>
           {pendingCount > 0 && (
-            <span className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-amber-500 px-1.5 text-[10px] font-bold text-white">
+            <span className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-state-warning-text px-1.5 text-[10px] font-bold text-text-inverse">
               {pendingCount}
             </span>
           )}
@@ -153,8 +153,8 @@ function ApprovalRequestCard({
               <span
                 className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
                   request.status === "approved"
-                    ? "bg-emerald-100 text-emerald-700"
-                    : "bg-red-100 text-red-700"
+                    ? "bg-state-success-bg text-state-success-text"
+                    : "bg-state-danger-bg text-state-danger-text"
                 }`}
               >
                 {request.status}
@@ -170,7 +170,7 @@ function ApprovalRequestCard({
               <button
                 type="button"
                 onClick={onApprove}
-                className="inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-2.5 py-1.5 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100"
+                className="inline-flex items-center gap-1 rounded-lg bg-state-success-bg px-2.5 py-1.5 text-xs font-medium text-state-success-text transition hover:bg-state-success-bg"
               >
                 <CheckCircle className="h-3.5 w-3.5" />
                 Approve
@@ -178,7 +178,7 @@ function ApprovalRequestCard({
               <button
                 type="button"
                 onClick={onReject}
-                className="inline-flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-medium text-red-700 transition hover:bg-red-100"
+                className="inline-flex items-center gap-1 rounded-lg bg-state-danger-bg px-2.5 py-1.5 text-xs font-medium text-state-danger-text transition hover:bg-state-danger-bg"
               >
                 <XCircle className="h-3.5 w-3.5" />
                 Reject

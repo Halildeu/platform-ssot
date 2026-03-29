@@ -38,11 +38,11 @@ type GraphEdge = {
 /* ---- Layer colors ---- */
 
 const LAYER_COLORS: Record<string, { bg: string; border: string; text: string }> = {
-  primitives: { bg: "#dbeafe", border: "#3b82f6", text: "#1d4ed8" },
-  components: { bg: "#dcfce7", border: "#22c55e", text: "#15803d" },
-  advanced: { bg: "#fef3c7", border: "#f59e0b", text: "#b45309" },
-  patterns: { bg: "#f3e8ff", border: "#a855f7", text: "#7e22ce" },
-  other: { bg: "#f1f5f9", border: "#94a3b8", text: "#475569" },
+  primitives: { bg: "var(--state-info-bg)", border: "var(--action-primary)", text: "var(--action-primary)" },
+  components: { bg: "var(--state-success-bg)", border: "var(--state-success-text)", text: "var(--state-success-text)" },
+  advanced: { bg: "var(--state-warning-bg)", border: "var(--state-warning-text)", text: "var(--state-warning-text)" },
+  patterns: { bg: "var(--action-primary-bg))", border: "var(--action-primary)", text: "var(--action-primary)" },
+  other: { bg: "var(--surface-muted)", border: "var(--text-subtle)", text: "var(--text-secondary)" },
 };
 
 function getLayerFromItem(item: DesignLabIndexItem): string {
@@ -288,7 +288,7 @@ export default function DependencyGraphPage() {
                 onClick={() => setLayerFilter(layerFilter === layer ? null : layer)}
                 className={`rounded-md px-2 py-1 text-[10px] font-semibold uppercase tracking-wider transition ${
                   layerFilter === layer
-                    ? "bg-action-primary text-white"
+                    ? "bg-action-primary text-text-inverse"
                     : "text-text-tertiary hover:bg-surface-canvas hover:text-text-secondary"
                 }`}
               >
@@ -343,10 +343,10 @@ export default function DependencyGraphPage() {
           {/* Defs for arrow markers */}
           <defs>
             <marker id="arrow" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 3 L 0 6 z" fill="#94a3b8" />
+              <path d="M 0 0 L 10 3 L 0 6 z" fill="var(--text-subtle)" />
             </marker>
             <marker id="arrow-highlight" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 3 L 0 6 z" fill="#3b82f6" />
+              <path d="M 0 0 L 10 3 L 0 6 z" fill="var(--action-primary)" />
             </marker>
           </defs>
 
@@ -367,7 +367,7 @@ export default function DependencyGraphPage() {
                 y1={source.y + 20}
                 x2={target.x}
                 y2={target.y + 20}
-                stroke={isHighlighted ? "#3b82f6" : "#cbd5e1"}
+                stroke={isHighlighted ? "var(--action-primary)" : "var(--border-default)"}
                 strokeWidth={isHighlighted ? 2 : 1}
                 strokeOpacity={isHidden ? 0.15 : isHighlighted ? 1 : 0.5}
                 markerEnd={isHighlighted ? "url(#arrow-highlight)" : "url(#arrow)"}
@@ -397,7 +397,7 @@ export default function DependencyGraphPage() {
                   height={44}
                   rx={12}
                   fill={colors.bg}
-                  stroke={isSelected ? "#2563eb" : colors.border}
+                  stroke={isSelected ? "var(--action-primary)" : colors.border}
                   strokeWidth={isSelected ? 2.5 : 1}
                 />
                 <text
@@ -464,7 +464,7 @@ export default function DependencyGraphPage() {
             <button
               type="button"
               onClick={() => handleNodeClick(selectedNode)}
-              className="mt-3 w-full rounded-lg bg-action-primary px-3 py-2 text-xs font-medium text-white transition hover:bg-action-primary/90"
+              className="mt-3 w-full rounded-lg bg-action-primary px-3 py-2 text-xs font-medium text-text-inverse transition hover:bg-action-primary/90"
             >
               Go to Component →
             </button>

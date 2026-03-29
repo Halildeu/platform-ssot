@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
@@ -78,7 +79,7 @@ describe('buildMenuBarShowcaseSections', () => {
     const sections = buildMenuBarShowcaseSections({
       ariaLabel: 'Command header legacy',
       locale: 'en',
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+       
       itemName: 'Command Header' as unknown as any,
     });
 
@@ -93,7 +94,7 @@ describe('buildMenuBarShowcaseSections', () => {
     const sections = buildMenuBarShowcaseSections({
       ariaLabel: 'Action bar legacy',
       locale: 'en',
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+       
       itemName: 'Action Bar' as unknown as any,
     });
 

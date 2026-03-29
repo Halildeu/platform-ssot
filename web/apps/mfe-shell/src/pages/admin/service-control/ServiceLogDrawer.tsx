@@ -36,7 +36,7 @@ export function ServiceLogDrawer({ serviceName, onClose, fetchLogs }: Props) {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40 bg-black/20 transition-opacity"
+        className="fixed inset-0 z-40 bg-surface-inverse/20 transition-opacity"
         onClick={onClose}
       />
 
@@ -85,13 +85,13 @@ export function ServiceLogDrawer({ serviceName, onClose, fetchLogs }: Props) {
         </div>
 
         {/* Log content */}
-        <div className="flex-1 overflow-auto bg-gray-950 p-4">
+        <div className="flex-1 overflow-auto bg-surface-muted-950 p-4">
           {loading && !logs ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+              <Loader2 className="h-6 w-6 animate-spin text-text-disabled" />
             </div>
           ) : (
-            <pre className="whitespace-pre-wrap break-all font-mono text-xs leading-5 text-gray-300">
+            <pre className="whitespace-pre-wrap break-all font-mono text-xs leading-5 text-border-default">
               {logs || 'No logs available.'}
             </pre>
           )}

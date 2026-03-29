@@ -44,7 +44,7 @@ export function UserManagementBlock({
           style={{
             fontSize: '1rem',
             fontWeight: 600,
-            color: 'var(--color-text-primary, #0f172a)',
+            color: 'var(--color-text-primary))',
             margin: 0,
           }}
         >
@@ -57,8 +57,8 @@ export function UserManagementBlock({
             padding: '0.5rem 1rem',
             borderRadius: '0.375rem',
             border: 'none',
-            background: 'var(--color-primary, #2563eb)',
-            color: '#fff',
+            background: 'var(--color-primary))',
+            color: 'var(--surface-default)',
             fontSize: '0.875rem',
             fontWeight: 500,
             cursor: 'pointer',
@@ -82,8 +82,8 @@ export function UserManagementBlock({
               style={{
                 textAlign: 'left',
                 padding: '0.625rem 0.75rem',
-                borderBottom: '2px solid var(--color-border, #e2e8f0)',
-                color: 'var(--color-text-secondary, #64748b)',
+                borderBottom: '2px solid var(--color-border))',
+                color: 'var(--color-text-secondary))',
                 fontWeight: 600,
                 fontSize: '0.75rem',
                 textTransform: 'uppercase',
@@ -96,8 +96,8 @@ export function UserManagementBlock({
               style={{
                 textAlign: 'left',
                 padding: '0.625rem 0.75rem',
-                borderBottom: '2px solid var(--color-border, #e2e8f0)',
-                color: 'var(--color-text-secondary, #64748b)',
+                borderBottom: '2px solid var(--color-border))',
+                color: 'var(--color-text-secondary))',
                 fontWeight: 600,
                 fontSize: '0.75rem',
                 textTransform: 'uppercase',
@@ -110,8 +110,8 @@ export function UserManagementBlock({
               style={{
                 textAlign: 'left',
                 padding: '0.625rem 0.75rem',
-                borderBottom: '2px solid var(--color-border, #e2e8f0)',
-                color: 'var(--color-text-secondary, #64748b)',
+                borderBottom: '2px solid var(--color-border))',
+                color: 'var(--color-text-secondary))',
                 fontWeight: 600,
                 fontSize: '0.75rem',
                 textTransform: 'uppercase',
@@ -126,7 +126,7 @@ export function UserManagementBlock({
           {users.map((user) => (
             <tr
               key={user.id}
-              style={{ borderBottom: '1px solid var(--color-border, #e2e8f0)' }}
+              style={{ borderBottom: '1px solid var(--color-border))' }}
             >
               <td style={{ padding: '0.625rem 0.75rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -147,8 +147,8 @@ export function UserManagementBlock({
                         width: '28px',
                         height: '28px',
                         borderRadius: '50%',
-                        backgroundColor: 'var(--color-primary, #2563eb)',
-                        color: '#fff',
+                        backgroundColor: 'var(--color-primary))',
+                        color: 'var(--surface-default)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -159,7 +159,7 @@ export function UserManagementBlock({
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                   )}
-                  <span style={{ color: 'var(--color-text-primary, #0f172a)' }}>
+                  <span style={{ color: 'var(--color-text-primary))' }}>
                     {user.name}
                   </span>
                 </div>
@@ -167,7 +167,7 @@ export function UserManagementBlock({
               <td
                 style={{
                   padding: '0.625rem 0.75rem',
-                  color: 'var(--color-text-secondary, #64748b)',
+                  color: 'var(--color-text-secondary))',
                 }}
               >
                 {user.email}
@@ -179,7 +179,7 @@ export function UserManagementBlock({
                   style={{
                     padding: '0.25rem 0.5rem',
                     borderRadius: '0.375rem',
-                    border: '1px solid var(--color-border, #e2e8f0)',
+                    border: '1px solid var(--color-border))',
                     fontSize: '0.8125rem',
                   }}
                 >

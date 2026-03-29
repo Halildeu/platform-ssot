@@ -1,13 +1,13 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import React, { useState, useMemo, _useCallback, useEffect, _useRef } from "react";
 import {
   Activity,
   ChevronDown,
   ChevronRight,
   Timer,
-  Zap,
+  _Zap,
   AlertTriangle,
   RotateCcw,
-  TrendingUp,
+  _TrendingUp,
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 
@@ -89,15 +89,15 @@ const SvgSparkline: React.FC<{ data: number[]; width?: number; height?: number; 
       {/* Threshold line */}
       <line
         x1={0} y1={thresholdY} x2={width} y2={thresholdY}
-        stroke="#ef4444" strokeWidth={1} strokeDasharray="4,4" opacity={0.5}
+        stroke="var(--state-danger-text)" strokeWidth={1} strokeDasharray="4,4" opacity={0.5}
       />
-      <text x={width + 4} y={thresholdY + 3} fontSize={8} fill="#ef4444">16ms</text>
+      <text x={width + 4} y={thresholdY + 3} fontSize={8} fill="var(--state-danger-text)">16ms</text>
 
       {/* Data line */}
       <polyline
         points={points}
         fill="none"
-        stroke="#2563eb"
+        stroke="var(--action-primary)"
         strokeWidth={1.5}
         strokeLinejoin="round"
       />
@@ -112,7 +112,7 @@ const SvgSparkline: React.FC<{ data: number[]; width?: number; height?: number; 
             cx={x}
             cy={y}
             r={2}
-            fill={val > threshold ? "#ef4444" : "#2563eb"}
+            fill={val > threshold ? "var(--state-danger-text)" : "var(--action-primary)"}
           />
         );
       })}
@@ -162,12 +162,12 @@ export const PerfProfilerPanel: React.FC<PerfProfilerPanelProps> = ({ expanded, 
           <Activity className="h-3.5 w-3.5 text-text-tertiary" />
           <Text as="span" className="text-xs font-semibold text-text-primary">Performance</Text>
           {stats && stats.slowRenders > 0 && (
-            <span className="flex items-center gap-1 rounded-md bg-red-100 px-1.5 py-0.5 text-[10px] font-semibold text-red-700">
+            <span className="flex items-center gap-1 rounded-md bg-state-danger-bg px-1.5 py-0.5 text-[10px] font-semibold text-state-danger-text">
               <AlertTriangle className="h-2.5 w-2.5" /> {stats.slowRenders} slow
             </span>
           )}
           {stats && stats.slowRenders === 0 && (
-            <span className="rounded-md bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
+            <span className="rounded-md bg-state-success-bg px-1.5 py-0.5 text-[10px] font-semibold text-state-success-text">
               Fast
             </span>
           )}
@@ -194,7 +194,7 @@ export const PerfProfilerPanel: React.FC<PerfProfilerPanelProps> = ({ expanded, 
                 </div>
                 <div className="rounded-xl bg-surface-canvas p-2.5 text-center">
                   <Text variant="secondary" className="text-[9px] font-semibold uppercase tracking-wider">Max</Text>
-                  <Text as="div" className={`text-sm font-bold ${stats.maxDuration > 16 ? "text-red-600" : "text-text-primary"}`}>
+                  <Text as="div" className={`text-sm font-bold ${stats.maxDuration > 16 ? "text-state-danger-text" : "text-text-primary"}`}>
                     {stats.maxDuration.toFixed(1)}ms
                   </Text>
                 </div>
@@ -204,7 +204,7 @@ export const PerfProfilerPanel: React.FC<PerfProfilerPanelProps> = ({ expanded, 
                 </div>
                 <div className="rounded-xl bg-surface-canvas p-2.5 text-center">
                   <Text variant="secondary" className="text-[9px] font-semibold uppercase tracking-wider">Slow</Text>
-                  <Text as="div" className={`text-sm font-bold ${stats.slowRenders > 0 ? "text-red-600" : "text-emerald-600"}`}>
+                  <Text as="div" className={`text-sm font-bold ${stats.slowRenders > 0 ? "text-state-danger-text" : "text-state-success-text"}`}>
                     {stats.slowRenders}
                   </Text>
                 </div>
@@ -233,9 +233,9 @@ export const PerfProfilerPanel: React.FC<PerfProfilerPanelProps> = ({ expanded, 
               <div className="flex flex-col max-h-32 overflow-y-auto gap-1">
                 {metrics.slice(-10).reverse().map((m) => (
                   <div key={m.id} className="flex items-center gap-2 rounded-lg px-2 py-1 text-[11px] hover:bg-surface-muted/50">
-                    <span className={`h-1.5 w-1.5 rounded-full ${m.actualDuration > 16 ? "bg-red-500" : "bg-emerald-500"}`} />
+                    <span className={`h-1.5 w-1.5 rounded-full ${m.actualDuration > 16 ? "bg-state-danger-text" : "bg-state-success-text"}`} />
                     <span className="text-text-tertiary font-mono w-16">{m.phase}</span>
-                    <span className={`font-mono font-medium ${m.actualDuration > 16 ? "text-red-600" : "text-text-primary"}`}>
+                    <span className={`font-mono font-medium ${m.actualDuration > 16 ? "text-state-danger-text" : "text-text-primary"}`}>
                       {m.actualDuration.toFixed(2)}ms
                     </span>
                     {m.propChange && (

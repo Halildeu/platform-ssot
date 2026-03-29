@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { SparklineChart } from "../SparklineChart";
@@ -110,11 +111,11 @@ describe("SparklineChart", () => {
 
   it("applies custom color", () => {
     const { container } = render(
-      <SparklineChart data={sampleData} type="line" color="#ff0000" />,
+      <SparklineChart data={sampleData} type="line" color="var(--state-danger-text)" />,
     );
 
     const polyline = container.querySelector("polyline");
-    expect(polyline!.getAttribute("stroke")).toBe("#ff0000");
+    expect(polyline!.getAttribute("stroke")).toBe("var(--state-danger-text)");
   });
 
   it("handles empty data array", () => {

@@ -69,10 +69,10 @@ export const SidebarHealthBanner: React.FC<Props> = ({ className }) => {
           <span
             className={`
               inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold
-              ${status === "healthy" ? "bg-state-success-text text-white" : ""}
-              ${status === "warning" ? "bg-state-warning-text text-white" : ""}
-              ${status === "critical" ? "bg-state-danger-text text-white" : ""}
-              ${status === "unknown" ? "bg-text-tertiary text-white" : ""}
+              ${status === "healthy" ? "bg-state-success-text text-text-inverse" : ""}
+              ${status === "warning" ? "bg-state-warning-text text-text-inverse" : ""}
+              ${status === "critical" ? "bg-state-danger-text text-text-inverse" : ""}
+              ${status === "unknown" ? "bg-text-tertiary text-text-inverse" : ""}
             `}
           >
             {colors.icon}

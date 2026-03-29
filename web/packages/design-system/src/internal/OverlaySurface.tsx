@@ -8,7 +8,7 @@ export const premiumOverlayPanelClassName =
   "rounded-[28px] border border-border-subtle/80 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md";
 
 export const premiumOverlayCloseButtonClassName =
-  "inline-flex h-8 w-8 items-center justify-center rounded-full border border-border-subtle/70 bg-[var(--surface-card,var(--surface-default))] text-text-subtle shadow-[0_14px_28px_-24px_var(--shadow-color)] transition hover:-translate-y-px hover:border-border-default hover:bg-[var(--surface-card,var(--surface-default))] hover:text-text-primary hover:shadow-[0_18px_32px_-22px_var(--shadow-color)]";
+  "inline-flex h-8 w-8 items-center justify-center rounded-full border border-border-subtle/70 bg-[var(--surface-card))] text-text-subtle shadow-[0_14px_28px_-24px_var(--shadow-color)] transition hover:-translate-y-px hover:border-border-default hover:bg-[var(--surface-card))] hover:text-text-primary hover:shadow-[0_18px_32px_-22px_var(--shadow-color)]";
 
 /** Props for {@link OverlaySurface}. */
 interface OverlaySurfaceProps {
@@ -124,7 +124,7 @@ export const OverlaySurface: React.FC<OverlaySurfaceProps> = ({
       aria-label={ariaLabel}
       aria-modal="true"
       className={cn(
-        "fixed inset-0 z-50 bg-black/30 backdrop-blur-xs transition-opacity duration-300",
+        "fixed inset-0 z-50 bg-surface-inverse/30 backdrop-blur-xs transition-opacity duration-300",
         open ? "opacity-100" : "pointer-events-none opacity-0",
         viewportClassName,
       )}

@@ -1,4 +1,4 @@
-/* eslint-disable semantic-theme/no-inline-color-literals */
+ 
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -9,7 +9,7 @@ describe('ColorPicker Visual Regression', () => {
   it('closed swatch matches screenshot', async () => {
     await render(
       <div style={{ padding: 20, background: LIGHT_BG_HEX }}>
-        <ColorPicker defaultValue="#3b82f6" label="Brand Color" />
+        <ColorPicker defaultValue="var(--action-primary)" label="Brand Color" />
       </div>,
     );
     await expect(page.screenshot()).toMatchImageSnapshot();

@@ -6,7 +6,7 @@ import {
   createPageLayoutPreset,
 } from '@mfe/design-system';
 import { EntityGridTemplate, buildEntityGridQueryParams } from '../../grid';
-import type { GridRequest, GridResponse, ColumnDef } from '../../grid';
+import type { GridRequest, GridResponse } from '../../grid';
 import type { ColDef, IServerSideGetRowsParams } from 'ag-grid-community';
 import type { ReportModule } from '../types';
 import { fetchReportMetadata } from './api';

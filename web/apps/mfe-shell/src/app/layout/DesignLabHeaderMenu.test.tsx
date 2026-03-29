@@ -1,12 +1,10 @@
+// @vitest-environment jsdom
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
-import { getDictionary } from '@mfe/i18n-dicts';
 import { DesignLabHeaderMenu } from './DesignLabHeaderMenu';
-
-const designLabDictionary = getDictionary('tr', 'designlab')?.dictionary ?? {};
 
 vi.mock('../i18n', () => ({
   useShellCommonI18n: () => ({
@@ -17,11 +15,15 @@ vi.mock('../i18n', () => ({
   }),
 }));
 
-vi.mock('../../pages/admin/design-lab/useDesignLabI18n', () => ({
-  useDesignLabI18n: () => ({
-    t: (key: string) => designLabDictionary[key] ?? key,
-  }),
-}));
+vi.mock('../../pages/admin/design-lab/useDesignLabI18n', async () => {
+  const { getDictionary } = await import('@mfe/i18n-dicts');
+  const dict = getDictionary('tr', 'designlab')?.dictionary ?? {};
+  return {
+    useDesignLabI18n: () => ({
+      t: (key: string) => dict[key] ?? key,
+    }),
+  };
+});
 
 const routerFuture = {
   v7_startTransition: true,

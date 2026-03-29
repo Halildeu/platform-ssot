@@ -13,7 +13,7 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
+  _CardFooter,
   Badge,
   Input,
   Switch,

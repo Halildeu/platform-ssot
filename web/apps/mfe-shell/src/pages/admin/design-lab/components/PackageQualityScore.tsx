@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Text } from "@mfe/design-system";
-import { QualityBadge, getQualityTier } from "./QualityBadge";
+import { QualityBadge } from "./QualityBadge";
 
 /* ------------------------------------------------------------------ */
 /*  PackageQualityScore                                                */
@@ -142,7 +142,7 @@ export function PackageQualityScore({
 
       {/* Weakest areas */}
       {metrics.weakest.length > 0 && (
-        <div className="border-t border-border-subtle bg-amber-500/5 px-5 py-3">
+        <div className="border-t border-border-subtle bg-state-warning-text/5 px-5 py-3">
           <Text
             variant="secondary"
             className="text-[10px] font-semibold uppercase tracking-widest"
@@ -153,7 +153,7 @@ export function PackageQualityScore({
             {metrics.weakest.map((w) => (
               <span
                 key={w.name}
-                className="rounded-lg bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-800"
+                className="rounded-lg bg-state-warning-bg px-2 py-0.5 text-[10px] font-medium text-state-warning-text"
               >
                 {w.name}
               </span>
@@ -168,17 +168,17 @@ export function PackageQualityScore({
 /* ---- Helpers ---- */
 
 function scoreTextColor(score: number): string {
-  if (score >= 85) return "text-emerald-600";
-  if (score >= 70) return "text-indigo-600";
-  if (score >= 50) return "text-amber-600";
-  return "text-red-600";
+  if (score >= 85) return "text-state-success-text";
+  if (score >= 70) return "text-action-primary";
+  if (score >= 50) return "text-state-warning-text";
+  return "text-state-danger-text";
 }
 
 function scorePillClass(score: number): string {
-  if (score >= 85) return "bg-emerald-100 text-emerald-700";
-  if (score >= 70) return "bg-indigo-100 text-indigo-700";
-  if (score >= 50) return "bg-amber-100 text-amber-700";
-  return "bg-red-100 text-red-700";
+  if (score >= 85) return "bg-state-success-bg text-state-success-text";
+  if (score >= 70) return "bg-action-primary/10 text-action-primary";
+  if (score >= 50) return "bg-state-warning-bg text-state-warning-text";
+  return "bg-state-danger-bg text-state-danger-text";
 }
 
 function ScoreBar({
@@ -214,8 +214,8 @@ function ScoreBar({
 }
 
 function scoreBarBg(score: number): string {
-  if (score >= 85) return "bg-emerald-500";
-  if (score >= 70) return "bg-indigo-500";
-  if (score >= 50) return "bg-amber-500";
-  return "bg-red-500";
+  if (score >= 85) return "bg-state-success-text";
+  if (score >= 70) return "bg-action-primary";
+  if (score >= 50) return "bg-state-warning-text";
+  return "bg-state-danger-text";
 }

@@ -17,9 +17,9 @@ function ConnectedTextareaDemo({ disabled = false }: { disabled?: boolean }) {
           label="Notes"
           disabled={disabled}
           rows={4}
-          style={{ width: '100%', padding: '8px 10px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 14 }}
+          style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--border-default)', borderRadius: 6, fontSize: 14 }}
         />
-        <pre style={{ fontSize: 11, background: '#f3f4f6', padding: 8, borderRadius: 4, marginTop: 8 }}>
+        <pre style={{ fontSize: 11, background: 'var(--surface-muted)', padding: 8, borderRadius: 4, marginTop: 8 }}>
           notes: {String(values.notes)}
         </pre>
       </div>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Text } from "@mfe/design-system";
 import type { AdoptionEntry } from "./insightsUtils";
 
 /* ------------------------------------------------------------------ */
@@ -111,7 +110,7 @@ export const AdoptionHeatmap: React.FC<Props> = ({ data, consumerApps }) => {
       {/* Tooltip */}
       {tooltip && (
         <div
-          className="pointer-events-none fixed z-50 rounded-lg bg-gray-900 px-2.5 py-1.5 text-[11px] text-white shadow-lg"
+          className="pointer-events-none fixed z-50 rounded-lg bg-surface-inverse px-2.5 py-1.5 text-[11px] text-text-inverse shadow-lg"
           style={{
             left: tooltip.x,
             top: tooltip.y - 32,

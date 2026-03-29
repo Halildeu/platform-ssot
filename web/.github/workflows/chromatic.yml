@@ -65,7 +65,7 @@ jobs:
         env:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
         run: |
-          CHROMATIC_ARGS="--project-token=$CHROMATIC_PROJECT_TOKEN --build-script-name build-storybook"
+          CHROMATIC_ARGS="--project-token=$CHROMATIC_PROJECT_TOKEN --build-script-name build-storybook --turbo-snap"
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
             CHROMATIC_ARGS="$CHROMATIC_ARGS --auto-accept-changes"
           else

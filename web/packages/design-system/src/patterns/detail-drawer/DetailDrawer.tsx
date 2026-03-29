@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback, useId } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
 import { useScrollLock, registerLayer, unregisterLayer, useEscapeKey, useFocusRestore } from "../../internal/overlay-engine";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 /* ------------------------------------------------------------------ */
 /*  DetailDrawer — Read-only detail panel (wider, with sections)       */
 /* ------------------------------------------------------------------ */
@@ -72,7 +72,7 @@ export const DetailDrawer = React.forwardRef<HTMLDivElement, DetailDrawerProps>(
   className,
   access,
   accessReason,
-}, ref) => {
+}, _ref) => {
   const accessState = resolveAccessState(access);
   const panelRef = useRef<HTMLDivElement>(null);
   const layerId = useId();
@@ -131,7 +131,7 @@ export const DetailDrawer = React.forwardRef<HTMLDivElement, DetailDrawerProps>(
     <div className="fixed inset-0 z-[1300] flex" data-access-state={accessState.state}>
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40 animate-in fade-in-0"
+        className="absolute inset-0 bg-surface-inverse/40 animate-in fade-in-0"
         onClick={handleBackdrop}
         aria-hidden
       />

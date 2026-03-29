@@ -36,15 +36,15 @@ export function SettingsPageBlock({ sections }: SettingsPageBlockProps) {
           style={{
             padding: '1.25rem',
             borderRadius: '0.5rem',
-            border: '1px solid var(--color-border, #e2e8f0)',
-            backgroundColor: 'var(--color-surface, #fff)',
+            border: '1px solid var(--color-border))',
+            backgroundColor: 'var(--color-surface))',
           }}
         >
           <h3
             style={{
               fontSize: '1rem',
               fontWeight: 600,
-              color: 'var(--color-text-primary, #0f172a)',
+              color: 'var(--color-text-primary))',
               margin: '0 0 0.25rem 0',
             }}
           >
@@ -54,7 +54,7 @@ export function SettingsPageBlock({ sections }: SettingsPageBlockProps) {
             <p
               style={{
                 fontSize: '0.8125rem',
-                color: 'var(--color-text-secondary, #64748b)',
+                color: 'var(--color-text-secondary))',
                 margin: '0 0 1rem 0',
               }}
             >
@@ -71,14 +71,14 @@ export function SettingsPageBlock({ sections }: SettingsPageBlockProps) {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   padding: '0.5rem 0',
-                  borderBottom: '1px solid var(--color-border, #e2e8f0)',
+                  borderBottom: '1px solid var(--color-border))',
                 }}
               >
                 <label
                   htmlFor={field.name}
                   style={{
                     fontSize: '0.875rem',
-                    color: 'var(--color-text-primary, #0f172a)',
+                    color: 'var(--color-text-primary))',
                   }}
                 >
                   {field.label}
@@ -97,8 +97,8 @@ export function SettingsPageBlock({ sections }: SettingsPageBlockProps) {
                       border: 'none',
                       cursor: 'pointer',
                       backgroundColor: field.value
-                        ? 'var(--color-primary, #2563eb)'
-                        : 'var(--color-border, #e2e8f0)',
+                        ? 'var(--color-primary))'
+                        : 'var(--color-border))',
                       position: 'relative',
                       transition: 'background-color 0.2s',
                     }}
@@ -109,7 +109,7 @@ export function SettingsPageBlock({ sections }: SettingsPageBlockProps) {
                         width: '18px',
                         height: '18px',
                         borderRadius: '50%',
-                        backgroundColor: '#fff',
+                        backgroundColor: 'var(--surface-default)',
                         position: 'absolute',
                         top: '3px',
                         left: field.value ? '23px' : '3px',
@@ -125,7 +125,7 @@ export function SettingsPageBlock({ sections }: SettingsPageBlockProps) {
                     style={{
                       padding: '0.375rem 0.5rem',
                       borderRadius: '0.375rem',
-                      border: '1px solid var(--color-border, #e2e8f0)',
+                      border: '1px solid var(--color-border))',
                       fontSize: '0.875rem',
                     }}
                   >
@@ -144,7 +144,7 @@ export function SettingsPageBlock({ sections }: SettingsPageBlockProps) {
                     style={{
                       padding: '0.375rem 0.5rem',
                       borderRadius: '0.375rem',
-                      border: '1px solid var(--color-border, #e2e8f0)',
+                      border: '1px solid var(--color-border))',
                       fontSize: '0.875rem',
                       maxWidth: '240px',
                     }}

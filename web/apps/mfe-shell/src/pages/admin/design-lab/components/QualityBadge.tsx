@@ -1,5 +1,4 @@
 import React from "react";
-import { Text } from "@mfe/design-system";
 
 /* ------------------------------------------------------------------ */
 /*  Quality Badge — tier-based visual indicator                        */
@@ -24,25 +23,25 @@ const TIER_CONFIG: Record<
   { color: string; bg: string; border: string; label: string }
 > = {
   bronze: {
-    color: "#cd7f32",
+    color: "var(--state-warning-text)",
     bg: "rgba(205,127,50,0.10)",
     border: "rgba(205,127,50,0.25)",
     label: "Bronze",
   },
   silver: {
-    color: "#71717a",
+    color: "var(--text-secondary)",
     bg: "rgba(192,192,192,0.12)",
     border: "rgba(192,192,192,0.30)",
     label: "Silver",
   },
   gold: {
-    color: "#b8860b",
+    color: "var(--state-warning-text)",
     bg: "rgba(255,215,0,0.10)",
     border: "rgba(255,215,0,0.30)",
     label: "Gold",
   },
   platinum: {
-    color: "#6366f1",
+    color: "var(--action-primary)",
     bg: "rgba(99,102,241,0.08)",
     border: "rgba(99,102,241,0.25)",
     label: "Platinum",

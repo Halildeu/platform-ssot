@@ -10,10 +10,9 @@
  */
 
 import { execSync } from "node:child_process";
-import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { tmpdir } from "node:os";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

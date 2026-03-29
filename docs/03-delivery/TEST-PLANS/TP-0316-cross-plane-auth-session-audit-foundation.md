@@ -10,7 +10,7 @@ yazilirken bu H2 basliklari ve numaralari bire bir korunmali; agent sadece
 bu basliklarin altini doldurabilir.
 
 -------------------------------------------------------------------------------
-## 1. AMAC
+## 1. AMAÇ
 -------------------------------------------------------------------------------
 
 - Web, mobil ve backend auth/session/audit temelinin AC-0316 senaryolarina
@@ -27,7 +27,7 @@ bu basliklarin altini doldurabilir.
 - Mobil stale session / offline queue korumalari.  
 
 -------------------------------------------------------------------------------
-## 3. STRATEJI
+## 3. STRATEJİ
 -------------------------------------------------------------------------------
 
 - Backend controller/service testleri ile auth-service ve permission-service
@@ -45,7 +45,7 @@ bu basliklarin altini doldurabilir.
   uctan uca teyit etmek.  
 
 -------------------------------------------------------------------------------
-## 4. TEST SENARYOLARI OZETI
+## 4. TEST SENARYOLARI ÖZETİ
 -------------------------------------------------------------------------------
 
 - [ ] Login bootstrap'i ve token/expiry alanlari.  
@@ -60,7 +60,7 @@ bu basliklarin altini doldurabilir.
   bloklanmasi.  
 
 -------------------------------------------------------------------------------
-## 5. CEVRE VE ARACLAR
+## 5. ÇEVRE VE ARAÇLAR
 -------------------------------------------------------------------------------
 
 - Spring Boot test runner / JUnit.  
@@ -69,7 +69,7 @@ bu basliklarin altini doldurabilir.
 - Gateway + auth-service + permission-service ayaga kalkmis gelistirme ortami.  
 
 -------------------------------------------------------------------------------
-## 6. RISKLER / ONCELIKLER
+## 6. RİSKLER / ÖNCELİKLER
 -------------------------------------------------------------------------------
 
 - Web ve mobil istemcilerin farkli permission isimleri veya farkli scope
@@ -81,7 +81,7 @@ bu basliklarin altini doldurabilir.
   kullanilmaya devam etmesi.  
 
 -------------------------------------------------------------------------------
-## 7. OZET
+## 7. ÖZET
 -------------------------------------------------------------------------------
 
 - Bu test plani, mevcut backend auth/yetki omurgasinin web ve mobil yuzeylere
@@ -89,7 +89,7 @@ bu basliklarin altini doldurabilir.
   dogrular.
 
 -------------------------------------------------------------------------------
-## 8. LINKLER (ISTEGE BAGLI)
+## 8. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
 - Story: docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md  

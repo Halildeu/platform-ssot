@@ -54,7 +54,7 @@ export function CoverageMatrix({ items, onNavigate }: CoverageMatrixProps) {
           onClick={() => setOnlyGaps((v) => !v)}
           className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
             onlyGaps
-              ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+              ? 'bg-state-warning-bg text-state-warning-text dark:bg-state-warning-text/30 dark:text-state-warning-text'
               : 'bg-surface-muted text-text-secondary hover:bg-surface-canvas'
           }`}
         >
@@ -68,7 +68,7 @@ export function CoverageMatrix({ items, onNavigate }: CoverageMatrixProps) {
         {dimensionCoverage.map((d) => (
           <div key={d.key} className="bg-surface-default px-3 py-2 text-center">
             <Text className="text-[10px] font-medium text-text-secondary">{d.label}</Text>
-            <Text className={`text-sm font-bold tabular-nums ${d.pct >= 80 ? 'text-emerald-600' : d.pct >= 50 ? 'text-amber-600' : 'text-red-600'}`}>
+            <Text className={`text-sm font-bold tabular-nums ${d.pct >= 80 ? 'text-state-success-text' : d.pct >= 50 ? 'text-state-warning-text' : 'text-state-danger-text'}`}>
               {d.pct}%
             </Text>
           </div>
@@ -96,7 +96,7 @@ export function CoverageMatrix({ items, onNavigate }: CoverageMatrixProps) {
                 <td className="px-4 py-2">
                   <button
                     onClick={() => onNavigate?.(item.name)}
-                    className="text-sm font-medium text-text-primary hover:text-indigo-600 hover:underline"
+                    className="text-sm font-medium text-text-primary hover:text-action-primary hover:underline"
                   >
                     {item.name}
                   </button>
@@ -104,9 +104,9 @@ export function CoverageMatrix({ items, onNavigate }: CoverageMatrixProps) {
                 {DIMENSIONS.map((d) => (
                   <td key={d.key} className="px-2 py-2 text-center">
                     {item[d.key] ? (
-                      <CheckCircle2 className="mx-auto h-4 w-4 text-emerald-500" />
+                      <CheckCircle2 className="mx-auto h-4 w-4 text-state-success-text" />
                     ) : (
-                      <XCircle className="mx-auto h-4 w-4 text-red-400" />
+                      <XCircle className="mx-auto h-4 w-4 text-state-danger-text" />
                     )}
                   </td>
                 ))}

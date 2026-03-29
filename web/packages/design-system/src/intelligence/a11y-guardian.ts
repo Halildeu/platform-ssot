@@ -143,5 +143,5 @@ export function suggestContrastFix(fg: string, bg: string, level: 'AA' | 'AAA' =
     }
   }
 
-  return needsDarker ? '#000000' : '#ffffff';
+  return needsDarker ? 'var(--text-primary)' : 'var(--surface-default)';
 }

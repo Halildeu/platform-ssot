@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { cn } from "../../utils/cn";
 import { stateAttrs } from "../../internal/interaction-core";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Toast — Notification system with provider + hook                   */
@@ -110,7 +110,7 @@ export const ToastProvider = React.forwardRef<HTMLDivElement, ToastProviderProps
   children,
   access,
   accessReason,
-}, ref) => {
+}, _ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
   const [toasts, setToasts] = useState<ToastData[]>([]);

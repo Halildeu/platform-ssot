@@ -48,10 +48,10 @@ export const KPICard = React.forwardRef<HTMLDivElement, KPICardProps>(
 
     const trendColor = trend
       ? isPositive
-        ? "var(--state-success-text, #22c55e)"
+        ? "var(--state-success-text))"
         : trend.direction === "flat"
-          ? "var(--text-secondary, #64748b)"
-          : "var(--state-error-text, #ef4444)"
+          ? "var(--text-secondary))"
+          : "var(--state-error-text))"
       : undefined;
 
     return (

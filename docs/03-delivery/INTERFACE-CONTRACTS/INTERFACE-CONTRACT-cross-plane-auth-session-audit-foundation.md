@@ -7,10 +7,10 @@ olusturulurken ayrica `STYLE-API-001.md` kurallari da uygulanmalidir. Ozellikle:
 - Request/Response DTO'lari **isim ve alan bazinda** tanimlanmalidir.
 - Kullanilan status code'lar ve ortak `ErrorResponse` semasi acikca yazilmalidir.
 - Ilgili PB / PRD / STORY / ACCEPTANCE / TEST PLAN / API dokuman linkleri
-  "7. LINKLER / SONRAKI ADIMLAR" bolumunde yer almalidir.
+  "7. LİNKLER / SONRAKİ ADIMLAR" bolumunde yer almalidir.
 
 -------------------------------------------------------------------------------
-1. AMAC
+1. AMAÇ
 -------------------------------------------------------------------------------
 
 - Web shell ve mobil istemcinin mevcut backend auth/yetki/audit omurgasi ile
@@ -31,7 +31,7 @@ olusturulurken ayrica `STYLE-API-001.md` kurallari da uygulanmalidir. Ozellikle:
   - Mobil offline queue replay icin profile preference mutasyonu
 
 -------------------------------------------------------------------------------
-3. ENDPOINT / ARAYUZ TANIMI
+3. ENDPOINT / ARAYÜZ TANIMI
 -------------------------------------------------------------------------------
 
 - `POST /api/v1/auth/sessions`
@@ -272,7 +272,7 @@ olusturulurken ayrica `STYLE-API-001.md` kurallari da uygulanmalidir. Ozellikle:
     - `conflictReason`: `string|null`, opsiyonel, `409` conflict neden kodu
 
 -------------------------------------------------------------------------------
-4. DAVRANIS VE HATA DURUMLARI
+4. DAVRANIŞ VE HATA DURUMLARI
 -------------------------------------------------------------------------------
 
 - Basarili akis:
@@ -355,7 +355,7 @@ olusturulurken ayrica `STYLE-API-001.md` kurallari da uygulanmalidir. Ozellikle:
   - `503` `vault_unavailable`: auth altyapisina erisim gecici olarak yok.
 
 -------------------------------------------------------------------------------
-5. GUVENLIK VE VERSIYONLAMA
+5. GÜVENLİK VE VERSİYONLAMA
 -------------------------------------------------------------------------------
 
 - Auth:
@@ -377,7 +377,7 @@ olusturulurken ayrica `STYLE-API-001.md` kurallari da uygulanmalidir. Ozellikle:
     path'ler yeni gelistirmelerde canonical kabul edilmez.
 
 -------------------------------------------------------------------------------
-6. OZET
+6. ÖZET
 -------------------------------------------------------------------------------
 
 - Bu kontrat, web ve mobil istemcinin mevcut backend auth/yetki altyapisiyla
@@ -386,7 +386,7 @@ olusturulurken ayrica `STYLE-API-001.md` kurallari da uygulanmalidir. Ozellikle:
   audit gorunurlugunu capability seviyesinde sabitlemektir.
 
 -------------------------------------------------------------------------------
-7. LINKLER / SONRAKI ADIMLAR
+7. LİNKLER / SONRAKİ ADIMLAR
 -------------------------------------------------------------------------------
 
 - docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md  

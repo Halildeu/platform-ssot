@@ -13,6 +13,7 @@ export type EntityGridQueryParams = {
   advancedFilter?: string;
   rowGroupCols?: string;
   groupKeys?: string;
+  multiSearch?: string;
 } & Record<string, unknown>;
 
 export type MapAdvancedFilter = (model: AgAdvancedFilterModel | null | undefined) => Record<string, unknown> | null;
@@ -22,6 +23,8 @@ export interface BuildEntityGridQueryParamsOptions {
   quickFilterText?: string;
   mapAdvancedFilter?: MapAdvancedFilter;
   mapFilterModel?: (model: IServerSideGetRowsRequest['filterModel']) => Partial<EntityGridQueryParams>;
+  /** Per-column pipe-separated values for backend multiSearch (from gridApi.__multiSearchParams). */
+  multiSearchParams?: Record<string, string>;
 }
 
 /**
@@ -49,7 +52,7 @@ const toSortParam = (sortModel: SortModelItem[] | undefined): string | undefined
 export const buildEntityGridQueryParams = (
   options: BuildEntityGridQueryParamsOptions,
 ): EntityGridQueryParams => {
-  const { request, quickFilterText = '', mapAdvancedFilter, mapFilterModel } = options;
+  const { request, quickFilterText = '', mapAdvancedFilter, mapFilterModel, multiSearchParams } = options;
   const blockSize = Math.max(1, (request.endRow ?? 0) - (request.startRow ?? 0));
   const startRow = request.startRow ?? 0;
   const page = Math.floor(startRow / blockSize) + 1;
@@ -117,6 +120,11 @@ export const buildEntityGridQueryParams = (
       const extras = mapFilterModel(filterModel ?? {});
       Object.assign(params, extras);
     }
+  }
+
+  // multiSearch: pipe-separated values from FilterBuilder for 3+ text conditions per column
+  if (multiSearchParams && Object.keys(multiSearchParams).length > 0) {
+    params.multiSearch = Object.values(multiSearchParams).join('|');
   }
 
   return params;

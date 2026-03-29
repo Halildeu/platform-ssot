@@ -262,7 +262,11 @@ const duplicateIdRule: RuntimeA11yRule = {
     const id = element.getAttribute('id');
     if (!id) return null;
 
-    const matches = document.querySelectorAll(`[id="${CSS.escape(id)}"]`);
+    // Use getRootNode() to work in shadow DOM and avoid global document issues.
+    // Escape only double-quotes in id value to build a safe attribute selector.
+    const root = element.getRootNode() as Document | ShadowRoot;
+    const escaped = id.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    const matches = root.querySelectorAll(`[id="${escaped}"]`);
     if (matches.length <= 1) return null;
 
     // Only report on the second+ occurrence to avoid double-reporting

@@ -181,13 +181,13 @@ function getDefaultStyles(componentName: string): StylePart[] {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  layout: "bg-blue-100 text-blue-700",
-  spacing: "bg-emerald-100 text-emerald-700",
-  typography: "bg-violet-100 text-violet-700",
-  color: "bg-amber-100 text-amber-700",
+  layout: "bg-state-info-bg text-state-info-text",
+  spacing: "bg-state-success-bg text-state-success-text",
+  typography: "bg-action-primary/10 text-action-primary",
+  color: "bg-state-warning-bg text-state-warning-text",
   border: "bg-[var(--surface-muted)] text-[var(--text-secondary)]",
-  effect: "bg-pink-100 text-pink-700",
-  interaction: "bg-indigo-100 text-indigo-700",
+  effect: "bg-state-danger-bg text-state-danger-text",
+  interaction: "bg-action-primary/10 text-action-primary",
 };
 
 type StyleTabProps = {
@@ -263,11 +263,11 @@ ${activeOverrides
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Palette className="h-4 w-4 text-pink-500" />
+          <Palette className="h-4 w-4 text-state-danger-text" />
           <Text as="h3" className="text-sm font-semibold text-text-primary">
             Style API
           </Text>
-          <span className="rounded-full bg-pink-100 px-2 py-0.5 text-[10px] font-bold text-pink-700">
+          <span className="rounded-full bg-state-danger-bg px-2 py-0.5 text-[10px] font-bold text-state-danger-text">
             {parts.reduce((sum, p) => sum + p.classes.length, 0)} classes
           </span>
         </div>
@@ -306,13 +306,13 @@ ${activeOverrides
               return (
                 <div
                   key={cls.className}
-                  className={`flex items-center gap-3 px-4 py-2 transition ${isDisabled ? "bg-red-50/50 opacity-60" : "hover:bg-surface-muted/30"}`}
+                  className={`flex items-center gap-3 px-4 py-2 transition ${isDisabled ? "bg-state-danger-bg/50 opacity-60" : "hover:bg-surface-muted/30"}`}
                 >
                   {/* Toggle */}
                   <button
                     type="button"
                     onClick={() => toggleClass(cls.className)}
-                    className={`rounded-xs p-1 transition ${isDisabled ? "text-red-400 hover:text-red-500" : "text-emerald-500 hover:text-emerald-600"}`}
+                    className={`rounded-xs p-1 transition ${isDisabled ? "text-state-danger-text hover:text-state-danger-text" : "text-state-success-text hover:text-state-success-text"}`}
                     title={isDisabled ? "Enable class" : "Disable class"}
                   >
                     {isDisabled ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
@@ -341,7 +341,7 @@ ${activeOverrides
                     onClick={() => copyClassName(cls.className)}
                     className="rounded-xs p-1 text-text-tertiary hover:text-text-primary transition"
                   >
-                    {isCopied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+                    {isCopied ? <Check className="h-3 w-3 text-state-success-text" /> : <Copy className="h-3 w-3" />}
                   </button>
                 </div>
               );
@@ -359,7 +359,7 @@ ${activeOverrides
               Generated Override ({disabledClasses.size} classes disabled)
             </Text>
           </div>
-          <pre className="overflow-x-auto bg-gray-900 p-4 text-[11px] leading-relaxed text-gray-200 font-mono">
+          <pre className="overflow-x-auto bg-surface-inverse p-4 text-[11px] leading-relaxed text-border-subtle font-mono">
             {overrideCode}
           </pre>
         </div>
