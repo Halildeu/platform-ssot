@@ -23,11 +23,37 @@ async function fetchAppPermissions(token: string): Promise<string[]> {
     const res = await api.get("/v1/authz/me", {
       headers: { Authorization: `Bearer ${token}` },
     });
-    const data = res.data as { permissions?: string[] };
+    const data = res.data as { permissions?: string[]; allowedModules?: string[] };
+    // Prefer allowedModules (OpenFGA) over legacy permissions
+    if (Array.isArray(data?.allowedModules) && data.allowedModules.length > 0) {
+      return data.allowedModules;
+    }
     return Array.isArray(data?.permissions) ? data.permissions : [];
   } catch (err: unknown) {
     console.warn("AuthBootstrapper: /v1/authz/me failed, falling back to JWT roles", err);
     return [];
+  }
+}
+
+/**
+ * Store token in httpOnly cookie via gateway endpoint.
+ * Falls back silently if endpoint unavailable (dev mode).
+ */
+async function setTokenCookie(token: string): Promise<void> {
+  try {
+    await api.post("/auth/cookie", null, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch {
+    // Cookie endpoint may not be available in dev; silently ignore
+  }
+}
+
+async function clearTokenCookie(): Promise<void> {
+  try {
+    await api.delete("/auth/cookie");
+  } catch {
+    // Silently ignore
   }
 }
 
@@ -130,8 +156,10 @@ export const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({
         if (!mounted) return;
         const kcToken = keycloak.token ?? null;
         if (kcToken) {
+          // Store token in httpOnly cookie for secure session management
+          void setTokenCookie(kcToken);
           const profile = mapKeycloakProfile(kcToken);
-          // Fetch real application permissions from permission-service
+          // Fetch real application permissions from authorization proxy
           const appPermissions = await fetchAppPermissions(kcToken);
           const mergedProfile = profile
             ? {
@@ -176,6 +204,7 @@ export const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({
       try {
         const refreshed = await keycloak.updateToken(60);
         if (refreshed && keycloak.token) {
+          void setTokenCookie(keycloak.token);
           const profile = mapKeycloakProfile(keycloak.token);
           const appPermissions = await fetchAppPermissions(keycloak.token);
           const mergedProfile = profile
@@ -200,6 +229,7 @@ export const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({
           );
         }
       } catch {
+        void clearTokenCookie();
         dispatch(logout());
       }
     };

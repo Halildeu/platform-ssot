@@ -7,3 +7,4 @@ export { ProtectedRoute, ProtectedSection } from './ProtectedRoute';
 export { fetchAuthzMe, checkPermission } from './api';
 export { MODULES } from './types';
 export type { AuthzMeResponse, CheckRequest, CheckResponse, ModuleKey } from './types';
+export { useAuthorization } from './compat';

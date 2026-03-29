@@ -329,6 +329,7 @@ services:
       start_period: 5s
 
   permission-service:
+    profiles: ["legacy"]  # Only starts with: docker compose --profile legacy up
     build: ./permission-service
     ports:
       - "8090:8084"
