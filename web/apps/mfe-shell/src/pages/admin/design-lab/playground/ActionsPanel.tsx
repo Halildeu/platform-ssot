@@ -215,7 +215,7 @@ function generateTestAssertion(entry: ActionLogEntry): string {
   const handler = `handle${entry.eventName.slice(2)}`;
   const lines = [
     `// Test assertion for ${entry.eventName} on ${entry.componentName}`,
-    `const ${handler} = jest.fn();`,
+    `const ${handler} = vi.fn();`,
     `render(<${entry.componentName} ${entry.eventName}={${handler}} />);`,
     ``,
     `// Simulate interaction`,

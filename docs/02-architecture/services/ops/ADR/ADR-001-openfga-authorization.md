@@ -1,9 +1,9 @@
 # ADR-001: OpenFGA for Authorization (Zanzibar Model)
 
 ID: ADR-001
-**Status:** Accepted
-**Date:** 2026-03-29
-**Decision Makers:** Halil Kocoglu
+Status: Accepted
+Date: 2026-03-29
+Owner: @team/platform
 
 ## Context
 
@@ -52,3 +52,8 @@ Sorunlar:
 **Risks:**
 - OpenFGA SPOF → circuit breaker + cached fallback
 - Model eksik senaryo → iteratif genisletme
+
+## Links
+
+- [OpenFGA docs](https://openfga.dev)
+- Related: ADR-002-data-enforcement-rls-filter.md, ADR-003-jwt-identity-only.md

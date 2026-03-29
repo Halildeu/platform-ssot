@@ -9,16 +9,17 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // TODO: Kendi gerçek bileşen yolunuzu girin
 // import { UsersGrid } from 'apps/mfe-users/src/widgets/user-management/ui/UsersGrid.ui';
 // Geçici dummy bileşen (şablon açıklaması için). Projede gerçek UsersGrid'i import edin.
 const UsersGrid: React.FC<any> = () => <div>UsersGrid</div>;
 
-// AgGridReact'i mock’la: render sırasında onGridReady'yi bir kez tetikle ve sahte api dön
-const setGridOptionMock = jest.fn();
+// AgGridReact'i mock'la: render sırasında onGridReady'yi bir kez tetikle ve sahte api dön
+const setGridOptionMock = vi.fn();
 
-jest.mock('ag-grid-react', () => ({
+vi.mock('ag-grid-react', () => ({
   AgGridReact: (props: any) => {
     const fakeEvent = {
       api: {
@@ -37,7 +38,7 @@ describe('UsersGrid SSRM attach', () => {
   beforeEach(() => setGridOptionMock.mockClear());
 
   it('serverSideDatasource sadece 1 kez bağlanmalı', () => {
-    // TODO: bileşenin gerektirdiği props’ları doldurun
+    // TODO: bileşenin gerektirdiği props'ları doldurun
     render(
       // StrictMode kapalı tutmak daha deterministik sonuç verir
       <UsersGrid />
@@ -50,4 +51,3 @@ describe('UsersGrid SSRM attach', () => {
     expect(calls.length).toBe(1);
   });
 });
-

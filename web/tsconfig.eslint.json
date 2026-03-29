@@ -21,7 +21,7 @@
       "@mfe/i18n-dicts": ["packages/i18n-dicts/src/index.ts"],
       "@mfe/i18n-dicts/*": ["packages/i18n-dicts/src/*"]
     },
-    "types": ["node", "jest", "cypress", "@testing-library/jest-dom"]
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom"]
   },
   "include": [
     "apps/**/*.ts",

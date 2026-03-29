@@ -1,9 +1,9 @@
 # ADR-003: JWT Contains Identity Only (No Permission Claims)
 
 ID: ADR-003
-**Status:** Accepted (implementation pending — Phase 3)
-**Date:** 2026-03-29
-**Decision Makers:** Halil Kocoglu
+Status: Accepted (implementation pending — Phase 3)
+Date: 2026-03-29
+Owner: @team/platform
 
 ## Context
 
@@ -53,3 +53,8 @@ Request → JWT'den userId cikart → OpenFGA check(userId, relation, object) �
 3. Phase 3: Keycloak realm config'den permission mapper kaldir
 4. Phase 3: JWT converter'lardan permission okuma kaldir
 5. Phase 3: permission-service kaldir
+
+## Links
+
+- Related: ADR-001-openfga-authorization.md
+- Related: ADR-002-data-enforcement-rls-filter.md

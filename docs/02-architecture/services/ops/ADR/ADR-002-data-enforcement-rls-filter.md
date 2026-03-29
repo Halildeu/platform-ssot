@@ -1,9 +1,9 @@
 # ADR-002: Dual Data Enforcement (Hibernate @Filter + PostgreSQL RLS)
 
 ID: ADR-002
-**Status:** Accepted
-**Date:** 2026-03-29
-**Decision Makers:** Halil Kocoglu
+Status: Accepted
+Date: 2026-03-29
+Owner: @team/platform
 
 ## Context
 
@@ -67,3 +67,8 @@ ScopeFilterInterceptor (HandlerInterceptor)
 Entity:
   @FilterDef + @Filter("companyScope", "company_id IN (:companyIds)")
 ```
+
+## Links
+
+- Related: ADR-001-openfga-authorization.md
+- Related: ADR-003-jwt-identity-only.md
