@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import React, { useRef } from 'react';
+import React, { _useRef } from 'react';
 
 // --- overlay-engine imports ---
-import { FocusTrap, useFocusTrap } from '../overlay-engine/focus-trap';
-import { Portal, usePortal } from '../overlay-engine/portal';
+import { FocusTrap } from '../overlay-engine/focus-trap';
+import { Portal } from '../overlay-engine/portal';
 import { AriaLiveRegion, announce, useAnnounce } from '../overlay-engine/aria-live';
 import { useRovingTabindex } from '../overlay-engine/roving-tabindex';
 
@@ -40,7 +40,7 @@ import {
   resolveClickIntent,
 } from '../interaction-core/semantic-intent';
 import {
-  Keys,
+  _Keys,
   KEYBOARD_CONTRACTS,
   createKeyHandler,
   describeKeyboardContract,

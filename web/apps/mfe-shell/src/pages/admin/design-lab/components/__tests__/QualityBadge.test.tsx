@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { QualityBadge, getQualityTier, countByTier } from '../QualityBadge';
+import { render } from '@testing-library/react';
+import { QualityBadge, getQualityTier } from '../QualityBadge';
 
 describe('QualityBadge', () => {
   it('renders without crashing', () => {

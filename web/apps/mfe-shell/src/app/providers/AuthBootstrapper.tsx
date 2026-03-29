@@ -11,7 +11,7 @@ import {
   subscribeAuthState,
   withSuppressedAuthBroadcast,
 } from "../auth/auth-sync";
-import { createFakeAuthSession, createDevAuthSession, mapKeycloakProfile } from "../config/auth-helpers";
+import { createDevAuthSession, mapKeycloakProfile } from "../config/auth-helpers";
 import { api } from "@mfe/shared-http";
 
 /* ------------------------------------------------------------------ */

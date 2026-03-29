@@ -1,4 +1,4 @@
-import type { TokenEntry, TokenTier, TokenCategory } from "./types";
+import type { TokenEntry, TokenCategory } from "./types";
 export type { TokenEntry, TokenTier, TokenCategory } from "./types";
 export { TOKEN_TIER_META, TOKEN_CATEGORY_META } from "./types";
 import { tokenMap1 } from "./tokens-1";

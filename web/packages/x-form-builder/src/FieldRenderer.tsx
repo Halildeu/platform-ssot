@@ -1,5 +1,5 @@
 import React, { useContext, useId } from 'react';
-import type { FieldSchema, FormValues } from './types';
+import type { FieldSchema } from './types';
 import { FieldRegistryContext } from './FieldRegistry';
 
 /* ------------------------------------------------------------------ */

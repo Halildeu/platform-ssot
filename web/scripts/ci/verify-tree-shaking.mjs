@@ -13,7 +13,7 @@
  * Usage: node scripts/ci/verify-tree-shaking.mjs
  */
 
-import { readFileSync, existsSync, writeFileSync, unlinkSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -89,7 +89,7 @@ console.log("\n3. Scanning for barrel re-exports that may impede tree-shaking...
  * module in the chain has side effects or if the bundler cannot
  * statically analyse the exports.
  */
-function findWildcardReExports(filePath, label) {
+function findWildcardReExports(filePath, _label) {
   if (!existsSync(filePath)) return [];
   const content = readFileSync(filePath, "utf-8");
   const re = /export\s+\*\s+from\s+["']([^"']+)["']/g;

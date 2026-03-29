@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   withAccessGuard,
   type AccessControlledProps,
 } from "../../internal/access-controller";
@@ -374,7 +374,7 @@ export const NotificationPanel = React.forwardRef<HTMLDivElement, NotificationPa
   onRemoveSelected,
   access = "full",
   accessReason,
-}, ref) => {
+}, _ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;

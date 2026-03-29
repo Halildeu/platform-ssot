@@ -1,5 +1,4 @@
 import React from "react";
-import { Text } from "@mfe/design-system";
 
 /* ------------------------------------------------------------------ */
 /*  Quality Badge — tier-based visual indicator                        */

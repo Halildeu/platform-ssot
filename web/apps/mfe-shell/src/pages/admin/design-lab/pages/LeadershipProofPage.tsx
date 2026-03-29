@@ -11,7 +11,7 @@
  * 7. Analytics summary
  */
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, _useState } from "react";
 import { Text } from "@mfe/design-system";
 import {
   Trophy,
@@ -19,10 +19,10 @@ import {
   Zap,
   Shield,
   BookOpen,
-  Tag,
+  _Tag,
   BarChart3,
-  Calculator,
-  ExternalLink,
+  _Calculator,
+  _ExternalLink,
   CheckCircle,
   ArrowRight,
 } from "lucide-react";

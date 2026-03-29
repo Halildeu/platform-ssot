@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   shouldBlockInteraction,
   type AccessControlledProps,
 } from "../../internal/access-controller";

@@ -80,7 +80,7 @@ type AdvancedConditionNode = {
   filterTo?: unknown;
 };
 
-type ServerSideRequestExtras = IServerSideGetRowsParams<UserSummary>['request'] & {
+type _ServerSideRequestExtras = IServerSideGetRowsParams<UserSummary>['request'] & {
   sortModel?: Array<{ colId?: string; sort?: 'asc' | 'desc' }>;
 };
 

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Text } from "@mfe/design-system";
-import { QualityBadge, getQualityTier } from "./QualityBadge";
+import { QualityBadge } from "./QualityBadge";
 
 /* ------------------------------------------------------------------ */
 /*  PackageQualityScore                                                */

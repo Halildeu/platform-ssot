@@ -156,7 +156,7 @@ export const ViewSourceModal: React.FC<ViewSourceModalProps> = ({
   isOpen,
   onClose,
   componentName,
-  importStatement,
+  _importStatement,
 }) => {
   const [activeTab, setActiveTab] = useState<SourceTab>("original");
   const [copied, setCopied] = useState(false);

@@ -103,7 +103,7 @@ describe('Virtual scroll data transforms', () => {
   });
 
   bench('sort 10K rows by numeric field', () => {
-    const data = Array.from({ length: ROW_COUNT }, (_, i) => ({
+    const data = Array.from({ length: ROW_COUNT }, (_, _i) => ({
       value: Math.random() * 10_000,
     }));
     data.sort((a, b) => a.value - b.value);
@@ -135,7 +135,7 @@ describe('Virtual scroll data transforms', () => {
   });
 
   bench('filter 10K rows by numeric range', () => {
-    const data = Array.from({ length: ROW_COUNT }, (_, i) => ({
+    const data = Array.from({ length: ROW_COUNT }, (_, _i) => ({
       value: Math.random() * 10_000,
     }));
     data.filter((r) => r.value >= 2000 && r.value <= 8000);

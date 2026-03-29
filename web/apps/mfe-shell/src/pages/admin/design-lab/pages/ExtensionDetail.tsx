@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Monitor, Shield, CheckCircle2, XCircle, Package, Zap, Code, Globe, ArrowRight } from "lucide-react";
+import { Monitor, Shield, CheckCircle2, XCircle, Package, Zap, Code, Globe } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "../DesignLabProvider";
 import surfacesCatalog from "../../design-lab.enterprise-data-surfaces.v1.json";

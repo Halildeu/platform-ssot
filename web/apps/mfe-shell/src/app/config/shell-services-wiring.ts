@@ -6,7 +6,7 @@ import { api } from "@mfe/shared-http";
 import { store } from "../store/store";
 import {
   configureShellServices,
-  getShellServices,
+  _getShellServices,
   type ShellNotificationEntry,
   type ShellTelemetryEvent,
 } from "../services/shell-services";

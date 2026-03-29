@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url';
 import {
   flattenFigmaRaw,
   flattenDtcg,
-  normalizeValue,
+  _normalizeValue,
   buildKeyMap,
 } from './tokens/shared-flatten.mjs';
 

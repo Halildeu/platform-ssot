@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from "react";
-import { Sparkles, Copy, Check, ChevronDown, ChevronRight, Code2, Layers } from "lucide-react";
+import { Sparkles, Copy, Check, ChevronDown, ChevronRight } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { getTemplatesForComponent, getPatternCategories } from "./patternTemplates";
 import type { PatternTemplate } from "./patternTemplates";

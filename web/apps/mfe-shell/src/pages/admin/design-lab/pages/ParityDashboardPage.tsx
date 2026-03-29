@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Target, CheckCircle2, XCircle, BarChart3 } from "lucide-react";
+import { Target, CheckCircle2, XCircle } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "../DesignLabProvider";
 import type { DesignLabComponentDocEntry } from "../DesignLabProvider";

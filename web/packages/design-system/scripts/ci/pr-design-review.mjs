@@ -12,7 +12,7 @@
 
 import { readFileSync, existsSync } from 'node:fs';
 import { execSync } from 'node:child_process';
-import { resolve, basename } from 'node:path';
+import { resolve } from 'node:path';
 
 /* ------------------------------------------------------------------ */
 /*  CLI arg parsing                                                    */

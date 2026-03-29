@@ -3,7 +3,7 @@ import { Badge, type BadgeVariant } from "../../primitives/badge/Badge";
 import { Text } from "../../primitives/text/Text";
 import { EmptyState as Empty } from "../empty-state";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   withAccessGuard,
   type AccessControlledProps,
   type AccessLevel,

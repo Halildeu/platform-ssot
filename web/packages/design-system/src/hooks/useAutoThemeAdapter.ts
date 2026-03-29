@@ -6,7 +6,7 @@
 /*  Uses MutationObserver on <html> to detect data-* attribute changes.*/
 /* ------------------------------------------------------------------ */
 
-import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import type { GridThemeParams } from "../theme/adapters/grid-adapter";
 import type { ChartColorConfig } from "../theme/adapters/chart-adapter";
 

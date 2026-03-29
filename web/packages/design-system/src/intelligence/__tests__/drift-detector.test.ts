@@ -1,7 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest';
 import { detectDrift } from '../drift-detector';
-import type { DriftReport } from '../drift-detector';
 
 /* ------------------------------------------------------------------ */
 /*  Token drift tests                                                  */

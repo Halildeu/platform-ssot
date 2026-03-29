@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, mock } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
 /*
@@ -8,9 +8,9 @@ import assert from 'node:assert/strict';
  */
 import {
   parseArgs,
-  loadCodeTokens,
-  loadFigmaTokens,
-  loadSyncState,
+  _loadCodeTokens,
+  _loadFigmaTokens,
+  _loadSyncState,
   buildLastSyncMap,
   filterByCategory,
   filterCodeToFigma,
@@ -22,8 +22,8 @@ import {
   updateSyncState,
 } from '../figma-sync-reverse.mjs';
 
-import { hashValue, normalizeValue } from '../tokens/shared-flatten.mjs';
-import { computeFullDiff, loadMergeStrategy, detectCategory } from '../tokens/merge-strategy.mjs';
+import { hashValue } from '../tokens/shared-flatten.mjs';
+import { computeFullDiff, loadMergeStrategy } from '../tokens/merge-strategy.mjs';
 
 /* ------------------------------------------------------------------ */
 /*  Fixtures                                                           */

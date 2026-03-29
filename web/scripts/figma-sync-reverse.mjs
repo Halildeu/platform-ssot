@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 import {
   flattenFigmaRaw,
   flattenTsTokens,
-  normalizeValue,
+  _normalizeValue,
   hexToFigmaColor,
   hashValue,
 } from './tokens/shared-flatten.mjs';

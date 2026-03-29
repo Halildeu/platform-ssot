@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, _useCallback } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Copy,
@@ -11,7 +11,7 @@ import {
   FileCode2,
   BookOpen,
   ShieldCheck,
-  ArrowRight,
+  _ArrowRight,
   Globe,
   History,
   BookOpenCheck,
@@ -39,7 +39,7 @@ import {
 } from "../playground";
 import type { PreviewAppearance, PreviewViewport } from "../playground";
 import { PropsTableV2 } from "../api/PropsTableV2";
-import { ExamplesGallery, hasExamples } from "../examples";
+import { ExamplesGallery } from "../examples";
 import { GuideTab } from "../docs";
 import { TokensTab } from "../tabs/TokensTab";
 import { PropsDepsGraph } from "../api/PropsDepsGraph";
@@ -1103,7 +1103,7 @@ function ComponentExamplesTab({
       )}
 
       {/* Preview focus scenarios */}
-      {previewFocus.map((scenario, idx) => (
+      {previewFocus.map((scenario, _idx) => (
         <ExampleCard
           key={scenario}
           title={scenario}

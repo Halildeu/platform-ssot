@@ -1,14 +1,14 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Shield,
+  _Shield,
   Award,
   TrendingUp,
   AlertTriangle,
   BarChart3,
   CheckCircle2,
-  XCircle,
-  ArrowDown,
+  _XCircle,
+  _ArrowDown,
   Activity,
 } from "lucide-react";
 import { Text } from "@mfe/design-system";

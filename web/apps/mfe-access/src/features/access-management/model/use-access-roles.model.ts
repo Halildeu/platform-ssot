@@ -1,6 +1,5 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { mockAccessRoles } from '../lib/mock-data';
 import type { AccessFilters, AccessLevel, AccessModulePolicy, AccessRole } from './access.types';
 import {
   getRoles,

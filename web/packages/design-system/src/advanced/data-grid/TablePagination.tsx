@@ -14,7 +14,7 @@ import {
   type UsePaginationStateOptions,
 } from "./usePaginationState";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
   type AccessLevel,
 } from "../../internal/access-controller";

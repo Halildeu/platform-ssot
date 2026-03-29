@@ -5,7 +5,7 @@ import {
 } from '@mfe/design-system';
 import {
   LibraryDetailLabel as DetailLabel,
-  LibraryPreviewPanel,
+  _LibraryPreviewPanel,
   LibrarySectionBadge as SectionBadge,
 } from '../../../../../../../packages/design-system/src/catalog/design-lab-internals';
 import { useDesignLabI18n } from '../useDesignLabI18n';

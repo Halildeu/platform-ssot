@@ -1,6 +1,6 @@
 import React, { useId } from "react";
 import { cn } from "../../utils/cn";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  FormField — Composed form control wrapper                          */

@@ -14,7 +14,7 @@ import {
   type EntitySummaryBlockProps,
 } from "../entity-summary-block/EntitySummaryBlock";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 

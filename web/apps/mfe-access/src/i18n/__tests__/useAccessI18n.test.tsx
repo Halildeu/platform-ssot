@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { test, expect, vi } from 'vitest';
+import { test, expect } from 'vitest';
 import React from 'react';
 import { render, cleanup, act } from '@testing-library/react';
 

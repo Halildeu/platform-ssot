@@ -482,7 +482,7 @@ const EcosystemOverviewTab: React.FC<{
 }> = ({
   activeOverviewPanel,
   extension,
-  selectedExtensionSurfaces,
+  _selectedExtensionSurfaces,
   selectedExtensionTiers,
   selectedExtensionItems,
   onOverviewPanelChange,
@@ -585,7 +585,7 @@ const EcosystemApiContent: React.FC<{
   activeApiPanel,
   extension,
   extensionContractId,
-  selectedExtensionSurfaces,
+  _selectedExtensionSurfaces,
   guidance,
   DetailLabelComponent,
   SectionBadgeComponent,

@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useRef } from "react";
+import React, { useMemo, _useCallback, useRef } from "react";
 import * as MfeUiKit from "@mfe/design-system";
 import { Text } from "@mfe/design-system";
 
@@ -8,7 +8,7 @@ import "./xSuiteStubsExtended";
 import "./xSuiteEnterpriseStubs";
 
 import {
-  NON_DOM_SAFE_PROPS,
+  _NON_DOM_SAFE_PROPS,
   resolveComponentKey,
   componentRegistry,
   DEFAULT_CHILDREN,
@@ -17,7 +17,6 @@ import {
   emitActionLog,
   nextLogId,
 } from "./playgroundRegistry";
-import type { NonComponentType } from "./playgroundRegistry";
 
 import { DEFAULT_PROPS } from "./playgroundDefaultProps";
 import { DEFAULT_PROPS_OVERLAY } from "./playgroundDefaultPropsOverlay";

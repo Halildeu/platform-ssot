@@ -1,10 +1,10 @@
-import React, { useState, useMemo, useCallback } from "react";
-import { Copy, Check, Code2, Eye, ExternalLink } from "lucide-react";
+import React, { useState, _useMemo, useCallback } from "react";
+import { Copy, Check, Code2, Eye } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { CodeBlock } from "../../../../../../../packages/design-system/src/catalog/design-lab-internals";
 import { PlaygroundPreview } from "../playground/PlaygroundPreview";
 import { PreviewThemeWrapper } from "../playground/PreviewThemeWrapper";
-import type { ExampleEntry, ExampleCategory, EXAMPLE_CATEGORY_META } from "./registry";
+import type { ExampleEntry } from "./registry";
 
 /* ------------------------------------------------------------------ */
 /*  ExampleCard — Single curated example with live preview + code       */

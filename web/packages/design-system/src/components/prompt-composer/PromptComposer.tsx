@@ -5,7 +5,7 @@ import { Text } from "../../primitives/text/Text";
 import { TextArea } from "../../primitives/input/Textarea";
 import { TextInput } from "../../primitives/input/Input";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -94,7 +94,7 @@ export const PromptComposer = React.forwardRef<HTMLDivElement, PromptComposerPro
   className = "",
   access = "full",
   accessReason,
-}, ref) => {
+}, _ref) => {
   const accessState = resolveAccessState(access);
   const [internalSubject, setInternalSubject] = React.useState(defaultSubject);
   const [internalValue, setInternalValue] = React.useState(defaultValue);

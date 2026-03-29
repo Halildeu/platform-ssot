@@ -1,5 +1,4 @@
 import React from 'react';
-import type { ReactNode } from 'react';
 import { KPIDashboardBlock } from '../blocks/dashboard/KPIDashboardBlock';
 import type { KPIMetric } from '../blocks/dashboard/KPIDashboardBlock';
 import { ChartGridBlock } from '../blocks/dashboard/ChartGridBlock';

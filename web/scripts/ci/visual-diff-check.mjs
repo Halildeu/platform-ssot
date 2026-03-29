@@ -34,7 +34,7 @@ try {
       WATCHED_PATHS.some((prefix) => file.startsWith(prefix))
     );
   }
-} catch (err) {
+} catch (_err) {
   // HEAD~1 may not exist in a shallow clone or initial commit
   console.log("⚠️  Could not determine diff (shallow clone or first commit).");
   console.log("    Skipping visual diff check.\n");

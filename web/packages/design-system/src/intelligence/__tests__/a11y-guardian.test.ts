@@ -1,8 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createA11yGuardian } from '../a11y-runtime-guardian';
-import type { A11yGuardian } from '../a11y-runtime-guardian';
-import type { RuntimeViolation } from '../a11y-runtime-rules';
 import { runtimeA11yRules, getRuleById } from '../a11y-runtime-rules';
 
 /* ------------------------------------------------------------------ */

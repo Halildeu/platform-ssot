@@ -8,7 +8,7 @@ import {
   GitBranch,
   Clock,
   Filter,
-  ChevronRight,
+  _ChevronRight,
   ExternalLink,
 } from "lucide-react";
 import { Text } from "@mfe/design-system";

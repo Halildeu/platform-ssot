@@ -2,7 +2,7 @@ import React from "react";
 import { stateAttrs, focusRingClass } from "../../internal/interaction-core";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import type { SlotProps } from "../../primitives/_shared/slot-types";

@@ -19,7 +19,7 @@ import {
   SidebarHealthBanner,
   SidebarBreadcrumb,
   SidebarSearchEnhanced,
-  HighlightedLabel,
+  _HighlightedLabel,
   SidebarFilterBar,
   useFilterState,
   SidebarFavorites,
@@ -29,8 +29,8 @@ import {
   buildComponentMenuItems,
   HoverPreviewProvider,
   useHoverPreview,
-  SidebarQuickActions,
-  SidebarGroupProgress,
+  _SidebarQuickActions,
+  _SidebarGroupProgress,
   type PreviewData,
 } from "./sidebar/sections";
 import {
@@ -651,7 +651,7 @@ function ScrollableNavItem({
   active,
   label,
   badge,
-  highlightRanges,
+  _highlightRanges,
   pinned,
   onPin,
   onClick,

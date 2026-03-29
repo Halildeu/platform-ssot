@@ -25,7 +25,7 @@ vi.mock("@mfe/design-system", () => ({
 
 // Mock SparklineChart since StatWidget imports it
 vi.mock("../SparklineChart", () => ({
-  SparklineChart: ({ data, ...rest }: any) => (
+  SparklineChart: ({ data, ..._rest }: any) => (
     <div data-testid="sparkline-mock" data-points={data?.length ?? 0} />
   ),
 }));

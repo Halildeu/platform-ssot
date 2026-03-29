@@ -71,7 +71,7 @@ function walkDir(d, topDir, results) {
 }
 
 // ── Score: API Quality (0-100) ──
-function scoreAPI(content, dir, name) {
+function scoreAPI(content, dir, _name) {
   let score = 0;
   const hasDisplayName = /\.displayName\s*=/.test(content);
   const hasForwardRef = /forwardRef|React\.forwardRef/.test(content);

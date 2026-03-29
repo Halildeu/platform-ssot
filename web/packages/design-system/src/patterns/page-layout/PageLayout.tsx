@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "../../utils/cn";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  PageLayout — Full-page scaffold with header, content, detail,     */
@@ -236,7 +236,7 @@ export const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(({
   style,
   access,
   accessReason,
-}, ref) => {
+}, _ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
   const widthCls = PAGE_WIDTH_CLASSES[pageWidth];

@@ -2,7 +2,7 @@ import React from "react";
 import { Badge } from "../../primitives/badge/Badge";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 

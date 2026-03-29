@@ -35,7 +35,7 @@ describe('Performance Gates — x-data-grid', () => {
   });
 
   it('sort 10K rows by number in < 50ms', () => {
-    const data = Array.from({ length: ROW_COUNT }, (_, i) => ({
+    const data = Array.from({ length: ROW_COUNT }, (_, _i) => ({
       value: Math.random() * 10_000,
     }));
     const start = performance.now();

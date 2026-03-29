@@ -1,5 +1,5 @@
 import React from "react";
-import * as MfeUiKit from "@mfe/design-system";
+import * as _MfeUiKit from "@mfe/design-system";
 
 /**
  * Default props part 3: Templates, page compositions, MenuBar/NavigationMenu aliases

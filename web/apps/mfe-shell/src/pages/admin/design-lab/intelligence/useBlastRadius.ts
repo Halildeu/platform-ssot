@@ -11,7 +11,7 @@
 
 import { useMemo } from "react";
 import { useDesignLab } from "../DesignLabProvider";
-import type { DesignLabIndexItem, DesignLabIndex } from "../DesignLabProvider";
+import type { DesignLabIndex } from "../DesignLabProvider";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                               */

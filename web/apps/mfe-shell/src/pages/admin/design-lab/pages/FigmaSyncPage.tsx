@@ -9,7 +9,7 @@ import {
   Type,
   Box,
   Layers,
-  ArrowRight,
+  _ArrowRight,
   ChevronDown,
   ChevronRight,
 } from "lucide-react";
@@ -179,7 +179,7 @@ function TokenCategoryRow({ name, count, total }: { name: string; count: number;
 
 /* ---- Diff Viewer ---- */
 
-function DiffViewer({ changes }: { changes: TokenChange[] }) {
+function _DiffViewer({ changes }: { changes: TokenChange[] }) {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
 
   if (changes.length === 0) {

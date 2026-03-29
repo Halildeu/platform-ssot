@@ -6,7 +6,7 @@ import {
   FileQuestion,
   BarChart3,
   ArrowUpRight,
-  ArrowDownRight,
+  _ArrowDownRight,
   Minus,
   AlertCircle,
 } from "lucide-react";
@@ -20,7 +20,6 @@ import {
   getAdoptionRate,
   deriveConsumerApps,
 } from "../insights/insightsUtils";
-import type { AdoptionEntry } from "../insights/insightsUtils";
 import { useDesignLab } from "../DesignLabProvider";
 import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
 

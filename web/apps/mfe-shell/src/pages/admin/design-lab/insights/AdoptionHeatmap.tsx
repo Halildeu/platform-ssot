@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Text } from "@mfe/design-system";
 import type { AdoptionEntry } from "./insightsUtils";
 
 /* ------------------------------------------------------------------ */

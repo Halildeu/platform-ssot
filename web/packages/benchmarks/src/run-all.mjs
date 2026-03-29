@@ -103,7 +103,7 @@ async function runBenchmarks() {
       // Parse benchmark output — expects last line like "metric: 42.5"
       const match = output.match(/(?:^|\n)\s*[\w-]+:\s*([\d.]+)\s*(?:ms|s)?\s*$/m);
       value = match ? parseFloat(match[1]) : 0;
-    } catch (e) {
+    } catch (_e) {
       // If perf test script doesn't exist, measure build time as fallback
       try {
         const buildStart = performance.now();
@@ -113,7 +113,7 @@ async function runBenchmarks() {
           cwd: join(ROOT, "..", ".."),
         });
         value = Math.round(performance.now() - buildStart);
-      } catch (buildErr) {
+      } catch (_buildErr) {
         status = "skip";
         error = "No perf test or build script available";
       }

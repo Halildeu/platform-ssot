@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { resolveAccessState, accessStyles } from '../internal/access-controller';
-import type { AccessLevel, AccessControlledProps } from '../internal/access-controller';
+import type { AccessLevel } from '../internal/access-controller';
 import { formatValue, getTrendColor, getTrendIcon } from './types';
 import type { FormatOptions, TrendInfo } from './types';
 

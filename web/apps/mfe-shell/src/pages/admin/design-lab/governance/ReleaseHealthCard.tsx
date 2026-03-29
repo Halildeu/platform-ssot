@@ -10,13 +10,13 @@ import {
   Package,
   CheckCircle,
   XCircle,
-  AlertCircle,
+  _AlertCircle,
   HelpCircle,
   Clock,
   Bug,
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
-import { useReleaseHealth, type ReleaseHealth } from "./useReleaseHealth";
+import { useReleaseHealth, type _ReleaseHealth } from "./useReleaseHealth";
 
 const STATUS_CONFIG = {
   pass: {

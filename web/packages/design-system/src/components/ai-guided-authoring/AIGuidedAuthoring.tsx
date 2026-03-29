@@ -18,7 +18,7 @@ import {
   type RecommendationCardProps,
 } from "../recommendation-card/RecommendationCard";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 

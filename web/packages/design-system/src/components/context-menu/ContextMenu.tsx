@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { cn } from "../../utils/cn";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  ContextMenu — Right-click or long-press activated menu             */
@@ -74,7 +74,7 @@ export const ContextMenu = React.forwardRef<HTMLDivElement, ContextMenuProps>(({
   className,
   access,
   accessReason,
-}, ref) => {
+}, _ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
   const [open, setOpen] = useState(false);

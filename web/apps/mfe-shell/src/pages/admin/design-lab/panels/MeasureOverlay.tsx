@@ -1,6 +1,5 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
-import { Ruler, Box, Eye, EyeOff } from "lucide-react";
-import { Text } from "@mfe/design-system";
+import React, { useState, _useCallback, useEffect, _useRef } from "react";
+import { Ruler, Box } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
 /*  MeasureOverlay — Measure spacing + Outline elements                 */

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { getGuideForComponent } from "./guideRegistry";
-import type { GuideSection, ComponentGuide } from "./guideRegistry";
+import type { GuideSection } from "./guideRegistry";
 
 /* ------------------------------------------------------------------ */
 /*  GuideTab — Narrative documentation with mini-TOC                    */

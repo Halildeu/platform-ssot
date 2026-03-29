@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from "react";
 import {
-  ArrowRight,
+  _ArrowRight,
   Search,
   AlertTriangle,
   CheckCircle2,
   ChevronDown,
   ChevronRight,
-  ArrowUpRight,
+  _ArrowUpRight,
   GitBranch,
   Zap,
   BookOpen,

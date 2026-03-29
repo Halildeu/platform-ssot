@@ -10,16 +10,16 @@
  * Data from release-please manifest + governance audit trail
  */
 
-import React, { useMemo, useState } from "react";
+import React, { _useMemo, useState } from "react";
 import { Text } from "@mfe/design-system";
 import {
   Tag,
   AlertTriangle,
   CheckCircle,
-  Clock,
+  _Clock,
   ChevronDown,
   ChevronRight,
-  ExternalLink,
+  _ExternalLink,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import React, { useState, useMemo, useCallback, _useEffect, _useRef } from "react";
 import {
   Accessibility,
   AlertTriangle,
@@ -7,7 +7,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronRight,
-  RefreshCw,
+  _RefreshCw,
   ExternalLink,
   Shield,
 } from "lucide-react";

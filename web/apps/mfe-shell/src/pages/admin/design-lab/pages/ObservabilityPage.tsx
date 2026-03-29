@@ -12,7 +12,7 @@
  * 8. External links (Sentry, Grafana, Loki, Tempo)
  */
 
-import React, { lazy, Suspense, useEffect, useState, useCallback } from 'react';
+import React, { lazy, Suspense, useEffect, useState, _useCallback } from 'react';
 import {
   Activity,
   Heart,

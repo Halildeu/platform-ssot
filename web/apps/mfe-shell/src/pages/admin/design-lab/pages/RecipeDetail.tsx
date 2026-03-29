@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Workflow, CircleDot, CheckCircle2, Shield, GitBranch, Zap, ArrowRight } from "lucide-react";
+import { Workflow, CircleDot, CheckCircle2, Shield, GitBranch, ArrowRight } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "../DesignLabProvider";
 import workflowCatalog from "../../design-lab.recipe-workflow-catalog.v1.json";
@@ -449,7 +449,7 @@ function RecipeComponents({
   );
 }
 
-function RecipeQuality({ recipe }: { recipe: RecipeFamily }) {
+function RecipeQuality({ _recipe }: { recipe: RecipeFamily }) {
   const { t } = useDesignLab();
 
   return (

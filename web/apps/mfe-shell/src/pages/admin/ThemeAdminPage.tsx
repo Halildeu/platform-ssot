@@ -9,7 +9,7 @@ import {
 } from '@mfe/design-system';
 import { api } from '@mfe/shared-http';
 import { useThemeContext } from '../../app/theme/theme-context.provider';
-import { parseAnyColor, rgbaToHex, rgbaToString, type RgbaColor } from '../../app/theme/color-utils';
+import { parseAnyColor, rgbaToHex, rgbaToString, type _RgbaColor } from '../../app/theme/color-utils';
 import ThemeAdminPreviewPanel from './ThemeAdminPreviewPanel';
 import ThemeAdminRegistryEditor from './ThemeAdminRegistryEditor';
 import {

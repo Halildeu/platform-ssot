@@ -1,13 +1,13 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import React, { useState, useMemo, _useCallback, useEffect, _useRef } from "react";
 import {
   Activity,
   ChevronDown,
   ChevronRight,
   Timer,
-  Zap,
+  _Zap,
   AlertTriangle,
   RotateCcw,
-  TrendingUp,
+  _TrendingUp,
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 

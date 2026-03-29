@@ -5,7 +5,7 @@ import { Skeleton } from "../../primitives/skeleton/Skeleton";
 import { Spinner } from "../../primitives/spinner/Spinner";
 import { Text } from "../../primitives/text/Text";
 import {
-  resolveAccessState, accessStyles,
+  resolveAccessState, _accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 

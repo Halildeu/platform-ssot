@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { getSummary, getLiveKPIs, getLiveCharts, isLiveDataAvailable } from './api';
+import { getSummary, getLiveKPIs, getLiveCharts } from './api';
 import type { DemographicSummary } from './types';
 
 // ---------------------------------------------------------------------------

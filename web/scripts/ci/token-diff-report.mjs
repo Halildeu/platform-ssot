@@ -15,7 +15,7 @@ const __dirname = dirname(__filename);
 const ROOT = resolve(__dirname, '../..');
 
 // Import shared utilities
-import { flattenFigmaRaw, flattenTsTokens, normalizeValue } from '../tokens/shared-flatten.mjs';
+import { flattenFigmaRaw, flattenTsTokens } from '../tokens/shared-flatten.mjs';
 import { computeFullDiff, loadMergeStrategy, detectCategory } from '../tokens/merge-strategy.mjs';
 
 /* ------------------------------------------------------------------ */

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Zap, Trash2, Copy, Check, ChevronDown, ChevronRight, Filter, Code2 } from "lucide-react";
+import { Zap, Trash2, Check, ChevronDown, ChevronRight, Filter, Code2 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { subscribeToActionLog } from "./PlaygroundPreview";
 import type { ActionLogEntry } from "./PlaygroundPreview";

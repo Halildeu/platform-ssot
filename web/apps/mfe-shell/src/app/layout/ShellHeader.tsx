@@ -11,7 +11,7 @@ import {
   isSuggestionsRemoteEnabled,
   isEthicRemoteEnabled,
 } from "../shell-navigation";
-import { useShellCommonI18n, i18n } from "../i18n";
+import { useShellCommonI18n } from "../i18n";
 import {
   ShellHeaderNavbar,
   type ShellHeaderNavbarItem,

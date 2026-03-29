@@ -100,7 +100,7 @@ const html = `<!DOCTYPE html>
   </div>
 
   <div class="grid" style="grid-template-columns: repeat(4, 1fr);">
-    ${Object.entries(grades).filter(([,v]) => true).map(([g, cnt]) => {
+    ${Object.entries(grades).filter(([,_v]) => true).map(([g, cnt]) => {
       const cls = g.toLowerCase();
       return `<div class="card" style="text-align:center">
         <div class="label">Grade ${g}</div>

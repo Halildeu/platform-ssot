@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import type { ReactNode } from 'react';
 import { DataListBlock } from '../blocks/crud/DataListBlock';
 import type { DataListColumn } from '../blocks/crud/DataListBlock';
 import { DetailViewBlock } from '../blocks/crud/DetailViewBlock';

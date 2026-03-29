@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import _React, { createContext, useContext } from 'react';
 import type { BlockCategory, BlockDefinition, BlockRegistry } from './types';
 
 /* ------------------------------------------------------------------ */

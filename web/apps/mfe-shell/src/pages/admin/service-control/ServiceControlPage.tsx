@@ -335,7 +335,7 @@ function PageHeader({
   onRestartAll,
   onStopAll,
   actionPending,
-  lastRefresh,
+  _lastRefresh,
 }: {
   upCount: number;
   total: number;

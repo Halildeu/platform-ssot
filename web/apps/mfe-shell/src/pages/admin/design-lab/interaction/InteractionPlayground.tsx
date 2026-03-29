@@ -1,18 +1,18 @@
-import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import React, { useState, _useMemo, useCallback, useRef, useEffect } from "react";
 import {
   Zap,
-  Play,
+  _Play,
   RotateCcw,
-  ChevronRight,
+  _ChevronRight,
   ArrowRight,
-  Unplug,
+  _Unplug,
   Cable,
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { PlaygroundPreview } from "../playground/PlaygroundPreview";
 import { PreviewThemeWrapper } from "../playground/PreviewThemeWrapper";
 import { SCENARIOS } from "./interactionScenarios";
-import type { InteractionScenario, InteractionNode, InteractionWire } from "./interactionScenarios";
+import type { InteractionScenario } from "./interactionScenarios";
 
 /* ------------------------------------------------------------------ */
 /*  InteractionPlayground — Cross-component interaction demo           */

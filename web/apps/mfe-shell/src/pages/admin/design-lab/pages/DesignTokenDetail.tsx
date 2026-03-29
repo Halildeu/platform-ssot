@@ -551,7 +551,7 @@ function ZIndexContent() {
 
         {/* Visual stack */}
         <div className="flex flex-col relative mx-auto max-w-lg gap-2">
-          {[...entries].reverse().map(([name, value], i) => {
+          {[...entries].reverse().map(([name, value], _i) => {
             const width = 40 + ((value / maxZ) * 55);
             return (
               <div key={name} className="flex items-center gap-3">

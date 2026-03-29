@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Paintbrush, Code2, Copy, Check, Palette, Layers, Sparkles, ChevronRight } from "lucide-react";
+import { Paintbrush, Code2, Copy, Check, Palette, Layers, Sparkles } from "lucide-react";
 import { Text } from "@mfe/design-system";
 
 /* ------------------------------------------------------------------ */

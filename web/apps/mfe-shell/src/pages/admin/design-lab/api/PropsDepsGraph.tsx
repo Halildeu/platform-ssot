@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import React, { useState, useMemo, _useCallback, _useEffect, useRef } from "react";
 import { GitBranch, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import { Text } from "@mfe/design-system";
 

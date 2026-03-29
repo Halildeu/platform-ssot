@@ -3,7 +3,7 @@ import { stateAttrs, focusRingClass } from "../../internal/interaction-core";
 import { useRovingTabindex } from "../../internal/overlay-engine";
 import { cn } from "../../utils/cn";
 import type { SlotProps } from "../../primitives/_shared/slot-types";
-import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Tabs — Segmented content switcher                                  */

@@ -9,7 +9,6 @@
  *   node scripts/a11y-gate.mjs --dry-run    # list what would be tested
  */
 
-import { readFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -93,7 +92,7 @@ async function runA11yGate() {
     chromium = pw.chromium;
     const axePw = await import('@axe-core/playwright');
     AxeBuilder = axePw.default || axePw.AxeBuilder;
-  } catch (err) {
+  } catch (_err) {
     console.error(
       'Missing dependencies. Install @playwright/test and @axe-core/playwright:\n' +
         '  npm i -D @playwright/test @axe-core/playwright\n'

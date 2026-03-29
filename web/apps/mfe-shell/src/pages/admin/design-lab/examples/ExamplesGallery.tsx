@@ -7,7 +7,7 @@ import {
   getExampleCategories,
   EXAMPLE_CATEGORY_META,
 } from "./registry";
-import type { ExampleCategory, ExampleEntry } from "./registry";
+import type { ExampleCategory } from "./registry";
 
 /* ------------------------------------------------------------------ */
 /*  ExamplesGallery — Curated code examples with category filters       */

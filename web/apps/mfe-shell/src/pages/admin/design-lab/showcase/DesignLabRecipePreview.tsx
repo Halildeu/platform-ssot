@@ -1,28 +1,28 @@
 import React from 'react';
 import {
-  ApprovalCheckpoint,
+  _ApprovalCheckpoint,
   ApprovalReview,
   AIGuidedAuthoring,
-  CitationPanel,
-  AIActionAuditTimeline,
+  _CitationPanel,
+  _AIActionAuditTimeline,
   DetailSummary,
-  Descriptions,
+  _Descriptions,
   SearchFilterListing,
-  Skeleton,
-  SummaryStrip,
+  _Skeleton,
+  _SummaryStrip,
   Text,
-  Tooltip,
-  Avatar,
+  _Tooltip,
+  _Avatar,
 } from '@mfe/design-system';
 import {
-  LibraryDetailLabel as DetailLabel,
+  LibraryDetailLabel as _DetailLabel,
   LibrarySectionBadge as SectionBadge,
 } from '../../../../../../../packages/design-system/src/catalog/design-lab-internals';
 import { useDesignLabI18n } from '../useDesignLabI18n';
 import { buildLayoutShowcaseSections } from './preview-components/showcase-families/buildLayoutShowcaseSections';
 import type {
-  ComponentShowcaseSection,
-  DemoSurfaceKind,
+  _ComponentShowcaseSection,
+  _DemoSurfaceKind,
   DesignLabRecipeComponentPreviewProps,
 } from './showcaseTypes';
 

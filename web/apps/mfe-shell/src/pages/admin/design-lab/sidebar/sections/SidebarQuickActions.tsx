@@ -16,7 +16,7 @@ type Props = {
 export const SidebarQuickActions: React.FC<Props> = ({
   name,
   isPinned,
-  onCopyImport,
+  _onCopyImport,
   onTogglePin,
   className,
 }) => {
