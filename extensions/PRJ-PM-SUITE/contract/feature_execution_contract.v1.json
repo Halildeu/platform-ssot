@@ -44,6 +44,8 @@
       "backend/common-auth/**/*",
       "backend/api-gateway/**/*",
       "backend/scripts/ci/security/*",
+      "web/.gitignore",
+      "web/.npmrc",
       "mobile/App.tsx",
       "mobile/ARCHITECTURE.md",
       "mobile/package.json",
@@ -205,6 +207,16 @@
       },
       {
         "path_glob": "mobile/packages/mobile-ui/**/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/.gitignore",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/.npmrc",
         "ux_theme_id": "consistency_and_pattern_governance",
         "ux_subtheme_id": "single_component_source_of_truth"
       }
