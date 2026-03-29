@@ -500,6 +500,15 @@ export const PlaygroundPreview: React.FC<PlaygroundPreviewProps> = ({
     if (DEFAULT_PROPS[componentName]?.children != null || DEFAULT_PROPS[resolvedKey]?.children != null) {
       return undefined;
     }
+    // Void elements (input, img, br, hr, etc.) must not receive children
+    const VOID_ELEMENT_COMPONENTS = new Set([
+      'Autocomplete', 'AutoComplete', 'TextInput', 'SearchInput',
+      'InputNumber', 'Slider', 'Rating', 'Switch', 'Checkbox',
+      'Radio', 'DatePicker', 'TimePicker', 'ColorPicker', 'Upload',
+    ]);
+    if (VOID_ELEMENT_COMPONENTS.has(componentName) || VOID_ELEMENT_COMPONENTS.has(resolvedKey)) {
+      return undefined;
+    }
     // Unknown components — try "Content" as generic children
     return "Content";
   }, [componentName]);

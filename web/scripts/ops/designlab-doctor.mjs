@@ -297,6 +297,53 @@ check('orphan-docs', 'Doc entries with matching source code', () => {
   };
 });
 
+// 6. Void element children — components that render void elements (input, img)
+// must not receive children in playground preview
+check('void-element-children', 'Components rendering void elements have no default children', () => {
+  const VOID_COMPONENTS = [
+    'Autocomplete', 'AutoComplete', 'TextInput', 'SearchInput',
+    'InputNumber', 'Slider', 'Rating', 'Switch', 'Checkbox',
+    'Radio', 'DatePicker', 'TimePicker', 'ColorPicker', 'Upload',
+    'Spinner', 'Skeleton', 'Divider',
+  ];
+  let registryContent = '';
+  try { registryContent = readFile('apps/mfe-shell/src/pages/admin/design-lab/playground/playgroundRegistry.ts'); } catch { /* */ }
+  let previewContent = '';
+  try { previewContent = readFile('apps/mfe-shell/src/pages/admin/design-lab/playground/PlaygroundPreview.tsx'); } catch { /* */ }
+
+  // Check if VOID_ELEMENT_COMPONENTS set exists in PlaygroundPreview
+  const hasVoidGuard = previewContent.includes('VOID_ELEMENT_COMPONENTS');
+  if (!hasVoidGuard) {
+    return {
+      status: 'fail',
+      message: 'PlaygroundPreview.tsx missing VOID_ELEMENT_COMPONENTS guard — void elements will get "Content" children and crash',
+    };
+  }
+
+  // Check if DEFAULT_CHILDREN explicitly sets undefined for void components
+  const childrenSection = registryContent.match(/DEFAULT_CHILDREN[^=]*=\s*\{([\s\S]*?)\n\};/);
+  const definedChildren = new Set();
+  if (childrenSection) {
+    for (const m of childrenSection[1].matchAll(/^\s*(\w+)\s*:/gm)) {
+      definedChildren.add(m[1]);
+    }
+  }
+
+  // Void components that have explicit non-undefined children = problem
+  const problems = VOID_COMPONENTS.filter(name =>
+    definedChildren.has(name) && !registryContent.includes(`${name}: undefined`)
+  );
+
+  if (problems.length === 0) {
+    return { status: 'pass', message: `${VOID_COMPONENTS.length} void-element components protected from children injection` };
+  }
+  return {
+    status: 'fail',
+    message: `${problems.length} void-element components have explicit children (will crash: "input is a void element")`,
+    items: problems,
+  };
+});
+
 /* ------------------------------------------------------------------ */
 /*  Output                                                             */
 /* ------------------------------------------------------------------ */
