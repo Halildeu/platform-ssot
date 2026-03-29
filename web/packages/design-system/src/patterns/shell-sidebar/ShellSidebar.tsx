@@ -100,12 +100,19 @@ const ShellSidebarInner: React.FC<ShellSidebarInnerProps> = ({
   return (
     <div className="flex h-full flex-col">
       {/* ---- Header ---- */}
-      <AppSidebar.Header
-        title={brandTitle}
-        subtitle={isCollapsed ? undefined : brandSubtitle}
-        logo={brandLogo}
-        action={<AppSidebar.Trigger />}
-      />
+      <div className="flex items-center gap-2 px-3 py-3">
+        <AppSidebar.Trigger />
+        {!isCollapsed && (brandTitle || brandSubtitle) && (
+          <div className="min-w-0 flex-1">
+            {brandTitle && (
+              <div className="truncate text-sm font-semibold text-text-primary">{brandTitle}</div>
+            )}
+            {brandSubtitle && (
+              <div className="truncate text-[11px] text-text-subtle">{brandSubtitle}</div>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* ---- Search ---- */}
       {onSearch && (
@@ -146,14 +153,14 @@ const ShellSidebarInner: React.FC<ShellSidebarInnerProps> = ({
               }`}
               title={foldersLabel}
             >
-              {foldersIcon ?? <FolderIcon className="h-4 w-4" />}
+              {foldersIcon ?? <FolderIcon className="h-[18px] w-[18px]" />}
               {!isCollapsed && (
                 <>
                   <span className="flex-1">{foldersLabel}</span>
                   {foldersOpen ? (
-                    <ChevronDownIcon className="h-4 w-4" />
+                    <ChevronDownIcon className="h-[18px] w-[18px]" />
                   ) : (
-                    <ChevronRightIcon className="h-4 w-4" />
+                    <ChevronRightIcon className="h-[18px] w-[18px]" />
                   )}
                 </>
               )}

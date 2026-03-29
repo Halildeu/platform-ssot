@@ -146,11 +146,6 @@ export const Sidebar: React.FC = () => {
       }}
       brandTitle="Platform"
       brandSubtitle={location.pathname}
-      brandLogo={
-        <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl border border-border-subtle bg-surface-default text-text-primary shadow-xs">
-          <span aria-hidden>⬛</span>
-        </div>
-      }
       onSearch={openCommandPalette}
       searchShortcut="Ctrl+K"
       folderItems={folderItems}

@@ -61,7 +61,7 @@ export const CommandPaletteTrigger = forwardRef<
   },
   ref,
 ) {
-  const searchIcon = icon ?? <SearchIcon className="h-4 w-4" />;
+  const searchIcon = icon ?? <SearchIcon className="h-[18px] w-[18px]" />;
 
   return (
     <button

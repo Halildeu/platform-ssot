@@ -51,7 +51,7 @@ AppSidebarTrigger.displayName = 'AppSidebar.Trigger';
 function PanelLeftCloseIcon() {
   return (
     <svg
-      className="h-4 w-4"
+      className="h-[18px] w-[18px]"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -70,7 +70,7 @@ function PanelLeftCloseIcon() {
 function PanelLeftOpenIcon() {
   return (
     <svg
-      className="h-4 w-4"
+      className="h-[18px] w-[18px]"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

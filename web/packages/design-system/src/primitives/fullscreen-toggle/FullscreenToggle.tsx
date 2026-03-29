@@ -70,8 +70,8 @@ const sizeStyles: Record<FullscreenToggleSize, string> = {
 };
 
 const iconSizeStyles: Record<FullscreenToggleSize, string> = {
-  sm: "h-3.5 w-3.5",
-  md: "h-4 w-4",
+  sm: "h-4 w-4",
+  md: "h-[18px] w-[18px]",
   lg: "h-5 w-5",
 };
 
