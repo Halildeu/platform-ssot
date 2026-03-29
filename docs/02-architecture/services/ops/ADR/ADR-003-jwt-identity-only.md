@@ -1,5 +1,6 @@
 # ADR-003: JWT Contains Identity Only (No Permission Claims)
 
+ID: ADR-003
 **Status:** Accepted (implementation pending — Phase 3)
 **Date:** 2026-03-29
 **Decision Makers:** Halil Kocoglu

@@ -59,6 +59,7 @@
       "web/apps/mfe-shell/src/widgets/app-shell/**/*",
       "web/apps/mfe-audit/src/**/*",
       "web/packages/shared-http/**/*",
+      "web/packages/auth/**/*",
       "web/packages/design-system/src/lib/auth/**/*",
       "docs/03-delivery/api/auth.api.md",
       "docs/03-delivery/api/permission.api.md",
@@ -85,6 +86,7 @@
       "mfe-shell",
       "mfe-audit",
       "web-shared-http",
+      "web-auth-package",
       "design-system",
       "permission-service",
       "user-service"
@@ -118,6 +120,16 @@
         "path_glob": "web/apps/mfe-audit/src/**/*",
         "ux_theme_id": "navigation_information_scent",
         "ux_subtheme_id": "orientation_and_wayfinding"
+      },
+      {
+        "path_glob": "web/packages/shared-http/**/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/packages/auth/**/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
       },
       {
         "path_glob": "web/packages/design-system/src/lib/auth/**/*",
@@ -208,6 +220,7 @@
         "web/apps/mfe-shell/src/widgets/app-shell/**/*",
         "web/apps/mfe-audit/src/**/*",
         "web/packages/shared-http/**/*",
+        "web/packages/auth/**/*",
         "web/packages/design-system/src/lib/auth/**/*"
       ],
       "mobile": [

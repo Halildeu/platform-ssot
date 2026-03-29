@@ -292,6 +292,18 @@ services:
       retries: 30
       start_period: 5s
 
+  openfga-migrate:
+    image: openfga/openfga:latest
+    command: migrate
+    environment:
+      OPENFGA_DATASTORE_ENGINE: postgres
+      OPENFGA_DATASTORE_URI: "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres-db:5432/${POSTGRES_DB:-users}?sslmode=disable&search_path=openfga"
+    networks:
+      - microservice-network
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+
   openfga:
     image: openfga/openfga:latest
     command: run
@@ -307,14 +319,14 @@ services:
     networks:
       - microservice-network
     depends_on:
-      postgres-db:
-        condition: service_healthy
+      openfga-migrate:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:8080/healthz"]
       interval: 15s
       timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 5s
 
   permission-service:
     build: ./permission-service

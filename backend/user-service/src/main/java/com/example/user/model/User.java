@@ -19,7 +19,7 @@ import java.util.Collections;
 @FilterDef(name = "companyScope",
         parameters = @ParamDef(name = "companyIds", type = Long.class))
 @Filter(name = "companyScope",
-        condition = "company_id IN (:companyIds)")
+        condition = "company_id IS NULL OR company_id IN (:companyIds)")
 public class User implements UserDetails {
 
     public static final int DEFAULT_SESSION_TIMEOUT_MINUTES = 15;
