@@ -77,7 +77,11 @@
       "docs/OPERATIONS/MANAGED-REPO-CONTEXT-CONSUMPTION.v1.md",
       "docs/OPERATIONS/MULTI-PLANE-EXECUTION-MODEL.v1.md",
       "tenant/TENANT-DEFAULT/**/*",
-      "extensions/PRJ-PM-SUITE/contract/**/*"
+      "extensions/PRJ-PM-SUITE/contract/**/*",
+      "web/apps/mfe-access/src/features/**/*",
+      "web/apps/mfe-shell/src/app/config/*",
+      "web/apps/mfe-shell/vite-plugins/*",
+      "web/apps/mfe-suggestions/src/*"
     ],
     "affected_modules": [
       "api-gateway",
@@ -217,6 +221,26 @@
       },
       {
         "path_glob": "web/.npmrc",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-access/src/features/**/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/config/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/vite-plugins/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-suggestions/src/*",
         "ux_theme_id": "consistency_and_pattern_governance",
         "ux_subtheme_id": "single_component_source_of_truth"
       }
