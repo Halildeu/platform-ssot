@@ -1,4 +1,6 @@
 @import url("tailwindcss");
+@import url('./styles/generated-theme-inline.css');
+@import url('./styles/theme.css');
 
 /* Content scanning for monorepo — TW4 native @source */
 @source "../../../packages/design-system/src/**/*.{ts,tsx}";
@@ -31,8 +33,6 @@
   --default-ring-color: var(--focus-outline);
 }
 
-/* @layer cascade bug fix REMOVED — @tailwindcss/webpack preserves @layer natively */
-
 /* Restore v3 base defaults changed in TW4 */
 @layer base {
   /* Border default: currentColor → gray-200 */
@@ -61,28 +61,6 @@
     margin: auto;
   }
 }
-
-/* ------------------------------------------------------------------ */
-
-/*  @theme inline — auto-generated from figma.tokens.json              */
-
-/*  Run: npm run tokens:build:theme to regenerate.                     */
-
-/*  "inline" ensures TW4 utilities use var() directly, so runtime     */
-
-/*  theme switches (data-theme attr) cascade correctly.                */
-
-/* ------------------------------------------------------------------ */
-@import url('./styles/generated-theme-inline.css');
-
-/* ------------------------------------------------------------------ */
-
-/*  Theme overrides — runtime CSS vars override @theme static values   */
-
-/*  theme.css sets :root { --color-surface-default: <actual value> }   */
-
-/* ------------------------------------------------------------------ */
-@import url('./styles/theme.css');
 
 /* ------------------------------------------------------------------ */
 
