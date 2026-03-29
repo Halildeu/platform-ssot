@@ -52,6 +52,41 @@ export const useAuthorization = () => {
       set.add('VIEW_REPORTS');
     }
 
+    // OpenFGA module → legacy permission mapping
+    if (set.has('USER_MANAGEMENT')) {
+      set.add('USER-READ');
+      set.add('USER-CREATE');
+      set.add('USER-UPDATE');
+      set.add('USER-DELETE');
+      set.add('VIEW_USERS');
+      set.add('MANAGE_USERS');
+    }
+    if (set.has('ACCESS')) {
+      set.add('ACCESS-READ');
+      set.add('ACCESS-WRITE');
+      set.add('VIEW_ACCESS');
+    }
+    if (set.has('AUDIT')) {
+      set.add('AUDIT-READ');
+      set.add('AUDIT-WRITE');
+      set.add('VIEW_AUDIT');
+    }
+    if (set.has('REPORT')) {
+      set.add('VIEW_REPORTS');
+      set.add('REPORT_VIEW');
+      set.add('REPORT_EXPORT');
+      set.add('REPORT_MANAGE');
+    }
+    if (set.has('THEME')) {
+      set.add('THEME_ADMIN');
+    }
+    if (set.has('WAREHOUSE')) {
+      set.add('VIEW_VARIANTS');
+      set.add('MANAGE_VARIANTS');
+      set.add('VARIANTS_READ');
+      set.add('VARIANTS_WRITE');
+    }
+
     return set;
   }, [user?.permissions]);
 

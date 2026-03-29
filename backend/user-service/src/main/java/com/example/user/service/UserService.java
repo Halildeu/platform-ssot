@@ -77,6 +77,7 @@ public class UserService implements UserDetailsService { // UserDetailsService a
     private final PasswordEncoder passwordEncoder;
     private final UserAuditEventService userAuditEventService;
     private final AuthorizationContextService authorizationContextService;
+    private final com.example.commonauth.openfga.OpenFgaAuthzService openFgaAuthzService;
     private final int maxSessionTimeoutMinutes;
 
     public record SessionTimeoutSyncResult(String status,
@@ -148,11 +149,13 @@ public class UserService implements UserDetailsService { // UserDetailsService a
                        PasswordEncoder passwordEncoder,
                        UserAuditEventService userAuditEventService,
                        AuthorizationContextService authorizationContextService,
+                       com.example.commonauth.openfga.OpenFgaAuthzService openFgaAuthzService,
                        @Value("${user.session-timeout.max-minutes:1440}") int configuredMaxSessionTimeoutMinutes) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userAuditEventService = userAuditEventService;
         this.authorizationContextService = authorizationContextService;
+        this.openFgaAuthzService = openFgaAuthzService;
         this.maxSessionTimeoutMinutes = Math.max(User.DEFAULT_SESSION_TIMEOUT_MINUTES, configuredMaxSessionTimeoutMinutes);
     }
 
@@ -219,7 +222,9 @@ public class UserService implements UserDetailsService { // UserDetailsService a
         newUser.setTimeFormat(User.DEFAULT_TIME_FORMAT);
         // Varsayılan olarak rolü "USER" ve hesabı "enabled" (aktif) olacak.
 
-        return userRepository.save(newUser);
+        User saved = userRepository.save(newUser);
+        syncUserToOpenFga(saved);
+        return saved;
     }
 
     /**
@@ -243,7 +248,42 @@ public class UserService implements UserDetailsService { // UserDetailsService a
         newUser.setDateFormat(User.DEFAULT_DATE_FORMAT);
         newUser.setTimeFormat(User.DEFAULT_TIME_FORMAT);
 
-        return userRepository.save(newUser);
+        User saved = userRepository.save(newUser);
+        syncUserToOpenFga(saved);
+        return saved;
+    }
+
+    /**
+     * Sync user role/company to OpenFGA tuples.
+     * Called on user registration and role/company changes.
+     */
+    private void syncUserToOpenFga(User user) {
+        if (user == null || user.getId() == null) return;
+        try {
+            String userId = String.valueOf(user.getId());
+            String role = user.getRole();
+            // Map DB role to OpenFGA relation
+            String relation = switch (role != null ? role.toUpperCase() : "USER") {
+                case "ADMIN" -> "admin";
+                case "MANAGER" -> "manager";
+                case "EDITOR" -> "editor";
+                default -> "viewer";
+            };
+            // Company tuple
+            if (user.getCompanyId() != null) {
+                openFgaAuthzService.writeTuple(userId, relation, "company", String.valueOf(user.getCompanyId()));
+            }
+            // Default module access based on role
+            if ("ADMIN".equalsIgnoreCase(role)) {
+                for (String module : java.util.List.of("USER_MANAGEMENT", "ACCESS", "AUDIT", "REPORT", "WAREHOUSE", "THEME", "COMPANY")) {
+                    openFgaAuthzService.writeTuple(userId, "can_manage", "module", module);
+                }
+            }
+            log.info("OpenFGA sync: user={} role={} relation={} company={}", userId, role, relation, user.getCompanyId());
+        } catch (Exception e) {
+            log.warn("OpenFGA sync failed for user {}: {}", user.getId(), e.getMessage());
+            // Don't fail registration if OpenFGA is down
+        }
     }
 
     public void activateUser(Long userId) {
