@@ -258,6 +258,7 @@ export const TiptapEditor = forwardRef<TiptapEditorHandle, TiptapEditorProps>(
       content: value ?? '',
       editable: !readOnly,
       immediatelyRender: false,
+      shouldRerenderOnTransaction: true,
       autofocus: autoFocus ? 'end' : false,
       onUpdate: ({ editor: e }: { editor: any }) => {
         onChange?.(e.getHTML());
