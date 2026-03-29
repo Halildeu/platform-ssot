@@ -97,6 +97,8 @@ export const COMPONENT_ALIASES: Record<string, string> = {
   CommandWorkspace: "PageLayout",
   // Components documented under different name than export
   AutoComplete: "Autocomplete",
+  Empty: "EmptyState",
+  Toast: "ToastProvider",
   SectionTabs: "DetailSectionTabs",
 };
 
@@ -159,6 +161,8 @@ export const NON_COMPONENT_ENTRIES: Record<string, NonComponentType> = {
   updateThemeAxes: "theme-api",
   // X-Suite hooks & utilities
   useScheduler: "hook",
+  SchedulerEvent: "constant",
+  FieldRegistry: "utility",
   useRecurrence: "hook",
   useConflictDetection: "hook",
   useKanban: "hook",

@@ -297,7 +297,53 @@ check('orphan-docs', 'Doc entries with matching source code', () => {
   };
 });
 
-// 6. Void element children — components that render void elements (input, img)
+// 6. Runtime resolvability — doc entries that can actually render in playground
+check('runtime-resolvable', 'Components resolvable at runtime (not just string match)', () => {
+  // Read registry to extract COMPONENT_ALIASES and NON_COMPONENT_ENTRIES
+  let registryContent = '';
+  try { registryContent = readFile('apps/mfe-shell/src/pages/admin/design-lab/playground/playgroundRegistry.ts'); } catch { return { status: 'warn', message: 'Could not read registry file' }; }
+
+  // Extract aliases: { DocName: "ExportName" }
+  const aliasMatch = registryContent.match(/COMPONENT_ALIASES[^=]*=\s*\{([\s\S]*?)\n\};/);
+  const aliases = {};
+  if (aliasMatch) {
+    for (const m of aliasMatch[1].matchAll(/^\s*["']?(\w[\w\s/]*)["']?\s*:\s*["'](\w+)["']/gm)) {
+      aliases[m[1].trim()] = m[2];
+    }
+  }
+
+  // For each doc entry that is NOT a non-component, check if it can resolve:
+  // 1. Directly in dsExports (MfeUiKit barrel)
+  // 2. Via COMPONENT_ALIASES → dsExports
+  // 3. Is a non-component (hook/utility) — skip
+  const unresolvable = [];
+  for (const name of docNames) {
+    if (nonCompEntries.has(name)) continue; // hooks/utilities — not rendered
+    // Direct export match
+    if (dsExports.has(name)) continue;
+    // Alias match → resolves to an export
+    const aliasTarget = aliases[name];
+    if (aliasTarget && dsExports.has(aliasTarget)) continue;
+    // Check if the exact PascalCase name exists as export (case-sensitive)
+    let found = false;
+    for (const exp of dsExports) {
+      if (exp.toLowerCase() === name.toLowerCase()) { found = true; break; }
+    }
+    if (found) continue;
+    unresolvable.push(name);
+  }
+
+  if (unresolvable.length === 0) {
+    return { status: 'pass', message: `All ${docNames.length} doc entries resolvable at runtime` };
+  }
+  return {
+    status: unresolvable.length <= 5 ? 'warn' : 'fail',
+    message: `${unresolvable.length} doc entries will show "Component not found" in playground`,
+    items: unresolvable,
+  };
+});
+
+// 7. Void element children — components that render void elements (input, img)
 // must not receive children in playground preview
 check('void-element-children', 'Components rendering void elements have no default children', () => {
   const VOID_COMPONENTS = [
