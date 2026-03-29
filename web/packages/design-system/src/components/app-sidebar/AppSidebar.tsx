@@ -16,6 +16,8 @@ import { AppSidebarSearch } from './AppSidebarSearch';
 import { AppSidebarTrigger } from './AppSidebarTrigger';
 import { AppSidebarResizer } from './AppSidebarResizer';
 import { AppSidebarSeparator } from './AppSidebarSeparator';
+import { AppSidebarFooterAction } from './AppSidebarFooterAction';
+import { AppSidebarFooterStatus } from './AppSidebarFooterStatus';
 import { useAppSidebarResize } from './hooks/useAppSidebarResize';
 import type { AppSidebarProps as AppSidebarPropsBase, SidebarMode, SidebarContextValue, SidebarResizeState } from './types';
 
@@ -219,6 +221,8 @@ type CompoundSidebar = typeof AppSidebarRoot & {
   Section: typeof AppSidebarSection;
   Group: typeof AppSidebarGroup;
   Footer: typeof AppSidebarFooter;
+  FooterAction: typeof AppSidebarFooterAction;
+  FooterStatus: typeof AppSidebarFooterStatus;
   Search: typeof AppSidebarSearch;
   Trigger: typeof AppSidebarTrigger;
   Resizer: typeof AppSidebarResizer;
@@ -232,6 +236,8 @@ AppSidebar.NavItem = AppSidebarNavItem;
 AppSidebar.Section = AppSidebarSection;
 AppSidebar.Group = AppSidebarGroup;
 AppSidebar.Footer = AppSidebarFooter;
+AppSidebar.FooterAction = AppSidebarFooterAction;
+AppSidebar.FooterStatus = AppSidebarFooterStatus;
 AppSidebar.Search = AppSidebarSearch;
 AppSidebar.Trigger = AppSidebarTrigger;
 AppSidebar.Resizer = AppSidebarResizer;

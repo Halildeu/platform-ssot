@@ -79,3 +79,17 @@ export type {
 } from "./dropdown";
 export { Drawer } from "./drawer";
 export type { DrawerProps, DrawerPlacement, DrawerSize } from "./drawer";
+
+/* Status */
+export { StatusIndicator } from "./status-indicator";
+export type { StatusIndicatorProps, StatusIndicatorStatus, StatusIndicatorSize } from "./status-indicator";
+
+/* Layout */
+export { HeaderBar } from "./header-bar";
+export type { HeaderBarProps } from "./header-bar";
+
+/* Actions — Browser */
+export { FullscreenToggle } from "./fullscreen-toggle";
+export type { FullscreenToggleProps, FullscreenToggleSize, FullscreenToggleVariant } from "./fullscreen-toggle";
+export { CommandPaletteTrigger } from "./command-palette-trigger";
+export type { CommandPaletteTriggerProps } from "./command-palette-trigger";
