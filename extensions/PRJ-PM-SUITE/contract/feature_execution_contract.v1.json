@@ -43,6 +43,7 @@
       "backend/user-service/**/*",
       "backend/common-auth/**/*",
       "backend/api-gateway/**/*",
+      "backend/scripts/ci/security/*",
       "mobile/App.tsx",
       "mobile/ARCHITECTURE.md",
       "mobile/package.json",

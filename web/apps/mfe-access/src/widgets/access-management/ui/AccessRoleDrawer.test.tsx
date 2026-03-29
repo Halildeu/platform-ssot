@@ -1,8 +1,7 @@
 // @vitest-environment jsdom
 import { test, expect } from 'vitest';
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { act } from 'react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { configureShellServices } from '../../../app/services/shell-services';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
@@ -85,7 +84,7 @@ test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async ()
   const permissionCheckbox = screen.getByTestId('access-role-permission-perm.manage') as HTMLInputElement;
 
   await act(async () => {
-    fireEvent.change(permissionCheckbox, { target: { checked: true } });
+    fireEvent.click(permissionCheckbox);
   });
 
   const saveButton = screen.getByTestId('access-role-drawer-save');

@@ -1,8 +1,7 @@
 // @vitest-environment jsdom
 import { test, expect } from 'vitest';
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { act } from 'react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import AccessVariantToolbar from './AccessVariantToolbar.ui';
 
 test('AccessVariantToolbar variant secim ve aksiyon davranisini surdurur', async () => {

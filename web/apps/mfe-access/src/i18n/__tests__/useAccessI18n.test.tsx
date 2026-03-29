@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { test, expect, vi } from 'vitest';
 import React from 'react';
-import { render, cleanup } from '@testing-library/react';
+import { render, cleanup, act } from '@testing-library/react';
 
 import {
   I18nManager,
@@ -10,7 +10,6 @@ import {
 } from '../../../../mfe-shell/src/app/i18n/index.ts';
 import { getDictionary } from '@mfe/i18n-dicts';
 import { useAccessI18n, type AccessI18n } from '../useAccessI18n';
-import { act } from 'react';
 
 const flushMicrotasks = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
