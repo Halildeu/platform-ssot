@@ -55,15 +55,17 @@ describe('Avatar — image rendering', () => {
   });
 
   it('alt verilmezse bos alt kullanir', () => {
-    render(<Avatar src="https://example.com/photo.jpg" />);
-    const img = screen.getByRole('img');
+    const { container } = render(<Avatar src="https://example.com/photo.jpg" />);
+    const img = container.querySelector('img');
+    expect(img).toBeInTheDocument();
     expect(img).toHaveAttribute('alt', '');
   });
 
   it('img hatasi durumunda fallback gosterir', () => {
-    render(<Avatar src="https://example.com/broken.jpg" initials="AB" />);
-    const img = screen.getByRole('img');
-    fireEvent.error(img);
+    const { container } = render(<Avatar src="https://example.com/broken.jpg" initials="AB" />);
+    const img = container.querySelector('img');
+    expect(img).toBeInTheDocument();
+    fireEvent.error(img!);
     expect(screen.getByText('AB')).toBeInTheDocument();
   });
 });
@@ -150,8 +152,8 @@ describe('Avatar — edge cases', () => {
 
   it('fallback onceligi: src > initials > icon > default', () => {
     // When src is provided, image should render (not initials)
-    render(<Avatar src="https://example.com/photo.jpg" initials="AB" icon={<span>X</span>} />);
-    const img = screen.getByRole('img');
+    const { container } = render(<Avatar src="https://example.com/photo.jpg" initials="AB" icon={<span>X</span>} />);
+    const img = container.querySelector('img');
     expect(img).toBeInTheDocument();
     expect(screen.queryByText('AB')).not.toBeInTheDocument();
   });
@@ -186,11 +188,12 @@ describe('Avatar — Faz 3 Dalga 5 deepening', () => {
   });
 
   it('shows initials after image load error', () => {
-    render(<Avatar src="https://example.com/broken.jpg" initials="XY" />);
-    const img = screen.getByRole('img');
-    fireEvent.error(img);
+    const { container } = render(<Avatar src="https://example.com/broken.jpg" initials="XY" />);
+    const img = container.querySelector('img');
+    expect(img).toBeInTheDocument();
+    fireEvent.error(img!);
     expect(screen.getByText('XY')).toBeInTheDocument();
-    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    expect(container.querySelector('img')).not.toBeInTheDocument();
   });
 
   it('initials are uppercased', () => {
@@ -253,14 +256,16 @@ describe('Avatar — Faz 3 Dalga 5 deepening', () => {
 
   /* --- Fallback chain: src > initials > icon > default SVG --- */
   it('when src fails, falls back to initials over icon', () => {
-    render(
+    const { container } = render(
       <Avatar
         src="https://example.com/broken.jpg"
         initials="FK"
         icon={<span data-testid="fallback-icon">I</span>}
       />,
     );
-    fireEvent.error(screen.getByRole('img'));
+    const img = container.querySelector('img');
+    expect(img).toBeInTheDocument();
+    fireEvent.error(img!);
     expect(screen.getByText('FK')).toBeInTheDocument();
     expect(screen.queryByTestId('fallback-icon')).not.toBeInTheDocument();
   });
