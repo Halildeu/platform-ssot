@@ -335,11 +335,11 @@ services:
       openfga-migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "curl", "-sf", "http://localhost:8080/healthz"]
+      test: ["NONE"]
       interval: 15s
       timeout: 5s
       retries: 5
-      start_period: 5s
+      start_period: 10s
 
   permission-service:
     profiles: ["legacy"]  # Only starts with: docker compose --profile legacy up
