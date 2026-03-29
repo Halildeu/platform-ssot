@@ -1,0 +1,294 @@
+#!/usr/bin/env node
+/**
+ * Design Lab Doctor v1.0 — Component registry health check.
+ *
+ * Checks (5):
+ *  1. export-sync           Doc catalog entries vs design-system exports
+ *  2. non-component-leak    NON_COMPONENT_ENTRIES containing real components
+ *  3. playground-props      Components missing DEFAULT_PROPS for live preview
+ *  4. import-statement      Doc entries with incorrect import statements
+ *  5. orphan-docs           Doc entries without corresponding component source
+ *
+ * Usage:
+ *   node scripts/ops/designlab-doctor.mjs          # terminal report
+ *   node scripts/ops/designlab-doctor.mjs --json    # JSON output
+ *
+ * Exit: 0 = healthy, 1 = issues found
+ */
+
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, '..', '..');
+
+const flags = new Set(process.argv.slice(2));
+const JSON_MODE = flags.has('--json');
+
+/* ------------------------------------------------------------------ */
+/*  Helpers                                                            */
+/* ------------------------------------------------------------------ */
+
+const results = [];
+let passCount = 0;
+let warnCount = 0;
+let failCount = 0;
+
+function check(id, label, fn) {
+  try {
+    const result = fn();
+    if (result.status === 'pass') passCount++;
+    else if (result.status === 'warn') warnCount++;
+    else failCount++;
+    results.push({ id, label, ...result });
+  } catch (err) {
+    failCount++;
+    results.push({ id, label, status: 'fail', message: `Exception: ${err.message}` });
+  }
+}
+
+function readFile(relPath) {
+  return readFileSync(join(ROOT, relPath), 'utf8');
+}
+
+/* ------------------------------------------------------------------ */
+/*  Data extraction                                                    */
+/* ------------------------------------------------------------------ */
+
+function getDocCatalogNames() {
+  const docsDir = join(ROOT, 'packages/design-system/src/catalog/component-docs/entries');
+  if (!existsSync(docsDir)) return [];
+  return readdirSync(docsDir)
+    .filter(f => f.endsWith('.doc.ts') || f.endsWith('.doc.d.ts'))
+    .filter(f => !f.endsWith('.d.ts'))
+    .map(f => f.replace('.doc.ts', ''));
+}
+
+function getDesignSystemExports() {
+  const files = [
+    'packages/design-system/src/index.ts',
+    'packages/design-system/src/components/index.ts',
+    'packages/design-system/src/primitives/index.ts',
+    'packages/design-system/src/patterns/index.ts',
+    'packages/design-system/src/advanced/index.ts',
+    'packages/design-system/src/advanced/data-grid/index.ts',
+  ];
+  const exports = new Set();
+  for (const f of files) {
+    try {
+      const content = readFile(f);
+      const matches = content.matchAll(/export\s*\{\s*([^}]+)\s*\}/g);
+      for (const m of matches) {
+        m[1].split(',').forEach(name => {
+          const clean = name.trim().split(/\s+as\s+/)[0].trim();
+          if (clean && /^[A-Z]/.test(clean) && !clean.startsWith('type ')) {
+            exports.add(clean);
+          }
+        });
+      }
+    } catch { /* file doesn't exist */ }
+  }
+  return exports;
+}
+
+function getNonComponentEntries() {
+  try {
+    const content = readFile('apps/mfe-shell/src/pages/admin/design-lab/playground/playgroundRegistry.ts');
+    const match = content.match(/NON_COMPONENT_ENTRIES[^=]*=\s*\{([\s\S]*?)\n\};/);
+    if (!match) return new Set();
+    const entries = match[1].matchAll(/^\s*(\w+)\s*:/gm);
+    return new Set([...entries].map(m => m[1]));
+  } catch { return new Set(); }
+}
+
+function getDefaultProps() {
+  try {
+    const content = readFile('apps/mfe-shell/src/pages/admin/design-lab/playground/playgroundDefaultPropsOverlay.tsx');
+    const content2 = readFile('apps/mfe-shell/src/pages/admin/design-lab/playground/playgroundDefaultPropsTemplates.tsx');
+    const content3 = readFile('apps/mfe-shell/src/pages/admin/design-lab/playground/playgroundRegistry.ts');
+    const all = content + content2 + content3;
+    const match = all.matchAll(/^\s*(\w+)\s*:\s*\{/gm);
+    return new Set([...match].map(m => m[1]));
+  } catch { return new Set(); }
+}
+
+function getComponentSourceDirs() {
+  const dirs = new Set();
+  const bases = [
+    'packages/design-system/src/components',
+    'packages/design-system/src/primitives',
+    'packages/design-system/src/patterns',
+    'packages/design-system/src/advanced/data-grid',
+    'packages/design-system/src/enterprise',
+  ];
+  for (const base of bases) {
+    try {
+      const fullPath = join(ROOT, base);
+      if (!existsSync(fullPath)) continue;
+      for (const entry of readdirSync(fullPath, { withFileTypes: true })) {
+        if (entry.isDirectory() && !entry.name.startsWith('__')) {
+          // Convert kebab-case dir to PascalCase component name
+          const pascal = entry.name
+            .split('-')
+            .map(s => s.charAt(0).toUpperCase() + s.slice(1))
+            .join('');
+          dirs.add(pascal);
+        }
+      }
+    } catch { /* */ }
+  }
+  return dirs;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Checks                                                             */
+/* ------------------------------------------------------------------ */
+
+const docNames = getDocCatalogNames();
+const dsExports = getDesignSystemExports();
+const nonCompEntries = getNonComponentEntries();
+const defaultProps = getDefaultProps();
+const sourceDirs = getComponentSourceDirs();
+
+// 1. Export sync — doc catalog entries that aren't exported from design-system
+check('export-sync', 'Doc catalog vs design-system exports', () => {
+  const missing = docNames.filter(name => !dsExports.has(name));
+  if (missing.length === 0) {
+    return { status: 'pass', message: `All ${docNames.length} doc entries have matching exports` };
+  }
+  return {
+    status: 'warn',
+    message: `${missing.length}/${docNames.length} doc entries missing from design-system exports`,
+    items: missing,
+  };
+});
+
+// 2. Non-component leak — real components incorrectly in NON_COMPONENT_ENTRIES
+check('non-component-leak', 'Components misclassified as non-component', () => {
+  const leaks = [...nonCompEntries].filter(name => dsExports.has(name));
+  if (leaks.length === 0) {
+    return { status: 'pass', message: 'No components misclassified as non-component' };
+  }
+  return {
+    status: 'fail',
+    message: `${leaks.length} exported components found in NON_COMPONENT_ENTRIES (will show "not found" in playground)`,
+    items: leaks,
+  };
+});
+
+// 3. Playground props — components without DEFAULT_PROPS (may render empty)
+check('playground-props', 'Components with DEFAULT_PROPS for preview', () => {
+  const componentDocs = docNames.filter(name => !nonCompEntries.has(name));
+  const withoutProps = componentDocs.filter(name => !defaultProps.has(name));
+  const coverage = ((componentDocs.length - withoutProps.length) / componentDocs.length * 100).toFixed(0);
+  if (withoutProps.length === 0) {
+    return { status: 'pass', message: `All ${componentDocs.length} components have DEFAULT_PROPS` };
+  }
+  if (withoutProps.length <= 10) {
+    return {
+      status: 'warn',
+      message: `${coverage}% coverage — ${withoutProps.length} components missing DEFAULT_PROPS`,
+      items: withoutProps,
+    };
+  }
+  return {
+    status: 'warn',
+    message: `${coverage}% coverage — ${withoutProps.length} components missing DEFAULT_PROPS`,
+    items: withoutProps.slice(0, 20),
+    total: withoutProps.length,
+  };
+});
+
+// 4. Import statement — doc entries where import path might be wrong
+check('import-statement', 'Doc entry import statement accuracy', () => {
+  const wrong = [];
+  for (const name of docNames) {
+    try {
+      const docPath = `packages/design-system/src/catalog/component-docs/entries/${name}.doc.ts`;
+      const content = readFile(docPath);
+      const importMatch = content.match(/importStatement['":\s]+import\s*\{[^}]*\}\s*from\s*['"]([^'"]+)['"]/);
+      if (importMatch) {
+        const pkg = importMatch[1];
+        if (!pkg.startsWith('@mfe/design-system') && !pkg.startsWith('@mfe/x-')) {
+          wrong.push({ name, pkg });
+        }
+      }
+    } catch { /* */ }
+  }
+  if (wrong.length === 0) {
+    return { status: 'pass', message: 'All import statements reference valid packages' };
+  }
+  return {
+    status: 'warn',
+    message: `${wrong.length} doc entries have non-standard import paths`,
+    items: wrong,
+  };
+});
+
+// 5. Orphan docs — doc entries without component source directory
+check('orphan-docs', 'Doc entries with matching source code', () => {
+  const orphans = docNames.filter(name => !sourceDirs.has(name) && !dsExports.has(name));
+  if (orphans.length === 0) {
+    return { status: 'pass', message: `All ${docNames.length} doc entries have source code` };
+  }
+  return {
+    status: 'warn',
+    message: `${orphans.length} doc entries have no matching source directory or export`,
+    items: orphans,
+  };
+});
+
+/* ------------------------------------------------------------------ */
+/*  Output                                                             */
+/* ------------------------------------------------------------------ */
+
+const overall = failCount > 0 ? 'FAIL' : warnCount > 0 ? 'WARN' : 'PASS';
+
+const summary = {
+  version: '1.0',
+  doctor_id: 'designlab-doctor',
+  overall_status: overall,
+  totals: { pass: passCount, warn: warnCount, fail: failCount },
+  checks: results,
+  stats: {
+    doc_catalog_entries: docNames.length,
+    design_system_exports: dsExports.size,
+    non_component_entries: nonCompEntries.size,
+    source_directories: sourceDirs.size,
+  },
+};
+
+if (JSON_MODE) {
+  console.log(JSON.stringify(summary, null, 2));
+} else {
+  const icon = { pass: '✅', warn: '⚠️', fail: '❌' };
+
+  console.log('');
+  console.log('  ╔══════════════════════════════════════════╗');
+  console.log('  ║     Design Lab Doctor v1.0               ║');
+  console.log('  ║   Component Registry Health Check        ║');
+  console.log('  ╚══════════════════════════════════════════╝');
+  console.log('');
+  console.log(`  📊 Stats: ${docNames.length} doc entries, ${dsExports.size} exports, ${nonCompEntries.size} non-components, ${sourceDirs.size} source dirs`);
+  console.log('');
+
+  for (const c of results) {
+    console.log(`  ${icon[c.status] || '❓'} ${c.label}`);
+    console.log(`     ${c.message}`);
+    if (c.items && c.items.length > 0) {
+      const items = c.items.slice(0, 15);
+      for (const item of items) {
+        const label = typeof item === 'string' ? item : `${item.name} (${item.pkg})`;
+        console.log(`     · ${label}`);
+      }
+      if (c.total && c.total > 15) console.log(`     · ... +${c.total - 15} more`);
+    }
+    console.log('');
+  }
+
+  console.log(`  Overall: ${overall}`);
+  console.log('');
+}
+
+process.exit(overall === 'PASS' ? 0 : 1);

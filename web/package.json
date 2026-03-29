@@ -158,6 +158,8 @@
     "pw:ci": "PW_MODE=ci npx playwright test --config tests/playwright/playwright.config.ts tests/playwright/scenario-runner.spec.ts --project=chromium --workers=1",
     "pw:nightly": "PW_MODE=nightly npx playwright test --config tests/playwright/playwright.config.ts tests/playwright/scenario-runner.spec.ts --project=chromium --workers=1",
     "doctor:frontend": "node ./scripts/ops/frontend-doctor.mjs",
+    "doctor:designlab": "node ./scripts/ops/designlab-doctor.mjs",
+    "doctor:designlab:json": "node ./scripts/ops/designlab-doctor.mjs --json",
     "doctor:lint": "node ./scripts/ops/lint-doctor.mjs",
     "doctor:lint:json": "node ./scripts/ops/lint-doctor.mjs --json",
     "doctor:lint:fix": "node ./scripts/ops/lint-doctor.mjs --fix",
