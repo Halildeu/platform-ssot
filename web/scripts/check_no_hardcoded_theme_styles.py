@@ -37,6 +37,7 @@ SKIP_DIRS = {
     "node_modules_failed_pnpm",
     "node_modules_failed_pnpm_hoisted",
     "dist",
+    "dist-quality",
     "build",
     "coverage",
     "test-results",
@@ -63,6 +64,12 @@ SKIP_PATH_PREFIXES = (
     # Theme core — tema katmanı tanımları
     "web/packages/design-system/src/theme/core/",
     "web/packages/design-system/src/theme/adapters/",
+    # Intelligence test fixtures — hex values are test data
+    "web/packages/design-system/src/intelligence/__tests__/",
+    # ColorPicker tests — hex values are inherent to color picker testing
+    "web/packages/design-system/src/components/color-picker/__tests__/",
+    # Schema explorer — third-party graph visualization, uses own theme
+    "web/apps/mfe-schema-explorer/",
 )
 
 ALLOWED_FALLBACK_VAR_PREFIXES: tuple[str, ...] = ()
