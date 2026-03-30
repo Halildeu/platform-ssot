@@ -366,25 +366,12 @@ export const VariantIntegration = <RowData = unknown,>({
       onActiveVariantChange?.(variantId);
 
       try {
-        const updated = await updateVariantPreference({ variantId, isSelected: true, gridId });
-        if (updated.isUserSelected) {
-          return;
-        }
+        await updateVariantPreference({ variantId, isSelected: true, gridId });
       } catch {
-        // Revert below when server-side preference sync fails.
+        // Preference sync failed (e.g. 401) — keep variant applied locally.
+        // updateVariantPreference already falls back to localStorage.
+        dispatchVariantToast("warning", m.variantPreferenceUpdateFailedLabel ?? "Varyant tercihi sunucuya kaydedilemedi");
       }
-
-      if (previousVariant) {
-        applyVariantState(gridApi, previousVariant.state);
-        appliedRef.current = previousVariant.id;
-        setInternalActiveId(previousVariant.id);
-        onActiveVariantChange?.(previousVariant.id);
-      } else {
-        setInternalActiveId(null);
-        appliedRef.current = null;
-        onActiveVariantChange?.(null);
-      }
-      dispatchVariantToast("error", m.variantPreferenceUpdateFailedLabel ?? "Varyant tercihi güncellenemedi");
     },
     [activeId, gridApi, gridId, m.variantPreferenceUpdateFailedLabel, onActiveVariantChange, variants],
   );
