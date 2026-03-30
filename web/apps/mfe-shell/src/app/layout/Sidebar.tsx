@@ -156,7 +156,7 @@ export const Sidebar: React.FC = () => {
       cssWidthVar="--shell-sidebar-w"
       collapsedWidth={76}
       expandedWidth={280}
-      className="fixed bottom-0 left-0 top-[var(--shell-header-h)] z-30"
+      className="fixed bottom-0 left-0 top-[var(--shell-header-h)] z-30 mt-4 mx-2 mb-2 !rounded-2xl !border !border-border-subtle overflow-hidden"
     />
   );
 };

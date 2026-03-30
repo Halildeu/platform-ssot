@@ -39,6 +39,7 @@ import {
   HighlightChangesModule,
   GridStateModule,
 } from "ag-grid-enterprise";
+import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
 import { setupAgGridLicense } from "../../lib/ag-grid-license";
 
 /* ── License ─────────────────────────────────────────────────────── */
@@ -121,7 +122,7 @@ ModuleRegistry.registerModules([
   PinnedRowModule,
 
   // Sparklines (mini inline charts in cells)
-  SparklinesModule,
+  SparklinesModule.with(AgChartsEnterpriseModule),
 
   // Master-Detail (expand row to show child grid)
   // Activate per-grid: masterDetail: true + detailCellRendererParams in gridOptions
@@ -142,7 +143,7 @@ ModuleRegistry.registerModules([
   // Integrated Charts (AG Charts 12.3.1)
   // Enables chart creation from grid range selection.
   // Dependency: ag-charts-enterprise 12.3.1 (installed in monorepo root)
-  IntegratedChartsModule,
+  IntegratedChartsModule.with(AgChartsEnterpriseModule),
 ]);
 
 export const AG_GRID_SETUP_COMPLETE = true;

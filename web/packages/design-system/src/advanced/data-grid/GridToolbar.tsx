@@ -221,7 +221,6 @@ export const GridToolbar = <RowData = unknown>({
           processCellCallback: exportConfig?.processCellCallback,
           allColumns: true,
           columnSeparator: exportConfig?.csvColumnSeparator ?? ';',
-          prependContent: '\uFEFF', // UTF-8 BOM for Excel compatibility
         });
       }
     },
@@ -234,7 +233,7 @@ export const GridToolbar = <RowData = unknown>({
     <div
       data-access-state={accessState.state}
       className={[
-        "flex flex-wrap items-center gap-3 rounded-t-lg border border-b-0 border-border-subtle bg-surface-default px-4 py-2",
+        "flex flex-wrap items-center gap-3 border-b border-border-subtle bg-surface-default px-4 py-2",
         className ?? "",
         accessStyles(accessState.state),
       ]
@@ -253,61 +252,8 @@ export const GridToolbar = <RowData = unknown>({
         aria-label={m.quickFilterPlaceholder ?? "Quick filter"}
       />
 
-      {/* Theme selector */}
-      {onThemeChange && (
-        <select
-          value={theme}
-          onChange={(e) => onThemeChange(e.target.value as GridTheme)}
-          className="h-8 rounded-md border border-border-default bg-surface-default px-2 text-sm text-text-primary"
-          aria-label={m.themeLabel ?? "Theme"}
-        >
-          {themeOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      )}
-
-      {/* Density toggle */}
-      {onDensityChange && (
-        <div className="flex items-center gap-1" role="radiogroup" aria-label="Grid density">
-          <button
-            type="button"
-            className={[
-              "h-8 rounded-md px-3 text-xs font-medium transition-colors",
-              density === "comfortable"
-                ? "bg-action-primary text-text-inverse"
-                : "bg-surface-muted text-text-secondary hover:bg-surface-raised",
-            ].join(" ")}
-            onClick={() => onDensityChange("comfortable")}
-            aria-checked={density === "comfortable"}
-            role="radio"
-          >
-            {m.densityComfortableLabel ?? "Comfortable"}
-          </button>
-          <button
-            type="button"
-            className={[
-              "h-8 rounded-md px-3 text-xs font-medium transition-colors",
-              density === "compact"
-                ? "bg-action-primary text-text-inverse"
-                : "bg-surface-muted text-text-secondary hover:bg-surface-raised",
-            ].join(" ")}
-            onClick={() => onDensityChange("compact")}
-            aria-checked={density === "compact"}
-            role="radio"
-          >
-            {m.densityCompactLabel ?? "Compact"}
-          </button>
-        </div>
-      )}
-
-      {/* Variant selector slot */}
-      {variantSlot}
-
-      {/* Spacer */}
-      <div className="flex-1" />
+      {/* Extras slot (Grupla, Filtre, etc.) */}
+      {extras}
 
       {/* Reset filters */}
       <button
@@ -317,6 +263,9 @@ export const GridToolbar = <RowData = unknown>({
       >
         {m.resetFiltersLabel ?? "Reset Filters"}
       </button>
+
+      {/* Spacer */}
+      <div className="flex-1" />
 
       {/* Export buttons — 2 buttons: Excel + CSV */}
       {exportConfig && !isFullscreen && (
@@ -344,8 +293,8 @@ export const GridToolbar = <RowData = unknown>({
         </div>
       )}
 
-      {/* Extras slot */}
-      {extras}
+      {/* Variant selector slot */}
+      {variantSlot}
 
       {/* Fullscreen toggle */}
       {onRequestFullscreen && (

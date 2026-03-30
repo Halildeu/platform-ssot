@@ -26,6 +26,7 @@ import { resolveAccessState, accessStyles, type AccessControlledProps } from '..
 import { GridShell, type GridShellApi, type GridTheme, type GridDensity } from "./GridShell";
 import { GridToolbar, type GridToolbarMessages } from "./GridToolbar";
 import { VariantIntegration, type VariantIntegrationMessages } from "./VariantIntegration";
+import { ServerPaginationFooter } from "./ServerPaginationFooter";
 import { useDatasourceModeAdapter, type DataSourceMode } from "./DatasourceModeAdapter";
 import { TablePagination, useAgGridTablePagination } from "./TablePagination";
 import { FilterBuilderButton } from "./filter-builder";
@@ -554,8 +555,8 @@ export function EntityGridTemplate<
         onGridReady={handleGridReady}
         onRowDoubleClick={onRowDoubleClick}
         onPaginationChanged={handlePaginationChanged}
-        height={effectiveFullscreen ? '100%' : 600}
-        className={effectiveFullscreen ? 'min-h-0 flex-1' : undefined}
+        height={effectiveFullscreen ? '100%' : 'calc(100vh - 320px)'}
+        className={effectiveFullscreen ? 'min-h-0 flex-1' : 'min-h-[400px]'}
       >
         {/* Client-side pagination footer */}
         {!isServerMode && (
@@ -576,9 +577,13 @@ export function EntityGridTemplate<
             }}
           />
         )}
+        {/* Server-side pagination footer (replaces AG Grid built-in) */}
+        {isServerMode && (
+          <ServerPaginationFooter gridApi={gridApi} startSlot={footerStartSlot} />
+        )}
       </GridShell>
-      {/* Footer start slot — aligned with pagination row */}
-      {footerStartSlot && (
+      {/* Footer start slot — only for client-side mode (server-side uses startSlot in pagination) */}
+      {!isServerMode && footerStartSlot && (
         <div className="flex items-center border-x border-b border-border-subtle bg-surface-default px-4 py-1.5 rounded-b-lg">
           {footerStartSlot}
         </div>

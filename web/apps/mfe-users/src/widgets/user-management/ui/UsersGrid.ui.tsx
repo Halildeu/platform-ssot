@@ -17,7 +17,7 @@ const EntityGridTemplate = React.lazy(() =>
   import('@mfe/design-system').then((m) => ({ default: m.EntityGridTemplate })),
 );
 import type { UserSummary, UserModuleAccessLevel } from '@mfe/shared-types';
-import { Badge, Button, Empty, type BadgeTone } from '@mfe/design-system';
+import { Badge, Button, Empty, useDownloadWithProgress, type BadgeTone } from '@mfe/design-system';
 import UserActions from './UserActions.ui';
 import { fetchUsers } from '../../../entities/user/api/users.api';
 import type { UsersQueryParams } from '../../../features/user-management/model/user-management.types';
@@ -116,6 +116,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
   onLoadingChange,
 }) => {
   const { t, locale } = useUsersI18n();
+  const { downloadWithProgress } = useDownloadWithProgress();
   const gridApiRef = useRef<GridApi<UserSummary> | null>(null);
   const [dataSourceMode, setDataSourceMode] = useState<'server' | 'client'>('server');
   const [clientRows, setClientRows] = useState<UserSummary[]>([]);
@@ -782,11 +783,14 @@ const UsersGrid: React.FC<UsersGridProps> = ({
       if (params.quickFilterText?.trim()) {
         qs.set('search', params.quickFilterText.trim());
       }
-      // Server exports CSV only — Excel opens CSV files natively
-      const url = `/api/users/export.csv${qs.toString() ? '?' + qs.toString() : ''}`;
-      window.open(url, '_blank', 'noopener,noreferrer');
+      const ext = format === 'excel' ? 'xlsx' : 'csv';
+      const url = `/api/users/export.${ext}${qs.toString() ? '?' + qs.toString() : ''}`;
+      await downloadWithProgress(url, {
+        filename: `kullanicilar.${ext}`,
+        title: 'Kullanıcılar dışa aktarılıyor',
+      });
     },
-    [],
+    [downloadWithProgress, t],
   );
 
   // modeSelector moved to footerStartSlot (grid bottom-left, next to pagination)

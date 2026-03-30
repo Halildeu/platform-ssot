@@ -243,7 +243,8 @@ function GridShellInner<RowData = unknown>(
           // groupTotalRow="bottom" — disabled: duplicates group header values
           pagination={rowModelType === "serverSide"}
           paginationPageSize={rowModelType === "serverSide" ? 50 : undefined}
-          paginationPageSizeSelector={rowModelType === "serverSide" ? [25, 50, 100, 200] : undefined}
+          paginationPageSizeSelector={false}
+          suppressPaginationPanel={rowModelType === "serverSide"}
           // enableAdvancedFilter — AG Grid limitation: disables floating filters + context menu
           // Custom filter builder will be implemented in design-system instead
           enableCharts={enableCharts}

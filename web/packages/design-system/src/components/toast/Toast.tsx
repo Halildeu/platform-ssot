@@ -23,20 +23,34 @@ export interface ToastData {
   variant: ToastVariant;
   title?: string;
   message: string;
+  /** Rich content rendered instead of message string when provided. */
+  content?: React.ReactNode;
   duration?: number;
+  /** When true, toast will not auto-dismiss (must be dismissed manually or via update). */
+  persistent?: boolean;
+  /** Called when user clicks the dismiss button. Use for abort/cancel logic. */
+  onCancel?: () => void;
 }
 
 interface ToastContextValue {
-  info: (message: string, opts?: ToastOptions) => void;
-  success: (message: string, opts?: ToastOptions) => void;
-  warning: (message: string, opts?: ToastOptions) => void;
-  error: (message: string, opts?: ToastOptions) => void;
+  info: (message: string, opts?: ToastOptions) => string;
+  success: (message: string, opts?: ToastOptions) => string;
+  warning: (message: string, opts?: ToastOptions) => string;
+  error: (message: string, opts?: ToastOptions) => string;
   dismiss: (id: string) => void;
+  /** Update an existing toast's properties (variant, content, message, etc.). */
+  update: (id: string, data: Partial<Omit<ToastData, "id">>) => void;
 }
 
-interface ToastOptions {
+export interface ToastOptions {
   title?: string;
   duration?: number;
+  /** Rich content rendered instead of message string. */
+  content?: React.ReactNode;
+  /** When true, toast will not auto-dismiss. */
+  persistent?: boolean;
+  /** Called when user clicks the dismiss button. */
+  onCancel?: () => void;
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null);
@@ -120,19 +134,29 @@ export const ToastProvider = React.forwardRef<HTMLDivElement, ToastProviderProps
   }, []);
 
   const addToast = useCallback(
-    (variant: ToastVariant, message: string, opts?: ToastOptions) => {
+    (variant: ToastVariant, message: string, opts?: ToastOptions): string => {
       const id = `toast-${++toastCounter}`;
       const toast: ToastData = {
         id,
         variant,
         message,
         title: opts?.title,
-        duration: opts?.duration ?? duration,
+        content: opts?.content,
+        duration: opts?.persistent ? undefined : (opts?.duration ?? duration),
+        persistent: opts?.persistent,
+        onCancel: opts?.onCancel,
       };
       setToasts((prev) => [...prev.slice(-(maxVisible - 1)), toast]);
+      return id;
     },
     [duration, maxVisible],
   );
+
+  const update = useCallback((id: string, data: Partial<Omit<ToastData, "id">>) => {
+    setToasts((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, ...data } : t)),
+    );
+  }, []);
 
   const value: ToastContextValue = {
     info: (msg, opts) => addToast("info", msg, opts),
@@ -140,6 +164,7 @@ export const ToastProvider = React.forwardRef<HTMLDivElement, ToastProviderProps
     warning: (msg, opts) => addToast("warning", msg, opts),
     error: (msg, opts) => addToast("error", msg, opts),
     dismiss,
+    update,
   };
 
   return (
@@ -184,11 +209,18 @@ function ToastItem({
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
-    if (toast.duration && toast.duration > 0) {
+    if (!toast.persistent && toast.duration && toast.duration > 0) {
       timerRef.current = setTimeout(onDismiss, toast.duration);
     }
     return () => clearTimeout(timerRef.current);
-  }, [toast.duration, onDismiss]);
+  }, [toast.duration, toast.persistent, onDismiss]);
+
+  const handleDismiss = () => {
+    if (toast.onCancel) {
+      toast.onCancel();
+    }
+    onDismiss();
+  };
 
   return (
     <div
@@ -213,13 +245,15 @@ function ToastItem({
             {toast.title}
           </div>
         )}
-        <div className="text-sm text-text-secondary">
-          {toast.message}
-        </div>
+        {toast.content ?? (
+          <div className="text-sm text-text-secondary">
+            {toast.message}
+          </div>
+        )}
       </div>
       <button
         type="button"
-        onClick={onDismiss}
+        onClick={handleDismiss}
         className="shrink-0 rounded-md p-1 text-text-secondary transition hover:bg-surface-muted"
         aria-label="Dismiss"
       >
