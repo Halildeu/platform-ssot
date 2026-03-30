@@ -6,7 +6,7 @@
  * - Density toggle (comfortable / compact)
  * - Theme selector dropdown
  * - Fullscreen toggle
- * - Excel / CSV export buttons
+ * - Excel / CSV export (2 buttons — always exports all filtered rows)
  * - Reset filters button
  * - Extensible extras slot
  */
@@ -19,8 +19,7 @@ import type { GridExportConfig } from "./EntityGridTemplate";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
-/* ------------------------------------------------------------------
- */
+/* ------------------------------------------------------------------ */
 
 export interface GridToolbarMessages {
   quickFilterPlaceholder?: string;
@@ -31,10 +30,9 @@ export interface GridToolbarMessages {
   fullscreenLabel?: string;
   fullscreenTooltip?: string;
   resetFiltersLabel?: string;
-  excelVisibleLabel?: string;
-  excelAllLabel?: string;
-  csvVisibleLabel?: string;
-  csvAllLabel?: string;
+  excelLabel?: string;
+  csvLabel?: string;
+  exportingLabel?: string;
 }
 
 /** Props for the GridToolbar component. */
@@ -63,6 +61,15 @@ export interface GridToolbarProps<RowData = unknown> extends AccessControlledPro
   isFullscreen?: boolean;
   /** Export configuration */
   exportConfig?: GridExportConfig<RowData>;
+  /**
+   * Server-side export callback. Called when exporting in server mode.
+   * Should fetch all filtered rows from backend and trigger file download.
+   * Receives current filter model and sort model from the grid.
+   */
+  onServerExport?: (
+    format: 'excel' | 'csv',
+    params: { filterModel: Record<string, unknown>; sortModel: unknown[]; quickFilterText: string },
+  ) => Promise<void>;
   /** i18n messages */
   messages?: GridToolbarMessages;
   /** Extra elements to render in toolbar */
@@ -72,6 +79,28 @@ export interface GridToolbarProps<RowData = unknown> extends AccessControlledPro
   /** Container className */
   className?: string;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Inline export icons                                                */
+/* ------------------------------------------------------------------ */
+
+const ExcelIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+    <polyline points="14 2 14 8 20 8" />
+    <line x1="8" y1="13" x2="16" y2="13" />
+    <line x1="8" y1="17" x2="16" y2="17" />
+  </svg>
+);
+
+const CsvIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+    <polyline points="14 2 14 8 20 8" />
+    <line x1="8" y1="13" x2="11" y2="13" />
+    <line x1="8" y1="17" x2="13" y2="17" />
+  </svg>
+);
 
 /* ------------------------------------------------------------------ */
 /*  Default theme options                                              */
@@ -88,13 +117,16 @@ const DEFAULT_THEME_OPTIONS: readonly { label: string; value: GridTheme }[] = [
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-/** Toolbar strip for data grids with search, density toggle, theme switcher, and CSV export. 
+/** Toolbar strip for data grids with search, density toggle, theme switcher, and export.
+ * Export buttons always export all filtered rows (not just current page).
+ * In server mode, calls onServerExport callback for backend-side export.
+ * In client mode, uses AG Grid's built-in export (all rows, ignoring pagination).
+ *
  * @example
  * ```tsx
- * <GridToolbar />
+ * <GridToolbar gridApi={api} theme="quartz" density="comfortable" exportConfig={{ fileBaseName: 'users' }} />
  * ```
  * @since 1.0.0
- * @see [Docs](https://design.mfe.dev/components/grid-toolbar)
  */
 export const GridToolbar = <RowData = unknown>({
   gridApi,
@@ -109,6 +141,7 @@ export const GridToolbar = <RowData = unknown>({
   onRequestFullscreen,
   isFullscreen = false,
   exportConfig,
+  onServerExport,
   messages,
   extras,
   variantSlot,
@@ -119,6 +152,7 @@ export const GridToolbar = <RowData = unknown>({
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return <></> as unknown as React.ReactElement;
   const [quickFilter, setQuickFilter] = useState(quickFilterInitialValue);
+  const [exporting, setExporting] = useState<'excel' | 'csv' | null>(null);
 
   const handleQuickFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,10 +161,7 @@ export const GridToolbar = <RowData = unknown>({
       onQuickFilterChange?.(value);
 
       if (gridApi) {
-        // v34: setGridOption for quickFilterText
         gridApi.setGridOption?.("quickFilterText", value);
-
-        // For SSRM, also trigger server-side refresh
         if (isServerMode) {
           gridApi.refreshServerSide?.({ purge: false });
         }
@@ -146,40 +177,54 @@ export const GridToolbar = <RowData = unknown>({
     gridApi.setGridOption?.("quickFilterText", "");
     setQuickFilter("");
     onQuickFilterChange?.("");
-    // For SSRM, trigger server refresh after clearing all filters
     if (isServerMode) {
       gridApi.refreshServerSide?.({ purge: true });
     }
   }, [gridApi, isServerMode, onQuickFilterChange]);
 
-  const handleExcelExport = useCallback(
-    (scope: "visible" | "all") => {
+  /* ---- Unified export handler ---- */
+  const handleExport = useCallback(
+    async (format: 'excel' | 'csv') => {
       if (!gridApi) return;
-      gridApi.exportDataAsExcel?.({
-        fileName: exportConfig?.fileBaseName
-          ? `${exportConfig.fileBaseName}.xlsx`
-          : "export.xlsx",
-        sheetName: exportConfig?.sheetName ?? "Sheet1",
-        processCellCallback: exportConfig?.processCellCallback,
-        allColumns: scope === "all",
-      });
-    },
-    [gridApi, exportConfig],
-  );
 
-  const handleCsvExport = useCallback(
-    (scope: "visible" | "all") => {
-      if (!gridApi) return;
-      gridApi.exportDataAsCsv?.({
-        fileName: exportConfig?.csvFileBaseName ?? exportConfig?.fileBaseName
-          ? `${exportConfig?.csvFileBaseName ?? exportConfig?.fileBaseName}.csv`
-          : "export.csv",
-        processCellCallback: exportConfig?.processCellCallback,
-        allColumns: scope === "all",
-        columnSeparator: exportConfig?.csvColumnSeparator,
-      });
+      // Server-side mode: delegate to callback
+      if (isServerMode && onServerExport) {
+        setExporting(format);
+        try {
+          const filterModel = gridApi.getFilterModel?.() ?? {};
+          const sortModel = (gridApi.getColumnState?.() ?? [])
+            .filter((c) => c.sort)
+            .map((c) => ({ colId: c.colId, sort: c.sort, sortIndex: c.sortIndex }));
+          const quickFilterText = (gridApi.getGridOption?.("quickFilterText") as string) ?? "";
+          await onServerExport(format, { filterModel, sortModel, quickFilterText });
+        } finally {
+          setExporting(null);
+        }
+        return;
+      }
+
+      // Client-side mode: use AG Grid export (all filtered rows)
+      if (format === 'excel') {
+        gridApi.exportDataAsExcel?.({
+          fileName: exportConfig?.fileBaseName
+            ? `${exportConfig.fileBaseName}.xlsx`
+            : "export.xlsx",
+          sheetName: exportConfig?.sheetName ?? "Sheet1",
+          processCellCallback: exportConfig?.processCellCallback,
+          allColumns: true,
+        });
+      } else {
+        gridApi.exportDataAsCsv?.({
+          fileName: exportConfig?.csvFileBaseName ?? exportConfig?.fileBaseName
+            ? `${exportConfig?.csvFileBaseName ?? exportConfig?.fileBaseName}.csv`
+            : "export.csv",
+          processCellCallback: exportConfig?.processCellCallback,
+          allColumns: true,
+          columnSeparator: exportConfig?.csvColumnSeparator,
+        });
+      }
     },
-    [gridApi, exportConfig],
+    [gridApi, isServerMode, onServerExport, exportConfig],
   );
 
   const m = messages ?? {};
@@ -202,7 +247,7 @@ export const GridToolbar = <RowData = unknown>({
         type="text"
         value={quickFilter}
         onChange={handleQuickFilterChange}
-        placeholder={m.quickFilterPlaceholder ?? "Ara..."}
+        placeholder={m.quickFilterPlaceholder ?? "Tüm sütunlarda ara..."}
         className="h-8 min-w-[180px] rounded-md border border-border-default bg-surface-default px-3 text-sm text-text-primary placeholder:text-text-disabled focus:border-action-primary focus:outline-hidden focus:ring-2 focus:ring-accent-focus"
         aria-label={m.quickFilterPlaceholder ?? "Quick filter"}
       />
@@ -272,36 +317,28 @@ export const GridToolbar = <RowData = unknown>({
         {m.resetFiltersLabel ?? "Reset Filters"}
       </button>
 
-      {/* Export buttons */}
+      {/* Export buttons — 2 buttons: Excel + CSV */}
       {exportConfig && !isFullscreen && (
         <div className="flex items-center gap-1">
           <button
             type="button"
-            className="h-8 rounded-md bg-surface-muted px-3 text-xs font-medium text-text-secondary hover:bg-surface-raised"
-            onClick={() => handleExcelExport("visible")}
+            disabled={exporting === 'excel'}
+            className="inline-flex h-8 items-center gap-1.5 rounded-md bg-surface-muted px-3 text-xs font-medium text-text-secondary hover:bg-surface-raised disabled:opacity-50"
+            onClick={() => handleExport('excel')}
+            title="Excel"
           >
-            {m.excelVisibleLabel ?? "Excel"}
+            <ExcelIcon className="h-4 w-4" />
+            {exporting === 'excel' ? (m.exportingLabel ?? "İndiriliyor...") : (m.excelLabel ?? "Excel")}
           </button>
           <button
             type="button"
-            className="h-8 rounded-md bg-surface-muted px-3 text-xs font-medium text-text-secondary hover:bg-surface-raised"
-            onClick={() => handleExcelExport("all")}
+            disabled={exporting === 'csv'}
+            className="inline-flex h-8 items-center gap-1.5 rounded-md bg-surface-muted px-3 text-xs font-medium text-text-secondary hover:bg-surface-raised disabled:opacity-50"
+            onClick={() => handleExport('csv')}
+            title="CSV"
           >
-            {m.excelAllLabel ?? "Excel (All)"}
-          </button>
-          <button
-            type="button"
-            className="h-8 rounded-md bg-surface-muted px-3 text-xs font-medium text-text-secondary hover:bg-surface-raised"
-            onClick={() => handleCsvExport("visible")}
-          >
-            {m.csvVisibleLabel ?? "CSV"}
-          </button>
-          <button
-            type="button"
-            className="h-8 rounded-md bg-surface-muted px-3 text-xs font-medium text-text-secondary hover:bg-surface-raised"
-            onClick={() => handleCsvExport("all")}
-          >
-            {m.csvAllLabel ?? "CSV (All)"}
+            <CsvIcon className="h-4 w-4" />
+            {exporting === 'csv' ? (m.exportingLabel ?? "İndiriliyor...") : (m.csvLabel ?? "CSV")}
           </button>
         </div>
       )}
