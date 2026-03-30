@@ -58,14 +58,7 @@ const entry: DesignLabComponentDocEntry = {
       "total rows (from AG Grid paginationGetRowCount)",
       "page input value (local editable state)"
     ],
-    "previewStates": [
-      "default (page 1 of N)",
-      "mid-page (page 10 of 25)",
-      "last page",
-      "all mode (page size = total rows)",
-      "empty state (no rows)",
-      "with start slot (veri modu dropdown)"
-    ],
+    "previewStates": [],
     "behaviorModel": [
       "page size change triggers setGridOption('paginationPageSize', value)",
       "page input accepts numeric input, navigates on Enter, reverts on Escape",

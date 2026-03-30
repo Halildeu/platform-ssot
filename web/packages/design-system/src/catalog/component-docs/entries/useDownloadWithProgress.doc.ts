@@ -55,14 +55,7 @@ const entry: DesignLabComponentDocEntry = {
       "received bytes (accumulated from ReadableStream chunks)",
       "total bytes (from Content-Length header, if available)"
     ],
-    "previewStates": [
-      "idle (no download)",
-      "downloading with percentage (determinate)",
-      "downloading without percentage (indeterminate, only KB/MB shown)",
-      "success (file downloaded, toast auto-dismisses in 3s)",
-      "error (HTTP 429 rate limit, network failure)",
-      "cancelled (user aborted via toast X button)"
-    ],
+    "previewStates": [],
     "behaviorModel": [
       "dispatches CustomEvent 'app:download-progress' on window for shell listener",
       "MF-boundary safe: no toast context dependency, event-based notification",
