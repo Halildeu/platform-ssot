@@ -59,12 +59,15 @@ export default defineConfig(({ mode }) => ({
   ],
 
   resolve: {
-    alias: isQualityRemoteBuild
-      ? {}
-      : {
-          '@mfe/design-system': path.resolve(__dirname, '../../packages/design-system/src'),
-          '@mfe/shared-http': path.resolve(__dirname, '../../packages/shared-http/src'),
-        },
+    alias: {
+      '@tanstack/react-query': path.resolve(__dirname, 'node_modules/@tanstack/react-query/build/modern/index.js'),
+      ...(isQualityRemoteBuild
+        ? {}
+        : {
+            '@mfe/design-system': path.resolve(__dirname, '../../packages/design-system/src'),
+            '@mfe/shared-http': path.resolve(__dirname, '../../packages/shared-http/src'),
+          }),
+    },
   },
 
   optimizeDeps: {
@@ -76,13 +79,12 @@ export default defineConfig(({ mode }) => ({
       'react/jsx-dev-runtime',
       'react-router',
       'react-router-dom',
-      '@tanstack/react-query',
       'clsx',
       'ag-grid-community',
       'ag-grid-enterprise',
       'ag-grid-react',
     ],
-    exclude: ['mfe_shell'],
+    exclude: ['mfe_shell', '@tanstack/react-query'],
   },
 
   server: {

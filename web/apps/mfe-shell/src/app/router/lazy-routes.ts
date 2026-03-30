@@ -33,3 +33,8 @@ export const ReportingModule = createLazyRemoteModule(
   "Reporting",
   () => import("mfe_reporting/ReportingApp"),
 );
+
+export const SchemaExplorerModule = createLazyRemoteModule(
+  "SchemaExplorer",
+  () => import("mfe_schema_explorer/SchemaExplorerApp"),
+);

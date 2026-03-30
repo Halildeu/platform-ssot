@@ -144,9 +144,9 @@ export function ServiceCard({ service, actionPending, onStart, onStop, onRestart
       <div className="mt-3 flex items-center gap-1.5">
         <button
           onClick={() => onStart(service.name)}
-          disabled={isPending || service.running || service.type === 'process'}
+          disabled={isPending || service.running}
           className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-medium text-state-success-text transition hover:bg-state-success-bg disabled:opacity-40 disabled:cursor-not-allowed"
-          title={service.type === 'process' ? 'Use npm scripts to start' : 'Start'}
+          title="Start"
         >
           <Play className="h-3.5 w-3.5" />
           Start

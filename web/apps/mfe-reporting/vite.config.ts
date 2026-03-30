@@ -69,6 +69,7 @@ export default defineConfig(({ mode }) => {
         { find: '@platform/capabilities', replacement: path.resolve(__dirname, '../../packages/platform-capabilities/src') },
         { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
         { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
+        { find: '@tanstack/react-query', replacement: path.resolve(__dirname, 'node_modules/@tanstack/react-query/build/modern/index.js') },
       ],
     },
 
@@ -88,14 +89,13 @@ export default defineConfig(({ mode }) => {
         'react/jsx-dev-runtime',
         'react-router',
         'react-router-dom',
-        '@tanstack/react-query',
         'axios',
         'clsx',
         'ag-grid-community',
         'ag-grid-enterprise',
         'ag-grid-react',
       ],
-      exclude: ['mfe_shell'],
+      exclude: ['mfe_shell', '@tanstack/react-query'],
     },
 
     build: {

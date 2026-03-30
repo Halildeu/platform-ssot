@@ -39,3 +39,10 @@ export const queryClient = new QueryClient({
     },
   },
 });
+
+// Expose queryClient on window for MFEs — @tanstack/react-query is resolved
+// via alias in shell (bypassing MF loadShare), so React context sharing
+// doesn't work across shell/remote boundary. Window bridge is the safe path.
+if (typeof window !== 'undefined') {
+  (window as Record<string, unknown>).__SHELL_QUERY_CLIENT__ = queryClient;
+}

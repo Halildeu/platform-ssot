@@ -69,6 +69,7 @@ function buildRemotes() {
     audit: readEnvBoolean(['VITE_SHELL_ENABLE_AUDIT_REMOTE', 'SHELL_ENABLE_AUDIT_REMOTE']),
     users: readEnvBoolean(['VITE_SHELL_ENABLE_USERS_REMOTE', 'SHELL_ENABLE_USERS_REMOTE']),
     reporting: readEnvBoolean(['VITE_SHELL_ENABLE_REPORTING_REMOTE', 'SHELL_ENABLE_REPORTING_REMOTE']),
+    schemaExplorer: readEnvBoolean(['VITE_SHELL_ENABLE_SCHEMA_EXPLORER_REMOTE', 'SHELL_ENABLE_SCHEMA_EXPLORER_REMOTE']),
   };
 
   // All remotes must be declared so MF plugin can resolve their imports
@@ -83,7 +84,8 @@ function buildRemotes() {
     mfe_access:      { type: 'module', name: 'mfe_access',      entry: enabled.access ? 'http://localhost:3005/remoteEntry.js' : STUB },
     mfe_audit:       { type: 'module', name: 'mfe_audit',       entry: enabled.audit ? 'http://localhost:3006/remoteEntry.js' : STUB },
     mfe_users:       { type: 'module', name: 'mfe_users',       entry: enabled.users ? 'http://localhost:3004/remoteEntry.js' : STUB },
-    mfe_reporting:   { type: 'module', name: 'mfe_reporting',   entry: enabled.reporting ? 'http://localhost:3007/remoteEntry.js' : STUB },
+    mfe_reporting:          { type: 'module', name: 'mfe_reporting',          entry: enabled.reporting ? 'http://localhost:3007/remoteEntry.js' : STUB },
+    mfe_schema_explorer:   { type: 'module', name: 'mfe_schema_explorer',   entry: enabled.schemaExplorer ? 'http://localhost:3008/remoteEntry.js' : STUB },
   };
 }
 
@@ -199,6 +201,7 @@ export default defineConfig(({ mode }) => {
         '/api/v1/me/theme': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
         '/api/v1/variants': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
         // /api/audit → gateway (route'lar permission-service DB'sine bağlı, henüz migrate edilmedi)
+        '/api/v1/schema': { target: 'http://localhost:8096', changeOrigin: true, secure: false },
         // '/api/services' handled by serviceHealthApi() Vite plugin
         '/cockpit-api': {
           target: 'http://localhost:8790',
