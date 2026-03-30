@@ -71,10 +71,9 @@ export interface EntityGridTemplateMessages {
   densityResetLabel?: string;
   fullscreenTooltip?: string;
   resetFiltersLabel?: string;
-  excelVisibleLabel?: string;
-  excelAllLabel?: string;
-  csvVisibleLabel?: string;
-  csvAllLabel?: string;
+  excelLabel?: string;
+  csvLabel?: string;
+  exportingLabel?: string;
   exportFileBaseName?: string;
   exportSheetName?: string;
   variantModalTitle?: string;
@@ -224,10 +223,11 @@ export interface EntityGridTemplateProps<
   densityResetLabel?: string;
   fullscreenTooltip?: string;
   resetFiltersLabel?: string;
-  excelVisibleLabel?: string;
-  excelAllLabel?: string;
-  csvVisibleLabel?: string;
-  csvAllLabel?: string;
+  /** Server-side export callback — called by toolbar Excel/CSV buttons in server mode. */
+  onServerExport?: (
+    format: 'excel' | 'csv',
+    params: { filterModel: Record<string, unknown>; sortModel: unknown[]; quickFilterText: string },
+  ) => Promise<void>;
   variantModalTitle?: string;
   variantNewButtonLabel?: string;
   variantNamePlaceholder?: string;
@@ -299,6 +299,7 @@ export function EntityGridTemplate<
     dataSourceMode = "server",
     createServerSideDatasource,
     onEffectiveModeChange,
+    onServerExport,
     access,
     accessReason,
   } = props;
@@ -392,10 +393,9 @@ export function EntityGridTemplate<
     fullscreenLabel: messages?.fullscreenTooltip,
     fullscreenTooltip: messages?.fullscreenTooltip,
     resetFiltersLabel: messages?.resetFiltersLabel,
-    excelVisibleLabel: messages?.excelVisibleLabel,
-    excelAllLabel: messages?.excelAllLabel,
-    csvVisibleLabel: messages?.csvVisibleLabel,
-    csvAllLabel: messages?.csvAllLabel,
+    excelLabel: messages?.excelLabel,
+    csvLabel: messages?.csvLabel,
+    exportingLabel: messages?.exportingLabel,
   };
 
   // ── Variant messages ───────────────────────────────────────────
@@ -496,6 +496,7 @@ export function EntityGridTemplate<
         isServerMode={isServerMode}
         quickFilterInitialValue={quickFilterInitialValue}
         exportConfig={exportConfig}
+        onServerExport={onServerExport}
         onRequestFullscreen={effectiveFullscreenHandler}
         isFullscreen={effectiveFullscreen}
         messages={toolbarMessages}

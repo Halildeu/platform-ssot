@@ -759,18 +759,16 @@ const UsersGrid: React.FC<UsersGridProps> = ({
     [dataSourceMode, t],
   );
 
-  const handleStreamingCsv = useCallback(() => {
-    const qs = new URLSearchParams();
-    const api = gridApiRef.current;
-    if (api) {
+  const handleServerExport = useCallback(
+    async (format: 'excel' | 'csv', params: { filterModel: Record<string, unknown>; sortModel: unknown[]; quickFilterText: string }) => {
+      const qs = new URLSearchParams();
       // Sort
-      const sortCols = api.getColumnState().filter((c) => c.sort);
-      if (sortCols.length > 0) {
-        qs.set('sort', sortCols.map((c) => `${c.colId},${c.sort}`).join(';'));
+      const sortModel = params.sortModel as Array<{ colId: string; sort: string }>;
+      if (sortModel.length > 0) {
+        qs.set('sort', sortModel.map((c) => `${c.colId},${c.sort}`).join(';'));
       }
-      // Column filters → extract known params
-      const filterModel = api.getFilterModel() ?? {};
-      for (const [colId, model] of Object.entries(filterModel)) {
+      // Column filters
+      for (const [colId, model] of Object.entries(params.filterModel)) {
         const m = model as Record<string, unknown>;
         if (colId === 'status' && m.values) {
           qs.set('status', String((m.values as unknown[])[0]));
@@ -781,30 +779,19 @@ const UsersGrid: React.FC<UsersGridProps> = ({
         }
       }
       // Quick filter
-      const quickFilter = api.getGridOption('quickFilterText') as string;
-      if (quickFilter?.trim()) {
-        qs.set('search', quickFilter.trim());
+      if (params.quickFilterText?.trim()) {
+        qs.set('search', params.quickFilterText.trim());
       }
-    }
-    const url = `/api/users/export.csv${qs.toString() ? '?' + qs.toString() : ''}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }, []);
+      qs.set('format', format);
+      const url = `/api/users/export.${format === 'excel' ? 'xlsx' : 'csv'}${qs.toString() ? '?' + qs.toString() : ''}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    },
+    [],
+  );
 
-  const toolbarExtrasWithExport = useMemo(
-    () => (
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          className="inline-flex items-center justify-center rounded-md border border-action-primary bg-action-primary px-3 py-2 text-sm font-semibold text-action-primary-text shadow-xs hover:bg-action-primary/90 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-selection-outline focus-visible:ring-offset-1 disabled:opacity-60"
-          onClick={handleStreamingCsv}
-          title="Streaming CSV (Tüm Kayıt) — sunucudan limitsiz indirme"
-        >
-          Streaming CSV (Tüm Kayıt)
-        </button>
-        {modeSelector}
-      </div>
-    ),
-    [handleStreamingCsv, modeSelector],
+  const toolbarExtrasWithMode = useMemo(
+    () => modeSelector,
+    [modeSelector],
   );
 
   // Fullscreen is now handled internally by EntityGridTemplate (grid-scoped, not page-scoped)
@@ -865,17 +852,14 @@ const UsersGrid: React.FC<UsersGridProps> = ({
           total={dataSourceMode === 'client' ? clientRows.length : undefined}
           createServerSideDatasource={dataSourceMode === 'server' ? createServerSideDatasource : undefined}
           onGridReady={handleGridReady}
-          toolbarExtras={toolbarExtrasWithExport}
+          toolbarExtras={toolbarExtrasWithMode}
+          onServerExport={dataSourceMode === 'server' ? handleServerExport : undefined}
           themeLabel={t('users.grid.themeLabel')}
           quickFilterLabel={t('users.grid.quickFilterLabel')}
           variantLabel={t('users.grid.variantLabel')}
           quickFilterPlaceholder={t('users.grid.quickFilterPlaceholder')}
           fullscreenTooltip={t('users.grid.fullscreenTooltip')}
           resetFiltersLabel={t('users.grid.toolbar.resetFilters')}
-          excelVisibleLabel={t('users.grid.toolbar.excelVisible')}
-          excelAllLabel={t('users.grid.toolbar.excelAll')}
-          csvVisibleLabel={t('users.grid.toolbar.csvVisible')}
-          csvAllLabel={t('users.grid.toolbar.csvAll')}
           localeText={localeText}
         />
       </React.Suspense>
