@@ -247,7 +247,7 @@ describe("useFuzzySearch", () => {
       useFuzzySearch(items, { debounceMs: 0 }),
     );
 
-    act(() => result.current.setQuery("datpick")); // fuzzy for DatePicker
+    act(() => result.current.setQuery("DatePick")); // prefix match for DatePicker
     await vi.waitFor(() => {
       expect(result.current.results.length).toBeGreaterThan(0);
     });
