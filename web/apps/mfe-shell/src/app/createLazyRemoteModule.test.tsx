@@ -42,7 +42,7 @@ describe("createLazyRemoteModule", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Remote modulu yuklenemedi. Local remoteEntry baglantisini kontrol et.",
+        "Beklenmeyen bir hata olustu. Detaylar asagida.",
       ),
     ).toBeInTheDocument();
     expect(
