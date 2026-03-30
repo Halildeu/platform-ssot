@@ -13,6 +13,7 @@ import {
 } from "../auth/auth-sync";
 import { createDevAuthSession, mapKeycloakProfile } from "../config/auth-helpers";
 import { api } from "@mfe/shared-http";
+import { registerGridVariantsTokenResolver } from "@mfe/design-system";
 
 /* ------------------------------------------------------------------ */
 /*  Fetch real application permissions from permission-service          */
@@ -71,6 +72,8 @@ export const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     tokenRef.current = token ?? null;
+    // Register token resolver for grid variant API calls
+    registerGridVariantsTokenResolver(() => tokenRef.current);
   }, [token]);
 
   /* Cross-window auth state subscription */
