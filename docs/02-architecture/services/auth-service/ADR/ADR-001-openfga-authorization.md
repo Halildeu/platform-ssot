@@ -1,5 +1,7 @@
 # ADR-001: OpenFGA for Authorization (Zanzibar Model)
 
+ID: ADR-001-openfga-authorization
+
 **Status:** Accepted
 **Date:** 2026-03-29
 **Decision Makers:** Halil Kocoglu
