@@ -37,6 +37,10 @@ export * from "./theme";
 /* ---- Providers ---- */
 export * from "./providers";
 
+/* ---- Hooks ---- */
+export { useBreakpoint, BREAKPOINTS } from "./hooks/useBreakpoint";
+export type { BreakpointKey, UseBreakpointReturn } from "./hooks/useBreakpoint";
+
 /* ---- Primitives ---- */
 export * from "./primitives";
 

@@ -12,6 +12,12 @@ export type { SlotProps } from "./_shared/Slot";
 /* Layout */
 export { Stack, HStack, VStack } from "./stack";
 export type { StackProps, HStackProps, VStackProps, StackDirection, StackAlign, StackJustify, StackGap } from "./stack";
+export { Grid } from "./grid";
+export type { GridProps, GridColProps, GridColumns, GridGutter, GridAlign, GridJustify, ResponsiveValue } from "./grid";
+export { Container } from "./container";
+export type { ContainerProps, ContainerMaxWidth } from "./container";
+export { Flex } from "./flex";
+export type { FlexProps, FlexDirection, FlexAlign, FlexJustify, FlexWrap, FlexGap } from "./flex";
 export { Card, CardHeader, CardBody, CardFooter } from "./card";
 export type { CardProps, CardVariant, CardPadding, CardHeaderProps } from "./card";
 export { Divider } from "./divider";
@@ -79,6 +85,14 @@ export type {
 } from "./dropdown";
 export { Drawer } from "./drawer";
 export type { DrawerProps, DrawerPlacement, DrawerSize } from "./drawer";
+
+/* Progress & Feedback */
+export { Progress } from "./progress";
+export type { ProgressProps, ProgressType, ProgressStatus, ProgressSize } from "./progress";
+export { Statistic } from "./statistic";
+export type { StatisticProps, StatisticCountdownProps, StatisticSize, StatisticTrend } from "./statistic";
+export { Image } from "./image";
+export type { ImageProps, ImageGroupProps, ImagePreviewConfig, ImageRounded, ImageObjectFit } from "./image";
 
 /* Status */
 export { StatusIndicator } from "./status-indicator";

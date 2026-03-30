@@ -339,3 +339,15 @@ export type {
   WidgetTrend,
   TrendDirection,
 } from "./smart-dashboard";
+
+/* Tree Select */
+export { TreeSelect } from "./tree-select";
+export type { TreeSelectProps, TreeSelectNode, TreeSelectSize } from "./tree-select";
+
+/* Speed Dial */
+export { SpeedDial } from "./speed-dial";
+export type { SpeedDialProps, SpeedDialAction, SpeedDialDirection } from "./speed-dial";
+
+/* Bottom Navigation */
+export { BottomNavigation } from "./bottom-navigation";
+export type { BottomNavigationProps, BottomNavigationItemProps } from "./bottom-navigation";

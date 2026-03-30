@@ -59,6 +59,10 @@ export type { DetailSummaryProps } from "./detail-summary";
 export { ReportFilterPanel } from "./report-filter-panel";
 export type { ReportFilterPanelProps } from "./report-filter-panel";
 
+/* Result */
+export { Result } from "./result";
+export type { ResultProps, ResultStatus } from "./result";
+
 /* Shell Header */
 export { ShellHeader } from "./shell-header";
 export type { ShellHeaderProps, ShellHeaderNavItem } from "./shell-header";
