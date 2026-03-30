@@ -782,8 +782,8 @@ const UsersGrid: React.FC<UsersGridProps> = ({
       if (params.quickFilterText?.trim()) {
         qs.set('search', params.quickFilterText.trim());
       }
-      qs.set('format', format);
-      const url = `/api/users/export.${format === 'excel' ? 'xlsx' : 'csv'}${qs.toString() ? '?' + qs.toString() : ''}`;
+      // Server exports CSV only — Excel opens CSV files natively
+      const url = `/api/users/export.csv${qs.toString() ? '?' + qs.toString() : ''}`;
       window.open(url, '_blank', 'noopener,noreferrer');
     },
     [],
