@@ -1,10 +1,9 @@
 # ADR-001: OpenFGA for Authorization (Zanzibar Model)
 
 ID: ADR-001-openfga-authorization
-
-**Status:** Accepted
-**Date:** 2026-03-29
-**Decision Makers:** Halil Kocoglu
+Status: Accepted
+Date: 2026-03-29
+Owner: @halilkocoglu
 
 ## Context
 
@@ -39,3 +38,8 @@ Sorunlar:
 **Positive:** Zanzibar inheritance, OSS/ucretsiz, Java/JS SDK mevcut, Playground UI
 **Negative:** Yeni teknoloji egrisi, migration sureci, OpenFGA performans izlenmeli
 **Risks:** OpenFGA SPOF → circuit breaker + cached fallback
+
+## Links
+
+- OpenFGA: https://openfga.dev
+- Google Zanzibar Paper: https://research.google/pubs/pub48190/

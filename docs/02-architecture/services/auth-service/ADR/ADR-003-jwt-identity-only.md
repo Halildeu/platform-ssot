@@ -1,10 +1,9 @@
 # ADR-003: JWT Contains Identity Only (No Permission Claims)
 
 ID: ADR-003-jwt-identity-only
-
-**Status:** Accepted
-**Date:** 2026-03-29
-**Decision Makers:** Halil Kocoglu
+Status: Accepted
+Date: 2026-03-29
+Owner: @halilkocoglu
 
 ## Context
 
@@ -23,3 +22,8 @@ JWT'den kaldirilan: permissions claim, resource_access client role'leri
 
 **Positive:** Permission degisiklikleri aninda etkili, token boyutu kucuk, net govrev ayriligi
 **Negative:** Her request'te OpenFGA cagrisi (cache ile mitigate), permission-service SPOF riski
+
+## Links
+
+- ADR-001: OpenFGA for Authorization
+- ADR-002: Dual Data Enforcement

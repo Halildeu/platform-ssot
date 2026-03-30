@@ -1,10 +1,9 @@
 # ADR-002: Dual Data Enforcement (Hibernate @Filter + PostgreSQL RLS)
 
 ID: ADR-002-data-enforcement-rls-filter
-
-**Status:** Accepted
-**Date:** 2026-03-29
-**Decision Makers:** Halil Kocoglu
+Status: Accepted
+Date: 2026-03-29
+Owner: @halilkocoglu
 
 ## Context
 
@@ -24,3 +23,7 @@ Developer WHERE clause'u unutursa sirketler arasi veri sizintisi olusabilir.
 
 **Positive:** Developer hatasi bypass-proof, dev'de bile aktif
 **Negative:** entityManager.find(id) Hibernate filter'i bypass eder (RLS yakalar), RLS performans izlenmeli
+
+## Links
+
+- ADR-001: OpenFGA for Authorization
