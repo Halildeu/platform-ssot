@@ -81,7 +81,20 @@
       "web/apps/mfe-access/src/features/**/*",
       "web/apps/mfe-shell/src/app/config/*",
       "web/apps/mfe-shell/vite-plugins/*",
-      "web/apps/mfe-suggestions/src/*"
+      "web/apps/mfe-suggestions/src/*",
+      "backend/schema-service/**",
+      "backend/scripts/*",
+      "web/apps/mfe-schema-explorer/**",
+      "web/apps/mfe-access/src/app/*",
+      "web/apps/mfe-users/**/*",
+      "web/apps/mfe-reporting/**/*",
+      "web/apps/mfe-shell/src/app/layout/*",
+      "web/apps/mfe-shell/src/app/router/*",
+      "web/apps/mfe-shell/src/app/createLazyRemoteModule.tsx",
+      "web/apps/mfe-shell/src/types/*",
+      "web/apps/mfe-shell/src/pages/**/*",
+      "web/packages/design-system/src/**",
+      "web/packages/design-system/src/index.ts"
     ],
     "affected_modules": [
       "api-gateway",
@@ -91,6 +104,10 @@
       "mobile-workspace",
       "pm-suite-contracts",
       "tenant-context",
+      "schema-service",
+      "mfe-schema-explorer",
+      "mfe-users",
+      "mfe-reporting",
       "mfe-shell",
       "mfe-audit",
       "web-shared-http",
@@ -241,6 +258,51 @@
       },
       {
         "path_glob": "web/apps/mfe-suggestions/src/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-schema-explorer/**",
+        "ux_theme_id": "data_entry_validation_recovery",
+        "ux_subtheme_id": "input_error_prevention_patterns"
+      },
+      {
+        "path_glob": "web/apps/mfe-users/**/*",
+        "ux_theme_id": "task_completion_architecture",
+        "ux_subtheme_id": "critical_path_minimization"
+      },
+      {
+        "path_glob": "web/apps/mfe-access/src/app/*",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/layout/*",
+        "ux_theme_id": "navigation_information_scent",
+        "ux_subtheme_id": "domain_based_information_architecture"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/router/*",
+        "ux_theme_id": "navigation_information_scent",
+        "ux_subtheme_id": "domain_based_information_architecture"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/createLazyRemoteModule.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/types/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/pages/**/*",
+        "ux_theme_id": "navigation_information_scent",
+        "ux_subtheme_id": "domain_based_information_architecture"
+      },
+      {
+        "path_glob": "web/packages/design-system/src/**",
         "ux_theme_id": "consistency_and_pattern_governance",
         "ux_subtheme_id": "single_component_source_of_truth"
       }
