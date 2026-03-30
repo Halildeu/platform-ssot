@@ -5,6 +5,9 @@ globs: backend/*-service/**
 Follow AGENT-CODEX.backend.md (§Spring Boot Pattern: Controller → Service → Repository → Model → DTO).
 Claude-only: run `cd backend && mvn test -pl <service-name>` before committing service changes.
 
+## Decision Registry (MUST READ FIRST)
+Before modifying auth-related code, read `decisions/topics/zanzibar-openfga.v1.json` and `decisions/topics/security-local-dev.v1.json`. Decisions marked FINAL cannot be reverted. Run `backend/scripts/doctor-zanzibar.sh --quick` before committing.
+
 ## Auth Architecture Rules (CRITICAL — DO NOT CHANGE)
 - Authorization: OpenFGA (Zanzibar) via `OpenFgaAuthzService`
 - **permission-service is REMOVED** — port 8090 does not exist

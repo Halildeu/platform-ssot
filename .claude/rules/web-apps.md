@@ -5,6 +5,9 @@ globs: web/apps/**
 Follow AGENT-CODEX.web.md (§MFE conventions: Module Federation, routing, state, auth).
 Claude-only: run `cd web && npm run lint && npm test` before committing app changes.
 
+## Decision Registry (MUST READ FIRST)
+Before modifying auth/proxy code, read `decisions/topics/zanzibar-openfga.v1.json`. Decisions marked FINAL cannot be reverted. Constraints are HARD RULES.
+
 ## Auth & Vite Config Rules (CRITICAL — DO NOT CHANGE)
 - **NEVER modify `web/apps/mfe-shell/.env.local`** — developer's personal config
 - **NEVER change AUTH_MODE** — it is `keycloak` (sektör standardı)
