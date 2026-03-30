@@ -188,8 +188,7 @@ export const DesignLabAppSidebar: React.FC = () => {
 
   const handleLayerSwitch = useCallback((layerId: LayerId) => {
     navigate(`/admin/design-lab/${layerId}`);
-    fuzzy.clear();
-  }, [navigate, fuzzy]);
+  }, [navigate]);
 
   const handleItemSelect = useCallback((itemPath: string) => {
     fuzzy.saveSearch(fuzzy.query);
