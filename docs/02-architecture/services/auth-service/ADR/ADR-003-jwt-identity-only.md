@@ -1,29 +1,5 @@
-# ADR-003: JWT Contains Identity Only (No Permission Claims)
-
-ID: ADR-003-jwt-identity-only
-Status: Accepted
-Date: 2026-03-29
-Owner: @halilkocoglu
-
-## Context
-
-Mevcut JWT'de Keycloak realm role'leri ve permission claim'leri gomulu.
-Permission degisiklikleri token expire'a kadar (5 dk) yansimaz.
-SecurityConfig'de hardcoded admin role → 7+ permission mapping.
+# ADR-003: JWT Identity Only (No Permission Claims)
+**Status:** Accepted  **Date:** 2026-03-29
 
 ## Decision
-
-**JWT sadece identity bilgisi tasir. Tum permission check'ler OpenFGA'dan runtime'da yapilir.**
-
-JWT'de kalacak: sub, email, preferred_username, realm_access.roles
-JWT'den kaldirilan: permissions claim, resource_access client role'leri
-
-## Consequences
-
-**Positive:** Permission degisiklikleri aninda etkili, token boyutu kucuk, net govrev ayriligi
-**Negative:** Her request'te OpenFGA cagrisi (cache ile mitigate), permission-service SPOF riski
-
-## Links
-
-- ADR-001: OpenFGA for Authorization
-- ADR-002: Dual Data Enforcement
+JWT = identity only (sub, email). All permissions from OpenFGA at runtime.
