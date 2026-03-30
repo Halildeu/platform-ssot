@@ -1,6 +1,7 @@
 import { useMemo, useState, useCallback, useRef, useEffect } from "react";
 
 const STORAGE_KEY = "design-lab-recent-searches";
+const SESSION_QUERY_KEY = "design-lab-active-search";
 const MAX_RECENT = 5;
 
 export type HighlightRange = [start: number, end: number];
@@ -64,8 +65,16 @@ export function useFuzzySearch<T extends { name: string }>(
   options?: { minScore?: number; debounceMs?: number },
 ) {
   const { minScore = 10, debounceMs = 150 } = options ?? {};
-  const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [query, setQueryRaw] = useState(() => {
+    try { return sessionStorage.getItem(SESSION_QUERY_KEY) ?? ""; } catch { return ""; }
+  });
+  const [debouncedQuery, setDebouncedQuery] = useState(query);
+
+  // Persist active query to sessionStorage so it survives route changes
+  const setQuery = useCallback((q: string) => {
+    setQueryRaw(q);
+    try { sessionStorage.setItem(SESSION_QUERY_KEY, q); } catch { /* noop */ }
+  }, []);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Debounce
@@ -113,7 +122,8 @@ export function useFuzzySearch<T extends { name: string }>(
   const clear = useCallback(() => {
     setQuery("");
     setDebouncedQuery("");
-  }, []);
+    try { sessionStorage.removeItem(SESSION_QUERY_KEY); } catch { /* noop */ }
+  }, [setQuery]);
 
   const isSearching = debouncedQuery.trim().length > 0;
 

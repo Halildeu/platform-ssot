@@ -192,10 +192,9 @@ export const DesignLabAppSidebar: React.FC = () => {
   }, [navigate, fuzzy]);
 
   const handleItemSelect = useCallback((itemPath: string) => {
+    fuzzy.saveSearch(fuzzy.query);
     navigate(itemPath);
     closeSidebar();
-    fuzzy.saveSearch(fuzzy.query);
-    fuzzy.clear();
   }, [navigate, closeSidebar, fuzzy]);
 
   /* Fuzzy search highlight ranges for a given item name */
