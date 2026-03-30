@@ -198,7 +198,7 @@ export default defineConfig(({ mode }) => {
         '/api/v1/theme-registry': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
         '/api/v1/me/theme': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
         '/api/v1/variants': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
-        '/api/audit': { target: 'http://localhost:8089', changeOrigin: true, secure: false },
+        // /api/audit → gateway (route'lar permission-service DB'sine bağlı, henüz migrate edilmedi)
         // '/api/services' handled by serviceHealthApi() Vite plugin
         '/cockpit-api': {
           target: 'http://localhost:8790',
