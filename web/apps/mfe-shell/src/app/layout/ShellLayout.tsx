@@ -59,7 +59,7 @@ const ShellChrome: React.FC = () => {
         }}
       >
         {showAuditSummary ? <AuditSummaryStrip /> : null}
-        <main className="flex min-h-0 flex-1 flex-col px-8 py-6">
+        <main className="flex min-h-0 flex-1 flex-col px-6 py-4">
           <AppRouter />
         </main>
       </div>

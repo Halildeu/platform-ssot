@@ -92,7 +92,7 @@ export const HeaderBar = forwardRef<HTMLElement, HeaderBarProps>(
           ...style,
         }}
         className={cn(
-          'fixed inset-x-0 top-0 z-50 bg-surface-header px-6 py-2',
+          'fixed inset-x-0 top-0 z-50 bg-surface-header px-3 py-2',
           className,
         )}
         {...rest}
