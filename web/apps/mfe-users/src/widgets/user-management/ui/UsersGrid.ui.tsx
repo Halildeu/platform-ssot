@@ -789,10 +789,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
     [],
   );
 
-  const toolbarExtrasWithMode = useMemo(
-    () => modeSelector,
-    [modeSelector],
-  );
+  // modeSelector moved to footerStartSlot (grid bottom-left, next to pagination)
 
   // Fullscreen is now handled internally by EntityGridTemplate (grid-scoped, not page-scoped)
 
@@ -852,7 +849,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
           total={dataSourceMode === 'client' ? clientRows.length : undefined}
           createServerSideDatasource={dataSourceMode === 'server' ? createServerSideDatasource : undefined}
           onGridReady={handleGridReady}
-          toolbarExtras={toolbarExtrasWithMode}
+          footerStartSlot={modeSelector}
           onServerExport={dataSourceMode === 'server' ? handleServerExport : undefined}
           themeLabel={t('users.grid.themeLabel')}
           quickFilterLabel={t('users.grid.quickFilterLabel')}

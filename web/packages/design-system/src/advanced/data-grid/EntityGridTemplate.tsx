@@ -205,6 +205,8 @@ export interface EntityGridTemplateProps<
   isFullscreen?: boolean;
   onRequestFullscreen?: () => void;
   toolbarExtras?: React.ReactNode;
+  /** Content rendered at the bottom-left of the grid, aligned with pagination. */
+  footerStartSlot?: React.ReactNode;
   exportConfig?: GridExportConfig<RowData>;
   quickFilterPlaceholder?: string;
   initialTheme?: ThemeValue;
@@ -284,6 +286,7 @@ export function EntityGridTemplate<
     isFullscreen = false,
     onRequestFullscreen,
     toolbarExtras,
+    footerStartSlot,
     exportConfig,
     quickFilterPlaceholder,
     initialTheme = "quartz",
@@ -574,6 +577,12 @@ export function EntityGridTemplate<
           />
         )}
       </GridShell>
+      {/* Footer start slot — aligned with pagination row */}
+      {footerStartSlot && (
+        <div className="flex items-center border-x border-b border-border-subtle bg-surface-default px-4 py-1.5 rounded-b-lg">
+          {footerStartSlot}
+        </div>
+      )}
     </div>
   );
 }
