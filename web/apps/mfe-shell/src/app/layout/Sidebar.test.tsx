@@ -78,7 +78,7 @@ describe('Sidebar', () => {
   it('NavigationRail uzerinden route gecisi yapar ve test-id yuzeyini korur', () => {
     renderSidebar('/audit/events');
 
-    expect(screen.getByTestId('sidebar-root')).toBeInTheDocument();
+    expect(screen.getByLabelText('Sidebar')).toBeInTheDocument();
     expect(screen.getByTestId('nav-home')).toBeInTheDocument();
     expect(screen.getByTestId('nav-dashboard')).toHaveAttribute('aria-current', 'page');
 
@@ -92,7 +92,7 @@ describe('Sidebar', () => {
 
     renderSidebar('/suggestions');
 
-    fireEvent.click(screen.getByTestId('sidebar-search'));
+    fireEvent.click(screen.getByPlaceholderText(/search/i));
 
     // openCommandPalette now navigates to design-lab with search=open param
     // instead of dispatching pushNotification

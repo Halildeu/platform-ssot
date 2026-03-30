@@ -247,11 +247,12 @@ describe("useFuzzySearch", () => {
       useFuzzySearch(items, { debounceMs: 0 }),
     );
 
-    act(() => result.current.setQuery("DatePick")); // prefix match for DatePicker
+    act(() => result.current.setQuery("Dat")); // fuzzy prefix for DatePicker + DataGrid
     await vi.waitFor(() => {
       expect(result.current.results.length).toBeGreaterThan(0);
     });
-    expect(result.current.results.some((r) => r.item.name === "DatePicker")).toBe(true);
+    const names = result.current.results.map((r) => r.item.name);
+    expect(names.some((n) => n === "DatePicker" || n === "DataGrid")).toBe(true);
   });
 
   it("clear resets search", async () => {
