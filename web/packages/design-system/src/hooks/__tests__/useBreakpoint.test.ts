@@ -6,6 +6,16 @@ import { useBreakpoint, BREAKPOINTS } from '../useBreakpoint';
 describe('useBreakpoint', () => {
   beforeEach(() => {
     Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1024 });
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: window.matchMedia ? false : false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
   });
 
   it('dogru breakpoint dondurur', () => {

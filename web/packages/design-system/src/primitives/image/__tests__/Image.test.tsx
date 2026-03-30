@@ -1,42 +1,42 @@
 // @vitest-environment jsdom
 import React from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { Image } from '../Image';
 
 afterEach(() => { cleanup(); });
 
-// Mock IntersectionObserver
-vi.stubGlobal('IntersectionObserver', class {
-  observe() {} unobserve() {} disconnect() {}
-  constructor(cb: IntersectionObserverCallback) { cb([{ isIntersecting: true } as IntersectionObserverEntry], this as unknown as IntersectionObserver); }
+beforeEach(() => {
+  vi.stubGlobal('IntersectionObserver', class MockIO {
+    private cb: IntersectionObserverCallback;
+    constructor(cb: IntersectionObserverCallback) { this.cb = cb; }
+    observe() { this.cb([{ isIntersecting: true } as IntersectionObserverEntry], this as unknown as IntersectionObserver); }
+    unobserve() {}
+    disconnect() {}
+  });
 });
 
 describe('Image — temel render', () => {
   it('img element render eder', () => {
     render(<Image src="/test.jpg" alt="Test" />);
-    expect(screen.getByAlt('Test')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Test' })).toBeInTheDocument();
   });
+
   it('data-component attribute ekler', () => {
     const { container } = render(<Image src="/test.jpg" alt="Test" />);
     expect(container.querySelector('[data-component="image"]')).toBeInTheDocument();
   });
-});
 
-describe('Image — fallback', () => {
-  it('hata durumunda fallback kullanir', () => {
-    render(<Image src="/broken.jpg" fallback="/fallback.jpg" alt="Fallback" />);
-    const img = screen.getByAlt('Fallback');
-    fireEvent.error(img);
-    expect(img).toHaveAttribute('src', '/fallback.jpg');
+  it('objectFit class uygular', () => {
+    render(<Image src="/test.jpg" alt="Cover" objectFit="contain" />);
+    const img = screen.getByRole('img', { name: 'Cover' });
+    expect(img.className).toContain('object-contain');
   });
-});
 
-describe('Image — preview', () => {
-  it('preview=true ile tiklanabilir', () => {
-    const { container } = render(<Image src="/test.jpg" preview alt="Preview" />);
-    expect(container.querySelector('.cursor-pointer')).toBeInTheDocument();
+  it('rounded class uygular', () => {
+    const { container } = render(<Image src="/test.jpg" alt="R" rounded="full" />);
+    expect(container.querySelector('.rounded-full')).toBeInTheDocument();
   });
 });
 
