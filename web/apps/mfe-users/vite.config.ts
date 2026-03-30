@@ -103,8 +103,10 @@ export default defineConfig(({ mode }) => {
       alias: [
         { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
         { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
-        { find: 'mfe_shell/i18n', replacement: path.resolve(__dirname, '__mocks__/mfe-shell-i18n.ts') },
+        // mfe_shell/i18n: only alias in test mode — in dev/prod, MF remote handles it
+        ...(isTest ? [{ find: 'mfe_shell/i18n', replacement: path.resolve(__dirname, '__mocks__/mfe-shell-i18n.ts') }] : []),
         { find: /^mfe_reporting\/(.*)$/, replacement: path.resolve(__dirname, '__mocks__/mfe-reporting-$1.ts') },
+        { find: '@tanstack/react-query', replacement: path.resolve(__dirname, 'node_modules/@tanstack/react-query/build/modern/index.js') },
       ],
     },
 
@@ -134,13 +136,12 @@ export default defineConfig(({ mode }) => {
         'react-router-dom',
         '@reduxjs/toolkit',
         'react-redux',
-        '@tanstack/react-query',
         'axios',
         'ag-grid-community',
         'ag-grid-enterprise',
         'ag-grid-react',
       ],
-      exclude: ['mfe_shell', 'mfe_reporting'],
+      exclude: ['mfe_shell', 'mfe_reporting', '@tanstack/react-query'],
     },
 
     build: {

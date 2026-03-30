@@ -60,7 +60,11 @@ export default defineConfig(({ mode }) => ({
     alias: [
       { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
       { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
-      { find: 'mfe_shell/i18n', replacement: path.resolve(__dirname, '../mfe-shell/src/app/i18n/index.ts') },
+      // mfe_shell/i18n: only alias in test mode — in dev/prod, MF remote handles it.
+      // Alias + MF plugin conflict: plugin rewrites to __moduleExports (enforce: pre)
+      // then alias resolves to raw TS file that doesn't have __moduleExports → crash.
+      ...(isTest ? [{ find: 'mfe_shell/i18n', replacement: path.resolve(__dirname, '../mfe-shell/src/app/i18n/index.ts') }] : []),
+      { find: '@tanstack/react-query', replacement: path.resolve(__dirname, 'node_modules/@tanstack/react-query/build/modern/index.js') },
     ],
   },
 
@@ -73,13 +77,12 @@ export default defineConfig(({ mode }) => ({
       'react/jsx-dev-runtime',
       'react-router',
       'react-router-dom',
-      '@tanstack/react-query',
       'axios',
       'ag-grid-community',
       'ag-grid-enterprise',
       'ag-grid-react',
     ],
-    exclude: ['mfe_shell'],
+    exclude: ['mfe_shell', '@tanstack/react-query'],
   },
 
   server: {
