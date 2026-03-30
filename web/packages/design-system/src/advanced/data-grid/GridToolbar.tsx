@@ -220,7 +220,8 @@ export const GridToolbar = <RowData = unknown>({
             : "export.csv",
           processCellCallback: exportConfig?.processCellCallback,
           allColumns: true,
-          columnSeparator: exportConfig?.csvColumnSeparator,
+          columnSeparator: exportConfig?.csvColumnSeparator ?? ';',
+          prependContent: '\uFEFF', // UTF-8 BOM for Excel compatibility
         });
       }
     },
