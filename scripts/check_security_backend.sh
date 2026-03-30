@@ -31,6 +31,7 @@ COMMON_GLOBS=(
   --glob '!**/scripts/vault/**'
   --glob '!**/scripts/test-users-and-variants.sh'
   --glob '!**/infra/**'
+  --glob '!**/test-results/**'
 )
 
 run_search_with_python() {

@@ -8,10 +8,10 @@ set -euo pipefail
 #
 # Çalıştırdığı adımlar:
 #   - python3 scripts/ops_technical_baseline_checklist.py --repo-root .
-#   - npm run lint:style
-#   - npm run lint:semantic
-#   - npm run lint:tailwind
-#   - npm run lint:no-antd
+#   - pnpm run lint:style
+#   - pnpm run lint:semantic
+#   - pnpm run lint:tailwind
+#   - pnpm run lint:no-antd
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
@@ -34,16 +34,16 @@ if [[ "${NODE_OPTIONS:-}" =~ --max-old-space-size=([0-9]+) ]]; then
   echo "[run_lint_web] Node memory: --max-old-space-size=${BASH_REMATCH[1]}"
 fi
 
-echo "[run_lint_web] npm run lint:style"
-npm run lint:style
+echo "[run_lint_web] pnpm run lint:style"
+pnpm run lint:style
 
-echo "[run_lint_web] npm run lint:semantic"
-npm run lint:semantic
+echo "[run_lint_web] pnpm run lint:semantic"
+pnpm run lint:semantic
 
-echo "[run_lint_web] npm run lint:tailwind"
-npm run lint:tailwind
+echo "[run_lint_web] pnpm run lint:tailwind"
+pnpm run lint:tailwind
 
-echo "[run_lint_web] npm run lint:no-antd"
-npm run lint:no-antd
+echo "[run_lint_web] pnpm run lint:no-antd"
+pnpm run lint:no-antd
 
 echo "[run_lint_web] Tüm WEB lint adımları başarıyla tamamlandı ✅"
