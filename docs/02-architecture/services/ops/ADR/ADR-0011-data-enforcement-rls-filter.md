@@ -1,6 +1,6 @@
-# ADR-002: Dual Data Enforcement (Hibernate @Filter + PostgreSQL RLS)
+# ADR-0011: Dual Data Enforcement (Hibernate @Filter + PostgreSQL RLS)
 
-ID: ADR-002
+ID: ADR-0011
 Status: Accepted
 Date: 2026-03-29
 Owner: @team/platform
