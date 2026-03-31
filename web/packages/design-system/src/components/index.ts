@@ -351,3 +351,14 @@ export type { SpeedDialProps, SpeedDialAction, SpeedDialDirection } from "./spee
 /* Bottom Navigation */
 export { BottomNavigation } from "./bottom-navigation";
 export type { BottomNavigationProps, BottomNavigationItemProps } from "./bottom-navigation";
+
+/* Grouped Card Gallery */
+export { GroupedCardGallery, GallerySearchBar, GalleryGroup, GalleryCard } from "./grouped-card-gallery";
+export type {
+  GroupedCardGalleryProps,
+  GalleryItem,
+  GalleryColumns,
+  GallerySearchBarProps,
+  GalleryGroupProps,
+  GalleryCardProps,
+} from "./grouped-card-gallery";
