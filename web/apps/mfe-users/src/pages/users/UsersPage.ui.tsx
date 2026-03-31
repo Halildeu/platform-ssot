@@ -3,6 +3,7 @@ import {
   PageLayout,
   createPageLayoutBreadcrumbItems,
   createPageLayoutPreset,
+  HoverDescription,
 } from '@mfe/design-system';
 import { UserDetail, UserSummary, TelemetryEvent } from '@mfe/shared-types';
 import { fetchPageLayout, trackAction, resolveTraceId } from '@mfe/shared-http';
@@ -13,6 +14,7 @@ import UsersGrid from '../../widgets/user-management/ui/UsersGrid.ui';
 import UserDetailDrawer from '../../widgets/user-management/ui/UserDetailDrawer.ui';
 import { usersPageManifest } from '../../manifest/users/users-page.manifest';
 import { useUsersI18n } from '../../i18n/useUsersI18n';
+
 
 interface UsersPageProps {
   isFullscreen?: boolean;
@@ -183,12 +185,13 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
       ) : (
         <PageLayout
           {...pageLayoutPreset}
-          title={pageTitle}
-          description={pageDescription}
+          title={<HoverDescription description={pageDescription}>{pageTitle}</HoverDescription>}
+          description={undefined}
+          classes={{
+            header: '!px-6 !rounded-2xl !border !border-border-subtle shadow-sm !overflow-visible',
+          }}
           breadcrumbItems={pageBreadcrumbItems}
-          actions={actionContent}
           contentClassName="!px-0 !py-4"
-          classes={{ header: '!px-6 overflow-hidden !rounded-2xl !border !border-border-subtle shadow-sm' }}
         >
           <div
             className="overflow-hidden !rounded-2xl border border-border-subtle bg-surface-default shadow-sm"
