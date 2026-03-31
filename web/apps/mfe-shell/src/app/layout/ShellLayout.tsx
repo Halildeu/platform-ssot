@@ -161,13 +161,18 @@ export const ShellLayout: React.FC = () => {
       );
     };
     if (remaining <= 0) {
-      sendSessionExpiredNotification();
-      dispatch(logout());
+      // Token expire oldu — Keycloak refresh yapacak (onTokenExpired handler).
+      // Logout YAPMIYORUZ — refresh başarılı olursa kullanıcı fark etmez.
+      if (process.env.NODE_ENV !== 'production') {
+        console.debug('[SESSION] Token expired, Keycloak will refresh');
+      }
       return;
     }
     const timeoutId = window.setTimeout(() => {
-      sendSessionExpiredNotification();
-      dispatch(logout());
+      // Token expire olacak — Keycloak refresh'e bırak, logout yapma.
+      if (process.env.NODE_ENV !== 'production') {
+        console.debug('[SESSION] Token expiry timer fired, Keycloak will refresh');
+      }
     }, remaining);
     return () => window.clearTimeout(timeoutId);
   }, [dispatch, expiresAt, token, t]);

@@ -231,9 +231,11 @@ export const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({
             }),
           );
         }
-      } catch {
+      } catch (refreshError) {
+        // Token refresh failed — log but don't logout.
+        // Keycloak SSO session may still be valid for re-auth.
+        console.warn('[AuthBootstrapper] Token refresh failed:', refreshError);
         void clearTokenCookie();
-        dispatch(logout());
       }
     };
 
