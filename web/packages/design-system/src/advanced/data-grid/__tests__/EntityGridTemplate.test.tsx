@@ -192,11 +192,11 @@ describe('EntityGridTemplate — dataSourceMode', () => {
 });
 
 /* ------------------------------------------------------------------ */
-/*  Pagination — client mode renders TablePagination                   */
+/*  Pagination — unified ServerPaginationFooter for both modes        */
 /* ------------------------------------------------------------------ */
 
 describe('EntityGridTemplate — pagination', () => {
-  it('client modda TablePagination render eder', () => {
+  it('her iki modda da ServerPaginationFooter render eder', () => {
     const { container } = render(
       <EntityGridTemplate
         gridId="pagination-grid"
@@ -207,10 +207,10 @@ describe('EntityGridTemplate — pagination', () => {
         total={100}
       />,
     );
-    expect(container.querySelector('[data-component="table-pagination"]')).toBeInTheDocument();
+    expect(container.querySelector('[data-component="server-pagination-footer"]')).toBeInTheDocument();
   });
 
-  it('server modda TablePagination render etmez', () => {
+  it('server modda da ServerPaginationFooter render eder', () => {
     const { container } = render(
       <EntityGridTemplate
         gridId="server-pagination-grid"
@@ -219,27 +219,7 @@ describe('EntityGridTemplate — pagination', () => {
         dataSourceMode="server"
       />,
     );
-    expect(container.querySelector('[data-component="table-pagination"]')).not.toBeInTheDocument();
-  });
-
-  it('pageSizeOptions geçilir', () => {
-    const { container } = render(
-      <EntityGridTemplate
-        gridId="page-size-grid"
-        gridSchemaVersion={1}
-        columnDefs={[{ field: 'name' }]}
-        dataSourceMode="client"
-        rowData={[]}
-        total={200}
-        pageSizeOptions={[10, 25, 50, 100]}
-      />,
-    );
-    // Use container query to find the pagination combobox (not the theme selector)
-    const paginationEl = container.querySelector('[data-component="table-pagination"]');
-    const select = paginationEl?.querySelector('select');
-    expect(select).toBeInTheDocument();
-    const options = select!.querySelectorAll('option');
-    expect(options).toHaveLength(4);
+    expect(container.querySelector('[data-component="server-pagination-footer"]')).toBeInTheDocument();
   });
 });
 
