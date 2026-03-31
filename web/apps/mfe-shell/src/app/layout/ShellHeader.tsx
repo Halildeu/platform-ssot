@@ -66,7 +66,7 @@ export const ShellHeader: React.FC = () => {
     if (canManageUsers) items.push({ key: "/admin/users", path: "/admin/users", label: t("shell.nav.users") });
     if (canThemeAdmin) items.push({ key: "/admin/themes", path: "/admin/themes", label: t("shell.nav.themes") });
     items.push({ key: "/admin/services", path: "/admin/services", label: t("shell.nav.services") });
-    items.push({ key: "/admin/schema-explorer", path: "/admin/schema-explorer", label: "Schema Explorer" });
+    items.push({ key: "/admin/schema-explorer", path: "/admin/schema-explorer", label: t("shell.nav.schemaExplorer") });
     return items;
   }, [canAccess, canAudit, canManageUsers, canReport, canThemeAdmin, ethicEnabled, suggestionsEnabled, t]);
 
