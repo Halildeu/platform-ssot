@@ -30,7 +30,7 @@ export const AppSidebarTrigger = React.forwardRef<HTMLButtonElement, AppSidebarT
       onClick={toggle}
       aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       className={cn(
-        'flex h-8 w-8 items-center justify-center rounded-md cursor-pointer',
+        'flex h-9 w-9 items-center justify-center rounded-xl cursor-pointer',
         'text-[var(--text-secondary)] hover:bg-[var(--surface-canvas)] hover:text-[var(--text-primary)]',
         'transition-colors duration-200 outline-hidden',
         'focus-visible:ring-2 focus-visible:ring-[var(--action-primary)]',
@@ -51,7 +51,7 @@ AppSidebarTrigger.displayName = 'AppSidebar.Trigger';
 function PanelLeftCloseIcon() {
   return (
     <svg
-      className="h-4 w-4"
+      className="h-[18px] w-[18px]"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -70,7 +70,7 @@ function PanelLeftCloseIcon() {
 function PanelLeftOpenIcon() {
   return (
     <svg
-      className="h-4 w-4"
+      className="h-[18px] w-[18px]"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

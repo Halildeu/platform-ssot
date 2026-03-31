@@ -35,3 +35,4 @@ Thumbs.db
 
 # Archive (migrated, no longer needed)
 archive/
+public/design-tokens.source.json

@@ -1,6 +1,20 @@
 # AGENTS.md – Proje Genel Agent Talimatları
 
-## 0. Authority durumu
+## 0. Decision Registry (MUST READ)
+
+**Before modifying any code, check `decisions/registry.v1.json`.**
+
+Active decision topics:
+- `decisions/topics/zanzibar-openfga.v1.json` — Authorization architecture (OpenFGA, Keycloak, data enforcement)
+- `decisions/topics/security-local-dev.v1.json` — Local dev auth rules (no JWT, permitAll)
+
+Rules:
+- FINAL decisions cannot be silently reverted
+- Rejected alternatives (with tried_count) must NOT be retried without user approval
+- Constraints in topic files are HARD RULES — violating them breaks the system
+- Run `backend/scripts/doctor-zanzibar.sh --quick` before committing auth-related changes
+
+## 0b. Authority durumu
 
 - Canonical OPO kaynakları:
   - `standards.lock`

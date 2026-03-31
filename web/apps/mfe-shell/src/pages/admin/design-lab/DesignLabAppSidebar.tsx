@@ -188,14 +188,12 @@ export const DesignLabAppSidebar: React.FC = () => {
 
   const handleLayerSwitch = useCallback((layerId: LayerId) => {
     navigate(`/admin/design-lab/${layerId}`);
-    fuzzy.clear();
-  }, [navigate, fuzzy]);
+  }, [navigate]);
 
   const handleItemSelect = useCallback((itemPath: string) => {
+    fuzzy.saveSearch(fuzzy.query);
     navigate(itemPath);
     closeSidebar();
-    fuzzy.saveSearch(fuzzy.query);
-    fuzzy.clear();
   }, [navigate, closeSidebar, fuzzy]);
 
   /* Fuzzy search highlight ranges for a given item name */

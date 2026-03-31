@@ -69,6 +69,7 @@ function buildRemotes() {
     audit: readEnvBoolean(['VITE_SHELL_ENABLE_AUDIT_REMOTE', 'SHELL_ENABLE_AUDIT_REMOTE']),
     users: readEnvBoolean(['VITE_SHELL_ENABLE_USERS_REMOTE', 'SHELL_ENABLE_USERS_REMOTE']),
     reporting: readEnvBoolean(['VITE_SHELL_ENABLE_REPORTING_REMOTE', 'SHELL_ENABLE_REPORTING_REMOTE']),
+    schemaExplorer: readEnvBoolean(['VITE_SHELL_ENABLE_SCHEMA_EXPLORER_REMOTE', 'SHELL_ENABLE_SCHEMA_EXPLORER_REMOTE']),
   };
 
   // All remotes must be declared so MF plugin can resolve their imports
@@ -83,7 +84,8 @@ function buildRemotes() {
     mfe_access:      { type: 'module', name: 'mfe_access',      entry: enabled.access ? 'http://localhost:3005/remoteEntry.js' : STUB },
     mfe_audit:       { type: 'module', name: 'mfe_audit',       entry: enabled.audit ? 'http://localhost:3006/remoteEntry.js' : STUB },
     mfe_users:       { type: 'module', name: 'mfe_users',       entry: enabled.users ? 'http://localhost:3004/remoteEntry.js' : STUB },
-    mfe_reporting:   { type: 'module', name: 'mfe_reporting',   entry: enabled.reporting ? 'http://localhost:3007/remoteEntry.js' : STUB },
+    mfe_reporting:          { type: 'module', name: 'mfe_reporting',          entry: enabled.reporting ? 'http://localhost:3007/remoteEntry.js' : STUB },
+    mfe_schema_explorer:   { type: 'module', name: 'mfe_schema_explorer',   entry: enabled.schemaExplorer ? 'http://localhost:3008/remoteEntry.js' : STUB },
   };
 }
 
@@ -165,6 +167,10 @@ export default defineConfig(({ mode }) => {
         { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
         { find: '@mfe/i18n-dicts', replacement: path.resolve(__dirname, '../../packages/i18n-dicts/src') },
         { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
+        // Bypass MF loadShare wrapper for @tanstack/react-query — prevents
+        // "QueryCache is not a constructor" caused by async TLA in Vite 8.
+        // Direct resolve to node_modules ESM entry, skipping MF's virtual module.
+        { find: '@tanstack/react-query', replacement: path.resolve(__dirname, 'node_modules/@tanstack/react-query/build/modern/index.js') },
       ],
     },
 
@@ -184,10 +190,18 @@ export default defineConfig(({ mode }) => {
           secure: false,
           rewrite: (p) => p.replace(/^\/auth/, ''),
         },
+        // Direct service routes — bypass gateway (avoids Vault/Eureka issues)
         '/api/v1/reports': { target: 'http://localhost:8095', changeOrigin: true, secure: false },
         '/api/v1/dashboards': { target: 'http://localhost:8095', changeOrigin: true, secure: false },
-        '/api/v1/authz': { target: 'http://localhost:8090', changeOrigin: true, secure: false },
+        '/api/v1/authz': { target: 'http://localhost:8089', changeOrigin: true, secure: false },
         '/api/v1/users': { target: 'http://localhost:8089', changeOrigin: true, secure: false },
+        '/api/v1/companies': { target: 'http://localhost:8092', changeOrigin: true, secure: false },
+        '/api/v1/themes': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
+        '/api/v1/theme-registry': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
+        '/api/v1/me/theme': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
+        '/api/v1/variants': { target: 'http://localhost:8091', changeOrigin: true, secure: false },
+        // /api/audit → gateway (route'lar permission-service DB'sine bağlı, henüz migrate edilmedi)
+        '/api/v1/schema': { target: 'http://localhost:8096', changeOrigin: true, secure: false },
         // '/api/services' handled by serviceHealthApi() Vite plugin
         '/cockpit-api': {
           target: 'http://localhost:8790',
@@ -203,6 +217,11 @@ export default defineConfig(({ mode }) => {
      * Without this, Vite serves 250+ individual HTTP requests (one per module).
      * With this, monorepo sources get bundled into optimized chunks like node_modules. */
     optimizeDeps: {
+      // Exclude @tanstack/react-query from Vite pre-bundling so that
+      // Module Federation's loadShare wrapper is NOT generated for it.
+      // This prevents the "QueryCache is not a constructor" error caused
+      // by MF's async TLA init not resolving before module evaluation.
+      exclude: ['@tanstack/react-query', '@tanstack/react-query-devtools'],
       include: [
         'react',
         'react-dom',
@@ -215,8 +234,6 @@ export default defineConfig(({ mode }) => {
         '@reduxjs/toolkit/query',
         '@reduxjs/toolkit/query/react',
         'react-redux',
-        '@tanstack/react-query',
-        '@tanstack/react-query-devtools',
         'clsx',
         'tailwind-merge',
         'axios',

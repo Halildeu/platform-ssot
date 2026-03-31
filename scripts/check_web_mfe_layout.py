@@ -41,6 +41,7 @@ LEGACY_ALLOWED_MFES: Set[str] = {
     "mfe-reporting",
     "mfe-ethic",
     "mfe-suggestions",
+    "mfe-schema-explorer",
 }
 
 

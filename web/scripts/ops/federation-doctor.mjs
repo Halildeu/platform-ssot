@@ -328,11 +328,13 @@ check('shared-deps-consistency', 'Shared dependency parity with shell', () => {
     return { status: 'pass', message: `All remotes share ${shellCfg.sharedCore.size} core singletons with shell` };
   }
 
+  // Shared dep drift causes real runtime failures (share-scope negotiation,
+  // "is not a constructor", context mismatch) — treat as fail, not warn.
   return {
-    status: 'warn',
-    message: `${drifts.length} shared dependency drift(s)`,
+    status: 'fail',
+    message: `${drifts.length} shared dependency drift(s) — MF share-scope negotiation will fail`,
     details: drifts.slice(0, 10),
-    fix: 'Align sharedCore in remote vite.config.ts with shell',
+    fix: 'Add missing singletons to sharedCore in the remote vite.config.ts (must match shell)',
   };
 });
 

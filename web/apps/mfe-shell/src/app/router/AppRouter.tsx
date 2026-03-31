@@ -17,6 +17,7 @@ import {
   AuditModule,
   UsersModule,
   ReportingModule,
+  SchemaExplorerModule,
 } from "./lazy-routes";
 
 /* ---- Page imports ---- */
@@ -132,6 +133,14 @@ export const AppRouter: React.FC = () => {
                 <UsersModule />
               </ProtectedRoute>
             </AuthTraceRoute>
+          }
+        />
+        <Route
+          path="/admin/schema-explorer/*"
+          element={
+            <ProtectedRoute>
+              <SchemaExplorerModule />
+            </ProtectedRoute>
           }
         />
         <Route

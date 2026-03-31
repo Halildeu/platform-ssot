@@ -187,9 +187,11 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
           description={pageDescription}
           breadcrumbItems={pageBreadcrumbItems}
           actions={actionContent}
+          contentClassName="!px-0 !py-4"
+          classes={{ header: '!px-6 overflow-hidden !rounded-2xl !border !border-border-subtle shadow-sm' }}
         >
           <div
-            className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs"
+            className="overflow-hidden !rounded-2xl border border-border-subtle bg-surface-default shadow-sm"
             data-testid={GRID_TEST_ID}
           >
             <UsersGrid

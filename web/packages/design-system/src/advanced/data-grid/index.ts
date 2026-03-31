@@ -63,6 +63,10 @@ export type {
   AgGridTablePaginationSnapshot,
 } from "./TablePagination";
 
+// --- ServerPaginationFooter ---
+export { ServerPaginationFooter } from "./ServerPaginationFooter";
+export type { ServerPaginationFooterProps } from "./ServerPaginationFooter";
+
 // --- Pagination State ---
 export { usePaginationState } from "./usePaginationState";
 export type {

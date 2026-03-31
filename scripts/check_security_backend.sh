@@ -31,6 +31,7 @@ COMMON_GLOBS=(
   --glob '!**/scripts/vault/**'
   --glob '!**/scripts/test-users-and-variants.sh'
   --glob '!**/infra/**'
+  --glob '!**/test-results/**'
 )
 
 run_search_with_python() {
@@ -44,7 +45,7 @@ pattern = sys.argv[1]
 root = sys.argv[2]
 
 regex = re.compile(pattern)
-exclude_dir_names = {"docs", "legacy", "target", ".git", "packages", "devops", "infra"}
+exclude_dir_names = {"docs", "legacy", "target", ".git", "packages", "devops", "infra", "test-results"}
 exclude_subpaths = ("src/main/java", "src/test", "scripts/perf", "scripts/vault")
 exclude_file_names = {"mvnw", "mvnw.cmd", "test-users-and-variants.sh"}
 exclude_suffixes = (".example", ".env.example", "application-local.properties", "application-docker.properties")

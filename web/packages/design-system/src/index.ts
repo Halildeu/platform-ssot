@@ -37,6 +37,12 @@ export * from "./theme";
 /* ---- Providers ---- */
 export * from "./providers";
 
+/* ---- Hooks ---- */
+export { useBreakpoint, BREAKPOINTS } from "./hooks/useBreakpoint";
+export type { BreakpointKey, UseBreakpointReturn } from "./hooks/useBreakpoint";
+export { useDownloadWithProgress } from "./hooks/useDownloadWithProgress";
+export type { DownloadWithProgressOptions, DownloadProgressEvent } from "./hooks/useDownloadWithProgress";
+
 /* ---- Primitives ---- */
 export * from "./primitives";
 

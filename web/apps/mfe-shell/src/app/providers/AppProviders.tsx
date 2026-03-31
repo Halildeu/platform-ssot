@@ -9,6 +9,7 @@ import { ThemeProvider } from "../theme/theme-context.provider";
 import { I18nProvider, i18n } from "../i18n";
 import { queryClient, shouldShowQueryDevtools } from "../config/query-config";
 import { AuthBootstrapper } from "./AuthBootstrapper";
+import { DownloadProgressListener } from "./DownloadProgressListener";
 import { api } from "@mfe/shared-http";
 import { isPermitAllMode } from "../auth/auth-config";
 
@@ -50,6 +51,7 @@ export const AppProviders: React.FC<{ children: React.ReactNode }> = ({
               duration={4500}
               maxVisible={4}
             >
+              <DownloadProgressListener />
               <AuthBootstrapper>
                 <PermissionProviderWrapper>
                   {children}

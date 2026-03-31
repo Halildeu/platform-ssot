@@ -26,6 +26,7 @@ import { resolveAccessState, accessStyles, type AccessControlledProps } from '..
 import { GridShell, type GridShellApi, type GridTheme, type GridDensity } from "./GridShell";
 import { GridToolbar, type GridToolbarMessages } from "./GridToolbar";
 import { VariantIntegration, type VariantIntegrationMessages } from "./VariantIntegration";
+import { ServerPaginationFooter } from "./ServerPaginationFooter";
 import { useDatasourceModeAdapter, type DataSourceMode } from "./DatasourceModeAdapter";
 import { TablePagination, useAgGridTablePagination } from "./TablePagination";
 import { FilterBuilderButton } from "./filter-builder";
@@ -71,10 +72,9 @@ export interface EntityGridTemplateMessages {
   densityResetLabel?: string;
   fullscreenTooltip?: string;
   resetFiltersLabel?: string;
-  excelVisibleLabel?: string;
-  excelAllLabel?: string;
-  csvVisibleLabel?: string;
-  csvAllLabel?: string;
+  excelLabel?: string;
+  csvLabel?: string;
+  exportingLabel?: string;
   exportFileBaseName?: string;
   exportSheetName?: string;
   variantModalTitle?: string;
@@ -206,6 +206,8 @@ export interface EntityGridTemplateProps<
   isFullscreen?: boolean;
   onRequestFullscreen?: () => void;
   toolbarExtras?: React.ReactNode;
+  /** Content rendered at the bottom-left of the grid, aligned with pagination. */
+  footerStartSlot?: React.ReactNode;
   exportConfig?: GridExportConfig<RowData>;
   quickFilterPlaceholder?: string;
   initialTheme?: ThemeValue;
@@ -224,10 +226,11 @@ export interface EntityGridTemplateProps<
   densityResetLabel?: string;
   fullscreenTooltip?: string;
   resetFiltersLabel?: string;
-  excelVisibleLabel?: string;
-  excelAllLabel?: string;
-  csvVisibleLabel?: string;
-  csvAllLabel?: string;
+  /** Server-side export callback — called by toolbar Excel/CSV buttons in server mode. */
+  onServerExport?: (
+    format: 'excel' | 'csv',
+    params: { filterModel: Record<string, unknown>; sortModel: unknown[]; quickFilterText: string },
+  ) => Promise<void>;
   variantModalTitle?: string;
   variantNewButtonLabel?: string;
   variantNamePlaceholder?: string;
@@ -284,6 +287,7 @@ export function EntityGridTemplate<
     isFullscreen = false,
     onRequestFullscreen,
     toolbarExtras,
+    footerStartSlot,
     exportConfig,
     quickFilterPlaceholder,
     initialTheme = "quartz",
@@ -299,6 +303,7 @@ export function EntityGridTemplate<
     dataSourceMode = "server",
     createServerSideDatasource,
     onEffectiveModeChange,
+    onServerExport,
     access,
     accessReason,
   } = props;
@@ -392,10 +397,9 @@ export function EntityGridTemplate<
     fullscreenLabel: messages?.fullscreenTooltip,
     fullscreenTooltip: messages?.fullscreenTooltip,
     resetFiltersLabel: messages?.resetFiltersLabel,
-    excelVisibleLabel: messages?.excelVisibleLabel,
-    excelAllLabel: messages?.excelAllLabel,
-    csvVisibleLabel: messages?.csvVisibleLabel,
-    csvAllLabel: messages?.csvAllLabel,
+    excelLabel: messages?.excelLabel,
+    csvLabel: messages?.csvLabel,
+    exportingLabel: messages?.exportingLabel,
   };
 
   // ── Variant messages ───────────────────────────────────────────
@@ -496,6 +500,7 @@ export function EntityGridTemplate<
         isServerMode={isServerMode}
         quickFilterInitialValue={quickFilterInitialValue}
         exportConfig={exportConfig}
+        onServerExport={onServerExport}
         onRequestFullscreen={effectiveFullscreenHandler}
         isFullscreen={effectiveFullscreen}
         messages={toolbarMessages}
@@ -550,8 +555,8 @@ export function EntityGridTemplate<
         onGridReady={handleGridReady}
         onRowDoubleClick={onRowDoubleClick}
         onPaginationChanged={handlePaginationChanged}
-        height={effectiveFullscreen ? '100%' : 600}
-        className={effectiveFullscreen ? 'min-h-0 flex-1' : undefined}
+        height={effectiveFullscreen ? '100%' : 'calc(100vh - 320px)'}
+        className={effectiveFullscreen ? 'min-h-0 flex-1' : 'min-h-[400px]'}
       >
         {/* Client-side pagination footer */}
         {!isServerMode && (
@@ -572,7 +577,17 @@ export function EntityGridTemplate<
             }}
           />
         )}
+        {/* Server-side pagination footer (replaces AG Grid built-in) */}
+        {isServerMode && (
+          <ServerPaginationFooter gridApi={gridApi} startSlot={footerStartSlot} />
+        )}
       </GridShell>
+      {/* Footer start slot — only for client-side mode (server-side uses startSlot in pagination) */}
+      {!isServerMode && footerStartSlot && (
+        <div className="flex items-center border-x border-b border-border-subtle bg-surface-default px-4 py-1.5 rounded-b-lg">
+          {footerStartSlot}
+        </div>
+      )}
     </div>
   );
 }

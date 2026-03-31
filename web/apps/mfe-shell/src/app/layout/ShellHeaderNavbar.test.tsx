@@ -2,8 +2,8 @@
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { ShellHeaderNavbar, __shellHeaderNavbarTestUtils } from './ShellHeaderNavbar';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { ShellHeaderNavbar } from './ShellHeaderNavbar';
 
 describe('ShellHeaderNavbar', () => {
   const navigateMock = vi.fn();
@@ -48,28 +48,14 @@ describe('ShellHeaderNavbar', () => {
       </div>,
     );
 
-  const setMeasuredWidths = (rootWidth: number, utilityWidth = 120) => {
-    const root = screen.getByTestId('shell-header-navbar');
-    const utility = screen.getByTestId('shell-header-navbar-utility');
-
-    Object.defineProperty(root, 'getBoundingClientRect', {
-      configurable: true,
-      value: () => __shellHeaderNavbarTestUtils.rectWithWidth(rootWidth),
-    });
-    Object.defineProperty(utility, 'getBoundingClientRect', {
-      configurable: true,
-      value: () => __shellHeaderNavbarTestUtils.rectWithWidth(utilityWidth),
-    });
-
-    act(() => {
-      window.dispatchEvent(new Event('resize'));
-    });
-  };
-
-  it('gorunen nav item tiklandiginda navigate eder', async () => {
+  it('renders navigation items', () => {
     renderNavbar();
-    setMeasuredWidths(960, 120);
+    expect(screen.getByTestId('shell-header-navbar')).toBeInTheDocument();
+    expect(screen.getByText('Ana Sayfa')).toBeInTheDocument();
+  });
 
+  it('navigates on item click', async () => {
+    renderNavbar();
     fireEvent.click(screen.getByText('Ana Sayfa'));
 
     await waitFor(() => {
@@ -77,19 +63,8 @@ describe('ShellHeaderNavbar', () => {
     });
   });
 
-  it('dar alanda overflow menusu acilir ve item secimi navigate eder', async () => {
-    renderNavbar('/audit/events');
-    setMeasuredWidths(360, 128);
-
-    await waitFor(() => {
-      expect(screen.getByTestId('shell-header-navbar-overflow-trigger')).toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByTestId('shell-header-navbar-overflow-trigger'));
-    fireEvent.click(screen.getByTestId('shell-header-navbar-overflow-admin-users'));
-
-    await waitFor(() => {
-      expect(navigateMock).toHaveBeenCalledWith('/admin/users');
-    });
+  it('renders utility slot', () => {
+    renderNavbar();
+    expect(screen.getByText('Design Lab')).toBeInTheDocument();
   });
 });

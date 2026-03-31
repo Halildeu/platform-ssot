@@ -175,11 +175,13 @@ function applyVariantState<RowData>(api: GridApi<RowData>, state: GridVariantSta
   if (state.columnState && Array.isArray(state.columnState)) {
     api.applyColumnState?.({ state: state.columnState as ColumnState[], applyOrder: true, defaultState: { hide: false } });
   }
-  if (state.filterModel) {
-    api.setFilterModel?.(state.filterModel);
-  }
+  // Always apply filter model — null/undefined/{} clears existing filters
+  api.setFilterModel?.(state.filterModel ?? null);
   if (state.advancedFilterModel !== undefined) {
     api.setAdvancedFilterModel?.(state.advancedFilterModel as AdvancedFilterModel);
+  } else {
+    // Clear advanced filter if variant has none
+    api.setAdvancedFilterModel?.(null as unknown as AdvancedFilterModel);
   }
   if (typeof state.pivotMode === "boolean") {
     api.setGridOption?.("pivotMode", state.pivotMode);
@@ -364,25 +366,12 @@ export const VariantIntegration = <RowData = unknown,>({
       onActiveVariantChange?.(variantId);
 
       try {
-        const updated = await updateVariantPreference({ variantId, isSelected: true, gridId });
-        if (updated.isUserSelected) {
-          return;
-        }
+        await updateVariantPreference({ variantId, isSelected: true, gridId });
       } catch {
-        // Revert below when server-side preference sync fails.
+        // Preference sync failed (e.g. 401) — keep variant applied locally.
+        // updateVariantPreference already falls back to localStorage.
+        dispatchVariantToast("warning", m.variantPreferenceUpdateFailedLabel ?? "Varyant tercihi sunucuya kaydedilemedi");
       }
-
-      if (previousVariant) {
-        applyVariantState(gridApi, previousVariant.state);
-        appliedRef.current = previousVariant.id;
-        setInternalActiveId(previousVariant.id);
-        onActiveVariantChange?.(previousVariant.id);
-      } else {
-        setInternalActiveId(null);
-        appliedRef.current = null;
-        onActiveVariantChange?.(null);
-      }
-      dispatchVariantToast("error", m.variantPreferenceUpdateFailedLabel ?? "Varyant tercihi güncellenemedi");
     },
     [activeId, gridApi, gridId, m.variantPreferenceUpdateFailedLabel, onActiveVariantChange, variants],
   );
@@ -390,8 +379,18 @@ export const VariantIntegration = <RowData = unknown,>({
   const handleClear = useCallback(() => {
     setInternalActiveId(null);
     appliedRef.current = null;
+    // Clear variant-specific filters and sort when deselecting
+    if (gridApi) {
+      gridApi.setFilterModel?.(null);
+      gridApi.setAdvancedFilterModel?.(null as unknown as AdvancedFilterModel);
+      gridApi.setGridOption?.("quickFilterText", "");
+      const rowModelType = gridApi.getGridOption?.("rowModelType");
+      if (rowModelType === "serverSide") {
+        gridApi.refreshServerSide?.({ purge: true });
+      }
+    }
     onActiveVariantChange?.(null);
-  }, [onActiveVariantChange]);
+  }, [gridApi, onActiveVariantChange]);
 
   const handleSave = useCallback(
     async (variantId: string) => {

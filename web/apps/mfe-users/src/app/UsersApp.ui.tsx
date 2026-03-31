@@ -4,7 +4,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import {
   QueryClient,
   QueryClientProvider,
-  QueryClientContext,
 } from '@tanstack/react-query';
 import UsersPage from '../pages/users/UsersPage.ui';
 
@@ -56,12 +55,18 @@ class UsersAppErrorBoundary extends React.Component<{ children: React.ReactNode 
 
 const UsersAppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const existingReduxContext = React.useContext(ReactReduxContext);
-  const existingQueryClient = React.useContext(QueryClientContext);
+  // Shell's QueryClient is shared via window bridge because @tanstack/react-query
+  // is resolved via alias in shell (bypassing MF loadShare), so React context
+  // from shell's instance is not accessible here. Window bridge is the safe path.
+  const shellQueryClient = (typeof window !== 'undefined'
+    ? (window as Record<string, unknown>).__SHELL_QUERY_CLIENT__
+    : undefined) as QueryClient | undefined;
 
   const queryClientRef = React.useRef<QueryClient>();
-  if (!existingQueryClient && !queryClientRef.current) {
+  if (!shellQueryClient && !queryClientRef.current) {
     queryClientRef.current = new QueryClient();
   }
+  const effectiveQueryClient = shellQueryClient ?? queryClientRef.current!;
 
   const storeRef = React.useRef<ReturnType<typeof createStandaloneStore>>();
   if (!existingReduxContext && !storeRef.current) {
@@ -70,13 +75,13 @@ const UsersAppProviders: React.FC<{ children: React.ReactNode }> = ({ children }
 
   let content = children;
 
-  if (!existingQueryClient && queryClientRef.current) {
-    content = (
-      <QueryClientProvider client={queryClientRef.current}>
-        {content}
-      </QueryClientProvider>
-    );
-  }
+  // Always wrap with QueryClientProvider — uses shell's client if available,
+  // otherwise standalone client for independent development
+  content = (
+    <QueryClientProvider client={effectiveQueryClient}>
+      {content}
+    </QueryClientProvider>
+  );
 
   if (!existingReduxContext && storeRef.current) {
     content = (

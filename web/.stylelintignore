@@ -16,3 +16,6 @@ packages/docs/dist/**
 
 # Third-party / generated
 **/.next/**
+
+# Schema Explorer — legacy CSS, migration candidate
+apps/mfe-schema-explorer/**

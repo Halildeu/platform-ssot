@@ -60,7 +60,7 @@ export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(({
     <header
       data-access-state={accessState.state}
       className={cn(
-        "bg-[var(--surface-default)] px-6 pt-4 pb-0",
+        "group/header bg-[var(--surface-default)] px-6 pt-4 pb-0",
         !noBorder && "border-b border-border-subtle",
         sticky && "sticky top-0 z-[100]",
         accessState.isDisabled && "pointer-events-none opacity-50",
@@ -85,7 +85,10 @@ export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(({
             </div>
 
             {subtitle && (
-              <p className="mt-0.5 text-sm text-text-secondary line-clamp-2">
+              <p
+                className="mt-0.5 text-sm text-text-secondary line-clamp-1 opacity-0 transition-opacity duration-200 group-hover/header:opacity-100"
+                aria-hidden="false"
+              >
                 {subtitle}
               </p>
             )}
