@@ -745,7 +745,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
 
   const modeSelector = useMemo(
     () => (
-      <div className="flex items-center gap-2 text-sm text-text-secondary">
+      <div className="flex items-center gap-3 text-sm text-text-secondary">
         <span className="font-semibold text-text-primary">{t('users.grid.mode.label')}</span>
         <select
           className="rounded-xl border border-border-subtle bg-surface-default px-3 py-1 text-sm font-medium text-text-secondary shadow-xs focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
@@ -755,9 +755,18 @@ const UsersGrid: React.FC<UsersGridProps> = ({
           <option value="server">{t('users.grid.mode.server')}</option>
           <option value="client">{t('users.grid.mode.client')}</option>
         </select>
+        {dataSourceMode === 'client' && (
+          <button
+            type="button"
+            onClick={loadClientData}
+            className="rounded-lg bg-action-primary px-3 py-1 text-xs font-semibold text-action-primary-text shadow-xs transition hover:opacity-90"
+          >
+            Yenile
+          </button>
+        )}
       </div>
     ),
-    [dataSourceMode, t],
+    [dataSourceMode, loadClientData, t],
   );
 
   const handleServerExport = useCallback(

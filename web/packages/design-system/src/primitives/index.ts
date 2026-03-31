@@ -107,3 +107,7 @@ export { FullscreenToggle } from "./fullscreen-toggle";
 export type { FullscreenToggleProps, FullscreenToggleSize, FullscreenToggleVariant } from "./fullscreen-toggle";
 export { CommandPaletteTrigger } from "./command-palette-trigger";
 export type { CommandPaletteTriggerProps } from "./command-palette-trigger";
+
+/* Overlay */
+export { HoverDescription } from "./hover-description";
+export type { HoverDescriptionProps } from "./hover-description";

@@ -558,36 +558,9 @@ export function EntityGridTemplate<
         height={effectiveFullscreen ? '100%' : 'calc(100vh - 320px)'}
         className={effectiveFullscreen ? 'min-h-0 flex-1' : 'min-h-[400px]'}
       >
-        {/* Client-side pagination footer */}
-        {!isServerMode && (
-          <TablePagination
-            totalItems={total ?? rowData?.length ?? 0}
-            page={pagination.paginationSnapshot.page}
-            pageSize={pagination.paginationSnapshot.pageSize}
-            onPageChange={handlePageChange}
-            onPageSizeChange={handlePageSizeChange}
-            pageSizeOptions={pageSizeOptions}
-            showFirstLastButtons
-            localeText={{
-              rowsPerPageLabel: messages?.pageSizeLabel,
-              previousButtonLabel: messages?.previousPageLabel,
-              nextButtonLabel: messages?.nextPageLabel,
-              firstButtonLabel: messages?.firstPageLabel,
-              lastButtonLabel: messages?.lastPageLabel,
-            }}
-          />
-        )}
-        {/* Server-side pagination footer (replaces AG Grid built-in) */}
-        {isServerMode && (
-          <ServerPaginationFooter gridApi={gridApi} startSlot={footerStartSlot} />
-        )}
+        {/* Unified pagination footer — same layout for both server and client modes */}
+        <ServerPaginationFooter gridApi={gridApi} startSlot={footerStartSlot} />
       </GridShell>
-      {/* Footer start slot — only for client-side mode (server-side uses startSlot in pagination) */}
-      {!isServerMode && footerStartSlot && (
-        <div className="flex items-center border-x border-b border-border-subtle bg-surface-default px-4 py-1.5 rounded-b-lg">
-          {footerStartSlot}
-        </div>
-      )}
     </div>
   );
 }
