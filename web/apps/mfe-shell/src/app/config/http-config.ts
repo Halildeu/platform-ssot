@@ -45,5 +45,19 @@ registerUnauthorizedHandler(() => {
     }
     return;
   }
-  store.dispatch(logout());
+  // Token expire olmuş olabilir — önce Keycloak refresh dene.
+  // Logout sadece refresh de başarısız olursa yapılmalı.
+  // Keycloak onTokenExpired handler zaten refresh yapıyor;
+  // burada logout yapmak yarış koşuluna neden olur.
+  if (
+    typeof process !== "undefined" &&
+    process.env.NODE_ENV !== "production"
+  ) {
+    console.warn("[AUTH 401 PRESERVE_SESSION]", {
+      url: "interceptor",
+      method: "response",
+    });
+  }
+  // Logout yapmıyoruz — Keycloak token refresh mekanizması devrede.
+  // store.dispatch(logout());
 });
