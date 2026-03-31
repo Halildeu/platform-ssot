@@ -152,7 +152,7 @@ export const GroupedCardGallery = React.forwardRef<
 >(
   <T extends GalleryItem>(
     {
-      items,
+      items: rawItems,
       groupBy = "group" as keyof T & string,
       searchFields,
       searchPlaceholder = "Search...",
@@ -168,6 +168,8 @@ export const GroupedCardGallery = React.forwardRef<
     }: GroupedCardGalleryProps<T>,
     ref: React.Ref<HTMLDivElement>,
   ) => {
+    const items = Array.isArray(rawItems) ? rawItems : ([] as T[]);
+
     /* -- Search state (debounced) ---------------------------------- */
     const [inputValue, setInputValue] = useState("");
     const [query, setQuery] = useState("");

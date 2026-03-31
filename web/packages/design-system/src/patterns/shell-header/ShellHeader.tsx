@@ -120,7 +120,7 @@ export const ShellHeader: React.FC<ShellHeaderProps> = ({
             {...menuBarPreset}
             ariaLabel={navAriaLabel}
             labelVisibility="always"
-            currentPath={currentPath}
+            value={activeKey ?? undefined}
             items={menuBarItems}
             overflowBehavior="collapse-to-more"
             overflowLabel={overflowLabel}

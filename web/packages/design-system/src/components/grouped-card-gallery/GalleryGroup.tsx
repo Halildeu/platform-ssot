@@ -59,9 +59,10 @@ export const GalleryGroup: React.FC<GalleryGroupProps> = ({
         type="button"
         onClick={onToggle}
         className={cn(
-          "flex w-full items-center gap-2 rounded-lg px-2 py-2",
+          "flex w-full items-center gap-2 rounded-xl px-3 py-2.5",
+          "bg-surface-muted/50",
           "text-start transition-colors duration-100",
-          "hover:bg-surface-hover",
+          "hover:bg-surface-muted",
           "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-action-primary/40",
         )}
         aria-expanded={expanded}
