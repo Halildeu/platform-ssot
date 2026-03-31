@@ -37,7 +37,6 @@ const SERVICES: ServiceDef[] = [
   { name: 'keycloak',           port: 8081, category: 'auth',         type: 'docker', dockerName: 'keycloak' },
   { name: 'auth-service',       port: 8088, category: 'auth',         type: 'docker', dockerName: 'auth-service' },
   { name: 'user-service',       port: 8089, category: 'business',     type: 'docker', dockerName: 'user-service' },
-  { name: 'permission-service', port: 8090, category: 'auth',         type: 'docker', dockerName: 'permission-service' },
   { name: 'variant-service',    port: 8091, category: 'business',     type: 'docker', dockerName: 'variant-service' },
   { name: 'core-data-service',  port: 8092, category: 'data',         type: 'docker', dockerName: 'core-data-service' },
   { name: 'report-service',     port: 8095, category: 'data',         type: 'docker', dockerName: 'report-service' },
