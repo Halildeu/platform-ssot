@@ -9,9 +9,9 @@ const entry: DesignLabComponentDocEntry = {
     lifecycle: "stable",
     maturity: "beta",
     group: "data_display",
-    subgroup: "List",
+    subgroup: "Card collections / gallery",
     taxonomyGroupId: "data_display",
-    taxonomySubgroup: "List",
+    taxonomySubgroup: "Card collections / gallery",
     demoMode: "live",
     description:
       "Collapse/expand grouped card gallery with search, responsive grid, and localStorage-persisted expand state. Ideal for report hubs, service directories, and design lab landing pages.",
