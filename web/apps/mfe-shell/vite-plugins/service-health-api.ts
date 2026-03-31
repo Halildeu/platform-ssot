@@ -37,18 +37,25 @@ const SERVICES: ServiceDef[] = [
   { name: 'keycloak',           port: 8081, category: 'auth',         type: 'docker', dockerName: 'keycloak' },
   { name: 'auth-service',       port: 8088, category: 'auth',         type: 'docker', dockerName: 'auth-service' },
   { name: 'user-service',       port: 8089, category: 'business',     type: 'docker', dockerName: 'user-service' },
-  { name: 'permission-service', port: 8090, category: 'auth',         type: 'docker', dockerName: 'permission-service' },
   { name: 'variant-service',    port: 8091, category: 'business',     type: 'docker', dockerName: 'variant-service' },
   { name: 'core-data-service',  port: 8092, category: 'data',         type: 'docker', dockerName: 'core-data-service' },
   { name: 'report-service',     port: 8095, category: 'data',         type: 'docker', dockerName: 'report-service' },
   { name: 'schema-service',    port: 8096, category: 'data',         type: 'docker', dockerName: 'schema-service' },
 
+  // Auth infrastructure (Docker)
+  { name: 'openfga',             port: 4000, category: 'auth',         type: 'docker', dockerName: 'openfga' },
+
   // Infrastructure (Docker)
   { name: 'postgres',           port: 5432, category: 'data',         type: 'docker', dockerName: 'postgres' },
+  { name: 'pgvector',           port: 5433, category: 'data',         type: 'docker', dockerName: 'pgvector' },
   { name: 'discovery-server',   port: 8761, category: 'core',         type: 'docker', dockerName: 'discovery' },
   { name: 'vault',              port: 8200, category: 'core',         type: 'docker', dockerName: 'vault' },
+
+  // Observability (Docker)
   { name: 'grafana',            port: 3010, category: 'observability', type: 'docker', dockerName: 'grafana' },
   { name: 'prometheus',         port: 9090, category: 'observability', type: 'docker', dockerName: 'prometheus' },
+  { name: 'tempo',              port: 3200, category: 'observability', type: 'docker', dockerName: 'tempo' },
+  { name: 'loki',               port: 3100, category: 'observability', type: 'docker', dockerName: 'loki' },
 ];
 
 const BACKEND_DIR = join(process.env.HOME || '', 'Documents/dev/backend');
