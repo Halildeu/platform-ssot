@@ -357,4 +357,19 @@ export const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
     ],
     activeTab: "overview",
   },
+  GroupedCardGallery: {
+    items: [
+      { id: "1", title: "Kullanici Raporu", description: "Kullanici durumu ve rolleri", group: "HR", icon: "👤", tags: ["grid"] },
+      { id: "2", title: "IK Dashboard", description: "IK metrikleri", group: "HR", icon: "📊", tags: ["dashboard"], badge: { label: "Dashboard", tone: "primary" } },
+      { id: "3", title: "Demografik Yapi", description: "Cinsiyet, yas, egitim dagilimi", group: "HR", icon: "📈", tags: ["mixed"] },
+      { id: "4", title: "Denetim Gunlugu", description: "Sistem aktivite kayitlari", group: "Denetim", icon: "📋", tags: ["grid"] },
+      { id: "5", title: "Log Dashboard", description: "Log metrikleri ve trendler", group: "Denetim", icon: "📊", tags: ["dashboard"], badge: { label: "Dashboard", tone: "info" } },
+      { id: "6", title: "Butce Raporu", description: "Butce planlama ve gerceklesen", group: "Finans", icon: "💰", tags: ["grid"] },
+      { id: "7", title: "Gelir Analizi", description: "Gelir kaynaklari ve trendler", group: "Finans", icon: "📈", tags: ["dashboard"], badge: { label: "Dashboard", tone: "success" } },
+    ],
+    searchPlaceholder: "Rapor ara...",
+    defaultExpandedGroups: ["HR", "Denetim"],
+    groupOrder: ["HR", "Denetim", "Finans"],
+    storageKey: "design-lab-gallery-preview",
+  },
 };
