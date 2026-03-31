@@ -1,6 +1,6 @@
-# ADR-001: OpenFGA for Authorization (Zanzibar Model)
+# ADR-0010: OpenFGA for Authorization (Zanzibar Model)
 
-ID: ADR-001
+ID: ADR-0010
 Status: Accepted
 Date: 2026-03-29
 Owner: @team/platform
@@ -56,4 +56,4 @@ Sorunlar:
 ## Links
 
 - [OpenFGA docs](https://openfga.dev)
-- Related: ADR-002-data-enforcement-rls-filter.md, ADR-003-jwt-identity-only.md
+- Related: ADR-0011-data-enforcement-rls-filter.md, ADR-0012-jwt-identity-only.md
