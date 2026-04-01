@@ -149,8 +149,18 @@ const ReportingApp: React.FC = () => {
   }
 
   if (!activeEntry) {
-    // Unknown route — redirect to hub
-    return <RedirectToHub basePath={basePath} />;
+    // Route exists in catalog but no module yet — show placeholder
+    return (
+      <div className="flex min-h-[320px] items-center justify-center rounded-3xl border border-border-subtle bg-surface-default p-8 shadow-xs">
+        <div className="flex max-w-md flex-col items-center gap-3 text-center">
+          <span className="text-4xl">🚧</span>
+          <h2 className="text-lg font-semibold text-text-primary">Bu rapor henüz hazır değil</h2>
+          <p className="text-sm text-text-secondary">
+            Bu periyodik rapor yakında aktif edilecektir. Backend entegrasyonu tamamlandığında otomatik olarak burada görünecek.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   if (activeEntry.isDashboard) {
