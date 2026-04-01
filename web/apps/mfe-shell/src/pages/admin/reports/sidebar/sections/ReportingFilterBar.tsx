@@ -18,11 +18,11 @@ const FILTERS: Array<{
   label: string;
   dot?: string;
 }> = [
-  { key: "all", label: "T\u00FCm\u00FC" },
+  { key: "all", label: "Tümü" },
   { key: "grid", label: "Grid", dot: "bg-action-primary" },
   { key: "dashboard", label: "Dashboard", dot: "bg-state-info-text" },
   { key: "mixed", label: "Hibrit", dot: "bg-state-warning-text" },
-  { key: "custom", label: "\u00D6zel", dot: "bg-state-success-text" },
+  { key: "custom", label: "Özel", dot: "bg-state-success-text" },
 ];
 
 type Props = {

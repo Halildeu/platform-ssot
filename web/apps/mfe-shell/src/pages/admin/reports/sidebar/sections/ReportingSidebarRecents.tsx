@@ -31,7 +31,7 @@ export const ReportingSidebarRecents: React.FC<Props> = ({
         className="flex w-full items-center gap-2 rounded-md px-2 py-1 text-[11px] font-semibold text-text-secondary hover:text-text-primary"
       >
         <Clock className="h-3 w-3" />
-        <span className="flex-1 text-left">Son G\u00F6r\u00FCnt\u00FClenen</span>
+        <span className="flex-1 text-left">Son Görüntülenen</span>
         <span className="rounded-full bg-surface-muted px-1.5 text-[10px]">
           {recents.length}
         </span>
