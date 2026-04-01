@@ -58,3 +58,9 @@ export {
 
 /* Filter builders */
 export { buildFilterConfig, type FilterConfig } from './filters';
+
+/* Detail drawer */
+export { buildDetailRenderer } from './detail-renderer';
+
+/* Export helpers */
+export { buildProcessCellCallback } from './export-helpers';

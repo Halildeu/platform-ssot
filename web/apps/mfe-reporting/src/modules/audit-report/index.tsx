@@ -68,19 +68,4 @@ export const auditReportModule: ReportModule<AuditFilters, AuditRow> = {
   getColumns: () => [],
   fetchRows: (filters, request) => fetchAuditReport(filters, request),
   exportRows: (filters, format) => exportAuditReport(filters, format),
-  renderDetail: (row, t) => {
-    if (!row) return <span>{t('reports.detail.empty')}</span>;
-    return (
-      <dl style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 8 }}>
-        <dt>{t('reports.audit.columns.eventId')}</dt><dd>{row.id}</dd>
-        <dt>{t('reports.audit.columns.userEmail')}</dt><dd>{row.userEmail}</dd>
-        <dt>{t('reports.audit.columns.service')}</dt><dd>{row.service}</dd>
-        <dt>{t('reports.audit.columns.action')}</dt><dd>{row.action}</dd>
-        <dt>{t('reports.audit.columns.level')}</dt><dd>{row.level}</dd>
-        <dt>{t('reports.audit.columns.timestamp')}</dt><dd>{row.timestamp}</dd>
-        <dt>Correlation ID</dt><dd>{row.correlationId ?? '-'}</dd>
-        <dt>Detay</dt><dd>{row.details ?? '-'}</dd>
-      </dl>
-    );
-  },
 };

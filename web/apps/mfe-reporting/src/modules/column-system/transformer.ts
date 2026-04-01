@@ -37,17 +37,32 @@ import {
  * @param locale - Locale string for date/number formatting (e.g., 'tr-TR')
  * @param permissions - Current user's permission codes (for column visibility)
  */
+const BREAKPOINTS: Record<string, number> = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+};
+
 export function buildColDefs<TRow = unknown>(
   columns: ColumnMeta[],
   t: TranslateFn,
   locale: string = 'tr-TR',
   permissions?: string[],
+  viewportWidth?: number,
 ): ColumnDef<TRow>[] {
+  const vw = viewportWidth ?? (typeof window !== 'undefined' ? window.innerWidth : 1280);
+
   return columns
     .filter((meta) => {
       /* Permission-based visibility */
       if (meta.requiredPermission && permissions) {
-        return permissions.includes(meta.requiredPermission);
+        if (!permissions.includes(meta.requiredPermission)) return false;
+      }
+      /* Responsive visibility */
+      if (meta.responsive?.hideBelow) {
+        const bp = BREAKPOINTS[meta.responsive.hideBelow] ?? 0;
+        if (vw < bp) return false;
       }
       return true;
     })

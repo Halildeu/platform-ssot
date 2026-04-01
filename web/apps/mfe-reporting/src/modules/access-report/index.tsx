@@ -38,18 +38,4 @@ export const accessReportModule: ReportModule<AccessFilters, AccessRow> = {
   ],
   getColumns: () => [],
   fetchRows: (filters, request) => fetchAccessReport(filters, request),
-  renderDetail: (row, t) => {
-    if (!row) return <span>{t('reports.detail.empty')}</span>;
-    return (
-      <dl style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: 8 }}>
-        <dt>ID</dt><dd>{row.id}</dd>
-        <dt>{t('reports.access.columns.roleName')}</dt><dd>{row.roleName}</dd>
-        <dt>{t('reports.access.columns.memberCount')}</dt><dd>{row.memberCount}</dd>
-        <dt>İzin sayısı</dt><dd>{row.permissionCount}</dd>
-        <dt>{t('reports.access.columns.moduleSummary')}</dt><dd>{row.moduleSummary}</dd>
-        <dt>Açıklama</dt><dd>{row.description ?? '-'}</dd>
-        <dt>{t('reports.access.columns.updatedAt')}</dt><dd>{row.updatedAt || '-'}</dd>
-      </dl>
-    );
-  },
 };

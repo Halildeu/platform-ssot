@@ -14,7 +14,7 @@ import type { GridRequest, GridResponse, ColumnDef } from '../../grid';
 import type { ColDef, IServerSideGetRowsParams } from 'ag-grid-community';
 import { useReportingI18n } from '../../i18n/useReportingI18n';
 import type { ReportModule } from '../../modules/types';
-import { buildColDefs } from '../../modules/column-system';
+import { buildColDefs, buildDetailRenderer, buildProcessCellCallback } from '../../modules/column-system';
 import { getShellServices } from '../services/shell-services';
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';
@@ -220,7 +220,13 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
           columnDefs={colDefs}
           dataSourceMode="server"
           createServerSideDatasource={() => createServerSideDatasource()}
-          detailDrawer={module.renderDetail ? (row) => module.renderDetail?.(row, t) : undefined}
+          detailDrawer={
+            module.getColumnMeta
+              ? (row) => buildDetailRenderer(module.getColumnMeta!())(row as Record<string, unknown> | null, t)
+              : module.renderDetail
+                ? (row) => module.renderDetail?.(row, t)
+                : undefined
+          }
           localeText={localeText}
           quickFilterLabel={t(module.titleKey)}
           quickFilterPlaceholder={t('reports.filters.search.placeholder') || 'Tüm sütunlarda ara...'}
@@ -228,6 +234,9 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
           exportConfig={exportEnabled && typeof module.exportRows === 'function' ? {
             fileBaseName: module.route,
             sheetName: t(module.titleKey),
+            ...(module.getColumnMeta ? {
+              processCellCallback: buildProcessCellCallback(module.getColumnMeta(), t),
+            } : {}),
           } : undefined}
           onServerExport={exportEnabled && typeof module.exportRows === 'function' ? async (format) => {
             setExporting(true);

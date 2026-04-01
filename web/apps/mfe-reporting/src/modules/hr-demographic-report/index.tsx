@@ -108,28 +108,4 @@ export const hrDemographicReportModule: ReportModule<HrDemographicFilters, HrDem
   getColumns: () => [],
   fetchRows: (filters, request) => fetchHrDemographicRows(filters, request),
   renderDashboard: () => <DemographicDashboard />,
-  renderDetail: (row, t) => {
-    if (!row) return <span>{t('reports.detail.empty')}</span>;
-    return (
-      <dl style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 8 }}>
-        <dt>ID</dt><dd>{row.id}</dd>
-        <dt>{t('reports.hrDemographic.columns.fullName')}</dt><dd>{row.fullName}</dd>
-        <dt>{t('reports.hrDemographic.columns.department')}</dt><dd>{row.department}</dd>
-        <dt>{t('reports.hrDemographic.columns.position')}</dt><dd>{row.position}</dd>
-        <dt>{t('reports.hrDemographic.columns.gender')}</dt><dd>{row.gender}</dd>
-        <dt>{t('reports.hrDemographic.columns.age')}</dt><dd>{row.age}</dd>
-        <dt>{t('reports.hrDemographic.columns.education')}</dt><dd>{row.education}</dd>
-        <dt>{t('reports.hrDemographic.columns.employmentType')}</dt><dd>{row.employmentType}</dd>
-        <dt>{t('reports.hrDemographic.columns.location')}</dt><dd>{row.location}</dd>
-        <dt>{t('reports.hrDemographic.columns.hireDate')}</dt><dd>{row.hireDate}</dd>
-        <dt>{t('reports.hrDemographic.columns.tenureYears')}</dt><dd>{row.tenureYears} yıl</dd>
-        <dt>{t('reports.hrDemographic.columns.generation')}</dt><dd>{row.generation}</dd>
-        <dt>{t('reports.hrDemographic.columns.maritalStatus')}</dt><dd>{row.maritalStatus}</dd>
-        <dt>{t('reports.hrDemographic.columns.militaryStatus')}</dt><dd>{row.militaryStatus}</dd>
-        <dt>{t('reports.hrDemographic.columns.isManager')}</dt><dd>{row.isManager ? 'Evet' : 'Hayır'}</dd>
-        <dt>{t('reports.hrDemographic.columns.hasDisability')}</dt><dd>{row.hasDisability ? 'Evet' : 'Hayır'}</dd>
-        <dt>{t('reports.hrDemographic.columns.ethicsTraining')}</dt><dd>{row.ethicsTrainingComplete ? 'Tamamlandı' : 'Beklemede'}</dd>
-      </dl>
-    );
-  },
 };

@@ -99,27 +99,4 @@ export const usersReportModule: ReportModule<UsersReportFilters, UsersReportRow>
   ],
   getColumns: () => [],
   fetchRows: (filters, request) => fetchUsersReport(filters, request),
-  renderDetail: (row, t) => {
-    if (!row) {
-      return <span>{t('reports.detail.empty')}</span>;
-    }
-    return (
-      <dl style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: 8 }}>
-        <dt>ID</dt>
-        <dd>{row.id}</dd>
-        <dt>{t('reports.users.columns.fullName')}</dt>
-        <dd>{row.fullName}</dd>
-        <dt>{t('reports.users.columns.email')}</dt>
-        <dd>{row.email}</dd>
-        <dt>{t('reports.users.columns.role')}</dt>
-        <dd>{row.role}</dd>
-        <dt>{t('reports.users.columns.status')}</dt>
-        <dd>{row.status}</dd>
-        <dt>{t('reports.users.columns.lastLoginAt')}</dt>
-        <dd>{row.lastLoginAt ?? '-'}</dd>
-        <dt>{t('reports.users.columns.createdAt')}</dt>
-        <dd>{row.createdAt ?? '-'}</dd>
-      </dl>
-    );
-  },
 };
