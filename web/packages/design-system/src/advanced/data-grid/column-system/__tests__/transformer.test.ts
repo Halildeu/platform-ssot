@@ -56,10 +56,11 @@ describe('buildColDefs', () => {
     ];
     const result = buildColDefs(meta, t);
     expect(result[0].filter).toBe('agSetColumnFilter');
-    expect(result[0].filterParams).toEqual({
+    expect(result[0].filterParams).toMatchObject({
       values: ['ADMIN', 'USER'],
       suppressSyncValuesAfterDataChange: true,
     });
+    expect(result[0].filterParams?.valueFormatter).toBeDefined();
     expect(result[0].cellRenderer).toBeDefined();
   });
 
@@ -75,10 +76,11 @@ describe('buildColDefs', () => {
     ];
     const result = buildColDefs(meta, t);
     expect(result[0].filter).toBe('agSetColumnFilter');
-    expect(result[0].filterParams).toEqual({
+    expect(result[0].filterParams).toMatchObject({
       values: ['ACTIVE', 'INACTIVE'],
       suppressSyncValuesAfterDataChange: true,
     });
+    expect(result[0].filterParams?.valueFormatter).toBeDefined();
     expect(result[0].cellRenderer).toBeDefined();
   });
 
@@ -115,10 +117,11 @@ describe('buildColDefs', () => {
     ];
     const result = buildColDefs(meta, t);
     expect(result[0].filter).toBe('agSetColumnFilter');
-    expect(result[0].filterParams).toEqual({
+    expect(result[0].filterParams).toMatchObject({
       values: ['true', 'false'],
       suppressSyncValuesAfterDataChange: true,
     });
+    expect(result[0].filterParams?.valueFormatter).toBeDefined();
   });
 
   it('percent sütunu — agNumberColumnFilter', () => {
