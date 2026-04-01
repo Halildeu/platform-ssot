@@ -119,7 +119,7 @@ export type OfflineMutationPolicyDescriptor = {
   conflictAuditCapabilityId: AuditFeedCapabilityId;
 };
 
-export type SharedReportId = "users-overview" | "roles-access" | "audit-activity" | "hr-demografik-yapi";
+export type SharedReportId = "users-overview" | "roles-access" | "audit-activity" | "hr-demografik-yapi" | "monthly-login-summary" | "weekly-audit-digest";
 
 export type SharedReportCatalogItem = {
   id: SharedReportId;
@@ -138,6 +138,14 @@ export type SharedReportCatalogItem = {
   webRouteSegment: string;
   webRoute: string;
   webModuleId: string;
+  /** Sidebar category for grouping (e.g., "İnsan Kaynakları", "Denetim", "Periyodik") */
+  category?: string;
+  /** Classification tags (e.g., ["periodic", "hr"]) */
+  tags?: readonly string[];
+  /** Report presentation type */
+  type?: "grid" | "dashboard" | "mixed";
+  /** Icon identifier for sidebar/hub display */
+  icon?: string;
 };
 
 export type ReportChannel = "web" | "mobile";
@@ -313,6 +321,7 @@ const SHARED_REPORT_CATALOG: readonly SharedReportCatalogItem[] = [
     webRouteSegment: "users",
     webRoute: "/admin/reports/users",
     webModuleId: "reports.users",
+    category: "Genel",
   },
   {
     id: "roles-access",
@@ -337,6 +346,7 @@ const SHARED_REPORT_CATALOG: readonly SharedReportCatalogItem[] = [
     webRouteSegment: "access",
     webRoute: "/admin/reports/access",
     webModuleId: "reports.access",
+    category: "Erişim & Güvenlik",
   },
   {
     id: "audit-activity",
@@ -364,6 +374,7 @@ const SHARED_REPORT_CATALOG: readonly SharedReportCatalogItem[] = [
     webRouteSegment: "audit",
     webRoute: "/admin/reports/audit",
     webModuleId: "reports.audit",
+    category: "Denetim",
   },
   {
     id: "hr-demografik-yapi",
@@ -392,6 +403,54 @@ const SHARED_REPORT_CATALOG: readonly SharedReportCatalogItem[] = [
     webRouteSegment: "hr-demografik-yapi",
     webRoute: "/admin/reports/hr-demografik-yapi",
     webModuleId: "reports.hr-demographic",
+    category: "İnsan Kaynakları",
+  },
+  {
+    id: "monthly-login-summary",
+    title: "Aylık giriş özeti",
+    description: "Her ay otomatik oluşturulan kullanıcı giriş istatistikleri raporu.",
+    permissionCode: "user-read",
+    exportPermissionCode: null,
+    metricLabel: "Toplam giriş",
+    emptyMessage: "Aylık giriş özeti için gösterilecek kayıt bulunamadı.",
+    supportedChannels: ["web"],
+    dataModeByChannel: { web: "live" },
+    favoriteChannels: ["web"],
+    savedFilterChannels: ["web"],
+    exportModeByChannel: { web: "none" },
+    filterParity: [
+      { key: "search", label: "Arama", supportedChannels: ["web"] },
+    ],
+    webRouteSegment: "monthly-login-summary",
+    webRoute: "/admin/reports/monthly-login-summary",
+    webModuleId: "reports.monthly-login-summary",
+    category: "Periyodik",
+    tags: ["periodic", "monthly"],
+    icon: "📅",
+  },
+  {
+    id: "weekly-audit-digest",
+    title: "Haftalık denetim özeti",
+    description: "Her hafta otomatik derlenen denetim olayları ve güvenlik uyarıları.",
+    permissionCode: "audit-read",
+    exportPermissionCode: null,
+    metricLabel: "Toplam olay",
+    emptyMessage: "Haftalık denetim özeti için gösterilecek kayıt bulunamadı.",
+    supportedChannels: ["web"],
+    dataModeByChannel: { web: "live" },
+    favoriteChannels: ["web"],
+    savedFilterChannels: ["web"],
+    exportModeByChannel: { web: "none" },
+    filterParity: [
+      { key: "search", label: "Arama", supportedChannels: ["web"] },
+      { key: "level", label: "Seviye", supportedChannels: ["web"] },
+    ],
+    webRouteSegment: "weekly-audit-digest",
+    webRoute: "/admin/reports/weekly-audit-digest",
+    webModuleId: "reports.weekly-audit-digest",
+    category: "Periyodik",
+    tags: ["periodic", "weekly"],
+    icon: "📋",
   },
 ] as const;
 
