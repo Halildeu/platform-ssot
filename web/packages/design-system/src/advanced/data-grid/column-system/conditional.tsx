@@ -3,22 +3,10 @@
  *
  * Wraps an existing cellRenderer with conditional style logic.
  * Rules are evaluated in order; first match wins.
- *
- * @example
- * ```ts
- * {
- *   field: 'salary',
- *   columnType: 'number',
- *   conditionalRules: [
- *     { condition: 'gt', value: 50000, style: { textColor: 'var(--state-success-text)' } },
- *     { condition: 'lt', value: 20000, style: { textColor: 'var(--state-danger-text)' } },
- *   ],
- * }
- * ```
  */
 
 import React from 'react';
-import { Badge } from '@mfe/design-system';
+import { Badge } from '../../../primitives/badge';
 import type { ConditionalRule, BadgeVariant } from './types';
 
 type CellParams = { value: unknown; data: unknown };

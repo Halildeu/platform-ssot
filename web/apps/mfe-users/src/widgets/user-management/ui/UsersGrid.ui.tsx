@@ -12,6 +12,7 @@ import type {
 // so import grid utilities from @mfe/design-system directly.
 import type { GridExportConfig } from 'mfe_reporting/grid';
 import { buildEntityGridQueryParams } from '@mfe/design-system';
+import { buildColDefs, buildProcessCellCallback, type ColumnMeta } from '@mfe/design-system/advanced/data-grid';
 // Ağır AG Grid bağımlılıklarını ilk ekranda yüklememek için lazy-load
 const EntityGridTemplate = React.lazy(() =>
   import('@mfe/design-system').then((m) => ({ default: m.EntityGridTemplate })),
@@ -171,101 +172,37 @@ const UsersGrid: React.FC<UsersGridProps> = ({
     [t, locale],
   );
 
-  const columnDefs = useMemo<ColDef<UserSummary>[]>(() => [
+  /* ------------------------------------------------------------------ */
+  /*  Column metadata — declarative column definitions via column-system  */
+  /* ------------------------------------------------------------------ */
+
+  const localeCode = locale === 'tr' ? 'tr-TR' : locale === 'en' ? 'en-US' : locale === 'de' ? 'de-DE' : locale === 'es' ? 'es-ES' : 'tr-TR';
+
+  const columnMeta = useMemo<ColumnMeta[]>(() => [
+    { field: 'fullName', headerNameKey: 'users.grid.columns.fullName', columnType: 'bold-text', minWidth: 180 },
+    { field: 'email', headerNameKey: 'users.grid.columns.email', columnType: 'text', minWidth: 220 },
     {
-      headerName: t('users.grid.columns.fullName'),
-      field: 'fullName',
-      minWidth: 180,
-      filter: 'agTextColumnFilter',
-      cellRenderer: ({ data }) => (
-        <span className="font-semibold text-text-primary">{data?.fullName ?? '-'}</span>
-      ),
+      field: 'role', headerNameKey: 'users.grid.columns.role', columnType: 'badge', width: 140,
+      variantMap: { ADMIN: 'danger', USER: 'info' },
+      defaultVariant: 'info',
+      labelMap: { ADMIN: 'users.filters.role.admin', USER: 'users.filters.role.user' },
+      filterValues: ['ADMIN', 'USER'],
     },
     {
-      headerName: t('users.grid.columns.email'),
-      field: 'email',
-      minWidth: 220,
-      filter: 'agTextColumnFilter',
-    },
-    {
-      headerName: t('users.grid.columns.role'),
-      field: 'role',
-      width: 140,
-      filter: 'agSetColumnFilter',
-      filterParams: {
-        // SSRM'de değer listesini stabil tutmak için olası rollerin tamamını sağlayın
-        values: ['ADMIN', 'USER'],
-        valueFormatter: ({ value }: { value: unknown }) => {
-          if (typeof value !== 'string') return String(value ?? '');
-          const upper = value.toUpperCase();
-          if (upper === 'USER') return t('users.filters.role.user');
-          if (upper === 'ADMIN') return t('users.filters.role.admin');
-          return value;
-        },
-        suppressSyncValuesAfterDataChange: true,
-      },
-      valueFormatter: ({ value }) => {
-        if (typeof value !== 'string') return value;
-        const upper = value.toUpperCase();
-        if (upper === 'USER') return t('users.filters.role.user');
-        if (upper === 'ADMIN') return t('users.filters.role.admin');
-        return value;
-      },
-      cellRenderer: ({ value }) => {
-        const upper = typeof value === 'string' ? value.toUpperCase() : '';
-        const label = upper === 'ADMIN' ? t('users.filters.role.admin')
-          : upper === 'USER' ? t('users.filters.role.user')
-          : value;
-        const tone = upper === 'ADMIN' ? 'danger' : 'info';
-        return <Badge variant={tone}>{label}</Badge>;
+      field: 'status', headerNameKey: 'users.grid.columns.status', columnType: 'status', width: 140,
+      statusMap: {
+        ACTIVE: { variant: 'success', labelKey: 'users.filters.status.active' },
+        INACTIVE: { variant: 'muted', labelKey: 'users.filters.status.inactive' },
+        INVITED: { variant: 'warning', labelKey: 'users.filters.status.invited' },
+        SUSPENDED: { variant: 'danger', labelKey: 'users.filters.status.suspended' },
       },
     },
-    {
-      headerName: t('users.grid.columns.status'),
-      field: 'status',
-      width: 140,
-      filter: 'agSetColumnFilter',
-      filterParams: {
-        values: ['ACTIVE', 'INACTIVE', 'INVITED', 'SUSPENDED'],
-        suppressSyncValuesAfterDataChange: true,
-      },
-      valueFormatter: ({ value }) => {
-        if (typeof value !== 'string') return String(value ?? '');
-        const upper = value.toUpperCase();
-        if (upper === 'ACTIVE') return t('users.filters.status.active');
-        if (upper === 'INACTIVE') return t('users.filters.status.inactive');
-        if (upper === 'INVITED') return t('users.filters.status.invited');
-        if (upper === 'SUSPENDED') return t('users.filters.status.suspended');
-        return value;
-      },
-      cellRenderer: ({ value }) => {
-        const colorMap: Record<string, string> = {
-          ACTIVE: 'success',
-          INACTIVE: 'muted',
-          INVITED: 'warning',
-          SUSPENDED: 'danger',
-        };
-        const upper = typeof value === 'string' ? value.toUpperCase() : '';
-        const label = upper === 'ACTIVE' ? t('users.filters.status.active')
-          : upper === 'INACTIVE' ? t('users.filters.status.inactive')
-          : upper === 'INVITED' ? t('users.filters.status.invited')
-          : upper === 'SUSPENDED' ? t('users.filters.status.suspended')
-          : value;
-        return <Badge variant={colorMap[upper] ?? 'default'}>{label}</Badge>;
-      },
-    },
-    {
-      headerName: t('users.grid.columns.sessionTimeoutMinutes'),
-      field: 'sessionTimeoutMinutes',
-      width: 160,
-      filter: 'agNumberColumnFilter',
-      valueFormatter: ({ value }) => {
-        if (typeof value === 'number' && Number.isFinite(value)) {
-          return `${value} dk`;
-        }
-        return '-';
-      },
-    },
+    { field: 'sessionTimeoutMinutes', headerNameKey: 'users.grid.columns.sessionTimeoutMinutes', columnType: 'number', width: 160, suffix: 'dk' },
+    { field: 'lastLoginAt', headerNameKey: 'users.grid.columns.lastLoginAt', columnType: 'date', width: 180, format: 'datetime' },
+  ], []);
+
+  /* Custom columns that column-system can't express */
+  const customColumnDefs = useMemo<ColDef<UserSummary>[]>(() => [
     {
       headerName: t('users.grid.columns.modulePermissions'),
       field: 'modulePermissions',
@@ -299,41 +236,6 @@ const UsersGrid: React.FC<UsersGridProps> = ({
       },
     },
     {
-      headerName: t('users.grid.columns.lastLoginAt'),
-      field: 'lastLoginAt',
-      width: 180,
-      filter: 'agDateColumnFilter',
-      filterValueGetter: ({ data }) => (data?.lastLoginAt ? new Date(data.lastLoginAt).getTime() : null),
-      cellRenderer: ({ value }) => {
-        if (!value) {
-          return t('shell.header.neverLoggedIn');
-        }
-        try {
-          const date = new Date(value);
-          let localeCode: string | undefined;
-          switch (locale) {
-            case 'tr':
-              localeCode = 'tr-TR';
-              break;
-            case 'en':
-              localeCode = 'en-US';
-              break;
-            case 'de':
-              localeCode = 'de-DE';
-              break;
-            case 'es':
-              localeCode = 'es-ES';
-              break;
-            default:
-              localeCode = undefined;
-          }
-          return localeCode ? date.toLocaleString(localeCode) : date.toLocaleString();
-        } catch {
-          return String(value);
-        }
-      },
-    },
-    {
       headerName: t('users.grid.columns.actions'),
       field: 'id',
       width: 120,
@@ -344,7 +246,14 @@ const UsersGrid: React.FC<UsersGridProps> = ({
         data ? <UserActions user={data} onSelect={() => onSelectUser(data)} /> : null,
       pinned: 'right',
     },
-  ], [formatModulePermissions, onSelectUser, t, locale]);
+  ], [formatModulePermissions, onSelectUser, t]);
+
+  /* Merge column-system output with custom columns */
+  const columnDefs = useMemo<ColDef<UserSummary>[]>(() => {
+    const metaDefs = buildColDefs<UserSummary>(columnMeta, t, localeCode) as ColDef<UserSummary>[];
+    // Insert modulePermissions before actions (between lastLoginAt and actions)
+    return [...metaDefs, ...customColumnDefs];
+  }, [columnMeta, customColumnDefs, t, localeCode]);
 
   const gridOptions = useMemo<GridOptions<UserSummary>>(
     () => ({

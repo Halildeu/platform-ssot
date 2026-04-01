@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Badge } from '@mfe/design-system';
+import { Badge } from '../../../primitives/badge';
 import type {
   ColumnMeta,
   TranslateFn,
@@ -131,16 +131,25 @@ function formatDetailValue(
 /*  buildDetailRenderer — THE auto detail drawer function              */
 /* ------------------------------------------------------------------ */
 
+export interface DetailExtraField {
+  /** Display label (raw string or i18n key) */
+  label: string;
+  /** Field name to read from the row data */
+  field: string;
+}
+
 /**
  * Creates a renderDetail function from column metadata.
  *
  * @param columns - Same ColumnMeta[] used for the grid
  * @param locale - Locale for formatting (default: 'tr-TR')
+ * @param extraFields - Additional fields to show in detail drawer beyond column definitions
  * @returns A function compatible with ReportModule.renderDetail
  */
 export function buildDetailRenderer<TRow extends Record<string, unknown>>(
   columns: ColumnMeta[],
   locale: string = 'tr-TR',
+  extraFields?: DetailExtraField[],
 ): (row: TRow | null, t: TranslateFn) => React.ReactNode {
   return (row, t) => {
     if (!row) {
@@ -178,6 +187,19 @@ export function buildDetailRenderer<TRow extends Record<string, unknown>>(
               <dd className="text-sm text-text-primary">
                 {formatDetailValue(col, value, t, locale)}
               </dd>
+            </React.Fragment>
+          );
+        })}
+
+        {/* Extra fields — shown after column-based fields */}
+        {extraFields?.map((ef) => {
+          const value = row[ef.field];
+          if (value == null) return null;
+          const label = ef.label.includes('.') ? (t(ef.label) || ef.label) : ef.label;
+          return (
+            <React.Fragment key={ef.field}>
+              <dt className="text-xs font-medium text-text-secondary">{label}</dt>
+              <dd className="text-sm text-text-primary">{String(value)}</dd>
             </React.Fragment>
           );
         })}

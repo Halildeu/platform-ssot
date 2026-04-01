@@ -14,7 +14,7 @@ import type { GridRequest, GridResponse, ColumnDef } from '../../grid';
 import type { ColDef, IServerSideGetRowsParams } from 'ag-grid-community';
 import { useReportingI18n } from '../../i18n/useReportingI18n';
 import type { ReportModule } from '../../modules/types';
-import { buildColDefs, buildDetailRenderer, buildProcessCellCallback } from '../../modules/column-system';
+import { buildColDefs, buildDetailRenderer, buildProcessCellCallback } from '@mfe/design-system/advanced/data-grid';
 import { getShellServices } from '../services/shell-services';
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';
@@ -182,15 +182,18 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
 
   const initialVariantId = searchParams.get('variant') ?? undefined;
 
-  const localeText = React.useMemo(() => ({
-    rowGroupPanel: t('reports.filters.all') ? 'Gruplamak için sütunları buraya sürükleyin' : 'Drag here to set row groups',
-    dropZoneColumnGroup: 'Gruplamak için sütunları buraya sürükleyin',
-    rowGroupColumnsEmptyMessage: 'Gruplamak için sütunları buraya sürükleyin',
-    dragHereToSetColumnRowGroup: 'Gruplamak için sütunları buraya sürükleyin',
-    dragHereToSetRowGroup: 'Gruplamak için sütunları buraya sürükleyin',
-    filters: 'Filtreler',
-    columns: 'Sütunlar',
-  } as Record<string, string>), [t]);
+  const localeText = React.useMemo(() => {
+    const groupPanel = t('shared.grid.groupPanel');
+    return {
+      rowGroupPanel: groupPanel,
+      dropZoneColumnGroup: groupPanel,
+      rowGroupColumnsEmptyMessage: groupPanel,
+      dragHereToSetColumnRowGroup: groupPanel,
+      dragHereToSetRowGroup: groupPanel,
+      filters: t('shared.grid.filters'),
+      columns: t('shared.grid.columns'),
+    } as Record<string, string>;
+  }, [t]);
 
   if (!ready) {
     return (

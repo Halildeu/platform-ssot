@@ -1,7 +1,7 @@
 import React from 'react';
 import { getSharedReport } from '@platform/capabilities';
 import type { ReportModule } from '../types';
-import type { ColumnMeta } from '../column-system';
+import type { ColumnMeta } from '@mfe/design-system/advanced/data-grid';
 import { exportAuditReport, fetchAuditReport } from './api';
 import type { AuditFilters, AuditRow } from './types';
 

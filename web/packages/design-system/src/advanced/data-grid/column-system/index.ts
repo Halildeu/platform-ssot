@@ -3,7 +3,7 @@
  *
  * Usage:
  * ```ts
- * import { buildColDefs, type ColumnMeta } from '../column-system';
+ * import { buildColDefs, type ColumnMeta } from '@mfe/design-system/advanced/data-grid';
  *
  * const meta: ColumnMeta[] = [
  *   { field: 'name', headerNameKey: 'shared.columns.name', columnType: 'bold-text' },
@@ -35,6 +35,7 @@ export type {
   BadgeVariant,
   ConditionalRule,
   TranslateFn,
+  ColumnDef,
 } from './types';
 
 /* Transformer */
@@ -61,6 +62,7 @@ export { buildFilterConfig, type FilterConfig } from './filters';
 
 /* Detail drawer */
 export { buildDetailRenderer } from './detail-renderer';
+export type { DetailExtraField } from './detail-renderer';
 
 /* Export helpers */
 export { buildProcessCellCallback } from './export-helpers';

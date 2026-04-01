@@ -38,6 +38,11 @@ export const CATEGORY_TO_TOP: Record<string, TopCategoryId> = {
   Diğer: "business",
   Diger: "business",
   Genel: "business",
+  /* Periyodik raporlar — backend schedule/periodic tag ile eşleşir */
+  Periyodik: "periodic",
+  "Zamanlanmış": "periodic",
+  Scheduled: "periodic",
+  Periodic: "periodic",
 };
 
 /* Default: unmapped categories fall into "business" */

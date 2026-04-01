@@ -275,3 +275,27 @@ export type ColumnMeta =
 /* ------------------------------------------------------------------ */
 
 export type TranslateFn = (key: string) => string;
+
+/* ------------------------------------------------------------------ */
+/*  ColumnDef — lightweight AG Grid column definition                  */
+/* ------------------------------------------------------------------ */
+
+export type ColumnDef<TRow = unknown> = {
+  field?: string;
+  headerName?: string;
+  width?: number;
+  minWidth?: number;
+  flex?: number | null;
+  filterType?: 'text' | 'number' | 'date' | 'set';
+  sortable?: boolean;
+  filter?: boolean | string;
+  floatingFilter?: boolean;
+  pinned?: 'left' | 'right';
+  wrapText?: boolean;
+  autoHeight?: boolean;
+  cellRenderer?: ((params: { value: unknown; data: TRow | undefined }) => React.ReactNode) | string;
+  valueFormatter?: (params: { value: unknown; data: TRow | undefined }) => string;
+  valueGetter?: (params: { data: TRow | undefined }) => unknown;
+  filterParams?: Record<string, unknown>;
+  cellClass?: string | string[];
+};

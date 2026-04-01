@@ -1,7 +1,7 @@
 import React from 'react';
 import { getSharedReport } from '@platform/capabilities';
 import type { ReportModule } from '../types';
-import type { ColumnMeta } from '../column-system';
+import type { ColumnMeta } from '@mfe/design-system/advanced/data-grid';
 import type { HrDemographicFilters, HrDemographicRow } from './types';
 import { fetchHrDemographicRows } from './api';
 import DemographicDashboard from './DemographicDashboard';

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { SharedReportId } from '@platform/capabilities';
 import type { ColumnDef, GridRequest, GridResponse } from '../grid';
-import type { ColumnMeta } from './column-system';
+import type { ColumnMeta } from '@mfe/design-system/advanced/data-grid';
 
 export type TranslateFn = (key: string, params?: Record<string, unknown>) => string;
 

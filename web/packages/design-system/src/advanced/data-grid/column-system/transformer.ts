@@ -7,8 +7,7 @@
  * with renderers, filters, formatters — everything.
  */
 
-import type { ColumnMeta, TranslateFn } from './types';
-import type { ColumnDef } from '../../grid';
+import type { ColumnMeta, ColumnDef, TranslateFn } from './types';
 import { buildFilterConfig } from './filters';
 import { withConditionalFormatting } from './conditional';
 import {
@@ -93,12 +92,8 @@ function buildSingleColDef<TRow>(
   if (meta.pinned) colDef.pinned = meta.pinned;
   if (meta.columnType === 'actions') colDef.pinned = meta.pinned ?? 'right';
 
-  /* Hidden */
-  // AG Grid uses `hide` but our ColumnDef doesn't have it — use cellClass workaround
-  // Skeleton handles this at the transformer level by filtering
-
-  /* Filter config */
-  const filterCfg = buildFilterConfig(meta);
+  /* Filter config — pass t for set filter label translation */
+  const filterCfg = buildFilterConfig(meta, t);
   if (filterCfg) {
     colDef.filter = filterCfg.filter as string | boolean;
     if (filterCfg.filterParams) colDef.filterParams = filterCfg.filterParams;
@@ -109,7 +104,7 @@ function buildSingleColDef<TRow>(
   let renderer = buildRenderer(meta, t, locale);
 
   /* Wrap with conditional formatting if rules exist */
-  if (meta.conditionalRules && meta.conditionalRules.length > 0) {
+  if (meta.conditionalRules && meta.conditionalRules.length > 0 && typeof renderer !== 'string') {
     renderer = withConditionalFormatting(renderer, meta.conditionalRules);
   }
 

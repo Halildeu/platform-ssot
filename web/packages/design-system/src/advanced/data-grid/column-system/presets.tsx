@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { Badge } from '@mfe/design-system';
+import { Badge } from '../../../primitives/badge';
 import type {
   BadgeVariant,
   BadgeColumnMeta,
