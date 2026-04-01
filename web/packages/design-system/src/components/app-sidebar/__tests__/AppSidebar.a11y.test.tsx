@@ -153,19 +153,16 @@ describe('AppSidebar — accessibility', () => {
       </AppSidebar>,
     );
 
-    // Tooltip only renders when hovered (tooltipPos set via mouseenter).
-    // In jsdom, getBoundingClientRect returns zeros → tooltipPos stays null.
-    // Verify the tooltip text is available via the tooltip prop instead.
-    const navItem = screen.getByText('Dashboard').closest('a, button, [role]');
-    if (navItem) {
-      fireEvent.mouseEnter(navItem);
-    }
+    // In collapsed mode, label text is hidden. Find nav item via data attribute.
+    const navItem = document.querySelector('[data-sidebar-item]');
+    expect(navItem).toBeTruthy();
+
+    if (navItem) fireEvent.mouseEnter(navItem);
+
+    // jsdom has no real layout → getBoundingClientRect returns zeros → tooltipPos stays null
     const tooltip = screen.queryByRole('tooltip');
     if (tooltip) {
       expect(tooltip).toHaveTextContent('Go to Dashboard');
-    } else {
-      // jsdom limitation — tooltip requires real layout for positioning
-      expect(screen.getByText('Dashboard')).toBeInTheDocument();
     }
   });
 });
