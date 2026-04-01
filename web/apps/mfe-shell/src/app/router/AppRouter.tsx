@@ -16,9 +16,9 @@ import {
   AccessModule,
   AuditModule,
   UsersModule,
-  ReportingModule,
   SchemaExplorerModule,
 } from "./lazy-routes";
+import { ReportingLayout } from "../../pages/admin/reports/ReportingLayout";
 
 /* ---- Page imports ---- */
 import { LoginPage } from "../../pages/login";
@@ -113,16 +113,20 @@ export const AppRouter: React.FC = () => {
           path="/admin/reports/*"
           element={
             <ProtectedRoute requiredPermissions={[PERMISSIONS.REPORTING_MODULE]}>
-              <ReportingModule />
+              <ReportingLayout />
             </ProtectedRoute>
           }
         />
         <Route
           path="/admin/reports"
-          element={<Navigate to="/admin/reports/users" replace />}
+          element={
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.REPORTING_MODULE]}>
+              <ReportingLayout />
+            </ProtectedRoute>
+          }
         />
         <Route path="/reports/*" element={<Navigate to="/admin/reports" replace />} />
-        <Route path="/reports" element={<Navigate to="/admin/reports/users" replace />} />
+        <Route path="/reports" element={<Navigate to="/admin/reports" replace />} />
         <Route
           path="/admin/users"
           element={

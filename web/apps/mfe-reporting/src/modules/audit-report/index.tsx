@@ -1,9 +1,9 @@
 import React from 'react';
 import { getSharedReport } from '@platform/capabilities';
 import type { ReportModule } from '../types';
+import type { ColumnMeta } from '../column-system';
 import { exportAuditReport, fetchAuditReport } from './api';
 import type { AuditFilters, AuditRow } from './types';
-import type { ColumnDef } from '../../grid';
 
 const LEVELS: Array<AuditRow['level']> = ['INFO', 'WARN', 'ERROR'];
 
@@ -20,15 +20,11 @@ export const auditReportModule: ReportModule<AuditFilters, AuditRow> = {
     { key: 'reports.breadcrumb.root', to: '/reports' },
     { key: 'reports.audit.breadcrumb' },
   ],
-  createInitialFilters: () => ({
-    search: '',
-    level: 'ALL',
-  }),
+  createInitialFilters: () => ({ search: '', level: 'ALL' }),
   renderFilters: ({ values, setFieldValue, t }) => {
     const inputClass =
       'w-full rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1';
     const labelClass = 'flex flex-col gap-1 text-xs font-medium text-text-secondary min-w-[200px]';
-
     return (
       <>
         <label className={labelClass}>
@@ -49,48 +45,41 @@ export const auditReportModule: ReportModule<AuditFilters, AuditRow> = {
           >
             <option value="ALL">{t('reports.filters.all')}</option>
             {LEVELS.map((level) => (
-              <option key={level} value={level}>
-                {level}
-              </option>
+              <option key={level} value={level}>{level}</option>
             ))}
           </select>
         </label>
       </>
     );
   },
-  getColumns: (t) =>
-    [
-      { headerName: t('reports.audit.columns.eventId'), field: 'id', width: 140 },
-      { headerName: t('reports.audit.columns.userEmail'), field: 'userEmail', flex: 1.4 },
-      { headerName: t('reports.audit.columns.service'), field: 'service', flex: 1 },
-      { headerName: t('reports.audit.columns.action'), field: 'action', flex: 1.2 },
-      { headerName: t('reports.audit.columns.level'), field: 'level', width: 120 },
-      { headerName: t('reports.audit.columns.timestamp'), field: 'timestamp', flex: 1.2 },
-    ] as ColumnDef<AuditRow>[],
+  getColumnMeta: (): ColumnMeta[] => [
+    { field: 'id', headerNameKey: 'reports.audit.columns.eventId', columnType: 'text', width: 140 },
+    { field: 'userEmail', headerNameKey: 'reports.audit.columns.userEmail', columnType: 'text', flex: 1.4 },
+    { field: 'service', headerNameKey: 'reports.audit.columns.service', columnType: 'text', flex: 1 },
+    { field: 'action', headerNameKey: 'reports.audit.columns.action', columnType: 'text', flex: 1.2 },
+    {
+      field: 'level', headerNameKey: 'reports.audit.columns.level', columnType: 'badge', width: 120,
+      variantMap: { INFO: 'info', WARN: 'warning', ERROR: 'danger' },
+      defaultVariant: 'default',
+      filterValues: ['INFO', 'WARN', 'ERROR'],
+    },
+    { field: 'timestamp', headerNameKey: 'reports.audit.columns.timestamp', columnType: 'date', flex: 1.2 },
+  ],
+  getColumns: () => [],
   fetchRows: (filters, request) => fetchAuditReport(filters, request),
   exportRows: (filters, format) => exportAuditReport(filters, format),
   renderDetail: (row, t) => {
-    if (!row) {
-      return <span>{t('reports.detail.empty')}</span>;
-    }
+    if (!row) return <span>{t('reports.detail.empty')}</span>;
     return (
       <dl style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 8 }}>
-        <dt>{t('reports.audit.columns.eventId')}</dt>
-        <dd>{row.id}</dd>
-        <dt>{t('reports.audit.columns.userEmail')}</dt>
-        <dd>{row.userEmail}</dd>
-        <dt>{t('reports.audit.columns.service')}</dt>
-        <dd>{row.service}</dd>
-        <dt>{t('reports.audit.columns.action')}</dt>
-        <dd>{row.action}</dd>
-        <dt>{t('reports.audit.columns.level')}</dt>
-        <dd>{row.level}</dd>
-        <dt>{t('reports.audit.columns.timestamp')}</dt>
-        <dd>{row.timestamp}</dd>
-        <dt>Correlation id</dt>
-        <dd>{row.correlationId ?? '-'}</dd>
-        <dt>Detay</dt>
-        <dd>{row.details ?? '-'}</dd>
+        <dt>{t('reports.audit.columns.eventId')}</dt><dd>{row.id}</dd>
+        <dt>{t('reports.audit.columns.userEmail')}</dt><dd>{row.userEmail}</dd>
+        <dt>{t('reports.audit.columns.service')}</dt><dd>{row.service}</dd>
+        <dt>{t('reports.audit.columns.action')}</dt><dd>{row.action}</dd>
+        <dt>{t('reports.audit.columns.level')}</dt><dd>{row.level}</dd>
+        <dt>{t('reports.audit.columns.timestamp')}</dt><dd>{row.timestamp}</dd>
+        <dt>Correlation ID</dt><dd>{row.correlationId ?? '-'}</dd>
+        <dt>Detay</dt><dd>{row.details ?? '-'}</dd>
       </dl>
     );
   },

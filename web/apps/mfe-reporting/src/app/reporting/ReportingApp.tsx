@@ -1,9 +1,7 @@
 import React from 'react';
-import clsx from 'clsx';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { reportModules } from '../../modules';
 import { ReportPage } from './ReportPage';
-import { DynamicReportPage } from '../../modules/dynamic-report/DynamicReportPage';
 import { useReportingI18n } from '../../i18n/useReportingI18n';
 import {
   createDynamicReportModule,
@@ -11,7 +9,7 @@ import {
 } from '../../modules/dynamic-report';
 import { DashboardPage, fetchDashboardList } from '../../modules/dashboard';
 import type { DashboardListItem } from '../../modules/dashboard';
-import type { ReportListItem, DynamicReportFilters, DynamicReportRow } from '../../modules/dynamic-report';
+import type { ReportListItem } from '../../modules/dynamic-report';
 import type { ReportModule } from '../../modules/types';
 
 type AnyModule = ReportModule<any, any>;
@@ -32,14 +30,15 @@ const resolveBasePath = (pathname: string): string => {
   return '/reports';
 };
 
-const getActiveRoute = (pathname: string, modules: MergedModule[]): string => {
-  const base = resolveBasePath(pathname);
-  const remainder = pathname.slice(base.length).replace(/^\//, '');
-  if (!remainder || modules.length === 0) {
-    return modules[0]?.module.route ?? '';
-  }
+/**
+ * Determine the active sub-route from the URL.
+ * Returns empty string when at root (hub view).
+ */
+const getActiveRoute = (pathname: string, basePath: string): string => {
+  const remainder = pathname.slice(basePath.length).replace(/^\//, '');
+  if (!remainder) return '';
   const [firstSegment] = remainder.split('/');
-  return firstSegment || (modules[0]?.module.route ?? '');
+  return firstSegment || '';
 };
 
 const ReportingApp: React.FC = () => {
@@ -81,7 +80,6 @@ const ReportingApp: React.FC = () => {
   }, []);
 
   const mergedModules = React.useMemo<MergedModule[]>(() => {
-    // Dashboard entries (appear first in nav)
     const dashboardEntries: MergedModule[] = dashboards.map((db) => ({
       module: {
         id: `dashboard-${db.key}`,
@@ -121,40 +119,28 @@ const ReportingApp: React.FC = () => {
     return [...dashboardEntries, ...staticEntries, ...dynamicEntries];
   }, [dynamicReports, dashboards]);
 
-  const activeKey = getActiveRoute(location.pathname, mergedModules);
-  const activeEntry = mergedModules.find((e) => e.module.route === activeKey) ?? mergedModules[0];
+  const activeKey = getActiveRoute(location.pathname, basePath);
 
-  React.useEffect(() => {
-    if (!activeEntry || !dynamicLoaded) return;
-    const expectedPath = `${basePath}/${activeEntry.module.route}`;
-    if (!location.pathname.startsWith(expectedPath)) {
-      navigate(expectedPath, { replace: true });
-    }
-  }, [activeEntry, basePath, location.pathname, navigate, dynamicLoaded]);
-
-  const groupedByCategory = React.useMemo(() => {
-    const dashboardGroup: MergedModule[] = [];
-    const staticGroup: MergedModule[] = [];
-    const categoryMap = new Map<string, MergedModule[]>();
-
-    for (const entry of mergedModules) {
-      if (entry.isDashboard) {
-        dashboardGroup.push(entry);
-      } else if (!entry.isDynamic) {
-        staticGroup.push(entry);
-      } else {
-        const cat = entry.category ?? 'Diğer';
-        if (!categoryMap.has(cat)) {
-          categoryMap.set(cat, []);
+  // Root route → show hub (lazy loaded)
+  if (!activeKey) {
+    const ReportingHub = React.lazy(() => import('./ReportingHub'));
+    return (
+      <React.Suspense
+        fallback={
+          <div className="flex flex-col gap-4 p-6">
+            <div className="h-10 w-64 animate-pulse rounded-lg bg-surface-muted" />
+          </div>
         }
-        categoryMap.get(cat)!.push(entry);
-      }
-    }
+      >
+        <ReportingHub />
+      </React.Suspense>
+    );
+  }
 
-    return { dashboardGroup, staticGroup, categories: categoryMap };
-  }, [mergedModules]);
+  // Sub-route → find matching module and render
+  const activeEntry = mergedModules.find((e) => e.module.route === activeKey);
 
-  if (!dynamicLoaded && mergedModules.length === 0) {
+  if (!dynamicLoaded && !activeEntry) {
     return (
       <div className="flex flex-col gap-4">
         <div className="h-10 w-full animate-pulse rounded-xs bg-surface-muted" />
@@ -162,83 +148,26 @@ const ReportingApp: React.FC = () => {
     );
   }
 
-  return (
-    <div className="flex flex-col gap-4">
-      <nav className="flex flex-wrap items-center gap-1 border-b border-border-subtle pb-1">
-        {groupedByCategory.dashboardGroup.map((entry) => (
-          <NavButton
-            key={entry.module.route}
-            label={entry.module.navKey}
-            isActive={entry.module.route === activeKey}
-            onClick={() => navigate(`${basePath}/${entry.module.route}`)}
-          />
-        ))}
+  if (!activeEntry) {
+    // Unknown route — redirect to hub
+    return <RedirectToHub basePath={basePath} />;
+  }
 
-        {groupedByCategory.dashboardGroup.length > 0 && groupedByCategory.staticGroup.length > 0 && (
-          <div className="mx-2 h-5 w-px bg-border-subtle" />
-        )}
+  if (activeEntry.isDashboard) {
+    return <DashboardPage dashboardKey={activeEntry.dashboardKey!} />;
+  }
 
-        {groupedByCategory.staticGroup.map((entry) => (
-          <NavButton
-            key={entry.module.route}
-            label={t(entry.module.navKey)}
-            isActive={entry.module.route === activeKey}
-            onClick={() => navigate(`${basePath}/${entry.module.route}`)}
-          />
-        ))}
-
-        {groupedByCategory.categories.size > 0 && groupedByCategory.staticGroup.length > 0 && (
-          <div className="mx-2 h-5 w-px bg-border-subtle" />
-        )}
-
-        {Array.from(groupedByCategory.categories.entries()).map(([category, entries]) => (
-          <React.Fragment key={category}>
-            <span className="px-2 text-xs font-semibold uppercase tracking-wider text-text-subtle">
-              {category}
-            </span>
-            {entries.map((entry) => (
-              <NavButton
-                key={entry.module.route}
-                label={entry.module.navKey}
-                isActive={entry.module.route === activeKey}
-                onClick={() => navigate(`${basePath}/${entry.module.route}`)}
-              />
-            ))}
-          </React.Fragment>
-        ))}
-      </nav>
-
-      {activeEntry?.isDashboard ? (
-        <DashboardPage dashboardKey={activeEntry.dashboardKey!} />
-      ) : activeEntry?.isDynamic ? (
-        <DynamicReportPage
-          module={activeEntry.module as ReportModule<DynamicReportFilters, DynamicReportRow>}
-          reportKey={activeEntry.reportKey!}
-        />
-      ) : activeEntry ? (
-        <ReportPage module={activeEntry.module} />
-      ) : null}
-    </div>
-  );
+  /* Both dynamic and static reports use the same ReportPage skeleton */
+  return <ReportPage module={activeEntry.module} />;
 };
 
-const NavButton: React.FC<{
-  label: string;
-  isActive: boolean;
-  onClick: () => void;
-}> = ({ label, isActive, onClick }) => (
-  <button
-    type="button"
-    onClick={onClick}
-    className={clsx(
-      'border-b-2 px-3 py-2 text-sm font-medium transition-colors',
-      isActive
-        ? 'border-action-primary-border text-text-primary'
-        : 'border-transparent text-text-subtle hover:text-text-secondary hover:border-border-subtle',
-    )}
-  >
-    {label}
-  </button>
-);
+/** Tiny component to redirect unknown sub-routes back to hub */
+const RedirectToHub: React.FC<{ basePath: string }> = ({ basePath }) => {
+  const navigate = useNavigate();
+  React.useEffect(() => {
+    navigate(basePath, { replace: true });
+  }, [navigate, basePath]);
+  return null;
+};
 
 export default ReportingApp;

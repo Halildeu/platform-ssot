@@ -212,12 +212,12 @@ const UsersGrid: React.FC<UsersGridProps> = ({
         return value;
       },
       cellRenderer: ({ value }) => {
-        const formatted =
-          typeof value === 'string' && value.toUpperCase() === 'USER'
-            ? t('users.filters.role.user')
-            : value;
-        const tone = typeof value === 'string' && value.toUpperCase() === 'ADMIN' ? 'danger' : 'info';
-        return <Badge variant={tone}>{formatted}</Badge>;
+        const upper = typeof value === 'string' ? value.toUpperCase() : '';
+        const label = upper === 'ADMIN' ? t('users.filters.role.admin')
+          : upper === 'USER' ? t('users.filters.role.user')
+          : value;
+        const tone = upper === 'ADMIN' ? 'danger' : 'info';
+        return <Badge variant={tone}>{label}</Badge>;
       },
     },
     {
@@ -229,6 +229,15 @@ const UsersGrid: React.FC<UsersGridProps> = ({
         values: ['ACTIVE', 'INACTIVE', 'INVITED', 'SUSPENDED'],
         suppressSyncValuesAfterDataChange: true,
       },
+      valueFormatter: ({ value }) => {
+        if (typeof value !== 'string') return String(value ?? '');
+        const upper = value.toUpperCase();
+        if (upper === 'ACTIVE') return t('users.filters.status.active');
+        if (upper === 'INACTIVE') return t('users.filters.status.inactive');
+        if (upper === 'INVITED') return t('users.filters.status.invited');
+        if (upper === 'SUSPENDED') return t('users.filters.status.suspended');
+        return value;
+      },
       cellRenderer: ({ value }) => {
         const colorMap: Record<string, string> = {
           ACTIVE: 'success',
@@ -236,7 +245,13 @@ const UsersGrid: React.FC<UsersGridProps> = ({
           INVITED: 'warning',
           SUSPENDED: 'danger',
         };
-        return <Badge variant={colorMap[value] ?? 'default'}>{value}</Badge>;
+        const upper = typeof value === 'string' ? value.toUpperCase() : '';
+        const label = upper === 'ACTIVE' ? t('users.filters.status.active')
+          : upper === 'INACTIVE' ? t('users.filters.status.inactive')
+          : upper === 'INVITED' ? t('users.filters.status.invited')
+          : upper === 'SUSPENDED' ? t('users.filters.status.suspended')
+          : value;
+        return <Badge variant={colorMap[upper] ?? 'default'}>{label}</Badge>;
       },
     },
     {

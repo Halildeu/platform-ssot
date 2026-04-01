@@ -1,0 +1,177 @@
+/**
+ * Metadata → ColDef Transformer
+ *
+ * THE single entry point: `buildColDefs(columns, t, locale, permissions?)`
+ *
+ * Takes declarative ColumnMeta[] and produces full AG Grid ColumnDef[],
+ * with renderers, filters, formatters — everything.
+ */
+
+import type { ColumnMeta, TranslateFn } from './types';
+import type { ColumnDef } from '../../grid';
+import { buildFilterConfig } from './filters';
+import {
+  createTextRenderer,
+  createBoldTextRenderer,
+  createBadgeRenderer,
+  createStatusRenderer,
+  createDateRenderer,
+  createNumberRenderer,
+  createCurrencyRenderer,
+  createBooleanRenderer,
+  createPercentRenderer,
+  createLinkRenderer,
+  createEnumRenderer,
+  createExportValueGetter,
+} from './presets';
+
+/* ------------------------------------------------------------------ */
+/*  Main transformer                                                   */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Transforms declarative column metadata into AG Grid ColumnDef objects.
+ *
+ * @param columns - Declarative column metadata array
+ * @param t - Translation function (i18n)
+ * @param locale - Locale string for date/number formatting (e.g., 'tr-TR')
+ * @param permissions - Current user's permission codes (for column visibility)
+ */
+export function buildColDefs<TRow = unknown>(
+  columns: ColumnMeta[],
+  t: TranslateFn,
+  locale: string = 'tr-TR',
+  permissions?: string[],
+): ColumnDef<TRow>[] {
+  return columns
+    .filter((meta) => {
+      /* Permission-based visibility */
+      if (meta.requiredPermission && permissions) {
+        return permissions.includes(meta.requiredPermission);
+      }
+      return true;
+    })
+    .map((meta) => buildSingleColDef<TRow>(meta, t, locale));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Single column builder                                              */
+/* ------------------------------------------------------------------ */
+
+function buildSingleColDef<TRow>(
+  meta: ColumnMeta,
+  t: TranslateFn,
+  locale: string,
+): ColumnDef<TRow> {
+  /* Base properties — shared across all types */
+  const colDef: ColumnDef<TRow> = {
+    field: meta.field,
+    headerName: resolveHeaderName(meta.headerNameKey, t),
+    width: meta.width,
+    minWidth: meta.minWidth,
+    flex: meta.flex,
+    sortable: meta.sortable ?? (meta.columnType !== 'actions'),
+  };
+
+  /* Pinning */
+  if (meta.pinned) colDef.pinned = meta.pinned;
+  if (meta.columnType === 'actions') colDef.pinned = meta.pinned ?? 'right';
+
+  /* Hidden */
+  // AG Grid uses `hide` but our ColumnDef doesn't have it — use cellClass workaround
+  // Skeleton handles this at the transformer level by filtering
+
+  /* Filter config */
+  const filterCfg = buildFilterConfig(meta);
+  if (filterCfg) {
+    colDef.filter = filterCfg.filter as string | boolean;
+    if (filterCfg.filterParams) colDef.filterParams = filterCfg.filterParams;
+    if (filterCfg.floatingFilter !== undefined) colDef.floatingFilter = filterCfg.floatingFilter;
+  }
+
+  /* Renderer — based on columnType */
+  const renderer = buildRenderer(meta, t, locale);
+  if (renderer) colDef.cellRenderer = renderer;
+
+  /* Export value formatter — rendered label for Excel/CSV */
+  const exportGetter = createExportValueGetter(meta as any, t);
+  if (exportGetter) colDef.valueFormatter = exportGetter as any;
+
+  return colDef;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Header name resolver                                               */
+/* ------------------------------------------------------------------ */
+
+function resolveHeaderName(key: string, t: TranslateFn): string {
+  if (!key) return '';
+
+  /* If key contains dots, it's likely an i18n key — try to resolve */
+  if (key.includes('.')) {
+    const resolved = t(key);
+    /* If t() returns the key itself (unresolved), use it as-is */
+    return resolved || key;
+  }
+
+  /* Plain string — use directly (for dynamic reports with pre-translated headers) */
+  return key;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Renderer factory dispatcher                                        */
+/* ------------------------------------------------------------------ */
+
+function buildRenderer(
+  meta: ColumnMeta,
+  t: TranslateFn,
+  locale: string,
+): ColumnDef['cellRenderer'] {
+  switch (meta.columnType) {
+    case 'text':
+      return createTextRenderer();
+
+    case 'bold-text':
+      return createBoldTextRenderer(meta.className);
+
+    case 'badge':
+      return createBadgeRenderer(
+        meta.variantMap,
+        meta.defaultVariant,
+        meta.labelMap,
+        t,
+      );
+
+    case 'status':
+      return createStatusRenderer(meta, t);
+
+    case 'date':
+      return createDateRenderer(meta, locale);
+
+    case 'number':
+      return createNumberRenderer(meta, locale);
+
+    case 'currency':
+      return createCurrencyRenderer(meta, locale);
+
+    case 'boolean':
+      return createBooleanRenderer(meta, t);
+
+    case 'percent':
+      return createPercentRenderer(meta);
+
+    case 'link':
+      return createLinkRenderer(meta);
+
+    case 'enum':
+      return createEnumRenderer(meta.labelMap, meta.labelsAreKeys ?? false, t);
+
+    case 'actions':
+      /* Actions renderer is intentionally left to the consumer —
+         skeleton provides filter/sort suppression only */
+      return undefined;
+
+    default:
+      return undefined;
+  }
+}

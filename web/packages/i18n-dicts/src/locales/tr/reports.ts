@@ -9,8 +9,10 @@ const reports = {
 
   'reports.filters.apply': 'Filtreleri uygula',
   'reports.filters.reset': 'Sıfırla',
+  'reports.filters.resetFilters': 'Reset Filters',
   'reports.filters.all': 'Tümü',
   'reports.filters.search.placeholder': 'Ad, e-posta veya ID ile ara',
+  'reports.filters.searchPlaceholder': 'Tüm sütunlarda ara...',
   'reports.filters.status.placeholder': 'Durum',
   'reports.filters.level.placeholder': 'Seviye',
 

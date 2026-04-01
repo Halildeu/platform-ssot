@@ -1,24 +1,16 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
-import { Menu, X } from "lucide-react";
+import { X, Menu } from "lucide-react";
 
-/** Join class names, filtering out falsy values */
-const cx = (...classes: (string | false | null | undefined)[]) => classes.filter(Boolean).join(" ");
+const cx = (...classes: (string | false | null | undefined)[]) =>
+  classes.filter(Boolean).join(" ");
 
 /* ------------------------------------------------------------------ */
-/*  DesignLabShell — Responsive layout grid                            */
+/*  ReportingShell — Responsive layout grid for reporting pages        */
 /*                                                                     */
-/*  Breakpoints:                                                       */
-/*  - Mobile  (<640px):   Full-width main, sidebar as drawer           */
+/*  Mirrors DesignLabShell pattern:                                    */
+/*  - Mobile  (<640px): Full-width main, sidebar as drawer             */
 /*  - Tablet  (640-1023): Collapsible sidebar (240px) + main           */
-/*  - Desktop (1024+):    Sidebar (280px) + main                       */
-/*  - XL      (1280+):    Sidebar (300px) + main + right rail (260px)  */
-/*                                                                     */
-/*  Compound component pattern:                                        */
-/*  <DesignLabShell>                                                   */
-/*    <DesignLabShell.Sidebar>...</DesignLabShell.Sidebar>             */
-/*    <DesignLabShell.Main>...</DesignLabShell.Main>                   */
-/*    <DesignLabShell.RightRail>...</DesignLabShell.RightRail>         */
-/*  </DesignLabShell>                                                  */
+/*  - Desktop (1024+): Sidebar (280px) + main                         */
 /* ------------------------------------------------------------------ */
 
 type ShellContextValue = {
@@ -37,20 +29,19 @@ const ShellContext = createContext<ShellContextValue>({
   toggleSidebarCollapse: () => {},
 });
 
-export function useDesignLabShell() {
+export function useReportingShell() {
   return useContext(ShellContext);
 }
 
-const STORAGE_KEY = "design-lab-sidebar-collapsed";
+const STORAGE_KEY = "reporting-sidebar-collapsed";
 
-/* ---- Sub-components (slots) ---- */
+/* ---- Slots ---- */
 
 function Sidebar({ children }: { children: React.ReactNode }) {
-  const { sidebarOpen, closeSidebar, sidebarCollapsed } = useDesignLabShell();
+  const { sidebarOpen, closeSidebar, sidebarCollapsed } = useReportingShell();
 
   return (
     <>
-      {/* Mobile backdrop */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-surface-inverse/30 backdrop-blur-xs sm:hidden"
@@ -59,32 +50,28 @@ function Sidebar({ children }: { children: React.ReactNode }) {
         />
       )}
 
-      {/* Sidebar container */}
       <div
-        data-testid="design-lab-sidebar-container"
+        data-testid="reporting-sidebar-container"
         data-collapsed={sidebarCollapsed}
         className={cx(
-          // Base
           "shrink-0 transition-[width] duration-200",
-          // Mobile: slide-over drawer (hidden off-screen by default)
           "fixed inset-y-0 left-0 z-50 w-[300px] bg-surface-default",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
-          // Desktop: static in layout, no fixed positioning
           "sm:relative sm:inset-auto sm:z-auto sm:translate-x-0 sm:bg-transparent",
-          // Desktop width
           sidebarCollapsed
             ? "sm:w-[52px] sm:max-w-[52px]"
             : "sm:w-[240px] lg:w-[280px] xl:w-[300px]",
         )}
       >
-        {/* Mobile close button */}
         <div className="flex items-center justify-between px-4 pt-4 sm:hidden">
-          <span className="text-sm font-semibold text-text-primary">Design Lab</span>
+          <span className="text-sm font-semibold text-text-primary">
+            Raporlar
+          </span>
           <button
             type="button"
             onClick={closeSidebar}
             className="rounded-lg p-1.5 text-text-secondary hover:bg-surface-muted hover:text-text-primary"
-            aria-label="Close menu"
+            aria-label="Menüyü kapat"
           >
             <X className="h-5 w-5" />
           </button>
@@ -98,14 +85,14 @@ function Sidebar({ children }: { children: React.ReactNode }) {
 }
 
 function MobileMenuButton() {
-  const { sidebarOpen, toggleSidebar } = useDesignLabShell();
+  const { sidebarOpen, toggleSidebar } = useReportingShell();
 
   return (
     <button
       type="button"
       onClick={toggleSidebar}
       className="inline-flex items-center justify-center rounded-xl border border-border-subtle bg-surface-default p-2 text-text-secondary transition hover:bg-surface-muted hover:text-text-primary sm:hidden"
-      aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+      aria-label={sidebarOpen ? "Menüyü kapat" : "Menüyü aç"}
     >
       {sidebarOpen ? (
         <X className="h-5 w-5" />
@@ -127,19 +114,9 @@ function Main({ children }: { children: React.ReactNode }) {
   );
 }
 
-function RightRail({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="hidden xl:block xl:w-[260px] xl:shrink-0">
-      <div className="sticky top-4 max-h-[calc(100vh-32px)] overflow-y-auto">
-        {children}
-      </div>
-    </div>
-  );
-}
+/* ---- Root ---- */
 
-/* ---- Root shell ---- */
-
-function DesignLabShellRoot({ children }: { children: React.ReactNode }) {
+function ReportingShellRoot({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     try {
@@ -160,28 +137,37 @@ function DesignLabShellRoot({ children }: { children: React.ReactNode }) {
   const toggleSidebarCollapse = useCallback(() => {
     setSidebarCollapsed((prev) => {
       const next = !prev;
-      try { localStorage.setItem(STORAGE_KEY, String(next)); } catch { /* ignore */ }
+      try {
+        localStorage.setItem(STORAGE_KEY, String(next));
+      } catch {
+        /* ignore */
+      }
       return next;
     });
   }, []);
 
   return (
-    <ShellContext.Provider value={{ sidebarOpen, toggleSidebar, closeSidebar, sidebarCollapsed, toggleSidebarCollapse }}>
+    <ShellContext.Provider
+      value={{
+        sidebarOpen,
+        toggleSidebar,
+        closeSidebar,
+        sidebarCollapsed,
+        toggleSidebarCollapse,
+      }}
+    >
       <div className="min-h-screen bg-surface-canvas overflow-x-hidden">
         <div className="mx-auto max-w-[1880px] px-2 py-4 sm:px-3 lg:px-4">
-          <div className="flex gap-3 max-w-full">
-            {children}
-          </div>
+          <div className="flex gap-3 max-w-full">{children}</div>
         </div>
       </div>
     </ShellContext.Provider>
   );
 }
 
-/* ---- Compound component assembly ---- */
+/* ---- Compound ---- */
 
-export const DesignLabShell = Object.assign(DesignLabShellRoot, {
+export const ReportingShell = Object.assign(ReportingShellRoot, {
   Sidebar,
   Main,
-  RightRail,
 });

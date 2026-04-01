@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
 import type { AppSidebarNavItemProps as AppSidebarNavItemPropsBase } from './types';
@@ -39,6 +39,7 @@ export const AppSidebarNavItem = React.forwardRef<HTMLDivElement, AppSidebarNavI
 }, ref) => {
   const { isCollapsed } = useSidebar();
   const itemRef = useRef<HTMLElement>(null);
+  const [tooltipPos, setTooltipPos] = useState<{ top: number; left: number } | null>(null);
 
   /* Auto-scroll into view when item becomes active */
   useEffect(() => {
@@ -46,6 +47,14 @@ export const AppSidebarNavItem = React.forwardRef<HTMLDivElement, AppSidebarNavI
       itemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
   }, [active]);
+
+  const showTooltip = useCallback(() => {
+    if (!isCollapsed || !itemRef.current) return;
+    const rect = itemRef.current.getBoundingClientRect();
+    setTooltipPos({ top: rect.top + rect.height / 2, left: rect.right + 8 });
+  }, [isCollapsed]);
+
+  const hideTooltip = useCallback(() => setTooltipPos(null), []);
 
   /* Indentation based on depth (0-3) */
   const depthPadding = isCollapsed ? 'px-2' : depth === 0 ? 'px-3' : depth === 1 ? 'pl-8 pr-3' : depth === 2 ? 'pl-12 pr-3' : 'pl-16 pr-3';
@@ -78,16 +87,15 @@ export const AppSidebarNavItem = React.forwardRef<HTMLDivElement, AppSidebarNavI
       {!isCollapsed && <span className="min-w-0 flex-1 truncate">{label}</span>}
       {!isCollapsed && badge && <span className="shrink-0">{badge}</span>}
 
-      {/* Tooltip shown when collapsed */}
-      {isCollapsed && (
+      {/* Tooltip shown when collapsed — fixed position to escape overflow clip */}
+      {isCollapsed && tooltipPos && (
         <span
           role="tooltip"
+          style={{ position: 'fixed', top: tooltipPos.top, left: tooltipPos.left, transform: 'translateY(-50%)' }}
           className={cn(
-            'pointer-events-none absolute left-full ml-2 z-50',
+            'pointer-events-none z-[9999]',
             'whitespace-nowrap rounded-md px-2 py-1 text-xs',
             'bg-[var(--text-primary)] text-[var(--surface-default)]',
-            'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100',
-            'transition-opacity duration-150',
           )}
         >
           {tooltip ?? label}
@@ -104,6 +112,10 @@ export const AppSidebarNavItem = React.forwardRef<HTMLDivElement, AppSidebarNavI
       className={sharedClasses}
       aria-current={active ? 'page' : undefined}
       aria-disabled={disabled || undefined}
+      onMouseEnter={showTooltip}
+      onMouseLeave={hideTooltip}
+      onFocus={showTooltip}
+      onBlur={hideTooltip}
     >
       {content}
     </a>
@@ -117,6 +129,10 @@ export const AppSidebarNavItem = React.forwardRef<HTMLDivElement, AppSidebarNavI
       aria-current={active ? 'page' : undefined}
       aria-disabled={disabled || undefined}
       tabIndex={disabled ? -1 : 0}
+      onMouseEnter={showTooltip}
+      onMouseLeave={hideTooltip}
+      onFocus={showTooltip}
+      onBlur={hideTooltip}
     >
       {content}
     </button>
