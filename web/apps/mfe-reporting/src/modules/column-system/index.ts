@@ -64,3 +64,6 @@ export { buildDetailRenderer } from './detail-renderer';
 
 /* Export helpers */
 export { buildProcessCellCallback } from './export-helpers';
+
+/* Conditional formatting */
+export { withConditionalFormatting, findMatchingRule } from './conditional';

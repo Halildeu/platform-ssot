@@ -10,6 +10,7 @@
 import type { ColumnMeta, TranslateFn } from './types';
 import type { ColumnDef } from '../../grid';
 import { buildFilterConfig } from './filters';
+import { withConditionalFormatting } from './conditional';
 import {
   createTextRenderer,
   createBoldTextRenderer,
@@ -105,7 +106,13 @@ function buildSingleColDef<TRow>(
   }
 
   /* Renderer — based on columnType */
-  const renderer = buildRenderer(meta, t, locale);
+  let renderer = buildRenderer(meta, t, locale);
+
+  /* Wrap with conditional formatting if rules exist */
+  if (meta.conditionalRules && meta.conditionalRules.length > 0) {
+    renderer = withConditionalFormatting(renderer, meta.conditionalRules);
+  }
+
   if (renderer) colDef.cellRenderer = renderer;
 
   /* Export value formatter — rendered label for Excel/CSV */
