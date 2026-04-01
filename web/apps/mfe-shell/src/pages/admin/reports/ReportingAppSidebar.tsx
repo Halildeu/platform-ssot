@@ -9,6 +9,7 @@ import {
   ChevronDown,
   ChevronRight,
   Star,
+  X,
 } from "lucide-react";
 import { useReporting } from "./ReportingProvider";
 import { useReportingShell } from "./ReportingShell";
@@ -306,13 +307,25 @@ export const ReportingAppSidebar: React.FC = () => {
             type="search"
             value={searchInput}
             onChange={handleSearchChange}
+            onKeyDown={(e) => { if (e.key === 'Escape') { handleSearchChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>); searchRef.current?.blur(); } }}
             placeholder="Rapor ara..."
             className="w-full rounded-lg border border-border-subtle bg-surface-default py-1.5 pe-8 ps-8 text-xs text-text-primary transition placeholder:text-text-disabled hover:bg-surface-muted focus:border-action-primary focus:outline-hidden focus:ring-1 focus:ring-action-primary/20 [&::-webkit-search-cancel-button]:hidden"
             aria-label="Rapor ara"
           />
-          <kbd className="absolute right-2 top-1/2 -translate-y-1/2 rounded border border-border-subtle bg-surface-panel px-1 py-px text-[9px] font-semibold text-text-subtle">
-            {"\u2318"}K
-          </kbd>
+          {searchInput ? (
+            <button
+              type="button"
+              onClick={() => { handleSearchChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>); searchRef.current?.focus(); }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full text-text-tertiary transition hover:bg-surface-muted hover:text-text-primary"
+              aria-label="Aramayı temizle"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          ) : (
+            <kbd className="absolute right-2 top-1/2 -translate-y-1/2 rounded border border-border-subtle bg-surface-panel px-1 py-px text-[9px] font-semibold text-text-subtle">
+              {"\u2318"}K
+            </kbd>
+          )}
         </div>
       </div>
 
