@@ -35,7 +35,6 @@ export const CATEGORY_TO_TOP: Record<string, TopCategoryId> = {
   "Erişim & Güvenlik": "system",
   "Erisim & Guvenlik": "system",
   IT: "system",
-  Dashboard: "executive",
   Diğer: "business",
   Diger: "business",
   Genel: "business",
@@ -63,6 +62,10 @@ export interface CatalogItemLike {
 }
 
 export function resolveTopCategory(item: CatalogItemLike): TopCategoryId {
+  /* Dashboard type/source → Yönetici Paneli */
+  if (item.type === "dashboard" || item.source === "dashboard") {
+    return "executive";
+  }
   return CATEGORY_TO_TOP[item.category] ?? DEFAULT_TOP;
 }
 
