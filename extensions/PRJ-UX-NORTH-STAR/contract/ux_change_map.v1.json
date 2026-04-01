@@ -74,6 +74,11 @@
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
+      "path": "web/packages/platform-capabilities/src/index.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
       "path": "web/packages/auth/src/compat.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
