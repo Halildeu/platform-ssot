@@ -77,11 +77,11 @@ describe("DesignLabShell — sidebar collapse", () => {
     expect(container.getAttribute("data-collapsed")).toBe("true");
   });
 
-  it("sidebar container has overflow-hidden when collapsed", () => {
+  it("sidebar container has max-w constraint when collapsed", () => {
     renderShell();
     fireEvent.click(screen.getByTestId("toggle"));
     const container = screen.getByTestId("design-lab-sidebar-container");
-    expect(container.className).toContain("overflow-hidden");
+    expect(container.className).toContain("sm:max-w-[52px]");
   });
 
   it("sidebar container has max-w when collapsed to prevent overflow", () => {
