@@ -51,8 +51,18 @@ interface ReportPageProps<TFilters extends Record<string, unknown>, TRow> {
 export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ module }: ReportPageProps<TFilters, TRow>) {
   const { t, ready } = useReportingI18n();
   const location = useLocation();
-  const sharedReport = React.useMemo(() => getSharedReport(module.sharedReportId), [module.sharedReportId]);
-  const exportMode = getSharedReportExportMode(module.sharedReportId, 'web');
+  const sharedReport = React.useMemo(() => {
+    try {
+      return getSharedReport(module.sharedReportId);
+    } catch {
+      // Dynamic reports use synthetic sharedReportId (e.g. 'dynamic:key') not in registry
+      return null;
+    }
+  }, [module.sharedReportId]);
+  const exportMode = (() => {
+    try { return getSharedReportExportMode(module.sharedReportId, 'web'); }
+    catch { return 'client' as const; }
+  })();
   const searchParams = React.useMemo(() => new URLSearchParams(location.search), [location.search]);
   const initialFiltersFromSearch = React.useMemo(
     () => module.createInitialFilters({ searchParams }),
@@ -67,7 +77,7 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
   const exportEnabled =
     exportMode !== 'none' &&
     typeof module.exportRows === 'function' &&
-    (!sharedReport.exportPermissionCode ||
+    (!sharedReport?.exportPermissionCode ||
       permissions.includes(normalizePermission(sharedReport.exportPermissionCode)));
 
   React.useEffect(() => {
