@@ -217,11 +217,6 @@ export default defineConfig(({ mode }) => {
      * Without this, Vite serves 250+ individual HTTP requests (one per module).
      * With this, monorepo sources get bundled into optimized chunks like node_modules. */
     optimizeDeps: {
-      // Exclude @tanstack/react-query from Vite pre-bundling so that
-      // Module Federation's loadShare wrapper is NOT generated for it.
-      // This prevents the "QueryCache is not a constructor" error caused
-      // by MF's async TLA init not resolving before module evaluation.
-      exclude: ['@tanstack/react-query', '@tanstack/react-query-devtools'],
       include: [
         'react',
         'react-dom',
@@ -244,14 +239,18 @@ export default defineConfig(({ mode }) => {
         'ag-grid-react',
         '@sentry/react',
         'lucide-react',
-        // Monorepo packages — resolved via alias, pre-bundle for speed
-        '@mfe/design-system',
+        // Monorepo packages — stable, rarely change → pre-bundle for speed
         '@mfe/shared-http',
         '@mfe/i18n-dicts',
         '@platform/capabilities',
       ],
-      /* Exclude MF remotes + heavy lazy deps from optimization */
       exclude: [
+        // @tanstack/react-query: MF loadShare wrapper causes "QueryCache is not a constructor"
+        '@tanstack/react-query',
+        '@tanstack/react-query-devtools',
+        // @mfe/design-system: actively developed → exclude for HMR
+        '@mfe/design-system',
+        // MF remotes + heavy lazy deps
         'shiki',
         'mfe_suggestions',
         'mfe_ethic',

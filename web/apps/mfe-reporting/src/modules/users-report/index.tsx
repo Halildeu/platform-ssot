@@ -1,8 +1,8 @@
 import React from 'react';
 import { getSharedReport } from '@platform/capabilities';
 import type { ReportModule } from '../types';
+import type { ColumnMeta } from '@mfe/design-system/advanced/data-grid';
 import type { UsersReportFilters, UsersReportRow } from './types';
-import type { ColumnDef } from '../../grid';
 import { fetchUsersReport } from './api';
 
 const ALLOWED_STATUSES: Array<UsersReportFilters['status']> = [
@@ -74,37 +74,29 @@ export const usersReportModule: ReportModule<UsersReportFilters, UsersReportRow>
       </>
     );
   },
-  getColumns: (t) =>
-    [
-      { headerName: t('reports.users.columns.fullName'), field: 'fullName', flex: 1.4 },
-      { headerName: t('reports.users.columns.email'), field: 'email', flex: 1.6 },
-      { headerName: t('reports.users.columns.role'), field: 'role', width: 140 },
-      { headerName: t('reports.users.columns.status'), field: 'status', width: 140 },
-      { headerName: t('reports.users.columns.lastLoginAt'), field: 'lastLoginAt', flex: 1.2 },
-      { headerName: t('reports.users.columns.createdAt'), field: 'createdAt', flex: 1.2 },
-    ] as ColumnDef<UsersReportRow>[],
+  /* Declarative column metadata — skeleton auto-generates renderers */
+  getColumnMeta: (): ColumnMeta[] => [
+    { field: 'fullName', headerNameKey: 'reports.users.columns.fullName', columnType: 'bold-text', minWidth: 180, flex: 1.4 },
+    { field: 'email', headerNameKey: 'reports.users.columns.email', columnType: 'text', minWidth: 220, flex: 1.6 },
+    {
+      field: 'role', headerNameKey: 'reports.users.columns.role', columnType: 'badge', width: 140,
+      variantMap: { ADMIN: 'danger', USER: 'info' },
+      defaultVariant: 'info',
+      labelMap: { ADMIN: 'shared.role.admin', USER: 'shared.role.user' },
+      filterValues: ['ADMIN', 'USER'],
+    },
+    {
+      field: 'status', headerNameKey: 'reports.users.columns.status', columnType: 'status', width: 140,
+      statusMap: {
+        ACTIVE: { variant: 'success', labelKey: 'shared.status.active' },
+        INACTIVE: { variant: 'muted', labelKey: 'shared.status.inactive' },
+        INVITED: { variant: 'warning', labelKey: 'shared.status.invited' },
+        SUSPENDED: { variant: 'danger', labelKey: 'shared.status.suspended' },
+      },
+    },
+    { field: 'lastLoginAt', headerNameKey: 'reports.users.columns.lastLoginAt', columnType: 'date', width: 180 },
+    { field: 'createdAt', headerNameKey: 'reports.users.columns.createdAt', columnType: 'date', width: 180 },
+  ],
+  getColumns: () => [],
   fetchRows: (filters, request) => fetchUsersReport(filters, request),
-  renderDetail: (row, t) => {
-    if (!row) {
-      return <span>{t('reports.detail.empty')}</span>;
-    }
-    return (
-      <dl style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: 8 }}>
-        <dt>ID</dt>
-        <dd>{row.id}</dd>
-        <dt>{t('reports.users.columns.fullName')}</dt>
-        <dd>{row.fullName}</dd>
-        <dt>{t('reports.users.columns.email')}</dt>
-        <dd>{row.email}</dd>
-        <dt>{t('reports.users.columns.role')}</dt>
-        <dd>{row.role}</dd>
-        <dt>{t('reports.users.columns.status')}</dt>
-        <dd>{row.status}</dd>
-        <dt>{t('reports.users.columns.lastLoginAt')}</dt>
-        <dd>{row.lastLoginAt ?? '-'}</dd>
-        <dt>{t('reports.users.columns.createdAt')}</dt>
-        <dd>{row.createdAt ?? '-'}</dd>
-      </dl>
-    );
-  },
 };

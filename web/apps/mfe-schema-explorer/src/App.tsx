@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useSchemaSnapshot } from './hooks/useSchemaData';
 import { Sidebar } from './components/Sidebar';
@@ -18,16 +18,35 @@ import './styles/schema-explorer.css';
 type ViewMode = 'domain' | 'neighborhood';
 type PanelMode = 'graph' | 'search' | 'path' | 'hubs' | 'dead' | 'health' | 'impact' | 'drift' | 'chat' | 'export';
 
+interface SchemaInfo { name: string; tableCount: number }
+
 const App = () => {
-  const { data: snapshot, isLoading, error } = useSchemaSnapshot();
+  const [activeSchema, setActiveSchema] = useState<string | undefined>(undefined);
+  const [schemas, setSchemas] = useState<SchemaInfo[]>([]);
+  const { data: snapshot, isLoading, error } = useSchemaSnapshot(activeSchema);
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('domain');
   const [panelMode, setPanelMode] = useState<PanelMode>('graph');
+
+  // Load available schemas
+  useEffect(() => {
+    fetch('/api/v1/schema/schemas')
+      .then(r => r.json())
+      .then((list: SchemaInfo[]) => setSchemas(list))
+      .catch(() => {});
+  }, []);
 
   const handleTableSelect = useCallback((tableName: string) => {
     setSelectedTable(tableName);
     setViewMode('neighborhood');
     setPanelMode('graph');
+  }, []);
+
+  const handleSchemaChange = useCallback((schema: string) => {
+    setActiveSchema(schema || undefined);
+    setSelectedTable(null);
+    setPanelMode('graph');
+    setViewMode('domain');
   }, []);
 
   if (isLoading) {
@@ -51,7 +70,7 @@ const App = () => {
   const renderMainPanel = () => {
     switch (panelMode) {
       case 'search':
-        return <ColumnSearch onTableSelect={handleTableSelect} />;
+        return <ColumnSearch onTableSelect={handleTableSelect} schema={activeSchema} />;
       case 'path':
         return <FindPath snapshot={snapshot} selectedTable={selectedTable} onTableSelect={handleTableSelect} />;
       case 'hubs':
@@ -59,7 +78,7 @@ const App = () => {
       case 'dead':
         return <DeadTables snapshot={snapshot} onTableSelect={handleTableSelect} />;
       case 'health':
-        return <HealthScore onTableSelect={handleTableSelect} />;
+        return <HealthScore onTableSelect={handleTableSelect} schema={activeSchema} />;
       case 'impact':
         return selectedTable
           ? <ImpactAnalysis tableName={selectedTable} onTableSelect={handleTableSelect} />
@@ -87,6 +106,21 @@ const App = () => {
     <div className={`se-layout ${selectedTable ? '' : 'se-layout--no-detail'}`}>
       <header className="se-header">
         <h1 className="se-header__title">SchemaLens</h1>
+
+        {/* Schema selector */}
+        <select
+          className="se-header__schema-select"
+          value={activeSchema || ''}
+          onChange={e => handleSchemaChange(e.target.value)}
+        >
+          <option value="">Default Schema</option>
+          {schemas.map(s => (
+            <option key={s.name} value={s.name}>
+              {s.name} ({s.tableCount})
+            </option>
+          ))}
+        </select>
+
         <div className="se-header__stats">
           <span><strong>{snapshot.metadata.tableCount.toLocaleString()}</strong> tables</span>
           <span><strong>{snapshot.metadata.columnCount.toLocaleString()}</strong> columns</span>

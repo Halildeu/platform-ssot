@@ -7,9 +7,23 @@ export type DynamicReportRow = Record<string, unknown>;
 export type ReportColumnMeta = {
   field: string;
   headerName: string;
-  type: 'text' | 'number' | 'date';
+  type: 'text' | 'number' | 'date' | 'badge' | 'status' | 'currency' | 'boolean' | 'percent' | 'enum';
   width: number;
   sensitive: boolean;
+  /** Badge/enum: raw value → variant color map (e.g., { ADMIN: 'danger', USER: 'info' }) */
+  variantMap?: Record<string, string>;
+  /** Badge/enum: raw value → i18n label key map */
+  labelMap?: Record<string, string>;
+  /** Status: raw value → { variant, labelKey } map */
+  statusMap?: Record<string, { variant: string; labelKey: string }>;
+  /** Currency: ISO 4217 code (default: 'TRY') */
+  currencyCode?: string;
+  /** Number/currency/percent: decimal places */
+  decimals?: number;
+  /** Number: suffix (e.g., 'dk', 'gün') */
+  suffix?: string;
+  /** Number: prefix (e.g., '₺') */
+  prefix?: string;
 };
 
 export type ReportListItem = {

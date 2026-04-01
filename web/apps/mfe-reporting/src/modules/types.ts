@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type { SharedReportId } from '@platform/capabilities';
 import type { ColumnDef, GridRequest, GridResponse } from '../grid';
+import type { ColumnMeta } from '@mfe/design-system/advanced/data-grid';
 
 export type TranslateFn = (key: string, params?: Record<string, unknown>) => string;
 
@@ -26,6 +27,8 @@ export interface ReportModule<TFilters extends Record<string, unknown>, TRow> {
   createInitialFilters: (context?: FilterInitContext) => TFilters;
   renderFilters: (ctx: FilterRenderContext<TFilters>) => ReactNode;
   getColumns: (t: TranslateFn) => ColumnDef<TRow>[];
+  /** Declarative column metadata — preferred over getColumns. Skeleton auto-generates renderers. */
+  getColumnMeta?: () => ColumnMeta[];
   fetchRows: (filters: TFilters, request: GridRequest) => Promise<GridResponse<TRow>>;
   renderDashboard?: (t: TranslateFn) => ReactNode;
   renderDetail?: (row: TRow | null, t: TranslateFn) => ReactNode;

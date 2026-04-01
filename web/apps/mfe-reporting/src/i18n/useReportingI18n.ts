@@ -3,6 +3,7 @@ import { useI18nManager, I18nManager, type I18nManager as ShellI18nManager } fro
 import { getDictionary } from '@mfe/i18n-dicts';
 
 const NAMESPACE = 'reports';
+const COMMON_NAMESPACE = 'common';
 const FALLBACK_TTL_MS = 10 * 60 * 1000;
 
 let fallbackManager: ShellI18nManager | null = null;
@@ -47,7 +48,10 @@ export const useReportingI18n = () => {
   React.useEffect(() => {
     let active = true;
     const load = async () => {
-      await resolvedManager.preloadNamespace(NAMESPACE);
+      await Promise.all([
+        resolvedManager.preloadNamespace(NAMESPACE),
+        resolvedManager.preloadNamespace(COMMON_NAMESPACE),
+      ]);
       if (active) {
         forceUpdate((value) => value + 1);
       }
@@ -66,7 +70,12 @@ export const useReportingI18n = () => {
   const locale = resolvedManager.getLocale();
 
   const t = React.useCallback(
-    (key: string, params?: Record<string, unknown>) => resolvedManager.translateSync(key, params ?? {}, NAMESPACE),
+    (key: string, params?: Record<string, unknown>) => {
+      const ns = key.startsWith('shared.') || key.startsWith('common.') || key.startsWith('shell.') || key.startsWith('auth.')
+        ? COMMON_NAMESPACE
+        : NAMESPACE;
+      return resolvedManager.translateSync(key, params ?? {}, ns);
+    },
     [resolvedManager, locale],
   );
 

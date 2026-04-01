@@ -71,7 +71,16 @@ export const fetchUsersReport = async (
   try {
     const client = resolveHttpClient();
     const { data } = await client.get<PaginatedResponse<UsersReportRow>>(`${USERS_ENDPOINT}?${qs}`);
-    const items = Array.isArray(data?.items) ? data.items : [];
+    const rawItems = Array.isArray(data?.items) ? data.items : [];
+    /* Backend may return `name` instead of `fullName` — normalize */
+    const items = rawItems.map((item) => {
+      const raw = item as Record<string, unknown>;
+      return {
+        ...item,
+        fullName: item.fullName || (raw.name as string) || item.email || '-',
+        status: typeof item.status === 'string' ? item.status.toUpperCase() : (item.status ?? 'ACTIVE'),
+      } as UsersReportRow;
+    });
     return {
       rows: items,
       total: typeof data?.total === 'number' ? data.total : items.length,

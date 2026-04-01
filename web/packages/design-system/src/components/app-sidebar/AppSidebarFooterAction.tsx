@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
 
@@ -73,6 +73,16 @@ export const AppSidebarFooterAction = React.forwardRef<
     ref,
   ) => {
     const { isCollapsed } = useSidebar();
+    const actionRef = useRef<HTMLElement>(null);
+    const [tooltipPos, setTooltipPos] = useState<{ top: number; left: number } | null>(null);
+
+    const showTooltip = useCallback(() => {
+      if (!isCollapsed || !actionRef.current) return;
+      const rect = actionRef.current.getBoundingClientRect();
+      setTooltipPos({ top: rect.top + rect.height / 2, left: rect.right + 8 });
+    }, [isCollapsed]);
+
+    const hideTooltip = useCallback(() => setTooltipPos(null), []);
 
     const sharedClasses = cn(
       'group relative flex w-full items-center gap-2 rounded-xl py-2 text-sm cursor-pointer',
@@ -92,15 +102,14 @@ export const AppSidebarFooterAction = React.forwardRef<
         <span className="flex shrink-0 items-center justify-center [&>svg]:h-[18px] [&>svg]:w-[18px]">{icon}</span>
         {!isCollapsed && <span className="min-w-0 flex-1 truncate">{label}</span>}
         {!isCollapsed && badge && <span className="shrink-0">{badge}</span>}
-        {isCollapsed && (
+        {isCollapsed && tooltipPos && (
           <span
             role="tooltip"
+            style={{ position: 'fixed', top: tooltipPos.top, left: tooltipPos.left, transform: 'translateY(-50%)' }}
             className={cn(
-              'pointer-events-none absolute left-full ml-2 z-50',
+              'pointer-events-none z-[9999]',
               'whitespace-nowrap rounded-md px-2 py-1 text-xs',
               'bg-[var(--text-primary)] text-[var(--surface-default)]',
-              'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100',
-              'transition-opacity duration-150',
             )}
           >
             {tooltip ?? label}
@@ -112,16 +121,22 @@ export const AppSidebarFooterAction = React.forwardRef<
     const element =
       href && !disabled ? (
         <a
+          ref={actionRef as React.Ref<HTMLAnchorElement>}
           href={href}
           className={sharedClasses}
           title={label}
           aria-label={label}
           data-testid={testId}
+          onMouseEnter={showTooltip}
+          onMouseLeave={hideTooltip}
+          onFocus={showTooltip}
+          onBlur={hideTooltip}
         >
           {content}
         </a>
       ) : (
         <button
+          ref={actionRef as React.Ref<HTMLButtonElement>}
           type="button"
           onClick={onClick}
           disabled={disabled}
@@ -129,6 +144,10 @@ export const AppSidebarFooterAction = React.forwardRef<
           title={label}
           aria-label={label}
           data-testid={testId}
+          onMouseEnter={showTooltip}
+          onMouseLeave={hideTooltip}
+          onFocus={showTooltip}
+          onBlur={hideTooltip}
         >
           {content}
         </button>

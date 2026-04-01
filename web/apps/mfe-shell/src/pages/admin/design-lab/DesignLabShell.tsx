@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { Menu, X } from "lucide-react";
 
+/** Join class names, filtering out falsy values */
+const cx = (...classes: (string | false | null | undefined)[]) => classes.filter(Boolean).join(" ");
+
 /* ------------------------------------------------------------------ */
 /*  DesignLabShell — Responsive layout grid                            */
 /*                                                                     */
@@ -22,22 +25,28 @@ type ShellContextValue = {
   sidebarOpen: boolean;
   toggleSidebar: () => void;
   closeSidebar: () => void;
+  sidebarCollapsed: boolean;
+  toggleSidebarCollapse: () => void;
 };
 
 const ShellContext = createContext<ShellContextValue>({
   sidebarOpen: false,
   toggleSidebar: () => {},
   closeSidebar: () => {},
+  sidebarCollapsed: false,
+  toggleSidebarCollapse: () => {},
 });
 
 export function useDesignLabShell() {
   return useContext(ShellContext);
 }
 
+const STORAGE_KEY = "design-lab-sidebar-collapsed";
+
 /* ---- Sub-components (slots) ---- */
 
 function Sidebar({ children }: { children: React.ReactNode }) {
-  const { sidebarOpen, closeSidebar } = useDesignLabShell();
+  const { sidebarOpen, closeSidebar, sidebarCollapsed } = useDesignLabShell();
 
   return (
     <>
@@ -52,18 +61,21 @@ function Sidebar({ children }: { children: React.ReactNode }) {
 
       {/* Sidebar container */}
       <div
-        className={[
-          // Mobile: slide-over drawer
-          "fixed inset-y-0 left-0 z-50 w-[300px] transform transition-[translate] duration-300 sm:relative sm:inset-auto sm:z-auto sm:translate-x-0",
-          // Desktop: static in grid
-          "sm:w-[240px] lg:w-[280px] xl:w-[300px]",
-          // Shrink behaviour
-          "shrink-0",
-          // Mobile background
-          "bg-surface-default sm:bg-transparent",
-          // Mobile open/close
-          sidebarOpen ? "translate-x-0" : "-translate-x-full sm:translate-x-0",
-        ].join(" ")}
+        data-testid="design-lab-sidebar-container"
+        data-collapsed={sidebarCollapsed}
+        className={cx(
+          // Base
+          "shrink-0 transition-[width] duration-200",
+          // Mobile: slide-over drawer (hidden off-screen by default)
+          "fixed inset-y-0 left-0 z-50 w-[300px] bg-surface-default",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full",
+          // Desktop: static in layout, no fixed positioning
+          "sm:relative sm:inset-auto sm:z-auto sm:translate-x-0 sm:bg-transparent",
+          // Desktop width
+          sidebarCollapsed
+            ? "sm:w-[52px] sm:max-w-[52px]"
+            : "sm:w-[240px] lg:w-[280px] xl:w-[300px]",
+        )}
       >
         {/* Mobile close button */}
         <div className="flex items-center justify-between px-4 pt-4 sm:hidden">
@@ -77,7 +89,7 @@ function Sidebar({ children }: { children: React.ReactNode }) {
             <X className="h-5 w-5" />
           </button>
         </div>
-        <div className="sticky top-4 flex max-h-[calc(100vh-32px)] min-h-0 flex-col sm:top-4">
+        <div className="sticky top-4 flex max-h-[calc(100vh-var(--shell-header-h)-40px)] min-h-0 flex-col sm:top-4">
           {children}
         </div>
       </div>
@@ -106,7 +118,7 @@ function MobileMenuButton() {
 
 function Main({ children }: { children: React.ReactNode }) {
   return (
-    <main className="min-w-0 flex-1">
+    <main className="min-w-0 flex-1 overflow-x-hidden">
       <div className="mb-3 sm:hidden">
         <MobileMenuButton />
       </div>
@@ -129,6 +141,13 @@ function RightRail({ children }: { children: React.ReactNode }) {
 
 function DesignLabShellRoot({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY) === "true";
+    } catch {
+      return false;
+    }
+  });
 
   const toggleSidebar = useCallback(() => {
     setSidebarOpen((prev) => !prev);
@@ -138,11 +157,19 @@ function DesignLabShellRoot({ children }: { children: React.ReactNode }) {
     setSidebarOpen(false);
   }, []);
 
+  const toggleSidebarCollapse = useCallback(() => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      try { localStorage.setItem(STORAGE_KEY, String(next)); } catch { /* ignore */ }
+      return next;
+    });
+  }, []);
+
   return (
-    <ShellContext.Provider value={{ sidebarOpen, toggleSidebar, closeSidebar }}>
-      <div className="min-h-screen bg-surface-canvas">
-        <div className="mx-auto max-w-[1880px] px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex gap-6">
+    <ShellContext.Provider value={{ sidebarOpen, toggleSidebar, closeSidebar, sidebarCollapsed, toggleSidebarCollapse }}>
+      <div className="min-h-screen bg-surface-canvas overflow-x-hidden">
+        <div className="mx-auto max-w-[1880px] px-2 py-4 sm:px-3 lg:px-4">
+          <div className="flex gap-3 max-w-full">
             {children}
           </div>
         </div>

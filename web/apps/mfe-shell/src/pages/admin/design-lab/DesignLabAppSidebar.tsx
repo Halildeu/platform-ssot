@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   CircleHelp, Menu, Star, UnfoldVertical, FoldVertical,
   Palette, Shapes, Box, Layout, BookOpen, Globe, Code,
+  PanelLeftClose, PanelLeftOpen,
 } from "lucide-react";
 import { IconButton, Text } from "@mfe/design-system";
 import { useDesignLabI18n } from "./useDesignLabI18n";
@@ -120,7 +121,7 @@ export const DesignLabAppSidebar: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useDesignLabI18n();
   const { index, taxonomy } = useDesignLab();
-  const { toggleSidebar, closeSidebar } = useDesignLabShell();
+  const { toggleSidebar, closeSidebar, sidebarCollapsed, toggleSidebarCollapse } = useDesignLabShell();
 
   const activeLayer = useMemo(() => resolveLayerFromPath(pathname), [pathname]);
   const activeItem = useMemo(() => resolveActiveItemFromPath(pathname), [pathname]);
@@ -226,10 +227,63 @@ export const DesignLabAppSidebar: React.FC = () => {
     groupBroadcast,
   };
 
+  /* ── Collapsed mode: icon strip ──────────────────────────────────── */
+  if (sidebarCollapsed) {
+    return (
+      <aside
+        className="hidden sm:flex w-full flex-col items-center overflow-y-auto bg-surface-default border border-border-subtle rounded-[16px] shadow-xs"
+        aria-label="Design Lab sidebar (collapsed)"
+        data-testid="design-lab-sidebar-collapsed"
+      >
+        {/* Expand toggle — aligned with app shell sidebar top */}
+        <div className="shrink-0 border-b border-border-subtle w-full flex items-center justify-center px-2 py-1.5">
+          <button
+            type="button"
+            data-testid="design-lab-sidebar-expand"
+            aria-label={t("designlab.sidebar.expand") || "Expand sidebar"}
+            onClick={toggleSidebarCollapse}
+            title={t("designlab.sidebar.expand") || "Expand sidebar"}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-text-secondary transition hover:bg-surface-muted hover:text-text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)]"
+          >
+            <PanelLeftOpen className="h-4 w-4" aria-hidden />
+          </button>
+        </div>
+
+        {/* Layer icons — vertical strip */}
+        <div className="flex flex-col items-center gap-0.5 px-1 py-1.5">
+          {LAYER_IDS.map((id) => {
+            const isActive = activeLayer === id;
+            const label = t(`designlab.sidebar.title.${id}`) || id;
+            return (
+              <button
+                key={id}
+                type="button"
+                aria-label={label}
+                title={label}
+                data-testid={`design-lab-layer-tab-${id}`}
+                onClick={() => handleLayerSwitch(id)}
+                className={[
+                  "inline-flex h-9 w-9 items-center justify-center rounded-lg transition",
+                  isActive
+                    ? "bg-action-primary text-text-inverse shadow-xs"
+                    : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
+                  "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)]",
+                ].join(" ")}
+              >
+                {LAYER_ICONS[id]}
+              </button>
+            );
+          })}
+        </div>
+      </aside>
+    );
+  }
+
+  /* ── Expanded mode: full sidebar ─────────────────────────────────── */
   return (
     <ContextMenuProvider>
     <HoverPreviewProvider>
-    <aside className="flex h-full w-full flex-col overflow-hidden bg-surface-default text-text-primary" aria-label="Design Lab sidebar">
+    <aside className="flex h-full w-full flex-col overflow-hidden bg-surface-default text-text-primary border border-border-subtle rounded-[16px] shadow-xs" aria-label="Design Lab sidebar">
         {/* Mobile menu toggle */}
         <div className="flex items-center justify-between border-b border-border-subtle px-3 py-2 sm:hidden">
           <Text className="text-sm font-semibold">Design Lab</Text>
@@ -239,6 +293,40 @@ export const DesignLabAppSidebar: React.FC = () => {
         {/* Health Banner */}
         <div className="shrink-0">
           <SidebarHealthBanner />
+        </div>
+
+        {/* Top bar: collapse toggle (left) + expand/collapse all (right, only for grouped layers) */}
+        <div className="hidden sm:flex shrink-0 border-b border-border-subtle px-2 py-1.5 items-center justify-between">
+          <button
+            type="button"
+            data-testid="design-lab-sidebar-collapse"
+            onClick={toggleSidebarCollapse}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-200 cursor-pointer text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)]"
+            title={t("designlab.sidebar.collapse") || "Collapse sidebar"}
+            aria-label={t("designlab.sidebar.collapse") || "Collapse sidebar"}
+          >
+            <PanelLeftClose className="h-4 w-4" />
+          </button>
+          <div className="flex items-center gap-0.5">
+            <button
+              type="button"
+              onClick={() => setGroupBroadcast((prev) => ({ version: prev.version + 1, open: true }))}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors cursor-pointer text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"
+              title="Expand all groups"
+              aria-label="Expand all groups"
+            >
+              <UnfoldVertical className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setGroupBroadcast((prev) => ({ version: prev.version + 1, open: false }))}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors cursor-pointer text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"
+              title="Collapse all groups"
+              aria-label="Collapse all groups"
+            >
+              <FoldVertical className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
 
         {/* Layer tabs — icon pills */}
@@ -264,41 +352,14 @@ export const DesignLabAppSidebar: React.FC = () => {
           </div>
         </div>
 
-        {/* Title + count + expand/collapse controls */}
+        {/* Title + count */}
         <div className="shrink-0 border-b border-border-subtle px-3 py-2">
-          <div className="flex items-center justify-between gap-2">
-            <div className="min-w-0">
-              <Text as="div" className="text-sm font-semibold leading-tight text-text-primary">
-                {layerTitle}
-              </Text>
-              <Text variant="secondary" className="block text-[10px] leading-4 mt-0.5">
-                {layerItemCount} items
-              </Text>
-            </div>
-            <div className="flex items-center gap-1 shrink-0">
-              {/* Expand All */}
-              <button
-                type="button"
-                onClick={() => setGroupBroadcast((prev) => ({ version: prev.version + 1, open: true }))}
-                className="p-1 rounded transition-colors cursor-pointer text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"
-                title="Expand all groups"
-                aria-label="Expand all groups"
-              >
-                <UnfoldVertical className="h-3.5 w-3.5" />
-              </button>
-              {/* Collapse All */}
-              <button
-                type="button"
-                onClick={() => setGroupBroadcast((prev) => ({ version: prev.version + 1, open: false }))}
-                className="p-1 rounded transition-colors cursor-pointer text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"
-                title="Collapse all groups"
-                aria-label="Collapse all groups"
-              >
-                <FoldVertical className="h-3.5 w-3.5" />
-              </button>
-              <IconButton icon={<CircleHelp className="h-3.5 w-3.5" />} label="Help" size="sm" variant="ghost" />
-            </div>
-          </div>
+          <Text as="div" className="text-sm font-semibold leading-tight text-text-primary">
+            {layerTitle}
+          </Text>
+          <Text variant="secondary" className="block text-[10px] leading-4 mt-0.5">
+            {layerItemCount} items
+          </Text>
         </div>
 
         {/* Breadcrumb */}
@@ -377,7 +438,7 @@ interface LayerNavProps {
 
 /* ---- Foundations ---- */
 
-function FoundationsNav({ activeItem, query, searchValue, onItemSelect }: LayerNavProps) {
+function FoundationsNav({ activeItem, query, searchValue, onItemSelect, groupBroadcast }: LayerNavProps) {
   const { t } = useDesignLabI18n();
 
   const tokenGroups = useMemo(() => {
@@ -401,7 +462,7 @@ function FoundationsNav({ activeItem, query, searchValue, onItemSelect }: LayerN
   return (
     <>
       {tokenGroups.length > 0 && (
-        <SidebarGroup label={t("designlab.sidebar.group.designTokens") || "Design Tokens"}>
+        <SidebarGroup label={t("designlab.sidebar.group.designTokens") || "Design Tokens"} broadcastVersion={groupBroadcast?.version} broadcastOpen={groupBroadcast?.open}>
           {tokenGroups.map((g) => (
             <ScrollableNavItem key={g.id} active={activeItem === g.id} label={g.title} onClick={() => onItemSelect(`/admin/design-lab/design/${g.id}`)} />
           ))}
@@ -410,7 +471,7 @@ function FoundationsNav({ activeItem, query, searchValue, onItemSelect }: LayerN
       {themeAxes.length > 0 && (
         <>
           <SidebarDivider />
-          <SidebarGroup label={t("designlab.sidebar.group.themeAxes") || "Theme Axes"}>
+          <SidebarGroup label={t("designlab.sidebar.group.themeAxes") || "Theme Axes"} broadcastVersion={groupBroadcast?.version} broadcastOpen={groupBroadcast?.open}>
             {themeAxes.map((a) => (
               <ScrollableNavItem key={a.id} active={activeItem === a.id} label={a.title} onClick={() => onItemSelect(`/admin/design-lab/theme/${a.id}`)} />
             ))}
@@ -500,8 +561,8 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighli
           key={group.id}
           label={`${group.label} (${stableItems}/${totalItems})`}
           defaultOpen={groupState?.isOpen(group.id) ?? true}
-          key={`${group.id}-v${groupBroadcast?.version ?? 0}`}
-          defaultOpen={groupBroadcast?.version ? groupBroadcast.open : (groupState?.isOpen(group.id) ?? true)}
+          broadcastVersion={groupBroadcast?.version}
+          broadcastOpen={groupBroadcast?.open}
         >
           {group.subgroups.flatMap((sg) =>
             sg.items.map((itemName) => {
@@ -532,7 +593,7 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighli
 
 /* ---- Patterns (pages + advanced) ---- */
 
-function PatternsNav({ activeItem, query, searchValue, onItemSelect, getHighlightRanges, isFavorite, onToggleFavorite }: LayerNavProps) {
+function PatternsNav({ activeItem, query, searchValue, onItemSelect, getHighlightRanges, isFavorite, onToggleFavorite, groupBroadcast }: LayerNavProps) {
   const { index } = useDesignLab();
 
   const pages = useMemo(() => {
@@ -553,7 +614,7 @@ function PatternsNav({ activeItem, query, searchValue, onItemSelect, getHighligh
   return (
     <>
       {pages.length > 0 && (
-        <SidebarGroup label="Pages">
+        <SidebarGroup label="Pages" broadcastVersion={groupBroadcast?.version} broadcastOpen={groupBroadcast?.open}>
           {pages.map((f) => (
             <ScrollableNavItem key={f.id} active={activeItem === f.id} label={f.title} onClick={() => onItemSelect(`/admin/design-lab/patterns/${f.id}`)} />
           ))}
@@ -562,7 +623,7 @@ function PatternsNav({ activeItem, query, searchValue, onItemSelect, getHighligh
       {advancedItems.length > 0 && (
         <>
           {pages.length > 0 && <SidebarDivider />}
-          <SidebarGroup label="Advanced">
+          <SidebarGroup label="Advanced" broadcastVersion={groupBroadcast?.version} broadcastOpen={groupBroadcast?.open}>
             {advancedItems.map((item) => (
               <ScrollableNavItem
                 key={item.name}
@@ -772,13 +833,24 @@ function SidebarGroup({
   defaultOpen = true,
   action,
   children,
+  broadcastVersion,
+  broadcastOpen,
 }: {
   label: string;
   defaultOpen?: boolean;
   action?: React.ReactNode;
   children: React.ReactNode;
+  broadcastVersion?: number;
+  broadcastOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
+  const lastBroadcastRef = useRef(0);
+  useEffect(() => {
+    if (broadcastVersion && broadcastVersion > lastBroadcastRef.current) {
+      lastBroadcastRef.current = broadcastVersion;
+      setOpen(broadcastOpen ?? true);
+    }
+  }, [broadcastVersion, broadcastOpen]);
   const isOpen = open;
 
   return (
