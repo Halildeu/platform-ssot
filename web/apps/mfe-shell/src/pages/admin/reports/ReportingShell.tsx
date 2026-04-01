@@ -54,10 +54,10 @@ function Sidebar({ children }: { children: React.ReactNode }) {
         data-testid="reporting-sidebar-container"
         data-collapsed={sidebarCollapsed}
         className={cx(
-          "shrink-0 transition-[width] duration-200",
+          "shrink-0 self-start transition-[width] duration-200",
           "fixed inset-y-0 left-0 z-50 w-[300px] bg-surface-default",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
-          "sm:relative sm:inset-auto sm:z-auto sm:translate-x-0 sm:bg-transparent",
+          "sm:sticky sm:top-4 sm:inset-auto sm:z-auto sm:translate-x-0 sm:bg-transparent",
           sidebarCollapsed
             ? "sm:w-[52px] sm:max-w-[52px]"
             : "sm:w-[240px] lg:w-[280px] xl:w-[300px]",
@@ -76,7 +76,7 @@ function Sidebar({ children }: { children: React.ReactNode }) {
             <X className="h-5 w-5" />
           </button>
         </div>
-        <div className="sticky top-4 flex max-h-[calc(100vh-var(--shell-header-h)-40px)] min-h-0 flex-col sm:top-4">
+        <div className="flex max-h-[calc(100vh-var(--shell-header-h)-40px)] min-h-0 flex-col">
           {children}
         </div>
       </div>
