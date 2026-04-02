@@ -1,75 +1,24 @@
 import axios from 'axios';
+import type {
+  SchemaColumnInfo,
+  SchemaTableInfo,
+  SchemaRelationship,
+  SchemaSnapshot,
+  SchemaColumnSearchResult,
+  SchemaImpactResult,
+} from '@mfe/shared-types';
 
 const BASE_URL = import.meta.env.VITE_SCHEMA_API_URL || '/api/v1/schema';
 
 const api = axios.create({ baseURL: BASE_URL });
 
-export interface ColumnInfo {
-  name: string;
-  dataType: string;
-  maxLength: number;
-  nullable: boolean;
-  identity: boolean;
-  pk: boolean;
-  ordinal: number;
-}
-
-export interface TableInfo {
-  name: string;
-  schema: string;
-  columns: ColumnInfo[];
-  rowCount: number | null;
-  columnCount: number;
-}
-
-export interface Relationship {
-  fromTable: string;
-  fromColumn: string;
-  toTable: string;
-  toColumn: string;
-  confidence: number;
-  source: string;
-  multiSource: boolean;
-}
-
-export interface SchemaSnapshot {
-  version: string;
-  metadata: {
-    dbType: string;
-    host: string;
-    database: string;
-    schema: string;
-    extractedAt: string;
-    tableCount: number;
-    columnCount: number;
-    relationshipCount: number;
-    domainCount: number;
-  };
-  tables: Record<string, TableInfo>;
-  relationships: Relationship[];
-  domains: Record<string, string[]>;
-  analysis: {
-    deadTables: { table: string; reason: string; rowCount: number | null }[];
-    hubTables: { table: string; incomingRefs: number }[];
-  };
-}
-
-export interface ColumnSearchResult {
-  query: string;
-  totalMatches: number;
-  results: {
-    column: string;
-    tableCount: number;
-    tables: { table: string; column: string; type: string; pk: boolean }[];
-  }[];
-}
-
-export interface ImpactResult {
-  table: string;
-  hops: number;
-  affectedCount: number;
-  affectedTables: string[];
-}
+/* Re-export shared types for backward compatibility within this MFE */
+export type ColumnInfo = SchemaColumnInfo;
+export type TableInfo = SchemaTableInfo;
+export type Relationship = SchemaRelationship;
+export type { SchemaSnapshot };
+export type ColumnSearchResult = SchemaColumnSearchResult;
+export type ImpactResult = SchemaImpactResult;
 
 export const schemaApi = {
   getSnapshot: (schema?: string) =>

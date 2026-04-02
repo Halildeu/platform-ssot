@@ -13,7 +13,7 @@ interface SchemaGraphProps {
   onViewModeChange: (mode: 'domain' | 'neighborhood') => void;
 }
 
-const CYTOSCAPE_STYLE: cytoscape.Stylesheet[] = [
+const CYTOSCAPE_STYLE: cytoscape.StylesheetStyle[] = [
   {
     selector: 'node[type="table"]',
     style: {

@@ -673,10 +673,11 @@ export const fetchGridVariants = async (gridId: string): Promise<GridVariant[]> 
     return enhanced;
   } catch (error) {
     const fallback = readLocalVariants(gridId);
-    if (isAxiosError(error) && error.response?.status === 404) {
-      const empty: GridVariant[] = [];
-      writeLocalVariants(gridId, empty);
-      return empty;
+    /* Never wipe localStorage on server errors — local data is the safety net.
+       A 404 may be a transient API issue, not proof that no variants exist. */
+    if (isAxiosError(error) && error.response?.status === 404 && fallback.length > 0) {
+      console.warn('[grid-variants] 404 ignored — returning local fallback (%d variants).', fallback.length);
+      return fallback;
     }
     console.warn('Sunucu erişilemedi, yerel varyantlar kullanılıyor.', error);
     return fallback;

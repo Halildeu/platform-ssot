@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ports=(3000 3001 3002 3003 3004 3005 3006 3007)
+ports=(3000 3001 3002 3003 3004 3005 3006 3007 3008)
 stop_wait_seconds="${WEB_RUNTIME_STOP_WAIT_SECONDS:-8}"
 stop_poll_interval="${WEB_RUNTIME_STOP_POLL_INTERVAL:-0.25}"
 force_kill="0"

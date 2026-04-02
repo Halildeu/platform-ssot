@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useColumnSearch } from '../hooks/useSchemaData';
 
-interface ColumnSearchProps {
+export interface ColumnSearchProps {
   onTableSelect: (table: string) => void;
+  schema?: string;
 }
 
-export const ColumnSearch = ({ onTableSelect }: ColumnSearchProps) => {
+export const ColumnSearch = ({ onTableSelect, schema: _schema }: ColumnSearchProps) => {
   const [query, setQuery] = useState('');
   const { data, isLoading } = useColumnSearch(query);
 

@@ -113,21 +113,5 @@ export const createDynamicReportModule = (
     getColumns: () => [],
     fetchRows: (filters, request) => fetchReportData(report.key, filters, request),
     exportRows: (filters, format) => exportReportData(report.key, filters, format),
-    renderDetail: (row) => {
-      if (!row) return <span>Detayları görmek için bir satır seçin.</span>;
-      const entries = Object.entries(row).filter(
-        ([key]) => !key.startsWith('_') && key !== 'id',
-      );
-      return (
-        <dl style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 8 }}>
-          {entries.map(([key, value]) => (
-            <React.Fragment key={key}>
-              <dt style={{ fontWeight: 500 }}>{key}</dt>
-              <dd>{value != null ? String(value) : '-'}</dd>
-            </React.Fragment>
-          ))}
-        </dl>
-      );
-    },
   };
 };

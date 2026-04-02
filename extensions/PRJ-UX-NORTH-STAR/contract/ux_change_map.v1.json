@@ -292,6 +292,21 @@
       "path": "web/packages/design-system/src/components/timeline/Timeline.tsx",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/apps/mfe-schema-explorer/src/vite-env.d.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/shared-types/src/index.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/shared-types/src/schema.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
     }
   ]
 }

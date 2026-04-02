@@ -36,4 +36,11 @@ export interface ReportModule<TFilters extends Record<string, unknown>, TRow> {
     filters: TFilters,
     format: "csv" | "json",
   ) => Promise<{ blob: Blob; filename: string }>;
+
+  /** Database tables this report reads from — enables schema lineage, related reports, FK lookup */
+  sourceTables?: string[];
+  /** Schema/tier identifier (e.g., 'workcube_mikrolink', 'workcube_mikrolink_2026_1') */
+  sourceSchema?: string;
+  /** Data source ID (for multi-DB support) */
+  dataSourceId?: string;
 }

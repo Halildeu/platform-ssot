@@ -17,8 +17,9 @@ interface HealthReport {
   stats: Record<string, number>;
 }
 
-interface HealthScoreProps {
+export interface HealthScoreProps {
   onTableSelect: (table: string) => void;
+  schema?: string;
 }
 
 const GRADE_COLORS: Record<string, string> = {
