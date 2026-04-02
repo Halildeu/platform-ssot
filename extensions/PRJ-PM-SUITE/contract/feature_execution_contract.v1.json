@@ -44,7 +44,7 @@
       "backend/common-auth/**/*",
       "backend/api-gateway/**/*",
       "backend/scripts/ci/security/*",
-      "web/packages/platform-capabilities/src/**/*",
+      "web/packages/platform-capabilities/**",
       "web/.gitignore",
       "web/.npmrc",
       "mobile/App.tsx",
