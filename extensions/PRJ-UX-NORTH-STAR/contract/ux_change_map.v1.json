@@ -1,7 +1,7 @@
 {
   "version": "v1",
   "subject_id": "ux_katalogu",
-  "generated_at": "2026-03-30T18:10:00Z",
+  "generated_at": "2026-04-02T05:17:03Z",
   "entries": [
     {
       "path": "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
@@ -262,6 +262,31 @@
       "path": "web/packages/design-system/src/index.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-audit/src/app/bootstrap.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "behavior_contracts_across_modules"
+    },
+    {
+      "path": "web/apps/mfe-audit/src/app/hooks/useWindowSearch.ts",
+      "ux_theme_id": "navigation_information_scent",
+      "ux_subtheme_id": "deep_link_and_shareable_state"
+    },
+    {
+      "path": "web/apps/mfe-audit/src/app/services/audit-api.ts",
+      "ux_theme_id": "performance_resilience_experience",
+      "ux_subtheme_id": "retry_idempotency_and_duplicate_prevention"
+    },
+    {
+      "path": "web/apps/mfe-reporting/src/app/bootstrap.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "behavior_contracts_across_modules"
+    },
+    {
+      "path": "web/packages/design-system/src/components/timeline/Timeline.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
     }
   ]
 }
