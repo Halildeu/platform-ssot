@@ -119,7 +119,7 @@ export type OfflineMutationPolicyDescriptor = {
   conflictAuditCapabilityId: AuditFeedCapabilityId;
 };
 
-export type SharedReportId = "users-overview" | "roles-access" | "audit-activity" | "hr-demografik-yapi" | "monthly-login-summary" | "weekly-audit-digest";
+export type SharedReportId = "users-overview" | "roles-access" | "audit-activity" | "hr-demografik-yapi" | "monthly-login-summary" | "weekly-audit-digest" | "hr-compensation";
 
 export type SharedReportCatalogItem = {
   id: SharedReportId;
@@ -451,6 +451,33 @@ const SHARED_REPORT_CATALOG: readonly SharedReportCatalogItem[] = [
     category: "Periyodik",
     tags: ["periodic", "weekly"],
     icon: "📋",
+  },
+  {
+    id: "hr-compensation",
+    title: "Ücret ve Yan Haklar Analitiği",
+    description: "Mercer/WTW standardında kapsamlı ücretlendirme analizi — iç denge, cinsiyet eşitliği, yüzdelik dağılımlar, trend.",
+    permissionCode: "hr-read",
+    exportPermissionCode: "hr-export",
+    metricLabel: "Toplam bordro",
+    emptyMessage: "Ücret analitiği için gösterilecek veri bulunamadı.",
+    supportedChannels: ["web"],
+    dataModeByChannel: { web: "live" },
+    favoriteChannels: ["web"],
+    savedFilterChannels: ["web"],
+    exportModeByChannel: { web: "job" },
+    filterParity: [
+      { key: "search", label: "Arama", supportedChannels: ["web"] },
+      { key: "department", label: "Departman", supportedChannels: ["web"] },
+      { key: "collarType", label: "Yaka Tipi", supportedChannels: ["web"] },
+      { key: "gender", label: "Cinsiyet", supportedChannels: ["web"] },
+      { key: "education", label: "Eğitim", supportedChannels: ["web"] },
+    ],
+    webRouteSegment: "hr-compensation",
+    webRoute: "/admin/reports/hr-compensation",
+    webModuleId: "reports.hr-compensation",
+    category: "İnsan Kaynakları",
+    type: "mixed",
+    icon: "💰",
   },
 ] as const;
 
