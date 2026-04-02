@@ -11,11 +11,15 @@ import {
 } from '@mfe/design-system';
 import { EntityGridTemplate, buildEntityGridQueryParams } from '../../grid';
 import type { GridRequest, GridResponse, ColumnDef } from '../../grid';
-import type { ColDef, IServerSideGetRowsParams } from 'ag-grid-community';
+import type { ColDef, GridOptions, IServerSideGetRowsParams } from 'ag-grid-community';
 import { useReportingI18n } from '../../i18n/useReportingI18n';
 import type { ReportModule } from '../../modules/types';
 import { buildColDefs, buildDetailRenderer, buildProcessCellCallback } from '@mfe/design-system/advanced/data-grid';
 import { getShellServices } from '../services/shell-services';
+
+/* ------------------------------------------------------------------ */
+/*  Helpers                                                            */
+/* ------------------------------------------------------------------ */
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';
 
@@ -33,9 +37,7 @@ const normalizePermission = (value: string) => value.trim().toUpperCase();
 const readCurrentPermissions = (): string[] => {
   try {
     const user = getShellServices().auth.getUser() as { permissions?: unknown } | null;
-    if (!user || !Array.isArray(user.permissions)) {
-      return [];
-    }
+    if (!user || !Array.isArray(user.permissions)) return [];
     return user.permissions
       .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
       .map((item) => normalizePermission(item));
@@ -43,6 +45,12 @@ const readCurrentPermissions = (): string[] => {
     return [];
   }
 };
+
+const SERVER_CACHE_BLOCK_SIZE = 50;
+
+/* ------------------------------------------------------------------ */
+/*  Component                                                          */
+/* ------------------------------------------------------------------ */
 
 interface ReportPageProps<TFilters extends Record<string, unknown>, TRow> {
   module: ReportModule<TFilters, TRow>;
@@ -52,12 +60,8 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
   const { t, ready } = useReportingI18n();
   const location = useLocation();
   const sharedReport = React.useMemo(() => {
-    try {
-      return getSharedReport(module.sharedReportId);
-    } catch {
-      // Dynamic reports use synthetic sharedReportId (e.g. 'dynamic:key') not in registry
-      return null;
-    }
+    try { return getSharedReport(module.sharedReportId); }
+    catch { return null; }
   }, [module.sharedReportId]);
   const exportMode = (() => {
     try { return getSharedReportExportMode(module.sharedReportId, 'web'); }
@@ -72,6 +76,8 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
   const [reloadSignal, setReloadSignal] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [exporting, setExporting] = React.useState(false);
+  const [dataSourceMode, setDataSourceMode] = React.useState<'server' | 'client'>('server');
+  const [clientRows, setClientRows] = React.useState<TRow[]>([]);
   const initialFilterSyncRef = React.useRef(true);
   const permissions = React.useMemo(() => readCurrentPermissions(), [location.key, location.pathname]);
   const exportEnabled =
@@ -89,13 +95,24 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
     setReloadSignal((value) => value + 1);
   }, [initialFiltersFromSearch]);
 
+  /* ---- Grid options (matching UsersGrid standard) ---- */
+  const gridOptions = React.useMemo<GridOptions<TRow>>(
+    () => ({
+      cellSelection: true,
+      multiSortKey: 'ctrl' as const,
+      rowGroupPanelShow: 'always' as const,
+      ...(dataSourceMode === 'server'
+        ? { cacheBlockSize: SERVER_CACHE_BLOCK_SIZE, maxBlocksInCache: 1 }
+        : {}),
+    }),
+    [dataSourceMode],
+  );
+
   /* ---- Column definitions — metadata-first, fallback to legacy ---- */
   const columns = React.useMemo<ColumnDef<TRow>[]>(() => {
-    /* NEW path: declarative metadata → auto-generated ColDef */
     if (module.getColumnMeta) {
       return buildColDefs<TRow>(module.getColumnMeta(), t, 'tr-TR');
     }
-    /* LEGACY path: module provides full ColumnDef with manual renderers */
     return module.getColumns(t);
   }, [module, t, ready]);
 
@@ -134,6 +151,7 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
     [columns],
   );
 
+  /* ---- Server-side datasource ---- */
   const createServerSideDatasource = React.useCallback(
     () => ({
       getRows: async (params: IServerSideGetRowsParams) => {
@@ -179,6 +197,108 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
     [filters, module],
   );
 
+  /* ---- Client-side data loading ---- */
+  const loadClientData = React.useCallback(async () => {
+    setLoading(true);
+    try {
+      const req: GridRequest = { page: 1, pageSize: 10000, quickFilter: '' };
+      const res: GridResponse<TRow> = await module.fetchRows(filters, req);
+      setClientRows(res.rows);
+    } catch (error: unknown) {
+      showToast('error', error instanceof Error ? error.message : 'Veriler yüklenemedi.');
+      setClientRows([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [filters, module]);
+
+  React.useEffect(() => {
+    if (dataSourceMode === 'client') {
+      void loadClientData();
+    }
+  }, [dataSourceMode, loadClientData]);
+
+  /* ---- Export config (matching UsersGrid: separator, BOM) ---- */
+  const exportConfig = React.useMemo(() => {
+    if (!exportEnabled || typeof module.exportRows !== 'function') return undefined;
+    return {
+      fileBaseName: module.route,
+      sheetName: t(module.titleKey),
+      csvColumnSeparator: ';',
+      csvBom: true,
+      ...(module.getColumnMeta ? {
+        processCellCallback: buildProcessCellCallback(module.getColumnMeta(), t),
+      } : {}),
+    };
+  }, [module, t, exportEnabled]);
+
+  /* ---- Locale text (full, matching UsersGrid) ---- */
+  const localeText = React.useMemo(() => {
+    const groupText = t('shared.grid.groupPanel');
+    const valueText = t('shared.grid.valuePanel') || 'Değer sütunlarını buraya sürükleyin';
+    return {
+      // Group panel
+      rowGroupPanel: groupText,
+      dropZoneColumnGroup: groupText,
+      rowGroupColumnsEmptyMessage: groupText,
+      dragHereToSetColumnRowGroup: groupText,
+      dragHereToSetRowGroup: groupText,
+      dropZoneColumnValue: valueText,
+      // Side panel
+      filters: t('shared.grid.filters'),
+      columns: t('shared.grid.columns'),
+      // Advanced filter
+      advancedFilter: t('shared.grid.advancedFilter') || 'Gelişmiş Filtre',
+      advancedFilterBuilder: t('shared.grid.advancedFilterBuilder') || 'Filtre Oluşturucu',
+      advancedFilterButtonTooltip: t('shared.grid.advancedFilterButtonTooltip') || 'Gelişmiş Filtre',
+      advancedFilterBuilderAdd: t('shared.grid.advancedFilterBuilderAdd') || 'Ekle',
+      advancedFilterBuilderRemove: t('shared.grid.advancedFilterBuilderRemove') || 'Kaldır',
+      advancedFilterJoinOperator: t('shared.grid.advancedFilterJoinOperator') || 'Operatör',
+      advancedFilterAnd: t('shared.grid.advancedFilterAnd') || 'VE',
+      advancedFilterOr: t('shared.grid.advancedFilterOr') || 'VEYA',
+      advancedFilterValidationMissingColumn: t('shared.grid.advancedFilterValidationMissingColumn') || 'Sütun seçiniz',
+      advancedFilterValidationMissingOption: t('shared.grid.advancedFilterValidationMissingOption') || 'Seçenek belirtiniz',
+      advancedFilterValidationMissingValue: t('shared.grid.advancedFilterValidationMissingValue') || 'Değer giriniz',
+      advancedFilterApply: t('shared.grid.advancedFilterApply') || 'Uygula',
+    } as Record<string, string>;
+  }, [t]);
+
+  /* ---- Footer: Server/Client mode selector ---- */
+  const modeSelector = React.useMemo(() => (
+    <div className="flex items-center gap-2 text-xs">
+      <label className="flex items-center gap-1 cursor-pointer">
+        <input
+          type="radio"
+          name={`mode-${module.id}`}
+          checked={dataSourceMode === 'server'}
+          onChange={() => { setDataSourceMode('server'); setReloadSignal((v) => v + 1); }}
+          className="accent-action-primary"
+        />
+        <span className="text-text-secondary">Sunucu</span>
+      </label>
+      <label className="flex items-center gap-1 cursor-pointer">
+        <input
+          type="radio"
+          name={`mode-${module.id}`}
+          checked={dataSourceMode === 'client'}
+          onChange={() => setDataSourceMode('client')}
+          className="accent-action-primary"
+        />
+        <span className="text-text-secondary">İstemci</span>
+      </label>
+      {dataSourceMode === 'client' && (
+        <button
+          type="button"
+          onClick={() => void loadClientData()}
+          className="ml-1 rounded px-2 py-0.5 text-xs bg-surface-muted hover:bg-surface-hover text-text-secondary"
+        >
+          ↻ Yenile
+        </button>
+      )}
+    </div>
+  ), [dataSourceMode, loadClientData, module.id]);
+
+  /* ---- Breadcrumbs & layout ---- */
   const breadcrumbItems = createPageLayoutBreadcrumbItems(
     module.breadcrumbKeys.map((item) => ({
       title: t(item.key),
@@ -192,19 +312,29 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
 
   const initialVariantId = searchParams.get('variant') ?? undefined;
 
-  const localeText = React.useMemo(() => {
-    const groupPanel = t('shared.grid.groupPanel');
-    return {
-      rowGroupPanel: groupPanel,
-      dropZoneColumnGroup: groupPanel,
-      rowGroupColumnsEmptyMessage: groupPanel,
-      dragHereToSetColumnRowGroup: groupPanel,
-      dragHereToSetRowGroup: groupPanel,
-      filters: t('shared.grid.filters'),
-      columns: t('shared.grid.columns'),
-    } as Record<string, string>;
-  }, [t]);
+  /* ---- Server export handler ---- */
+  const handleServerExport = React.useCallback(async (format: 'excel' | 'csv') => {
+    if (typeof module.exportRows !== 'function') return;
+    setExporting(true);
+    try {
+      const result = await module.exportRows(filters, format === 'excel' ? 'csv' : format);
+      const objectUrl = window.URL.createObjectURL(result.blob);
+      const anchor = document.createElement('a');
+      anchor.href = objectUrl;
+      anchor.download = result.filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      window.URL.revokeObjectURL(objectUrl);
+      showToast('success', t('reports.export.success') || 'Export indirilmeye başladı.');
+    } catch (error: unknown) {
+      showToast('error', error instanceof Error ? error.message : t('reports.export.failed') || 'Export başlatılamadı.');
+    } finally {
+      setExporting(false);
+    }
+  }, [module, filters, t]);
 
+  /* ---- Loading skeleton ---- */
   if (!ready) {
     return (
       <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
@@ -220,7 +350,6 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
         title={t(module.titleKey)}
         description={t(module.descriptionKey)}
         breadcrumbItems={breadcrumbItems}
-        fullHeight
         descriptionRevealOnHover
       >
         {module.renderDashboard ? module.renderDashboard(t) : null}
@@ -231,8 +360,12 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
           gridSchemaVersion={1}
           initialVariantId={initialVariantId}
           columnDefs={colDefs}
-          dataSourceMode="server"
-          createServerSideDatasource={() => createServerSideDatasource()}
+          gridOptions={gridOptions}
+          dataSourceMode={dataSourceMode}
+          createServerSideDatasource={dataSourceMode === 'server' ? () => createServerSideDatasource() : undefined}
+          rowData={dataSourceMode === 'client' ? clientRows : undefined}
+          total={dataSourceMode === 'client' ? clientRows.length : undefined}
+          footerStartSlot={modeSelector}
           detailDrawer={
             module.getColumnMeta
               ? (row) => buildDetailRenderer(module.getColumnMeta!())(row as Record<string, unknown> | null, t)
@@ -244,32 +377,8 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
           quickFilterLabel={t(module.titleKey)}
           quickFilterPlaceholder={t('reports.filters.search.placeholder') || 'Tüm sütunlarda ara...'}
           resetFiltersLabel={t('reports.filters.reset')}
-          exportConfig={exportEnabled && typeof module.exportRows === 'function' ? {
-            fileBaseName: module.route,
-            sheetName: t(module.titleKey),
-            ...(module.getColumnMeta ? {
-              processCellCallback: buildProcessCellCallback(module.getColumnMeta(), t),
-            } : {}),
-          } : undefined}
-          onServerExport={exportEnabled && typeof module.exportRows === 'function' ? async (format) => {
-            setExporting(true);
-            try {
-              const result = await module.exportRows!(filters, format === 'excel' ? 'csv' : 'csv');
-              const objectUrl = window.URL.createObjectURL(result.blob);
-              const anchor = document.createElement('a');
-              anchor.href = objectUrl;
-              anchor.download = result.filename;
-              document.body.appendChild(anchor);
-              anchor.click();
-              document.body.removeChild(anchor);
-              window.URL.revokeObjectURL(objectUrl);
-              showToast('success', 'Export indirilmeye basladi.');
-            } catch (error: unknown) {
-              showToast('error', error instanceof Error ? error.message : 'Export baslatilamadi.');
-            } finally {
-              setExporting(false);
-            }
-          } : undefined}
+          exportConfig={exportConfig}
+          onServerExport={exportEnabled ? handleServerExport : undefined}
         />
       </PageLayout>
     </div>
