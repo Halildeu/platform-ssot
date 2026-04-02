@@ -71,6 +71,10 @@ export function resolveTopCategory(item: CatalogItemLike): TopCategoryId {
   if (item.type === "dashboard" || item.source === "dashboard") {
     return "executive";
   }
+  /* Tags-based: "periodic"/"scheduled" tag → Periyodik */
+  if (item.tags?.some((t) => t === "periodic" || t === "scheduled")) {
+    return "periodic";
+  }
   return CATEGORY_TO_TOP[item.category] ?? DEFAULT_TOP;
 }
 
