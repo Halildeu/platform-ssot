@@ -148,6 +148,30 @@ export interface PageLayoutManifest {
   meta?: Record<string, unknown>;
 }
 
+// Schema types — database-agnostic schema metadata
+export type {
+  SchemaColumnInfo,
+  SchemaTableInfo,
+  SchemaRelationship,
+  SchemaSnapshot,
+  SchemaSnapshotMetadata,
+  SchemaDeadTable,
+  SchemaHubTable,
+  SchemaAnalysis,
+  SchemaColumnSearchResult,
+  SchemaColumnSearchGroup,
+  SchemaColumnSearchMatch,
+  SchemaImpactResult,
+  SchemaJoinPathSegment,
+  SchemaJoinPath,
+  SchemaDomain,
+  DataSource,
+  DataSourceType,
+  DataSourceConnectionConfig,
+  SchemaDriftEntry,
+  SchemaDriftResult,
+} from './schema';
+
 // Telemetry & audit event tipleri (E06-S01)
 export type TelemetryEventType = 'telemetry' | 'audit' | 'error';
 
