@@ -46,7 +46,30 @@ const pseudo = {
   "reports.audit.columns.action": "Áçtíóñ",
   "reports.audit.columns.level": "Lévél",
   "reports.audit.columns.timestamp": "Tíméstámp",
-  "reports.audit.comingSoon": "Thé áúdít détáíl páñél ís úñdér çóñstrúçtíóñ."
+  "reports.audit.comingSoon": "Thé áúdít détáíl páñél ís úñdér çóñstrúçtíóñ.",
+
+  'reports.nav.monthlyLogin': '[Monthly Login ⟪ML⟫]',
+  'reports.monthlyLogin.title': '[Monthly login summary ⟪MLS⟫]',
+  'reports.monthlyLogin.description': '[Auto-generated monthly user login statistics ⟪MULS⟫]',
+  'reports.monthlyLogin.breadcrumb': '[Monthly Login ⟪ML⟫]',
+  'reports.monthlyLogin.filters.month': '[Month ⟪M⟫]',
+  'reports.monthlyLogin.columns.fullName': '[Full Name ⟪FN⟫]',
+  'reports.monthlyLogin.columns.email': '[Email ⟪E⟫]',
+  'reports.monthlyLogin.columns.role': '[Role ⟪R⟫]',
+  'reports.monthlyLogin.columns.status': '[Status ⟪S⟫]',
+  'reports.monthlyLogin.columns.lastLoginAt': '[Last login ⟪LL⟫]',
+  'reports.monthlyLogin.columns.createdAt': '[Created at ⟪CA⟫]',
+
+  'reports.nav.weeklyAudit': '[Weekly Audit ⟪WA⟫]',
+  'reports.weeklyAudit.title': '[Weekly audit digest ⟪WAD⟫]',
+  'reports.weeklyAudit.description': '[Auto-compiled weekly audit events ⟪WAE⟫]',
+  'reports.weeklyAudit.breadcrumb': '[Weekly Audit ⟪WA⟫]',
+  'reports.weeklyAudit.columns.eventId': '[Event ID ⟪EI⟫]',
+  'reports.weeklyAudit.columns.userEmail': '[User email ⟪UE⟫]',
+  'reports.weeklyAudit.columns.service': '[Service ⟪S⟫]',
+  'reports.weeklyAudit.columns.action': '[Action ⟪A⟫]',
+  'reports.weeklyAudit.columns.level': '[Level ⟪L⟫]',
+  'reports.weeklyAudit.columns.timestamp': '[Timestamp ⟪TS⟫]',
 };
 
 export default pseudo;
