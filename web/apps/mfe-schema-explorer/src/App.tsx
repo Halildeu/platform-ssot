@@ -176,7 +176,7 @@ const App = () => {
 /** Wrapper with own QueryClientProvider — needed when loaded as MF remote */
 const AppWithProviders = () => {
   const shellQC = typeof window !== 'undefined'
-    ? (window as Record<string, unknown>).__SHELL_QUERY_CLIENT__ as QueryClient | undefined
+    ? (window as unknown as Record<string, unknown>).__SHELL_QUERY_CLIENT__ as QueryClient | undefined
     : undefined;
   const localQC = useRef<QueryClient>();
   if (!shellQC && !localQC.current) {
