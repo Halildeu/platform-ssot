@@ -92,39 +92,66 @@ export const refreshDashboardData = (): void => {
 /*  Grid API — dynamic report data                                     */
 /* ------------------------------------------------------------------ */
 
-const extractFilterModelSearch = (filterModel?: Record<string, unknown>): string => {
-  if (!filterModel) return '';
-  // AG Grid column filters — extract text filter values as search terms
-  const terms: string[] = [];
-  for (const [, value] of Object.entries(filterModel)) {
-    const v = value as Record<string, unknown> | undefined;
-    if (v?.filter && typeof v.filter === 'string') {
-      terms.push(v.filter.trim());
-    }
+/**
+ * Build the AG Grid advancedFilter object from sidebar filters + grid filterModel.
+ *
+ * Backend ReportController accepts `advancedFilter` as JSON — it passes it through
+ * FilterTranslator which understands AG Grid's filter model format
+ * (e.g., { FULL_NAME: { filterType: "text", type: "contains", filter: "halil" } }).
+ *
+ * Sidebar dropdown filters (department, collarType, etc.) are converted to the same
+ * AG Grid filter format so the backend handles them uniformly.
+ */
+const buildAdvancedFilter = (
+  filters: HrCompensationFilters,
+  gridFilterModel?: Record<string, unknown>,
+): Record<string, unknown> => {
+  const merged: Record<string, unknown> = { ...(gridFilterModel ?? {}) };
+
+  // Sidebar search → FULL_NAME contains filter
+  if (filters.search?.trim()) {
+    merged.FULL_NAME = { filterType: 'text', type: 'contains', filter: filters.search.trim() };
   }
-  return terms.join(' ').trim();
+
+  // Sidebar dropdown filters → AG Grid set/number format
+  if (filters.department && filters.department !== 'all') {
+    merged.DEPARTMENT_NAME = { filterType: 'text', type: 'contains', filter: filters.department };
+  }
+  if (filters.collarType && filters.collarType !== 'all') {
+    merged.COLLAR_TYPE = { filterType: 'number', type: 'equals', filter: Number(filters.collarType) };
+  }
+  if (filters.gender && filters.gender !== 'all') {
+    merged.GENDER = { filterType: 'number', type: 'equals', filter: Number(filters.gender) };
+  }
+  if (filters.education && filters.education !== 'all') {
+    merged.EDUCATION = { filterType: 'text', type: 'equals', filter: filters.education };
+  }
+
+  return merged;
 };
 
 const buildQueryString = (filters: HrCompensationFilters, request: GridRequest) => {
   const params = new URLSearchParams();
-  const filterModelSearch = extractFilterModelSearch(request.filterModel);
-  const search = (request.quickFilter?.trim() || filterModelSearch || filters.search?.trim() || '');
-  if (search) params.set('search', search);
 
-  if (filters.department && filters.department !== 'all') params.set('department', filters.department);
-  if (filters.company && filters.company !== 'all') params.set('company', filters.company);
-  if (filters.collarType && filters.collarType !== 'all') params.set('collarType', filters.collarType);
-  if (filters.gender && filters.gender !== 'all') params.set('gender', filters.gender);
-  if (filters.education && filters.education !== 'all') params.set('education', filters.education);
+  // Quick filter (grid toolbar search) → FULL_NAME contains
+  const quickSearch = request.quickFilter?.trim() || '';
+  const advFilter = buildAdvancedFilter(
+    quickSearch ? { ...filters, search: quickSearch } : filters,
+    request.filterModel,
+  );
+
+  if (Object.keys(advFilter).length > 0) {
+    params.set('advancedFilter', JSON.stringify(advFilter));
+  }
 
   params.set('page', String(request.page ?? 1));
   params.set('pageSize', String(request.pageSize ?? 50));
 
   const firstSort = Array.isArray(request.sortModel) ? request.sortModel[0] : undefined;
   if (firstSort?.colId && firstSort.sort) {
-    params.set('sort', `${firstSort.colId},${firstSort.sort}`);
+    params.set('sort', JSON.stringify([{ colId: firstSort.colId, sort: firstSort.sort }]));
   } else {
-    params.set('sort', 'GROSS_SALARY,desc');
+    params.set('sort', JSON.stringify([{ colId: 'GROSS_SALARY', sort: 'desc' }]));
   }
 
   return params.toString();
