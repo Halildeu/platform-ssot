@@ -92,9 +92,23 @@ export const refreshDashboardData = (): void => {
 /*  Grid API — dynamic report data                                     */
 /* ------------------------------------------------------------------ */
 
+const extractFilterModelSearch = (filterModel?: Record<string, unknown>): string => {
+  if (!filterModel) return '';
+  // AG Grid column filters — extract text filter values as search terms
+  const terms: string[] = [];
+  for (const [, value] of Object.entries(filterModel)) {
+    const v = value as Record<string, unknown> | undefined;
+    if (v?.filter && typeof v.filter === 'string') {
+      terms.push(v.filter.trim());
+    }
+  }
+  return terms.join(' ').trim();
+};
+
 const buildQueryString = (filters: HrCompensationFilters, request: GridRequest) => {
   const params = new URLSearchParams();
-  const search = (request.quickFilter?.trim() || filters.search?.trim() || '');
+  const filterModelSearch = extractFilterModelSearch(request.filterModel);
+  const search = (request.quickFilter?.trim() || filterModelSearch || filters.search?.trim() || '');
   if (search) params.set('search', search);
 
   if (filters.department && filters.department !== 'all') params.set('department', filters.department);
