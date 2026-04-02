@@ -1,7 +1,9 @@
 import React from 'react';
 import { getLiveKPIs, getLiveCharts } from './api';
 import type { DashboardKPI, DashboardChart, DashboardChartItem } from './api';
-import { BarChart, LineChart, PieChart, EntityGridTemplate } from '@mfe/design-system';
+import { BarChart, PieChart, EntityGridTemplate } from '@mfe/design-system';
+import { AgCharts } from 'ag-charts-react';
+import type { AgChartOptions } from 'ag-charts-community';
 import type { ColDef } from 'ag-grid-community';
 
 /* ------------------------------------------------------------------ */
@@ -177,14 +179,74 @@ const renderBarChart = (
   );
 };
 
-const renderLineChart = (data: DashboardChartItem[], valueFormatter?: (value: number) => string) => {
-  if (!data.length) return <EmptyState />;
-  const labels = data.map((d) => d.label);
-  const series = [{ name: 'Ort. Maaş', data: data.map((d) => d.value) }];
-  if (data.some((d) => d.value2 != null)) {
-    series.push({ name: 'Çalışan', data: data.map((d) => (d.value2 as number) ?? 0) });
-  }
-  return <LineChart labels={labels} series={series} showGrid valueFormatter={valueFormatter} />;
+/** Dual-axis line chart — left axis: currency (Ort. Maaş), right axis: count (Çalışan) */
+const DualAxisLineChart: React.FC<{ data: DashboardChartItem[] }> = ({ data }) => {
+  const hasDualSeries = data.some((d) => d.value2 != null);
+
+  const options = React.useMemo((): AgChartOptions => {
+    const chartData = data.map((d) => ({
+      label: d.label,
+      salary: d.value,
+      count: (d.value2 as number) ?? 0,
+    }));
+
+    const series: AgChartOptions['series'] = [
+      {
+        type: 'line' as const,
+        xKey: 'label',
+        yKey: 'salary',
+        yName: 'Ort. Maaş',
+        stroke: '#3b82f6',
+        marker: { enabled: true, size: 6, fill: '#3b82f6' },
+      },
+    ];
+
+    if (hasDualSeries) {
+      series.push({
+        type: 'bar' as const,
+        xKey: 'label',
+        yKey: 'count',
+        yName: 'Çalışan Sayısı',
+        fill: '#f59e0b',
+        fillOpacity: 0.6,
+      } as any);
+    }
+
+    const axes: AgChartOptions['axes'] = [
+      {
+        type: 'category',
+        position: 'bottom',
+      },
+      {
+        type: 'number',
+        position: 'left',
+        keys: ['salary'],
+        title: { text: 'Ort. Maaş (₺)' },
+        label: { formatter: (p: any) => chartCurrencyFormatter(p.value) },
+        gridLine: { enabled: true },
+      },
+    ];
+
+    if (hasDualSeries) {
+      axes.push({
+        type: 'number',
+        position: 'right',
+        keys: ['count'],
+        title: { text: 'Çalışan Sayısı' },
+        label: { formatter: (p: any) => formatNumber(p.value) },
+        gridLine: { enabled: false },
+      } as any);
+    }
+
+    return {
+      data: chartData,
+      series,
+      axes,
+      legend: { enabled: true },
+    } as AgChartOptions;
+  }, [data, hasDualSeries]);
+
+  return <AgCharts options={options} style={{ height: 320, width: '100%' }} />;
 };
 
 const renderPieChart = (data: DashboardChartItem[], valueFormatter?: (value: number) => string) => {
@@ -334,7 +396,7 @@ const CompensationDashboard: React.FC = () => {
             { key: 'value2', label: 'Çalışan Sayısı', format: 'number' },
           ]}
         >
-          {renderLineChart(findChart('salary-trend-12m')?.data ?? [], chartCurrencyFormatter)}
+          <DualAxisLineChart data={findChart('salary-trend-12m')?.data ?? []} />
         </ChartBlock>
       </div>
 
