@@ -15,6 +15,7 @@ import type { ColDef, GridOptions, IServerSideGetRowsParams } from 'ag-grid-comm
 import { useReportingI18n } from '../../i18n/useReportingI18n';
 import type { ReportModule } from '../../modules/types';
 import { buildColDefs, buildDetailRenderer, buildProcessCellCallback } from '@mfe/design-system/advanced/data-grid';
+import { useReportSchemaContext } from '../../hooks/useReportSchemaContext';
 import { getShellServices } from '../services/shell-services';
 
 /* ------------------------------------------------------------------ */
@@ -59,6 +60,7 @@ interface ReportPageProps<TFilters extends Record<string, unknown>, TRow> {
 export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ module }: ReportPageProps<TFilters, TRow>) {
   const { t, ready } = useReportingI18n();
   const location = useLocation();
+  const schemaCtx = useReportSchemaContext(module.sourceTables, module.sourceSchema);
   const sharedReport = React.useMemo(() => {
     try { return getSharedReport(module.sharedReportId); }
     catch { return null; }
