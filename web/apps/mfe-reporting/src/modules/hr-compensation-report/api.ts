@@ -97,6 +97,12 @@ const buildQueryString = (filters: HrCompensationFilters, request: GridRequest) 
   const search = (request.quickFilter?.trim() || filters.search?.trim() || '');
   if (search) params.set('search', search);
 
+  if (filters.department && filters.department !== 'all') params.set('department', filters.department);
+  if (filters.company && filters.company !== 'all') params.set('company', filters.company);
+  if (filters.collarType && filters.collarType !== 'all') params.set('collarType', filters.collarType);
+  if (filters.gender && filters.gender !== 'all') params.set('gender', filters.gender);
+  if (filters.education && filters.education !== 'all') params.set('education', filters.education);
+
   params.set('page', String(request.page ?? 1));
   params.set('pageSize', String(request.pageSize ?? 50));
 

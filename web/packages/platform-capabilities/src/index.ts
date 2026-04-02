@@ -40,7 +40,7 @@ export type OfflineMutationCapabilityId =
   | "profile.date-format.sync"
   | "profile.time-format.sync";
 
-export type SharedReportFilterKey = "search" | "status" | "level" | "department" | "location" | "gender" | "employmentType";
+export type SharedReportFilterKey = "search" | "status" | "level" | "department" | "location" | "gender" | "employmentType" | "collarType" | "education" | "company" | "month";
 export type ReportExportMode = "none" | "download" | "job";
 
 export type AuditFeedCapability = {

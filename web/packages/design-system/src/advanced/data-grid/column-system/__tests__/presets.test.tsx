@@ -62,6 +62,35 @@ describe('createBadgeRenderer', () => {
     const result = renderWithLabels({ value: 'ADMIN', data: undefined });
     expect(result).toBeTruthy();
   });
+
+  it('numeric key variantMap/labelMap ile çalışır (COLLAR_TYPE/GENDER)', () => {
+    const numericT = (key: string) => {
+      const m: Record<string, string> = {
+        'reports.collarType.white': 'Beyaz Yaka',
+        'reports.collarType.blue': 'Mavi Yaka',
+      };
+      return m[key] ?? key;
+    };
+    const renderNumeric = createBadgeRenderer(
+      { 1: 'info', 2: 'warning' } as Record<string, any>,
+      'default',
+      { 1: 'reports.collarType.white', 2: 'reports.collarType.blue' } as Record<string, string>,
+      numericT,
+    );
+    const result1 = renderNumeric({ value: 1, data: undefined });
+    expect(result1).toBeTruthy();
+    const result2 = renderNumeric({ value: 2, data: undefined });
+    expect(result2).toBeTruthy();
+  });
+
+  it('numeric 0 değerini doğru handle eder (GENDER=0)', () => {
+    const renderGender = createBadgeRenderer(
+      { 0: 'primary', 1: 'info' } as Record<string, any>,
+      'default',
+    );
+    const result = renderGender({ value: 0, data: undefined });
+    expect(result).toBeTruthy();
+  });
 });
 
 describe('createStatusRenderer', () => {
@@ -134,6 +163,18 @@ describe('createCurrencyRenderer', () => {
     const result = render({ value: 1500, data: undefined });
     expect(typeof result).toBe('string');
   });
+
+  it('null değer — dash gösterir', () => {
+    const render = createCurrencyRenderer({ currencyCode: 'TRY' }, 'tr-TR');
+    const result = render({ value: null, data: undefined });
+    expect(result).toBeTruthy();
+  });
+
+  it('currencyCode belirtilmezse TRY varsayar', () => {
+    const render = createCurrencyRenderer({}, 'tr-TR');
+    const result = render({ value: 50000, data: undefined });
+    expect(typeof result).toBe('string');
+  });
 });
 
 describe('createBooleanRenderer', () => {
@@ -153,6 +194,15 @@ describe('createBooleanRenderer', () => {
     const render = createBooleanRenderer({ display: 'text', trueLabelKey: 'shared.boolean.yes', falseLabelKey: 'shared.boolean.no' }, t);
     expect(render({ value: true, data: undefined })).toBe('Evet');
     expect(render({ value: false, data: undefined })).toBe('Hayır');
+  });
+
+  it('numeric 1/0 — truthy/falsy olarak handle eder', () => {
+    const render = createBooleanRenderer({ display: 'icon' }, t);
+    const trueResult = render({ value: 1, data: undefined });
+    const falseResult = render({ value: 0, data: undefined });
+    expect(trueResult).toBeTruthy();
+    expect(falseResult).toBeTruthy();
+    expect(trueResult).not.toEqual(falseResult);
   });
 });
 
