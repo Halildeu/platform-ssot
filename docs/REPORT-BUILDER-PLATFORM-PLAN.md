@@ -244,6 +244,8 @@ Faz 8 (düzenleme + versiyon)
 
 ## Yetki
 
+### Mevcut (implement edilecek)
+
 | İşlem | Permission |
 |-------|-----------|
 | Rapor görüntüleme | `REPORT_READ` |
@@ -251,6 +253,24 @@ Faz 8 (düzenleme + versiyon)
 | Rapor düzenleme | `REPORT_BUILDER` + owner |
 | Data source yönetimi | `DATASOURCE_ADMIN` |
 | Schema keşfi | `SCHEMA_READ` |
+
+### Gelecek — Granüler Erişim (altyapı hazır, ileride implement)
+
+Tablo ve schema bazlı yetkilendirme — şimdi implement edilmez ama **tüm altyapı buna uygun tasarlanır**.
+
+| Seviye | Açıklama | Altyapı |
+|--------|----------|---------|
+| **Schema bazlı** | Kullanıcı sadece izinli schema'ları görür | `useReportSchemaContext` hook'a `allowedSchemas` filtresi eklenebilir |
+| **Tablo bazlı** | Kullanıcı sadece izinli tabloları görür | Wizard `SelectTableStep`'te tablo listesi filtrelenir |
+| **Sütun bazlı** | Hassas sütunlar (maaş, TC no) gizlenir | `ColumnMeta.requiredPermission` zaten var |
+| **Satır bazlı (RLS)** | Kullanıcı sadece kendi verilerini görür | `fetchRows` filter inject — backend RLS ile |
+| **Rapor bazlı** | Belirli raporlara erişim | `SharedReportCatalogItem.permissionCode` zaten var |
+
+**Tasarım kuralları:**
+- Schema snapshot hook'a `filterTables(tables, userPermissions)` enjekte edilebilir noktası bırak
+- Wizard adımlarında tablo/sütun listeleme fonksiyonları permission callback kabul etsin
+- `ReportDefinition`'a `accessPolicy?: { schemaAccess?, tableAccess?, columnBlacklist? }` alanı şimdiden koy (boş bırakılabilir)
+- Backend lookup endpoint'leri kullanıcı token'ından yetki kontrol etsin
 
 ## Performans
 
