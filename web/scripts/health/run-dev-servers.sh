@@ -146,7 +146,7 @@ service_names_for_profile() {
       printf '%s\n' shell reporting users access
       ;;
     full|all)
-      printf '%s\n' shell suggestions ethic users access audit reporting cockpit
+      printf '%s\n' shell suggestions ethic users access audit reporting schema-explorer cockpit
       ;;
     *)
       echo "[run-web] desteklenmeyen profile: $WEB_RUNTIME_PROFILE" >&2
@@ -199,6 +199,7 @@ service_port() {
     access) printf '3005\n' ;;
     audit) printf '3006\n' ;;
     reporting) printf '3007\n' ;;
+    schema-explorer) printf '3008\n' ;;
     cockpit) printf '8790\n' ;;
     *) return 1 ;;
   esac
@@ -213,8 +214,9 @@ service_command() {
     users)       printf 'cd apps/mfe-users && exec npx vite\n' ;;
     access)      printf 'cd apps/mfe-access && exec npx vite\n' ;;
     audit)       printf 'cd apps/mfe-audit && exec npx vite\n' ;;
-    reporting)   printf 'cd apps/mfe-reporting && exec npx vite\n' ;;
-    cockpit)     printf 'cd ../../autonomous-orchestrator && exec python3 -m src.ops.manage cockpit-serve --workspace-root .cache/ws_customer_default --port 8790\n' ;;
+    reporting)        printf 'cd apps/mfe-reporting && exec npx vite\n' ;;
+    schema-explorer)  printf 'cd apps/mfe-schema-explorer && exec npx vite\n' ;;
+    cockpit)          printf 'cd ../../autonomous-orchestrator && exec python3 -m src.ops.manage cockpit-serve --workspace-root .cache/ws_customer_default --port 8790\n' ;;
     *) return 1 ;;
   esac
 }
@@ -228,6 +230,7 @@ service_check_url() {
     access) printf 'http://127.0.0.1:3005/remoteEntry.js\n' ;;
     audit) printf 'http://127.0.0.1:3006/remoteEntry.js\n' ;;
     reporting) printf 'http://127.0.0.1:3007/remoteEntry.js\n' ;;
+    schema-explorer) printf 'http://127.0.0.1:3008/remoteEntry.js\n' ;;
     cockpit) printf 'http://127.0.0.1:8790/api/status\n' ;;
     *) return 1 ;;
   esac
