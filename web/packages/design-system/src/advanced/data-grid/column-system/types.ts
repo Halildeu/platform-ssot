@@ -66,8 +66,23 @@ export interface BaseColumnMeta {
   /** Responsive: hide column below this breakpoint */
   responsive?: { hideBelow?: 'sm' | 'md' | 'lg' | 'xl' };
 
-  /** Conditional formatting rules (future — field reserved) */
+  /** Conditional formatting rules */
   conditionalRules?: ConditionalRule[];
+
+  /** Calculated field expression (e.g., "price * quantity") */
+  expression?: string;
+
+  /** Schema lineage — source table/column metadata from Schema Explorer */
+  schemaLineage?: {
+    sourceTable: string;
+    sourceColumn: string;
+    sqlDataType: string;
+    isNullable: boolean;
+    isPrimaryKey: boolean;
+    isForeignKey: boolean;
+    referencedTable?: string;
+    referencedColumn?: string;
+  };
 }
 
 /* ------------------------------------------------------------------ */

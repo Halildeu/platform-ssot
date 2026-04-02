@@ -16,6 +16,7 @@ import { useReportingI18n } from '../../i18n/useReportingI18n';
 import type { ReportModule } from '../../modules/types';
 import { buildColDefs, buildDetailRenderer, buildProcessCellCallback } from '@mfe/design-system/advanced/data-grid';
 import { useReportSchemaContext } from '../../hooks/useReportSchemaContext';
+import { enrichColumnsWithSchema } from '../../utils/enrichColumnsWithSchema';
 import { getShellServices } from '../services/shell-services';
 
 /* ------------------------------------------------------------------ */
@@ -113,10 +114,14 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
   /* ---- Column definitions — metadata-first, fallback to legacy ---- */
   const columns = React.useMemo<ColumnDef<TRow>[]>(() => {
     if (module.getColumnMeta) {
-      return buildColDefs<TRow>(module.getColumnMeta(), t, 'tr-TR');
+      const rawMeta = module.getColumnMeta();
+      const enriched = schemaCtx.isAvailable
+        ? enrichColumnsWithSchema(rawMeta, schemaCtx.tables, schemaCtx.relationships)
+        : rawMeta;
+      return buildColDefs<TRow>(enriched, t, 'tr-TR');
     }
     return module.getColumns(t);
-  }, [module, t, ready]);
+  }, [module, t, ready, schemaCtx.isAvailable, schemaCtx.tables, schemaCtx.relationships]);
 
   const colDefs = React.useMemo<ColDef<TRow>[]>(
     () =>
