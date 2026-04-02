@@ -1,5 +1,5 @@
 import React from 'react';
-import { getLiveKPIs, getLiveCharts, refreshDashboardData } from './api';
+import { getLiveKPIs, getLiveCharts } from './api';
 import type { DashboardKPI, DashboardChart, DashboardChartItem } from './api';
 import { BarChart, LineChart, PieChart } from '@mfe/design-system';
 
@@ -12,6 +12,10 @@ const chartRowClass = 'grid grid-cols-1 md:grid-cols-2 gap-4 mb-6';
 const chartFullClass = 'grid grid-cols-1 gap-4 mb-6';
 const cardClass = 'rounded-lg border border-border-subtle bg-surface-default p-4';
 const kpiStripClass = 'grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-6';
+
+/* ------------------------------------------------------------------ */
+/*  Formatters                                                         */
+/* ------------------------------------------------------------------ */
 
 const formatCurrency = (v: number | null): string => {
   if (v == null) return '-';
@@ -28,12 +32,24 @@ const formatDecimal = (v: number | null): string => {
   return v.toFixed(2);
 };
 
+const formatNumber = (v: number | null): string => {
+  if (v == null) return '-';
+  return new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 }).format(v);
+};
+
 const formatValue = (v: number | null, format?: string): string => {
   if (format === 'currency') return formatCurrency(v);
   if (format === 'percent') return formatPercent(v);
   if (format === 'decimal') return formatDecimal(v);
   if (v == null) return '-';
-  return String(v);
+  return formatNumber(v);
+};
+
+/** Chart axis/bar label formatter — compact TRY display */
+const chartCurrencyFormatter = (value: number): string => {
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 1_000) return `${(value / 1_000).toFixed(0)}K`;
+  return formatNumber(value);
 };
 
 const toneColors: Record<string, string> = {
@@ -67,7 +83,7 @@ const KPICard: React.FC<{ kpi: DashboardKPI }> = ({ kpi }) => {
 };
 
 /* ------------------------------------------------------------------ */
-/*  Chart + Mini Grid Block                                            */
+/*  MiniGrid — tabular summary under charts                            */
 /* ------------------------------------------------------------------ */
 
 const MiniGrid: React.FC<{ data: DashboardChartItem[]; columns: { key: string; label: string; format?: string }[] }> = ({ data, columns }) => {
@@ -77,8 +93,11 @@ const MiniGrid: React.FC<{ data: DashboardChartItem[]; columns: { key: string; l
       <table className="w-full text-xs border-collapse">
         <thead>
           <tr className="border-b border-border-subtle">
-            {columns.map((col) => (
-              <th key={col.key} className="px-2 py-1.5 text-left font-medium text-text-subtle whitespace-nowrap">
+            {columns.map((col, idx) => (
+              <th
+                key={col.key}
+                className={`px-2 py-1.5 font-medium text-text-subtle whitespace-nowrap ${idx === 0 ? 'text-left' : 'text-right'}`}
+              >
                 {col.label}
               </th>
             ))}
@@ -87,13 +106,16 @@ const MiniGrid: React.FC<{ data: DashboardChartItem[]; columns: { key: string; l
         <tbody>
           {data.map((row, idx) => (
             <tr key={idx} className="border-b border-border-subtle hover:bg-surface-muted">
-              {columns.map((col) => {
+              {columns.map((col, colIdx) => {
                 const raw = row[col.key];
                 const val = typeof raw === 'number'
-                  ? (col.format === 'currency' ? formatCurrency(raw) : col.format === 'percent' ? formatPercent(raw) : raw.toLocaleString('tr-TR'))
+                  ? (col.format === 'currency' ? formatCurrency(raw) : col.format === 'percent' ? formatPercent(raw) : formatNumber(raw))
                   : (raw ?? '-');
                 return (
-                  <td key={col.key} className="px-2 py-1.5 whitespace-nowrap text-text-primary">
+                  <td
+                    key={col.key}
+                    className={`px-2 py-1.5 whitespace-nowrap text-text-primary ${colIdx === 0 ? 'text-left' : 'text-right'}`}
+                  >
                     {String(val)}
                   </td>
                 );
@@ -106,18 +128,23 @@ const MiniGrid: React.FC<{ data: DashboardChartItem[]; columns: { key: string; l
   );
 };
 
+/* ------------------------------------------------------------------ */
+/*  ChartBlock — card with optional height + MiniGrid                  */
+/* ------------------------------------------------------------------ */
+
 const ChartBlock: React.FC<{
   chart: DashboardChart | undefined;
   title?: string;
+  height?: string;
   children?: React.ReactNode;
   gridColumns?: { key: string; label: string; format?: string }[];
-}> = ({ chart, title, children, gridColumns }) => {
+}> = ({ chart, title, height, children, gridColumns }) => {
   const chartTitle = chart?.title ?? title ?? '';
   const data = chart?.data ?? [];
   return (
     <div className={cardClass}>
       <h3 className="text-sm font-medium text-text-primary mb-3">{chartTitle}</h3>
-      <div className="h-64">
+      <div className={height ?? 'h-64'}>
         {chart && data.length > 0 ? children : <EmptyState />}
       </div>
       {gridColumns && data.length > 0 && <MiniGrid data={data} columns={gridColumns} />}
@@ -129,30 +156,41 @@ const ChartBlock: React.FC<{
 /*  Chart Renderers                                                    */
 /* ------------------------------------------------------------------ */
 
-const renderBarChart = (data: DashboardChartItem[], config?: Record<string, unknown>) => {
+const renderBarChart = (
+  data: DashboardChartItem[],
+  config?: Record<string, unknown>,
+  valueFormatter?: (value: number) => string,
+) => {
   if (!data.length) return <EmptyState />;
   const orientation = config?.orientation === 'horizontal' ? 'horizontal' as const : 'vertical' as const;
-  return <BarChart data={data} orientation={orientation} showValues={Boolean(config?.showValues)} />;
+  return (
+    <BarChart
+      data={data}
+      orientation={orientation}
+      showValues={Boolean(config?.showValues)}
+      valueFormatter={valueFormatter}
+    />
+  );
 };
 
-const renderLineChart = (data: DashboardChartItem[]) => {
+const renderLineChart = (data: DashboardChartItem[], valueFormatter?: (value: number) => string) => {
   if (!data.length) return <EmptyState />;
   const labels = data.map((d) => d.label);
-  const series = [{ name: 'Ort. Maas', data: data.map((d) => d.value) }];
+  const series = [{ name: 'Ort. Maaş', data: data.map((d) => d.value) }];
   if (data.some((d) => d.value2 != null)) {
-    series.push({ name: 'Calisan', data: data.map((d) => (d.value2 as number) ?? 0) });
+    series.push({ name: 'Çalışan', data: data.map((d) => (d.value2 as number) ?? 0) });
   }
-  return <LineChart labels={labels} series={series} showGrid />;
+  return <LineChart labels={labels} series={series} showGrid valueFormatter={valueFormatter} />;
 };
 
-const renderPieChart = (data: DashboardChartItem[]) => {
+const renderPieChart = (data: DashboardChartItem[], valueFormatter?: (value: number) => string) => {
   if (!data.length) return <EmptyState />;
-  return <PieChart data={data} showLegend />;
+  return <PieChart data={data} showLegend valueFormatter={valueFormatter} />;
 };
 
 const EmptyState = () => (
   <div className="flex items-center justify-center h-full text-sm text-text-subtle">
-    Veri bulunamadi
+    Veri bulunamadı
   </div>
 );
 
@@ -204,7 +242,6 @@ const CompensationDashboard: React.FC = () => {
       {!hasData && (
         <div className="mb-6 rounded-lg border border-state-warning-border bg-state-warning-surface p-4 text-sm text-state-warning-text">
           Dashboard verileri yüklenemedi. Backend report-service servisinin çalıştığından ve <code className="font-mono text-xs">hr-compensation</code> dashboard tanımının yüklendiğinden emin olun.
-          Aşağıdaki chart alanları veri geldiğinde otomatik dolacaktır.
         </div>
       )}
 
@@ -212,7 +249,7 @@ const CompensationDashboard: React.FC = () => {
       <div className={kpiStripClass}>
         {kpis.length > 0 ? kpis.map((kpi) => <KPICard key={kpi.id} kpi={kpi} />) : (
           <>
-            {['Medyan Maas', 'Compa-Ratio', 'Cinsiyet Farki', 'Isveren Maliyeti', 'YoY Artis', 'P90/P10', 'Fazla Mesai', 'Gini'].map((label) => (
+            {['Medyan Maaş', 'Compa-Ratio', 'Cinsiyet Farkı', 'İşveren Maliyeti', 'YoY Artış', 'P90/P10', 'Fazla Mesai', 'Gini'].map((label) => (
               <div key={label} className={`${cardClass} flex flex-col gap-1`}>
                 <span className="text-xs text-text-subtle">{label}</span>
                 <span className="text-lg font-semibold text-text-subtle">—</span>
@@ -222,131 +259,135 @@ const CompensationDashboard: React.FC = () => {
         )}
       </div>
 
-      {/* Blok 1: Maas Dagilimi Histogrami */}
+      {/* Maaş Dağılımı Histogramı */}
       <div className={chartFullClass}>
         <ChartBlock
           chart={findChart('salary-histogram')}
-          title="Maas Dagilimi Histogrami"
+          title="Maaş Dağılımı Histogramı"
+          height="h-80"
           gridColumns={[
             { key: 'label', label: 'Bant' },
-            { key: 'value', label: 'Kisi Sayisi' },
+            { key: 'value', label: 'Kişi Sayısı' },
           ]}
         >
           {renderBarChart(findChart('salary-histogram')?.data ?? [], findChart('salary-histogram')?.chartConfig)}
         </ChartBlock>
       </div>
 
-      {/* Blok 2: Departman Bazli Karsilastirma */}
+      {/* Departman Bazlı Maaş Karşılaştırma */}
       <div className={chartFullClass}>
         <ChartBlock
           chart={findChart('dept-salary-comparison')}
-          title="Departman Bazli Maas Karsilastirma"
+          title="Departman Bazlı Maaş Karşılaştırma"
+          height="h-96"
           gridColumns={[
             { key: 'label', label: 'Departman' },
-            { key: 'value', label: 'Ort. Maas', format: 'currency' },
+            { key: 'value', label: 'Ort. Maaş', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('dept-salary-comparison')?.data ?? [], findChart('dept-salary-comparison')?.chartConfig)}
+          {renderBarChart(findChart('dept-salary-comparison')?.data ?? [], { ...findChart('dept-salary-comparison')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter)}
         </ChartBlock>
       </div>
 
-      {/* Blok 3-4: Cinsiyet + Egitim */}
+      {/* Cinsiyet + Eğitim */}
       <div className={chartRowClass}>
         <ChartBlock
           chart={findChart('gender-salary-comparison')}
-          title="Cinsiyet Bazli Maas Karsilastirma"
+          title="Cinsiyet Bazlı Maaş Karşılaştırma"
           gridColumns={[
             { key: 'label', label: 'Departman' },
             { key: 'value', label: 'Erkek Ort.', format: 'currency' },
-            { key: 'value2', label: 'Kadin Ort.', format: 'currency' },
+            { key: 'value2', label: 'Kadın Ort.', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('gender-salary-comparison')?.data ?? [], findChart('gender-salary-comparison')?.chartConfig)}
+          {renderBarChart(findChart('gender-salary-comparison')?.data ?? [], { ...findChart('gender-salary-comparison')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter)}
         </ChartBlock>
 
         <ChartBlock
           chart={findChart('education-salary-premium')}
-          title="Egitim Seviyesi Primi"
+          title="Eğitim Seviyesi Primi"
           gridColumns={[
-            { key: 'label', label: 'Egitim' },
-            { key: 'value', label: 'Ort. Maas', format: 'currency' },
+            { key: 'label', label: 'Eğitim' },
+            { key: 'value', label: 'Ort. Maaş', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('education-salary-premium')?.data ?? [], findChart('education-salary-premium')?.chartConfig)}
+          {renderBarChart(findChart('education-salary-premium')?.data ?? [], { ...findChart('education-salary-premium')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter)}
         </ChartBlock>
       </div>
 
-      {/* Blok 5: 12 Aylik Trend */}
+      {/* 12 Aylık Maaş Trendi */}
       <div className={chartFullClass}>
         <ChartBlock
           chart={findChart('salary-trend-12m')}
-          title="12 Aylik Maas Trendi"
+          title="12 Aylık Maaş Trendi"
+          height="h-80"
           gridColumns={[
             { key: 'label', label: 'Ay' },
-            { key: 'value', label: 'Ort. Maas', format: 'currency' },
-            { key: 'value2', label: 'Calisan Sayisi' },
+            { key: 'value', label: 'Ort. Maaş', format: 'currency' },
+            { key: 'value2', label: 'Çalışan Sayısı' },
           ]}
         >
-          {renderLineChart(findChart('salary-trend-12m')?.data ?? [])}
+          {renderLineChart(findChart('salary-trend-12m')?.data ?? [], chartCurrencyFormatter)}
         </ChartBlock>
       </div>
 
-      {/* Blok 6-7: Yaka Tipi + Kidem */}
+      {/* Yaka Tipi + Kıdem */}
       <div className={chartRowClass}>
         <ChartBlock
           chart={findChart('collar-type-salary')}
-          title="Yaka Tipi Dagilimi"
+          title="Yaka Tipi Dağılımı"
           gridColumns={[
             { key: 'label', label: 'Yaka Tipi' },
-            { key: 'value', label: 'Ort. Maas', format: 'currency' },
-            { key: 'value2', label: 'Kisi Sayisi' },
+            { key: 'value', label: 'Ort. Maaş', format: 'currency' },
+            { key: 'value2', label: 'Kişi Sayısı' },
           ]}
         >
-          {renderBarChart(findChart('collar-type-salary')?.data ?? [], findChart('collar-type-salary')?.chartConfig)}
+          {renderBarChart(findChart('collar-type-salary')?.data ?? [], findChart('collar-type-salary')?.chartConfig, chartCurrencyFormatter)}
         </ChartBlock>
 
         <ChartBlock
           chart={findChart('tenure-salary-relation')}
-          title="Kidem — Maas Iliskisi"
+          title="Kıdem — Maaş İlişkisi"
           gridColumns={[
-            { key: 'label', label: 'Kidem Bandi' },
-            { key: 'value', label: 'Ort. Maas', format: 'currency' },
+            { key: 'label', label: 'Kıdem Bandı' },
+            { key: 'value', label: 'Ort. Maaş', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('tenure-salary-relation')?.data ?? [], findChart('tenure-salary-relation')?.chartConfig)}
+          {renderBarChart(findChart('tenure-salary-relation')?.data ?? [], findChart('tenure-salary-relation')?.chartConfig, chartCurrencyFormatter)}
         </ChartBlock>
       </div>
 
-      {/* Blok 8: Maliyet Selale */}
+      {/* Maliyet Yapısı Şelale */}
       <div className={chartFullClass}>
         <ChartBlock
           chart={findChart('cost-waterfall')}
-          title="Maliyet Yapisi Selale"
+          title="Maliyet Yapısı Şelale"
+          height="h-80"
           gridColumns={[
             { key: 'label', label: 'Maliyet Kalemi' },
             { key: 'value', label: 'Tutar', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('cost-waterfall')?.data ?? [], { showValues: true, showGrid: true })}
+          {renderBarChart(findChart('cost-waterfall')?.data ?? [], { showValues: true, showGrid: true }, chartCurrencyFormatter)}
         </ChartBlock>
       </div>
 
-      {/* Blok 9-10: Sirket Pie + Departman */}
+      {/* Şirket Pie + Departman Yüzdelik */}
       <div className={chartRowClass}>
         <ChartBlock
           chart={findChart('company-payroll-pie')}
-          title="Sirket Bordro Dagilimi"
+          title="Şirket Bordro Dağılımı"
           gridColumns={[
-            { key: 'label', label: 'Sirket' },
+            { key: 'label', label: 'Şirket' },
             { key: 'value', label: 'Toplam Bordro', format: 'currency' },
           ]}
         >
-          {renderPieChart(findChart('company-payroll-pie')?.data ?? [])}
+          {renderPieChart(findChart('company-payroll-pie')?.data ?? [], chartCurrencyFormatter)}
         </ChartBlock>
 
         <ChartBlock
           chart={findChart('dept-percentile-radar')}
-          title="Departman Yuzdelik Karsilastirma"
+          title="Departman Yüzdelik Karşılaştırma"
           gridColumns={[
             { key: 'label', label: 'Departman' },
             { key: 'min_val', label: 'Min', format: 'currency' },
@@ -354,7 +395,7 @@ const CompensationDashboard: React.FC = () => {
             { key: 'max_val', label: 'Max', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('dept-percentile-radar')?.data ?? [], findChart('dept-percentile-radar')?.chartConfig)}
+          {renderBarChart(findChart('dept-percentile-radar')?.data ?? [], { ...findChart('dept-percentile-radar')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter)}
         </ChartBlock>
       </div>
     </div>

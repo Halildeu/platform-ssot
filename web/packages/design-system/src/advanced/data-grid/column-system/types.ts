@@ -298,4 +298,6 @@ export type ColumnDef<TRow = unknown> = {
   valueGetter?: (params: { data: TRow | undefined }) => unknown;
   filterParams?: Record<string, unknown>;
   cellClass?: string | string[];
+  /** AG Grid column type — e.g. 'rightAligned' for numeric columns */
+  type?: string | string[];
 };

@@ -88,6 +88,11 @@ function buildSingleColDef<TRow>(
     sortable: meta.sortable ?? (meta.columnType !== 'actions'),
   };
 
+  /* Right-align numeric column types (AG Grid aligns both cell + header) */
+  if (meta.columnType === 'number' || meta.columnType === 'currency' || meta.columnType === 'percent') {
+    colDef.type = 'rightAligned';
+  }
+
   /* Pinning */
   if (meta.pinned) colDef.pinned = meta.pinned;
   if (meta.columnType === 'actions') colDef.pinned = meta.pinned ?? 'right';

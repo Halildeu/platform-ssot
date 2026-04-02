@@ -136,6 +136,7 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
                     ? 'agSetColumnFilter'
                     : 'agTextColumnFilter',
         };
+        if (c.type) (colDef as Record<string, unknown>).type = c.type;
         if (c.sortable !== undefined) colDef.sortable = c.sortable;
         if (c.floatingFilter !== undefined) colDef.floatingFilter = c.floatingFilter;
         if (c.pinned) colDef.pinned = c.pinned;

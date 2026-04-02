@@ -93,22 +93,24 @@ describe('buildColDefs', () => {
     expect(result[0].cellRenderer).toBeDefined();
   });
 
-  it('number sütunu — agNumberColumnFilter', () => {
+  it('number sütunu — agNumberColumnFilter + rightAligned', () => {
     const meta: ColumnMeta[] = [
       { field: 'amount', headerNameKey: 'col.amount', columnType: 'number', width: 120, suffix: 'dk' },
     ];
     const result = buildColDefs(meta, t);
     expect(result[0].filter).toBe('agNumberColumnFilter');
     expect(result[0].cellRenderer).toBeDefined();
+    expect(result[0].type).toBe('rightAligned');
   });
 
-  it('currency sütunu — agNumberColumnFilter', () => {
+  it('currency sütunu — agNumberColumnFilter + rightAligned', () => {
     const meta: ColumnMeta[] = [
       { field: 'total', headerNameKey: 'col.amount', columnType: 'currency', currencyCode: 'TRY' },
     ];
     const result = buildColDefs(meta, t);
     expect(result[0].filter).toBe('agNumberColumnFilter');
     expect(result[0].cellRenderer).toBeDefined();
+    expect(result[0].type).toBe('rightAligned');
   });
 
   it('boolean sütunu — set filter [true, false]', () => {
@@ -124,13 +126,30 @@ describe('buildColDefs', () => {
     expect(result[0].filterParams?.valueFormatter).toBeDefined();
   });
 
-  it('percent sütunu — agNumberColumnFilter', () => {
+  it('percent sütunu — agNumberColumnFilter + rightAligned', () => {
     const meta: ColumnMeta[] = [
       { field: 'score', headerNameKey: 'col.score', columnType: 'percent', showBar: true },
     ];
     const result = buildColDefs(meta, t);
     expect(result[0].filter).toBe('agNumberColumnFilter');
     expect(result[0].cellRenderer).toBeDefined();
+    expect(result[0].type).toBe('rightAligned');
+  });
+
+  it('text sütunu — rightAligned OLMAZ', () => {
+    const meta: ColumnMeta[] = [
+      { field: 'name', headerNameKey: 'col.name', columnType: 'text' },
+    ];
+    const result = buildColDefs(meta, t);
+    expect(result[0].type).toBeUndefined();
+  });
+
+  it('bold-text sütunu — rightAligned OLMAZ', () => {
+    const meta: ColumnMeta[] = [
+      { field: 'name', headerNameKey: 'col.name', columnType: 'bold-text' },
+    ];
+    const result = buildColDefs(meta, t);
+    expect(result[0].type).toBeUndefined();
   });
 
   it('actions sütunu — filter false, pinned right', () => {
