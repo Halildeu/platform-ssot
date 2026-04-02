@@ -25,11 +25,11 @@
       "source": "EMPLOYEES_PUANTAJ_ROWS",
       "sourceSchema": "workcube_mikrolink",
       "aggregate": {
-        "select": "(SELECT DISTINCT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY epr.SALARY) OVER() FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND epr.SALARY > 0)",
+        "select": "(SELECT DISTINCT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY SALARY) OVER() FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND SALARY > 0)",
         "where": "1=1"
       },
       "trend": {
-        "select": "(SELECT DISTINCT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY epr.SALARY) OVER() FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 2 AND epr.SALARY > 0)",
+        "select": "(SELECT DISTINCT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY SALARY) OVER() FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 2 AND SALARY > 0)",
         "where": "1=1",
         "direction": "higher_is_better"
       },
@@ -47,8 +47,8 @@
       "source": "EMPLOYEES_PUANTAJ_ROWS",
       "sourceSchema": "workcube_mikrolink",
       "aggregate": {
-        "select": "AVG(CASE WHEN dept_med.dept_median > 0 THEN epr.SALARY / dept_med.dept_median ELSE NULL END)",
-        "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND epr.SALARY > 0",
+        "select": "AVG(CASE WHEN dept_med.dept_median > 0 THEN SALARY / dept_med.dept_median ELSE NULL END)",
+        "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND SALARY > 0",
         "join": "INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].PUANTAJ_ID LEFT JOIN (SELECT DEPARTMENT_ID, PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY SALARY) OVER(PARTITION BY DEPARTMENT_ID) AS dept_median FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr2 INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep2 ON ep2.PUANTAJ_ID = epr2.PUANTAJ_ID WHERE ep2.SAL_YEAR = YEAR(GETDATE()) AND ep2.SAL_MON = MONTH(GETDATE()) - 1 AND epr2.SALARY > 0) dept_med ON dept_med.DEPARTMENT_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].DEPARTMENT_ID"
       }
     },
@@ -64,8 +64,8 @@
       "source": "EMPLOYEES_PUANTAJ_ROWS",
       "sourceSchema": "workcube_mikrolink",
       "aggregate": {
-        "select": "1.0 - (AVG(CASE WHEN ed.SEX = 0 THEN epr.SALARY END) / NULLIF(AVG(CASE WHEN ed.SEX = 1 THEN epr.SALARY END), 0))",
-        "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND epr.SALARY > 0",
+        "select": "1.0 - (AVG(CASE WHEN ed.SEX = 0 THEN SALARY END) / NULLIF(AVG(CASE WHEN ed.SEX = 1 THEN SALARY END), 0))",
+        "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND SALARY > 0",
         "join": "INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].PUANTAJ_ID INNER JOIN [workcube_mikrolink].[EMPLOYEES] e ON e.EMPLOYEE_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].EMPLOYEE_ID LEFT JOIN [workcube_mikrolink].[EMPLOYEES_DETAIL] ed ON ed.EMPLOYEE_ID = e.EMPLOYEE_ID"
       },
       "benchmark": { "label": "EU Ort.", "value": 0.13 }
@@ -102,7 +102,7 @@
       "aggregate": {
         "select": "AVG(CASE WHEN prev.SALARY > 0 THEN (cur.SALARY - prev.SALARY) / prev.SALARY ELSE NULL END)",
         "where": "1=1",
-        "join": "(SELECT epr.EMPLOYEE_ID, epr.SALARY FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND epr.SALARY > 0) cur INNER JOIN (SELECT epr.EMPLOYEE_ID, epr.SALARY FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) - 1 AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND epr.SALARY > 0) prev ON cur.EMPLOYEE_ID = prev.EMPLOYEE_ID"
+        "join": "(SELECT EMPLOYEE_ID, SALARY FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND SALARY > 0) cur INNER JOIN (SELECT EMPLOYEE_ID, SALARY FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) - 1 AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND SALARY > 0) prev ON cur.EMPLOYEE_ID = prev.EMPLOYEE_ID"
       }
     },
     {
@@ -117,7 +117,7 @@
       "source": "EMPLOYEES_PUANTAJ_ROWS",
       "sourceSchema": "workcube_mikrolink",
       "aggregate": {
-        "select": "(SELECT DISTINCT PERCENTILE_CONT(0.90) WITHIN GROUP (ORDER BY epr.SALARY) OVER() FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND epr.SALARY > 0) / NULLIF((SELECT DISTINCT PERCENTILE_CONT(0.10) WITHIN GROUP (ORDER BY epr.SALARY) OVER() FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND epr.SALARY > 0), 0)",
+        "select": "(SELECT DISTINCT PERCENTILE_CONT(0.90) WITHIN GROUP (ORDER BY SALARY) OVER() FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND SALARY > 0) / NULLIF((SELECT DISTINCT PERCENTILE_CONT(0.10) WITHIN GROUP (ORDER BY SALARY) OVER() FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND SALARY > 0), 0)",
         "where": "1=1"
       }
     },
@@ -155,7 +155,7 @@
       "source": "EMPLOYEES_PUANTAJ_ROWS",
       "sourceSchema": "workcube_mikrolink",
       "aggregate": {
-        "select": "(SELECT (2.0 * SUM(rn * s.SALARY) / (cnt * SUM(s.SALARY))) - ((cnt + 1.0) / cnt) FROM (SELECT SALARY, ROW_NUMBER() OVER (ORDER BY SALARY) AS rn, COUNT(*) OVER () AS cnt FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND epr.SALARY > 0) s GROUP BY cnt)",
+        "select": "(SELECT (2.0 * SUM(rn * s.SALARY) / (cnt * SUM(s.SALARY))) - ((cnt + 1.0) / cnt) FROM (SELECT SALARY, ROW_NUMBER() OVER (ORDER BY SALARY) AS rn, COUNT(*) OVER () AS cnt FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = epr.PUANTAJ_ID WHERE ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND SALARY > 0) s GROUP BY cnt)",
         "where": "1=1"
       }
     }
@@ -202,11 +202,11 @@
       "source": "EMPLOYEES_PUANTAJ_ROWS",
       "sourceSchema": "workcube_mikrolink",
       "aggregate": {
-        "select": "ISNULL(NULLIF(RTRIM(epr.ROW_DEPARTMENT_HEAD),''), 'Belirtilmemiş') AS label, AVG(CASE WHEN ed.SEX = 1 THEN epr.SALARY END) AS value, AVG(CASE WHEN ed.SEX = 0 THEN epr.SALARY END) AS value2",
-        "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND epr.SALARY > 0",
+        "select": "ISNULL(NULLIF(RTRIM(ROW_DEPARTMENT_HEAD),''), 'Belirtilmemiş') AS label, AVG(CASE WHEN ed.SEX = 1 THEN SALARY END) AS value, AVG(CASE WHEN ed.SEX = 0 THEN SALARY END) AS value2",
+        "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND SALARY > 0",
         "join": "INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].PUANTAJ_ID INNER JOIN [workcube_mikrolink].[EMPLOYEES] e ON e.EMPLOYEE_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].EMPLOYEE_ID LEFT JOIN [workcube_mikrolink].[EMPLOYEES_DETAIL] ed ON ed.EMPLOYEE_ID = e.EMPLOYEE_ID",
-        "groupBy": "ISNULL(NULLIF(RTRIM(epr.ROW_DEPARTMENT_HEAD),''), 'Belirtilmemiş')",
-        "orderBy": "AVG(epr.SALARY) DESC",
+        "groupBy": "ISNULL(NULLIF(RTRIM(ROW_DEPARTMENT_HEAD),''), 'Belirtilmemiş')",
+        "orderBy": "AVG(SALARY) DESC",
         "limit": 10
       },
       "chartConfig": { "grouped": true, "showValues": true, "seriesLabels": ["Erkek", "Kadın"] }
@@ -219,11 +219,11 @@
       "source": "EMPLOYEES_PUANTAJ_ROWS",
       "sourceSchema": "workcube_mikrolink",
       "aggregate": {
-        "select": "CASE ed.LAST_SCHOOL WHEN 1 THEN 'İlkokul' WHEN 8 THEN 'Ortaokul' WHEN 2 THEN 'Lise' WHEN 9 THEN 'Meslek Lisesi' WHEN 3 THEN 'Önlisans' WHEN 4 THEN 'Lisans' WHEN 10 THEN 'Mühendislik' WHEN 11 THEN 'Fakülte' WHEN 5 THEN 'Yüksek Lisans' WHEN 6 THEN 'Doktora' ELSE 'Belirtilmemiş' END AS label, AVG(epr.SALARY) AS value",
-        "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND epr.SALARY > 0",
+        "select": "CASE ed.LAST_SCHOOL WHEN 1 THEN 'İlkokul' WHEN 8 THEN 'Ortaokul' WHEN 2 THEN 'Lise' WHEN 9 THEN 'Meslek Lisesi' WHEN 3 THEN 'Önlisans' WHEN 4 THEN 'Lisans' WHEN 10 THEN 'Mühendislik' WHEN 11 THEN 'Fakülte' WHEN 5 THEN 'Yüksek Lisans' WHEN 6 THEN 'Doktora' ELSE 'Belirtilmemiş' END AS label, AVG(SALARY) AS value",
+        "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND SALARY > 0",
         "join": "INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].PUANTAJ_ID INNER JOIN [workcube_mikrolink].[EMPLOYEES] e ON e.EMPLOYEE_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].EMPLOYEE_ID LEFT JOIN [workcube_mikrolink].[EMPLOYEES_DETAIL] ed ON ed.EMPLOYEE_ID = e.EMPLOYEE_ID",
         "groupBy": "ed.LAST_SCHOOL",
-        "orderBy": "AVG(epr.SALARY) ASC"
+        "orderBy": "AVG(SALARY) ASC"
       },
       "chartConfig": { "orientation": "horizontal", "showValues": true }
     },
@@ -235,8 +235,8 @@
       "source": "EMPLOYEES_PUANTAJ_ROWS",
       "sourceSchema": "workcube_mikrolink",
       "aggregate": {
-        "select": "CAST(ep.SAL_YEAR AS VARCHAR) + '-' + RIGHT('0' + CAST(ep.SAL_MON AS VARCHAR), 2) AS label, AVG(epr.SALARY) AS value, COUNT(epr.EMPLOYEE_ID) AS value2",
-        "where": "(ep.SAL_YEAR = YEAR(GETDATE()) OR (ep.SAL_YEAR = YEAR(GETDATE())-1 AND ep.SAL_MON >= MONTH(GETDATE()))) AND ep.SAL_MON <= CASE WHEN ep.SAL_YEAR = YEAR(GETDATE()) THEN MONTH(GETDATE())-1 ELSE 12 END AND epr.SALARY > 0",
+        "select": "CAST(ep.SAL_YEAR AS VARCHAR) + '-' + RIGHT('0' + CAST(ep.SAL_MON AS VARCHAR), 2) AS label, AVG(SALARY) AS value, COUNT(EMPLOYEE_ID) AS value2",
+        "where": "(ep.SAL_YEAR = YEAR(GETDATE()) OR (ep.SAL_YEAR = YEAR(GETDATE())-1 AND ep.SAL_MON >= MONTH(GETDATE()))) AND ep.SAL_MON <= CASE WHEN ep.SAL_YEAR = YEAR(GETDATE()) THEN MONTH(GETDATE())-1 ELSE 12 END AND SALARY > 0",
         "join": "INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].PUANTAJ_ID",
         "groupBy": "CAST(ep.SAL_YEAR AS VARCHAR) + '-' + RIGHT('0' + CAST(ep.SAL_MON AS VARCHAR), 2)",
         "orderBy": "label ASC"
@@ -251,11 +251,11 @@
       "source": "EMPLOYEES_PUANTAJ_ROWS",
       "sourceSchema": "workcube_mikrolink",
       "aggregate": {
-        "select": "CASE epos.COLLAR_TYPE WHEN 1 THEN 'Beyaz Yaka' WHEN 2 THEN 'Mavi Yaka' ELSE 'Belirtilmemiş' END AS label, AVG(epr.SALARY) AS value, COUNT(*) AS value2",
-        "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND epr.SALARY > 0",
+        "select": "CASE epos.COLLAR_TYPE WHEN 1 THEN 'Beyaz Yaka' WHEN 2 THEN 'Mavi Yaka' ELSE 'Belirtilmemiş' END AS label, AVG(SALARY) AS value, COUNT(*) AS value2",
+        "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND SALARY > 0",
         "join": "INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].PUANTAJ_ID LEFT JOIN [workcube_mikrolink].[EMPLOYEE_POSITIONS] epos ON epos.EMPLOYEE_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].EMPLOYEE_ID AND epos.POSITION_STATUS = 1",
         "groupBy": "epos.COLLAR_TYPE",
-        "orderBy": "AVG(epr.SALARY) DESC"
+        "orderBy": "AVG(SALARY) DESC"
       },
       "chartConfig": { "showValues": true }
     },
@@ -267,8 +267,8 @@
       "source": "EMPLOYEES_PUANTAJ_ROWS",
       "sourceSchema": "workcube_mikrolink",
       "aggregate": {
-        "select": "CASE WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 1 THEN '0-1 yıl' WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 3 THEN '1-3 yıl' WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 5 THEN '3-5 yıl' WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 10 THEN '5-10 yıl' WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 15 THEN '10-15 yıl' ELSE '15+ yıl' END AS label, AVG(epr.SALARY) AS value",
-        "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND epr.SALARY > 0 AND eio.FINISH_DATE IS NULL",
+        "select": "CASE WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 1 THEN '0-1 yıl' WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 3 THEN '1-3 yıl' WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 5 THEN '3-5 yıl' WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 10 THEN '5-10 yıl' WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 15 THEN '10-15 yıl' ELSE '15+ yıl' END AS label, AVG([workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].SALARY) AS value",
+        "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1 AND [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].SALARY > 0 AND eio.FINISH_DATE IS NULL",
         "join": "INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].PUANTAJ_ID INNER JOIN [workcube_mikrolink].[EMPLOYEES_IN_OUT] eio ON eio.EMPLOYEE_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].EMPLOYEE_ID AND eio.FINISH_DATE IS NULL",
         "groupBy": "CASE WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 1 THEN '0-1 yıl' WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 3 THEN '1-3 yıl' WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 5 THEN '3-5 yıl' WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 10 THEN '5-10 yıl' WHEN DATEDIFF(YEAR, eio.START_DATE, GETDATE()) < 15 THEN '10-15 yıl' ELSE '15+ yıl' END",
         "orderBy": "MIN(DATEDIFF(YEAR, eio.START_DATE, GETDATE())) ASC"
@@ -283,7 +283,7 @@
       "source": "EMPLOYEES_PUANTAJ_ROWS",
       "sourceSchema": "workcube_mikrolink",
       "aggregate": {
-        "select": "'Baz Maaş' AS label, SUM(SALARY) AS value UNION ALL SELECT 'SGK İşveren', SUM(SSK_ISVEREN_HISSESI) UNION ALL SELECT 'İşsizlik İşveren', SUM(ISSIZLIK_ISVEREN_HISSESI) UNION ALL SELECT 'Fazla Mesai', SUM(EXT_SALARY) UNION ALL SELECT 'Kıdem+İhbar', SUM(KIDEM_AMOUNT + IHBAR_AMOUNT) FROM [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS] epr2 INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep2 ON ep2.PUANTAJ_ID = epr2.PUANTAJ_ID WHERE ep2.SAL_YEAR = YEAR(GETDATE()) AND ep2.SAL_MON = MONTH(GETDATE()) - 1",
+        "select": "'Toplam Brut' AS label, SUM(SALARY) AS value",
         "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1",
         "join": "INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].PUANTAJ_ID"
       },
@@ -297,11 +297,11 @@
       "source": "EMPLOYEES_PUANTAJ_ROWS",
       "sourceSchema": "workcube_mikrolink",
       "aggregate": {
-        "select": "ISNULL(NULLIF(RTRIM(ep.COMP_NICK_NAME),''), 'Belirtilmemiş') AS label, SUM(epr.SALARY) AS value",
+        "select": "ISNULL(NULLIF(RTRIM(ep.COMP_NICK_NAME),''), 'Belirtilmemiş') AS label, SUM(SALARY) AS value",
         "where": "ep.SAL_YEAR = YEAR(GETDATE()) AND ep.SAL_MON = MONTH(GETDATE()) - 1",
         "join": "INNER JOIN [workcube_mikrolink].[EMPLOYEES_PUANTAJ] ep ON ep.PUANTAJ_ID = [workcube_mikrolink].[EMPLOYEES_PUANTAJ_ROWS].PUANTAJ_ID",
         "groupBy": "ISNULL(NULLIF(RTRIM(ep.COMP_NICK_NAME),''), 'Belirtilmemiş')",
-        "orderBy": "SUM(epr.SALARY) DESC"
+        "orderBy": "SUM(SALARY) DESC"
       },
       "chartConfig": { "showLegend": true }
     },

@@ -108,18 +108,19 @@ const MiniGrid: React.FC<{ data: DashboardChartItem[]; columns: { key: string; l
 
 const ChartBlock: React.FC<{
   chart: DashboardChart | undefined;
+  title?: string;
   children?: React.ReactNode;
   gridColumns?: { key: string; label: string; format?: string }[];
-}> = ({ chart, children, gridColumns }) => {
-  if (!chart) return null;
-  const data = chart.data ?? [];
+}> = ({ chart, title, children, gridColumns }) => {
+  const chartTitle = chart?.title ?? title ?? '';
+  const data = chart?.data ?? [];
   return (
     <div className={cardClass}>
-      <h3 className="text-sm font-medium text-text-primary mb-3">{chart.title}</h3>
+      <h3 className="text-sm font-medium text-text-primary mb-3">{chartTitle}</h3>
       <div className="h-64">
-        {children}
+        {chart && data.length > 0 ? children : <EmptyState />}
       </div>
-      {gridColumns && <MiniGrid data={data} columns={gridColumns} />}
+      {gridColumns && data.length > 0 && <MiniGrid data={data} columns={gridColumns} />}
     </div>
   );
 };
@@ -186,22 +187,46 @@ const CompensationDashboard: React.FC = () => {
     return (
       <div className="flex flex-col gap-4 p-4">
         <div className="h-20 animate-pulse rounded-lg bg-surface-muted" />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="h-64 animate-pulse rounded-lg bg-surface-muted" />
+          <div className="h-64 animate-pulse rounded-lg bg-surface-muted" />
+        </div>
         <div className="h-64 animate-pulse rounded-lg bg-surface-muted" />
       </div>
     );
   }
 
+  const hasData = kpis.length > 0 || charts.length > 0;
+
   return (
     <div className={sectionClass}>
+      {/* Data Source Warning */}
+      {!hasData && (
+        <div className="mb-6 rounded-lg border border-state-warning-border bg-state-warning-surface p-4 text-sm text-state-warning-text">
+          Dashboard verileri yüklenemedi. Backend report-service servisinin çalıştığından ve <code className="font-mono text-xs">hr-compensation</code> dashboard tanımının yüklendiğinden emin olun.
+          Aşağıdaki chart alanları veri geldiğinde otomatik dolacaktır.
+        </div>
+      )}
+
       {/* KPI Strip */}
       <div className={kpiStripClass}>
-        {kpis.map((kpi) => <KPICard key={kpi.id} kpi={kpi} />)}
+        {kpis.length > 0 ? kpis.map((kpi) => <KPICard key={kpi.id} kpi={kpi} />) : (
+          <>
+            {['Medyan Maas', 'Compa-Ratio', 'Cinsiyet Farki', 'Isveren Maliyeti', 'YoY Artis', 'P90/P10', 'Fazla Mesai', 'Gini'].map((label) => (
+              <div key={label} className={`${cardClass} flex flex-col gap-1`}>
+                <span className="text-xs text-text-subtle">{label}</span>
+                <span className="text-lg font-semibold text-text-subtle">—</span>
+              </div>
+            ))}
+          </>
+        )}
       </div>
 
       {/* Blok 1: Maas Dagilimi Histogrami */}
       <div className={chartFullClass}>
         <ChartBlock
           chart={findChart('salary-histogram')}
+          title="Maas Dagilimi Histogrami"
           gridColumns={[
             { key: 'label', label: 'Bant' },
             { key: 'value', label: 'Kisi Sayisi' },
@@ -215,6 +240,7 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartFullClass}>
         <ChartBlock
           chart={findChart('dept-salary-comparison')}
+          title="Departman Bazli Maas Karsilastirma"
           gridColumns={[
             { key: 'label', label: 'Departman' },
             { key: 'value', label: 'Ort. Maas', format: 'currency' },
@@ -228,6 +254,7 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartRowClass}>
         <ChartBlock
           chart={findChart('gender-salary-comparison')}
+          title="Cinsiyet Bazli Maas Karsilastirma"
           gridColumns={[
             { key: 'label', label: 'Departman' },
             { key: 'value', label: 'Erkek Ort.', format: 'currency' },
@@ -239,6 +266,7 @@ const CompensationDashboard: React.FC = () => {
 
         <ChartBlock
           chart={findChart('education-salary-premium')}
+          title="Egitim Seviyesi Primi"
           gridColumns={[
             { key: 'label', label: 'Egitim' },
             { key: 'value', label: 'Ort. Maas', format: 'currency' },
@@ -252,6 +280,7 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartFullClass}>
         <ChartBlock
           chart={findChart('salary-trend-12m')}
+          title="12 Aylik Maas Trendi"
           gridColumns={[
             { key: 'label', label: 'Ay' },
             { key: 'value', label: 'Ort. Maas', format: 'currency' },
@@ -266,6 +295,7 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartRowClass}>
         <ChartBlock
           chart={findChart('collar-type-salary')}
+          title="Yaka Tipi Dagilimi"
           gridColumns={[
             { key: 'label', label: 'Yaka Tipi' },
             { key: 'value', label: 'Ort. Maas', format: 'currency' },
@@ -277,6 +307,7 @@ const CompensationDashboard: React.FC = () => {
 
         <ChartBlock
           chart={findChart('tenure-salary-relation')}
+          title="Kidem — Maas Iliskisi"
           gridColumns={[
             { key: 'label', label: 'Kidem Bandi' },
             { key: 'value', label: 'Ort. Maas', format: 'currency' },
@@ -290,6 +321,7 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartFullClass}>
         <ChartBlock
           chart={findChart('cost-waterfall')}
+          title="Maliyet Yapisi Selale"
           gridColumns={[
             { key: 'label', label: 'Maliyet Kalemi' },
             { key: 'value', label: 'Tutar', format: 'currency' },
@@ -303,6 +335,7 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartRowClass}>
         <ChartBlock
           chart={findChart('company-payroll-pie')}
+          title="Sirket Bordro Dagilimi"
           gridColumns={[
             { key: 'label', label: 'Sirket' },
             { key: 'value', label: 'Toplam Bordro', format: 'currency' },
@@ -313,6 +346,7 @@ const CompensationDashboard: React.FC = () => {
 
         <ChartBlock
           chart={findChart('dept-percentile-radar')}
+          title="Departman Yuzdelik Karsilastirma"
           gridColumns={[
             { key: 'label', label: 'Departman' },
             { key: 'min_val', label: 'Min', format: 'currency' },

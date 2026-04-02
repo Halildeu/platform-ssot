@@ -122,11 +122,15 @@ export const fetchCompensationRows = async (
 ): Promise<GridResponse<HrCompensationRow>> => {
   try {
     const client = resolveHttp();
-    const response = await client.get<{ data: HrCompensationRow[]; total: number }>(
+    const response = await client.get<{ items?: HrCompensationRow[]; data?: HrCompensationRow[]; rows?: HrCompensationRow[]; total: number }>(
       `/v1/reports/${REPORT_KEY}/data?${buildQueryString(filters, request)}`,
     );
-    const rows = Array.isArray(response.data?.data) ? response.data.data : [];
-    const apiTotal = typeof response.data?.total === 'number' ? response.data.total : rows.length;
+    const rawData = response.data;
+    const rows = Array.isArray(rawData?.items) ? rawData.items
+      : Array.isArray(rawData?.data) ? rawData.data
+      : Array.isArray(rawData?.rows) ? rawData.rows
+      : [];
+    const apiTotal = typeof rawData?.total === 'number' ? rawData.total : rows.length;
     const pageSize = request.pageSize ?? 50;
     const total = rows.length < pageSize ? rows.length : apiTotal;
 
