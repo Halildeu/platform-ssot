@@ -337,7 +337,17 @@ function dockerAction(containerName: string, action: 'start' | 'stop' | 'restart
       timeout: 30000,
       encoding: 'utf-8',
     });
-    dockerCacheTime = 0; // invalidate cache
+    // Only invalidate the affected service from cache — not the entire cache.
+    // Setting dockerCacheTime = 0 caused ALL services to flash red while
+    // a single service restarts (batch cache invalidation race condition).
+    for (const [key] of dockerCache.entries()) {
+      if (key.toLowerCase().includes(containerName.toLowerCase())) {
+        dockerCache.delete(key);
+      }
+    }
+    // Force a targeted refresh on next poll without wiping other services' cached state.
+    // Reduce TTL to trigger refresh sooner but keep existing cache entries intact.
+    dockerCacheTime = Date.now() - DOCKER_CACHE_TTL + 1000; // refresh in ~1s
     return { ok: true };
   } catch (e: any) {
     return { ok: false, error: e.message };
