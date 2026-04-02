@@ -140,7 +140,7 @@ const sizeConfig: Record<
 /* ---- Pending dot (loading spinner) ---- */
 
 function PendingDot({ size, className }: { size: TimelineSize; className?: string }) {
-  const s = sizeConfig[size];
+  const s = sizeConfig[size] ?? sizeConfig['md'];
   return (
     <span
       className={cn(
@@ -175,7 +175,7 @@ function TimelineDot({
   pending?: boolean;
   size: TimelineSize;
 }) {
-  const s = sizeConfig[size];
+  const s = sizeConfig[size] ?? sizeConfig['md'];
   const colors = dotColorMap[color];
 
   if (pending && !dot) {
@@ -242,7 +242,10 @@ export const Timeline = React.forwardRef<HTMLDivElement, TimelineProps>(({
     return null;
   }
 
-  const s = sizeConfig[size];
+  if (process.env.NODE_ENV !== 'production' && !sizeConfig[size]) {
+    console.warn(`[Timeline] Invalid size "${String(size)}", falling back to "md".`);
+  }
+  const s = sizeConfig[size] ?? sizeConfig['md'];
 
   // Build final item list
   let finalItems = [...items];
