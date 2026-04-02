@@ -263,40 +263,29 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
     } as Record<string, string>;
   }, [t]);
 
-  /* ---- Footer: Server/Client mode selector ---- */
+  /* ---- Footer: Server/Client mode selector (birebir UsersGrid standardı) ---- */
   const modeSelector = React.useMemo(() => (
-    <div className="flex items-center gap-2 text-xs">
-      <label className="flex items-center gap-1 cursor-pointer">
-        <input
-          type="radio"
-          name={`mode-${module.id}`}
-          checked={dataSourceMode === 'server'}
-          onChange={() => { setDataSourceMode('server'); setReloadSignal((v) => v + 1); }}
-          className="accent-action-primary"
-        />
-        <span className="text-text-secondary">Sunucu</span>
-      </label>
-      <label className="flex items-center gap-1 cursor-pointer">
-        <input
-          type="radio"
-          name={`mode-${module.id}`}
-          checked={dataSourceMode === 'client'}
-          onChange={() => setDataSourceMode('client')}
-          className="accent-action-primary"
-        />
-        <span className="text-text-secondary">İstemci</span>
-      </label>
+    <div className="flex items-center gap-3 text-sm text-text-secondary">
+      <span className="font-semibold text-text-primary">{t('shared.grid.mode.label') || 'Mod'}</span>
+      <select
+        className="rounded-xl border border-border-subtle bg-surface-default px-3 py-1 text-sm font-medium text-text-secondary shadow-xs focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
+        value={dataSourceMode}
+        onChange={(event) => setDataSourceMode(event.target.value as 'server' | 'client')}
+      >
+        <option value="server">{t('shared.grid.mode.server') || 'Sunucu'}</option>
+        <option value="client">{t('shared.grid.mode.client') || 'İstemci'}</option>
+      </select>
       {dataSourceMode === 'client' && (
         <button
           type="button"
           onClick={() => void loadClientData()}
-          className="ml-1 rounded px-2 py-0.5 text-xs bg-surface-muted hover:bg-surface-hover text-text-secondary"
+          className="rounded-lg bg-action-primary px-3 py-1 text-xs font-semibold text-action-primary-text shadow-xs transition hover:opacity-90"
         >
-          ↻ Yenile
+          Yenile
         </button>
       )}
     </div>
-  ), [dataSourceMode, loadClientData, module.id]);
+  ), [dataSourceMode, loadClientData, t]);
 
   /* ---- Breadcrumbs & layout ---- */
   const breadcrumbItems = createPageLayoutBreadcrumbItems(
