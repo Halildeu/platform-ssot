@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import type { IGetRowsParams, IDatasource } from 'ag-grid-community';
 import {
@@ -26,6 +25,7 @@ import { useAuditLiveStream } from '../hooks/useAuditLiveStream';
 import { AuditDetailDrawer } from './AuditDetailDrawer';
 import { getShellServices, type RemoteShellServices } from '../services/shell-services';
 import { parseAuditFeedSearch } from '../utils/audit-feed-deeplink';
+import { useWindowSearch } from '../hooks/useWindowSearch';
 
 const DEFAULT_PAGE_SIZE = 10;
 const PAGE_SIZE_OPTIONS = [10, 25, 50, 100, 200];
@@ -43,7 +43,7 @@ const columnDefs: ColDef<AuditEvent>[] = [
 ];
 
 export const AuditEventFeed: React.FC = () => {
-  const location = useLocation();
+  const locationSearch = useWindowSearch();
   const initialDeepLink = useRef(
     parseAuditFeedSearch(typeof window !== 'undefined' ? window.location.search : ''),
   );
@@ -74,7 +74,8 @@ export const AuditEventFeed: React.FC = () => {
     },
   });
   const initialAuditIdRef = useRef<string | null>(initialDeepLink.current.auditId);
-  const lastSearchRef = useRef<string>(location.search);
+  const lastSearchRef = useRef<string>(locationSearch);
+  const activeRequestRef = useRef<AbortController | null>(null);
   const deeplinkNotifiedRef = useRef(false);
   const deeplinkResolvedRef = useRef(false);
   const userManagedLiveRef = useRef(false);
@@ -129,6 +130,10 @@ export const AuditEventFeed: React.FC = () => {
 
   const requestAuditRows = useCallback(
     async ({ startRow, successCallback, failCallback, sortModel }: IGetRowsParams<AuditEvent>) => {
+      // Cancel any in-flight request before starting a new one
+      activeRequestRef.current?.abort();
+      const controller = new AbortController();
+      activeRequestRef.current = controller;
       try {
         const resolvedPageSize = pageSizeRef.current;
         const page = Math.floor(startRow / resolvedPageSize);
@@ -140,8 +145,10 @@ export const AuditEventFeed: React.FC = () => {
           pageSize: resolvedPageSize,
           auditId: requestedAuditId,
           sort,
-          filters: filters.userEmail || filters.service || filters.level || filters.action ? filters : undefined
+          filters: filters.userEmail || filters.service || filters.level || filters.action ? filters : undefined,
+          signal: controller.signal,
         });
+        if (controller.signal.aborted) return;
         setTotalItems(response.total);
         successCallback(response.events, response.total);
         if (!response.fallback && !userManagedLiveRef.current) {
@@ -167,6 +174,7 @@ export const AuditEventFeed: React.FC = () => {
           }
         }
       } catch (error: unknown) {
+        if (error instanceof Error && error.name === 'AbortError') return;
         console.error('Audit events fetch failed', error);
         failCallback();
         emitTelemetry('fe.audit.grid_fetch_failed', {
@@ -185,9 +193,8 @@ export const AuditEventFeed: React.FC = () => {
   }), [requestAuditRows]);
 
   const onGridReady = useCallback((event: GridReadyEvent<AuditEvent>) => {
-    event.api.setGridOption('datasource', datasource);
     registerGridApi(event.api as AgGridTablePaginationApi<AuditEvent>);
-  }, [datasource, registerGridApi]);
+  }, [registerGridApi]);
 
   const refreshData = useCallback(() => {
     const api = gridApiRef.current;
@@ -197,11 +204,11 @@ export const AuditEventFeed: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (location.search === lastSearchRef.current) {
+    if (locationSearch === lastSearchRef.current) {
       return;
     }
-    lastSearchRef.current = location.search;
-    const deepLink = parseAuditFeedSearch(location.search);
+    lastSearchRef.current = locationSearch;
+    const deepLink = parseAuditFeedSearch(locationSearch);
     setFilters(deepLink.filters);
     setHighlightId(deepLink.auditId);
     initialAuditIdRef.current = deepLink.auditId;
@@ -213,7 +220,7 @@ export const AuditEventFeed: React.FC = () => {
       api.paginationGoToFirstPage?.();
     }
     refreshData();
-  }, [gridApiRef, location.search, refreshData]);
+  }, [gridApiRef, locationSearch, refreshData]);
 
   const handleLiveEvent = useCallback((event: AuditEvent) => {
     setHighlightId(event.id);
@@ -391,7 +398,7 @@ export const AuditEventFeed: React.FC = () => {
     <div>
       <div className="audit-toolbar">
         <form
-          key={location.search || 'audit-filter-default'}
+          key={locationSearch || 'audit-filter-default'}
           data-testid="audit-filter-bar"
           className="audit-filter-bar"
           onSubmit={onFilterSubmit}

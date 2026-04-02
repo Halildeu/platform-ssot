@@ -16,6 +16,7 @@ export type FetchAuditEventsParams = {
   filters?: Record<string, string>;
   sort?: string;
   auditId?: string;
+  signal?: AbortSignal;
 };
 
 export type FetchAuditEventsResponse = {
@@ -147,7 +148,7 @@ export async function fetchAuditEvents(params: FetchAuditEventsParams): Promise<
   const client = resolveHttpClient();
 
   try {
-    const response = await client.get<AuditEventsApiResponse>(endpoint);
+    const response = await client.get<AuditEventsApiResponse>(endpoint, { signal: params.signal });
     const payload = response.data ?? {};
     const events = Array.isArray(payload.events)
       ? payload.events.map(normaliseAuditEvent)

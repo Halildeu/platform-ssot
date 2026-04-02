@@ -559,3 +559,14 @@ describe('Timeline — quality signals', () => {
     expect(screen.getByTestId('async-el')).toBeInTheDocument();
   });
 });
+
+/* ------------------------------------------------------------------ */
+/*  Size prop — runtime safety                                          */
+/* ------------------------------------------------------------------ */
+
+describe('Timeline — size prop', () => {
+  it('invalid size prop renders without crash (falls back to md)', () => {
+    render(<Timeline items={defaultItems} size={'xl' as any} />);
+    expect(screen.getByRole('list')).toBeInTheDocument();
+  });
+});
