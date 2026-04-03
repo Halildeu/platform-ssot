@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NotificationDrawer, type NotificationSurfaceItem } from '@mfe/design-system';
+import { NotificationBell } from './header/NotificationBell';
 
 import {
   useNotificationCenterActions,
@@ -89,19 +90,11 @@ const NotificationCenter: React.FC = () => {
 
   return (
     <>
-      <button
-        type="button"
+      <NotificationBell
+        unreadCount={state.unreadCount}
         onClick={() => toggle()}
-        aria-label="Bildirim merkezini aç"
-        className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border-subtle bg-surface-default text-text-secondary shadow-xs transition hover:bg-surface-muted"
-      >
-        <span aria-hidden>🔔</span>
-        {state.unreadCount > 0 && (
-          <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-state-danger-text px-1 text-center text-[10px] font-semibold text-text-inverse">
-            {state.unreadCount > 99 ? '99+' : state.unreadCount}
-          </span>
-        )}
-      </button>
+        label={drawerTitle}
+      />
       <NotificationDrawer
         open={state.isOpen}
         onClose={() => toggle(false)}

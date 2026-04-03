@@ -139,6 +139,36 @@ const reports = {
   'reports.hrCompensation.columns.overtime': 'Fazla Mesai',
   'reports.hrCompensation.columns.severance': 'Kıdem Tazm.',
   'reports.hrCompensation.columns.critical': 'Kritik Pozisyon',
+
+  // --- Yönetici Özeti ---
+  'reports.nav.hrExecutiveSummary': 'Yönetici Özeti',
+  'reports.hrExecutiveSummary.title': 'Yönetici Özeti',
+  'reports.hrExecutiveSummary.description': 'Üst yönetim tek bakışta: toplam maliyet, turnover, kişi başı maliyet, cinsiyet farkı ve risk alarmları.',
+  'reports.hrExecutiveSummary.breadcrumb': 'Yönetici Özeti',
+
+  // --- Ücret Analitiği (detay) ---
+  'reports.nav.hrSalaryAnalytics': 'Ücret Analitiği (Detay)',
+  'reports.hrSalaryAnalytics.title': 'Ücret Analitiği',
+  'reports.hrSalaryAnalytics.description': 'Sabit ücret, değişken ücret ve ücret hareketleri — departman, kıdem, eğitim, seviye bazlı dağılım ve trend.',
+  'reports.hrSalaryAnalytics.breadcrumb': 'Ücret Analitiği',
+
+  // --- Yan Haklar ---
+  'reports.nav.hrBenefitsLite': 'Yan Haklar',
+  'reports.hrBenefitsLite.title': 'Yan Haklar Analitiği',
+  'reports.hrBenefitsLite.description': 'Ek ödeme, sağlık sigortası, SGK ve bonus analizi — tür, departman ve trend bazlı.',
+  'reports.hrBenefitsLite.breadcrumb': 'Yan Haklar',
+
+  // --- İç Denge ve Risk ---
+  'reports.nav.hrEquityRisk': 'İç Denge ve Risk',
+  'reports.hrEquityRisk.title': 'İç Denge ve Risk',
+  'reports.hrEquityRisk.description': 'Internal equity, cinsiyet farkı, maaş sıkışması, compa-ratio dağılımı ve ayrılma riski analizi.',
+  'reports.hrEquityRisk.breadcrumb': 'İç Denge ve Risk',
+
+  // --- Bordro Trendleri ---
+  'reports.nav.hrPayrollTrends': 'Bordro Trendleri',
+  'reports.hrPayrollTrends.title': 'Bordro Trendleri',
+  'reports.hrPayrollTrends.description': '24 aylık bordro trendi, maliyet yapısı şelale, departman ve şirket bazlı maliyet izleme.',
+  'reports.hrPayrollTrends.breadcrumb': 'Bordro Trendleri',
 };
 
 export default reports;

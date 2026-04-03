@@ -75,7 +75,7 @@ describe('NotificationCenter', () => {
 
     render(<NotificationCenter />);
 
-    expect(screen.getByRole('button', { name: 'Bildirim merkezini aç' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Bildirimler (3 okunmamış)' })).toBeInTheDocument();
     expect(screen.getByText('3')).toBeInTheDocument();
   });
 

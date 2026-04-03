@@ -125,7 +125,7 @@ export type {
   ActionsColumnMeta,
   ActionItem,
   BaseColumnMeta,
-  BadgeVariant,
+  BadgeVariant as ColumnBadgeVariant,
   ConditionalRule,
   TranslateFn,
   FilterConfig,

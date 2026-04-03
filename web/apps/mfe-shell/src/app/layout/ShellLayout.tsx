@@ -2,7 +2,7 @@ import React, { useEffect, _useMemo, useCallback } from "react";
 import { BrowserRouter, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/store.hooks";
 import { useThemeContext } from "../theme/theme-context.provider";
-import { useToast } from "@mfe/design-system";
+import { useToast, useBreakpoint } from "@mfe/design-system";
 import {
   _isSuggestionsRemoteEnabled,
   _isEthicRemoteEnabled,
@@ -18,9 +18,12 @@ import {
 import { logout } from "../../features/auth/model/auth.slice";
 import { Sidebar } from "./Sidebar";
 import AuditSummaryStrip from "./AuditSummaryStrip";
-import { ShellHeader } from "./ShellHeader";
+import { ShellHeaderNew, BreadcrumbStrip } from "./header";
 import { RouteTracker } from "../router/RouteTracker";
 import { AppRouter } from "../router/AppRouter";
+import { useChordNavigation } from "../shortcuts/useChordNavigation";
+import { ChordOverlay } from "../shortcuts/ChordOverlay";
+import { MobileBottomBar } from "./MobileBottomBar";
 
 /* ------------------------------------------------------------------ */
 /*  ShellLayout — Main application layout with header, sidebar, routes */
@@ -33,8 +36,11 @@ const ShellChrome: React.FC = () => {
   const { token, initialized } = authState;
   const showSidebar = Boolean(token);
   const location = useLocation();
+  const { isBelow } = useBreakpoint();
+  const isMobile = isBelow('md');
   const showAuditSummary =
     initialized && location.pathname.startsWith("/audit");
+  const { isPending: chordPending, activeChords } = useChordNavigation();
 
   return (
     <div
@@ -45,24 +51,34 @@ const ShellChrome: React.FC = () => {
       className="flex min-h-screen flex-col"
     >
       {/* Fixed header */}
-      <ShellHeader />
+      <ShellHeaderNew />
 
-      {/* Fixed sidebar — rendered outside normal flow */}
-      {showSidebar ? <Sidebar /> : null}
+      {/* Fixed sidebar — hidden on mobile (navigation in hamburger drawer) */}
+      {showSidebar && !isMobile ? <Sidebar /> : null}
 
       {/* Main content area — offset by header height and sidebar width */}
       <div
         className="flex flex-1 flex-col"
         style={{
           paddingTop: 'var(--shell-header-h, 0px)',
-          paddingLeft: showSidebar ? 'var(--shell-sidebar-w, 0px)' : undefined,
+          paddingLeft: showSidebar && !isMobile ? 'var(--shell-sidebar-w, 0px)' : undefined,
         }}
       >
+        <BreadcrumbStrip showSidebar={showSidebar} maxItems={isMobile ? 3 : undefined} />
         {showAuditSummary ? <AuditSummaryStrip /> : null}
-        <main className="flex min-h-0 flex-1 flex-col px-6 py-4">
+        <main
+          className="flex min-h-0 flex-1 flex-col px-6 py-4"
+          style={{ paddingBottom: isMobile && showSidebar ? '56px' : undefined }}
+        >
           <AppRouter />
         </main>
       </div>
+
+      {/* G-Chord overlay (desktop keyboard navigation) */}
+      {!isMobile && <ChordOverlay isPending={chordPending} chords={activeChords} />}
+
+      {/* Mobile bottom bar (authenticated only) */}
+      {isMobile && showSidebar && <MobileBottomBar />}
     </div>
   );
 };

@@ -115,6 +115,19 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
             _fill: d.color ?? palette[i % palette.length],
           }));
 
+      const clickListener = onDataPointClick ? {
+        nodeClick: (e: any) => {
+          onDataPointClick({
+            datum: e.datum ?? {},
+            seriesId: e.seriesId,
+            xKey: e.xKey,
+            yKey: e.yKey,
+            value: e.datum?.[e.yKey],
+            label: e.datum?.[e.xKey],
+          });
+        },
+      } : undefined;
+
       const barSeries: any[] = hasMultiSeries
         ? seriesDef!.map((s, i) => ({
             type: "bar" as const,
@@ -124,6 +137,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
             yName: s.name,
             fill: s.color ?? palette[i % palette.length],
             cursor: onDataPointClick ? "pointer" : undefined,
+            listeners: clickListener,
             label: showValues ? { formatter: (p: any) => valueFormatter ? valueFormatter(p.value) : String(p.value) } : undefined,
           }))
         : [
@@ -132,8 +146,12 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
               direction: _isHorizontal ? "horizontal" : "vertical",
               xKey: "label",
               yKey: "value",
-              fills: chartData.map((d: any) => d._fill),
+              fill: palette[0],
+              itemStyler: (params: any) => ({
+                fill: chartData[params.itemId % chartData.length]?._fill ?? palette[params.itemId % palette.length],
+              }),
               cursor: onDataPointClick ? "pointer" : undefined,
+              listeners: clickListener,
               label: showValues ? { formatter: (p: any) => valueFormatter ? valueFormatter(p.value) : String(p.value) } : undefined,
             },
           ];
@@ -143,18 +161,6 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         title: title ? { text: title, ...themeOverrides.common?.title } : undefined,
         subtitle: description ? { text: description } : undefined,
         series: barSeries as AgChartOptions["series"],
-        listeners: onDataPointClick ? {
-          seriesNodeClick: (e: any) => {
-            onDataPointClick({
-              datum: e.datum ?? {},
-              seriesId: e.seriesId,
-              xKey: e.xKey,
-              yKey: e.yKey,
-              value: e.datum?.[e.yKey],
-              label: e.datum?.[e.xKey],
-            });
-          },
-        } : undefined,
         legend: { enabled: showLegend || (hasMultiSeries ?? false) },
         theme: {
           overrides: {

@@ -114,6 +114,19 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         return row;
       });
 
+      const clickListener = onDataPointClick ? {
+        seriesNodeClick: (e: any) => {
+          onDataPointClick({
+            datum: e.datum ?? {},
+            seriesId: e.seriesId,
+            xKey: e.xKey,
+            yKey: e.yKey,
+            value: e.datum?.[e.yKey],
+            label: e.datum?.[e.xKey],
+          });
+        },
+      } : undefined;
+
       const agSeries: AgChartOptions["series"] = seriesData.map((s, i) => ({
         type: showArea ? ("area" as const) : ("line" as const),
         xKey: "label",
@@ -125,6 +138,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         marker: { enabled: showDots, size: 6 },
         cursor: onDataPointClick ? "pointer" : undefined,
         interpolation: curved ? { type: "smooth" as const } : undefined,
+        listeners: clickListener,
       }));
 
       return {
@@ -148,18 +162,6 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
             gridLine: { enabled: showGrid },
           },
         ],
-        listeners: onDataPointClick ? {
-          seriesNodeClick: (e: any) => {
-            onDataPointClick({
-              datum: e.datum ?? {},
-              seriesId: e.seriesId,
-              xKey: e.xKey,
-              yKey: e.yKey,
-              value: e.datum?.[e.yKey],
-              label: e.datum?.[e.xKey],
-            });
-          },
-        } : undefined,
         legend: { enabled: showLegend || seriesData.length > 1 },
       } as AgChartOptions;
     }, [seriesData, labels, showDots, showGrid, showLegend, showArea, curved, valueFormatter, animate, title, description, isEmpty, onDataPointClick]);

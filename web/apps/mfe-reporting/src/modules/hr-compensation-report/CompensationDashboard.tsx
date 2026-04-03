@@ -310,6 +310,7 @@ const CompensationDashboard: React.FC<CompensationDashboardProps> = ({ filters: 
     return merged;
   }, [sidebarFilters, crossFilters]);
 
+
   React.useEffect(() => {
     let active = true;
     const timer = setTimeout(() => {

@@ -136,22 +136,24 @@ export const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
               }),
             },
             ...(donut ? { innerRadiusOffset: -40 } : {}),
-            fills: coloredData.map((d) => d._fill),
+            itemStyler: (params: any) => ({
+              fill: coloredData[params.itemId % coloredData.length]?._fill ?? palette[params.itemId % palette.length],
+            }),
             cursor: onDataPointClick ? "pointer" : undefined,
+            listeners: onDataPointClick ? {
+              seriesNodeClick: (e: any) => {
+                onDataPointClick({
+                  datum: e.datum ?? {},
+                  seriesId: e.seriesId,
+                  xKey: undefined,
+                  yKey: e.angleKey,
+                  value: e.datum?.[e.angleKey ?? "value"],
+                  label: e.datum?.label,
+                });
+              },
+            } : undefined,
           } as any,
         ],
-        listeners: onDataPointClick ? {
-          seriesNodeClick: (e: any) => {
-            onDataPointClick({
-              datum: e.datum ?? {},
-              seriesId: e.seriesId,
-              xKey: undefined,
-              yKey: e.angleKey,
-              value: e.datum?.[e.angleKey ?? "value"],
-              label: e.datum?.label,
-            });
-          },
-        } : undefined,
         legend: { enabled: showLegend },
       } as AgChartOptions;
     }, [validData, donut, showLabels, showLegend, showPercentage, valueFormatter, animate, title, description, onDataPointClick]);

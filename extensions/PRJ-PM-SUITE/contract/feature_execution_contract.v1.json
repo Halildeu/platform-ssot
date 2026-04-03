@@ -91,6 +91,7 @@
       "web/apps/mfe-reporting/**/*",
       "web/apps/mfe-shell/src/app/layout/*",
       "web/apps/mfe-shell/src/app/router/*",
+      "web/apps/mfe-shell/src/app/shortcuts/*",
       "web/apps/mfe-shell/src/app/createLazyRemoteModule.tsx",
       "web/apps/mfe-shell/src/types/*",
       "web/apps/mfe-shell/src/pages/**/*",
@@ -317,6 +318,11 @@
         "path_glob": "web/packages/shared-types/**",
         "ux_theme_id": "consistency_and_pattern_governance",
         "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/shortcuts/**",
+        "ux_theme_id": "task_completion_architecture",
+        "ux_subtheme_id": "critical_path_minimization"
       }
     ]
   },
