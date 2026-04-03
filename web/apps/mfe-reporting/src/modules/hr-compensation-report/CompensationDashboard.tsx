@@ -1,11 +1,16 @@
 import React from 'react';
 import { getLiveKPIs, getLiveCharts, refreshDashboardData } from './api';
-import type { DashboardKPI, DashboardChart, DashboardChartItem } from './api';
+import type { DashboardKPI, DashboardChart, DashboardChartItem, DashboardFilters } from './api';
 import { BarChart, PieChart } from '@mfe/design-system';
+import type { ChartClickEvent } from '@mfe/design-system';
 import { AgGridReact } from 'ag-grid-react';
 import { AgCharts } from 'ag-charts-react';
 import type { AgChartOptions } from 'ag-charts-community';
 import type { ColDef } from 'ag-grid-community';
+import type { CrossFilter } from './crossFilterTypes';
+import { CHART_FILTER_MAP, KPI_FILTER_MAP, toggleCrossFilter } from './crossFilterTypes';
+import ActiveFilterChips from './ActiveFilterChips';
+import type { HrCompensationFilters } from './types';
 
 /* ------------------------------------------------------------------ */
 /*  Formatters                                                         */
@@ -66,11 +71,19 @@ const toneColors: Record<string, string> = {
 /*  KPI Card                                                           */
 /* ------------------------------------------------------------------ */
 
-const KPICard: React.FC<{ kpi: DashboardKPI }> = ({ kpi }) => {
+const KPICard: React.FC<{ kpi: DashboardKPI; onClick?: () => void; active?: boolean }> = ({ kpi, onClick, active }) => {
   const toneClass = toneColors[kpi.tone ?? 'info'] ?? 'text-text-primary';
   const trendIcon = kpi.trend?.direction === 'up' ? '\u2191' : kpi.trend?.direction === 'down' ? '\u2193' : '';
+  const interactiveClass = onClick ? 'cursor-pointer hover:ring-2 hover:ring-action-primary/40 transition' : '';
+  const activeClass = active ? 'ring-2 ring-action-primary' : '';
   return (
-    <div className={`${cardClass} flex flex-col gap-1`}>
+    <div
+      className={`${cardClass} flex flex-col gap-1 ${interactiveClass} ${activeClass}`}
+      onClick={onClick}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+    >
       <span className="text-xs text-text-subtle truncate" title={kpi.title}>{kpi.title}</span>
       <span className={`text-lg font-semibold ${toneClass}`}>{formatValue(kpi.value, kpi.format)}</span>
       {kpi.trend && (
@@ -124,11 +137,10 @@ const ChartDataGrid: React.FC<{
   );
 
   return (
-    <div className="ag-theme-quartz mt-3" style={{ height: Math.min(data.length * 36 + 42, 280) }}>
+    <div className="ag-theme-quartz mt-3" style={{ height: Math.min(data.length * 32 + 42, 260) }}>
       <AgGridReact
         rowData={data}
         columnDefs={colDefs}
-        domLayout="autoHeight"
         headerHeight={32}
         rowHeight={32}
         suppressCellFocus
@@ -154,7 +166,7 @@ const ChartBlock: React.FC<{
   return (
     <div className={cardClass}>
       <h3 className="text-sm font-medium text-text-primary mb-3">{chartTitle}</h3>
-      <div className={height ?? 'h-64'}>
+      <div className={`${height ?? 'h-72'} overflow-hidden`}>
         {chart && data.length > 0 ? children : <EmptyState />}
       </div>
       {gridColumns && data.length > 0 && (
@@ -172,6 +184,7 @@ const renderBarChart = (
   data: DashboardChartItem[],
   config?: Record<string, unknown>,
   valueFormatter?: (value: number) => string,
+  onDataPointClick?: (event: ChartClickEvent) => void,
 ) => {
   if (!data.length) return <EmptyState />;
   const orientation = config?.orientation === 'horizontal' ? 'horizontal' as const : 'vertical' as const;
@@ -181,6 +194,7 @@ const renderBarChart = (
       orientation={orientation}
       showValues={Boolean(config?.showValues)}
       valueFormatter={valueFormatter}
+      onDataPointClick={onDataPointClick}
     />
   );
 };
@@ -255,9 +269,13 @@ const DualAxisLineChart: React.FC<{ data: DashboardChartItem[] }> = ({ data }) =
   return <AgCharts options={options} style={{ height: 320, width: '100%' }} />;
 };
 
-const renderPieChart = (data: DashboardChartItem[], valueFormatter?: (value: number) => string) => {
+const renderPieChart = (
+  data: DashboardChartItem[],
+  valueFormatter?: (value: number) => string,
+  onDataPointClick?: (event: ChartClickEvent) => void,
+) => {
   if (!data.length) return <EmptyState />;
-  return <PieChart data={data} showLegend valueFormatter={valueFormatter} />;
+  return <PieChart data={data} showLegend valueFormatter={valueFormatter} onDataPointClick={onDataPointClick} />;
 };
 
 const EmptyState = () => (
@@ -270,32 +288,94 @@ const EmptyState = () => (
 /*  Main Dashboard Component                                           */
 /* ------------------------------------------------------------------ */
 
-const CompensationDashboard: React.FC = () => {
+interface CompensationDashboardProps {
+  filters?: Partial<HrCompensationFilters>;
+}
+
+const CompensationDashboard: React.FC<CompensationDashboardProps> = ({ filters: sidebarFilters }) => {
   const [kpis, setKpis] = React.useState<DashboardKPI[]>([]);
   const [charts, setCharts] = React.useState<DashboardChart[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [retryCount, setRetryCount] = React.useState(0);
+  const [crossFilters, setCrossFilters] = React.useState<CrossFilter[]>([]);
+
+  const effectiveFilters = React.useMemo<DashboardFilters>(() => {
+    const merged: DashboardFilters = { ...sidebarFilters };
+    for (const cf of crossFilters) {
+      if (cf.dimension === 'department') merged.department = String(cf.value);
+      else if (cf.dimension === 'gender') merged.gender = String(cf.value);
+      else if (cf.dimension === 'collarType') merged.collarType = String(cf.value);
+      else if (cf.dimension === 'education') merged.education = String(cf.value);
+    }
+    return merged;
+  }, [sidebarFilters, crossFilters]);
 
   React.useEffect(() => {
     let active = true;
-    setLoading(true);
-    Promise.all([getLiveKPIs(), getLiveCharts()])
-      .then(([k, c]) => {
-        if (active) {
-          setKpis(k ?? []);
-          setCharts(c ?? []);
-        }
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-    return () => { active = false; };
-  }, [retryCount]);
+    const timer = setTimeout(() => {
+      setLoading(true);
+      Promise.all([getLiveKPIs(effectiveFilters), getLiveCharts(effectiveFilters)])
+        .then(([k, c]) => {
+          if (active) {
+            setKpis(k ?? []);
+            setCharts(c ?? []);
+          }
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
+    }, crossFilters.length > 0 || sidebarFilters ? 300 : 0);
+    return () => { active = false; clearTimeout(timer); };
+  }, [effectiveFilters, retryCount]);
 
   const handleRetry = React.useCallback(() => {
     refreshDashboardData();
     setRetryCount((c) => c + 1);
   }, []);
+
+  const handleChartClick = React.useCallback((chartId: string, event: ChartClickEvent) => {
+    const mapping = CHART_FILTER_MAP[chartId];
+    if (!mapping) return;
+    const label = event.label ?? event.datum?.[mapping.valueField] ?? '';
+    if (!label) return;
+    setCrossFilters((prev) =>
+      toggleCrossFilter(prev, {
+        sourceId: `chart:${chartId}`,
+        dimension: mapping.dimension,
+        value: String(label),
+        displayLabel: `${mapping.dimension}: ${label}`,
+      }),
+    );
+  }, []);
+
+  const handleKpiClick = React.useCallback((kpiId: string) => {
+    const dimension = KPI_FILTER_MAP[kpiId];
+    if (!dimension) return;
+    setCrossFilters((prev) =>
+      toggleCrossFilter(prev, {
+        sourceId: `kpi:${kpiId}`,
+        dimension,
+        value: kpiId,
+        displayLabel: `KPI: ${kpiId}`,
+      }),
+    );
+  }, []);
+
+  const handleRemoveFilter = React.useCallback((filter: CrossFilter) => {
+    setCrossFilters((prev) => prev.filter((f) => !(f.dimension === filter.dimension && f.value === filter.value)));
+  }, []);
+
+  const handleClearAll = React.useCallback(() => {
+    setCrossFilters([]);
+  }, []);
+
+  const makeChartClickHandler = React.useCallback(
+    (chartId: string) => {
+      if (!CHART_FILTER_MAP[chartId]) return undefined;
+      return (event: ChartClickEvent) => handleChartClick(chartId, event);
+    },
+    [handleChartClick],
+  );
 
   const findChart = (id: string) => charts.find((c) => c.id === id);
 
@@ -328,9 +408,19 @@ const CompensationDashboard: React.FC = () => {
         </div>
       )}
 
+      {/* Active Cross-Filter Chips */}
+      <ActiveFilterChips filters={crossFilters} onRemove={handleRemoveFilter} onClearAll={handleClearAll} />
+
       {/* KPI Strip */}
       <div className={kpiStripClass}>
-        {kpis.length > 0 ? kpis.map((kpi) => <KPICard key={kpi.id} kpi={kpi} />) : (
+        {kpis.length > 0 ? kpis.map((kpi) => (
+          <KPICard
+            key={kpi.id}
+            kpi={kpi}
+            onClick={KPI_FILTER_MAP[kpi.id] ? () => handleKpiClick(kpi.id) : undefined}
+            active={crossFilters.some((f) => f.sourceId === `kpi:${kpi.id}`)}
+          />
+        )) : (
           <>
             {['Medyan Maaş', 'Compa-Ratio', 'Cinsiyet Farkı', 'İşveren Maliyeti', 'YoY Artış', 'P90/P10', 'Fazla Mesai', 'Gini'].map((label) => (
               <div key={label} className={`${cardClass} flex flex-col gap-1`}>
@@ -353,7 +443,7 @@ const CompensationDashboard: React.FC = () => {
             { key: 'value', label: 'Kişi Sayısı', format: 'number' },
           ]}
         >
-          {renderBarChart(findChart('salary-histogram')?.data ?? [], findChart('salary-histogram')?.chartConfig)}
+          {renderBarChart(findChart('salary-histogram')?.data ?? [], findChart('salary-histogram')?.chartConfig, undefined, makeChartClickHandler('salary-histogram'))}
         </ChartBlock>
       </div>
 
@@ -368,7 +458,7 @@ const CompensationDashboard: React.FC = () => {
             { key: 'value', label: 'Ort. Maaş', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('dept-salary-comparison')?.data ?? [], { ...findChart('dept-salary-comparison')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter)}
+          {renderBarChart(findChart('dept-salary-comparison')?.data ?? [], { ...findChart('dept-salary-comparison')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter, makeChartClickHandler('department-salary'))}
         </ChartBlock>
       </div>
 
@@ -383,7 +473,7 @@ const CompensationDashboard: React.FC = () => {
             { key: 'value2', label: 'Kadın Ort.', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('gender-salary-comparison')?.data ?? [], { ...findChart('gender-salary-comparison')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter)}
+          {renderBarChart(findChart('gender-salary-comparison')?.data ?? [], { ...findChart('gender-salary-comparison')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter, makeChartClickHandler('gender-salary'))}
         </ChartBlock>
 
         <ChartBlock
@@ -394,7 +484,7 @@ const CompensationDashboard: React.FC = () => {
             { key: 'value', label: 'Ort. Maaş', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('education-salary-premium')?.data ?? [], { ...findChart('education-salary-premium')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter)}
+          {renderBarChart(findChart('education-salary-premium')?.data ?? [], { ...findChart('education-salary-premium')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter, makeChartClickHandler('education-salary'))}
         </ChartBlock>
       </div>
 
@@ -425,7 +515,7 @@ const CompensationDashboard: React.FC = () => {
             { key: 'value2', label: 'Kişi Sayısı', format: 'number' },
           ]}
         >
-          {renderBarChart(findChart('collar-type-salary')?.data ?? [], findChart('collar-type-salary')?.chartConfig, chartCurrencyFormatter)}
+          {renderBarChart(findChart('collar-type-salary')?.data ?? [], findChart('collar-type-salary')?.chartConfig, chartCurrencyFormatter, makeChartClickHandler('collar-distribution'))}
         </ChartBlock>
 
         <ChartBlock
@@ -436,7 +526,7 @@ const CompensationDashboard: React.FC = () => {
             { key: 'value', label: 'Ort. Maaş', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('tenure-salary-relation')?.data ?? [], findChart('tenure-salary-relation')?.chartConfig, chartCurrencyFormatter)}
+          {renderBarChart(findChart('tenure-salary-relation')?.data ?? [], findChart('tenure-salary-relation')?.chartConfig, chartCurrencyFormatter, makeChartClickHandler('tenure-salary'))}
         </ChartBlock>
       </div>
 
@@ -445,13 +535,13 @@ const CompensationDashboard: React.FC = () => {
         <ChartBlock
           chart={findChart('cost-waterfall')}
           title="Maliyet Yapısı Şelale"
-          height="h-80"
+          height="h-96"
           gridColumns={[
             { key: 'label', label: 'Maliyet Kalemi' },
             { key: 'value', label: 'Tutar', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('cost-waterfall')?.data ?? [], { showValues: true, showGrid: true }, chartCurrencyFormatter)}
+          {renderBarChart(findChart('cost-waterfall')?.data ?? [], { orientation: 'horizontal', showValues: true, showGrid: true }, chartCurrencyFormatter)}
         </ChartBlock>
       </div>
 
@@ -460,12 +550,13 @@ const CompensationDashboard: React.FC = () => {
         <ChartBlock
           chart={findChart('company-payroll-pie')}
           title="Şirket Bordro Dağılımı"
+          height="h-72"
           gridColumns={[
             { key: 'label', label: 'Şirket' },
             { key: 'value', label: 'Toplam Bordro', format: 'currency' },
           ]}
         >
-          {renderPieChart(findChart('company-payroll-pie')?.data ?? [], chartCurrencyFormatter)}
+          {renderPieChart(findChart('company-payroll-pie')?.data ?? [], chartCurrencyFormatter, makeChartClickHandler('company-payroll'))}
         </ChartBlock>
 
         <ChartBlock
@@ -478,7 +569,7 @@ const CompensationDashboard: React.FC = () => {
             { key: 'max_val', label: 'Max', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('dept-percentile-radar')?.data ?? [], { ...findChart('dept-percentile-radar')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter)}
+          {renderBarChart(findChart('dept-percentile-radar')?.data ?? [], { ...findChart('dept-percentile-radar')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter, makeChartClickHandler('department-percentile'))}
         </ChartBlock>
       </div>
     </div>

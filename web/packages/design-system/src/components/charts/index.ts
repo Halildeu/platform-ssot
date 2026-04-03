@@ -3,7 +3,7 @@
 /* ------------------------------------------------------------------ */
 
 /* Types */
-export type { ChartSize, ChartDataPoint, ChartSeries, ChartLocaleText } from "./types";
+export type { ChartSize, ChartDataPoint, ChartSeries, ChartLocaleText, ChartClickEvent } from "./types";
 
 /* BarChart */
 export { BarChart } from "./BarChart";

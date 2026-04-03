@@ -47,45 +47,73 @@ export interface DashboardChart {
   chartConfig?: Record<string, unknown>;
 }
 
-let _kpiCache: DashboardKPI[] | null = null;
-let _chartCache: DashboardChart[] | null = null;
-let _fetchPromise: Promise<void> | null = null;
+export type DashboardFilters = Partial<Pick<HrCompensationFilters, 'department' | 'gender' | 'collarType' | 'education'>>;
 
-async function fetchDashboardData(timeRange = 'ytd'): Promise<void> {
-  if (_kpiCache && _chartCache) return;
-  if (_fetchPromise) return _fetchPromise;
+const _cache = new Map<string, { kpis: DashboardKPI[] | null; charts: DashboardChart[] | null }>();
+const _pending = new Map<string, Promise<void>>();
 
-  _fetchPromise = (async () => {
+function filterCacheKey(filters?: DashboardFilters): string {
+  if (!filters) return '';
+  const parts: string[] = [];
+  if (filters.department && filters.department !== 'all') parts.push(`d=${filters.department}`);
+  if (filters.gender && filters.gender !== 'all') parts.push(`g=${filters.gender}`);
+  if (filters.collarType && filters.collarType !== 'all') parts.push(`c=${filters.collarType}`);
+  if (filters.education && filters.education !== 'all') parts.push(`e=${filters.education}`);
+  return parts.sort().join('&');
+}
+
+function buildDashboardFilterParams(filters?: DashboardFilters): string {
+  if (!filters) return '';
+  const params = new URLSearchParams();
+  if (filters.department && filters.department !== 'all') params.set('department', filters.department);
+  if (filters.gender && filters.gender !== 'all') params.set('gender', filters.gender);
+  if (filters.collarType && filters.collarType !== 'all') params.set('collarType', filters.collarType);
+  if (filters.education && filters.education !== 'all') params.set('education', filters.education);
+  const str = params.toString();
+  return str ? `&${str}` : '';
+}
+
+async function fetchDashboardData(timeRange = 'ytd', filters?: DashboardFilters): Promise<void> {
+  const key = filterCacheKey(filters);
+  if (_cache.has(key)) return;
+  if (_pending.has(key)) return _pending.get(key);
+
+  const promise = (async () => {
     try {
       const client = resolveHttp();
+      const filterQs = buildDashboardFilterParams(filters);
       const [kpiRes, chartRes] = await Promise.all([
-        client.get<DashboardKPI[]>(`/v1/dashboards/${DASHBOARD_KEY}/kpis?timeRange=${timeRange}`),
-        client.get<DashboardChart[]>(`/v1/dashboards/${DASHBOARD_KEY}/charts?timeRange=${timeRange}`),
+        client.get<DashboardKPI[]>(`/v1/dashboards/${DASHBOARD_KEY}/kpis?timeRange=${timeRange}${filterQs}`),
+        client.get<DashboardChart[]>(`/v1/dashboards/${DASHBOARD_KEY}/charts?timeRange=${timeRange}${filterQs}`),
       ]);
-      if (kpiRes.data) _kpiCache = Array.isArray(kpiRes.data) ? kpiRes.data : null;
-      if (chartRes.data) _chartCache = Array.isArray(chartRes.data) ? chartRes.data : null;
+      const kpis = kpiRes.data && Array.isArray(kpiRes.data) ? kpiRes.data : null;
+      const charts = chartRes.data && Array.isArray(chartRes.data) ? chartRes.data : null;
+      _cache.set(key, { kpis, charts });
     } catch (err) {
       console.warn('[hr-compensation] Dashboard fetch failed:', err);
+      _cache.set(key, { kpis: null, charts: null });
+    } finally {
+      _pending.delete(key);
     }
   })();
 
-  return _fetchPromise;
+  _pending.set(key, promise);
+  return promise;
 }
 
-export const getLiveKPIs = async (): Promise<DashboardKPI[] | null> => {
-  await fetchDashboardData();
-  return _kpiCache;
+export const getLiveKPIs = async (filters?: DashboardFilters): Promise<DashboardKPI[] | null> => {
+  await fetchDashboardData('ytd', filters);
+  return _cache.get(filterCacheKey(filters))?.kpis ?? null;
 };
 
-export const getLiveCharts = async (): Promise<DashboardChart[] | null> => {
-  await fetchDashboardData();
-  return _chartCache;
+export const getLiveCharts = async (filters?: DashboardFilters): Promise<DashboardChart[] | null> => {
+  await fetchDashboardData('ytd', filters);
+  return _cache.get(filterCacheKey(filters))?.charts ?? null;
 };
 
 export const refreshDashboardData = (): void => {
-  _kpiCache = null;
-  _chartCache = null;
-  _fetchPromise = null;
+  _cache.clear();
+  _pending.clear();
 };
 
 /* ------------------------------------------------------------------ */

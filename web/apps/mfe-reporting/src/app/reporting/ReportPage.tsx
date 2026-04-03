@@ -349,7 +349,7 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
         breadcrumbItems={breadcrumbItems}
         descriptionRevealOnHover
       >
-        {module.renderDashboard ? module.renderDashboard(t) : null}
+        {module.renderDashboard ? module.renderDashboard(t, filters) : null}
 
         <EntityGridTemplate<TRow>
           key={reloadSignal}
