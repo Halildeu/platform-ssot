@@ -1,5 +1,25 @@
 # Report Builder Platform — Kapsamlı İyileştirme Planı
 
+## ÖNCELİKLİ — Sonraki Session İlk İş
+
+### Header Dropdown Menu (Design Lab Pattern)
+Header'daki "Raporlar" nav item'ına Design Lab gibi dropdown ekle:
+- **Referans:** `mfe-shell/src/app/layout/DesignLabHeaderMenu.tsx` — Popover + hover-focus trigger
+- **Yeni dosya:** `mfe-shell/src/app/layout/ReportingHeaderMenu.tsx`
+- **İçerik:**
+  - "Yeni Rapor Oluştur" → `/admin/reports/builder`
+  - "Dashboard Oluştur" → `/admin/reports/builder/dashboard`
+  - "SQL Lab" → `/admin/reports/query-lab` (route henüz yok)
+  - "AI ile Rapor" → AI query bar (ReportingHub'a entegre)
+  - Son oluşturulan raporlar (recent)
+- **Entegrasyon:** `ShellHeaderNavbar.tsx`'te "Raporlar" butonunu ReportingHeaderMenu ile değiştir
+- **Wiring tamamlandı:** `/admin/reports/builder`, `/admin/reports/builder/dashboard`, `/admin/reports/builder/edit/:key` route'ları çalışıyor (PR #141 ile merge edildi)
+
+### ReportPage Visualization Toggle Entegrasyonu
+- `ReportVisualizationToggle` bileşeni ReportPage'e henüz eklenmedi
+- Grid üstüne "Görünüm: Tablo | Bar | Line | Pie" toggle ekle
+- Dosya: `mfe-reporting/src/app/reporting/ReportPage.tsx`
+
 ## Mevcut Durum Değerlendirmesi
 
 ### Gerçek Derinlik (Production-Ready)
