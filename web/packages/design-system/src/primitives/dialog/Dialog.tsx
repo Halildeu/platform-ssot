@@ -1,188 +1,200 @@
-import React, { useEffect, useRef, useCallback, useId } from "react";
-import { stateAttrs } from "../../internal/interaction-core";
-import { registerLayer, unregisterLayer } from "../../internal/overlay-engine";
+"use client";
+
+import * as React from "react";
 import { cn } from "../../utils/cn";
-import type { SlotProps } from "../_shared/slot-types";
+import { slotVariants } from "../../system/variants";
+import { setDisplayName, composeRefs } from "../../system/compose";
+import { stateAttrs } from "../../internal/interaction-core/state-attributes";
 
-/* ------------------------------------------------------------------ */
-/*  Dialog — Modal overlay                                             */
-/*                                                                     */
-/*  Built on native <dialog> for accessibility.                        */
-/*  Sizes: sm · md · lg · xl · full                                    */
-/* ------------------------------------------------------------------ */
+// ---------------------------------------------------------------------------
+// Slot Variants
+// ---------------------------------------------------------------------------
 
-export type DialogSize = "sm" | "md" | "lg" | "xl" | "full";
+const dialogStyles = slotVariants({
+  slots: {
+    backdrop: "fixed inset-0 z-50 bg-black/60 backdrop-blur-[2px] data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
+    panel: [
+      "fixed z-50 bg-surface-default rounded-xl shadow-xl border border-border-subtle",
+      "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+      "flex flex-col max-h-[85vh] w-full",
+      "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+      "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
+      "focus-visible:outline-none",
+    ],
+    header: "flex items-start justify-between gap-4 px-6 pt-6 pb-2",
+    title: "text-lg font-semibold text-text-primary leading-tight",
+    description: "text-sm text-text-secondary mt-1",
+    body: "flex-1 overflow-y-auto px-6 py-4",
+    footer: "flex items-center justify-end gap-3 px-6 pb-6 pt-2",
+    closeButton: [
+      "absolute right-4 top-4 rounded-md p-1",
+      "text-text-secondary hover:text-text-primary hover:bg-surface-muted",
+      "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary",
+    ],
+  },
+  variants: {
+    size: {
+      sm: "",
+      md: "",
+      lg: "",
+      xl: "",
+      full: "",
+    },
+  },
+  compoundVariants: [
+    { size: "sm", slot: "panel", className: "max-w-sm" },
+    { size: "md", slot: "panel", className: "max-w-lg" },
+    { size: "lg", slot: "panel", className: "max-w-2xl" },
+    { size: "xl", slot: "panel", className: "max-w-4xl" },
+    { size: "full", slot: "panel", className: "max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)]" },
+  ],
+  defaultVariants: {
+    size: "md",
+  },
+});
 
-export type DialogSlot = "root" | "backdrop" | "panel" | "title" | "description";
+// ---------------------------------------------------------------------------
+// Close icon
+// ---------------------------------------------------------------------------
 
-/** Props for the Dialog component.
- * @example
- * ```tsx
- * <Dialog />
- * ```
- * @since 1.0.0
- * @see [Docs](https://design.mfe.dev/components/dialog)
- */
+function CloseIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+      <path d="M4 4l8 8M12 4l-8 8" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
 export interface DialogProps {
   open: boolean;
   onClose: () => void;
-  size?: DialogSize;
-  /** Show close button */
-  closable?: boolean;
-  /** Close on backdrop click */
-  closeOnBackdrop?: boolean;
-  /** Close on Escape key */
-  closeOnEscape?: boolean;
-  /** Title for header */
+  size?: "sm" | "md" | "lg" | "xl" | "full";
   title?: React.ReactNode;
-  /** Description below title */
   description?: React.ReactNode;
-  /** Footer content (actions) */
   footer?: React.ReactNode;
+  closable?: boolean;
+  closeOnBackdrop?: boolean;
+  closeOnEscape?: boolean;
+  children?: React.ReactNode;
   className?: string;
-  children: React.ReactNode;
-  /** Override props (className, style, etc.) on internal slot elements */
-  slotProps?: SlotProps<DialogSlot>;
 }
 
-const sizeStyles: Record<DialogSize, string> = {
-  sm: "max-w-sm",
-  md: "max-w-md",
-  lg: "max-w-lg",
-  xl: "max-w-2xl",
-  full: "max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)]",
-};
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
-/** Accessible modal overlay built on native dialog with configurable size, title, and footer. */
-export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(({
-  open,
-  onClose,
-  size = "md",
-  closable = true,
-  closeOnBackdrop = true,
-  closeOnEscape = true,
-  title,
-  description,
-  footer,
-  className,
-  children,
-  slotProps,
-}, forwardedRef) => {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const layerId = useId();
+const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(
+  function Dialog(props, ref) {
+    const {
+      open,
+      onClose,
+      size,
+      title,
+      description,
+      footer,
+      closable = true,
+      closeOnBackdrop = true,
+      closeOnEscape = true,
+      children,
+      className,
+    } = props;
 
-  /* ---- layer-stack registration ---- */
-  useEffect(() => {
-    if (open) {
-      registerLayer(layerId, "modal");
-    }
-    return () => {
-      if (open) {
-        unregisterLayer(layerId);
+    const dialogRef = React.useRef<HTMLDialogElement>(null);
+    const composedRef = composeRefs(ref, dialogRef);
+
+    // Sync native dialog open state
+    React.useEffect(() => {
+      const el = dialogRef.current;
+      if (!el) return;
+
+      if (open && !el.open) {
+        el.showModal();
+      } else if (!open && el.open) {
+        el.close();
       }
-    };
-  }, [open, layerId]);
+    }, [open]);
 
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
+    // Escape key handling
+    const handleCancel = React.useCallback(
+      (e: React.SyntheticEvent) => {
+        e.preventDefault();
+        if (closeOnEscape && closable) onClose();
+      },
+      [closeOnEscape, closable, onClose],
+    );
 
-    if (open && !dialog.open) {
-      dialog.showModal();
-    } else if (!open && dialog.open) {
-      dialog.close();
-    }
-  }, [open]);
+    // Backdrop click
+    const handleBackdropClick = React.useCallback(
+      (e: React.MouseEvent) => {
+        if (closeOnBackdrop && closable && e.target === dialogRef.current) {
+          onClose();
+        }
+      },
+      [closeOnBackdrop, closable, onClose],
+    );
 
-  const handleCancel = useCallback(
-    (e: React.SyntheticEvent) => {
-      e.preventDefault();
-      if (closeOnEscape) onClose();
-    },
-    [closeOnEscape, onClose],
-  );
+    const styles = dialogStyles({ size });
+    const state = open ? "open" : "closed";
 
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDialogElement>) => {
-      if (closeOnBackdrop && e.target === dialogRef.current) {
-        onClose();
-      }
-    },
-    [closeOnBackdrop, onClose],
-  );
+    return (
+      <dialog
+        ref={composedRef}
+        className={cn(
+          "fixed inset-0 z-50 m-0 h-screen w-screen bg-transparent p-0",
+          "backdrop:bg-transparent",
+          className,
+        )}
+        onCancel={handleCancel}
+        onClick={handleBackdropClick}
+        {...stateAttrs({ state, component: "dialog" })}
+      >
+        {/* Backdrop */}
+        <div className={styles.backdrop} data-state={state} aria-hidden />
 
-  if (!open) return null;
+        {/* Panel */}
+        <div
+          className={styles.panel}
+          data-state={state}
+          role="document"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Close button */}
+          {closable && (
+            <button
+              type="button"
+              className={styles.closeButton}
+              onClick={onClose}
+              aria-label="Close"
+            >
+              <CloseIcon />
+            </button>
+          )}
 
-  return (
-    <dialog
-      ref={(node) => {
-        (dialogRef as React.MutableRefObject<HTMLDialogElement | null>).current = node;
-        if (typeof forwardedRef === 'function') forwardedRef(node);
-        else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLDialogElement | null>).current = node;
-      }}
-      onCancel={handleCancel}
-      onClick={handleBackdropClick}
-      {...stateAttrs({ state: open ? "open" : "closed", component: "dialog" })}
-      {...slotProps?.root}
-      className={cn(
-        "fixed inset-0 z-[1400] m-auto rounded-2xl border border-border-subtle",
-        "bg-surface-default p-0 shadow-xl",
-        "backdrop:bg-surface-inverse/50 backdrop:backdrop-blur-xs",
-        "open:animate-in open:fade-in-0 open:zoom-in-95",
-        sizeStyles[size],
-        size !== "full" && "w-full",
-        className,
-        slotProps?.root?.className,
-      )}
-    >
-      <div {...slotProps?.panel} className={cn("flex max-h-[85vh] flex-col", slotProps?.panel?.className)}>
-        {/* Header */}
-        {(title || closable) && (
-          <div className="flex items-start justify-between gap-4 border-b border-border-subtle px-6 py-4">
-            <div>
-              {title && (
-                <div {...slotProps?.title} className={cn("text-lg font-semibold text-text-primary", slotProps?.title?.className)}>
-                  {title}
-                </div>
-              )}
-              {description && (
-                <div {...slotProps?.description} className={cn("mt-1 text-sm text-text-secondary", slotProps?.description?.className)}>
-                  {description}
-                </div>
-              )}
+          {/* Header */}
+          {(title || description) && (
+            <div className={styles.header}>
+              <div>
+                {title && <h2 className={styles.title}>{title}</h2>}
+                {description && <p className={styles.description}>{description}</p>}
+              </div>
             </div>
-            {closable && (
-              <button
-                type="button"
-                onClick={onClose}
-                className="shrink-0 rounded-lg p-1.5 text-text-secondary transition hover:bg-surface-muted hover:text-text-primary"
-                aria-label="Close"
-              >
-                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M15 5L5 15M5 5l10 10"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
-            )}
-          </div>
-        )}
+          )}
 
-        {/* Body */}
-        <div className="flex-1 overflow-auto px-6 py-4">{children}</div>
+          {/* Body */}
+          <div className={styles.body}>{children}</div>
 
-        {/* Footer */}
-        {footer && (
-          <div className="flex items-center justify-end gap-2 border-t border-border-subtle px-6 py-3">
-            {footer}
-          </div>
-        )}
-      </div>
-    </dialog>
-  );
-});
+          {/* Footer */}
+          {footer && <div className={styles.footer}>{footer}</div>}
+        </div>
+      </dialog>
+    );
+  },
+);
 
-Dialog.displayName = "Dialog";
+setDisplayName(Dialog, "Dialog");
+
+export { Dialog, dialogStyles };

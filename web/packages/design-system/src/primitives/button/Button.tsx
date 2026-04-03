@@ -1,265 +1,209 @@
-import React, { forwardRef } from "react";
+"use client";
+
+import * as React from "react";
 import { cn } from "../../utils/cn";
+import { variants, type VariantProps } from "../../system/variants";
+import { composeRefs, setDisplayName } from "../../system/compose";
 import { Slot } from "../_shared/Slot";
-import { Spinner } from "../spinner/Spinner";
 import {
   resolveAccessState,
   shouldBlockInteraction,
-  stateAttrs,
-  focusRingClass,
-  focusRingClassWithColor,
-  guardAria,
+  accessStyles,
   type AccessLevel,
-} from "../../internal/interaction-core";
+} from "../../internal/access-controller";
+import { stateAttrs } from "../../internal/interaction-core/state-attributes";
 
-/* ------------------------------------------------------------------ */
-/*  Button                                                             */
-/*                                                                     */
-/*  Variants: primary · secondary · outline · ghost · danger · link    */
-/*  Sizes:    xs · sm · md · lg · xl                                   */
-/* ------------------------------------------------------------------ */
+// ---------------------------------------------------------------------------
+// Variant Definition
+// ---------------------------------------------------------------------------
 
-export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "outline"
-  | "ghost"
-  | "danger"
-  | "link";
+const buttonVariants = variants({
+  base: [
+    "inline-flex items-center justify-center gap-2",
+    "rounded-md font-medium whitespace-nowrap",
+    "transition-colors duration-150 ease-out",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-action-primary",
+    "disabled:pointer-events-none disabled:opacity-50",
+    "select-none cursor-pointer",
+  ],
+  variants: {
+    variant: {
+      primary:
+        "bg-action-primary text-text-inverse shadow-sm hover:bg-action-primary-hover active:bg-action-primary-active",
+      secondary:
+        "bg-surface-muted text-text-primary border border-border-default hover:bg-surface-raised active:bg-surface-muted",
+      outline:
+        "border border-border-default text-text-primary bg-transparent hover:bg-surface-muted active:bg-surface-raised",
+      ghost:
+        "text-text-primary bg-transparent hover:bg-surface-muted active:bg-surface-raised",
+      danger:
+        "bg-red-600 text-white shadow-sm hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-500",
+      link:
+        "text-action-primary underline-offset-4 hover:underline p-0 h-auto",
+    },
+    size: {
+      xs: "h-7 px-2.5 text-xs rounded",
+      sm: "h-8 px-3 text-sm",
+      md: "h-9 px-4 text-sm",
+      lg: "h-10 px-5 text-base",
+      xl: "h-12 px-6 text-base",
+    },
+    density: {
+      compact: "gap-1",
+      comfortable: "gap-2",
+      spacious: "gap-3",
+    },
+    fullWidth: {
+      true: "w-full",
+    },
+  },
+  compoundVariants: [
+    { variant: "link", size: "xs", className: "text-xs" },
+    { variant: "link", size: "sm", className: "text-sm" },
+    { variant: "link", size: "lg", className: "text-base" },
+  ],
+  defaultVariants: {
+    variant: "primary",
+    size: "md",
+    density: "comfortable",
+  },
+});
 
-export type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
+// ---------------------------------------------------------------------------
+// Icon sizing
+// ---------------------------------------------------------------------------
 
-export type ButtonDensity = "compact" | "comfortable" | "spacious";
+const iconSizeMap: Record<string, string> = {
+  xs: "h-3.5 w-3.5",
+  sm: "h-4 w-4",
+  md: "h-4 w-4",
+  lg: "h-5 w-5",
+  xl: "h-5 w-5",
+};
 
-export type ButtonProps<C extends React.ElementType = "button"> = {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  /** Density controls padding/spacing */
-  density?: ButtonDensity;
-  /** Render a loading spinner and disable interaction */
-  loading?: boolean;
-  /** Icon placed before children */
-  leftIcon?: React.ReactNode;
-  /** Icon placed after children */
-  rightIcon?: React.ReactNode;
-  /** Stretch to fill parent width */
-  fullWidth?: boolean;
-  /** Render as icon-only (square aspect ratio) */
-  iconOnly?: boolean;
-  /** Access level — controls disabled/readonly state via access-controller */
-  access?: AccessLevel;
-  /** Tooltip/title text explaining access restriction */
-  accessReason?: string;
-  /**
-   * Render as a different element type (polymorphic).
-   * @example <Button as="a" href="/login">Login</Button>
-   */
-  as?: C;
-  /**
-   * Render via Slot — merges Button props onto the child element.
-   * @example <Button asChild><a href="/login">Login</a></Button>
-   */
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+type ButtonVariantProps = VariantProps<typeof buttonVariants.variants>;
+
+export interface ButtonProps
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "disabled">,
+    ButtonVariantProps {
   asChild?: boolean;
-} & Omit<React.ComponentPropsWithoutRef<C>, "as" | "asChild" | "variant" | "size" | "density" | "loading" | "leftIcon" | "rightIcon" | "fullWidth" | "iconOnly" | "access" | "accessReason">;
+  loading?: boolean;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  iconOnly?: boolean;
+  access?: AccessLevel;
+  accessReason?: string;
+  disabled?: boolean;
+}
 
-const densityStyles: Record<ButtonDensity, string> = {
-  compact: "px-2 py-0.5",
-  comfortable: "",
-  spacious: "px-5 py-3",
-};
+// ---------------------------------------------------------------------------
+// Spinner SVG (inline — no circular dep)
+// ---------------------------------------------------------------------------
 
-const variantStyles: Record<ButtonVariant, string> = {
-  primary: [
-    "bg-action-primary text-text-inverse",
-    "hover:bg-accent-primary-hover",
-    "active:bg-[var(--action-primary-active)]",
-    "shadow-xs",
-  ].join(" "),
+function ButtonSpinner({ className }: { className?: string }) {
+  return (
+    <svg className={cn("animate-spin", className)} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    </svg>
+  );
+}
 
-  secondary: [
-    "bg-surface-muted text-text-primary",
-    "hover:bg-border-subtle",
-    "active:bg-border-default",
-  ].join(" "),
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
-  outline: [
-    "border border-border-default bg-transparent text-text-primary",
-    "hover:bg-surface-muted",
-    "active:bg-border-subtle",
-  ].join(" "),
-
-  ghost: [
-    "bg-transparent text-text-primary",
-    "hover:bg-surface-muted",
-    "active:bg-border-subtle",
-  ].join(" "),
-
-  danger: [
-    "bg-state-danger-text text-text-inverse",
-    "hover:brightness-110",
-    "active:brightness-90",
-    "shadow-xs",
-  ].join(" "),
-
-  link: [
-    "bg-transparent text-action-primary underline-offset-4",
-    "hover:underline",
-    "active:text-[var(--action-primary-active)]",
-    "p-0 h-auto",
-  ].join(" "),
-};
-
-const sizeStyles: Record<ButtonSize, string> = {
-  xs: "h-7 px-2.5 text-xs gap-1 rounded-md",
-  sm: "h-8 px-3 text-xs gap-1.5 rounded-lg",
-  md: "h-9 px-4 text-sm gap-2 rounded-lg",
-  lg: "h-10 px-5 text-sm gap-2 rounded-xl",
-  xl: "h-12 px-6 text-base gap-2.5 rounded-xl",
-};
-
-const iconOnlySizes: Record<ButtonSize, string> = {
-  xs: "h-7 w-7 rounded-md",
-  sm: "h-8 w-8 rounded-lg",
-  md: "h-9 w-9 rounded-lg",
-  lg: "h-10 w-10 rounded-xl",
-  xl: "h-12 w-12 rounded-xl",
-};
-
-/**
- * Primary action trigger with solid, outline, ghost, and link variants in multiple sizes.
- *
- * @example
- * ```tsx
- * <Button variant="primary" size="md" onClick={handleSave}>
- *   Save Changes
- * </Button>
- * ```
- */
-export const Button = forwardRef<HTMLElement, ButtonProps>(
-  (
-    {
-      variant = "primary",
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  function Button(props, ref) {
+    const {
+      className,
+      variant,
       size = "md",
-      density = "comfortable",
+      density,
+      fullWidth,
+      asChild = false,
       loading = false,
       leftIcon,
       rightIcon,
-      fullWidth = false,
       iconOnly = false,
-      access = "full",
+      access,
       accessReason,
-      disabled,
-      className,
+      disabled: disabledProp,
       children,
-      title,
       onClick,
-      as,
-      asChild = false,
       ...rest
-    },
-    ref,
-  ) => {
-    // Task 1: warn when iconOnly lacks accessible label
-    if (process.env.NODE_ENV !== "production") {
-      if (iconOnly && !rest["aria-label"] && !rest["aria-labelledby"] && !title) {
-        console.warn(
-          "Button: `iconOnly` is true but no `aria-label`, `aria-labelledby`, or `title` was provided. " +
-            "This makes the button inaccessible to screen readers.",
-        );
-      }
-    }
+    } = props;
 
     const accessState = resolveAccessState(access);
-    const blockedByAccess = shouldBlockInteraction(access, disabled);
-    const isDisabled = disabled || loading || blockedByAccess;
+    if (accessState.isHidden) return null;
 
-    const focusClass =
-      variant === "danger"
-        ? focusRingClassWithColor("ring", "var(--state-error-text)")
-        : focusRingClass("ring");
+    const isDisabled = disabledProp || loading || shouldBlockInteraction(accessState.state);
 
-    const mergedClassName = cn(
-      "inline-flex items-center justify-center font-medium transition-all duration-150",
-      "select-none whitespace-nowrap",
-      "disabled:pointer-events-none disabled:opacity-50",
-      accessState.isHidden && "invisible",
-      variantStyles[variant],
-      focusClass,
-      iconOnly ? iconOnlySizes[size] : sizeStyles[size],
-      density !== "comfortable" && densityStyles[density],
-      fullWidth && "w-full",
-      className,
-    );
-
-    const sharedProps = {
-      title: accessReason ?? title,
-      onClick: blockedByAccess
-        ? (e: React.MouseEvent) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }
-        : onClick,
-      className: mergedClassName,
-      "aria-busy": loading || undefined,
-      "aria-disabled": isDisabled || undefined,
-      ...stateAttrs({
-        access,
-        disabled: isDisabled,
-        loading,
-        component: "button",
-      }),
-      ...guardAria({ access, disabled: isDisabled }),
-      ...rest,
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (isDisabled) { e.preventDefault(); return; }
+      onClick?.(e);
     };
 
-    const inner = loading ? (
-      <>
-        <Spinner size={size === "xs" || size === "sm" ? "xs" : "sm"} />
-        {!iconOnly && children && (
-          <span className="ms-1.5">{children}</span>
-        )}
-      </>
-    ) : (
-      <>
-        {leftIcon && (
-          <span className="shrink-0 [&>svg]:h-[1em] [&>svg]:w-[1em]">
-            {leftIcon}
-          </span>
-        )}
-        {children}
-        {rightIcon && (
-          <span className="shrink-0 [&>svg]:h-[1em] [&>svg]:w-[1em]">
-            {rightIcon}
-          </span>
-        )}
-      </>
-    );
+    const iconClass = iconSizeMap[size] ?? iconSizeMap.md;
+    const renderIcon = (icon: React.ReactNode) =>
+      icon ? <span className={cn("shrink-0 [&>svg]:size-full", iconClass)} aria-hidden>{icon}</span> : null;
 
-    // asChild: render via Slot, merging props onto the child element
-    if (asChild) {
-      return (
-        <Slot ref={ref} {...sharedProps}>
-          {children}
-        </Slot>
-      );
-    }
-
-    // Polymorphic: render as the given element type
-    const Component = (as || "button") as React.ElementType;
+    const Comp = asChild ? Slot : "button";
 
     return (
-      <Component
-        ref={ref as React.Ref<never>}
-        {...(Component === "button" ? { type: "button", disabled: isDisabled } : {})}
-        {...sharedProps}
+      <Comp
+        ref={ref}
+        type={asChild ? undefined : "button"}
+        className={cn(
+          buttonVariants({ variant, size, density, fullWidth }),
+          iconOnly && "aspect-square p-0",
+          loading && "cursor-wait",
+          accessState.isReadonly && "pointer-events-none opacity-70",
+          accessStyles(access),
+          className,
+        )}
+        disabled={isDisabled}
+        aria-disabled={isDisabled || undefined}
+        aria-busy={loading || undefined}
+        title={accessState.isDisabled ? accessReason : undefined}
+        onClick={handleClick}
+        {...stateAttrs({ access, loading, disabled: isDisabled, component: "button" })}
+        {...rest}
       >
-        {inner}
-      </Component>
+        {loading ? <ButtonSpinner className={iconClass} /> : renderIcon(leftIcon)}
+        {!iconOnly && children}
+        {!loading && renderIcon(rightIcon)}
+      </Comp>
     );
   },
 );
 
-Button.displayName = "Button";
+setDisplayName(Button, "Button");
 
-/** Default button props (non-polymorphic) for simple use cases. */
-export interface ButtonDefaultProps extends Omit<ButtonProps<'button'>, keyof React.ComponentPropsWithoutRef<'button'>> {}
+// ---------------------------------------------------------------------------
+// IconButton
+// ---------------------------------------------------------------------------
+
+export interface IconButtonProps extends Omit<ButtonProps, "iconOnly" | "leftIcon" | "rightIcon"> {
+  "aria-label": string;
+  icon: React.ReactNode;
+}
+
+const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+  function IconButton({ icon, children, ...props }, ref) {
+    return (
+      <Button ref={ref} iconOnly variant="ghost" size="sm" {...props}>
+        {icon}
+      </Button>
+    );
+  },
+);
+
+setDisplayName(IconButton, "IconButton");
+
+export { Button, IconButton, buttonVariants };
+export type { ButtonVariantProps };

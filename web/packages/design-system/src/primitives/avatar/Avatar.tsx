@@ -1,108 +1,104 @@
-import React from "react";
+"use client";
+
+import * as React from "react";
 import { cn } from "../../utils/cn";
-import { stateAttrs } from "../../internal/interaction-core";
+import { variants } from "../../system/variants";
+import { setDisplayName } from "../../system/compose";
 
-/* ------------------------------------------------------------------ */
-/*  Avatar — User / entity representation                              */
-/* ------------------------------------------------------------------ */
+// ---------------------------------------------------------------------------
+// Variants
+// ---------------------------------------------------------------------------
 
-export type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
-export type AvatarShape = "circle" | "square";
+const avatarVariants = variants({
+  base: "relative inline-flex items-center justify-center overflow-hidden bg-surface-muted select-none shrink-0",
+  variants: {
+    size: {
+      xs: "h-6 w-6 text-[10px]",
+      sm: "h-8 w-8 text-xs",
+      md: "h-10 w-10 text-sm",
+      lg: "h-12 w-12 text-base",
+      xl: "h-16 w-16 text-lg",
+    },
+    shape: {
+      circle: "rounded-full",
+      square: "rounded-lg",
+    },
+  },
+  defaultVariants: {
+    size: "md",
+    shape: "circle",
+  },
+});
 
-/**
- * Avatar displays a user or entity representation as an image, initials, or icon fallback.
- */
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
 export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
-  /** Image URL */
   src?: string;
-  /** Alt text for the avatar image. */
   alt?: string;
-  /** Fallback initials (1-2 chars) */
   initials?: string;
-  /** Avatar dimensions. @default "md" */
-  size?: AvatarSize;
-  /** Border radius shape. @default "circle" */
-  shape?: AvatarShape;
-  /** Fallback icon (when no src or initials) */
-  icon?: React.ReactNode;
+  fallbackIcon?: React.ReactNode;
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  shape?: "circle" | "square";
 }
 
-const sizeStyles: Record<AvatarSize, string> = {
-  xs: "h-6 w-6 text-[10px]",
-  sm: "h-8 w-8 text-xs",
-  md: "h-10 w-10 text-sm",
-  lg: "h-12 w-12 text-base",
-  xl: "h-14 w-14 text-lg",
-  "2xl": "h-16 w-16 text-xl",
-};
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
-const shapeStyles: Record<AvatarShape, string> = {
-  circle: "rounded-full",
-  square: "rounded-lg",
-};
+const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
+  function Avatar(props, ref) {
+    const {
+      className,
+      src,
+      alt = "",
+      initials,
+      fallbackIcon,
+      size,
+      shape,
+      ...rest
+    } = props;
 
-/**
- * Circular or square avatar displaying an image, initials fallback, or icon with configurable size.
- *
- * @example
- * ```tsx
- * <Avatar src="/avatars/jane.jpg" alt="Jane Doe" size="lg" />
- * <Avatar initials="JD" size="md" shape="square" />
- * ```
- */
-export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
-  ({
-    src,
-    alt,
-    initials,
-    size = "md",
-    shape = "circle",
-    icon,
-    className,
-    ...rest
-  }, ref) => {
     const [imgError, setImgError] = React.useState(false);
+
+    React.useEffect(() => { setImgError(false); }, [src]);
+
     const showImage = src && !imgError;
 
     return (
       <span
         ref={ref}
-        className={cn(
-          "relative inline-flex shrink-0 items-center justify-center overflow-hidden",
-          "bg-surface-muted text-text-secondary font-medium",
-          sizeStyles[size],
-          shapeStyles[shape],
-          className,
-        )}
-        {...stateAttrs({ component: "avatar" })}
+        className={cn(avatarVariants({ size, shape }), className)}
+        role="img"
+        aria-label={alt || initials || "avatar"}
         {...rest}
       >
-      {showImage ? (
-        <img
-          src={src}
-          alt={alt ?? ""}
-          className="h-full w-full object-cover"
-          onError={() => setImgError(true)}
-        />
-      ) : initials ? (
-        <span className="select-none uppercase leading-none">
-          {initials.slice(0, 2)}
-        </span>
-      ) : icon ? (
-        <span className="[&>svg]:h-[1.2em] [&>svg]:w-[1.2em]">{icon}</span>
-      ) : (
-        /* Default user icon */
-        <svg
-          className="h-[60%] w-[60%] text-[var(--text-disabled)]"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-        </svg>
-      )}
+        {showImage ? (
+          <img
+            src={src}
+            alt={alt}
+            className="h-full w-full object-cover"
+            onError={() => setImgError(true)}
+          />
+        ) : initials ? (
+          <span className="font-medium text-text-primary uppercase leading-none">
+            {initials.slice(0, 2)}
+          </span>
+        ) : fallbackIcon ? (
+          <span className="flex items-center justify-center [&>svg]:h-[60%] [&>svg]:w-[60%]">
+            {fallbackIcon}
+          </span>
+        ) : (
+          <svg className="h-[60%] w-[60%] text-text-secondary" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v1.2c0 .7.5 1.2 1.2 1.2h16.8c.7 0 1.2-.5 1.2-1.2v-1.2c0-3.2-6.4-4.8-9.6-4.8z" />
+          </svg>
+        )}
       </span>
     );
-  }
+  },
 );
 
-Avatar.displayName = "Avatar";
+setDisplayName(Avatar, "Avatar");
+
+export { Avatar, avatarVariants };

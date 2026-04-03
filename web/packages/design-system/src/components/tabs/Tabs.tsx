@@ -1,278 +1,279 @@
-import React, { useState, useCallback, useId, useMemo } from "react";
-import { stateAttrs, focusRingClass } from "../../internal/interaction-core";
-import { useRovingTabindex } from "../../internal/overlay-engine";
+"use client";
+
+import * as React from "react";
 import { cn } from "../../utils/cn";
-import type { SlotProps } from "../../primitives/_shared/slot-types";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { variants } from "../../system/variants";
+import { setDisplayName } from "../../system/compose";
+import { stateAttrs } from "../../internal/interaction-core/state-attributes";
 
-/* ------------------------------------------------------------------ */
-/*  Tabs — Segmented content switcher                                  */
-/*                                                                     */
-/*  Variants: line · enclosed · pill                                   */
-/*  Supports: icons, badges, disabled tabs, controlled/uncontrolled    */
-/* ------------------------------------------------------------------ */
+// ---------------------------------------------------------------------------
+// Variants
+// ---------------------------------------------------------------------------
 
-export type TabsVariant = "line" | "enclosed" | "pill" | "standard" | "fullWidth" | "scrollable";
-export type TabsSize = "sm" | "md" | "lg";
-export type TabsDensity = "compact" | "comfortable" | "spacious";
-
-const tabsDensityStyles: Record<TabsDensity, string> = {
-  compact: "gap-0 text-sm py-1",
-  comfortable: "",
-  spacious: "gap-2 text-base py-3",
-};
-
-export interface TabItem {
-  key: string;
-  label: React.ReactNode;
-  icon?: React.ReactNode;
-  badge?: React.ReactNode;
-  disabled?: boolean;
-  /** Description shown below tab content */
-  description?: React.ReactNode;
-  /** Show close button on tab */
-  closable?: boolean;
-  content: React.ReactNode;
-}
-
-export type TabsSlot = "root" | "list" | "trigger" | "content";
-
-export interface TabsProps extends AccessControlledProps {
-  items: TabItem[];
-  variant?: TabsVariant;
-  size?: TabsSize;
-  /** Controlled active key */
-  activeKey?: string;
-  defaultActiveKey?: string;
-  onChange?: (key: string) => void;
-  /** Called when a closable tab's close button is clicked */
-  onCloseTab?: (key: string) => void;
-  /** Full width tabs */
-  fullWidth?: boolean;
-  className?: string;
-  /** Density controls gap, text size, and padding of tab buttons */
-  density?: TabsDensity;
-  /** Override props (className, style, etc.) on internal slot elements */
-  slotProps?: SlotProps<TabsSlot>;
-}
-
-/** Normalize legacy variant names to internal variants */
-const normalizeVariant = (v: TabsVariant): "line" | "enclosed" | "pill" => {
-  if (v === "standard" || v === "scrollable") return "line";
-  if (v === "fullWidth") return "line";
-  return v as "line" | "enclosed" | "pill";
-};
-
-type InternalVariant = "line" | "enclosed" | "pill";
-
-const variantBaseStyles: Record<InternalVariant, string> = {
-  line: "border-b border-border-subtle",
-  enclosed: "bg-surface-muted rounded-xl p-1",
-  pill: "gap-1",
-};
-
-const tabStyles: Record<InternalVariant, { active: string; inactive: string }> = {
-  line: {
-    active: "border-b-2 border-action-primary text-text-primary",
-    inactive: "text-text-secondary hover:text-text-primary border-b-2 border-transparent",
-  },
-  enclosed: {
-    active: "bg-surface-default text-text-primary shadow-xs rounded-lg",
-    inactive: "text-text-secondary hover:text-text-primary rounded-lg",
-  },
-  pill: {
-    active: "bg-action-primary text-text-inverse rounded-full shadow-xs",
-    inactive: "text-text-secondary hover:bg-surface-muted rounded-full",
-  },
-};
-
-const sizeStyles: Record<TabsSize, string> = {
-  sm: "px-3 py-1.5 text-xs gap-1.5",
-  md: "px-4 py-2 text-sm gap-2",
-  lg: "px-5 py-2.5 text-base gap-2",
-};
-
-const resolveKey = (item: TabItem): string => item.key;
-
-/**
- * Segmented content switcher with line, enclosed, and pill variants.
- *
- * @example
- * ```tsx
- * <Tabs
- *   items={[
- *     { key: 'overview', label: 'Overview', content: <Overview /> },
- *     { key: 'settings', label: 'Settings', content: <Settings /> },
- *   ]}
- *   variant="line"
- *   defaultActiveKey="overview"
- * />
- * ```
- */
-export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(({
-  items,
-  variant: variantProp = "line",
-  size = "md",
-  activeKey: activeKeyProp,
-  defaultActiveKey,
-  onChange,
-  onCloseTab,
-  fullWidth: fullWidthProp = false,
-  className,
-  density = "comfortable",
-  slotProps,
-  access,
-  accessReason,
-}, ref) => {
-  const accessState = resolveAccessState(access);
-  if (accessState.isHidden) return null;
-  const variant = normalizeVariant(variantProp);
-  const fullWidth = fullWidthProp || variantProp === "fullWidth";
-  const controlledKey = activeKeyProp;
-  const handleChange = onChange;
-  const id = useId();
-  const [internalKey, setInternalKey] = useState(
-    defaultActiveKey ?? (items[0] ? resolveKey(items[0]) : ""),
-  );
-  const isControlled = controlledKey !== undefined;
-  const currentKey = isControlled ? controlledKey : internalKey;
-
-  const handleSelect = useCallback(
-    (key: string) => {
-      if (!isControlled) setInternalKey(key);
-      handleChange?.(key);
+const tabListVariants = variants({
+  base: "inline-flex items-center",
+  variants: {
+    variant: {
+      line: "border-b border-border-default gap-0",
+      enclosed: "bg-surface-muted rounded-lg p-1 gap-0.5",
+      pill: "gap-1",
     },
-    [isControlled, handleChange],
-  );
-
-  /* ---- overlay-engine: roving tabindex for arrow key navigation ---- */
-  const disabledIndices = useMemo(
-    () => new Set(items.map((item, i) => (item.disabled ? i : -1)).filter((i) => i >= 0)),
-    [items],
-  );
-
-  const currentIndex = items.findIndex((i) => resolveKey(i) === currentKey);
-
-  const roving = useRovingTabindex({
-    itemCount: items.length,
-    initialIndex: currentIndex >= 0 ? currentIndex : 0,
-    direction: "horizontal",
-    loop: true,
-    disabledIndices,
-    onActiveChange: (index: number) => {
-      // When arrow keys move focus, also select the tab
-      const key = resolveKey(items[index]);
-      handleSelect(key);
+    fullWidth: {
+      true: "w-full",
     },
-  });
-
-  const activeItem = items.find((i) => resolveKey(i) === currentKey);
-
-  return (
-    <div ref={ref} {...slotProps?.root} className={cn(accessState.isDisabled && "pointer-events-none opacity-50", className, slotProps?.root?.className)} title={accessReason}>
-      {/* Tab list */}
-      <div
-        role="tablist"
-        {...slotProps?.list}
-        data-access-state={accessState.state}
-        className={cn(
-          "flex",
-          variantBaseStyles[variant],
-          variant === "line" && "-mb-px",
-          slotProps?.list?.className,
-        )}
-      >
-        {items.map((item, index) => {
-          const itemKey = resolveKey(item);
-          const isActive = itemKey === currentKey;
-          const rovingProps = roving.getItemProps(index);
-          return (
-            <button
-              key={itemKey}
-              type="button"
-              role="tab"
-              id={`${id}-tab-${itemKey}`}
-              aria-selected={isActive}
-              aria-controls={`${id}-panel-${itemKey}`}
-              tabIndex={rovingProps.tabIndex}
-              disabled={item.disabled}
-              onClick={() => handleSelect(itemKey)}
-              onKeyDown={rovingProps.onKeyDown}
-              onFocus={rovingProps.onFocus}
-              {...stateAttrs({
-                state: isActive ? "active" : "inactive",
-                component: "tab",
-                disabled: item.disabled,
-              })}
-              className={cn(
-                "inline-flex items-center justify-center font-medium transition-all duration-150",
-                "disabled:pointer-events-none disabled:opacity-40",
-                focusRingClass("outline"),
-                sizeStyles[size],
-                density !== "comfortable" && tabsDensityStyles[density],
-                isActive
-                  ? tabStyles[variant].active
-                  : tabStyles[variant].inactive,
-                fullWidth && "flex-1",
-                slotProps?.trigger?.className,
-              )}
-            >
-              {item.icon && (
-                <span className="shrink-0 [&>svg]:h-[1em] [&>svg]:w-[1em]">
-                  {item.icon}
-                </span>
-              )}
-              {item.label}
-              {item.badge && (
-                <span className="shrink-0">{item.badge}</span>
-              )}
-              {item.closable && onCloseTab && (
-                <span
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Close tab"
-                  className="ms-1 shrink-0 rounded-xs p-0.5 opacity-60 transition hover:opacity-100"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onCloseTab(itemKey);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      onCloseTab(itemKey);
-                    }
-                  }}
-                >
-                  <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none">
-                    <path d="M9 3L3 9M3 3l6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                  </svg>
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Tab panels */}
-      {activeItem && (
-        <div
-          role="tabpanel"
-          id={`${id}-panel-${resolveKey(activeItem)}`}
-          aria-labelledby={`${id}-tab-${resolveKey(activeItem)}`}
-          {...slotProps?.content}
-          className={cn("mt-4", slotProps?.content?.className)}
-        >
-          {activeItem.description && (
-            <div className="mb-3 rounded-[20px] border border-border-subtle/70 bg-surface-default px-4 py-3 text-sm text-text-secondary shadow-xs">
-              {activeItem.description}
-            </div>
-          )}
-          {activeItem.content}
-        </div>
-      )}
-    </div>
-  );
+  },
+  defaultVariants: {
+    variant: "line",
+  },
 });
 
-Tabs.displayName = "Tabs";
+const tabTriggerVariants = variants({
+  base: [
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap",
+    "text-sm font-medium transition-colors duration-150",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-offset-1",
+    "disabled:pointer-events-none disabled:opacity-50",
+    "cursor-pointer select-none",
+  ],
+  variants: {
+    variant: {
+      line: [
+        "px-4 py-2.5 -mb-px border-b-2 border-transparent",
+        "text-text-secondary hover:text-text-primary",
+        "data-[state=active]:border-action-primary data-[state=active]:text-text-primary",
+      ],
+      enclosed: [
+        "px-3 py-1.5 rounded-md",
+        "text-text-secondary hover:text-text-primary",
+        "data-[state=active]:bg-surface-default data-[state=active]:text-text-primary data-[state=active]:shadow-sm",
+      ],
+      pill: [
+        "px-4 py-2 rounded-full",
+        "text-text-secondary hover:bg-surface-muted",
+        "data-[state=active]:bg-action-primary data-[state=active]:text-text-inverse",
+      ],
+    },
+    fullWidth: {
+      true: "flex-1",
+    },
+  },
+  defaultVariants: {
+    variant: "line",
+  },
+});
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+  variant?: "line" | "enclosed" | "pill";
+  fullWidth?: boolean;
+}
+
+export interface TabListProps extends React.HTMLAttributes<HTMLDivElement> {}
+export interface TabTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  value: string;
+  badge?: React.ReactNode;
+  icon?: React.ReactNode;
+  closable?: boolean;
+  onClose?: () => void;
+}
+export interface TabContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  value: string;
+}
+
+// ---------------------------------------------------------------------------
+// Context
+// ---------------------------------------------------------------------------
+
+interface TabsCtx {
+  value: string;
+  onValueChange: (v: string) => void;
+  variant: "line" | "enclosed" | "pill";
+  fullWidth: boolean;
+}
+
+const TabsContext = React.createContext<TabsCtx | null>(null);
+
+function useTabsContext() {
+  const ctx = React.useContext(TabsContext);
+  if (!ctx) throw new Error("Tabs compound components must be used within <Tabs>");
+  return ctx;
+}
+
+// ---------------------------------------------------------------------------
+// Tabs Root
+// ---------------------------------------------------------------------------
+
+const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
+  function Tabs(props, ref) {
+    const {
+      className,
+      value: valueProp,
+      defaultValue = "",
+      onValueChange,
+      variant = "line",
+      fullWidth = false,
+      children,
+      ...rest
+    } = props;
+
+    const [internalValue, setInternalValue] = React.useState(defaultValue);
+    const isControlled = valueProp !== undefined;
+    const value = isControlled ? valueProp : internalValue;
+
+    const handleChange = React.useCallback(
+      (v: string) => {
+        if (!isControlled) setInternalValue(v);
+        onValueChange?.(v);
+      },
+      [isControlled, onValueChange],
+    );
+
+    return (
+      <TabsContext.Provider value={{ value, onValueChange: handleChange, variant, fullWidth }}>
+        <div
+          ref={ref}
+          className={cn("flex flex-col", className)}
+          {...stateAttrs({ component: "tabs" })}
+          {...rest}
+        >
+          {children}
+        </div>
+      </TabsContext.Provider>
+    );
+  },
+);
+
+// ---------------------------------------------------------------------------
+// TabList
+// ---------------------------------------------------------------------------
+
+const TabList = React.forwardRef<HTMLDivElement, TabListProps>(
+  function TabList({ className, children, ...props }, ref) {
+    const { variant, fullWidth } = useTabsContext();
+
+    // Keyboard navigation (arrow keys)
+    const handleKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+      const triggers = Array.from(
+        (e.currentTarget as HTMLElement).querySelectorAll<HTMLButtonElement>('[role="tab"]:not([disabled])'),
+      );
+      const current = triggers.indexOf(e.target as HTMLButtonElement);
+      if (current === -1) return;
+
+      let next = -1;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        next = (current + 1) % triggers.length;
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        next = (current - 1 + triggers.length) % triggers.length;
+      } else if (e.key === "Home") {
+        next = 0;
+      } else if (e.key === "End") {
+        next = triggers.length - 1;
+      }
+
+      if (next >= 0) {
+        e.preventDefault();
+        triggers[next].focus();
+        triggers[next].click();
+      }
+    }, []);
+
+    return (
+      <div
+        ref={ref}
+        role="tablist"
+        className={cn(tabListVariants({ variant, fullWidth }), className)}
+        onKeyDown={handleKeyDown}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  },
+);
+
+// ---------------------------------------------------------------------------
+// TabTrigger
+// ---------------------------------------------------------------------------
+
+const TabTrigger = React.forwardRef<HTMLButtonElement, TabTriggerProps>(
+  function TabTrigger(props, ref) {
+    const { className, value, badge, icon, closable, onClose, children, disabled, ...rest } = props;
+    const { value: activeValue, onValueChange, variant, fullWidth } = useTabsContext();
+
+    const isActive = value === activeValue;
+
+    const handleCloseClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      onClose?.();
+    };
+
+    return (
+      <button
+        ref={ref}
+        type="button"
+        role="tab"
+        tabIndex={isActive ? 0 : -1}
+        aria-selected={isActive}
+        disabled={disabled}
+        data-state={isActive ? "active" : "inactive"}
+        className={cn(tabTriggerVariants({ variant, fullWidth }), className)}
+        onClick={() => onValueChange(value)}
+        {...rest}
+      >
+        {icon && <span className="shrink-0 [&>svg]:h-4 [&>svg]:w-4" aria-hidden>{icon}</span>}
+        <span>{children}</span>
+        {badge && <span className="shrink-0">{badge}</span>}
+        {closable && (
+          <button
+            type="button"
+            className="ml-1 shrink-0 rounded-sm p-0.5 hover:bg-black/10 dark:hover:bg-white/10"
+            onClick={handleCloseClick}
+            aria-label="Close tab"
+            tabIndex={-1}
+          >
+            <svg className="h-3 w-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <path d="M4 4l8 8M12 4l-8 8" />
+            </svg>
+          </button>
+        )}
+      </button>
+    );
+  },
+);
+
+// ---------------------------------------------------------------------------
+// TabContent
+// ---------------------------------------------------------------------------
+
+const TabContent = React.forwardRef<HTMLDivElement, TabContentProps>(
+  function TabContent({ className, value, children, ...props }, ref) {
+    const { value: activeValue } = useTabsContext();
+    if (value !== activeValue) return null;
+
+    return (
+      <div
+        ref={ref}
+        role="tabpanel"
+        tabIndex={0}
+        className={cn("mt-3 focus-visible:outline-none", className)}
+        data-state="active"
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  },
+);
+
+setDisplayName(Tabs, "Tabs");
+setDisplayName(TabList, "TabList");
+setDisplayName(TabTrigger, "TabTrigger");
+setDisplayName(TabContent, "TabContent");
+
+export { Tabs, TabList, TabTrigger, TabContent, tabListVariants, tabTriggerVariants };

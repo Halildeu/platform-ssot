@@ -1,143 +1,96 @@
-import React, { forwardRef } from "react";
+"use client";
+
+import * as React from "react";
 import { cn } from "../../utils/cn";
+import { variants } from "../../system/variants";
+import { setDisplayName } from "../../system/compose";
 import { Slot } from "../_shared/Slot";
-import { stateAttrs } from "../../internal/interaction-core";
+import { stateAttrs } from "../../internal/interaction-core/state-attributes";
 
-/* ------------------------------------------------------------------ */
-/*  Badge — Small status / count indicator                             */
-/* ------------------------------------------------------------------ */
+// ---------------------------------------------------------------------------
+// Variants
+// ---------------------------------------------------------------------------
 
-export type BadgeVariant =
-  | "default"
-  | "primary"
-  | "success"
-  | "warning"
-  | "error"
-  | "danger"
-  | "info"
-  | "muted";
+const badgeVariants = variants({
+  base: "inline-flex items-center font-medium transition-colors select-none",
+  variants: {
+    variant: {
+      default: "bg-surface-muted text-text-primary border border-border-default",
+      primary: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
+      success: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300",
+      warning: "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
+      error: "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300",
+      info: "bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300",
+      muted: "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400",
+    },
+    size: {
+      sm: "text-[10px] px-1.5 py-0.5 rounded",
+      md: "text-xs px-2 py-0.5 rounded-md",
+      lg: "text-sm px-2.5 py-1 rounded-md",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    size: "md",
+  },
+});
 
-export type BadgeSize = "sm" | "md" | "lg";
+// Dot colors — explicit map (no fragile string parsing)
+const dotColorMap: Record<string, string> = {
+  default: "bg-gray-500",
+  primary: "bg-blue-500",
+  success: "bg-green-500",
+  warning: "bg-amber-500",
+  error: "bg-red-500",
+  info: "bg-sky-500",
+  muted: "bg-gray-400",
+};
 
-/**
- * Badge renders a small status or count indicator with semantic color variants.
- */
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  /** Visual color variant. @default "default" */
-  variant?: BadgeVariant;
-  /** @deprecated Use `variant` instead. Will be removed in v3.0.0. */
-  tone?: BadgeVariant;
-  /** Badge size controlling padding and font size. @default "md" */
-  size?: BadgeSize;
-  /** Render as a dot (no children) */
+  variant?: keyof typeof badgeVariants.variants.variant;
+  size?: "sm" | "md" | "lg";
   dot?: boolean;
-  /**
-   * Render via Slot — merges Badge props onto the child element.
-   * @example <Badge asChild><a href="/status">Active</a></Badge>
-   */
   asChild?: boolean;
 }
 
-const variantStyles: Record<BadgeVariant, string> = {
-  default:
-    "bg-surface-muted text-text-secondary",
-  primary:
-    "bg-action-primary/10 text-action-primary",
-  success:
-    "bg-state-success-bg text-state-success-text",
-  warning:
-    "bg-state-warning-bg text-state-warning-text",
-  error:
-    "bg-state-danger-bg text-state-danger-text",
-  danger:
-    "bg-state-danger-bg text-state-danger-text",
-  info:
-    "bg-state-info-bg text-state-info-text",
-  muted:
-    "bg-surface-muted text-[var(--text-tertiary)]",
-};
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
-const sizeStyles: Record<BadgeSize, string> = {
-  sm: "px-1.5 py-0.5 text-[10px]",
-  md: "px-2 py-0.5 text-xs",
-  lg: "px-2.5 py-1 text-xs",
-};
-
-/**
- * Small status or count indicator with semantic color variants and optional dot mode.
- *
- * @example
- * ```tsx
- * <Badge variant="success" size="md">Active</Badge>
- * <Badge variant="error" dot />
- * ```
- */
-export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
-  (
-    {
-      variant: variantProp,
-      tone,
-      size = "md",
+const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
+  function Badge(props, ref) {
+    const {
+      className,
+      variant = "default",
+      size,
       dot = false,
       asChild = false,
-      className,
       children,
       ...rest
-    },
-    ref,
-  ) => {
-    const variant = variantProp ?? tone ?? "default";
+    } = props;
 
-    if (process.env.NODE_ENV !== "production" && tone !== undefined) {
-      console.warn(
-        '[DesignSystem] "Badge" prop "tone" is deprecated. Use "variant" instead. "tone" will be removed in v3.0.0.',
-      );
-    }
-
-    if (dot) {
-      return (
-        <span
-          ref={ref}
-          className={cn(
-            "inline-block h-2 w-2 rounded-full",
-            variant === "default"
-              ? "bg-text-secondary"
-              : variantStyles[variant].split(" ").find((c) => c.startsWith("text-"))?.replace("text-", "bg-") ??
-                "bg-text-secondary",
-            className,
-          )}
-          {...rest}
-        />
-      );
-    }
-
-    const mergedClassName = cn(
-      "inline-flex items-center justify-center rounded-full font-medium leading-none",
-      variantStyles[variant],
-      sizeStyles[size],
-      className,
-    );
-
-    const sharedProps = {
-      className: mergedClassName,
-      ...stateAttrs({ component: "badge" }),
-      ...rest,
-    };
-
-    if (asChild) {
-      return (
-        <Slot ref={ref} {...sharedProps}>
-          {children}
-        </Slot>
-      );
-    }
+    const Comp = asChild ? Slot : "span";
 
     return (
-      <span ref={ref} {...sharedProps}>
+      <Comp
+        ref={ref}
+        className={cn(badgeVariants({ variant, size }), dot && "gap-1.5", className)}
+        {...stateAttrs({ component: "badge" })}
+        {...rest}
+      >
+        {dot && (
+          <span className={cn("h-1.5 w-1.5 rounded-full shrink-0", dotColorMap[variant])} aria-hidden />
+        )}
         {children}
-      </span>
+      </Comp>
     );
   },
 );
 
-Badge.displayName = "Badge";
+setDisplayName(Badge, "Badge");
+
+export { Badge, badgeVariants };
