@@ -19,7 +19,7 @@ export interface PageLayoutPresetOptions {
   responsiveDetailBreakpoint?: "base" | "sm" | "md" | "lg" | "xl";
 }
 
-export function createPageLayoutPreset(
+function createPageLayoutPreset(
   options: PageLayoutPresetOptions,
 ): Partial<PageLayoutProps> {
   const { preset, pageWidth, stickyHeader, currentBreadcrumbMode, responsiveDetailBreakpoint } =
@@ -52,7 +52,7 @@ export function createPageLayoutPreset(
   }
 }
 
-export function createPageLayoutBreadcrumbItems(
+function createPageLayoutBreadcrumbItems(
   inputs: PageBreadcrumbItem[],
 ): PageBreadcrumbItem[] {
   return inputs.map((item) => ({

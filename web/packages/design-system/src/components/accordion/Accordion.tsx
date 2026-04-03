@@ -252,7 +252,7 @@ export interface AccordionPreset {
   ghost: boolean;
 }
 
-export function createAccordionItemsFromSections(
+function createAccordionItemsFromSections(
   sections: AccordionSectionInput[],
   options?: CreateAccordionItemsFromSectionsOptions,
 ): { value: string; children: React.ReactNode }[] {
@@ -264,7 +264,7 @@ export function createAccordionItemsFromSections(
   }));
 }
 
-export function createAccordionPreset(kind: AccordionPresetKind): AccordionPreset {
+function createAccordionPreset(kind: AccordionPresetKind): AccordionPreset {
   const presets: Record<AccordionPresetKind, AccordionPreset> = {
     faq: { type: "single", collapsible: true, size: "md", bordered: true, ghost: false },
     compact: { type: "multiple", collapsible: true, size: "sm", bordered: false, ghost: true },
