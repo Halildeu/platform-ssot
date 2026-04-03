@@ -60,7 +60,7 @@ export type ButtonProps<C extends React.ElementType = "button"> = {
    * @example <Button asChild><a href="/login">Login</a></Button>
    */
   asChild?: boolean;
-} & Omit<React.ComponentPropsWithoutRef<C>, "as" | "asChild" | "variant" | "size" | "density" | "loading" | "leftIcon" | "rightIcon" | "fullWidth" | "iconOnly" | "access" | "accessReason" | "isLoading" | "loadingDisplay">;
+} & Omit<React.ComponentPropsWithoutRef<C>, "as" | "asChild" | "variant" | "size" | "density" | "loading" | "leftIcon" | "rightIcon" | "fullWidth" | "iconOnly" | "access" | "accessReason">;
 
 const densityStyles: Record<ButtonDensity, string> = {
   compact: "px-2 py-0.5",
@@ -212,6 +212,9 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(
       ...rest,
     };
 
+    // Strip non-DOM props that playground/legacy code may pass
+    const { isLoading: _, loadingDisplay: __, ...cleanProps } = sharedProps as typeof sharedProps & Record<string, unknown>;
+
     const inner = loading ? (
       <>
         <Spinner size={size === "xs" || size === "sm" ? "xs" : "sm"} />
@@ -238,7 +241,7 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(
     // asChild: render via Slot, merging props onto the child element
     if (asChild) {
       return (
-        <Slot ref={ref} {...sharedProps}>
+        <Slot ref={ref} {...cleanProps}>
           {children}
         </Slot>
       );
@@ -251,7 +254,7 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(
       <Component
         ref={ref as React.Ref<never>}
         {...(Component === "button" ? { type: "button", disabled: isDisabled } : {})}
-        {...sharedProps}
+        {...cleanProps}
       >
         {inner}
       </Component>
