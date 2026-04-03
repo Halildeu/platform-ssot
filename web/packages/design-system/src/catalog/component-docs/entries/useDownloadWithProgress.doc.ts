@@ -12,7 +12,7 @@ const entry: DesignLabComponentDocEntry = {
     "subgroup": "download",
     "taxonomyGroupId": "feedback_state_and_visibility",
     "taxonomySubgroup": "Download progress",
-    "demoMode": "code",
+    "demoMode": "inspector",
     "description": "Server-side dosya indirmeleri icin fetch + ReadableStream progress tracking hook'u. window.open() yerine kullanilir. In-app toast ile indirme durumu, yuzde, dosya boyutu gosterir. AbortController ile iptal destekler.",
     "sectionIds": [
       "component_library_management",

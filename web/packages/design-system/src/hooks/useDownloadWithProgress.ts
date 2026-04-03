@@ -204,7 +204,7 @@ export function useDownloadWithProgress() {
 
           emitProgress(true);
 
-          const blob = new Blob(chunks);
+          const blob = new Blob(chunks as BlobPart[]);
           triggerBlobDownload(blob, filename);
         } else {
           // Fallback: no ReadableStream support

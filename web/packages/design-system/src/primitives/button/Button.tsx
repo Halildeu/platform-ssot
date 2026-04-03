@@ -60,7 +60,7 @@ export type ButtonProps<C extends React.ElementType = "button"> = {
    * @example <Button asChild><a href="/login">Login</a></Button>
    */
   asChild?: boolean;
-} & Omit<React.ComponentPropsWithoutRef<C>, "as" | "asChild" | "variant" | "size" | "density" | "loading" | "leftIcon" | "rightIcon" | "fullWidth" | "iconOnly" | "access" | "accessReason">;
+} & Omit<React.ComponentPropsWithoutRef<C>, "as" | "asChild" | "variant" | "size" | "density" | "loading" | "leftIcon" | "rightIcon" | "fullWidth" | "iconOnly" | "access" | "accessReason" | "isLoading" | "loadingDisplay">;
 
 const densityStyles: Record<ButtonDensity, string> = {
   compact: "px-2 py-0.5",

@@ -123,6 +123,7 @@ export interface VariantIntegrationMessages {
   variantNameEmptyLabel?: string;
   variantNameUpdatedLabel?: string;
   variantNameUpdateFailedLabel?: string;
+  variantPreferenceUpdateFailedLabel?: string;
 }
 
 /** Props for the VariantIntegration component. */

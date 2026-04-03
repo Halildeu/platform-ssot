@@ -65,7 +65,7 @@ describe('GlobalSearchTrigger', () => {
   it('shows keyboard shortcut hint', () => {
     render(<GlobalSearchTrigger />);
     // Either ⌘K or Ctrl+K depending on platform
-    const kbd = screen.getByText(/[⌘K|Ctrl\+K]/);
+    const kbd = screen.getByText(/(⌘K|Ctrl\+K)/);
     expect(kbd).toBeInTheDocument();
   });
 });

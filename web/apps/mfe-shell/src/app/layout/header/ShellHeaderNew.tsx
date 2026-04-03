@@ -4,7 +4,6 @@ import { BrandMark } from './BrandMark';
 import { MegaNavigation } from './MegaNavigation';
 import { GlobalSearchTrigger } from './GlobalSearchTrigger';
 import { HeaderActions } from './HeaderActions';
-import { WorkspaceSwitcher } from './WorkspaceSwitcher';
 
 /* ------------------------------------------------------------------ */
 /*  ShellHeaderNew — World-class header orchestrator                   */
@@ -38,8 +37,6 @@ export const ShellHeaderNew: React.FC = () => {
         {!isMobile && (
           <>
             <div className="mx-1 h-5 w-px bg-border-subtle/40" aria-hidden />
-            <WorkspaceSwitcher />
-            <div className="mx-0.5 h-5 w-px bg-border-subtle/40" aria-hidden />
             <MegaNavigation />
           </>
         )}

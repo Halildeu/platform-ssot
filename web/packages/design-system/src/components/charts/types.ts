@@ -8,6 +8,8 @@ export type ChartDataPoint = {
   label: string;
   value: number;
   color?: string;
+  /** @internal Runtime-computed fill color for per-bar coloring */
+  _fill?: string;
 };
 
 export type ChartSeries = {
