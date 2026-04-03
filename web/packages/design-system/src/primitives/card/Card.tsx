@@ -1,118 +1,199 @@
-"use client";
-
-import * as React from "react";
+import React, { createContext, forwardRef, useContext } from "react";
 import { cn } from "../../utils/cn";
-import { variants, slotVariants } from "../../system/variants";
-import { setDisplayName } from "../../system/compose";
 import { Slot } from "../_shared/Slot";
+import { stateAttrs } from "../../internal/interaction-core";
+import type { SlotProps } from "../_shared/slot-types";
 
-// ---------------------------------------------------------------------------
-// Card Variants
-// ---------------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/*  Card — Elevated content container                                  */
+/* ------------------------------------------------------------------ */
 
-const cardVariants = variants({
-  base: "rounded-xl border bg-surface-default text-text-primary shadow-sm transition-colors",
-  variants: {
-    variant: {
-      default: "border-border-subtle",
-      outline: "border-border-default",
-      elevated: "border-border-subtle shadow-md",
-      ghost: "border-transparent shadow-none bg-transparent",
-    },
-    padding: {
-      none: "",
-      sm: "p-4",
-      md: "p-6",
-      lg: "p-8",
-    },
-    interactive: {
-      true: "cursor-pointer hover:shadow-md hover:border-border-default active:shadow-sm transition-shadow",
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-    padding: "md",
-  },
-});
+export type CardVariant = "elevated" | "outlined" | "filled" | "ghost";
+export type CardPadding = "none" | "sm" | "md" | "lg";
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
+export type CardSlot = "root" | "header" | "body" | "footer";
 
+/** Props for the Card component. */
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "outline" | "elevated" | "ghost";
-  padding?: "none" | "sm" | "md" | "lg";
-  interactive?: boolean;
+  variant?: CardVariant;
+  padding?: CardPadding;
+  /** Interactive — adds hover effects */
+  hoverable?: boolean;
+  /** Full-width click target */
+  as?: "div" | "button" | "article" | "section";
+  /**
+   * Render via Slot — merges Card props onto the child element.
+   * Modern alternative to `as` for polymorphism.
+   * @example <Card asChild><a href="/detail">...</a></Card>
+   */
   asChild?: boolean;
+  /** Override props (className, style, etc.) on internal slot elements */
+  slotProps?: SlotProps<CardSlot>;
 }
 
-export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
-export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {}
-export interface CardDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
-export interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {}
-export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
+const variantStyles: Record<CardVariant, string> = {
+  elevated: "bg-surface-default border border-border-subtle shadow-xs",
+  outlined: "bg-transparent border border-border-default",
+  filled: "bg-surface-muted border border-transparent",
+  ghost: "bg-transparent border border-transparent",
+};
 
-// ---------------------------------------------------------------------------
-// Card
-// ---------------------------------------------------------------------------
+const CardSlotPropsContext = createContext<SlotProps<CardSlot> | undefined>(undefined);
 
-const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  function Card(props, ref) {
-    const { className, variant, padding, interactive, asChild = false, ...rest } = props;
-    const Comp = asChild ? Slot : "div";
-    return (
-      <Comp
-        ref={ref}
-        className={cn(cardVariants({ variant, padding, interactive }), className)}
-        {...rest}
-      />
+function useCardSlotProps() {
+  return useContext(CardSlotPropsContext);
+}
+
+const paddingStyles: Record<CardPadding, string> = {
+  none: "p-0",
+  sm: "p-3",
+  md: "p-5",
+  lg: "p-6",
+};
+
+/**
+ * Elevated content container with variant styles, optional hover effect, and polymorphic element support.
+ *
+ * @example
+ * ```tsx
+ * <Card variant="elevated" padding="md" hoverable>
+ *   <CardHeader title="Project" subtitle="Updated 2 hours ago" />
+ *   <CardBody>Card content here</CardBody>
+ * </Card>
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/card)
+ */
+export const Card = forwardRef<HTMLDivElement, CardProps>(
+  (
+    {
+      variant = "elevated",
+      padding = "md",
+      hoverable = false,
+      as: Tag = "div",
+      asChild = false,
+      className,
+      children,
+      slotProps,
+      ...rest
+    },
+    ref,
+  ) => {
+    const mergedClassName = cn(
+      "rounded-2xl transition-all duration-150",
+      variantStyles[variant],
+      paddingStyles[padding],
+      hoverable && [
+        "cursor-pointer",
+        "hover:border-action-primary/30 hover:shadow-md",
+        "active:scale-[0.99]",
+      ],
+      !asChild && Tag === "button" && "w-full text-start",
+      className,
+      slotProps?.root?.className,
     );
-  },
-);
 
-// ---------------------------------------------------------------------------
-// Compound parts
-// ---------------------------------------------------------------------------
+    const sharedProps = {
+      role: !asChild && Tag === "button" ? "button" as const : undefined,
+      tabIndex: !asChild && Tag === "button" ? 0 : undefined,
+      ...stateAttrs({ component: "card" }),
+      className: mergedClassName,
+      ...rest,
+    };
 
-const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
-  function CardHeader({ className, ...props }, ref) {
-    return <div ref={ref} className={cn("flex flex-col gap-1.5", className)} {...props} />;
-  },
-);
-
-const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
-  function CardTitle({ className, children, ...props }, ref) {
-    return (
-      <h3 ref={ref} className={cn("text-lg font-semibold leading-tight text-text-primary", className)} {...props}>
+    const wrappedChildren = slotProps ? (
+      <CardSlotPropsContext.Provider value={slotProps}>
         {children}
-      </h3>
+      </CardSlotPropsContext.Provider>
+    ) : children;
+
+    if (asChild) {
+      return (
+        <Slot ref={ref} {...sharedProps}>
+          {wrappedChildren}
+        </Slot>
+      );
+    }
+
+    return (
+      <div ref={ref} {...sharedProps}>
+        {wrappedChildren}
+      </div>
     );
   },
 );
 
-const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescriptionProps>(
-  function CardDescription({ className, ...props }, ref) {
-    return <p ref={ref} className={cn("text-sm text-text-secondary", className)} {...props} />;
-  },
-);
+Card.displayName = "Card";
 
-const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
-  function CardContent({ className, ...props }, ref) {
-    return <div ref={ref} className={cn("pt-0", className)} {...props} />;
-  },
-);
+/* ---- Card sub-components ---- */
 
-const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
-  function CardFooter({ className, ...props }, ref) {
-    return <div ref={ref} className={cn("flex items-center gap-3 pt-4", className)} {...props} />;
-  },
-);
+export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+  title?: React.ReactNode;
+  subtitle?: React.ReactNode;
+  action?: React.ReactNode;
+}
 
-setDisplayName(Card, "Card");
-setDisplayName(CardHeader, "CardHeader");
-setDisplayName(CardTitle, "CardTitle");
-setDisplayName(CardDescription, "CardDescription");
-setDisplayName(CardContent, "CardContent");
-setDisplayName(CardFooter, "CardFooter");
+export const CardHeader: React.FC<CardHeaderProps> = ({
+  title,
+  subtitle,
+  action,
+  className,
+  children,
+  ...rest
+}) => {
+  const cardSlotProps = useCardSlotProps();
+  return (
+    <div {...cardSlotProps?.header} className={cn("flex items-start justify-between gap-4", className, cardSlotProps?.header?.className)} {...rest}>
+      <div className="min-w-0 flex-1">
+        {title && (
+          <div className="text-sm font-semibold text-text-primary">{title}</div>
+        )}
+        {subtitle && (
+          <div className="mt-0.5 text-xs text-text-secondary">{subtitle}</div>
+        )}
+        {children}
+      </div>
+      {action && <div className="shrink-0">{action}</div>}
+    </div>
+  );
+};
 
-export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, cardVariants };
+CardHeader.displayName = "CardHeader";
+
+export const CardBody: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  children,
+  ...rest
+}) => {
+  const cardSlotProps = useCardSlotProps();
+  return (
+    <div {...cardSlotProps?.body} className={cn("mt-3", className, cardSlotProps?.body?.className)} {...rest}>
+      {children}
+    </div>
+  );
+};
+
+CardBody.displayName = "CardBody";
+
+export const CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  children,
+  ...rest
+}) => {
+  const cardSlotProps = useCardSlotProps();
+  return (
+    <div
+      {...cardSlotProps?.footer}
+      className={cn(
+        "mt-4 flex items-center gap-2 border-t border-border-subtle pt-3",
+        className,
+        cardSlotProps?.footer?.className,
+      )}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
+};
+
+CardFooter.displayName = "CardFooter";

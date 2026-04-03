@@ -1,58 +1,68 @@
-"use client";
-
-import * as React from "react";
+import React from "react";
 import { cn } from "../../utils/cn";
-import { variants } from "../../system/variants";
-import { setDisplayName } from "../../system/compose";
+import { stateAttrs } from "../../internal/interaction-core";
 
-// ---------------------------------------------------------------------------
-// Variants
-// ---------------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/*  Spinner — Animated loading indicator                               */
+/* ------------------------------------------------------------------ */
 
-const spinnerVariants = variants({
-  base: "animate-spin text-current",
-  variants: {
-    size: {
-      xs: "h-3 w-3",
-      sm: "h-4 w-4",
-      md: "h-5 w-5",
-      lg: "h-6 w-6",
-      xl: "h-8 w-8",
-    },
-  },
-  defaultVariants: {
-    size: "md",
-  },
-});
+export type SpinnerSize = "xs" | "sm" | "md" | "lg" | "xl";
+export type SpinnerMode = "inline" | "block";
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-export interface SpinnerProps extends React.HTMLAttributes<HTMLElement> {
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+/**
+ * Spinner renders an animated loading indicator with optional visible label.
+ */
+export interface SpinnerProps {
+  /** Spinner dimensions. @default "md" */
+  size?: SpinnerSize;
+  /** Additional CSS class name. */
+  className?: string;
+  /** Accessible label for screen readers. @default "Loading" */
   label?: string;
+  /** Display mode: inline (default) or block (centered with visible label). @default "inline" */
+  mode?: SpinnerMode;
 }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
+const sizeMap: Record<SpinnerSize, string> = {
+  xs: "h-3 w-3",
+  sm: "h-4 w-4",
+  md: "h-5 w-5",
+  lg: "h-6 w-6",
+  xl: "h-8 w-8",
+};
 
-const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
-  function Spinner(props, ref) {
-    const { className, size, label, ...rest } = props;
-
+/**
+ * Animated circular loading indicator with configurable size and optional visible label.
+ *
+ * @example
+ * ```tsx
+ * <Spinner size="md" label="Loading data..." />
+ * <Spinner size="sm" mode="block" />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/spinner)
+ */
+export const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
+  ({
+    size = "md",
+    className,
+    label = "Loading",
+    mode = "inline",
+  }, ref) => {
     const svg = (
       <svg
-        className={cn(spinnerVariants({ size }), !label && className)}
+        className={cn("animate-spin", sizeMap[size], mode === "inline" && className)}
         viewBox="0 0 24 24"
         fill="none"
+        aria-label={label}
         role="status"
-        aria-label={label ?? "Loading"}
+        {...stateAttrs({ component: "spinner", loading: true })}
       >
         <circle
           className="opacity-25"
-          cx="12" cy="12" r="10"
+          cx="12"
+          cy="12"
+          r="10"
           stroke="currentColor"
           strokeWidth="4"
         />
@@ -64,22 +74,29 @@ const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
       </svg>
     );
 
-    if (!label) return svg;
+    if (mode === "block") {
+      return (
+        <div
+          ref={ref}
+          className={cn(
+            "flex flex-col items-center justify-center gap-3 py-6 text-text-secondary",
+            className,
+          )}
+        >
+          {svg}
+          {label ? (
+            <span className="text-sm font-medium">{label}</span>
+          ) : null}
+        </div>
+      );
+    }
 
     return (
-      <div
-        ref={ref}
-        className={cn("flex flex-col items-center justify-center gap-3", className)}
-        role="status"
-        {...rest}
-      >
+      <span ref={ref} className="inline-flex">
         {svg}
-        <span className="text-sm text-text-secondary">{label}</span>
-      </div>
+      </span>
     );
-  },
+  }
 );
 
-setDisplayName(Spinner, "Spinner");
-
-export { Spinner, spinnerVariants };
+Spinner.displayName = "Spinner";

@@ -1,168 +1,253 @@
-"use client";
-
-import * as React from "react";
+import React, { forwardRef, useId, useState } from "react";
 import { cn } from "../../utils/cn";
-import { variants } from "../../system/variants";
-import { setDisplayName } from "../../system/compose";
 import {
   resolveAccessState,
-  shouldBlockInteraction,
-  accessStyles,
-  type AccessLevel,
+  withAccessGuard,
+  type AccessControlledProps,
 } from "../../internal/access-controller";
-import { stateAttrs } from "../../internal/interaction-core/state-attributes";
+import {
+  stateAttrs,
+  focusRingClass,
+  guardAria,
+} from "../../internal/interaction-core";
 
-// ---------------------------------------------------------------------------
-// Variants
-// ---------------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/*  Switch — Toggle control                                            */
+/* ------------------------------------------------------------------ */
 
-const switchTrackVariants = variants({
-  base: [
-    "relative inline-flex shrink-0 cursor-pointer rounded-full border-2 border-transparent",
-    "transition-colors duration-200 ease-in-out",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-offset-2",
-    "disabled:cursor-not-allowed disabled:opacity-50",
-  ],
-  variants: {
-    size: {
-      sm: "h-5 w-9",
-      md: "h-6 w-11",
-      lg: "h-7 w-[52px]",
-    },
-    checked: {
-      true: "bg-action-primary",
-      false: "bg-gray-200 dark:bg-gray-700",
-    },
-  },
-  defaultVariants: {
-    size: "md",
-    checked: false,
-  },
-});
+export type SwitchSize = "sm" | "md" | "lg";
 
-const thumbSizeMap: Record<string, string> = {
-  sm: "h-4 w-4",
-  md: "h-5 w-5",
-  lg: "h-6 w-6",
-};
+export type SwitchVariant = "default" | "destructive";
 
-const thumbTranslateMap: Record<string, string> = {
-  sm: "translate-x-4",
-  md: "translate-x-5",
-  lg: "translate-x-[26px]",
-};
+export type SwitchDensity = "compact" | "comfortable" | "spacious";
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
+/** Props for the Switch component. */
 export interface SwitchProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onChange" | "value"> {
-  size?: "sm" | "md" | "lg";
-  label?: React.ReactNode;
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type">,
+    AccessControlledProps {
+  /** Label text */
+  label?: string;
+  /** Description below label */
   description?: string;
-  checked?: boolean;
+  /** Component size */
+  size?: SwitchSize;
+  /** @deprecated Use `size` instead. Will be removed in v3.0.0. */
+  switchSize?: SwitchSize;
+  /** Visual variant — "destructive" uses error color when checked */
+  variant?: SwitchVariant;
+  /** Density controls scale of the switch */
+  density?: SwitchDensity;
+  /** Initial checked state for uncontrolled mode. Ignored when `checked` is provided. */
   defaultChecked?: boolean;
+  /** Checked state (controlled) */
+  checked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
-  access?: AccessLevel;
+  /** Error state — sets aria-invalid when truthy */
+  error?: boolean | string | React.ReactNode;
+  /** Show a loading indicator on the thumb; makes the switch non-interactive */
+  loading?: boolean;
 }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
+const switchDensityStyles: Record<SwitchDensity, string> = {
+  compact: "scale-75",
+  comfortable: "",
+  spacious: "scale-110",
+};
 
-const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
-  function Switch(props, ref) {
-    const {
-      className,
-      size = "md",
+const trackSizes: Record<SwitchSize, string> = {
+  sm: "h-4 w-7",
+  md: "h-5 w-9",
+  lg: "h-6 w-11",
+};
+
+const thumbSizes: Record<SwitchSize, { base: string; translate: string }> = {
+  sm: { base: "h-3 w-3", translate: "translate-x-3" },
+  md: { base: "h-4 w-4", translate: "translate-x-4" },
+  lg: { base: "h-5 w-5", translate: "translate-x-5" },
+};
+
+/**
+ * Toggle switch control with label, description, destructive variant, and loading state.
+ *
+ * @example
+ * ```tsx
+ * <Switch
+ *   label="Enable notifications"
+ *   checked={enabled}
+ *   onCheckedChange={setEnabled}
+ * />
+ * ```
+ */
+export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
+  (
+    {
       label,
       description,
+      size: sizeProp,
+      switchSize,
+      variant = "default",
+      density = "comfortable",
+      defaultChecked: defaultCheckedProp,
       checked: checkedProp,
-      defaultChecked = false,
       onCheckedChange,
-      access,
-      disabled: disabledProp,
-      id: idProp,
+      error = false,
+      loading = false,
+      disabled,
+      className,
+      id: externalId,
+      access = "full",
+      accessReason,
       ...rest
-    } = props;
+    },
+    ref,
+  ) => {
+    const resolvedSize = sizeProp ?? switchSize ?? "md";
 
-    const generatedId = React.useId();
-    const id = idProp ?? generatedId;
+    if (process.env.NODE_ENV !== "production" && switchSize !== undefined) {
+      console.warn(
+        '[DesignSystem] "Switch" prop "switchSize" is deprecated. Use "size" instead. "switchSize" will be removed in v3.0.0.',
+      );
+    }
 
-    const [internalChecked, setInternalChecked] = React.useState(defaultChecked);
+    const autoId = useId();
+    const id = externalId ?? autoId;
+
+    // Uncontrolled mode: track internal checked state when `checked` prop is not provided
+    const [internalChecked, setInternalChecked] = useState(defaultCheckedProp ?? false);
     const isControlled = checkedProp !== undefined;
-    const isChecked = isControlled ? checkedProp : internalChecked;
+    const checked = isControlled ? checkedProp : internalChecked;
 
     const accessState = resolveAccessState(access);
+
     if (accessState.isHidden) return null;
 
-    const isDisabled = disabledProp || shouldBlockInteraction(accessState.state);
+    const isDisabled = disabled || loading || accessState.isDisabled;
+    const isReadonly = accessState.isReadonly;
 
-    const toggle = () => {
-      if (isDisabled) return;
-      const next = !isChecked;
-      if (!isControlled) setInternalChecked(next);
-      onCheckedChange?.(next);
-    };
+    // For readonly: HTML checkbox readOnly doesn't block clicks.
+    // Use withAccessGuard to actively preventDefault + stopPropagation.
+    const guardedChange = withAccessGuard<React.ChangeEvent<HTMLInputElement>>(
+      access,
+      (e) => {
+        if (!isControlled) {
+          setInternalChecked(e.target.checked);
+        }
+        onCheckedChange?.(e.target.checked);
+      },
+      disabled,
+    );
+
+    // Block label click delegation for readonly/disabled
+    const handleLabelClick = (isReadonly || isDisabled)
+      ? (e: React.MouseEvent) => { e.preventDefault(); }
+      : undefined;
 
     return (
-      <div className="flex items-center gap-3">
-        <button
+      <label
+        htmlFor={isReadonly ? undefined : id}
+        onClick={handleLabelClick}
+        className={cn(
+          "inline-flex cursor-pointer items-start gap-3",
+          isDisabled && "cursor-not-allowed opacity-50",
+          isReadonly && "cursor-default opacity-70",
+          focusRingClass("ring"),
+          className,
+        )}
+        title={accessReason}
+        {...stateAttrs({
+          access,
+          state: checked ? "checked" : "unchecked",
+          disabled: isDisabled,
+          readonly: isReadonly,
+          error: Boolean(error),
+          loading,
+          component: "switch",
+        })}
+        aria-readonly={isReadonly || undefined}
+      >
+        <input
           ref={ref}
           id={id}
-          type="button"
+          type="checkbox"
           role="switch"
-          aria-checked={isChecked}
+          checked={checked}
           disabled={isDisabled}
-          onClick={toggle}
-          className={cn(
-            switchTrackVariants({ size, checked: isChecked }),
-            accessStyles(access),
-            className,
-          )}
-          {...stateAttrs({
-            access,
-            disabled: isDisabled,
-            state: isChecked ? "checked" : "unchecked",
-            component: "switch",
-          })}
+          aria-invalid={Boolean(error) || undefined}
+          {...guardAria({ access, disabled: isDisabled })}
+          onChange={guardedChange}
+          onClick={isReadonly ? (e) => e.preventDefault() : undefined}
+          className="sr-only"
           {...rest}
+        />
+        <span
+          className={cn(
+            "relative inline-flex shrink-0 rounded-full transition-colors duration-200",
+            trackSizes[resolvedSize],
+            density !== "comfortable" && switchDensityStyles[density],
+            isDisabled && "cursor-not-allowed",
+            isReadonly && "cursor-default",
+            !isDisabled && !isReadonly && "cursor-pointer",
+          )}
+          style={{
+            backgroundColor: checked
+              ? variant === "destructive"
+                ? "var(--state-error-text)"
+                : "var(--action-primary)"
+              : "var(--border-default)",
+          }}
+          aria-hidden
         >
           <span
             className={cn(
-              "pointer-events-none inline-block rounded-full bg-white shadow-sm ring-0",
-              "transition-transform duration-200 ease-in-out",
-              thumbSizeMap[size],
-              isChecked ? thumbTranslateMap[size] : "translate-x-0",
+              "pointer-events-none inline-flex items-center justify-center rounded-full bg-surface-default shadow-xs transition-[translate] duration-200",
+              thumbSizes[resolvedSize].base,
+              "translate-y-0.5 translate-x-0.5",
+              checked && thumbSizes[resolvedSize].translate,
             )}
-            aria-hidden
-          />
-        </button>
-
-        {(label || description) && (
-          <div className="flex flex-col gap-0.5">
-            {label && (
-              <label
-                htmlFor={id}
-                className={cn(
-                  "text-sm font-medium text-text-primary cursor-pointer leading-none",
-                  isDisabled && "cursor-not-allowed opacity-50",
-                )}
+          >
+            {loading && (
+              <svg
+                className="animate-spin text-text-secondary"
+                style={{ width: "60%", height: "60%" }}
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden
               >
+                <circle
+                  cx="8"
+                  cy="8"
+                  r="6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  opacity="0.25"
+                />
+                <path
+                  d="M14 8a6 6 0 00-6-6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            )}
+          </span>
+        </span>
+        {(label || description) && (
+          <span className="flex flex-col">
+            {label && (
+              <span className="text-sm font-medium text-text-primary">
                 {label}
-              </label>
+              </span>
             )}
             {description && (
-              <span className="text-xs text-text-secondary">{description}</span>
+              <span className="text-xs text-text-secondary">
+                {description}
+              </span>
             )}
-          </div>
+          </span>
         )}
-      </div>
+      </label>
     );
   },
 );
 
-setDisplayName(Switch, "Switch");
-
-export { Switch, switchTrackVariants };
+Switch.displayName = "Switch";

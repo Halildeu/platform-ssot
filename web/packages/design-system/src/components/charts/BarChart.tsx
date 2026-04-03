@@ -116,7 +116,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
           }));
 
       const clickListener = onDataPointClick ? {
-        seriesNodeClick: (e: any) => {
+        nodeClick: (e: any) => {
           onDataPointClick({
             datum: e.datum ?? {},
             seriesId: e.seriesId,

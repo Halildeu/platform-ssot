@@ -1,145 +1,177 @@
-"use client";
-
-import * as React from "react";
+import React, { useEffect, useRef, useCallback, useId } from "react";
 import { cn } from "../../utils/cn";
-import { variants } from "../../system/variants";
-import { composeRefs, setDisplayName } from "../../system/compose";
+import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
+import { useScrollLock, registerLayer, unregisterLayer, useEscapeKey, useFocusRestore } from "../../internal/overlay-engine";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
-// ---------------------------------------------------------------------------
-// Variants
-// ---------------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/*  FormDrawer — Slide-in panel for create/edit forms                  */
+/* ------------------------------------------------------------------ */
 
-const drawerVariants = variants({
-  base: [
-    "fixed inset-y-0 z-50 flex flex-col bg-surface-default shadow-2xl border",
-    "transition-transform duration-300 ease-out",
-    "focus-visible:outline-none",
-  ],
-  variants: {
-    side: {
-      right: "right-0 border-l border-border-subtle",
-      left: "left-0 border-r border-border-subtle",
-    },
-    size: {
-      sm: "w-[360px]",
-      md: "w-[480px]",
-      lg: "w-[640px]",
-      xl: "w-[800px]",
-    },
-  },
-  defaultVariants: {
-    side: "right",
-    size: "md",
-  },
-});
+export type FormDrawerSize = "sm" | "md" | "lg" | "xl";
+export type FormDrawerPlacement = "right" | "left";
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-export interface FormDrawerProps {
+/** Props for the FormDrawer component.
+ * @example
+ * ```tsx
+ * <FormDrawer />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/form-drawer)
+ */
+export interface FormDrawerProps extends AccessControlledProps {
+  /** Controlled open state */
   open: boolean;
+  /** Close callback */
   onClose: () => void;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
+  /** Drawer title */
+  title: React.ReactNode;
+  /** Optional subtitle */
+  subtitle?: React.ReactNode;
+  /** Form body content */
+  children: React.ReactNode;
+  /** Footer slot — typically submit/cancel buttons */
   footer?: React.ReactNode;
-  side?: "left" | "right";
-  size?: "sm" | "md" | "lg" | "xl";
+  /** Width preset */
+  size?: FormDrawerSize;
+  /** Slide direction */
+  placement?: FormDrawerPlacement;
+  /** Close on backdrop click */
   closeOnBackdrop?: boolean;
+  /** Close on Escape key */
   closeOnEscape?: boolean;
+  /** Show loading overlay */
   loading?: boolean;
-  children?: React.ReactNode;
   className?: string;
 }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
+const sizeMap: Record<FormDrawerSize, string> = {
+  sm: "max-w-sm",
+  md: "max-w-md",
+  lg: "max-w-lg",
+  xl: "max-w-xl",
+};
 
-function FormDrawer(props: FormDrawerProps) {
-  const {
-    open,
-    onClose,
-    title,
-    description,
-    footer,
-    side = "right",
-    size,
-    closeOnBackdrop = true,
-    closeOnEscape = true,
-    loading = false,
-    children,
-    className,
-  } = props;
+/** Slide-in panel for create/edit forms with submit/cancel footer, loading overlay, and escape handling. */
+export const FormDrawer = React.forwardRef<HTMLDivElement, FormDrawerProps>(({
+  open,
+  onClose,
+  title,
+  subtitle,
+  children,
+  footer,
+  size = "md",
+  placement = "right",
+  closeOnBackdrop = true,
+  closeOnEscape = true,
+  loading = false,
+  className,
+  access,
+  accessReason,
+}, _ref) => {
+  const accessState = resolveAccessState(access);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const layerId = useId();
 
-  // Escape key
-  React.useEffect(() => {
-    if (!open || !closeOnEscape) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+  /* ---- overlay-engine: scroll lock ---- */
+  useScrollLock(open);
+
+  /* ---- overlay-engine: layer-stack registration ---- */
+  useEffect(() => {
+    if (open) {
+      registerLayer(layerId, "modal");
+    }
+    return () => {
+      if (open) {
+        unregisterLayer(layerId);
+      }
     };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open, closeOnEscape, onClose]);
+  }, [open, layerId]);
 
-  // Lock body scroll
-  React.useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = prev; };
+  /* ---- overlay-engine: focus restore ---- */
+  useFocusRestore(open);
+
+  /* ---- overlay-engine: escape key ---- */
+  useEscapeKey(open && closeOnEscape, onClose);
+
+  /* Focus panel on open */
+  useEffect(() => {
+    if (open) panelRef.current?.focus();
   }, [open]);
 
+  const handleBackdropClick = useCallback(() => {
+    if (closeOnBackdrop) onClose();
+  }, [closeOnBackdrop, onClose]);
+
+  if (accessState.isHidden) return null;
   if (!open) return null;
 
-  const translateClass = side === "right"
-    ? "animate-in slide-in-from-right duration-300"
-    : "animate-in slide-in-from-left duration-300";
+  const isRight = placement === "right";
 
   return (
-    <>
+    <div className="fixed inset-0 z-[1300] flex">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-50 bg-black/40 animate-in fade-in-0 duration-200"
-        onClick={closeOnBackdrop ? onClose : undefined}
+        data-access-state={accessState.state}
+        className="absolute inset-0 bg-surface-inverse/40 animate-in fade-in-0"
+        onClick={handleBackdropClick}
         aria-hidden
       />
 
-      {/* Drawer */}
+      {/* Panel */}
       <div
-        className={cn(drawerVariants({ side, size }), translateClass, className)}
+        ref={panelRef}
         role="dialog"
-        aria-modal
-        aria-label={typeof title === "string" ? title : "Form drawer"}
+        aria-modal="true"
+        aria-label={typeof title === "string" ? title : undefined}
+        tabIndex={-1}
+        {...stateAttrs({ component: "form-drawer", state: "open", loading })}
+        title={accessReason}
+        className={cn(
+          "relative flex flex-col w-full bg-surface-default shadow-2xl",
+          "animate-in",
+          isRight ? "ml-auto slide-in-from-right" : "mr-auto slide-in-from-left",
+          accessState.isDisabled && "pointer-events-none opacity-50",
+          sizeMap[size],
+          className,
+        )}
       >
         {/* Header */}
-        {(title || description) && (
-          <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-2">
-            <div className="flex flex-col gap-1 min-w-0">
-              {title && <h2 className="text-lg font-semibold text-text-primary">{title}</h2>}
-              {description && <p className="text-sm text-text-secondary">{description}</p>}
-            </div>
-            <button
-              type="button"
-              className="shrink-0 rounded-md p-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
-              onClick={onClose}
-              aria-label="Close"
-            >
-              <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                <path d="M4 4l8 8M12 4l-8 8" />
-              </svg>
-            </button>
+        <div className="flex items-start justify-between gap-3 border-b border-border-subtle px-6 py-4">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg font-semibold text-text-primary truncate">
+              {title}
+            </h2>
+            {subtitle && (
+              <p className="mt-0.5 text-sm text-text-secondary">{subtitle}</p>
+            )}
           </div>
-        )}
+          <button
+            type="button"
+            onClick={onClose}
+            className={cn(
+              "shrink-0 rounded-lg p-1.5 text-[var(--text-tertiary)]",
+              "hover:bg-[var(--surface-hover)] hover:text-text-primary",
+              focusRingClass("ring"),
+              "transition-colors",
+            )}
+            aria-label="Close drawer"
+          >
+            <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fillRule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 relative">
+        <div className="flex-1 overflow-y-auto px-6 py-4">
           {loading && (
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-surface-default/60">
-              <svg className="h-6 w-6 animate-spin text-action-primary" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-border-default border-t-[var(--action-primary)]" />
             </div>
           )}
           {children}
@@ -147,15 +179,16 @@ function FormDrawer(props: FormDrawerProps) {
 
         {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-3 border-t border-border-subtle px-6 py-4">
+          <div className="flex items-center justify-end gap-2 border-t border-border-subtle px-6 py-3">
             {footer}
           </div>
         )}
       </div>
-    </>
+    </div>
   );
-}
+});
 
-setDisplayName(FormDrawer, "FormDrawer");
+FormDrawer.displayName = "FormDrawer";
 
-export { FormDrawer, drawerVariants };
+/** Ref type for FormDrawer. */
+export type FormDrawerRef = React.Ref<HTMLDivElement>;

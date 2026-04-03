@@ -1,166 +1,201 @@
-"use client";
-
-import * as React from "react";
+import React, { useMemo, useState } from "react";
 import { cn } from "../../utils/cn";
-import { setDisplayName } from "../../system/compose";
+import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/*  Pagination — Page navigation with smart ellipsis                   */
+/* ------------------------------------------------------------------ */
 
-export interface PaginationProps extends React.HTMLAttributes<HTMLElement> {
-  page: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+export type PaginationSize = "sm" | "md";
+
+export interface PaginationProps extends AccessControlledProps {
+  /** Total number of items across all pages. */
+  total?: number;
+  /** Controlled current page number. */
+  current?: number;
+  /** Initial page for uncontrolled mode. Ignored when `current` is provided. */
+  defaultCurrent?: number;
+  /** Number of items per page. */
+  pageSize?: number;
+  /** Callback fired when the page changes. */
+  onChange?: (page: number) => void;
+  /** Max page buttons visible (excluding prev/next) */
   siblingCount?: number;
-  showEdges?: boolean;
-  disabled?: boolean;
+  /** Size variant for the pagination buttons. */
+  size?: PaginationSize;
+  /** Show total count */
+  showTotal?: boolean;
+  /** Additional CSS class name. */
+  className?: string;
 }
 
-// ---------------------------------------------------------------------------
-// Page range algorithm
-// ---------------------------------------------------------------------------
-
-function getPageRange(page: number, total: number, siblings: number): (number | "ellipsis")[] {
-  const totalNumbers = siblings * 2 + 5; // siblings each side + first + last + page + 2 ellipsis
-
-  if (total <= totalNumbers) {
-    return Array.from({ length: total }, (_, i) => i + 1);
-  }
-
-  const leftSibling = Math.max(page - siblings, 2);
-  const rightSibling = Math.min(page + siblings, total - 1);
-
-  const showLeftEllipsis = leftSibling > 3;
-  const showRightEllipsis = rightSibling < total - 2;
-
-  const items: (number | "ellipsis")[] = [1];
-
-  if (showLeftEllipsis) {
-    items.push("ellipsis");
-  } else {
-    for (let i = 2; i < leftSibling; i++) items.push(i);
-  }
-
-  for (let i = leftSibling; i <= rightSibling; i++) items.push(i);
-
-  if (showRightEllipsis) {
-    items.push("ellipsis");
-  } else {
-    for (let i = rightSibling + 1; i < total; i++) items.push(i);
-  }
-
-  items.push(total);
-
-  return items;
+function range(start: number, end: number): number[] {
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 }
 
-// ---------------------------------------------------------------------------
-// Chevron icons
-// ---------------------------------------------------------------------------
+function usePaginationRange(
+  totalPages: number,
+  current: number,
+  siblings: number,
+): (number | "ellipsis")[] {
+  return useMemo(() => {
+    const totalNumbers = siblings * 2 + 5; // first + last + current + 2 siblings + 2 ellipsis
 
-function ChevronLeft({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-      <path d="M10 4l-4 4 4 4" />
-    </svg>
-  );
-}
+    if (totalPages <= totalNumbers) {
+      return range(1, totalPages);
+    }
 
-function ChevronRight({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-      <path d="M6 4l4 4-4 4" />
-    </svg>
-  );
-}
+    const leftSibling = Math.max(current - siblings, 1);
+    const rightSibling = Math.min(current + siblings, totalPages);
 
-// ---------------------------------------------------------------------------
-// Shared button classes
-// ---------------------------------------------------------------------------
+    const showLeftEllipsis = leftSibling > 2;
+    const showRightEllipsis = rightSibling < totalPages - 1;
 
-const pageButtonBase = [
-  "inline-flex items-center justify-center rounded-md text-sm font-medium",
-  "h-9 min-w-9 px-2",
-  "transition-colors duration-150",
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-offset-1",
-  "disabled:pointer-events-none disabled:opacity-50",
-].join(" ");
+    if (!showLeftEllipsis && showRightEllipsis) {
+      const leftRange = range(1, siblings * 2 + 3);
+      return [...leftRange, "ellipsis" as const, totalPages];
+    }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
+    if (showLeftEllipsis && !showRightEllipsis) {
+      const rightRange = range(totalPages - siblings * 2 - 2, totalPages);
+      return [1, "ellipsis" as const, ...rightRange];
+    }
 
-const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
-  function Pagination(props, ref) {
-    const {
-      className,
-      page,
+    return [
+      1,
+      "ellipsis" as const,
+      ...range(leftSibling, rightSibling),
+      "ellipsis" as const,
       totalPages,
-      onPageChange,
-      siblingCount = 1,
-      showEdges = true,
-      disabled = false,
-      ...rest
-    } = props;
+    ];
+  }, [totalPages, current, siblings]);
+}
 
-    if (totalPages <= 1) return null;
+const sizeMap: Record<PaginationSize, string> = {
+  sm: "h-7 min-w-7 px-2 text-xs",
+  md: "h-8 min-w-8 px-2.5 text-sm",
+};
 
-    const pages = getPageRange(page, totalPages, siblingCount);
+/**
+ * Page navigation control with smart ellipsis, controlled/uncontrolled modes, and keyboard support.
+ *
+ * @example
+ * ```tsx
+ * <Pagination
+ *   total={150}
+ *   pageSize={10}
+ *   current={currentPage}
+ *   onChange={setCurrentPage}
+ * />
+ * ```
+ */
+export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(({
+  total: totalProp,
+  current: currentProp,
+  defaultCurrent,
+  pageSize = 10,
+  onChange: onChangeProp,
+  siblingCount = 1,
+  size = "md",
+  showTotal = false,
+  access = "full",
+  accessReason,
+  className,
+}, ref) => {
+  const accessState = resolveAccessState(access);
 
-    return (
-      <nav ref={ref} aria-label="Pagination" className={cn("flex items-center gap-1", className)} {...rest}>
-        {/* Previous */}
-        <button
-          type="button"
-          className={cn(pageButtonBase, "text-text-secondary hover:bg-surface-muted")}
-          disabled={disabled || page <= 1}
-          onClick={() => onPageChange(page - 1)}
-          aria-label="Previous page"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
+  if (accessState.isHidden) return null;
 
-        {/* Pages */}
-        {pages.map((item, i) =>
-          item === "ellipsis" ? (
-            <span key={`e-${i}`} className="px-1 text-text-disabled select-none">
+  const isAccessDisabled = accessState.isDisabled || accessState.isReadonly;
+
+  const total = totalProp ?? 0;
+
+  // Uncontrolled mode: track internal page when `current` prop is not provided
+  const [internalCurrent, setInternalCurrent] = useState(defaultCurrent ?? 1);
+  const isControlled = currentProp !== undefined;
+  const current = isControlled ? currentProp : internalCurrent;
+
+  const onChange = (p: number) => {
+    if (!isControlled) {
+      setInternalCurrent(p);
+    }
+    onChangeProp?.(p);
+  };
+
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const pages = usePaginationRange(totalPages, current, siblingCount);
+
+  const btnBase = cn(
+    "inline-flex items-center justify-center rounded-lg font-medium transition",
+    focusRingClass("ring"),
+    "disabled:pointer-events-none disabled:opacity-40",
+    sizeMap[size],
+  );
+
+  return (
+    <nav ref={ref as React.Ref<HTMLElement>} aria-label="Pagination" title={accessReason} className={cn("flex items-center gap-1.5", isAccessDisabled && "opacity-50 pointer-events-none", className)} data-access-state={accessState.state} {...stateAttrs({ component: "pagination", disabled: isAccessDisabled, access })}>
+      {showTotal && (
+        <span className="me-2 text-xs text-text-secondary">
+          {total} items
+        </span>
+      )}
+
+      {/* Prev */}
+      <button
+        type="button"
+        disabled={current <= 1 || isAccessDisabled}
+        onClick={() => onChange?.(current - 1)}
+        className={cn(btnBase, "text-text-secondary hover:bg-surface-muted")}
+        aria-label="Previous page"
+      >
+        <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+          <path d="M10 4l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      {/* Pages */}
+      {pages.map((page, i) => {
+        if (page === "ellipsis") {
+          return (
+            <span key={`e-${i}`} className={cn(btnBase, "pointer-events-none text-[var(--text-disabled)]")}>
               ...
             </span>
-          ) : (
-            <button
-              key={item}
-              type="button"
-              className={cn(
-                pageButtonBase,
-                item === page
-                  ? "bg-action-primary text-text-inverse shadow-sm"
-                  : "text-text-secondary hover:bg-surface-muted",
-              )}
-              disabled={disabled}
-              aria-current={item === page ? "page" : undefined}
-              onClick={() => onPageChange(item)}
-            >
-              {item}
-            </button>
-          ),
-        )}
+          );
+        }
+        const isActive = page === current;
+        return (
+          <button
+            key={page}
+            type="button"
+            onClick={() => onChange?.(page)}
+            aria-current={isActive ? "page" : undefined}
+            className={cn(
+              btnBase,
+              isActive
+                ? "bg-action-primary text-text-inverse shadow-xs"
+                : "text-text-secondary hover:bg-surface-muted",
+            )}
+          >
+            {page}
+          </button>
+        );
+      })}
 
-        {/* Next */}
-        <button
-          type="button"
-          className={cn(pageButtonBase, "text-text-secondary hover:bg-surface-muted")}
-          disabled={disabled || page >= totalPages}
-          onClick={() => onPageChange(page + 1)}
-          aria-label="Next page"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
-      </nav>
-    );
-  },
-);
+      {/* Next */}
+      <button
+        type="button"
+        disabled={current >= totalPages || isAccessDisabled}
+        onClick={() => onChange?.(current + 1)}
+        className={cn(btnBase, "text-text-secondary hover:bg-surface-muted")}
+        aria-label="Next page"
+      >
+        <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+          <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+    </nav>
+  );
+});
 
-setDisplayName(Pagination, "Pagination");
-
-export { Pagination };
+Pagination.displayName = "Pagination";

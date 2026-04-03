@@ -1,122 +1,127 @@
-"use client";
-
-import * as React from "react";
+import React, { forwardRef } from "react";
 import { cn } from "../../utils/cn";
-import { variants } from "../../system/variants";
-import { setDisplayName } from "../../system/compose";
 
-// ---------------------------------------------------------------------------
-// Variants
-// ---------------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/*  Stack — Flexbox layout primitive                                   */
+/*                                                                     */
+/*  Inspired by Chakra UI Stack / MUI Stack.                           */
+/*  Provides consistent spacing and alignment for layouts.             */
+/* ------------------------------------------------------------------ */
 
-const stackVariants = variants({
-  base: "flex",
-  variants: {
-    direction: {
-      row: "flex-row",
-      column: "flex-col",
-      "row-reverse": "flex-row-reverse",
-      "column-reverse": "flex-col-reverse",
-    },
-    align: {
-      start: "items-start",
-      center: "items-center",
-      end: "items-end",
-      stretch: "items-stretch",
-      baseline: "items-baseline",
-    },
-    justify: {
-      start: "justify-start",
-      center: "justify-center",
-      end: "justify-end",
-      between: "justify-between",
-      around: "justify-around",
-      evenly: "justify-evenly",
-    },
-    gap: {
-      0: "gap-0",
-      1: "gap-1",
-      2: "gap-2",
-      3: "gap-3",
-      4: "gap-4",
-      5: "gap-5",
-      6: "gap-6",
-      8: "gap-8",
-      10: "gap-10",
-      12: "gap-12",
-    },
-    wrap: {
-      true: "flex-wrap",
-    },
-  },
-  defaultVariants: {
-    direction: "column",
-    gap: 3,
-  },
-});
+export type StackDirection = "row" | "column" | "row-reverse" | "column-reverse";
+export type StackAlign = "start" | "center" | "end" | "stretch" | "baseline";
+export type StackJustify = "start" | "center" | "end" | "between" | "around" | "evenly";
+export type StackGap = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8 | 10 | 12;
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
+/** Props for the Stack component.
+ * @example
+ * ```tsx
+ * <Stack />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/stack)
+ */
 export interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
-  as?: "div" | "section" | "nav" | "ul" | "ol" | "main" | "aside" | "header" | "footer";
-  direction?: "row" | "column" | "row-reverse" | "column-reverse";
-  align?: "start" | "center" | "end" | "stretch" | "baseline";
-  justify?: "start" | "center" | "end" | "between" | "around" | "evenly";
-  gap?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8 | 10 | 12;
+  /** Flex direction of the stack. */
+  direction?: StackDirection;
+  /** Cross-axis alignment of items. */
+  align?: StackAlign;
+  /** Main-axis justification of items. */
+  justify?: StackJustify;
+  /** Spacing gap between items. */
+  gap?: StackGap;
+  /** Whether items wrap to multiple lines. */
   wrap?: boolean;
+  /** Render as another element */
+  as?: "div" | "section" | "article" | "nav" | "main" | "aside" | "ul" | "ol";
 }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
+const directionMap: Record<StackDirection, string> = {
+  row: "flex-row",
+  column: "flex-col",
+  "row-reverse": "flex-row-reverse",
+  "column-reverse": "flex-col-reverse",
+};
 
-const Stack = React.forwardRef<HTMLDivElement, StackProps>(
-  function Stack(props, ref) {
-    const {
-      className,
-      as: Tag = "div",
-      direction,
+const alignMap: Record<StackAlign, string> = {
+  start: "items-start",
+  center: "items-center",
+  end: "items-end",
+  stretch: "items-stretch",
+  baseline: "items-baseline",
+};
+
+const justifyMap: Record<StackJustify, string> = {
+  start: "justify-start",
+  center: "justify-center",
+  end: "justify-end",
+  between: "justify-between",
+  around: "justify-around",
+  evenly: "justify-evenly",
+};
+
+const gapMap: Record<StackGap, string> = {
+  0: "gap-0",
+  1: "gap-1",
+  2: "gap-2",
+  3: "gap-3",
+  4: "gap-4",
+  5: "gap-5",
+  6: "gap-6",
+  8: "gap-8",
+  10: "gap-10",
+  12: "gap-12",
+};
+
+/** Flexbox layout primitive with configurable direction, alignment, gap, and polymorphic element. */
+export const Stack = forwardRef<HTMLDivElement, StackProps>(
+  (
+    {
+      direction = "column",
       align,
       justify,
-      gap,
-      wrap,
+      gap = 3,
+      wrap = false,
+      as: _Tag = "div",
+      className,
       children,
       ...rest
-    } = props;
-
-    return (
-      <Tag
-        ref={ref}
-        className={cn(stackVariants({ direction, align, justify, gap, wrap }), className)}
-        {...rest}
-      >
-        {children}
-      </Tag>
-    );
-  },
+    },
+    ref,
+  ) => (
+    <div
+      ref={ref}
+      className={cn(
+        "flex",
+        directionMap[direction],
+        align && alignMap[align],
+        justify && justifyMap[justify],
+        gapMap[gap],
+        wrap && "flex-wrap",
+        className,
+      )}
+      {...rest}
+    >
+      {children}
+    </div>
+  ),
 );
 
-setDisplayName(Stack, "Stack");
+Stack.displayName = "Stack";
 
-// ---------------------------------------------------------------------------
-// Convenience wrappers
-// ---------------------------------------------------------------------------
+/* ---- HStack / VStack convenience wrappers ---- */
 
-const HStack = React.forwardRef<HTMLDivElement, Omit<StackProps, "direction">>(
-  function HStack(props, ref) {
-    return <Stack ref={ref} direction="row" align="center" {...props} />;
-  },
+export type HStackProps = Omit<StackProps, "direction">;
+export type VStackProps = Omit<StackProps, "direction">;
+
+export const HStack = forwardRef<HTMLDivElement, HStackProps>(
+  ({ align = "center", ...rest }, ref) => (
+    <Stack ref={ref} direction="row" align={align} {...rest} />
+  ),
 );
+HStack.displayName = "HStack";
 
-const VStack = React.forwardRef<HTMLDivElement, Omit<StackProps, "direction">>(
-  function VStack(props, ref) {
-    return <Stack ref={ref} direction="column" {...props} />;
-  },
+export const VStack = forwardRef<HTMLDivElement, VStackProps>(
+  (props, ref) => <Stack ref={ref} direction="column" {...props} />,
 );
-
-setDisplayName(HStack, "HStack");
-setDisplayName(VStack, "VStack");
-
-export { Stack, HStack, VStack, stackVariants };
+VStack.displayName = "VStack";

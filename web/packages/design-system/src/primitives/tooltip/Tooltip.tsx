@@ -1,152 +1,201 @@
-"use client";
-
-import * as React from "react";
+import React, { useState, useRef, useCallback, useEffect, useId } from "react";
+import { stateAttrs } from "../../internal/interaction-core";
+import { registerLayer, unregisterLayer } from "../../internal/overlay-engine";
 import { cn } from "../../utils/cn";
-import { setDisplayName, composeEventHandlers } from "../../system/compose";
-import { stateAttrs } from "../../internal/interaction-core/state-attributes";
 
-// ---------------------------------------------------------------------------
-// Placement styles
-// ---------------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/*  Tooltip — Hover / focus information overlay                        */
+/* ------------------------------------------------------------------ */
 
-const placementStyles: Record<string, string> = {
-  top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
-  bottom: "top-full left-1/2 -translate-x-1/2 mt-2",
-  left: "right-full top-1/2 -translate-y-1/2 mr-2",
-  right: "left-full top-1/2 -translate-y-1/2 ml-2",
-};
+export type TooltipPlacement = "top" | "bottom" | "left" | "right";
+export type TooltipAlign = "start" | "center" | "end";
 
-const arrowStyles: Record<string, string> = {
-  top: "top-full left-1/2 -translate-x-1/2 border-t-gray-900 border-x-transparent border-b-transparent dark:border-t-gray-100",
-  bottom: "bottom-full left-1/2 -translate-x-1/2 border-b-gray-900 border-x-transparent border-t-transparent dark:border-b-gray-100",
-  left: "left-full top-1/2 -translate-y-1/2 border-l-gray-900 border-y-transparent border-r-transparent dark:border-l-gray-100",
-  right: "right-full top-1/2 -translate-y-1/2 border-r-gray-900 border-y-transparent border-l-transparent dark:border-r-gray-100",
-};
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
+/**
+ * Tooltip renders a hover/focus information overlay positioned relative to its trigger element.
+ */
 export interface TooltipProps {
-  content: React.ReactNode;
-  placement?: "top" | "bottom" | "left" | "right";
+  /** Tooltip content displayed in the overlay. */
+  content?: React.ReactNode;
+  /** Side on which the tooltip appears. @default "top" */
+  placement?: TooltipPlacement;
+  /** Horizontal alignment relative to the trigger. @default "center" */
+  align?: TooltipAlign;
+  /** @deprecated Use `openDelay` instead. Delay before showing (ms). */
+  delay?: number;
+  /** Delay in ms before the tooltip appears. @default 200 */
   openDelay?: number;
+  /** Delay in ms before the tooltip hides. @default 0 */
   closeDelay?: number;
-  arrow?: boolean;
+  /** Prevent the tooltip from appearing. @default false */
   disabled?: boolean;
-  children: React.ReactElement;
+  /** Show a directional arrow pointing to the trigger. @default false */
+  showArrow?: boolean;
+  /** Additional CSS class name for the wrapper span. */
   className?: string;
+  /**
+   * Render the trigger via Slot — merges tooltip event handlers
+   * directly onto the child element, removing the wrapper `<span>`.
+   * The child element must accept `className`, `onMouseEnter`,
+   * `onMouseLeave`, `onFocus`, `onBlur`, and `onKeyDown` props.
+   * @example
+   * <Tooltip content="Settings" asChild>
+   *   <IconButton icon={<GearIcon />} aria-label="Settings" />
+   * </Tooltip>
+   */
+  asChild?: boolean;
+  /** Trigger element that the tooltip wraps. */
+  children: React.ReactNode;
 }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
+const placementStyles: Record<TooltipPlacement, string> = {
+  top: "bottom-full start-1/2 -translate-x-1/2 mb-2",
+  bottom: "top-full start-1/2 -translate-x-1/2 mt-2",
+  left: "end-full top-1/2 -translate-y-1/2 me-2",
+  right: "start-full top-1/2 -translate-y-1/2 ms-2",
+};
 
-function Tooltip(props: TooltipProps) {
-  const {
-    content,
-    placement = "top",
-    openDelay = 200,
-    closeDelay = 150,
-    arrow = true,
-    disabled = false,
-    children,
-    className,
-  } = props;
+const arrowStyles: Record<TooltipPlacement, string> = {
+  top: "top-full start-1/2 -translate-x-1/2 border-t-[var(--text-primary)] border-x-transparent border-b-transparent",
+  bottom: "bottom-full start-1/2 -translate-x-1/2 border-b-[var(--text-primary)] border-x-transparent border-t-transparent",
+  left: "start-full top-1/2 -translate-y-1/2 border-s-[var(--text-primary)] border-y-transparent border-e-transparent",
+  right: "end-full top-1/2 -translate-y-1/2 border-e-[var(--text-primary)] border-y-transparent border-s-transparent",
+};
 
-  const [visible, setVisible] = React.useState(false);
-  const openTimer = React.useRef<ReturnType<typeof setTimeout>>();
-  const closeTimer = React.useRef<ReturnType<typeof setTimeout>>();
+/** Hover/focus information overlay positioned relative to its trigger element. */
+export const Tooltip = React.forwardRef<HTMLSpanElement, TooltipProps>(({
+  content,
+  placement = "top",
+  align: _align,
+  delay,
+  openDelay,
+  closeDelay = 0,
+  disabled = false,
+  showArrow = false,
+  className,
+  asChild = false,
+  children,
+}, ref) => {
+  const [visible, setVisible] = useState(false);
+  const showTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const hideTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const resolvedDelay = openDelay ?? delay ?? 200;
+  const resolvedContent = content;
+  const layerId = useId();
 
-  const show = React.useCallback(() => {
-    clearTimeout(closeTimer.current);
-    openTimer.current = setTimeout(() => setVisible(true), openDelay);
-  }, [openDelay]);
+  /* ---- overlay-engine: layer-stack registration ---- */
+  useEffect(() => {
+    if (visible) {
+      registerLayer(`tooltip-${layerId}`, "toast");
+    }
+    return () => {
+      if (visible) {
+        unregisterLayer(`tooltip-${layerId}`);
+      }
+    };
+  }, [visible, layerId]);
 
-  const hide = React.useCallback(() => {
-    clearTimeout(openTimer.current);
-    closeTimer.current = setTimeout(() => setVisible(false), closeDelay);
+  const show = useCallback(() => {
+    if (disabled) return;
+    clearTimeout(hideTimeoutRef.current);
+    showTimeoutRef.current = setTimeout(() => setVisible(true), resolvedDelay);
+  }, [resolvedDelay, disabled]);
+
+  const hide = useCallback(() => {
+    clearTimeout(showTimeoutRef.current);
+    if (closeDelay > 0) {
+      hideTimeoutRef.current = setTimeout(() => setVisible(false), closeDelay);
+    } else {
+      setVisible(false);
+    }
   }, [closeDelay]);
 
-  // Cleanup
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(openTimer.current);
-      clearTimeout(closeTimer.current);
-    };
-  }, []);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") {
+        hide();
+      }
+    },
+    [hide],
+  );
 
-  // Escape dismissal
-  React.useEffect(() => {
-    if (!visible) return;
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setVisible(false); }
-    };
-    document.addEventListener("keydown", handleEsc);
-    return () => document.removeEventListener("keydown", handleEsc);
-  }, [visible]);
+  if (!resolvedContent) {
+    return <>{children}</>;
+  }
 
-  if (disabled || !content) return children;
-
-  // Compose event handlers with child's existing handlers
-  const child = React.Children.only(children);
-  const childProps = child.props as Record<string, unknown>;
-
-  const triggerProps = {
-    onMouseEnter: composeEventHandlers(
-      childProps.onMouseEnter as (() => void) | undefined,
-      show,
-      { checkForDefaultPrevented: false },
-    ),
-    onMouseLeave: composeEventHandlers(
-      childProps.onMouseLeave as (() => void) | undefined,
-      hide,
-      { checkForDefaultPrevented: false },
-    ),
-    onFocus: composeEventHandlers(
-      childProps.onFocus as (() => void) | undefined,
-      show,
-      { checkForDefaultPrevented: false },
-    ),
-    onBlur: composeEventHandlers(
-      childProps.onBlur as (() => void) | undefined,
-      hide,
-      { checkForDefaultPrevented: false },
-    ),
-    "aria-describedby": visible ? "ds-tooltip" : undefined,
-  };
-
-  return (
-    <span className="relative inline-flex">
-      {React.cloneElement(child, triggerProps)}
-
-      {visible && (
+  const tooltipPopup = visible ? (
+    <span
+      role="tooltip"
+      {...stateAttrs({ state: visible ? "open" : "closed", component: "tooltip" })}
+      className={cn(
+        "pointer-events-none absolute z-[1600] rounded-lg px-2.5 py-1.5",
+        "bg-text-primary text-xs font-medium text-text-inverse",
+        "shadow-lg animate-in fade-in-0 zoom-in-95",
+        placementStyles[placement],
+      )}
+    >
+      {resolvedContent}
+      {showArrow && (
         <span
-          id="ds-tooltip"
-          role="tooltip"
           className={cn(
-            "absolute z-50 px-2.5 py-1.5 rounded-md text-xs font-medium",
-            "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900",
-            "shadow-lg pointer-events-none whitespace-nowrap",
-            "animate-in fade-in-0 zoom-in-95 duration-150",
-            placementStyles[placement],
-            className,
+            "absolute border-4",
+            arrowStyles[placement],
           )}
-          {...stateAttrs({ component: "tooltip" })}
-        >
-          {content}
-          {arrow && (
-            <span
-              className={cn("absolute border-4", arrowStyles[placement])}
-              aria-hidden
-            />
-          )}
-        </span>
+        />
       )}
     </span>
+  ) : null;
+
+  const triggerProps = {
+    onMouseEnter: show,
+    onMouseLeave: hide,
+    onFocus: show,
+    onBlur: hide,
+    onKeyDown: handleKeyDown,
+  };
+
+  // asChild: merge trigger behavior onto the child element directly,
+  // avoiding the extra wrapper <span>. The child must support className
+  // and event handler props.
+  if (asChild) {
+    const child = React.Children.only(children);
+    if (!React.isValidElement(child)) {
+      console.warn("Tooltip: asChild requires a single valid React element as child.");
+      return <>{children}</>;
+    }
+
+    const childProps = child.props as Record<string, unknown>;
+    return React.cloneElement(child, {
+      ...triggerProps,
+      className: cn("relative inline-flex", childProps.className as string | undefined, className),
+      // Compose event handlers with child's existing handlers
+      onMouseEnter: childProps.onMouseEnter
+        ? (e: React.MouseEvent) => { show(); (childProps.onMouseEnter as (e: React.MouseEvent) => void)(e); }
+        : show,
+      onMouseLeave: childProps.onMouseLeave
+        ? (e: React.MouseEvent) => { hide(); (childProps.onMouseLeave as (e: React.MouseEvent) => void)(e); }
+        : hide,
+      onFocus: childProps.onFocus
+        ? (e: React.FocusEvent) => { show(); (childProps.onFocus as (e: React.FocusEvent) => void)(e); }
+        : show,
+      onBlur: childProps.onBlur
+        ? (e: React.FocusEvent) => { hide(); (childProps.onBlur as (e: React.FocusEvent) => void)(e); }
+        : hide,
+    } as Record<string, unknown>,
+      ...(React.Children.toArray((child.props as { children?: React.ReactNode }).children)),
+      tooltipPopup,
+    );
+  }
+
+  return (
+    <span
+      ref={ref}
+      className={cn("relative inline-flex", className)}
+      {...triggerProps}
+    >
+      {children}
+      {tooltipPopup}
+    </span>
   );
-}
+});
 
-setDisplayName(Tooltip, "Tooltip");
-
-export { Tooltip };
+Tooltip.displayName = "Tooltip";

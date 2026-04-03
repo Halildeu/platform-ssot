@@ -1,155 +1,215 @@
-"use client";
-
-import * as React from "react";
+import React, { useEffect, useRef, useCallback, useId } from "react";
 import { cn } from "../../utils/cn";
-import { variants } from "../../system/variants";
-import { setDisplayName } from "../../system/compose";
+import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
+import { useScrollLock, registerLayer, unregisterLayer, useEscapeKey, useFocusRestore } from "../../internal/overlay-engine";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+/* ------------------------------------------------------------------ */
+/*  DetailDrawer — Read-only detail panel (wider, with sections)       */
+/* ------------------------------------------------------------------ */
 
-// ---------------------------------------------------------------------------
-// Variants
-// ---------------------------------------------------------------------------
+export type DetailDrawerSize = "md" | "lg" | "xl" | "full";
 
-const detailDrawerVariants = variants({
-  base: [
-    "fixed inset-y-0 right-0 z-50 flex flex-col bg-surface-default shadow-2xl",
-    "border-l border-border-subtle",
-    "animate-in slide-in-from-right duration-300",
-    "focus-visible:outline-none",
-  ],
-  variants: {
-    size: {
-      sm: "w-[400px]",
-      md: "w-[520px]",
-      lg: "w-[680px]",
-      xl: "w-[860px]",
-      full: "w-[calc(100vw-4rem)]",
-    },
-  },
-  defaultVariants: {
-    size: "md",
-  },
-});
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-export interface DetailDrawerProps {
-  open: boolean;
-  onClose: () => void;
+export interface DetailDrawerSection {
+  key: string;
   title?: React.ReactNode;
+  content: React.ReactNode;
+}
+
+/** Props for the DetailDrawer component.
+ * @example
+ * ```tsx
+ * <DetailDrawer />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/detail-drawer)
+ */
+export interface DetailDrawerProps extends AccessControlledProps {
+  /** Controlled open state */
+  open: boolean;
+  /** Close callback */
+  onClose: () => void;
+  /** Drawer title */
+  title: React.ReactNode;
+  /** Optional subtitle */
   subtitle?: React.ReactNode;
-  badge?: React.ReactNode;
+  /** Optional header actions (e.g. Edit, Delete buttons) */
   actions?: React.ReactNode;
-  tabs?: React.ReactNode;
-  footer?: React.ReactNode;
-  size?: "sm" | "md" | "lg" | "xl" | "full";
-  closeOnBackdrop?: boolean;
-  closeOnEscape?: boolean;
+  /** Optional header tags / badges */
+  tags?: React.ReactNode;
+  /** Sections to render */
+  sections?: DetailDrawerSection[];
+  /** Or free-form children */
   children?: React.ReactNode;
+  /** Footer slot */
+  footer?: React.ReactNode;
+  /** Width preset */
+  size?: DetailDrawerSize;
+  /** Close on backdrop click */
+  closeOnBackdrop?: boolean;
   className?: string;
 }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
+const sizeMap: Record<DetailDrawerSize, string> = {
+  md: "max-w-md",
+  lg: "max-w-2xl",
+  xl: "max-w-4xl",
+  full: "max-w-full",
+};
 
-function DetailDrawer(props: DetailDrawerProps) {
-  const {
-    open,
-    onClose,
-    title,
-    subtitle,
-    badge,
-    actions,
-    tabs,
-    footer,
-    size,
-    closeOnBackdrop = true,
-    closeOnEscape = true,
-    children,
-    className,
-  } = props;
+/** Read-only slide-in detail panel with section layout, header actions, and tags. */
+export const DetailDrawer = React.forwardRef<HTMLDivElement, DetailDrawerProps>(({
+  open,
+  onClose,
+  title,
+  subtitle,
+  actions,
+  tags,
+  sections,
+  children,
+  footer,
+  size = "lg",
+  closeOnBackdrop = true,
+  className,
+  access,
+  accessReason,
+}, _ref) => {
+  const accessState = resolveAccessState(access);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const layerId = useId();
 
-  // Escape
-  React.useEffect(() => {
-    if (!open || !closeOnEscape) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open, closeOnEscape, onClose]);
+  /* ---- overlay-engine: scroll lock ---- */
+  useScrollLock(open);
 
-  // Body scroll lock
-  React.useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = prev; };
+  /* ---- overlay-engine: layer-stack registration ---- */
+  useEffect(() => {
+    if (open) {
+      registerLayer(layerId, "modal");
+    }
+    return () => {
+      if (open) {
+        unregisterLayer(layerId);
+      }
+    };
+  }, [open, layerId]);
+
+  /* ---- overlay-engine: focus restore ---- */
+  useFocusRestore(open);
+
+  /* ---- overlay-engine: escape key ---- */
+  useEscapeKey(open, onClose);
+
+  useEffect(() => {
+    if (open) panelRef.current?.focus();
   }, [open]);
 
+  const handleBackdrop = useCallback(() => {
+    if (closeOnBackdrop) onClose();
+  }, [closeOnBackdrop, onClose]);
+
+  if (accessState.isHidden) return null;
   if (!open) return null;
 
+  // Resolve body content: sections > children
+  const renderBody = () => {
+    if (sections) {
+      return sections.map((section) => (
+        <div key={section.key} className="border-b border-border-subtle px-6 py-4 last:border-b-0">
+          {section.title && (
+            <h3 className="mb-3 text-sm font-semibold text-text-secondary uppercase tracking-wider">
+              {section.title}
+            </h3>
+          )}
+          {section.content}
+        </div>
+      ));
+    }
+
+    return <div className="px-6 py-4">{children}</div>;
+  };
+
   return (
-    <>
+    <div className="fixed inset-0 z-[1300] flex" data-access-state={accessState.state}>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-50 bg-black/40 animate-in fade-in-0 duration-200"
-        onClick={closeOnBackdrop ? onClose : undefined}
+        className="absolute inset-0 bg-surface-inverse/40 animate-in fade-in-0"
+        onClick={handleBackdrop}
         aria-hidden
       />
 
-      {/* Drawer */}
+      {/* Panel */}
       <div
-        className={cn(detailDrawerVariants({ size }), className)}
+        ref={panelRef}
         role="dialog"
-        aria-modal
-        aria-label={typeof title === "string" ? title : "Detail drawer"}
+        aria-modal="true"
+        aria-label={typeof title === "string" ? title : undefined}
+        tabIndex={-1}
+        title={accessReason}
+        {...stateAttrs({ component: "detail-drawer", state: "open" })}
+        className={cn(
+          "relative ml-auto flex flex-col w-full bg-surface-default shadow-2xl",
+          "animate-in slide-in-from-right",
+          accessState.isDisabled && "pointer-events-none opacity-50",
+          sizeMap[size],
+          className,
+        )}
       >
         {/* Header */}
-        <div className="flex flex-col gap-3 px-6 pt-6 pb-3 border-b border-border-subtle">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex flex-col gap-1 min-w-0">
-              <div className="flex items-center gap-2">
-                {title && <h2 className="text-lg font-semibold text-text-primary truncate">{title}</h2>}
-                {badge}
+        <div className="border-b border-border-subtle px-6 py-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-lg font-semibold text-text-primary truncate">
+                  {title}
+                </h2>
+                {tags && <div className="flex items-center gap-1.5">{tags}</div>}
               </div>
-              {subtitle && <p className="text-sm text-text-secondary">{subtitle}</p>}
+              {subtitle && (
+                <p className="mt-0.5 text-sm text-text-secondary">{subtitle}</p>
+              )}
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
               {actions}
               <button
                 type="button"
-                className="rounded-md p-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
                 onClick={onClose}
-                aria-label="Close"
+                className={cn(
+                  "rounded-lg p-1.5 text-[var(--text-tertiary)]",
+                  "hover:bg-[var(--surface-hover)] hover:text-text-primary",
+                  focusRingClass("ring"),
+                  "transition-colors",
+                )}
+                aria-label="Close drawer"
               >
-                <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                  <path d="M4 4l8 8M12 4l-8 8" />
+                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path
+                    fillRule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </button>
             </div>
           </div>
-
-          {tabs}
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
-          {children}
+        <div className="flex-1 overflow-y-auto">
+          {renderBody()}
         </div>
 
         {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-3 border-t border-border-subtle px-6 py-4">
+          <div className="flex items-center justify-end gap-2 border-t border-border-subtle px-6 py-3">
             {footer}
           </div>
         )}
       </div>
-    </>
+    </div>
   );
-}
+});
 
-setDisplayName(DetailDrawer, "DetailDrawer");
+DetailDrawer.displayName = "DetailDrawer";
 
-export { DetailDrawer, detailDrawerVariants };
+/** Ref type for DetailDrawer. */
+export type DetailDrawerRef = React.Ref<HTMLDivElement>;

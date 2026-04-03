@@ -1,195 +1,283 @@
-"use client";
-
-import * as React from "react";
-import { cn } from "../../utils/cn";
-import { variants } from "../../system/variants";
-import { setDisplayName } from "../../system/compose";
+import React from "react";
 import {
   resolveAccessState,
-  shouldBlockInteraction,
-  accessStyles,
+  withAccessGuard,
+  stateAttrs,
+  type AccessControlledProps,
   type AccessLevel,
-} from "../../internal/access-controller";
-import { stateAttrs } from "../../internal/interaction-core/state-attributes";
+} from "../../internal/interaction-core";
+import {
+  FieldControlShell,
+  buildDescribedBy,
+  getFieldFrameClass,
+  getFieldInputClass,
+  getFieldSlotClass,
+  getFieldTone,
+  type FieldDensity,
+  type FieldSize,
+} from "../_shared/FieldControlPrimitives";
+import { Spinner } from "../spinner/Spinner";
 
-// ---------------------------------------------------------------------------
-// Variants
-// ---------------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/*  TextInput — Full-featured text input with field shell               */
+/*                                                                     */
+/*  Supports: label, description, hint, error, character count,        */
+/*  leading/trailing visuals, access control, density, controlled/     */
+/*  uncontrolled value, forwardRef.                                    */
+/* ------------------------------------------------------------------ */
 
-const inputVariants = variants({
-  base: [
-    "flex w-full rounded-md border bg-transparent text-sm",
-    "transition-colors duration-150",
-    "file:border-0 file:bg-transparent file:text-sm file:font-medium",
-    "placeholder:text-text-disabled",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-offset-1",
-    "disabled:cursor-not-allowed disabled:opacity-50",
-  ],
-  variants: {
-    size: {
-      sm: "h-8 text-xs px-2.5",
-      md: "h-9 text-sm px-3",
-      lg: "h-10 text-base px-3.5",
-    },
-    tone: {
-      default: "border-border-default hover:border-border-strong",
-      error: "border-red-500 focus-visible:ring-red-500",
-      success: "border-green-500 focus-visible:ring-green-500",
-    },
-  },
-  defaultVariants: {
-    size: "md",
-    tone: "default",
-  },
-});
+export type InputSize = FieldSize;
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
+/** Props for the Input component. */
 export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
-  size?: "sm" | "md" | "lg";
-  tone?: "default" | "error" | "success";
-  label?: string;
-  description?: string;
-  error?: string;
+  extends Omit<
+      React.InputHTMLAttributes<HTMLInputElement>,
+      "size" | "onChange" | "children" | "prefix"
+    >,
+    AccessControlledProps {
+  label?: React.ReactNode;
+  description?: React.ReactNode;
+  hint?: React.ReactNode;
+  error?: React.ReactNode;
+  size?: FieldSize;
+  /** @deprecated Use `size` instead. Will be removed in v3.0.0. */
+  inputSize?: FieldSize;
+  density?: FieldDensity;
   leadingVisual?: React.ReactNode;
   trailingVisual?: React.ReactNode;
+  /** Alias — same as leadingVisual */
+  prefix?: React.ReactNode;
+  /** Alias — same as trailingVisual */
+  suffix?: React.ReactNode;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onValueChange?: (
+    value: string,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => void;
   showCount?: boolean;
+  fullWidth?: boolean;
+  /** Show a loading spinner in the trailing slot and make the input readonly */
   loading?: boolean;
-  access?: AccessLevel;
-  onValueChange?: (value: string) => void;
 }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
+const getInitialValue = (
+  value?: string | number | readonly string[],
+  defaultValue?: string | number | readonly string[],
+) => {
+  if (value !== undefined && value !== null) return String(value);
+  if (defaultValue !== undefined && defaultValue !== null)
+    return String(defaultValue);
+  return "";
+};
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  function Input(props, ref) {
-    const {
-      className,
-      size,
-      tone: toneProp,
-      label,
-      description,
-      error,
-      leadingVisual,
-      trailingVisual,
-      showCount = false,
-      loading = false,
-      access,
-      onValueChange,
-      onChange,
-      maxLength,
+/**
+ * Full-featured text input with field shell, label, visuals, character count, and access control.
+ *
+ * @example
+ * ```tsx
+ * <Input
+ *   label="Email"
+ *   placeholder="you@example.com"
+ *   error={errors.email}
+ *   onChange={handleChange}
+ * />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/input)
+ */
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  function Input(
+    {
+      id,
       value,
       defaultValue,
-      disabled: disabledProp,
-      readOnly: readOnlyProp,
-      id: idProp,
-      ...rest
-    } = props;
+      type = "text",
+      label,
+      description,
+      hint,
+      error,
+      size: sizeProp,
+      inputSize,
+      density = "comfortable",
+      leadingVisual,
+      trailingVisual,
+      prefix,
+      suffix,
+      onChange,
+      onValueChange,
+      disabled = false,
+      readOnly = false,
+      required = false,
+      maxLength,
+      showCount = false,
+      className,
+      fullWidth = true,
+      loading = false,
+      access = "full",
+      accessReason,
+      ...props
+    },
+    forwardedRef,
+  ) {
+    const size = sizeProp ?? inputSize ?? "md";
 
-    const generatedId = React.useId();
-    const id = idProp ?? generatedId;
-    const descId = `${id}-desc`;
-    const errId = `${id}-err`;
+    if (process.env.NODE_ENV !== "production" && inputSize !== undefined) {
+      console.warn(
+        '[DesignSystem] "Input" prop "inputSize" is deprecated. Use "size" instead. "inputSize" will be removed in v3.0.0.',
+      );
+    }
+
+    const resolvedLeading = leadingVisual ?? prefix;
+    const resolvedTrailing =
+      trailingVisual ?? suffix ?? (loading ? <Spinner size="xs" label="Loading" /> : undefined);
 
     const accessState = resolveAccessState(access);
-    if (accessState.isHidden) return null;
-
-    const isDisabled = disabledProp || shouldBlockInteraction(accessState.state);
-    const isReadOnly = readOnlyProp || accessState.isReadonly;
-    const tone = error ? "error" : toneProp;
-
-    const [charCount, setCharCount] = React.useState(() =>
-      String(value ?? defaultValue ?? "").length,
+    const generatedId = React.useId();
+    const inputId = id ?? `text-input-${generatedId}`;
+    const descriptionId = description ? `${inputId}-description` : undefined;
+    const hintId = hint ? `${inputId}-hint` : undefined;
+    const errorId = error ? `${inputId}-error` : undefined;
+    const countId =
+      showCount || maxLength !== undefined ? `${inputId}-count` : undefined;
+    const describedBy = buildDescribedBy(
+      descriptionId,
+      error ? errorId : hintId,
+      countId,
     );
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (showCount) setCharCount(e.target.value.length);
-      onChange?.(e);
-      onValueChange?.(e.target.value);
+    const [internalValue, setInternalValue] = React.useState(() =>
+      getInitialValue(undefined, defaultValue),
+    );
+    const isControlled = value !== undefined;
+    const currentValue = isControlled
+      ? getInitialValue(value, undefined)
+      : internalValue;
+
+    const isReadonly = readOnly || loading || accessState.isReadonly;
+    const resolvedDisabled = disabled || accessState.isDisabled;
+    const interactionState: AccessLevel = resolvedDisabled
+      ? "disabled"
+      : isReadonly
+        ? "readonly"
+        : accessState.state;
+
+    const tone = getFieldTone({
+      invalid: Boolean(error),
+      disabled: resolvedDisabled,
+      readonly: isReadonly,
+    });
+
+    const countLabel =
+      showCount || maxLength !== undefined
+        ? `${currentValue.length}${maxLength !== undefined ? ` / ${maxLength}` : ""}`
+        : undefined;
+
+    const localRef = React.useRef<HTMLInputElement | null>(null);
+    const assignRef = (node: HTMLInputElement | null) => {
+      localRef.current = node;
+      if (typeof forwardedRef === "function") {
+        forwardedRef(node);
+      } else if (forwardedRef) {
+        forwardedRef.current = node;
+      }
     };
 
-    const hasLeading = !!leadingVisual;
-    const hasTrailing = !!trailingVisual || loading;
+    const handleChange = withAccessGuard<React.ChangeEvent<HTMLInputElement>>(
+      interactionState,
+      (event) => {
+        if (!isControlled) {
+          setInternalValue(event.target.value);
+        }
+        onChange?.(event);
+        onValueChange?.(event.target.value, event);
+      },
+      resolvedDisabled,
+    );
+
+    if (accessState.isHidden) {
+      return null;
+    }
 
     return (
-      <div className="flex flex-col gap-1.5 w-full">
-        {label && (
-          <label htmlFor={id} className="text-sm font-medium text-text-primary">
-            {label}
-          </label>
-        )}
-
-        <div className="relative flex items-center">
-          {hasLeading && (
-            <span className="absolute left-3 flex items-center text-text-secondary pointer-events-none [&>svg]:h-4 [&>svg]:w-4">
-              {leadingVisual}
-            </span>
+      <FieldControlShell
+        inputId={inputId}
+        label={label}
+        description={
+          description ? (
+            <span id={descriptionId}>{description}</span>
+          ) : undefined
+        }
+        hint={
+          !error && hint ? <span id={hintId}>{hint}</span> : undefined
+        }
+        error={
+          error ? <span id={errorId}>{error}</span> : undefined
+        }
+        countLabel={countLabel}
+        required={required}
+        fullWidth={fullWidth}
+      >
+        <div
+          className={getFieldFrameClass(
+            size,
+            tone,
+            fullWidth,
+            className,
+            density,
           )}
-
+          {...stateAttrs({
+            access: interactionState,
+            status: error ? "error" : undefined,
+            disabled: resolvedDisabled,
+            readonly: isReadonly,
+            loading,
+            component: "text-input",
+          })}
+          data-field-tone={tone}
+          data-density={density}
+          data-size={size}
+          data-field-type="text-input"
+          title={accessReason}
+        >
+          {resolvedLeading ? (
+            <span className={getFieldSlotClass(size, density)}>
+              {resolvedLeading}
+            </span>
+          ) : null}
           <input
-            ref={ref}
-            id={id}
-            className={cn(
-              inputVariants({ size, tone }),
-              hasLeading && "pl-9",
-              hasTrailing && "pr-9",
-              accessStyles(access),
-              className,
-            )}
-            value={value}
-            defaultValue={defaultValue}
-            onChange={handleChange}
-            disabled={isDisabled}
-            readOnly={isReadOnly}
+            {...props}
+            ref={assignRef}
+            id={inputId}
+            type={type}
+            value={currentValue}
+            disabled={resolvedDisabled}
+            readOnly={isReadonly}
+            required={required}
             maxLength={maxLength}
-            aria-invalid={tone === "error" || undefined}
-            aria-describedby={
-              [error && errId, description && descId].filter(Boolean).join(" ") || undefined
-            }
-            {...stateAttrs({ access, loading, disabled: isDisabled, readonly: isReadOnly, error: !!error, component: "input" })}
-            {...rest}
+            aria-invalid={Boolean(error) || undefined}
+            aria-readonly={isReadonly || undefined}
+            aria-disabled={resolvedDisabled || isReadonly || undefined}
+            aria-describedby={describedBy}
+            className={getFieldInputClass(size, undefined, density)}
+            onChange={handleChange}
           />
-
-          {hasTrailing && (
-            <span className="absolute right-3 flex items-center text-text-secondary [&>svg]:h-4 [&>svg]:w-4">
-              {loading ? (
-                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-              ) : trailingVisual}
+          {resolvedTrailing ? (
+            <span className={getFieldSlotClass(size, density)}>
+              {resolvedTrailing}
             </span>
-          )}
+          ) : null}
         </div>
-
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex flex-col">
-            {error && (
-              <p id={errId} className="text-xs text-red-500" role="alert">{error}</p>
-            )}
-            {description && !error && (
-              <p id={descId} className="text-xs text-text-secondary">{description}</p>
-            )}
-          </div>
-          {showCount && maxLength != null && (
-            <span className="text-xs text-text-secondary tabular-nums shrink-0">
-              {charCount}/{maxLength}
-            </span>
-          )}
-        </div>
-      </div>
+        {countId ? (
+          <span id={countId} className="sr-only">
+            {countLabel}
+          </span>
+        ) : null}
+      </FieldControlShell>
     );
   },
 );
 
-setDisplayName(Input, "Input");
+Input.displayName = "Input";
 
-/** @deprecated Use Input directly */
-const TextInput = Input;
-
-export { Input, TextInput, inputVariants };
+/** Alias for backward compatibility */
+export const TextInput = Input;
