@@ -19,6 +19,9 @@ import {
   SchemaExplorerModule,
 } from "./lazy-routes";
 import { ReportingLayout } from "../../pages/admin/reports/ReportingLayout";
+const ReportBuilderWizard = React.lazy(() => import("../../pages/admin/reports/builder/ReportBuilderWizard").then(m => ({ default: m.ReportBuilderWizard })));
+const DashboardBuilder = React.lazy(() => import("../../pages/admin/reports/dashboard-builder/DashboardBuilder").then(m => ({ default: m.DashboardBuilder })));
+const ReportEditorRoute = React.lazy(() => import("../../pages/admin/reports/builder/ReportEditor").then(m => ({ default: m.ReportEditorRoute })));
 
 /* ---- Page imports ---- */
 import { LoginPage } from "../../pages/login";
@@ -106,6 +109,36 @@ export const AppRouter: React.FC = () => {
           element={
             <ProtectedRoute requiredPermissions={[PERMISSIONS.AUDIT_MODULE]}>
               <AuditModule />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/reports/builder"
+          element={
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.REPORTING_MODULE]}>
+              <Suspense fallback={<div className="flex justify-center py-16"><span className="inline-flex h-6 w-6 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary" /></div>}>
+                <ReportBuilderWizard />
+              </Suspense>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/reports/builder/dashboard"
+          element={
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.REPORTING_MODULE]}>
+              <Suspense fallback={<div className="flex justify-center py-16"><span className="inline-flex h-6 w-6 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary" /></div>}>
+                <DashboardBuilder />
+              </Suspense>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/reports/builder/edit/:reportKey"
+          element={
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.REPORTING_MODULE]}>
+              <Suspense fallback={<div className="flex justify-center py-16"><span className="inline-flex h-6 w-6 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary" /></div>}>
+                <ReportEditorRoute />
+              </Suspense>
             </ProtectedRoute>
           }
         />

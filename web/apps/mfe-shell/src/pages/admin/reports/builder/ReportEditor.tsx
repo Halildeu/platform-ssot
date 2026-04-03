@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Pencil, ArrowLeft } from 'lucide-react';
 import { useBuilderState } from './hooks/useBuilderState';
 import { ReportBuilderWizard } from './ReportBuilderWizard';
@@ -119,3 +119,12 @@ export const ReportEditor: React.FC<Props> = ({ reportKey }) => {
     </div>
   );
 };
+
+/** URL-param wrapper for route usage */
+export const ReportEditorRoute: React.FC = () => {
+  const { reportKey } = useParams<{ reportKey: string }>();
+  if (!reportKey) return <div className="py-16 text-center text-text-tertiary">Rapor bulunamadı.</div>;
+  return <ReportEditor reportKey={reportKey} />;
+};
+
+export default ReportEditor;

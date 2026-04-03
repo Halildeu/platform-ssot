@@ -3,7 +3,11 @@ import { Table2, Search } from 'lucide-react';
 import { useTableList } from '../hooks/useTableDiscovery';
 import type { BuilderState, ColumnDef } from '../hooks/useBuilderState';
 import type { SchemaTableInfo } from '@mfe/shared-types';
-import { inferColumnType } from '../../../../../../apps/mfe-reporting/src/utils/schemaColumnMapper';
+/* Inline SQL type inference — avoids cross-MFE import */
+const SQL_TYPE_MAP: Record<string, string> = { int:'number',bigint:'number',smallint:'number',tinyint:'number',decimal:'number',numeric:'number',float:'number',real:'number',money:'number',smallmoney:'number',integer:'number',serial:'number',bit:'boolean',boolean:'boolean',bool:'boolean',date:'date',datetime:'date',datetime2:'date',smalldatetime:'date',datetimeoffset:'date',time:'date',timestamp:'date' };
+function inferColumnType(sqlType: string): string | undefined {
+  return SQL_TYPE_MAP[sqlType.toLowerCase().trim().replace(/\(.*\)/,'').trim()];
+}
 
 interface Props {
   state: BuilderState;

@@ -20,9 +20,9 @@ async function fetchSchemas(): Promise<string[]> {
   const res = await fetch(`${SCHEMA_API_BASE}/schemas`);
   if (!res.ok) return [];
   const data = await res.json();
-  return Array.isArray(data.schemas)
-    ? data.schemas.map((s: { name: string }) => s.name)
-    : Array.isArray(data) ? data : [];
+  /* API returns [{name, tableCount}] or {schemas: [{name, tableCount}]} */
+  const list = Array.isArray(data) ? data : Array.isArray(data.schemas) ? data.schemas : [];
+  return list.map((s: string | { name: string }) => typeof s === 'string' ? s : s.name);
 }
 
 export function useAvailableSchemas() {
