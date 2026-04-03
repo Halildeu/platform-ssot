@@ -31,19 +31,12 @@ export { Timeline } from "./timeline";
 export type { TimelineProps, TimelineItemProps, TimelineColor, TimelineMode, TimelineSize } from "./timeline";
 
 /* Disclosure */
-export { Accordion, createAccordionItemsFromSections, createAccordionPreset } from "./accordion";
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent, createAccordionPreset, createAccordionItemsFromSections } from "./accordion";
 export type {
   AccordionProps,
-  AccordionItem,
-  AccordionClasses,
-  AccordionPreset,
-  AccordionSelectionMode,
-  AccordionSize,
-  AccordionExpandIconPosition,
-  AccordionCollapsible,
-  AccordionPresetKind,
-  AccordionSectionInput,
-  CreateAccordionItemsFromSectionsOptions,
+  AccordionItemProps,
+  AccordionTriggerProps,
+  AccordionContentProps,
 } from "./accordion";
 
 /* Form */
