@@ -1,5 +1,5 @@
 import React from 'react';
-import { getLiveKPIs, getLiveCharts } from './api';
+import { getLiveKPIs, getLiveCharts, refreshDashboardData } from './api';
 import type { DashboardKPI, DashboardChart, DashboardChartItem } from './api';
 import { BarChart, PieChart } from '@mfe/design-system';
 import { AgGridReact } from 'ag-grid-react';
@@ -26,9 +26,15 @@ const formatNumber = (v: number | null): string => {
   return new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 }).format(v);
 };
 
+const formatDecimal = (v: number | null): string => {
+  if (v == null) return '-';
+  return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 1, maximumFractionDigits: 2 }).format(v);
+};
+
 const formatValue = (v: number | null, format?: string): string => {
   if (format === 'currency') return formatCurrency(v);
   if (format === 'percent') return formatPercent(v);
+  if (format === 'decimal') return formatDecimal(v);
   if (v == null) return '-';
   return formatNumber(v);
 };
@@ -66,7 +72,7 @@ const KPICard: React.FC<{ kpi: DashboardKPI }> = ({ kpi }) => {
   return (
     <div className={`${cardClass} flex flex-col gap-1`}>
       <span className="text-xs text-text-subtle truncate" title={kpi.title}>{kpi.title}</span>
-      <span className={`text-lg font-semibold ${toneClass}`}>{kpi.formattedValue || formatValue(kpi.value, kpi.format)}</span>
+      <span className={`text-lg font-semibold ${toneClass}`}>{formatValue(kpi.value, kpi.format)}</span>
       {kpi.trend && (
         <span className="text-xs text-text-subtle">
           {trendIcon} {kpi.trend.percentage != null ? `${kpi.trend.percentage > 0 ? '+' : ''}${kpi.trend.percentage.toFixed(1)}%` : ''}
@@ -268,6 +274,7 @@ const CompensationDashboard: React.FC = () => {
   const [kpis, setKpis] = React.useState<DashboardKPI[]>([]);
   const [charts, setCharts] = React.useState<DashboardChart[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [retryCount, setRetryCount] = React.useState(0);
 
   React.useEffect(() => {
     let active = true;
@@ -283,6 +290,11 @@ const CompensationDashboard: React.FC = () => {
         if (active) setLoading(false);
       });
     return () => { active = false; };
+  }, [retryCount]);
+
+  const handleRetry = React.useCallback(() => {
+    refreshDashboardData();
+    setRetryCount((c) => c + 1);
   }, []);
 
   const findChart = (id: string) => charts.find((c) => c.id === id);
@@ -304,8 +316,15 @@ const CompensationDashboard: React.FC = () => {
   return (
     <div className={sectionClass}>
       {!hasData && (
-        <div className="mb-6 rounded-lg border border-state-warning-border bg-state-warning-surface p-4 text-sm text-state-warning-text">
-          Dashboard verileri yüklenemedi. Backend report-service servisinin çalıştığından emin olun.
+        <div className="mb-6 rounded-lg border border-state-warning-border bg-state-warning-surface p-4 text-sm text-state-warning-text flex items-center justify-between gap-3">
+          <span>Dashboard verileri yüklenemedi. Backend report-service servisinin çalıştığından emin olun.</span>
+          <button
+            type="button"
+            onClick={handleRetry}
+            className="shrink-0 rounded-lg bg-action-primary px-3 py-1.5 text-xs font-semibold text-action-primary-text shadow-xs transition hover:opacity-90"
+          >
+            Tekrar Dene
+          </button>
         </div>
       )}
 
