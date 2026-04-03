@@ -70,5 +70,8 @@ export * from "./a11y";
 /* ---- Performance ---- */
 export * from "./performance";
 
+/* ---- Motion ---- */
+export * from "./motion";
+
 /* ---- MCP (Model Context Protocol) ---- */
 export * from "./mcp";
