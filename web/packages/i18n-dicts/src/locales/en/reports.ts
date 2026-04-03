@@ -137,6 +137,36 @@ const reports = {
   'reports.hrCompensation.columns.overtime': 'Overtime',
   'reports.hrCompensation.columns.severance': 'Severance',
   'reports.hrCompensation.columns.critical': 'Critical Position',
+
+  // --- Executive Summary ---
+  'reports.nav.hrExecutiveSummary': 'Executive Summary',
+  'reports.hrExecutiveSummary.title': 'Executive Summary',
+  'reports.hrExecutiveSummary.description': 'At-a-glance view: total cost, turnover, cost per employee, gender gap and risk alerts.',
+  'reports.hrExecutiveSummary.breadcrumb': 'Executive Summary',
+
+  // --- Salary Analytics ---
+  'reports.nav.hrSalaryAnalytics': 'Salary Analytics',
+  'reports.hrSalaryAnalytics.title': 'Salary Analytics',
+  'reports.hrSalaryAnalytics.description': 'Base pay, variable pay and salary movements — department, tenure, education, level distribution and trends.',
+  'reports.hrSalaryAnalytics.breadcrumb': 'Salary Analytics',
+
+  // --- Benefits ---
+  'reports.nav.hrBenefitsLite': 'Benefits',
+  'reports.hrBenefitsLite.title': 'Benefits Analytics',
+  'reports.hrBenefitsLite.description': 'Allowances, health insurance, SSI and bonus analysis — by type, department and trend.',
+  'reports.hrBenefitsLite.breadcrumb': 'Benefits',
+
+  // --- Internal Equity & Risk ---
+  'reports.nav.hrEquityRisk': 'Equity & Risk',
+  'reports.hrEquityRisk.title': 'Internal Equity & Risk',
+  'reports.hrEquityRisk.description': 'Internal equity, gender pay gap, salary compression, compa-ratio distribution and flight risk analysis.',
+  'reports.hrEquityRisk.breadcrumb': 'Equity & Risk',
+
+  // --- Payroll Trends ---
+  'reports.nav.hrPayrollTrends': 'Payroll Trends',
+  'reports.hrPayrollTrends.title': 'Payroll Trends',
+  'reports.hrPayrollTrends.description': '24-month payroll trend, cost structure waterfall, department and company cost tracking.',
+  'reports.hrPayrollTrends.breadcrumb': 'Payroll Trends',
 };
 
 export default reports;
