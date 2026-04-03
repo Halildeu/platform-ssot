@@ -32,10 +32,17 @@ export const fetchDashboardMetadata = async (key: string): Promise<DashboardMeta
 export const fetchDashboardKpis = async (
   key: string,
   timeRange: string,
+  filters?: Record<string, string>,
 ): Promise<KpiResult[]> => {
   const client = resolveHttpClient();
+  const params = new URLSearchParams({ timeRange });
+  if (filters) {
+    for (const [k, v] of Object.entries(filters)) {
+      if (v) params.set(k, v);
+    }
+  }
   const { data } = await client.get<KpiResult[]>(
-    `${DASHBOARDS_BASE}/${key}/kpis?timeRange=${encodeURIComponent(timeRange)}`,
+    `${DASHBOARDS_BASE}/${key}/kpis?${params.toString()}`,
   );
   return Array.isArray(data) ? data : [];
 };
@@ -43,10 +50,17 @@ export const fetchDashboardKpis = async (
 export const fetchDashboardCharts = async (
   key: string,
   timeRange: string,
+  filters?: Record<string, string>,
 ): Promise<ChartResult[]> => {
   const client = resolveHttpClient();
+  const params = new URLSearchParams({ timeRange });
+  if (filters) {
+    for (const [k, v] of Object.entries(filters)) {
+      if (v) params.set(k, v);
+    }
+  }
   const { data } = await client.get<ChartResult[]>(
-    `${DASHBOARDS_BASE}/${key}/charts?timeRange=${encodeURIComponent(timeRange)}`,
+    `${DASHBOARDS_BASE}/${key}/charts?${params.toString()}`,
   );
   return Array.isArray(data) ? data : [];
 };

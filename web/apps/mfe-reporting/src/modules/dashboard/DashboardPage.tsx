@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDashboardData } from './useDashboardData';
+import type { CrossFilter } from './useDashboardData';
 import { ChartCard } from './ChartCard';
 import type { ChartResult, ChartDataRow, KpiResult, DrillToDto } from './types';
 
@@ -25,8 +26,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ dashboardKey }) =>
   const navigate = useNavigate();
   const location = useLocation();
   const basePath = resolveBasePath(location.pathname);
-  const { metadata, kpis, charts, loading, error, timeRange, setTimeRange, refresh } =
-    useDashboardData(dashboardKey);
+  const {
+    metadata, kpis, charts, loading, error, timeRange, setTimeRange, refresh,
+    crossFilters, toggleChartFilter, removeFilter, clearAllFilters,
+  } = useDashboardData(dashboardKey);
 
   const handleDrillDown = useCallback(
     (drillTo: DrillToDto | null | undefined, dataPoint?: ChartDataRow) => {
@@ -86,6 +89,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ dashboardKey }) =>
     return map;
   }, [charts]);
 
+  const handleChartClick = useCallback(
+    (chartId: string, label: string) => {
+      toggleChartFilter(chartId, label);
+    },
+    [toggleChartFilter],
+  );
+
   const renderChart = useCallback(
     (chart: ChartResult) => {
       const chartData = chart.data.map((d) => ({
@@ -96,6 +106,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ dashboardKey }) =>
       // Auto-detect if values are large enough to need abbreviation
       const maxVal = Math.max(...chartData.map((d) => Math.abs(d.value)), 0);
       const needsAbbrev = maxVal >= 1000;
+
+      const onDataPointClick = (event: { label?: string; datum?: Record<string, unknown> }) => {
+        const label = event.label ?? (event.datum?.label as string) ?? '';
+        if (label) handleChartClick(chart.id, label);
+      };
 
       const chartProps: Record<string, unknown> = {
         size: 'lg' as const,
@@ -110,7 +125,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ dashboardKey }) =>
       switch (chart.chartType) {
         case 'bar':
           chartElement = BarChart ? (
-            <BarChart data={chartData} {...chartProps} />
+            <BarChart data={chartData} {...chartProps} onDataPointClick={onDataPointClick} />
           ) : (
             <FallbackChart data={chartData} />
           );
@@ -127,7 +142,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ dashboardKey }) =>
         }
         case 'pie':
           chartElement = PieChart ? (
-            <PieChart data={chartData} showLegend showPercentage {...chartProps} />
+            <PieChart data={chartData} showLegend showPercentage {...chartProps} onDataPointClick={onDataPointClick} />
           ) : (
             <FallbackChart data={chartData} />
           );
@@ -156,7 +171,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ dashboardKey }) =>
         </ChartCard>
       );
     },
-    [handleDrillDown],
+    [handleDrillDown, handleChartClick],
   );
 
   if (error) {
@@ -233,6 +248,35 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ dashboardKey }) =>
           </button>
         </div>
       </div>
+
+      {/* Cross-filter Chips */}
+      {crossFilters.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-medium text-text-subtle">Aktif Filtreler:</span>
+          {crossFilters.map((f) => (
+            <button
+              key={`${f.filterKey}-${f.filterValue}`}
+              type="button"
+              onClick={() => removeFilter(f)}
+              className="inline-flex items-center gap-1 rounded-md border border-action-primary/30 bg-action-primary/10 px-2 py-0.5 text-xs font-medium text-action-primary transition hover:bg-action-primary/20"
+            >
+              {f.displayLabel}
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0">
+                <path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </button>
+          ))}
+          {crossFilters.length > 1 && (
+            <button
+              type="button"
+              onClick={clearAllFilters}
+              className="text-xs text-state-danger-text underline-offset-2 hover:underline"
+            >
+              Hepsini Temizle
+            </button>
+          )}
+        </div>
+      )}
 
       {/* KPI Widgets */}
       {SmartDashboard && widgets.length > 0 ? (
