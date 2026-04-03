@@ -5,7 +5,6 @@
  */
 
 import type { BuilderState, JoinDef, LookupDef, FilterDef } from '../hooks/useBuilderState';
-import { inferColumnType } from '../../../../../apps/mfe-reporting/src/utils/schemaColumnMapper';
 
 /* ------------------------------------------------------------------ */
 /*  ReportDefinition — matches backend dynamic report contract         */

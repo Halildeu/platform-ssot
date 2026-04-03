@@ -1,8 +1,22 @@
 import React from 'react';
 import { Eye, X } from 'lucide-react';
 import { useSchemaSnapshot } from '../hooks/useTableDiscovery';
-import { findDisplayColumn } from '../../../../../../apps/mfe-reporting/src/utils/fkLookupResolver';
 import type { BuilderState } from '../hooks/useBuilderState';
+import type { SchemaTableInfo } from '@mfe/shared-types';
+
+const DISPLAY_CANDIDATES = ['NAME', 'TITLE', 'DESCRIPTION', 'LABEL', 'AD', 'BASLIK', 'TANIM'];
+
+function findDisplayColumn(table: SchemaTableInfo): string | undefined {
+  for (const candidate of DISPLAY_CANDIDATES) {
+    const col = table.columns.find(
+      (c) => c.name.toUpperCase() === candidate || c.name.toUpperCase().endsWith(`_${candidate}`),
+    );
+    if (col) return col.name;
+  }
+  return table.columns.find(
+    (c) => !c.pk && (c.dataType.toLowerCase().includes('varchar') || c.dataType.toLowerCase().includes('char')),
+  )?.name;
+}
 
 interface Props { state: BuilderState; dispatch: React.Dispatch<any>; }
 
