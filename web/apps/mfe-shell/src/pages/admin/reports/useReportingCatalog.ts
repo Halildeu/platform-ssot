@@ -84,27 +84,47 @@ function mapDashboard(db: DashboardListItem): CatalogItemLike {
 /*  Hook                                                               */
 /* ------------------------------------------------------------------ */
 
+const CATALOG_FETCH_TIMEOUT_MS = 8_000;
+
+function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms)),
+  ]);
+}
+
 export function useReportingCatalog() {
   const [dynamicReports, setDynamicReports] = useState<ReportListItem[]>([]);
   const [dashboards, setDashboards] = useState<DashboardListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const staticItems = useMemo(
-    () => listSharedReportsForChannel("web").map(mapStatic),
-    [],
-  );
+  const staticItems = useMemo(() => {
+    try {
+      return listSharedReportsForChannel("web").map(mapStatic);
+    } catch {
+      return [];
+    }
+  }, []);
 
   useEffect(() => {
     let active = true;
     Promise.all([
-      api
-        .get<ReportListItem[]>("/v1/reports")
-        .then((r) => (Array.isArray(r.data) ? r.data : []))
-        .catch(() => [] as ReportListItem[]),
-      api
-        .get<DashboardListItem[]>("/v1/dashboards")
-        .then((r) => (Array.isArray(r.data) ? r.data : []))
-        .catch(() => [] as DashboardListItem[]),
+      withTimeout(
+        api
+          .get<ReportListItem[]>("/v1/reports")
+          .then((r) => (Array.isArray(r.data) ? r.data : []))
+          .catch(() => [] as ReportListItem[]),
+        CATALOG_FETCH_TIMEOUT_MS,
+        [] as ReportListItem[],
+      ),
+      withTimeout(
+        api
+          .get<DashboardListItem[]>("/v1/dashboards")
+          .then((r) => (Array.isArray(r.data) ? r.data : []))
+          .catch(() => [] as DashboardListItem[]),
+        CATALOG_FETCH_TIMEOUT_MS,
+        [] as DashboardListItem[],
+      ),
     ]).then(([reports, dbs]) => {
       if (active) {
         setDynamicReports(reports);

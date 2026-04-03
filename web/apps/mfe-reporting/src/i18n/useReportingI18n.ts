@@ -1,5 +1,5 @@
 import React from 'react';
-import { useI18nManager, I18nManager, type I18nManager as ShellI18nManager } from 'mfe_shell/i18n';
+import { I18nManager, type I18nManager as ShellI18nManager } from 'mfe_shell/i18n';
 import { getDictionary } from '@mfe/i18n-dicts';
 
 const NAMESPACE = 'reports';
@@ -8,12 +8,23 @@ const FALLBACK_TTL_MS = 10 * 60 * 1000;
 
 let fallbackManager: ShellI18nManager | null = null;
 
+const detectInitialLocale = (): string => {
+  if (typeof window === 'undefined') {
+    return 'tr';
+  }
+  const stored = window.localStorage.getItem('mfe.locale');
+  if (stored && stored.trim().length > 0) {
+    return stored;
+  }
+  return 'tr';
+};
+
 const ensureFallbackManager = (): ShellI18nManager => {
   if (fallbackManager) {
     return fallbackManager;
   }
   fallbackManager = new I18nManager({
-    initialLocale: 'tr',
+    initialLocale: detectInitialLocale(),
     fallbackLocale: 'en',
     defaultNamespace: NAMESPACE,
     loadDictionary: async (locale, namespace, etag) => {
@@ -35,15 +46,8 @@ const ensureFallbackManager = (): ShellI18nManager => {
 };
 
 export const useReportingI18n = () => {
-  let manager: ShellI18nManager | null = null;
-  try {
-    manager = useI18nManager();
-  } catch {
-    manager = null;
-  }
-
-  const resolvedManager = React.useMemo(() => manager ?? ensureFallbackManager(), [manager]);
-  const [, forceUpdate] = React.useState(0);
+  const resolvedManager = React.useMemo(() => ensureFallbackManager(), []);
+  const [revision, setRevision] = React.useState(0);
 
   React.useEffect(() => {
     let active = true;
@@ -53,16 +57,34 @@ export const useReportingI18n = () => {
         resolvedManager.preloadNamespace(COMMON_NAMESPACE),
       ]);
       if (active) {
-        forceUpdate((value) => value + 1);
+        setRevision((value) => value + 1);
       }
     };
     load();
+
     const unsubscribe = resolvedManager.addLocaleChangeListener(() => {
       void load();
     });
+
+    const handleLocaleChange = (event: Event) => {
+      const custom = event as CustomEvent<{ locale?: string }>;
+      const nextLocale = custom.detail?.locale;
+      if (nextLocale) {
+        resolvedManager.setLocale(nextLocale);
+        void load();
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('app:locale-change', handleLocaleChange);
+    }
+
     return () => {
       active = false;
       unsubscribe?.();
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('app:locale-change', handleLocaleChange);
+      }
     };
   }, [resolvedManager]);
 
@@ -76,12 +98,13 @@ export const useReportingI18n = () => {
         : NAMESPACE;
       return resolvedManager.translateSync(key, params ?? {}, ns);
     },
-    [resolvedManager, locale],
+    [resolvedManager, locale, revision],
   );
 
   return {
     t,
     ready,
     manager: resolvedManager,
+    locale,
   };
 };
