@@ -149,7 +149,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
           },
         ],
         listeners: onDataPointClick ? {
-          nodeClick: (e: any) => {
+          seriesNodeClick: (e: any) => {
             onDataPointClick({
               datum: e.datum ?? {},
               seriesId: e.seriesId,
