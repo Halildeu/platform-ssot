@@ -3,19 +3,7 @@ import { useAppDispatch } from '../store/store.hooks';
 import type { AppDispatch } from '../store/store';
 import { pushNotification, toggleOpen } from '../../features/notifications/model/notifications.slice';
 import { useShellCommonI18n } from '../i18n';
-
-const isEditableElement = (target: EventTarget | null) => {
-  if (!target || !(target instanceof HTMLElement)) {
-    return false;
-  }
-
-  const tagName = target.tagName.toLowerCase();
-  if (target.isContentEditable) {
-    return true;
-  }
-
-  return tagName === 'input' || tagName === 'textarea' || tagName === 'select' || target.getAttribute('role') === 'textbox';
-};
+import { isEditableElement } from './keyboard-utils';
 
 const openNotification = (dispatch: AppDispatch, key: string, message: string, description?: string) => {
   dispatch(
@@ -57,16 +45,8 @@ export const useShellShortcuts = () => {
         return;
       }
 
-      if (key === 'k' && (event.ctrlKey || event.metaKey)) {
-        event.preventDefault();
-        openNotification(
-          dispatch,
-          'ctrl+k',
-          t('shell.shortcuts.commandPaletteSoon.title'),
-          t('shell.shortcuts.commandPaletteSoon.description'),
-        );
-        return;
-      }
+      // Ctrl+K / Cmd+K is now handled by useGlobalSearch (header CommandPalette).
+      // Do not intercept here.
 
       if (key === 'r' && !event.ctrlKey && !event.metaKey && !event.altKey && !event.shiftKey) {
         if (isEditable) {

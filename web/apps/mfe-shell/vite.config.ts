@@ -241,7 +241,6 @@ export default defineConfig(({ mode }) => {
         'lucide-react',
         // Monorepo packages — stable, rarely change → pre-bundle for speed
         '@mfe/shared-http',
-        '@mfe/i18n-dicts',
         '@platform/capabilities',
       ],
       exclude: [
