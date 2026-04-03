@@ -57,6 +57,9 @@ export function accessStyles(access: AccessLevel): string {
   }
 }
 
+/** @deprecated Use accessStyles instead */
+export const _accessStyles = accessStyles;
+
 export const withAccessGuard = <
   E extends React.SyntheticEvent = React.SyntheticEvent,
 >(

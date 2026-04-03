@@ -1,98 +1,51 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
-import { cn } from "../../utils/cn";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+"use client";
 
-/* ------------------------------------------------------------------ */
-/*  ContextMenu — Right-click or long-press activated menu             */
-/* ------------------------------------------------------------------ */
+import * as React from "react";
+import { cn } from "../../utils/cn";
+import { setDisplayName } from "../../system/compose";
+import { stateAttrs } from "../../internal/interaction-core/state-attributes";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
 export interface ContextMenuItem {
-  type?: "item";
   key: string;
-  label: React.ReactNode;
+  label: string;
   icon?: React.ReactNode;
   shortcut?: string;
-  disabled?: boolean;
   danger?: boolean;
-  onClick?: () => void;
-}
-
-export interface ContextMenuSeparator {
-  type: "separator";
-  key: string;
-}
-
-export interface ContextMenuLabel {
-  type: "label";
-  key: string;
-  label: React.ReactNode;
-}
-
-export type ContextMenuEntry = ContextMenuItem | ContextMenuSeparator | ContextMenuLabel;
-
-export interface ContextMenuProps extends AccessControlledProps {
-  /** Menu entries (items, separators, and labels). */
-  items: ContextMenuEntry[];
-  /** Trigger element that activates the context menu on right-click. */
-  children: React.ReactElement;
-  /** Whether the context menu is disabled. */
   disabled?: boolean;
-  /** Additional CSS class name for the menu panel. */
-  className?: string;
-  /** Access level controlling visibility and interactivity. */
-  access?: import('../../internal/access-controller').AccessLevel;
-  /** Tooltip text explaining access restrictions. */
-  accessReason?: string;
+  separator?: boolean;
+  onSelect?: () => void;
 }
 
-function isItem(entry: ContextMenuEntry): entry is ContextMenuItem {
-  return !entry.type || entry.type === "item";
+export interface ContextMenuProps {
+  items: ContextMenuItem[];
+  children: React.ReactElement;
+  onSelect?: (key: string) => void;
+  disabled?: boolean;
 }
 
-/**
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
- * ContextMenu component.
+function ContextMenu({ items, children, onSelect, disabled = false }: ContextMenuProps) {
+  const [open, setOpen] = React.useState(false);
+  const [position, setPosition] = React.useState({ x: 0, y: 0 });
+  const [focusIndex, setFocusIndex] = React.useState(-1);
+  const menuRef = React.useRef<HTMLDivElement>(null);
 
- * @example
+  const activeItems = React.useMemo(() => items.filter((i) => !i.separator), [items]);
 
- * ```tsx
-
- * <ContextMenu />
-
- * ```
-
- * @since 1.0.0
-
- * @see [Docs](https://design.mfe.dev/components/context-menu)
-
- */
-
-export const ContextMenu = React.forwardRef<HTMLDivElement, ContextMenuProps>(({
-  items,
-  children,
-  disabled = false,
-  className,
-  access,
-  accessReason,
-}, _ref) => {
-  const accessState = resolveAccessState(access);
-  if (accessState.isHidden) return null;
-  const [open, setOpen] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const menuRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const [focusIndex, setFocusIndex] = useState(-1);
-
-  const actionableItems = items.filter(isItem).filter((i) => !i.disabled);
-
-  const close = useCallback(() => {
+  const close = React.useCallback(() => {
     setOpen(false);
     setFocusIndex(-1);
   }, []);
 
-  /* Right-click handler
-   */
-  const handleContextMenu = useCallback(
+  // Context menu trigger
+  const handleContextMenu = React.useCallback(
     (e: React.MouseEvent) => {
       if (disabled) return;
       e.preventDefault();
@@ -103,166 +56,122 @@ export const ContextMenu = React.forwardRef<HTMLDivElement, ContextMenuProps>(({
     [disabled],
   );
 
-  /* Click outside */
-  useEffect(() => {
+  // Close on outside click or escape
+  React.useEffect(() => {
     if (!open) return;
-    const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        close();
-      }
+
+    const handleClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) close();
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleEsc);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleEsc);
+    };
   }, [open, close]);
 
-  /* Escape key */
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        close();
-      }
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open, close]);
-
-  /* Keyboard navigation */
-  const handleKeyDown = useCallback(
+  // Keyboard navigation
+  const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent) => {
-      if (!open || actionableItems.length === 0) return;
+      if (!open) return;
 
-      switch (e.key) {
-        case "ArrowDown": {
-          e.preventDefault();
-          setFocusIndex((prev) => (prev + 1) % actionableItems.length);
-          break;
-        }
-        case "ArrowUp": {
-          e.preventDefault();
-          setFocusIndex((prev) => (prev - 1 + actionableItems.length) % actionableItems.length);
-          break;
-        }
-        case "Enter":
-        case " ": {
-          e.preventDefault();
-          const focused = actionableItems[focusIndex];
-          if (focused) {
-            focused.onClick?.();
-            close();
-          }
-          break;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setFocusIndex((i) => (i + 1) % activeItems.length);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setFocusIndex((i) => (i - 1 + activeItems.length) % activeItems.length);
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const item = activeItems[focusIndex];
+        if (item && !item.disabled) {
+          item.onSelect?.();
+          onSelect?.(item.key);
+          close();
         }
       }
     },
-    [open, actionableItems, focusIndex, close],
+    [open, focusIndex, activeItems, onSelect, close],
   );
 
-  /* Adjust position to stay within viewport */
-  useEffect(() => {
-    if (!open || !menuRef.current) return;
-    const rect = menuRef.current.getBoundingClientRect();
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    let { x, y } = position;
-    if (x + rect.width > vw) x = vw - rect.width - 8;
-    if (y + rect.height > vh) y = vh - rect.height - 8;
-    if (x < 0) x = 8;
-    if (y < 0) y = 8;
-    if (x !== position.x || y !== position.y) {
-      setPosition({ x, y });
-    }
-  }, [open, position]);
+  // Viewport adjustment
+  const adjustedStyle = React.useMemo(() => {
+    const style: React.CSSProperties = {
+      position: "fixed",
+      left: position.x,
+      top: position.y,
+      zIndex: 50,
+    };
+    return style;
+  }, [position]);
+
+  const child = React.Children.only(children);
 
   return (
     <>
-      data-access-state={accessState.state}
-      <div ref={triggerRef} onContextMenu={handleContextMenu} className={cn("inline-flex", accessState.isDisabled && "pointer-events-none opacity-50")} title={accessReason}>
-        {children}
-      </div>
+      {React.cloneElement(child, { onContextMenu: handleContextMenu } as Record<string, unknown>)}
 
       {open && (
         <div
           ref={menuRef}
           role="menu"
-          tabIndex={-1}
-          onKeyDown={handleKeyDown}
+          style={adjustedStyle}
           className={cn(
-            "fixed z-[1500] min-w-[160px] rounded-lg border border-border-default bg-surface-default py-1",
-            "shadow-lg animate-in fade-in-0 zoom-in-95",
-            className,
+            "min-w-[180px] rounded-lg border border-border-subtle bg-surface-default shadow-xl p-1",
+            "animate-in fade-in-0 zoom-in-95 duration-150",
           )}
-          style={{ left: position.x, top: position.y }}
+          onKeyDown={handleKeyDown}
+          tabIndex={-1}
+          {...stateAttrs({ component: "context-menu" })}
         >
-          {items.map((entry) => {
-            if (entry.type === "separator") {
-              return (
-                <div
-                  key={entry.key}
-                  role="separator"
-                  className="my-1 h-px bg-border-default"
-                />
-              );
-            }
-
-            if (entry.type === "label") {
-              return (
-                <div
-                  key={entry.key}
-                  className="px-3 py-1.5 text-xs font-semibold text-[var(--text-tertiary)] select-none"
-                >
-                  {entry.label}
-                </div>
-              );
-            }
-
-            /* item */
-            const item = entry as ContextMenuItem;
-            const actionIdx = actionableItems.indexOf(item);
-            const isFocused = actionIdx === focusIndex;
-
-            return (
+          {items.map((item, i) =>
+            item.separator ? (
+              <div key={`sep-${i}`} className="my-1 h-px bg-border-subtle" role="separator" />
+            ) : (
               <button
                 key={item.key}
                 type="button"
                 role="menuitem"
                 disabled={item.disabled}
+                className={cn(
+                  "flex w-full items-center gap-3 rounded-md px-2.5 py-2 text-sm",
+                  "transition-colors outline-none",
+                  item.danger
+                    ? "text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
+                    : "text-text-primary hover:bg-surface-muted",
+                  item.disabled && "opacity-50 pointer-events-none",
+                  activeItems.indexOf(item) === focusIndex && "bg-surface-muted",
+                )}
                 onClick={() => {
-                  item.onClick?.();
+                  item.onSelect?.();
+                  onSelect?.(item.key);
                   close();
                 }}
-                onMouseEnter={() => {
-                  if (!item.disabled) setFocusIndex(actionIdx);
-                }}
-                className={cn(
-                  "flex w-full items-center gap-2 px-3 py-1.5 text-sm outline-hidden transition-colors",
-                  "disabled:opacity-50 disabled:cursor-not-allowed",
-                  item.danger
-                    ? cn(
-                        "text-[var(--state-danger-text)]",
-                        isFocused && "bg-state-danger-bg",
-                      )
-                    : cn(
-                        "text-text-primary",
-                        isFocused && "bg-[var(--surface-hover)]",
-                      ),
-                )}
+                tabIndex={-1}
               >
-                {item.icon && <span className="shrink-0 w-4 h-4">{item.icon}</span>}
-                <span className="flex-1 text-start">{item.label}</span>
-                {item.shortcut && (
-                  <span className="ms-auto ps-4 text-xs text-[var(--text-tertiary)]">
-                    {item.shortcut}
+                {item.icon && (
+                  <span className="shrink-0 [&>svg]:h-4 [&>svg]:w-4 text-text-secondary" aria-hidden>
+                    {item.icon}
                   </span>
                 )}
+                <span className="flex-1 text-left">{item.label}</span>
+                {item.shortcut && (
+                  <kbd className="ml-auto text-xs text-text-disabled font-mono">{item.shortcut}</kbd>
+                )}
               </button>
-            );
-          })}
+            ),
+          )}
         </div>
       )}
     </>
   );
-});
+}
 
-ContextMenu.displayName = "ContextMenu";
+setDisplayName(ContextMenu, "ContextMenu");
+
+export { ContextMenu };

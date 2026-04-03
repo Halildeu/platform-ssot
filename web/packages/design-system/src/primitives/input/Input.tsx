@@ -189,4 +189,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
 setDisplayName(Input, "Input");
 
-export { Input, inputVariants };
+/** @deprecated Use Input directly */
+const TextInput = Input;
+
+export { Input, TextInput, inputVariants };

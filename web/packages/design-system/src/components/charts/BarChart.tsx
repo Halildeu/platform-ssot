@@ -161,18 +161,6 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         title: title ? { text: title, ...themeOverrides.common?.title } : undefined,
         subtitle: description ? { text: description } : undefined,
         series: barSeries as AgChartOptions["series"],
-        listeners: onDataPointClick ? {
-          seriesNodeClick: (e: any) => {
-            onDataPointClick({
-              datum: e.datum ?? {},
-              seriesId: e.seriesId,
-              xKey: e.xKey,
-              yKey: e.yKey,
-              value: e.datum?.[e.yKey],
-              label: e.datum?.[e.xKey],
-            });
-          },
-        } : undefined,
         legend: { enabled: showLegend || (hasMultiSeries ?? false) },
         theme: {
           overrides: {
