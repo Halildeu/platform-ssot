@@ -1,7 +1,8 @@
 import React from 'react';
 import { getLiveKPIs, getLiveCharts } from './api';
 import type { DashboardKPI, DashboardChart, DashboardChartItem } from './api';
-import { BarChart, PieChart, EntityGridTemplate } from '@mfe/design-system';
+import { BarChart, PieChart } from '@mfe/design-system';
+import { AgGridReact } from 'ag-grid-react';
 import { AgCharts } from 'ag-charts-react';
 import type { AgChartOptions } from 'ag-charts-community';
 import type { ColDef } from 'ag-grid-community';
@@ -88,11 +89,11 @@ interface ChartGridColumn {
   format?: 'currency' | 'percent' | 'number';
 }
 
+/** Lightweight AG Grid for chart summary data — no toolbar/variant overhead */
 const ChartDataGrid: React.FC<{
-  gridId: string;
   data: DashboardChartItem[];
   columns: ChartGridColumn[];
-}> = ({ gridId, data, columns }) => {
+}> = ({ data, columns }) => {
   if (!data || data.length === 0) return null;
 
   const colDefs = React.useMemo<ColDef[]>(() =>
@@ -102,7 +103,6 @@ const ChartDataGrid: React.FC<{
       flex: idx === 0 ? 1.5 : 1,
       minWidth: idx === 0 ? 160 : 100,
       sortable: true,
-      filter: true,
       type: idx > 0 ? 'rightAligned' : undefined,
       valueFormatter: idx > 0 ? (params: { value: unknown }) => {
         const v = params.value;
@@ -118,14 +118,15 @@ const ChartDataGrid: React.FC<{
   );
 
   return (
-    <div className="mt-3" style={{ height: Math.min(data.length * 42 + 56, 320) }}>
-      <EntityGridTemplate
-        gridId={gridId}
-        gridSchemaVersion={1}
-        columnDefs={colDefs}
-        dataSourceMode="client"
+    <div className="ag-theme-quartz mt-3" style={{ height: Math.min(data.length * 36 + 42, 280) }}>
+      <AgGridReact
         rowData={data}
-        total={data.length}
+        columnDefs={colDefs}
+        domLayout="autoHeight"
+        headerHeight={32}
+        rowHeight={32}
+        suppressCellFocus
+        suppressMovableColumns
       />
     </div>
   );
@@ -137,12 +138,11 @@ const ChartDataGrid: React.FC<{
 
 const ChartBlock: React.FC<{
   chart: DashboardChart | undefined;
-  gridId: string;
   title?: string;
   height?: string;
   children?: React.ReactNode;
   gridColumns?: ChartGridColumn[];
-}> = ({ chart, gridId, title, height, children, gridColumns }) => {
+}> = ({ chart, title, height, children, gridColumns }) => {
   const chartTitle = chart?.title ?? title ?? '';
   const data = chart?.data ?? [];
   return (
@@ -152,7 +152,7 @@ const ChartBlock: React.FC<{
         {chart && data.length > 0 ? children : <EmptyState />}
       </div>
       {gridColumns && data.length > 0 && (
-        <ChartDataGrid gridId={gridId} data={data} columns={gridColumns} />
+        <ChartDataGrid data={data} columns={gridColumns} />
       )}
     </div>
   );
@@ -327,7 +327,6 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartFullClass}>
         <ChartBlock
           chart={findChart('salary-histogram')}
-          gridId="dash-salary-histogram"
           title="Maaş Dağılımı Histogramı"
           height="h-80"
           gridColumns={[
@@ -343,7 +342,6 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartFullClass}>
         <ChartBlock
           chart={findChart('dept-salary-comparison')}
-          gridId="dash-dept-salary"
           title="Departman Bazlı Maaş Karşılaştırma"
           height="h-96"
           gridColumns={[
@@ -359,7 +357,6 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartRowClass}>
         <ChartBlock
           chart={findChart('gender-salary-comparison')}
-          gridId="dash-gender-salary"
           title="Cinsiyet Bazlı Maaş Karşılaştırma"
           gridColumns={[
             { key: 'label', label: 'Departman' },
@@ -372,7 +369,6 @@ const CompensationDashboard: React.FC = () => {
 
         <ChartBlock
           chart={findChart('education-salary-premium')}
-          gridId="dash-education-salary"
           title="Eğitim Seviyesi Primi"
           gridColumns={[
             { key: 'label', label: 'Eğitim' },
@@ -387,7 +383,6 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartFullClass}>
         <ChartBlock
           chart={findChart('salary-trend-12m')}
-          gridId="dash-salary-trend"
           title="12 Aylık Maaş Trendi"
           height="h-80"
           gridColumns={[
@@ -404,7 +399,6 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartRowClass}>
         <ChartBlock
           chart={findChart('collar-type-salary')}
-          gridId="dash-collar-salary"
           title="Yaka Tipi Dağılımı"
           gridColumns={[
             { key: 'label', label: 'Yaka Tipi' },
@@ -417,7 +411,6 @@ const CompensationDashboard: React.FC = () => {
 
         <ChartBlock
           chart={findChart('tenure-salary-relation')}
-          gridId="dash-tenure-salary"
           title="Kıdem — Maaş İlişkisi"
           gridColumns={[
             { key: 'label', label: 'Kıdem Bandı' },
@@ -432,7 +425,6 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartFullClass}>
         <ChartBlock
           chart={findChart('cost-waterfall')}
-          gridId="dash-cost-waterfall"
           title="Maliyet Yapısı Şelale"
           height="h-80"
           gridColumns={[
@@ -448,7 +440,6 @@ const CompensationDashboard: React.FC = () => {
       <div className={chartRowClass}>
         <ChartBlock
           chart={findChart('company-payroll-pie')}
-          gridId="dash-company-payroll"
           title="Şirket Bordro Dağılımı"
           gridColumns={[
             { key: 'label', label: 'Şirket' },
@@ -460,7 +451,6 @@ const CompensationDashboard: React.FC = () => {
 
         <ChartBlock
           chart={findChart('dept-percentile-radar')}
-          gridId="dash-dept-percentile"
           title="Departman Yüzdelik Karşılaştırma"
           gridColumns={[
             { key: 'label', label: 'Departman' },
