@@ -1,10 +1,73 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { getSharedReport } from '@platform/capabilities';
-import type { ReportModule } from '../types';
+import type { ReportModule, FilterRenderContext } from '../types';
 import type { ColumnMeta } from '@mfe/design-system/advanced/data-grid';
 import type { HrCompensationFilters, HrCompensationRow } from './types';
-import { fetchCompensationRows } from './api';
+import { fetchCompensationRows, getFilterOptions } from './api';
 import CompensationDashboard from './CompensationDashboard';
+
+const inputClass =
+  'w-full rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1';
+const labelClass = 'flex flex-col gap-1 text-xs font-medium text-text-secondary min-w-[200px]';
+
+function CompensationFilters({ values, setFieldValue, t }: FilterRenderContext<HrCompensationFilters>) {
+  const [departments, setDepartments] = useState<string[]>([]);
+
+  useEffect(() => {
+    getFilterOptions('department').then(setDepartments);
+  }, []);
+
+  return (
+    <>
+      <label className={labelClass}>
+        <span>{t('reports.filters.search.placeholder')}</span>
+        <input
+          data-testid="report-filter-search"
+          className={inputClass}
+          value={values.search ?? ''}
+          placeholder={t('reports.hrCompensation.filters.searchPlaceholder')}
+          onChange={(e) => setFieldValue('search', e.target.value)}
+        />
+      </label>
+      <label className={labelClass}>
+        <span>{t('reports.hrCompensation.filters.department')}</span>
+        <select data-testid="report-filter-department" className={inputClass} value={values.department ?? 'all'} onChange={(e) => setFieldValue('department', e.target.value)}>
+          <option value="all">{t('reports.filters.all')}</option>
+          {departments.map((d) => (
+            <option key={d} value={d}>{d}</option>
+          ))}
+        </select>
+      </label>
+      <label className={labelClass}>
+        <span>{t('reports.hrCompensation.filters.collarType')}</span>
+        <select data-testid="report-filter-collar" className={inputClass} value={values.collarType ?? 'all'} onChange={(e) => setFieldValue('collarType', e.target.value)}>
+          <option value="all">{t('reports.filters.all')}</option>
+          <option value="1">{t('reports.hrCompensation.collarType.white')}</option>
+          <option value="2">{t('reports.hrCompensation.collarType.blue')}</option>
+        </select>
+      </label>
+      <label className={labelClass}>
+        <span>{t('reports.hrCompensation.filters.gender')}</span>
+        <select data-testid="report-filter-gender" className={inputClass} value={values.gender ?? 'all'} onChange={(e) => setFieldValue('gender', e.target.value)}>
+          <option value="all">{t('reports.filters.all')}</option>
+          <option value="1">Erkek</option>
+          <option value="0">Kadin</option>
+        </select>
+      </label>
+      <label className={labelClass}>
+        <span>{t('reports.hrCompensation.filters.education')}</span>
+        <select data-testid="report-filter-education" className={inputClass} value={values.education ?? 'all'} onChange={(e) => setFieldValue('education', e.target.value)}>
+          <option value="all">{t('reports.filters.all')}</option>
+          <option value="Lise">Lise</option>
+          <option value="Onlisans">Onlisans</option>
+          <option value="Lisans">Lisans</option>
+          <option value="Yuksek Lisans">Yuksek Lisans</option>
+          <option value="Doktora">Doktora</option>
+        </select>
+      </label>
+    </>
+  );
+}
 
 const sharedReport = getSharedReport('hr-compensation');
 
@@ -30,59 +93,7 @@ export const hrCompensationModule: ReportModule<HrCompensationFilters, HrCompens
       education: sp?.get('education')?.trim() ?? 'all',
     };
   },
-  renderFilters: ({ values, setFieldValue, t }) => {
-    const inputClass =
-      'w-full rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1';
-    const labelClass = 'flex flex-col gap-1 text-xs font-medium text-text-secondary min-w-[200px]';
-
-    return (
-      <>
-        <label className={labelClass}>
-          <span>{t('reports.filters.search.placeholder')}</span>
-          <input
-            data-testid="report-filter-search"
-            className={inputClass}
-            value={values.search ?? ''}
-            placeholder={t('reports.hrCompensation.filters.searchPlaceholder')}
-            onChange={(e) => setFieldValue('search', e.target.value)}
-          />
-        </label>
-        <label className={labelClass}>
-          <span>{t('reports.hrCompensation.filters.department')}</span>
-          <select data-testid="report-filter-department" className={inputClass} value={values.department ?? 'all'} onChange={(e) => setFieldValue('department', e.target.value)}>
-            <option value="all">{t('reports.filters.all')}</option>
-          </select>
-        </label>
-        <label className={labelClass}>
-          <span>{t('reports.hrCompensation.filters.collarType')}</span>
-          <select data-testid="report-filter-collar" className={inputClass} value={values.collarType ?? 'all'} onChange={(e) => setFieldValue('collarType', e.target.value)}>
-            <option value="all">{t('reports.filters.all')}</option>
-            <option value="1">{t('reports.hrCompensation.collarType.white')}</option>
-            <option value="2">{t('reports.hrCompensation.collarType.blue')}</option>
-          </select>
-        </label>
-        <label className={labelClass}>
-          <span>{t('reports.hrCompensation.filters.gender')}</span>
-          <select data-testid="report-filter-gender" className={inputClass} value={values.gender ?? 'all'} onChange={(e) => setFieldValue('gender', e.target.value)}>
-            <option value="all">{t('reports.filters.all')}</option>
-            <option value="1">Erkek</option>
-            <option value="0">Kadin</option>
-          </select>
-        </label>
-        <label className={labelClass}>
-          <span>{t('reports.hrCompensation.filters.education')}</span>
-          <select data-testid="report-filter-education" className={inputClass} value={values.education ?? 'all'} onChange={(e) => setFieldValue('education', e.target.value)}>
-            <option value="all">{t('reports.filters.all')}</option>
-            <option value="Lise">Lise</option>
-            <option value="Onlisans">Onlisans</option>
-            <option value="Lisans">Lisans</option>
-            <option value="Yuksek Lisans">Yuksek Lisans</option>
-            <option value="Doktora">Doktora</option>
-          </select>
-        </label>
-      </>
-    );
-  },
+  renderFilters: (props) => <CompensationFilters {...props} />,
   getColumnMeta: (): ColumnMeta[] => [
     { field: 'EMPLOYEE_ID', headerNameKey: 'reports.hrCompensation.columns.employeeId', columnType: 'number', width: 90 },
     { field: 'FULL_NAME', headerNameKey: 'reports.hrCompensation.columns.fullName', columnType: 'bold-text', minWidth: 180, flex: 1.4 },

@@ -117,6 +117,26 @@ export const refreshDashboardData = (): void => {
 };
 
 /* ------------------------------------------------------------------ */
+/*  Filter Options API — dynamic dropdown values                       */
+/* ------------------------------------------------------------------ */
+
+const _filterOptionsCache = new Map<string, string[]>();
+
+export const getFilterOptions = async (filterKey: string): Promise<string[]> => {
+  if (_filterOptionsCache.has(filterKey)) return _filterOptionsCache.get(filterKey)!;
+  try {
+    const client = resolveHttp();
+    const res = await client.get<string[]>(`/v1/dashboards/${DASHBOARD_KEY}/filter-options/${filterKey}`);
+    const options = Array.isArray(res.data) ? res.data : [];
+    _filterOptionsCache.set(filterKey, options);
+    return options;
+  } catch (err) {
+    console.warn(`[hr-compensation] Filter options fetch failed for ${filterKey}:`, err);
+    return [];
+  }
+};
+
+/* ------------------------------------------------------------------ */
 /*  Grid API — dynamic report data                                     */
 /* ------------------------------------------------------------------ */
 
