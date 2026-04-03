@@ -9,7 +9,7 @@ import {
 } from '@mfe/design-system';
 import { api } from '@mfe/shared-http';
 import { useThemeContext } from '../../app/theme/theme-context.provider';
-import { parseAnyColor, rgbaToHex, rgbaToString, type _RgbaColor } from '../../app/theme/color-utils';
+import { parseAnyColor, rgbaToHex, rgbaToString, type RgbaColor as _RgbaColor } from '../../app/theme/color-utils';
 import ThemeAdminPreviewPanel from './ThemeAdminPreviewPanel';
 import ThemeAdminRegistryEditor from './ThemeAdminRegistryEditor';
 import {
@@ -31,6 +31,60 @@ import {
   type ThemeSummary,
 } from './ThemeAdminPage.shared';
 import { useThemeAdminI18n } from './useThemeAdminI18n';
+
+/* ------------------------------------------------------------------ */
+/*  localStorage hybrid persistence helpers                            */
+/* ------------------------------------------------------------------ */
+
+const LS_PREFIX = 'mfe.theme.admin';
+
+function lsGet<T>(key: string): T | null {
+  try {
+    const raw = localStorage.getItem(`${LS_PREFIX}.${key}`);
+    return raw ? (JSON.parse(raw) as T) : null;
+  } catch {
+    return null;
+  }
+}
+
+function lsSet(key: string, value: unknown): void {
+  try {
+    localStorage.setItem(`${LS_PREFIX}.${key}`, JSON.stringify(value));
+  } catch {
+    /* quota exceeded — silent */
+  }
+}
+
+async function apiOrFallback<T>(
+  apiCall: () => Promise<{ data: T }>,
+  fallbackKey: string,
+  fallbackData?: T,
+): Promise<T> {
+  try {
+    const res = await apiCall();
+    const data = res.data;
+    lsSet(fallbackKey, data);
+    return data;
+  } catch {
+    const cached = lsGet<T>(fallbackKey);
+    if (cached) return cached;
+    if (fallbackData !== undefined) return fallbackData;
+    throw new Error(`No API and no cached data for ${fallbackKey}`);
+  }
+}
+
+async function apiPutOrLocal(
+  url: string,
+  payload: unknown,
+  localKey: string,
+): Promise<void> {
+  lsSet(localKey, payload);
+  try {
+    await api.put(url, payload);
+  } catch {
+    /* API unavailable — saved locally, silent */
+  }
+}
 
 // STORY-0022: Theme Personalization v1.0
 const ThemeAdminPage: React.FC = () => {
@@ -224,18 +278,26 @@ const ThemeAdminPage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const [registryRes, themesRes] = await Promise.all([
-          api.get<ThemeRegistryEntry[]>('/v1/theme-registry'),
-          api.get<ThemeSummary[]>('/v1/themes', { params: { scope: 'global' } }),
+        const [registryData, themesData] = await Promise.all([
+          apiOrFallback<ThemeRegistryEntry[]>(
+            () => api.get<ThemeRegistryEntry[]>('/v1/theme-registry'),
+            'registry',
+            [],
+          ),
+          apiOrFallback<ThemeSummary[]>(
+            () => api.get<ThemeSummary[]>('/v1/themes', { params: { scope: 'global' } }),
+            'themes',
+            [],
+          ),
         ]);
         if (cancelled) return;
-        setRegistry(registryRes.data ?? []);
-        setThemes(themesRes.data ?? []);
-        if (!selectedThemeId && themesRes.data && themesRes.data.length > 0) {
+        setRegistry(registryData);
+        setThemes(themesData);
+        if (!selectedThemeId && themesData && themesData.length > 0) {
           const preferred =
-            currentThemeId && themesRes.data.some((theme) => theme.id === currentThemeId)
+            currentThemeId && themesData.some((theme: ThemeSummary) => theme.id === currentThemeId)
               ? currentThemeId
-              : themesRes.data[0].id;
+              : themesData[0].id;
           setSelectedThemeId(preferred);
         }
       } catch {
@@ -280,21 +342,24 @@ const ThemeAdminPage: React.FC = () => {
       setError(null);
       setSuccess(null);
       try {
-        const res = await api.get<ThemeDetails>(`/v1/themes/${selectedThemeId}`);
+        const themeData = await apiOrFallback<ThemeDetails>(
+          () => api.get<ThemeDetails>(`/v1/themes/${selectedThemeId}`),
+          `theme.${selectedThemeId}`,
+        );
         if (cancelled) return;
-        setOverrides(res.data.overrides ?? {});
-        setSelectedTheme(res.data ?? null);
-	        setThemeMeta({
-	          appearance: res.data.appearance ?? 'light',
-	          surfaceTone: res.data.surfaceTone ?? null,
-	          axes: {
-	            accent: res.data.axes?.accent ?? 'neutral',
-	            density: res.data.axes?.density ?? 'comfortable',
-	            radius: res.data.axes?.radius ?? 'rounded',
-	            elevation: res.data.axes?.elevation ?? 'raised',
-	            motion: res.data.axes?.motion ?? 'standard',
-	          },
-	        });
+        setOverrides(themeData.overrides ?? {});
+        setSelectedTheme(themeData ?? null);
+        setThemeMeta({
+          appearance: themeData.appearance ?? 'light',
+          surfaceTone: themeData.surfaceTone ?? null,
+          axes: {
+            accent: themeData.axes?.accent ?? 'neutral',
+            density: themeData.axes?.density ?? 'comfortable',
+            radius: themeData.axes?.radius ?? 'rounded',
+            elevation: themeData.axes?.elevation ?? 'raised',
+            motion: themeData.axes?.motion ?? 'standard',
+          },
+        });
       } catch {
         if (!cancelled) {
           setError(t('themeadmin.error.loadThemeDetails'));
@@ -593,7 +658,11 @@ const ThemeAdminPage: React.FC = () => {
     setDefaultThemeError(null);
     setDefaultThemeSuccess(null);
     try {
-      await api.put(`/v1/themes/global/default/${defaultThemeId}`);
+      await apiPutOrLocal(
+        `/v1/themes/global/default/${defaultThemeId}`,
+        { defaultThemeId },
+        'defaultTheme',
+      );
       setThemes((prev) =>
         prev.map((theme) => {
           const isCurrentlyDefault = String(theme.visibility ?? '').trim().toUpperCase() === 'DEFAULT';
@@ -639,7 +708,11 @@ const ThemeAdminPage: React.FC = () => {
         id: theme.id,
         activeFlag: Boolean(paletteDraft[theme.id]),
       }));
-      await api.put('/v1/themes/global/palette', { themes: updates });
+      await apiPutOrLocal(
+        '/v1/themes/global/palette',
+        { themes: updates },
+        'palette',
+      );
 
       setThemes((prev) =>
         prev.map((theme) => ({
@@ -669,12 +742,16 @@ const ThemeAdminPage: React.FC = () => {
     setSuccess(null);
     try {
       await Promise.all([
-        api.put(`/v1/themes/global/${selectedThemeId}/meta`, {
-          appearance: themeMeta.appearance,
-          surfaceTone: themeMeta.surfaceTone,
-          axes: themeMeta.axes,
-        }),
-        api.put(`/v1/themes/global/${selectedThemeId}`, overrides),
+        apiPutOrLocal(
+          `/v1/themes/global/${selectedThemeId}/meta`,
+          { appearance: themeMeta.appearance, surfaceTone: themeMeta.surfaceTone, axes: themeMeta.axes },
+          `meta.${selectedThemeId}`,
+        ),
+        apiPutOrLocal(
+          `/v1/themes/global/${selectedThemeId}`,
+          overrides,
+          `overrides.${selectedThemeId}`,
+        ),
       ]);
       setThemes((prev) =>
         prev.map((theme) =>
