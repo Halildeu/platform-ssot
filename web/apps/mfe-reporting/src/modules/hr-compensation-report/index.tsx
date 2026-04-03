@@ -42,8 +42,8 @@ function CompensationFilters({ values, setFieldValue, t }: FilterRenderContext<H
         <span>{t('reports.hrCompensation.filters.collarType')}</span>
         <select data-testid="report-filter-collar" className={inputClass} value={values.collarType ?? 'all'} onChange={(e) => setFieldValue('collarType', e.target.value)}>
           <option value="all">{t('reports.filters.all')}</option>
-          <option value="1">{t('reports.hrCompensation.collarType.white')}</option>
-          <option value="2">{t('reports.hrCompensation.collarType.blue')}</option>
+          <option value="1">{t('reports.hrCompensation.collarType.blue')}</option>
+          <option value="2">{t('reports.hrCompensation.collarType.white')}</option>
         </select>
       </label>
       <label className={labelClass}>
@@ -103,8 +103,8 @@ export const hrCompensationModule: ReportModule<HrCompensationFilters, HrCompens
     { field: 'COMPANY_NAME', headerNameKey: 'reports.hrCompensation.columns.company', columnType: 'text', width: 130 },
     {
       field: 'COLLAR_TYPE', headerNameKey: 'reports.hrCompensation.columns.collarType', columnType: 'badge', width: 90,
-      variantMap: { 1: 'info', 2: 'warning' },
-      labelMap: { 1: 'reports.hrCompensation.collarType.white', 2: 'reports.hrCompensation.collarType.blue' },
+      variantMap: { 1: 'warning', 2: 'info' },
+      labelMap: { 1: 'reports.hrCompensation.collarType.blue', 2: 'reports.hrCompensation.collarType.white' },
       defaultVariant: 'default',
     },
     {
