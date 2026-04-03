@@ -183,4 +183,4 @@ const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(
 
 setDisplayName(PageLayout, "PageLayout");
 
-export { PageLayout };
+export { PageLayout, createPageLayoutPreset, createPageLayoutBreadcrumbItems };

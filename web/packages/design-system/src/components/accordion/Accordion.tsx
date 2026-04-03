@@ -218,4 +218,59 @@ setDisplayName(AccordionItem, "AccordionItem");
 setDisplayName(AccordionTrigger, "AccordionTrigger");
 setDisplayName(AccordionContent, "AccordionContent");
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };
+// ---------------------------------------------------------------------------
+// Helper factories (used by consumers for declarative accordion creation)
+// ---------------------------------------------------------------------------
+
+export interface AccordionSectionInput {
+  key: string;
+  title: React.ReactNode;
+  content?: React.ReactNode;
+  description?: React.ReactNode;
+  extra?: React.ReactNode;
+  defaultExpanded?: boolean;
+  disabled?: boolean;
+  sections?: AccordionSectionInput[];
+}
+
+export interface CreateAccordionItemsFromSectionsOptions {
+  nestedSelectionMode?: "single" | "multiple";
+  nestedSize?: "sm" | "md";
+  nestedBordered?: boolean;
+  nestedGhost?: boolean;
+  nestedDisableGutters?: boolean;
+  renderSectionContent?: (section: AccordionSectionInput) => React.ReactNode;
+}
+
+export type AccordionPresetKind = "faq" | "compact" | "settings";
+
+export interface AccordionPreset {
+  type: "single" | "multiple";
+  collapsible: boolean;
+  size: "sm" | "md";
+  bordered: boolean;
+  ghost: boolean;
+}
+
+export function createAccordionItemsFromSections(
+  sections: AccordionSectionInput[],
+  options?: CreateAccordionItemsFromSectionsOptions,
+): { value: string; children: React.ReactNode }[] {
+  return sections.map((section) => ({
+    value: section.key,
+    children: options?.renderSectionContent
+      ? options.renderSectionContent(section)
+      : section.content ?? null,
+  }));
+}
+
+export function createAccordionPreset(kind: AccordionPresetKind): AccordionPreset {
+  const presets: Record<AccordionPresetKind, AccordionPreset> = {
+    faq: { type: "single", collapsible: true, size: "md", bordered: true, ghost: false },
+    compact: { type: "multiple", collapsible: true, size: "sm", bordered: false, ghost: true },
+    settings: { type: "single", collapsible: true, size: "md", bordered: true, ghost: false },
+  };
+  return presets[kind];
+}
+
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent, createAccordionPreset, createAccordionItemsFromSections };
