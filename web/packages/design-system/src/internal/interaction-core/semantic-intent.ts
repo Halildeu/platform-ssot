@@ -63,7 +63,7 @@ export type ResolvedIntent = {
  */
 export function resolveKeyboardIntent(
   event: React.KeyboardEvent | KeyboardEvent,
-  componentRole: "button" | "switch" | "checkbox" | "radio" | "select" | "tabs" | "accordion" | "dialog" | "combobox" | "menu" | "slider",
+  componentRole: "button" | "switch" | "checkbox" | "radio" | "select" | "tabs" | "accordion" | "dialog" | "combobox" | "menu" | "slider" | "gallery",
 ): ResolvedIntent | null {
   const key = event.key;
 

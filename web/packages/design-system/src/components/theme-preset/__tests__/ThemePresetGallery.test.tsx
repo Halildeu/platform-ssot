@@ -82,29 +82,29 @@ describe('ThemePresetGallery — empty state', () => {
 describe('ThemePresetGallery — selection', () => {
   it('ilk preseti varsayilan olarak secer', () => {
     render(<ThemePresetGallery presets={presets} />);
-    const buttons = screen.getAllByRole('button');
-    expect(buttons[0]).toHaveAttribute('aria-current', 'true');
+    const options = screen.getAllByRole('option');
+    expect(options[0]).toHaveAttribute('aria-current', 'true');
   });
 
   it('defaultSelectedPresetId ile belirtilen preseti secer', () => {
     render(<ThemePresetGallery presets={presets} defaultSelectedPresetId="p2" />);
-    const buttons = screen.getAllByRole('button');
-    expect(buttons[1]).toHaveAttribute('aria-current', 'true');
+    const options = screen.getAllByRole('option');
+    expect(options[1]).toHaveAttribute('aria-current', 'true');
   });
 
   it('onSelectPreset callback calisir', async () => {
     const handleSelect = vi.fn();
     render(<ThemePresetGallery presets={presets} onSelectPreset={handleSelect} />);
-    const buttons = screen.getAllByRole('button');
-    await userEvent.click(buttons[1]);
+    const options = screen.getAllByRole('option');
+    await userEvent.click(options[1]);
     expect(handleSelect).toHaveBeenCalledWith('p2', presets[1]);
   });
 
   it('controlled selectedPresetId ile secim disaridan yonetilir', () => {
     render(<ThemePresetGallery presets={presets} selectedPresetId="p2" />);
-    const buttons = screen.getAllByRole('button');
-    expect(buttons[1]).toHaveAttribute('aria-current', 'true');
-    expect(buttons[0]).not.toHaveAttribute('aria-current');
+    const options = screen.getAllByRole('option');
+    expect(options[1]).toHaveAttribute('aria-current', 'true');
+    expect(options[0]).not.toHaveAttribute('aria-current');
   });
 });
 
@@ -150,8 +150,8 @@ describe('ThemePresetGallery — access control', () => {
     render(
       <ThemePresetGallery presets={presets} access="disabled" onSelectPreset={handleSelect} />,
     );
-    const buttons = screen.getAllByRole('button');
-    fireEvent.click(buttons[1]);
+    const options = screen.getAllByRole('option');
+    fireEvent.click(options[1]);
     expect(handleSelect).not.toHaveBeenCalled();
   });
 
