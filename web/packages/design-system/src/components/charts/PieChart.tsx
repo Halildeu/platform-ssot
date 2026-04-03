@@ -11,7 +11,7 @@ import {
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { getChartThemeOverrides, getChartColorPalette } from "../../advanced/data-grid/chart-theme-bridge";
-import type { ChartSize, ChartDataPoint, ChartLocaleText } from "./types";
+import type { ChartSize, ChartDataPoint, ChartLocaleText, ChartClickEvent } from "./types";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -44,6 +44,8 @@ export interface PieChartProps extends AccessControlledProps {
   localeText?: ChartLocaleText;
   /** Additional class name. */
   className?: string;
+  /** Callback fired when a data point (slice) is clicked. */
+  onDataPointClick?: (event: ChartClickEvent) => void;
 }
 
 /* ------------------------------------------------------------------ */
@@ -79,6 +81,7 @@ export const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       description,
       localeText,
       className,
+      onDataPointClick,
       access = "full",
       accessReason,
       ...rest
@@ -134,11 +137,24 @@ export const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
             },
             ...(donut ? { innerRadiusOffset: -40 } : {}),
             fills: coloredData.map((d) => d._fill),
+            cursor: onDataPointClick ? "pointer" : undefined,
           } as any,
         ],
+        listeners: onDataPointClick ? {
+          nodeClick: (e: any) => {
+            onDataPointClick({
+              datum: e.datum ?? {},
+              seriesId: e.seriesId,
+              xKey: undefined,
+              yKey: e.angleKey,
+              value: e.datum?.[e.angleKey ?? "value"],
+              label: e.datum?.label,
+            });
+          },
+        } : undefined,
         legend: { enabled: showLegend },
       } as AgChartOptions;
-    }, [validData, donut, showLabels, showLegend, showPercentage, valueFormatter, animate, title, description]);
+    }, [validData, donut, showLabels, showLegend, showPercentage, valueFormatter, animate, title, description, onDataPointClick]);
 
     /* ---- empty state ---- */
     if (validData.length === 0) {

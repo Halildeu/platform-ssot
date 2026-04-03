@@ -20,3 +20,12 @@ export type ChartLocaleText = {
   noData?: string;
   total?: string;
 };
+
+export type ChartClickEvent = {
+  datum: Record<string, unknown>;
+  seriesId?: string;
+  xKey?: string;
+  yKey?: string;
+  value?: number;
+  label?: string;
+};

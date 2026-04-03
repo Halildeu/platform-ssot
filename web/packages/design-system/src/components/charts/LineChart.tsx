@@ -11,7 +11,7 @@ import {
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { getChartThemeOverrides, getChartColorPalette } from "../../advanced/data-grid/chart-theme-bridge";
-import type { ChartSize, ChartSeries, ChartLocaleText } from "./types";
+import type { ChartSize, ChartSeries, ChartLocaleText, ChartClickEvent } from "./types";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -46,6 +46,8 @@ export interface LineChartProps extends AccessControlledProps {
   localeText?: ChartLocaleText;
   /** Additional class name. */
   className?: string;
+  /** Callback fired when a data point (marker) is clicked. */
+  onDataPointClick?: (event: ChartClickEvent) => void;
 }
 
 /* ------------------------------------------------------------------ */
@@ -57,7 +59,7 @@ const SIZE_HEIGHT: Record<ChartSize, number> = { sm: 200, md: 300, lg: 400 };
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
-/* ------------------------------------------------------------------ 
+/* ------------------------------------------------------------------
  * @example
  * ```tsx
  * <LineChart />
@@ -82,6 +84,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       description,
       localeText,
       className,
+      onDataPointClick,
       access = "full",
       accessReason,
       ...rest
@@ -120,6 +123,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         fillOpacity: showArea ? 0.18 : undefined,
         stroke: s.color ?? palette[i % palette.length],
         marker: { enabled: showDots, size: 6 },
+        cursor: onDataPointClick ? "pointer" : undefined,
         interpolation: curved ? { type: "smooth" as const } : undefined,
       }));
 
@@ -144,9 +148,21 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
             gridLine: { enabled: showGrid },
           },
         ],
+        listeners: onDataPointClick ? {
+          nodeClick: (e: any) => {
+            onDataPointClick({
+              datum: e.datum ?? {},
+              seriesId: e.seriesId,
+              xKey: e.xKey,
+              yKey: e.yKey,
+              value: e.datum?.[e.yKey],
+              label: e.datum?.[e.xKey],
+            });
+          },
+        } : undefined,
         legend: { enabled: showLegend || seriesData.length > 1 },
       } as AgChartOptions;
-    }, [seriesData, labels, showDots, showGrid, showLegend, showArea, curved, valueFormatter, animate, title, description, isEmpty]);
+    }, [seriesData, labels, showDots, showGrid, showLegend, showArea, curved, valueFormatter, animate, title, description, isEmpty, onDataPointClick]);
 
     if (isEmpty) {
       return (

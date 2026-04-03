@@ -118,5 +118,5 @@ export const hrCompensationModule: ReportModule<HrCompensationFilters, HrCompens
   ],
   getColumns: () => [],
   fetchRows: (filters, request) => fetchCompensationRows(filters, request),
-  renderDashboard: () => <CompensationDashboard />,
+  renderDashboard: (_t, filters) => <CompensationDashboard filters={filters} />,
 };

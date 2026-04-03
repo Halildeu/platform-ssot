@@ -30,7 +30,7 @@ export interface ReportModule<TFilters extends Record<string, unknown>, TRow> {
   /** Declarative column metadata — preferred over getColumns. Skeleton auto-generates renderers. */
   getColumnMeta?: () => ColumnMeta[];
   fetchRows: (filters: TFilters, request: GridRequest) => Promise<GridResponse<TRow>>;
-  renderDashboard?: (t: TranslateFn) => ReactNode;
+  renderDashboard?: (t: TranslateFn, filters?: TFilters) => ReactNode;
   renderDetail?: (row: TRow | null, t: TranslateFn) => ReactNode;
   exportRows?: (
     filters: TFilters,

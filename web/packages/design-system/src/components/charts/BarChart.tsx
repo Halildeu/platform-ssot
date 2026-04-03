@@ -11,7 +11,7 @@ import {
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { getChartThemeOverrides, getChartColorPalette } from "../../advanced/data-grid/chart-theme-bridge";
-import type { ChartSize, ChartDataPoint, ChartLocaleText } from "./types";
+import type { ChartSize, ChartDataPoint, ChartLocaleText, ChartClickEvent } from "./types";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -46,6 +46,8 @@ export interface BarChartProps extends AccessControlledProps {
   className?: string;
   /** Multi-series: second value field for grouped bars. */
   series?: { field: string; name: string; color?: string }[];
+  /** Callback fired when a data point (bar) is clicked. */
+  onDataPointClick?: (event: ChartClickEvent) => void;
 }
 
 /* ------------------------------------------------------------------ */
@@ -82,6 +84,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       localeText,
       className,
       series: seriesDef,
+      onDataPointClick,
       access = "full",
       accessReason,
       ...rest
@@ -120,6 +123,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
             yKey: s.field,
             yName: s.name,
             fill: s.color ?? palette[i % palette.length],
+            cursor: onDataPointClick ? "pointer" : undefined,
             label: showValues ? { formatter: (p: any) => valueFormatter ? valueFormatter(p.value) : String(p.value) } : undefined,
           }))
         : [
@@ -129,6 +133,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
               xKey: "label",
               yKey: "value",
               fills: chartData.map((d: any) => d._fill),
+              cursor: onDataPointClick ? "pointer" : undefined,
               label: showValues ? { formatter: (p: any) => valueFormatter ? valueFormatter(p.value) : String(p.value) } : undefined,
             },
           ];
@@ -138,6 +143,18 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         title: title ? { text: title, ...themeOverrides.common?.title } : undefined,
         subtitle: description ? { text: description } : undefined,
         series: barSeries as AgChartOptions["series"],
+        listeners: onDataPointClick ? {
+          nodeClick: (e: any) => {
+            onDataPointClick({
+              datum: e.datum ?? {},
+              seriesId: e.seriesId,
+              xKey: e.xKey,
+              yKey: e.yKey,
+              value: e.datum?.[e.yKey],
+              label: e.datum?.[e.xKey],
+            });
+          },
+        } : undefined,
         legend: { enabled: showLegend || (hasMultiSeries ?? false) },
         theme: {
           overrides: {
@@ -152,7 +169,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
           },
         },
       } as AgChartOptions;
-    }, [data, orientation, showValues, showGrid, showLegend, valueFormatter, animate, colors, title, description, seriesDef]);
+    }, [data, orientation, showValues, showGrid, showLegend, valueFormatter, animate, colors, title, description, seriesDef, onDataPointClick]);
 
     /* ---- empty state ---- */
     if (!data || data.length === 0) {
