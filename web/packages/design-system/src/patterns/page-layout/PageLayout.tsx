@@ -8,7 +8,60 @@ import { setDisplayName } from "../../system/compose";
 // Types
 // ---------------------------------------------------------------------------
 
-export interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
+export type PageLayoutClasses = Record<string, string>;
+export type PageBreadcrumbItem = { label: string; href?: string };
+export type PageLayoutRouteInput = { path: string; label: string };
+export interface PageLayoutPresetOptions {
+  preset: "content-only" | "detail-sidebar" | "ops-workspace";
+  pageWidth?: "default" | "wide" | "full";
+  stickyHeader?: boolean;
+  currentBreadcrumbMode?: "text" | "link";
+  responsiveDetailBreakpoint?: "base" | "sm" | "md" | "lg" | "xl";
+}
+
+export function createPageLayoutPreset(
+  options: PageLayoutPresetOptions,
+): Partial<PageLayoutProps> {
+  const { preset, pageWidth, stickyHeader, currentBreadcrumbMode, responsiveDetailBreakpoint } =
+    options;
+
+  switch (preset) {
+    case "content-only":
+      return {
+        pageWidth: pageWidth ?? "default",
+        stickyHeader: stickyHeader ?? false,
+        responsiveDetailCollapse: false,
+        currentBreadcrumbMode: currentBreadcrumbMode ?? "text",
+      };
+    case "detail-sidebar":
+      return {
+        pageWidth: pageWidth ?? "full",
+        stickyHeader: stickyHeader ?? false,
+        responsiveDetailCollapse: true,
+        responsiveDetailBreakpoint: responsiveDetailBreakpoint ?? "md",
+        currentBreadcrumbMode: currentBreadcrumbMode ?? "text",
+      };
+    case "ops-workspace":
+      return {
+        pageWidth: pageWidth ?? "full",
+        stickyHeader: stickyHeader ?? true,
+        responsiveDetailCollapse: true,
+        responsiveDetailBreakpoint: responsiveDetailBreakpoint ?? "lg",
+        currentBreadcrumbMode: currentBreadcrumbMode ?? "link",
+      };
+  }
+}
+
+export function createPageLayoutBreadcrumbItems(
+  inputs: PageBreadcrumbItem[],
+): PageBreadcrumbItem[] {
+  return inputs.map((item) => ({
+    label: item.label,
+    href: item.href ?? item.path,
+  }));
+}
+
+export interface PageLayoutProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   /** Page title */
   title?: React.ReactNode;
   /** Subtitle / description */
@@ -27,6 +80,16 @@ export interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   fullWidth?: boolean;
   /** Loading overlay */
   loading?: boolean;
+  /** Page width preset */
+  pageWidth?: "default" | "wide" | "full";
+  /** Sticky header */
+  stickyHeader?: boolean;
+  /** Collapse detail panel on small screens */
+  responsiveDetailCollapse?: boolean;
+  /** Breakpoint for detail collapse */
+  responsiveDetailBreakpoint?: "base" | "sm" | "md" | "lg" | "xl";
+  /** Breadcrumb display mode */
+  currentBreadcrumbMode?: "text" | "link";
 }
 
 // ---------------------------------------------------------------------------
