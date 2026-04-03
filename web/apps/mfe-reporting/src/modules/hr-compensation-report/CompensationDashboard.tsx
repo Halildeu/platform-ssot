@@ -458,7 +458,7 @@ const CompensationDashboard: React.FC<CompensationDashboardProps> = ({ filters: 
             { key: 'value', label: 'Ort. Maaş', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('dept-salary-comparison')?.data ?? [], { ...findChart('dept-salary-comparison')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter, makeChartClickHandler('department-salary'))}
+          {renderBarChart(findChart('dept-salary-comparison')?.data ?? [], { ...findChart('dept-salary-comparison')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter, makeChartClickHandler('dept-salary-comparison'))}
         </ChartBlock>
       </div>
 
@@ -473,7 +473,7 @@ const CompensationDashboard: React.FC<CompensationDashboardProps> = ({ filters: 
             { key: 'value2', label: 'Kadın Ort.', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('gender-salary-comparison')?.data ?? [], { ...findChart('gender-salary-comparison')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter, makeChartClickHandler('gender-salary'))}
+          {renderBarChart(findChart('gender-salary-comparison')?.data ?? [], { ...findChart('gender-salary-comparison')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter, makeChartClickHandler('gender-salary-comparison'))}
         </ChartBlock>
 
         <ChartBlock
@@ -484,7 +484,7 @@ const CompensationDashboard: React.FC<CompensationDashboardProps> = ({ filters: 
             { key: 'value', label: 'Ort. Maaş', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('education-salary-premium')?.data ?? [], { ...findChart('education-salary-premium')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter, makeChartClickHandler('education-salary'))}
+          {renderBarChart(findChart('education-salary-premium')?.data ?? [], { ...findChart('education-salary-premium')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter, makeChartClickHandler('education-salary-premium'))}
         </ChartBlock>
       </div>
 
@@ -515,7 +515,7 @@ const CompensationDashboard: React.FC<CompensationDashboardProps> = ({ filters: 
             { key: 'value2', label: 'Kişi Sayısı', format: 'number' },
           ]}
         >
-          {renderBarChart(findChart('collar-type-salary')?.data ?? [], findChart('collar-type-salary')?.chartConfig, chartCurrencyFormatter, makeChartClickHandler('collar-distribution'))}
+          {renderBarChart(findChart('collar-type-salary')?.data ?? [], findChart('collar-type-salary')?.chartConfig, chartCurrencyFormatter, makeChartClickHandler('collar-type-salary'))}
         </ChartBlock>
 
         <ChartBlock
@@ -526,7 +526,7 @@ const CompensationDashboard: React.FC<CompensationDashboardProps> = ({ filters: 
             { key: 'value', label: 'Ort. Maaş', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('tenure-salary-relation')?.data ?? [], findChart('tenure-salary-relation')?.chartConfig, chartCurrencyFormatter, makeChartClickHandler('tenure-salary'))}
+          {renderBarChart(findChart('tenure-salary-relation')?.data ?? [], findChart('tenure-salary-relation')?.chartConfig, chartCurrencyFormatter, makeChartClickHandler('tenure-salary-relation'))}
         </ChartBlock>
       </div>
 
@@ -556,7 +556,7 @@ const CompensationDashboard: React.FC<CompensationDashboardProps> = ({ filters: 
             { key: 'value', label: 'Toplam Bordro', format: 'currency' },
           ]}
         >
-          {renderPieChart(findChart('company-payroll-pie')?.data ?? [], chartCurrencyFormatter, makeChartClickHandler('company-payroll'))}
+          {renderPieChart(findChart('company-payroll-pie')?.data ?? [], chartCurrencyFormatter, makeChartClickHandler('company-payroll-pie'))}
         </ChartBlock>
 
         <ChartBlock
@@ -569,7 +569,7 @@ const CompensationDashboard: React.FC<CompensationDashboardProps> = ({ filters: 
             { key: 'max_val', label: 'Max', format: 'currency' },
           ]}
         >
-          {renderBarChart(findChart('dept-percentile-radar')?.data ?? [], { ...findChart('dept-percentile-radar')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter, makeChartClickHandler('department-percentile'))}
+          {renderBarChart(findChart('dept-percentile-radar')?.data ?? [], { ...findChart('dept-percentile-radar')?.chartConfig, orientation: 'horizontal' }, chartCurrencyFormatter, makeChartClickHandler('dept-percentile-radar'))}
         </ChartBlock>
       </div>
     </div>

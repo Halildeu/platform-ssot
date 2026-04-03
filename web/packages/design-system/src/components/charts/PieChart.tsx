@@ -141,7 +141,7 @@ export const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
           } as any,
         ],
         listeners: onDataPointClick ? {
-          nodeClick: (e: any) => {
+          seriesNodeClick: (e: any) => {
             onDataPointClick({
               datum: e.datum ?? {},
               seriesId: e.seriesId,

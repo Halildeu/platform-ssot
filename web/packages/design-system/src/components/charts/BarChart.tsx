@@ -144,7 +144,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         subtitle: description ? { text: description } : undefined,
         series: barSeries as AgChartOptions["series"],
         listeners: onDataPointClick ? {
-          nodeClick: (e: any) => {
+          seriesNodeClick: (e: any) => {
             onDataPointClick({
               datum: e.datum ?? {},
               seriesId: e.seriesId,
