@@ -205,6 +205,21 @@ export const KEYBOARD_CONTRACTS: Record<string, ComponentKeyboardContract> = {
       { key: Keys.PageDown, action: "navigate-prev", description: "Large decrease", withShift: false },
     ],
   },
+
+  gallery: {
+    component: "Gallery",
+    role: "listbox",
+    bindings: [
+      { key: Keys.ArrowRight, action: "navigate-next", description: "Next item" },
+      { key: Keys.ArrowLeft, action: "navigate-prev", description: "Previous item" },
+      { key: Keys.ArrowDown, action: "navigate-next", description: "Next row" },
+      { key: Keys.ArrowUp, action: "navigate-prev", description: "Previous row" },
+      { key: [Keys.Enter, Keys.Space], action: "select", description: "Select item" },
+      { key: Keys.Escape, action: "dismiss", description: "Deselect" },
+      { key: Keys.Home, action: "navigate-first", description: "First item" },
+      { key: Keys.End, action: "navigate-last", description: "Last item" },
+    ],
+  },
 };
 
 /* ---- Keyboard Event Helpers ---- */
