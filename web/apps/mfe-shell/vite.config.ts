@@ -193,6 +193,7 @@ export default defineConfig(({ mode }) => {
         // Direct service routes — bypass gateway (avoids Vault/Eureka issues)
         '/api/v1/reports': { target: 'http://localhost:8095', changeOrigin: true, secure: false },
         '/api/v1/dashboards': { target: 'http://localhost:8095', changeOrigin: true, secure: false },
+        '/api/v1/context-health': { target: 'http://localhost:8095', changeOrigin: true, secure: false },
         '/api/v1/roles': { target: 'http://localhost:8090', changeOrigin: true, secure: false },
         '/api/v1/permissions': { target: 'http://localhost:8090', changeOrigin: true, secure: false },
         '/api/v1/authz': { target: 'http://localhost:8089', changeOrigin: true, secure: false },
