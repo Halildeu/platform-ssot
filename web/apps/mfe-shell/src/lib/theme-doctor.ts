@@ -184,6 +184,10 @@ function checkHardcodedColors(maxElements: number): DoctorCheck[] {
     const inline = el.style.cssText;
     if (!inline) continue;
 
+    // Skip browser extensions and 3rd-party injected elements
+    const elId = el.id ?? '';
+    if (elId.startsWith('claude-') || elId.startsWith('grammarly') || el.closest('[data-ag-grid],.ag-root-wrapper')) continue;
+
     // Check for hardcoded colors in inline styles
     for (const prop of ['color', 'background-color', 'border-color', 'background']) {
       const value = el.style.getPropertyValue(prop);
