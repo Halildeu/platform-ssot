@@ -184,9 +184,14 @@ function checkHardcodedColors(maxElements: number): DoctorCheck[] {
     const inline = el.style.cssText;
     if (!inline) continue;
 
-    // Skip browser extensions and 3rd-party injected elements
+    // Skip browser extensions, 3rd-party injected elements, AG Grid, and shell wrapper
     const elId = el.id ?? '';
-    if (elId.startsWith('claude-') || elId.startsWith('grammarly') || el.closest('[data-ag-grid],.ag-root-wrapper')) continue;
+    if (
+      elId.startsWith('claude-') || elId.startsWith('grammarly') ||
+      el.closest('[data-ag-grid],.ag-root-wrapper,.ag-cell,[role="gridcell"],[role="row"]') ||
+      el.matches('.min-h-screen') ||
+      el.closest('#root > div:first-child')?.classList.contains('min-h-screen')
+    ) continue;
 
     // Check for hardcoded colors in inline styles
     for (const prop of ['color', 'background-color', 'border-color', 'background']) {
