@@ -174,7 +174,14 @@ const AccessGrid: React.FC<AccessGridProps> = ({
               .map((node) => (node.data as AccessRole).id);
             onSelectionChange(ids);
           }}
-          onRowClicked={(event) => onSelect(event.data as AccessRole)}
+          onRowClicked={(event) => {
+            const role = event.data as AccessRole;
+            onSelect(role);
+            const node = event.node;
+            if (node) {
+              node.setSelected(!node.isSelected());
+            }
+          }}
         />
       </div>
       <div className="border-t border-border-subtle p-4">
