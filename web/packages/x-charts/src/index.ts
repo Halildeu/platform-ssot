@@ -112,7 +112,7 @@ export type { ChartErrorBoundaryProps } from "./states/ChartErrorBoundary";
 /* ------------------------------------------------------------------ */
 
 export { createCrossFilterStore } from "./cross-filter/createCrossFilterStore";
-export { CrossFilterProvider, useCrossFilterStore } from "./cross-filter/useCrossFilterStore";
+export { CrossFilterProvider, useCrossFilter, useCrossFilterStoreApi } from "./cross-filter/useCrossFilterStore";
 export { useChartCrossFilter } from "./cross-filter/useChartCrossFilter";
 export { useGridCrossFilter } from "./cross-filter/useGridCrossFilter";
 export { eventBridge } from "./cross-filter/eventBridge";
