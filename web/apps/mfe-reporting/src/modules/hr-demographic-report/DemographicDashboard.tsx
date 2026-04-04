@@ -294,7 +294,7 @@ function _LegacyPieChart({
 // ---------------------------------------------------------------------------
 // Vertical Bar Chart
 // ---------------------------------------------------------------------------
-function VerticalBarChart({
+function _LegacyVerticalBarChart({
   data,
 }: {
   data: Array<{ label: string; value: number }>;
@@ -375,9 +375,9 @@ function VerticalBarChart({
 }
 
 // ---------------------------------------------------------------------------
-// Horizontal Bar Chart
+// Horizontal Bar Chart (legacy SVG)
 // ---------------------------------------------------------------------------
-function HorizontalBarChart({
+function _LegacyHorizontalBarChart({
   data,
 }: {
   data: Array<{ label: string; value: number }>;
@@ -432,9 +432,9 @@ function HorizontalBarChart({
 }
 
 // ---------------------------------------------------------------------------
-// Treemap
+// Treemap (legacy SVG)
 // ---------------------------------------------------------------------------
-function Treemap({ data }: { data: Array<{ label: string; value: number }> }) {
+function _LegacyTreemap({ data }: { data: Array<{ label: string; value: number }> }) {
   const total = data.reduce((s, d) => s + d.value, 0);
   if (total === 0) return null;
 
@@ -534,9 +534,9 @@ function Treemap({ data }: { data: Array<{ label: string; value: number }> }) {
 }
 
 // ---------------------------------------------------------------------------
-// Gauge (semi-circle)
+// Gauge (legacy SVG semi-circle)
 // ---------------------------------------------------------------------------
-function Gauge({
+function _LegacyGauge({
   value,
   target,
   label,
