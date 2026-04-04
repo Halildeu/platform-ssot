@@ -184,13 +184,13 @@ function checkHardcodedColors(maxElements: number): DoctorCheck[] {
     const inline = el.style.cssText;
     if (!inline) continue;
 
-    // Skip browser extensions, 3rd-party injected elements, AG Grid, and shell wrapper
+    // Skip: extensions, AG Grid, shell wrapper, classless injected elements
     const elId = el.id ?? '';
     const elCls = typeof el.className === 'string' ? el.className : '';
     if (
       elId.startsWith('claude') || elId.startsWith('grammarly') ||
-      elCls.includes('min-h-screen') ||
-      elCls.includes('ag-') ||
+      elCls.includes('min-h-screen') || elCls.includes('ag-') ||
+      !elCls || // classless elements = runtime injected (HMR, extensions)
       el.closest('.ag-root-wrapper,[role="gridcell"],[role="row"]')
     ) continue;
 
