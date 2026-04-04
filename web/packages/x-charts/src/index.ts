@@ -143,6 +143,19 @@ export { useResponsiveLegend } from "./responsive/useResponsiveLegend";
 export { useResponsiveChartType } from "./responsive/useResponsiveChartType";
 
 /* ------------------------------------------------------------------ */
+/*  Grid Adapter (P4)                                                  */
+/* ------------------------------------------------------------------ */
+
+export { AGGridAdapter } from "./grid-adapter/AGGridAdapter";
+export { useChartGridLink, autoMapColumns } from "./grid-adapter/useChartGridLink";
+export type {
+  GridAdapter, GridColumnDef, GridFilterEntry, GridSortEntry,
+  GridSelectionEvent, ChartGridLinkConfig, ColumnChartMapping,
+} from "./grid-adapter/types";
+export type { AGGridApi } from "./grid-adapter/AGGridAdapter";
+export type { ChartGridLinkState } from "./grid-adapter/useChartGridLink";
+
+/* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
