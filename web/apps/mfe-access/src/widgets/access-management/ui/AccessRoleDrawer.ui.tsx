@@ -67,9 +67,9 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
     }
     try {
       await onPermissionsSave(role.id, selectedPermissionIds);
-      showToast('success', 'Permissions updated');
+      showToast('success', t('access.drawer.permissions.saveSuccess'));
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : t('auth.login.failed');
+      const message = error instanceof Error ? error.message : t('access.drawer.permissions.saveError');
       showToast('error', message);
     }
   };

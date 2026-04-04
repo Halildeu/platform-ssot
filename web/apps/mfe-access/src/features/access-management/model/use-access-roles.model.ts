@@ -144,107 +144,50 @@ export const useAccessRoles = (filters: AccessFilters) => {
 
   const cloneRole = React.useCallback(
     async (payload: CloneRolePayload): Promise<CloneRoleResult> => {
-      try {
-        if (!/^\d+$/.test(payload.sourceRoleId)) {
-          throw new Error(`Mock role kaynağı backend clone için uygun değil: ${payload.sourceRoleId}`);
-        }
-        const cloned = await roleCloneMutation.mutateAsync(payload);
-        await queryClient.invalidateQueries({ queryKey: ['roles'] });
-        return { role: cloned.role, auditId: cloned.auditId ?? cloned.role.id };
-      } catch (error: unknown) {
-        console.warn('[useAccessRoles] Role klonlama başarısız, mock fallback.', error);
-        const source = data.find((role) => role.id === payload.sourceRoleId);
-        if (!source) {
-          throw new Error(`Rol bulunamadı: ${payload.sourceRoleId}`);
-        }
-        const timestamp = new Date().toISOString();
-        const slug = slugify(payload.name);
-        const auditId = createAuditId('audit-clone');
-        const clonedPolicies = source.policies.map((policy) => clonePolicy(policy, CURRENT_ACTOR, timestamp));
-        const newRole: AccessRole = {
-          ...source,
-          id: `role-${slug || 'clone'}-${Date.now().toString(36)}`,
-          name: payload.name,
-          description: payload.description ?? source.description,
-          memberCount: payload.copyMemberCount ? source.memberCount : 0,
-          isSystemRole: false,
-          policies: clonedPolicies,
-          lastModifiedAt: timestamp,
-          lastModifiedBy: CURRENT_ACTOR
-        };
-        setData((prev) => [newRole, ...prev]);
-        return { role: newRole, auditId };
-      }
+      const cloned = await roleCloneMutation.mutateAsync(payload);
+      await queryClient.invalidateQueries({ queryKey: ['roles'] });
+      return { role: cloned.role, auditId: cloned.auditId ?? cloned.role.id };
     },
-    [data, queryClient, roleCloneMutation]
+    [queryClient, roleCloneMutation]
   );
 
   const bulkUpdateRoles = React.useCallback(
-    (payload: BulkUpdatePayload, actor: string = CURRENT_ACTOR): BulkUpdateResult => {
-      const timestamp = new Date().toISOString();
+    async (payload: BulkUpdatePayload): Promise<BulkUpdateResult> => {
       const targetSet = new Set(payload.roleIds);
       if (targetSet.size === 0) {
         return { updatedRoleIds: [], auditId: createAuditId('audit-bulk-skip') };
       }
 
       const auditId = createAuditId('audit-bulk');
-      const updatedRoleIds: string[] = [];
-
-      setData((prev) =>
-        prev.map((role) => {
-          if (!targetSet.has(role.id)) {
-            return role;
-          }
-
-          let changed = false;
-          const policies = role.policies.map((policy) => {
-            if (policy.moduleKey !== payload.moduleKey) {
-              return policy;
-            }
-            if (policy.level === payload.level) {
-              return policy;
-            }
-            changed = true;
-            return {
-              ...policy,
-              level: payload.level,
-              lastUpdatedAt: timestamp,
-              updatedBy: actor
-            };
-          });
-
-          if (!policies.some((policy) => policy.moduleKey === payload.moduleKey)) {
-            changed = true;
-            policies.push({
-              moduleKey: payload.moduleKey,
-              moduleLabel: payload.moduleLabel,
-              level: payload.level,
-              lastUpdatedAt: timestamp,
-              updatedBy: actor
-            });
-          }
-
-          if (!changed) {
-            return role;
-          }
-
-          updatedRoleIds.push(role.id);
-
-          return {
-            ...role,
-            policies,
-            lastModifiedAt: timestamp,
-            lastModifiedBy: actor
-          };
+      const results = await Promise.allSettled(
+        payload.roleIds.map(async (roleId) => {
+          const role = data.find((r) => r.id === roleId);
+          if (!role) return null;
+          const existingPermIds = role.policies
+            .filter((p) => p.moduleKey !== payload.moduleKey)
+            .flatMap((p) => [p.moduleKey]);
+          const newPermIds = payload.level !== 'NONE'
+            ? [...existingPermIds, `${payload.moduleKey}:${payload.level}`]
+            : existingPermIds;
+          await updateRolePermissions(roleId, { permissionIds: newPermIds });
+          return roleId;
         })
       );
 
-      return {
-        updatedRoleIds,
-        auditId
-      };
+      const updatedRoleIds = results
+        .filter((r): r is PromiseFulfilledResult<string | null> => r.status === 'fulfilled' && r.value != null)
+        .map((r) => r.value!);
+
+      const failedCount = results.filter((r) => r.status === 'rejected').length;
+      if (failedCount > 0) {
+        console.warn(`[useAccessRoles] Bulk update: ${failedCount}/${payload.roleIds.length} failed`);
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ['roles'] });
+
+      return { updatedRoleIds, auditId };
     },
-    []
+    [data, queryClient]
   );
 
   return {

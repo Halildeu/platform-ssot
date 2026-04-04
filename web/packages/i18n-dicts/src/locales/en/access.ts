@@ -59,6 +59,8 @@ const access = {
   'access.drawer.permissionsEmpty': 'No module permissions have been assigned yet.',
   'access.drawer.permissionUpdated': 'Updated by {user} · {timestamp}',
   'access.drawer.auditHint': 'The link to the related audit event will appear here.',
+  'access.drawer.permissions.saveSuccess': 'Permissions updated successfully.',
+  'access.drawer.permissions.saveError': 'Failed to update permissions.',
 
   'access.notifications.cloneSuccess.title': 'Role cloned',
   'access.notifications.cloneSuccess.description': 'Audit ID: {auditId}',

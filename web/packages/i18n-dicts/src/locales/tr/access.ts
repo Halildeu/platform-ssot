@@ -59,6 +59,8 @@ const access = {
   'access.drawer.permissionsEmpty': 'Tanımlı modül yetkisi bulunmuyor.',
   'access.drawer.permissionUpdated': 'Güncelleyen: {user} · {timestamp}',
   'access.drawer.auditHint': 'İlgili audit kaydına ait bağlantı bu alanda gösterilecek.',
+  'access.drawer.permissions.saveSuccess': 'Yetkiler başarıyla güncellendi.',
+  'access.drawer.permissions.saveError': 'Yetki güncellenirken bir hata oluştu.',
 
   'access.notifications.cloneSuccess.title': 'Rol klonlandı',
   'access.notifications.cloneSuccess.description': 'Audit ID: {auditId}',

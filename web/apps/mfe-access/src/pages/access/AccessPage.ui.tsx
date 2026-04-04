@@ -1,6 +1,8 @@
 import React from 'react';
 import {
   Button,
+  Modal,
+  TextInput,
   PageLayout,
   createPageLayoutBreadcrumbItems,
   createPageLayoutPreset,
@@ -247,45 +249,47 @@ const AccessPage: React.FC = () => {
     });
   }, [accessRolesPageManifest.actions, emitActionTelemetry, selectionCount, t]);
 
+  // Variant dialog state
+  const [variantNameDialogOpen, setVariantNameDialogOpen] = React.useState(false);
+  const [variantNameInput, setVariantNameInput] = React.useState('');
+  const [variantNameMode, setVariantNameMode] = React.useState<'save' | 'saveAs'>('save');
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
+
   const handleSaveVariant = React.useCallback(() => {
     if (selectedVariantId) {
       updateSelectedVariant();
       showToast('success', t('access.variants.updated'));
     } else {
-      const name = window.prompt(
-        t('access.variants.promptName'),
-        t('access.variants.promptPlaceholder'),
-      );
-      if (!name || name.trim().length === 0) {
-        return;
-      }
-      saveAsVariant(name.trim());
-      showToast('success', t('access.variants.saved'));
+      setVariantNameMode('save');
+      setVariantNameInput('');
+      setVariantNameDialogOpen(true);
     }
-  }, [saveAsVariant, selectedVariantId, t, updateSelectedVariant]);
+  }, [selectedVariantId, t, updateSelectedVariant]);
 
   const handleSaveAsVariant = React.useCallback(() => {
-    const name = window.prompt(
-      t('access.variants.promptName'),
-      t('access.variants.promptPlaceholder'),
-    );
-    if (!name || name.trim().length === 0) {
-      return;
-    }
-    saveAsVariant(name.trim());
+    setVariantNameMode('saveAs');
+    setVariantNameInput('');
+    setVariantNameDialogOpen(true);
+  }, []);
+
+  const handleVariantNameConfirm = React.useCallback(() => {
+    const name = variantNameInput.trim();
+    if (!name) return;
+    saveAsVariant(name);
     showToast('success', t('access.variants.saved'));
-  }, [saveAsVariant, t]);
+    setVariantNameDialogOpen(false);
+  }, [variantNameInput, saveAsVariant, t]);
 
   const handleDeleteVariant = React.useCallback(() => {
-    if (!selectedVariantId) {
-      return;
-    }
-    const confirmed = window.confirm(t('access.variants.deleteConfirm.content'));
-    if (!confirmed) {
-      return;
-    }
+    if (!selectedVariantId) return;
+    setDeleteConfirmOpen(true);
+  }, [selectedVariantId]);
+
+  const handleDeleteVariantConfirm = React.useCallback(() => {
+    if (!selectedVariantId) return;
     deleteVariant(selectedVariantId);
     showToast('success', t('access.variants.deleted'));
+    setDeleteConfirmOpen(false);
   }, [deleteVariant, selectedVariantId, t]);
 
   const filterBar = React.useMemo(
@@ -392,6 +396,7 @@ const AccessPage: React.FC = () => {
       <RoleCloneModal
         open={cloneModalOpen}
         role={singleSelectedRole}
+        confirmLoading={roleCloneMutation.isPending}
         onCancel={() => setCloneModalOpen(false)}
         t={t}
         onSubmit={async (values) => {
@@ -495,6 +500,51 @@ const AccessPage: React.FC = () => {
           });
         }}
       />
+
+      {/* Variant Name Dialog */}
+      <Modal
+        open={variantNameDialogOpen}
+        onClose={() => setVariantNameDialogOpen(false)}
+        title={t('access.variants.promptName')}
+        size="sm"
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setVariantNameDialogOpen(false)}>
+              {t('access.actions.cancel')}
+            </Button>
+            <Button onClick={handleVariantNameConfirm} disabled={!variantNameInput.trim()}>
+              {t('access.actions.save')}
+            </Button>
+          </>
+        }
+      >
+        <TextInput
+          value={variantNameInput}
+          onChange={(e) => setVariantNameInput(typeof e === 'string' ? e : e.target.value)}
+          placeholder={t('access.variants.promptPlaceholder')}
+          autoFocus
+        />
+      </Modal>
+
+      {/* Delete Variant Confirm Dialog */}
+      <Modal
+        open={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+        title={t('access.variants.deleteConfirm.title')}
+        size="sm"
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setDeleteConfirmOpen(false)}>
+              {t('access.actions.cancel')}
+            </Button>
+            <Button variant="danger" onClick={handleDeleteVariantConfirm}>
+              {t('access.actions.delete')}
+            </Button>
+          </>
+        }
+      >
+        <p className="text-sm text-text-secondary">{t('access.variants.deleteConfirm.content')}</p>
+      </Modal>
     </>
   );
 };

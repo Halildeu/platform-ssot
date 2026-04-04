@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Switch } from '@mfe/design-system';
+import { Modal, Switch, TextInput, Button } from '@mfe/design-system';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
 
 export interface RoleCloneFormValues {
@@ -56,9 +56,7 @@ const RoleCloneModal: React.FC<RoleCloneModalProps> = ({ open, role, confirmLoad
   };
 
   const handleSubmit = () => {
-    if (!validate()) {
-      return;
-    }
+    if (!validate()) return;
     onSubmit({
       name: formValues.name.trim(),
       description: formValues.description?.trim() || undefined,
@@ -71,53 +69,40 @@ const RoleCloneModal: React.FC<RoleCloneModalProps> = ({ open, role, confirmLoad
       open={open}
       title={t('access.clone.modal.title')}
       size="lg"
-      onClose={() => onCancel()}
-      footer={(
+      onClose={onCancel}
+      footer={
         <div className="flex justify-end gap-3">
-          <button
-            type="button"
-            className="rounded-xl border border-border-subtle px-4 py-2 text-sm font-semibold text-text-secondary hover:bg-surface-muted"
-            onClick={onCancel}
-          >
+          <Button variant="ghost" onClick={onCancel}>
             {t('access.clone.cancelText')}
-          </button>
-          <button
-            type="button"
-            className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-xs hover:opacity-90 disabled:opacity-50"
-            onClick={handleSubmit}
-            disabled={confirmLoading}
-          >
-            {confirmLoading ? `${t('access.clone.okText')}...` : t('access.clone.okText')}
-          </button>
+          </Button>
+          <Button onClick={handleSubmit} loading={confirmLoading} disabled={confirmLoading}>
+            {t('access.clone.okText')}
+          </Button>
         </div>
-      )}
+      }
     >
       <div className="flex flex-col gap-4">
-        {role ? (
-          <p className="text-sm text-text-subtle">{t('access.clone.modal.subtitle', { roleName: role.name })}</p>
-        ) : null}
-        <label className="flex flex-col gap-1 text-sm font-semibold text-text-secondary">
-          {t('access.clone.nameLabel')}
-          <input
-            type="text"
-            className={`rounded-xl border px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-selection-outline ${errors.name ? 'border-state-danger-border' : 'border-border-subtle'}`}
-            value={formValues.name}
-            onChange={(event) => setFormValues((prev) => ({ ...prev, name: event.target.value }))}
-            placeholder={t('access.clone.namePlaceholder')}
-            autoFocus
-          />
-          {errors.name ? <span className="text-xs text-state-danger-text">{errors.name}</span> : null}
-        </label>
-        <label className="flex flex-col gap-1 text-sm font-semibold text-text-secondary">
-          {t('access.clone.descriptionLabel') ?? 'Açıklama'}
-          <textarea
-            className="rounded-xl border border-border-subtle px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
-            rows={3}
-            value={formValues.description ?? ''}
-            onChange={(event) => setFormValues((prev) => ({ ...prev, description: event.target.value }))}
-            placeholder={t('access.clone.descriptionPlaceholder')}
-          />
-        </label>
+        {role && (
+          <p className="text-sm text-text-subtle">
+            {t('access.clone.modal.subtitle', { roleName: role.name })}
+          </p>
+        )}
+        <TextInput
+          label={t('access.clone.nameLabel')}
+          value={formValues.name}
+          onChange={(e) => setFormValues((prev) => ({ ...prev, name: typeof e === 'string' ? e : e.target.value }))}
+          placeholder={t('access.clone.namePlaceholder')}
+          error={errors.name}
+          autoFocus
+        />
+        <TextInput
+          label={t('access.clone.descriptionLabel') ?? 'Açıklama'}
+          value={formValues.description ?? ''}
+          onChange={(e) => setFormValues((prev) => ({ ...prev, description: typeof e === 'string' ? e : e.target.value }))}
+          placeholder={t('access.clone.descriptionPlaceholder')}
+          multiline
+          rows={3}
+        />
         <div className="rounded-2xl border border-border-subtle bg-surface-muted px-4 py-3">
           <Switch
             label={t('access.clone.copyMemberCount')}
