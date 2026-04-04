@@ -1,4 +1,3 @@
- 
 // @vitest-environment jsdom
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -6,13 +5,15 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { expectNoA11yViolations } from "../../../__tests__/a11y-utils";
 
-const chartMockState = vi.hoisted(() => ({ calls: [] as any[] }));
+const mockState = vi.hoisted(() => ({ options: [] as any[] }));
 
-vi.mock("ag-charts-react", () => ({
-  AgCharts: (props: any) => {
-    chartMockState.calls.push(props);
-    return <div data-testid="ag-charts-mock" />;
+vi.mock("../useInlineECharts", () => ({
+  useInlineECharts: (opts: any) => {
+    mockState.options.push(opts.option);
+    const ref = { current: null };
+    return { containerRef: ref, isReady: false, resize: vi.fn() };
   },
+  buildLightTheme: () => ({}),
 }));
 
 import { BarChart } from "../BarChart";
@@ -23,14 +24,14 @@ const sampleData = [
   { label: "Mar", value: 150 },
 ];
 
-function getLastOptions() {
-  const call = chartMockState.calls.at(-1);
-  expect(call).toBeDefined();
-  return call.options;
+function getLastOption() {
+  const opt = mockState.options.at(-1);
+  expect(opt).toBeDefined();
+  return opt;
 }
 
 beforeEach(() => {
-  chartMockState.calls.length = 0;
+  mockState.options.length = 0;
 });
 
 afterEach(() => {
@@ -45,24 +46,23 @@ describe("BarChart contract", () => {
   it("root test id ile render olur", () => {
     render(<BarChart data={sampleData} />);
     expect(screen.getByTestId("bar-chart")).toBeInTheDocument();
-    expect(screen.getByTestId("ag-charts-mock")).toBeInTheDocument();
   });
 
-  it("title verildiginde options'a yansir", () => {
+  it("title verildiginde option'a yansir", () => {
     render(<BarChart data={sampleData} title="Revenue" description="Q1" />);
-    const options = getLastOptions();
-    expect(options.title.text).toBe("Revenue");
-    expect(options.subtitle.text).toBe("Q1");
+    const opt = getLastOption();
+    expect(opt.title.text).toBe("Revenue");
+    expect(opt.title.subtext).toBe("Q1");
   });
 
-  it("showValues acikken label formatter tanimlar", () => {
+  it("showValues acikken label tanimlar", () => {
     render(<BarChart data={sampleData} showValues />);
-    expect(typeof getLastOptions().series[0].label.formatter).toBe("function");
+    expect(getLastOption().series[0].label.show).toBe(true);
   });
 
   it("showLegend acikken legend etkinlesir", () => {
     render(<BarChart data={sampleData} showLegend />);
-    expect(getLastOptions().legend.enabled).toBe(true);
+    expect(getLastOption().legend.show).toBe(true);
   });
 
   it("bos veri durumunda empty state gosterir", () => {

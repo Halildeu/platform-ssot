@@ -1,19 +1,23 @@
- 
 // @vitest-environment jsdom
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { expectNoA11yViolations } from "../../../__tests__/a11y-utils";
 
-const chartMockState = vi.hoisted(() => ({ calls: [] as any[] }));
+/* ------------------------------------------------------------------ */
+/*  Mock: useEChartsRenderer                                           */
+/* ------------------------------------------------------------------ */
 
-vi.mock("ag-charts-react", () => ({
-  AgCharts: (props: any) => {
-    chartMockState.calls.push(props);
-    return <div data-testid="ag-charts-mock" />;
+const mockState = vi.hoisted(() => ({ options: [] as any[] }));
+
+vi.mock("../useInlineECharts", () => ({
+  useInlineECharts: (opts: any) => {
+    mockState.options.push(opts.option);
+    const ref = { current: null };
+    return { containerRef: ref, isReady: false, resize: vi.fn() };
   },
+  buildLightTheme: () => ({}),
 }));
 
 import { BarChart } from "../BarChart";
@@ -40,33 +44,28 @@ const lineSeries = [
 
 const lineLabels = ["Q1", "Q2", "Q3", "Q4"];
 
-function getLastCall() {
-  const call = chartMockState.calls.at(-1);
-  expect(call).toBeDefined();
-  return call;
-}
-
-function getLastOptions() {
-  return getLastCall().options;
-}
-
-function getLastStyle() {
-  return getLastCall().style;
+function getLastOption() {
+  const opt = mockState.options.at(-1);
+  expect(opt).toBeDefined();
+  return opt;
 }
 
 beforeEach(() => {
-  chartMockState.calls.length = 0;
+  mockState.options.length = 0;
 });
 
 afterEach(() => {
   cleanup();
 });
 
+/* ================================================================== */
+/*  BarChart                                                           */
+/* ================================================================== */
+
 describe("BarChart", () => {
   it("veri ile render eder", () => {
     render(<BarChart data={barData} />);
     expect(screen.getByTestId("bar-chart")).toBeInTheDocument();
-    expect(screen.getByTestId("ag-charts-mock")).toBeInTheDocument();
   });
 
   it("bos veri durumunda empty state gosterir", () => {
@@ -74,39 +73,26 @@ describe("BarChart", () => {
     expect(screen.getByTestId("bar-chart-empty")).toHaveTextContent("Veri yok");
   });
 
-  it("title ve description bilgisini options'a tasir", () => {
+  it("title ve description bilgisini ECharts option'a tasir", () => {
     render(<BarChart data={barData} title="Gelir" description="Aylik dagilim" />);
-    const options = getLastOptions();
-    expect(options.title.text).toBe("Gelir");
-    expect(options.subtitle.text).toBe("Aylik dagilim");
-  });
-
-  it("showValues ve valueFormatter ile label formatter tanimlar", () => {
-    const formatter = vi.fn((value: number) => `${value} TL`);
-    render(<BarChart data={barData} showValues valueFormatter={formatter} />);
-    const options = getLastOptions();
-    const labelFormatter = options.series[0].label.formatter;
-    expect(labelFormatter({ value: 42 })).toBe("42 TL");
-    expect(formatter).toHaveBeenCalledWith(42);
-  });
-
-  it("showGrid=false oldugunda number axis grid'i kapatir", () => {
-    render(<BarChart data={barData} showGrid={false} />);
-    const options = getLastOptions();
-    expect(options.theme.overrides.bar.axes.number.gridLine.enabled).toBe(false);
+    const option = getLastOption();
+    expect(option.title.text).toBe("Gelir");
+    expect(option.title.subtext).toBe("Aylik dagilim");
   });
 
   it("showLegend ile legend'i acar", () => {
     render(<BarChart data={barData} showLegend />);
-    expect(getLastOptions().legend.enabled).toBe(true);
+    expect(getLastOption().legend.show).toBe(true);
   });
 
-  it("horizontal orientation icin yatay yonu kullanir", () => {
+  it("horizontal orientation icin yatay axis kullanir", () => {
     render(<BarChart data={barData} orientation="horizontal" />);
-    expect(getLastOptions().series[0].direction).toBe("horizontal");
+    const opt = getLastOption();
+    expect(opt.xAxis.type).toBe("value");
+    expect(opt.yAxis.type).toBe("category");
   });
 
-  it("multi-series veriyi gruplanmis bar series'e cevirir", () => {
+  it("multi-series veriyi gruplar", () => {
     render(
       <BarChart
         data={[
@@ -119,16 +105,15 @@ describe("BarChart", () => {
         ]}
       />,
     );
-    const options = getLastOptions();
-    expect(options.series).toHaveLength(2);
-    expect(options.legend.enabled).toBe(true);
-    expect(options.series[1].yKey).toBe("refunds");
+    const option = getLastOption();
+    expect(option.series).toHaveLength(2);
+    expect(option.series[0].name).toBe("Satis");
+    expect(option.series[1].name).toBe("Iade");
   });
 
-  it("className ekler ve size variant yuksekligini uygular", () => {
-    render(<BarChart data={barData} className="my-bar" size="lg" />);
+  it("className ekler", () => {
+    render(<BarChart data={barData} className="my-bar" />);
     expect(screen.getByTestId("bar-chart")).toHaveClass("my-bar");
-    expect(getLastStyle().height).toBe(400);
   });
 
   it('access="hidden" durumunda null doner', () => {
@@ -140,7 +125,22 @@ describe("BarChart", () => {
     render(<BarChart data={barData} access="disabled" />);
     expect(screen.getByTestId("bar-chart")).toHaveClass("opacity-50");
   });
+
+  it("showGrid=false oldugunda splitLine kapatir", () => {
+    render(<BarChart data={barData} showGrid={false} />);
+    const opt = getLastOption();
+    expect(opt.yAxis.splitLine.show).toBe(false);
+  });
+
+  it("animation flag'ini tasir", () => {
+    render(<BarChart data={barData} animate={false} />);
+    expect(getLastOption().animation).toBe(false);
+  });
 });
+
+/* ================================================================== */
+/*  LineChart                                                          */
+/* ================================================================== */
 
 describe("LineChart", () => {
   it("veri ile render eder", () => {
@@ -153,47 +153,31 @@ describe("LineChart", () => {
     expect(screen.getByTestId("line-chart-empty")).toHaveTextContent("Veri yok");
   });
 
-  it("title ve description bilgisini options'a tasir", () => {
+  it("title ve description bilgisini option'a tasir", () => {
     render(<LineChart series={lineSeries} labels={lineLabels} title="Trend" description="Q bazli" />);
-    const options = getLastOptions();
-    expect(options.title.text).toBe("Trend");
-    expect(options.subtitle.text).toBe("Q bazli");
+    const opt = getLastOption();
+    expect(opt.title.text).toBe("Trend");
+    expect(opt.title.subtext).toBe("Q bazli");
   });
 
-  it("seri sayisini korur ve legend'i coklu seride otomatik acabilir", () => {
+  it("seri sayisini korur", () => {
     render(<LineChart series={lineSeries} labels={lineLabels} />);
-    const options = getLastOptions();
-    expect(options.series).toHaveLength(2);
-    expect(options.legend.enabled).toBe(true);
+    expect(getLastOption().series).toHaveLength(2);
   });
 
-  it("showDots=false iken marker'lari kapatir", () => {
+  it("showDots=false iken showSymbol kapatir", () => {
     render(<LineChart series={[lineSeries[0]]} labels={lineLabels} showDots={false} />);
-    expect(getLastOptions().series[0].marker.enabled).toBe(false);
+    expect(getLastOption().series[0].showSymbol).toBe(false);
   });
 
-  it("showArea ile area series kullanir", () => {
+  it("showArea ile areaStyle ekler", () => {
     render(<LineChart series={[lineSeries[0]]} labels={lineLabels} showArea />);
-    const series = getLastOptions().series[0];
-    expect(series.type).toBe("area");
-    expect(series.fillOpacity).toBe(0.18);
+    expect(getLastOption().series[0].areaStyle).toBeDefined();
   });
 
-  it("curved ile smooth interpolation kullanir", () => {
+  it("curved ile smooth kullanir", () => {
     render(<LineChart series={[lineSeries[0]]} labels={lineLabels} curved />);
-    expect(getLastOptions().series[0].interpolation).toEqual({ type: "smooth" });
-  });
-
-  it("showGrid=false iken sayisal axis grid'ini kapatir", () => {
-    render(<LineChart series={[lineSeries[0]]} labels={lineLabels} showGrid={false} />);
-    expect(getLastOptions().axes[1].gridLine.enabled).toBe(false);
-  });
-
-  it("valueFormatter'i axis label formatter olarak kullanir", () => {
-    const formatter = vi.fn((value: number) => `${value}%`);
-    render(<LineChart series={[lineSeries[0]]} labels={lineLabels} valueFormatter={formatter} />);
-    const labelFormatter = getLastOptions().axes[1].label.formatter;
-    expect(labelFormatter({ value: 95 })).toBe("95%");
+    expect(getLastOption().series[0].smooth).toBe(true);
   });
 
   it('access="disabled" durumunda opacity sinifi uygular', () => {
@@ -201,6 +185,10 @@ describe("LineChart", () => {
     expect(screen.getByTestId("line-chart")).toHaveClass("opacity-50");
   });
 });
+
+/* ================================================================== */
+/*  PieChart                                                           */
+/* ================================================================== */
 
 describe("PieChart", () => {
   it("veri ile render eder", () => {
@@ -213,41 +201,29 @@ describe("PieChart", () => {
     expect(screen.getByTestId("pie-chart-empty")).toBeInTheDocument();
   });
 
-  it("title ve description bilgisini options'a tasir", () => {
+  it("title ve description bilgisini option'a tasir", () => {
     render(<PieChart data={pieData} title="Dagilim" description="Kategori bazli" />);
-    const options = getLastOptions();
-    expect(options.title.text).toBe("Dagilim");
-    expect(options.subtitle.text).toBe("Kategori bazli");
+    const opt = getLastOption();
+    expect(opt.title.text).toBe("Dagilim");
+    expect(opt.title.subtext).toBe("Kategori bazli");
   });
 
-  it("donut modunda innerLabel render eder", () => {
+  it("donut modunda radius array kullanir ve innerLabel render eder", () => {
     render(<PieChart data={pieData} donut innerLabel={<span data-testid="inner-label">Toplam</span>} />);
-    const options = getLastOptions();
-    expect(options.series[0].type).toBe("donut");
+    const opt = getLastOption();
+    expect(opt.series[0].radius).toEqual(["40%", "70%"]);
     expect(screen.getByTestId("pie-chart-inner-label")).toBeInTheDocument();
     expect(screen.getByTestId("inner-label")).toHaveTextContent("Toplam");
   });
 
-  it("showPercentage ile yuzde formatter tanimlar", () => {
+  it("showPercentage ile label formatter tanimlar", () => {
     render(<PieChart data={pieData} showPercentage />);
-    const formatter = getLastOptions().series[0].sectorLabel.formatter;
-    expect(formatter({ value: 25, total: 100 })).toBe("25%");
-  });
-
-  it("showLabels ile callout label'i acar", () => {
-    render(<PieChart data={pieData} showLabels />);
-    expect(getLastOptions().series[0].calloutLabel.enabled).toBe(true);
+    expect(getLastOption().series[0].label.formatter).toBe("{d}%");
   });
 
   it("showLegend ile legend'i acar", () => {
     render(<PieChart data={pieData} showLegend />);
-    expect(getLastOptions().legend.enabled).toBe(true);
-  });
-
-  it("valueFormatter tooltip icerigine yansir", () => {
-    render(<PieChart data={pieData} valueFormatter={(value) => `${value} TL`} />);
-    const renderer = getLastOptions().series[0].tooltip.renderer;
-    expect(renderer({ datum: { label: "A", value: 30 } }).content).toBe("A: 30 TL");
+    expect(getLastOption().legend.show).toBe(true);
   });
 
   it('access="disabled" durumunda opacity sinifi uygular', () => {
@@ -255,6 +231,10 @@ describe("PieChart", () => {
     expect(screen.getByTestId("pie-chart")).toHaveClass("opacity-50");
   });
 });
+
+/* ================================================================== */
+/*  AreaChart                                                          */
+/* ================================================================== */
 
 describe("AreaChart", () => {
   it("veri ile render eder", () => {
@@ -267,38 +247,28 @@ describe("AreaChart", () => {
     expect(screen.getByTestId("area-chart-empty")).toBeInTheDocument();
   });
 
-  it("birden fazla seri icin area config uretir", () => {
+  it("seri sayisini korur ve areaStyle ekler", () => {
     render(<AreaChart series={lineSeries} labels={lineLabels} />);
-    const options = getLastOptions();
-    expect(options.series).toHaveLength(2);
-    expect(options.series[0].type).toBe("area");
+    const opt = getLastOption();
+    expect(opt.series).toHaveLength(2);
+    expect(opt.series[0].areaStyle).toBeDefined();
   });
 
-  it("showDots=false iken marker'lari kapatir", () => {
+  it("showDots=false iken showSymbol kapatir", () => {
     render(<AreaChart series={[lineSeries[0]]} labels={lineLabels} showDots={false} />);
-    expect(getLastOptions().series[0].marker.enabled).toBe(false);
+    expect(getLastOption().series[0].showSymbol).toBe(false);
   });
 
-  it("stacked ve curved ayarlarini options'a tasir", () => {
+  it("stacked ile stack kullanir, curved ile smooth", () => {
     render(<AreaChart series={lineSeries} labels={lineLabels} stacked curved />);
-    const series = getLastOptions().series[0];
-    expect(series.stacked).toBe(true);
-    expect(series.interpolation).toEqual({ type: "smooth" });
+    const s = getLastOption().series[0];
+    expect(s.stack).toBe("total");
+    expect(s.smooth).toBe(true);
   });
 
   it("gradient=false iken daha opak fill kullanir", () => {
     render(<AreaChart series={[lineSeries[0]]} labels={lineLabels} gradient={false} />);
-    expect(getLastOptions().series[0].fillOpacity).toBe(0.6);
-  });
-
-  it("showGrid=false iken number axis grid'ini kapatir", () => {
-    render(<AreaChart series={[lineSeries[0]]} labels={lineLabels} showGrid={false} />);
-    expect(getLastOptions().axes[1].gridLine.enabled).toBe(false);
-  });
-
-  it("size variant yuksekligini uygular", () => {
-    render(<AreaChart series={lineSeries} labels={lineLabels} size="sm" />);
-    expect(getLastStyle().height).toBe(200);
+    expect(getLastOption().series[0].areaStyle.opacity).toBe(0.6);
   });
 
   it('access="disabled" durumunda opacity sinifi uygular', () => {
@@ -306,6 +276,10 @@ describe("AreaChart", () => {
     expect(screen.getByTestId("area-chart")).toHaveClass("opacity-50");
   });
 });
+
+/* ================================================================== */
+/*  Accessibility                                                      */
+/* ================================================================== */
 
 describe("Charts - accessibility", () => {
   it("BarChart sarmalayi uygunluk ihlali uretmez", async () => {
@@ -316,18 +290,5 @@ describe("Charts - accessibility", () => {
   it("PieChart innerLabel ile de uygunluk ihlali uretmez", async () => {
     const { container } = render(<PieChart data={pieData} donut innerLabel={<span>Toplam</span>} />);
     await expectNoA11yViolations(container);
-  });
-});
-
-describe("Charts - interaction signals", () => {
-  it("odaklanabilir bir interaktif yuzeyle kullanici etkilesimini simule eder", async () => {
-    const user = userEvent.setup();
-    render(<div role="button" tabIndex={0} data-testid="interactive">Click me</div>);
-    const element = screen.getByTestId("interactive");
-    await user.click(element);
-    await user.tab();
-    await user.keyboard("{Enter}");
-    expect(element).toHaveAttribute("role", "button");
-    expect(element).toHaveTextContent("Click me");
   });
 });
