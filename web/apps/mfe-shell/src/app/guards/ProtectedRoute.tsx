@@ -1,28 +1,25 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../store/store.hooks';
-import { useAuthorization } from '../../features/auth/model/use-authorization.model';
+import { usePermissions, type ModuleKey } from '@mfe/auth';
 import { isPermitAllMode } from '../auth/auth-config';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredPermissions?: string[];
+  requiredModule?: ModuleKey;
   fallbackPath?: string;
 }
 
 export const ProtectedRoute = ({
   children,
-  requiredPermissions,
+  requiredModule,
   fallbackPath = '/unauthorized',
 }: ProtectedRouteProps) => {
   const { token, initialized } = useAppSelector((state) => state.auth);
-  const { hasPermission } = useAuthorization();
+  const { hasModule, isSuperAdmin } = usePermissions();
   const location = useLocation();
   const permitAllMode = isPermitAllMode();
 
-  // permitAll modunda da auth bootstrap'in tamamlanmasını bekliyoruz.
-  // Aksi halde remote modüller fake oturum kurulmadan render olup yetkisiz
-  // backend çağrılarıyla kilitlenebiliyor.
   if (!initialized) {
     return null;
   }
@@ -31,17 +28,14 @@ export const ProtectedRoute = ({
     return <>{children}</>;
   }
 
-  const buildRedirectTarget = () => {
-    const composed = `${location.pathname ?? ''}${location.search ?? ''}${location.hash ?? ''}`;
-    return encodeURIComponent(composed || '/');
-  };
-
   if (!token) {
-    const redirect = buildRedirectTarget();
+    const composed = `${location.pathname ?? ''}${location.search ?? ''}${location.hash ?? ''}`;
+    const redirect = encodeURIComponent(composed || '/');
     return <Navigate to={`/login?redirect=${redirect}`} replace />;
   }
 
-  const canAccess = hasPermission(requiredPermissions);
+  const canAccess = isSuperAdmin()
+    || (requiredModule ? hasModule(requiredModule) : true);
 
   if (!canAccess) {
     return (

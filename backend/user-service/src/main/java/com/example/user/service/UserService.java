@@ -7,6 +7,7 @@ import com.example.user.model.User;
 import com.example.user.repository.UserRepository;
 import com.example.user.authz.AuthorizationContextService;
 import com.example.commonauth.AuthorizationContext;
+import com.example.commonauth.openfga.OpenFgaAuthzService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.data.domain.Page;
@@ -77,6 +78,7 @@ public class UserService implements UserDetailsService { // UserDetailsService a
     private final PasswordEncoder passwordEncoder;
     private final UserAuditEventService userAuditEventService;
     private final AuthorizationContextService authorizationContextService;
+    private final OpenFgaAuthzService authzService;
     private final int maxSessionTimeoutMinutes;
 
     public record SessionTimeoutSyncResult(String status,
@@ -148,11 +150,13 @@ public class UserService implements UserDetailsService { // UserDetailsService a
                        PasswordEncoder passwordEncoder,
                        UserAuditEventService userAuditEventService,
                        AuthorizationContextService authorizationContextService,
+                       OpenFgaAuthzService authzService,
                        @Value("${user.session-timeout.max-minutes:1440}") int configuredMaxSessionTimeoutMinutes) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userAuditEventService = userAuditEventService;
         this.authorizationContextService = authorizationContextService;
+        this.authzService = authzService;
         this.maxSessionTimeoutMinutes = Math.max(User.DEFAULT_SESSION_TIMEOUT_MINUTES, configuredMaxSessionTimeoutMinutes);
     }
 
@@ -177,8 +181,10 @@ public class UserService implements UserDetailsService { // UserDetailsService a
             user.setName(updateRequest.getName());
         }
 
+        String oldRole = user.getRole();
         if (updateRequest.getRole() != null && !updateRequest.getRole().isBlank()) {
             user.setRole(updateRequest.getRole());
+            syncRoleTuple(userId, oldRole, user.getRole());
         }
 
         if (updateRequest.getEnabled() != null) {
@@ -219,7 +225,9 @@ public class UserService implements UserDetailsService { // UserDetailsService a
         newUser.setTimeFormat(User.DEFAULT_TIME_FORMAT);
         // Varsayılan olarak rolü "USER" ve hesabı "enabled" (aktif) olacak.
 
-        return userRepository.save(newUser);
+        User saved = userRepository.save(newUser);
+        writeInitialRoleTuple(saved.getId(), saved.getRole());
+        return saved;
     }
 
     /**
@@ -1194,5 +1202,45 @@ public class UserService implements UserDetailsService { // UserDetailsService a
         // User modelimiz zaten UserDetails'i uyguladığı için doğrudan döndürebiliriz.
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Kullanıcı bulunamadı: " + email));
+    }
+
+    // --- OpenFGA tuple lifecycle ---
+
+    private void writeInitialRoleTuple(Long userId, String role) {
+        if (role == null || role.isBlank()) return;
+        String relation = mapRoleToRelation(role);
+        if (relation == null) return;
+        try {
+            authzService.writeTuple(String.valueOf(userId), relation, "organization", "default");
+            log.info("OpenFGA: granted {} on organization:default to user:{}", relation, userId);
+        } catch (Exception e) {
+            log.error("OpenFGA: failed to write initial role tuple for user:{}", userId, e);
+        }
+    }
+
+    private void syncRoleTuple(Long userId, String oldRole, String newRole) {
+        if (oldRole != null && oldRole.equalsIgnoreCase(newRole)) return;
+        String uid = String.valueOf(userId);
+        String oldRelation = mapRoleToRelation(oldRole);
+        String newRelation = mapRoleToRelation(newRole);
+        try {
+            if (oldRelation != null) {
+                authzService.deleteTuple(uid, oldRelation, "organization", "default");
+            }
+            if (newRelation != null) {
+                authzService.writeTuple(uid, newRelation, "organization", "default");
+            }
+        } catch (Exception e) {
+            log.error("OpenFGA: failed to sync role tuple for user:{} {} → {}", userId, oldRole, newRole, e);
+        }
+    }
+
+    private static String mapRoleToRelation(String role) {
+        if (role == null) return null;
+        return switch (role.toUpperCase()) {
+            case "ADMIN" -> "admin";
+            case "USER", "MANAGER", "VIEWER" -> "member";
+            default -> null;
+        };
     }
 }
