@@ -1,204 +1,353 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { updateThemeAxes } from '@mfe/design-system';
-import type { ThemeOption, ThemeAdminTranslator } from '../ThemeAdminPage.shared';
 import type { UseThemeAdminReturn } from './useThemeAdmin';
-import ThemeDrawerTabs from './ThemeDrawerTabs';
 
 type ThemeDrawerPanelProps = {
   admin: UseThemeAdminReturn;
 };
 
 /* ------------------------------------------------------------------ */
-/*  Critical Controls — always visible above tabs                      */
+/*  Accent color map — actual representative colors for each accent    */
 /* ------------------------------------------------------------------ */
+const ACCENT_COLORS: Record<string, string> = {
+  neutral: '#6b7280',
+  light: '#3b82f6',
+  violet: '#8b5cf6',
+  emerald: '#10b981',
+  sunset: '#f59e0b',
+  ocean: '#0ea5e9',
+  graphite: '#4b5563',
+};
 
-const ModeToggle: React.FC<{
-  t: ThemeAdminTranslator;
-  appearance: string;
-  onToggle: () => void;
-}> = ({ t, appearance, onToggle }) => (
-  <div className="flex flex-col gap-1">
-    <span className="text-[10px] font-semibold uppercase tracking-wide text-text-subtle">
-      {t('themeadmin.meta.appearance')}
-    </span>
-    <div className="flex gap-1">
-      {(['light', 'dark'] as const).map((mode) => (
-        <button
-          key={mode}
-          type="button"
-          onClick={mode !== appearance ? onToggle : undefined}
-          className={`flex-1 rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
-            appearance === mode
-              ? 'bg-action-primary text-action-primary-text shadow-xs'
-              : 'bg-surface-muted text-text-secondary hover:bg-surface-default'
-          }`}
-        >
-          {mode === 'light' ? '☀️' : '🌙'} {mode === 'light' ? 'Light' : 'Dark'}
-        </button>
-      ))}
+/* ------------------------------------------------------------------ */
+/*  Section wrapper — clean visual grouping                            */
+/* ------------------------------------------------------------------ */
+const Section: React.FC<{
+  title: string;
+  children: React.ReactNode;
+  collapsible?: boolean;
+  defaultOpen?: boolean;
+}> = ({ title, children, collapsible, defaultOpen = true }) => {
+  if (collapsible) {
+    return (
+      <details open={defaultOpen} className="group">
+        <summary className="flex cursor-pointer select-none items-center justify-between py-2 text-[11px] font-semibold uppercase tracking-wider text-text-subtle">
+          {title}
+          <span className="text-[10px] text-text-subtle transition-transform group-open:rotate-180">▾</span>
+        </summary>
+        <div className="flex flex-col gap-3 pb-1">{children}</div>
+      </details>
+    );
+  }
+  return (
+    <div>
+      <div className="py-2 text-[11px] font-semibold uppercase tracking-wider text-text-subtle">{title}</div>
+      <div className="flex flex-col gap-3">{children}</div>
     </div>
-  </div>
-);
-
-const AccentGrid: React.FC<{
-  t: ThemeAdminTranslator;
-  options: ThemeOption[];
-  selected: string;
-  onSelect: (value: string) => void;
-}> = ({ t, options, selected, onSelect }) => (
-  <div className="flex flex-col gap-1">
-    <span className="text-[10px] font-semibold uppercase tracking-wide text-text-subtle">
-      {t('themeadmin.meta.accent')}
-    </span>
-    <div className="flex flex-wrap gap-1.5">
-      {options.map((option) => {
-        const isSelected = selected === option.value;
-        return (
-          <button
-            key={option.value}
-            type="button"
-            title={option.label}
-            onClick={() => onSelect(option.value)}
-            className={`flex h-8 items-center gap-1.5 rounded-lg border px-2 text-[10px] font-semibold transition-all ${
-              isSelected
-                ? 'border-action-primary bg-action-primary/10 text-action-primary ring-1 ring-action-primary'
-                : 'border-border-subtle bg-surface-default text-text-secondary hover:border-text-secondary'
-            }`}
-          >
-            <span
-              className="inline-block h-3.5 w-3.5 rounded-full border border-black/10"
-              style={{ backgroundColor: `var(--color-accent-${option.value}, var(--color-action-primary))` }}
-            />
-            {option.label}
-          </button>
-        );
-      })}
-    </div>
-  </div>
-);
-
-const DensityToggle: React.FC<{
-  t: ThemeAdminTranslator;
-  selected: string;
-  onSelect: (value: string) => void;
-}> = ({ t, selected, onSelect }) => (
-  <div className="flex flex-col gap-1">
-    <span className="text-[10px] font-semibold uppercase tracking-wide text-text-subtle">
-      {t('themeadmin.meta.density')}
-    </span>
-    <div className="flex gap-1">
-      {[
-        { value: 'comfortable', label: 'Comfortable', gap: 'gap-1.5' },
-        { value: 'compact', label: 'Compact', gap: 'gap-0.5' },
-      ].map((item) => {
-        const isSelected = selected === item.value;
-        return (
-          <button
-            key={item.value}
-            type="button"
-            onClick={() => onSelect(item.value)}
-            className={`flex flex-1 flex-col items-center rounded-lg border p-2 transition-all ${
-              isSelected
-                ? 'border-action-primary bg-action-primary/10 ring-1 ring-action-primary'
-                : 'border-border-subtle bg-surface-default hover:border-text-secondary'
-            }`}
-          >
-            <div className={`flex w-full flex-col ${item.gap}`}>
-              <div className="h-1 w-full rounded-full bg-text-subtle/30" />
-              <div className="h-1 w-3/4 rounded-full bg-text-subtle/30" />
-              <div className="h-1 w-full rounded-full bg-text-subtle/30" />
-            </div>
-            <span className="mt-1 text-[9px] font-semibold text-text-secondary">{item.label}</span>
-          </button>
-        );
-      })}
-    </div>
-  </div>
-);
+  );
+};
 
 /* ------------------------------------------------------------------ */
 /*  Main Panel                                                         */
 /* ------------------------------------------------------------------ */
-
 const ThemeDrawerPanel: React.FC<ThemeDrawerPanelProps> = ({ admin }) => {
   const { t } = admin;
-  /* --- live context bridge: updateThemeAxes directly patches DOM + CSS vars --- */
-  const handleAccentChange = useCallback((value: string) => {
-    admin.setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, accent: value } } : prev));
-    updateThemeAxes({ accent: value });
-  }, [admin]);
+  const [exportFormat, setExportFormat] = useState<'css' | 'json' | 'ts'>('css');
+  const [copied, setCopied] = useState(false);
 
-  const handleModeToggle = useCallback(() => {
-    const next = admin.themeMeta?.appearance === 'dark' ? 'light' : 'dark';
+  const appearance = admin.themeMeta?.appearance ?? 'light';
+  const accent = admin.themeMeta?.axes.accent ?? 'neutral';
+  const density = admin.themeMeta?.axes.density ?? 'comfortable';
+  const radius = admin.themeMeta?.axes.radius ?? 'rounded';
+  const elevation = admin.themeMeta?.axes.elevation ?? 'raised';
+  const motion = admin.themeMeta?.axes.motion ?? 'standard';
+
+  /* --- live bridge helpers --- */
+  const liveUpdate = useCallback((patch: Record<string, string>) => {
+    updateThemeAxes(patch);
+  }, []);
+
+  const setAxis = useCallback((axis: string, value: string) => {
+    admin.setThemeMeta((prev) =>
+      prev ? { ...prev, axes: { ...prev.axes, [axis]: value } } : prev,
+    );
+    liveUpdate({ [axis]: value });
+  }, [admin, liveUpdate]);
+
+  const toggleMode = useCallback(() => {
+    const next = appearance === 'dark' ? 'light' : 'dark';
     admin.toggleAppearance();
-    updateThemeAxes({ appearance: next });
-  }, [admin]);
+    liveUpdate({ appearance: next });
+  }, [admin, appearance, liveUpdate]);
 
-  const handleDensityChange = useCallback((value: string) => {
-    admin.setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, density: value } } : prev));
-    updateThemeAxes({ density: value });
-  }, [admin]);
+  /* --- export --- */
+  const exportContent = React.useMemo(() => {
+    const ov = admin.overrides;
+    const meta = admin.themeMeta;
+    const cssMap = admin.registryCssVarsByKey;
+    if (exportFormat === 'json') return JSON.stringify({ meta, overrides: ov }, null, 2);
+    if (exportFormat === 'ts') {
+      return `export const themeMeta = ${JSON.stringify(meta, null, 2)} as const;\n\nexport const themeOverrides = ${JSON.stringify(ov, null, 2)};`;
+    }
+    const lines = [`/* Theme — ${meta?.appearance} / ${meta?.axes.accent} */`, ':root {'];
+    for (const key of Object.keys(ov).sort()) {
+      for (const v of cssMap[key] ?? []) lines.push(`  ${v}: ${ov[key]};`);
+    }
+    lines.push('}');
+    return lines.join('\n');
+  }, [exportFormat, admin.overrides, admin.themeMeta, admin.registryCssVarsByKey]);
+
+  const handleCopy = async () => {
+    try { await navigator.clipboard.writeText(exportContent); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch {}
+  };
 
   return (
     <div className="flex h-full flex-col">
-      {/* Critical controls — always visible */}
-      <div className="flex flex-col gap-3 border-b border-border-subtle px-4 pb-4">
-        <ModeToggle
-          t={t}
-          appearance={admin.themeMeta?.appearance ?? 'light'}
-          onToggle={handleModeToggle}
-        />
-        <AccentGrid
-          t={t}
-          options={admin.accentOptions}
-          selected={admin.themeMeta?.axes.accent ?? 'neutral'}
-          onSelect={handleAccentChange}
-        />
-        <DensityToggle
-          t={t}
-          selected={admin.themeMeta?.axes.density ?? 'comfortable'}
-          onSelect={handleDensityChange}
-        />
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto px-5 py-4">
+        <div className="flex flex-col gap-5">
+
+          {/* ── Mode ───────────────────────────────────── */}
+          <Section title={t('themeadmin.meta.appearance')}>
+            <div className="flex rounded-xl bg-surface-muted p-1">
+              {(['light', 'dark'] as const).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={mode !== appearance ? toggleMode : undefined}
+                  className={`flex-1 rounded-lg py-2.5 text-xs font-semibold transition-all ${
+                    appearance === mode
+                      ? 'bg-surface-default text-text-primary shadow-sm'
+                      : 'text-text-subtle hover:text-text-secondary'
+                  }`}
+                >
+                  {mode === 'light' ? '☀️ Light' : '🌙 Dark'}
+                </button>
+              ))}
+            </div>
+          </Section>
+
+          {/* ── Accent ─────────────────────────────────── */}
+          <Section title={t('themeadmin.meta.accent')}>
+            <div className="flex flex-wrap gap-2">
+              {admin.accentOptions.map((opt) => {
+                const isSelected = accent === opt.value;
+                const color = ACCENT_COLORS[opt.value] ?? '#6b7280';
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    title={opt.label}
+                    onClick={() => setAxis('accent', opt.value)}
+                    className={`group flex flex-col items-center gap-1.5 rounded-xl p-2 transition-all ${
+                      isSelected ? 'bg-surface-muted ring-2 ring-action-primary' : 'hover:bg-surface-muted'
+                    }`}
+                  >
+                    <div
+                      className={`h-8 w-8 rounded-full border-2 transition-transform ${
+                        isSelected ? 'border-white scale-110 shadow-lg' : 'border-transparent group-hover:scale-105'
+                      }`}
+                      style={{ backgroundColor: color }}
+                    />
+                    <span className="text-[10px] font-medium text-text-secondary">{opt.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </Section>
+
+          {/* ── Style ──────────────────────────────────── */}
+          <Section title="Stil">
+            <div className="grid grid-cols-2 gap-3">
+              {/* Radius */}
+              <div>
+                <span className="mb-1.5 block text-[10px] font-medium text-text-subtle">Radius</span>
+                <div className="flex gap-1.5">
+                  {[{ v: 'rounded', icon: '◐', label: 'Yumuşak' }, { v: 'sharp', icon: '▢', label: 'Keskin' }].map((r) => (
+                    <button
+                      key={r.v}
+                      type="button"
+                      onClick={() => setAxis('radius', r.v)}
+                      className={`flex flex-1 flex-col items-center gap-1 rounded-lg border p-2 text-[10px] font-semibold transition-all ${
+                        radius === r.v
+                          ? 'border-action-primary bg-action-primary/10 text-action-primary'
+                          : 'border-border-subtle text-text-secondary hover:border-text-secondary'
+                      }`}
+                    >
+                      <span className="text-base">{r.icon}</span>
+                      {r.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Density */}
+              <div>
+                <span className="mb-1.5 block text-[10px] font-medium text-text-subtle">Yoğunluk</span>
+                <div className="flex gap-1.5">
+                  {[{ v: 'comfortable', label: 'Rahat' }, { v: 'compact', label: 'Sıkı' }].map((d) => (
+                    <button
+                      key={d.v}
+                      type="button"
+                      onClick={() => setAxis('density', d.v)}
+                      className={`flex flex-1 items-center justify-center rounded-lg border p-2 text-[10px] font-semibold transition-all ${
+                        density === d.v
+                          ? 'border-action-primary bg-action-primary/10 text-action-primary'
+                          : 'border-border-subtle text-text-secondary hover:border-text-secondary'
+                      }`}
+                    >
+                      {d.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Elevation */}
+              <div>
+                <span className="mb-1.5 block text-[10px] font-medium text-text-subtle">Gölge</span>
+                <div className="flex gap-1.5">
+                  {[{ v: 'raised', label: 'Var' }, { v: 'flat', label: 'Yok' }].map((e) => (
+                    <button
+                      key={e.v}
+                      type="button"
+                      onClick={() => setAxis('elevation', e.v)}
+                      className={`flex flex-1 items-center justify-center rounded-lg border p-2 text-[10px] font-semibold transition-all ${
+                        elevation === e.v
+                          ? 'border-action-primary bg-action-primary/10 text-action-primary'
+                          : 'border-border-subtle text-text-secondary hover:border-text-secondary'
+                      }`}
+                    >
+                      {e.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Motion */}
+              <div>
+                <span className="mb-1.5 block text-[10px] font-medium text-text-subtle">Animasyon</span>
+                <div className="flex gap-1.5">
+                  {[{ v: 'standard', label: 'Normal' }, { v: 'reduced', label: 'Az' }].map((m) => (
+                    <button
+                      key={m.v}
+                      type="button"
+                      onClick={() => setAxis('motion', m.v)}
+                      className={`flex flex-1 items-center justify-center rounded-lg border p-2 text-[10px] font-semibold transition-all ${
+                        motion === m.v
+                          ? 'border-action-primary bg-action-primary/10 text-action-primary'
+                          : 'border-border-subtle text-text-secondary hover:border-text-secondary'
+                      }`}
+                    >
+                      {m.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* ── Surface Tone (collapsible) ─────────────── */}
+          <Section title="Surface Tone" collapsible defaultOpen={false}>
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                type="button"
+                onClick={() => admin.setThemeMeta((prev) => (prev ? { ...prev, surfaceTone: null } : prev))}
+                className={`rounded-lg border px-3 py-1.5 text-[10px] font-semibold transition-all ${
+                  !admin.themeMeta?.surfaceTone
+                    ? 'border-action-primary bg-action-primary/10 text-action-primary'
+                    : 'border-border-subtle text-text-secondary hover:border-text-secondary'
+                }`}
+              >
+                Varsayılan
+              </button>
+              {['ultra', 'mid', 'deep'].map((band) =>
+                Array.from({ length: 6 }, (_, i) => {
+                  const tone = `${band}-${i + 1}`;
+                  const isSelected = admin.themeMeta?.surfaceTone === tone;
+                  const lightness = band === 'ultra' ? 95 - i * 3 : band === 'mid' ? 75 - i * 5 : 50 - i * 6;
+                  return (
+                    <button
+                      key={tone}
+                      type="button"
+                      title={tone}
+                      onClick={() => admin.setThemeMeta((prev) => (prev ? { ...prev, surfaceTone: tone } : prev))}
+                      className={`h-7 w-7 rounded-md border text-[8px] font-bold transition-all ${
+                        isSelected ? 'border-action-primary ring-2 ring-action-primary scale-110' : 'border-border-subtle hover:scale-105'
+                      }`}
+                      style={{ backgroundColor: `hsl(0 0% ${lightness}%)`, color: lightness < 55 ? '#fff' : '#333' }}
+                    >
+                      {i + 1}
+                    </button>
+                  );
+                }),
+              )}
+            </div>
+          </Section>
+
+          {/* ── Export (collapsible) ────────────────────── */}
+          <Section title="Export" collapsible defaultOpen={false}>
+            <div className="flex gap-1.5">
+              {(['css', 'json', 'ts'] as const).map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => setExportFormat(f)}
+                  className={`rounded-full px-3 py-1 text-[10px] font-semibold transition-all ${
+                    exportFormat === f
+                      ? 'bg-action-primary text-action-primary-text'
+                      : 'border border-border-subtle text-text-secondary hover:border-text-secondary'
+                  }`}
+                >
+                  {f.toUpperCase()}
+                </button>
+              ))}
+            </div>
+            <pre className="max-h-32 overflow-auto rounded-lg bg-surface-muted p-3 text-[10px] leading-relaxed text-text-primary">
+              {exportContent}
+            </pre>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => void handleCopy()}
+                className="rounded-md border border-border-subtle px-3 py-1 text-[10px] font-semibold text-text-secondary hover:border-text-secondary"
+              >
+                {copied ? '✓' : 'Kopyala'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const blob = new Blob([exportContent], { type: 'text/plain' });
+                  const a = document.createElement('a');
+                  a.href = URL.createObjectURL(blob);
+                  a.download = `theme.${exportFormat}`;
+                  a.click();
+                  URL.revokeObjectURL(a.href);
+                }}
+                className="rounded-md bg-action-primary px-3 py-1 text-[10px] font-semibold text-action-primary-text hover:opacity-90"
+              >
+                İndir .{exportFormat}
+              </button>
+            </div>
+          </Section>
+
+        </div>
       </div>
 
-      {/* Tabs — scrollable content */}
-      <div className="min-h-0 flex-1 overflow-y-auto">
-        <ThemeDrawerTabs admin={admin} />
-      </div>
-
-      {/* Footer — always visible */}
-      <div className="flex items-center gap-2 border-t border-border-subtle px-4 py-3">
+      {/* ── Footer ─────────────────────────────────────── */}
+      <div className="flex items-center gap-2 border-t border-border-subtle px-5 py-3">
         {admin.isDirty ? (
-          <span className="rounded-full bg-status-warning px-2 py-0.5 text-[10px] font-semibold text-status-warning-text">
-            ●
-          </span>
-        ) : null}
-        <button
-          type="button"
-          title="Undo (Cmd+Z)"
-          className="rounded-md border border-border-subtle bg-surface-default px-2 py-1 text-[11px] font-semibold text-text-secondary hover:border-text-secondary disabled:cursor-not-allowed disabled:text-text-subtle"
-          onClick={admin.undo}
-          disabled={!admin.canUndo}
-        >
-          ↩
-        </button>
-        <button
-          type="button"
-          title="Redo (Cmd+Shift+Z)"
-          className="rounded-md border border-border-subtle bg-surface-default px-2 py-1 text-[11px] font-semibold text-text-secondary hover:border-text-secondary disabled:cursor-not-allowed disabled:text-text-subtle"
-          onClick={admin.redo}
-          disabled={!admin.canRedo}
-        >
-          ↪
-        </button>
+          <span className="text-[10px] font-medium text-status-warning-text">Kaydedilmedi</span>
+        ) : (
+          <span className="text-[10px] text-text-subtle">Güncel</span>
+        )}
         <div className="flex-1" />
         <button
           type="button"
-          className="inline-flex items-center rounded-md border border-action-primary-border bg-action-primary px-4 py-1.5 text-xs font-semibold text-action-primary-text hover:opacity-90 disabled:cursor-not-allowed disabled:border-border-subtle disabled:bg-surface-muted disabled:text-text-subtle"
+          className="rounded-lg bg-action-primary px-5 py-2 text-xs font-semibold text-action-primary-text hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => void admin.handleSave()}
           disabled={admin.saving || !admin.selectedThemeId || !admin.themeMeta}
         >
-          {admin.saving ? '...' : t('themeadmin.selection.save')}
+          {admin.saving ? 'Kaydediliyor...' : 'Kaydet'}
         </button>
       </div>
     </div>
