@@ -108,6 +108,68 @@ const access = {
   'access.registry.status.active': 'Active',
   'access.registry.status.deprecated': 'Deprecated',
   'access.registry.sunset.tbd': 'Not scheduled',
+  'access.registry.status.overdue': 'Overdue',
+
+  // F1: Create/Delete Role
+  'access.actions.delete': 'Delete Role',
+  'access.actions.delete.tooltip': 'Permanently delete the selected role.',
+  'access.actions.save': 'Save',
+  'access.actions.cancel': 'Cancel',
+  'access.create.title': 'Create New Role',
+  'access.create.nameLabel': 'Role name',
+  'access.create.namePlaceholder': 'e.g. Regional Manager',
+  'access.create.descriptionLabel': 'Description',
+  'access.create.descriptionPlaceholder': 'Briefly describe the purpose of this role',
+  'access.create.nameMinLength': 'Role name must be at least 3 characters.',
+  'access.create.submitText': 'Create',
+  'access.delete.title': 'Delete Role',
+  'access.delete.message': 'Are you sure you want to delete "{roleName}"? This action cannot be undone.',
+  'access.delete.confirmText': 'Delete',
+  'access.delete.systemRoleWarning': 'System roles cannot be deleted.',
+  'access.delete.memberWarning': 'This role has {count} active members. Deleting will remove all their assignments.',
+  'access.notifications.createSuccess': 'Role created successfully.',
+  'access.notifications.createError': 'Failed to create role.',
+  'access.notifications.deleteSuccess': 'Role deleted successfully.',
+  'access.notifications.deleteError': 'Failed to delete role.',
+
+  // Drawer dirty state
+  'access.drawer.unsavedChanges': 'Unsaved changes',
+  'access.drawer.discardConfirm': 'Discard changes',
+  'access.drawer.discardMessage': 'You have unsaved permission changes. Are you sure you want to leave?',
+
+  // Company scope
+  'access.scope.superAdmin': 'Super Admin',
+  'access.scope.allCompanies': 'All companies',
+  'access.scope.title': 'Scope Assignment',
+  'access.scope.subtitle': 'Manage scope assignments for {userName}.',
+  'access.scope.companyLabel': 'Company Access',
+  'access.scope.noScopes': 'No scopes assigned yet.',
+  'access.scope.noCompanies': 'No companies found.',
+
+  // Relationship Graph
+  'access.graph.title': 'Permission Relationship Map',
+  'access.graph.treeView': 'Tree',
+  'access.graph.graphView': 'Graph',
+  'access.graph.noData': 'No relationship data found.',
+
+  // Permission Matrix
+  'access.matrix.title': 'Permission Matrix',
+  'access.matrix.saveAll': 'Save All',
+  'access.matrix.changed': '{count} changes',
+
+  // Explain Panel
+  'access.explain.title': 'Access Explanation',
+  'access.explain.relation': 'Relation',
+  'access.explain.objectType': 'Resource Type',
+  'access.explain.objectId': 'Resource ID',
+  'access.explain.checkButton': 'Check',
+  'access.explain.results': 'Results',
+  'access.explain.allowed': 'Allowed',
+  'access.explain.denied': 'Denied',
+  'access.explain.noResults': 'No checks performed yet.',
+
+  'common.save': 'Save',
+  'common.loading': 'Loading...',
 };
 
 export default access;

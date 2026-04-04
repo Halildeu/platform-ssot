@@ -108,6 +108,68 @@ const access = {
   'access.registry.status.active': 'Aktif',
   'access.registry.status.deprecated': 'Sunset',
   'access.registry.sunset.tbd': 'Planlanmadı',
+  'access.registry.status.overdue': 'Süresi Geçmiş',
+
+  // F1: Create/Delete Role
+  'access.actions.delete': 'Rolü Sil',
+  'access.actions.delete.tooltip': 'Seçili rolü kalıcı olarak silin.',
+  'access.actions.save': 'Kaydet',
+  'access.actions.cancel': 'Vazgeç',
+  'access.create.title': 'Yeni Rol Oluştur',
+  'access.create.nameLabel': 'Rol adı',
+  'access.create.namePlaceholder': 'Örn. Bölge Yöneticisi',
+  'access.create.descriptionLabel': 'Açıklama',
+  'access.create.descriptionPlaceholder': 'Rolün amacını kısaca açıklayın',
+  'access.create.nameMinLength': 'Rol adı en az 3 karakter olmalıdır.',
+  'access.create.submitText': 'Oluştur',
+  'access.delete.title': 'Rolü Sil',
+  'access.delete.message': '"{roleName}" rolünü silmek istediğinize emin misiniz? Bu işlem geri alınamaz.',
+  'access.delete.confirmText': 'Sil',
+  'access.delete.systemRoleWarning': 'Sistem rolleri silinemez.',
+  'access.delete.memberWarning': 'Bu rolde {count} aktif üye bulunmaktadır. Silme işlemi tüm atamalarını kaldıracaktır.',
+  'access.notifications.createSuccess': 'Rol başarıyla oluşturuldu.',
+  'access.notifications.createError': 'Rol oluşturulurken hata oluştu.',
+  'access.notifications.deleteSuccess': 'Rol başarıyla silindi.',
+  'access.notifications.deleteError': 'Rol silinirken hata oluştu.',
+
+  // Drawer dirty state
+  'access.drawer.unsavedChanges': 'Kaydedilmemiş değişiklikler',
+  'access.drawer.discardConfirm': 'Değişiklikleri at',
+  'access.drawer.discardMessage': 'Kaydedilmemiş yetki değişiklikleri var. Çıkmak istediğinize emin misiniz?',
+
+  // Company scope
+  'access.scope.superAdmin': 'Süper Admin',
+  'access.scope.allCompanies': 'Tüm şirketler',
+  'access.scope.title': 'Scope Atama',
+  'access.scope.subtitle': '{userName} için scope atamalarını yönetin.',
+  'access.scope.companyLabel': 'Şirket Erişimi',
+  'access.scope.noScopes': 'Henüz scope atanmamış.',
+  'access.scope.noCompanies': 'Şirket bulunamadı.',
+
+  // Relationship Graph
+  'access.graph.title': 'Yetki İlişki Haritası',
+  'access.graph.treeView': 'Ağaç',
+  'access.graph.graphView': 'Grafik',
+  'access.graph.noData': 'İlişki verisi bulunamadı.',
+
+  // Permission Matrix
+  'access.matrix.title': 'Yetki Matrisi',
+  'access.matrix.saveAll': 'Tümünü Kaydet',
+  'access.matrix.changed': '{count} değişiklik',
+
+  // Explain Panel
+  'access.explain.title': 'Erişim Açıklama',
+  'access.explain.relation': 'İlişki',
+  'access.explain.objectType': 'Kaynak Tipi',
+  'access.explain.objectId': 'Kaynak ID',
+  'access.explain.checkButton': 'Kontrol Et',
+  'access.explain.results': 'Sonuçlar',
+  'access.explain.allowed': 'Erişim Var',
+  'access.explain.denied': 'Erişim Yok',
+  'access.explain.noResults': 'Henüz bir kontrol yapılmadı.',
+
+  'common.save': 'Kaydet',
+  'common.loading': 'Yükleniyor...',
 };
 
 export default access;

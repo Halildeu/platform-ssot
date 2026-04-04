@@ -6,7 +6,9 @@ import {
   getRole,
   updateRole,
   UpdateRoleRequestDto,
+  createRole as createRoleApi,
   cloneRole as cloneRoleApi,
+  deleteRole as deleteRoleApi,
   updateRolePermissions,
 } from '../../../entities/roles/api/roles.api';
 
@@ -98,6 +100,26 @@ export const useAccessRoles = (filters: AccessFilters) => {
     },
     onError: (error) => {
       console.warn('[useAccessRoles] Role güncelleme başarısız, mock veri tutuluyor.', error);
+    },
+  });
+
+  const createRoleMutation = useMutation({
+    mutationFn: (payload: { name: string; description?: string }) => createRoleApi(payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['roles'] });
+    },
+    onError: (error) => {
+      console.warn('[useAccessRoles] Role oluşturma başarısız.', error);
+    },
+  });
+
+  const deleteRoleMutation = useMutation({
+    mutationFn: (roleId: string) => deleteRoleApi(roleId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['roles'] });
+    },
+    onError: (error) => {
+      console.warn('[useAccessRoles] Role silme başarısız.', error);
     },
   });
 
@@ -198,6 +220,8 @@ export const useAccessRoles = (filters: AccessFilters) => {
     bulkUpdateRoles,
     fetchRoleDetail,
     roleUpdateMutation,
+    createRoleMutation,
+    deleteRoleMutation,
     roleCloneMutation,
     updateRolePermissionsMutation: useMutation({
       mutationFn: (vars: { id: string; permissionIds: string[] }) =>

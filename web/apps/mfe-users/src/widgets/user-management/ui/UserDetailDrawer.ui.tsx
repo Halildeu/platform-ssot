@@ -477,20 +477,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
 
         <hr className="border-border-subtle" />
 
-        <section>
-          <h3 className="text-base font-semibold text-text-primary">
-            {t('users.detail.section.quickActions')}
-          </h3>
-          <div className="mt-3 flex gap-3">
-            <button
-              type="button"
-              className="rounded-xl border border-dashed border-border-subtle px-4 py-2 text-sm font-semibold text-text-secondary"
-              disabled
-            >
-              {t('users.detail.quickActions.noteSoon')}
-            </button>
-          </div>
-        </section>
+        {/* Quick Actions section hidden — placeholder removed */}
       </div>
     </DetailDrawer>
   );

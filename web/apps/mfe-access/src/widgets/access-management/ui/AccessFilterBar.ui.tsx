@@ -15,16 +15,30 @@ const defaultFilters: AccessFilters = {
   level: 'ALL',
 };
 
+const SEARCH_DEBOUNCE_MS = 300;
+
 const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onChange, t }) => {
-  const [localFilters, setLocalFilters] = React.useState<AccessFilters>(filters);
+  const [searchValue, setSearchValue] = React.useState(filters.search);
+  const debounceRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const filtersRef = React.useRef(filters);
+  filtersRef.current = filters;
 
   React.useEffect(() => {
-    setLocalFilters(filters);
-  }, [filters]);
+    setSearchValue(filters.search);
+  }, [filters.search]);
 
-  const handleSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
-    event?.preventDefault();
-    onChange(localFilters);
+  React.useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
+
+  const handleSearchChange = (value: string) => {
+    setSearchValue(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      onChange({ ...filtersRef.current, search: value });
+    }, SEARCH_DEBOUNCE_MS);
   };
 
   const moduleOptions = React.useMemo(
@@ -54,23 +68,22 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
     [],
   );
 
-  const handleFieldChange = <K extends keyof AccessFilters>(key: K, value: AccessFilters[K]) => {
-    setLocalFilters((prev) => ({ ...prev, [key]: value }));
+  const handleModuleChange = (value: string) => {
+    onChange({ ...filtersRef.current, moduleKey: value as AccessFilters['moduleKey'] });
   };
 
   const handleLevelChange = (value: AccessLevel | 'ALL') => {
-    handleFieldChange('level', value);
-    onChange({ ...localFilters, level: value });
+    onChange({ ...filtersRef.current, level: value });
   };
 
   const handleReset = () => {
-    setLocalFilters(defaultFilters);
+    setSearchValue('');
+    if (debounceRef.current) clearTimeout(debounceRef.current);
     onChange(defaultFilters);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
+    <div
       data-testid="access-filter-bar"
       className="flex w-full flex-wrap items-end gap-3 rounded-2xl border border-border-subtle bg-surface-default/70 p-4 shadow-xs"
     >
@@ -79,8 +92,8 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
           label={<span className="text-xs font-semibold uppercase tracking-wide text-text-secondary">{t('access.filter.searchPlaceholder')}</span>}
           data-testid="access-filter-search"
           placeholder={t('access.filter.searchPlaceholder')}
-          value={localFilters.search}
-          onValueChange={(nextValue) => handleFieldChange('search', nextValue)}
+          value={searchValue}
+          onValueChange={handleSearchChange}
           fullWidth
         />
       </div>
@@ -88,11 +101,8 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
         <Select
           label={<span className="text-xs font-semibold uppercase tracking-wide text-text-secondary">{t('access.filter.moduleAll')}</span>}
           data-testid="access-filter-module"
-          value={localFilters.moduleKey}
-          onValueChange={(nextValue) => {
-            handleFieldChange('moduleKey', nextValue as AccessFilters['moduleKey']);
-            onChange({ ...localFilters, moduleKey: nextValue as AccessFilters['moduleKey'] });
-          }}
+          value={filters.moduleKey}
+          onValueChange={handleModuleChange}
           options={moduleOptions}
           fullWidth
         />
@@ -101,7 +111,7 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
         <span>{t('access.filter.level.all')}</span>
         <Segmented
           items={accessLevels}
-          value={localFilters.level}
+          value={filters.level}
           ariaLabel={t('access.filter.level.all')}
           onValueChange={(nextValue) => handleLevelChange(nextValue as AccessLevel | 'ALL')}
           variant={levelSegmentedPreset.variant}
@@ -113,13 +123,7 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
           classes={{ list: 'w-full', item: 'min-w-0 flex-1', content: 'w-full' }}
         />
       </label>
-      <div className="ml-auto flex flex-wrap gap-2">
-        <Button
-          type="submit"
-          data-testid="access-filter-apply"
-        >
-          {t('access.filter.apply')}
-        </Button>
+      <div className="ml-auto">
         <Button
           type="button"
           variant="secondary"
@@ -128,7 +132,7 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
           {t('access.filter.reset')}
         </Button>
       </div>
-    </form>
+    </div>
   );
 };
 

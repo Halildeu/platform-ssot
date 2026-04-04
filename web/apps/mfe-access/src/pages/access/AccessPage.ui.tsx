@@ -1,7 +1,10 @@
 import React from 'react';
 import {
+  Badge,
   Button,
   Modal,
+  Segmented,
+  Select,
   TextInput,
   PageLayout,
   createPageLayoutBreadcrumbItems,
@@ -11,6 +14,7 @@ import { trackAction, trackMutation, resolveTraceId } from '@mfe/shared-http';
 import type { TelemetryEvent } from '@mfe/shared-types';
 import { fetchPageLayout } from '@mfe/shared-http';
 import type { PageLayoutManifest } from '@mfe/shared-types';
+import { useQuery } from '@tanstack/react-query';
 import type { AccessFilters, AccessRole } from '../../features/access-management/model/access.types';
 import { useAccessRoles } from '../../features/access-management/model/use-access-roles.model';
 import AccessFilterBar from '../../widgets/access-management/ui/AccessFilterBar.ui';
@@ -21,10 +25,18 @@ import { accessRolesPageManifest } from '../../manifest/access/roles-page.manife
 import { useAccessVariants } from '../../features/access-management/model/use-access-variants.model';
 import RoleCloneModal from '../../widgets/access-management/ui/RoleCloneModal.ui';
 import BulkPermissionModal from '../../widgets/access-management/ui/BulkPermissionModal.ui';
+import CreateRoleModal from '../../widgets/access-management/ui/CreateRoleModal.ui';
+import DeleteRoleModal from '../../widgets/access-management/ui/DeleteRoleModal.ui';
 import { getShellServices } from '../../app/services/shell-services';
 import { useAccessI18n } from '../../i18n/useAccessI18n';
 import PermissionRegistryPanel from '../../widgets/permission-registry/PermissionRegistryPanel.ui';
 import { isRuntimeDev, readRuntimeEnv } from '../../app/runtime/env';
+import { getCompanies, type CompanyDto } from '../../entities/companies/api/companies.api';
+import RelationshipGraph from '../../widgets/access-management/ui/RelationshipGraph.ui';
+import PermissionMatrix from '../../widgets/access-management/ui/PermissionMatrix.ui';
+import ExplainPanel from '../../widgets/access-management/ui/ExplainPanel.ui';
+
+type ActiveTab = 'roles' | 'matrix' | 'graph';
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';
 
@@ -51,6 +63,10 @@ const AccessPage: React.FC = () => {
   const [selectedRoleIds, setSelectedRoleIds] = React.useState<string[]>([]);
   const [cloneModalOpen, setCloneModalOpen] = React.useState(false);
   const [bulkModalOpen, setBulkModalOpen] = React.useState(false);
+  const [createModalOpen, setCreateModalOpen] = React.useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
+  const [activeTab, setActiveTab] = React.useState<ActiveTab>('roles');
+  const [explainOpen, setExplainOpen] = React.useState(false);
   const [pageLayout, setPageLayout] = React.useState<PageLayoutManifest | null>(null);
   const {
     roles,
@@ -58,6 +74,9 @@ const AccessPage: React.FC = () => {
     total,
     cloneRole,
     bulkUpdateRoles,
+    createRoleMutation,
+    deleteRoleMutation,
+    roleCloneMutation,
     updateRolePermissionsMutation,
   } = useAccessRoles(filters);
   const shellServices = React.useMemo(() => {
@@ -71,6 +90,28 @@ const AccessPage: React.FC = () => {
     }
   }, []);
   const { t, ready, formatNumber, formatDate } = useAccessI18n();
+  const authUser = React.useMemo(() => {
+    try {
+      const user = shellServices?.auth.getUser() as { superAdmin?: boolean } | null;
+      return user ?? { superAdmin: false };
+    } catch {
+      return { superAdmin: false };
+    }
+  }, [shellServices]);
+  const { data: companies = [] } = useQuery({
+    queryKey: ['companies'],
+    queryFn: getCompanies,
+    staleTime: 120_000,
+  });
+  const [activeCompanyId, setActiveCompanyId] = React.useState<string>('');
+
+  const companyOptions = React.useMemo(
+    () => [
+      { value: '', label: t('access.scope.allCompanies') },
+      ...companies.map((c: CompanyDto) => ({ value: String(c.id), label: c.name })),
+    ],
+    [companies, t],
+  );
 
   const applyFilters = React.useCallback((next: AccessFilters) => {
     setFilters(next);
@@ -204,6 +245,10 @@ const AccessPage: React.FC = () => {
           return;
         }
         emitActionTelemetry(action.key);
+        if (action.key === 'create-role') {
+          setCreateModalOpen(true);
+          return;
+        }
         if (action.key === 'clone-role') {
           setCloneModalOpen(true);
           return;
@@ -212,13 +257,17 @@ const AccessPage: React.FC = () => {
           setBulkModalOpen(true);
           return;
         }
+        if (action.key === 'delete-role') {
+          setDeleteModalOpen(true);
+          return;
+        }
       };
 
       const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
         if (disabled) {
           return;
         }
-        if (action.key !== 'clone-role' && action.key !== 'bulk-permission') {
+        if (!['create-role', 'clone-role', 'bulk-permission', 'delete-role'].includes(action.key)) {
           return;
         }
         // Grid seçimi toolbar click'inde düşse bile aksiyon state'i yakalansın.
@@ -336,33 +385,94 @@ const AccessPage: React.FC = () => {
           description={layoutDescription}
           breadcrumbItems={breadcrumbs}
           actions={actionButtons ? <div className="flex flex-wrap gap-2">{actionButtons}</div> : undefined}
-          filterBar={filterBar}
-        >
-          <div className="flex flex-col gap-6">
-            <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
-              <p className="text-sm text-text-subtle">
-                {t('access.metrics.activeRoleCount', { count: formatNumber(total) })}
-              </p>
-              {roles.length > 0 ? (
-                <AccessGrid
-                  rows={roles}
-                  columns={translatedColumns}
-                  onSelect={setSelectedRole}
-                  selectedRoleIds={selectedRoleIds}
-                  onSelectionChange={setSelectedRoleIds}
-                  t={t}
-                  formatNumber={formatNumber}
-                  formatDate={formatDate}
+          headerExtra={
+            <div className="flex items-center gap-2">
+              {authUser?.superAdmin && (
+                <Badge variant="info" size="sm">{t('access.scope.superAdmin')}</Badge>
+              )}
+              {companies.length > 1 && (
+                <Select
+                  options={companyOptions}
+                  value={activeCompanyId}
+                  onValueChange={setActiveCompanyId}
+                  size="sm"
+                  fullWidth={false}
+                  data-testid="access-company-scope-select"
                 />
-              ) : (
-                <div className="mt-12 text-center text-text-subtle">
-                  <p>{t('access.empty.noResults')}</p>
-                </div>
+              )}
+              {companies.length === 1 && (
+                <Badge variant="default" size="sm">{companies[0].name}</Badge>
               )}
             </div>
+          }
+          filterBar={filterBar}
+          secondaryNav={
+            <div className="flex items-center gap-3">
+              <Segmented
+                items={[
+                  { value: 'roles', label: t('access.breadcrumb.roles') },
+                  { value: 'matrix', label: t('access.matrix.title') },
+                  { value: 'graph', label: t('access.graph.title') },
+                ]}
+                value={activeTab}
+                onValueChange={(v) => setActiveTab(v as ActiveTab)}
+                size="sm"
+              />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setExplainOpen(true)}
+              >
+                {t('access.explain.title')}
+              </Button>
+            </div>
+          }
+        >
+          {activeTab === 'roles' && (
+            <div className="flex flex-col gap-6">
+              <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
+                <p className="text-sm text-text-subtle">
+                  {t('access.metrics.activeRoleCount', { count: formatNumber(total) })}
+                </p>
+                {roles.length > 0 ? (
+                  <AccessGrid
+                    rows={roles}
+                    columns={translatedColumns}
+                    onSelect={setSelectedRole}
+                    selectedRoleIds={selectedRoleIds}
+                    onSelectionChange={setSelectedRoleIds}
+                    t={t}
+                    formatNumber={formatNumber}
+                    formatDate={formatDate}
+                  />
+                ) : (
+                  <div className="mt-12 text-center text-text-subtle">
+                    <p>{t('access.empty.noResults')}</p>
+                  </div>
+                )}
+              </div>
 
-            <PermissionRegistryPanel t={t} formatDate={formatDate} />
-          </div>
+              <PermissionRegistryPanel t={t} formatDate={formatDate} />
+            </div>
+          )}
+
+          {activeTab === 'matrix' && (
+            <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
+              <PermissionMatrix
+                roles={roles}
+                modules={modules}
+                onLevelChange={() => {}}
+                onSaveAll={() => {}}
+                t={t}
+              />
+            </div>
+          )}
+
+          {activeTab === 'graph' && (
+            <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
+              <RelationshipGraph t={t} />
+            </div>
+          )}
         </PageLayout>
       </div>
 
@@ -499,6 +609,52 @@ const AccessPage: React.FC = () => {
             },
           });
         }}
+      />
+
+      <CreateRoleModal
+        open={createModalOpen}
+        confirmLoading={createRoleMutation.isPending}
+        onCancel={() => setCreateModalOpen(false)}
+        t={t}
+        onSubmit={async (values) => {
+          try {
+            const created = await createRoleMutation.mutateAsync(values);
+            setCreateModalOpen(false);
+            setSelectedRole(created);
+            setSelectedRoleIds([created.id]);
+            showToast('success', t('access.notifications.createSuccess'));
+          } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : t('access.notifications.createError');
+            showToast('error', msg);
+          }
+        }}
+      />
+
+      <DeleteRoleModal
+        open={deleteModalOpen}
+        role={singleSelectedRole}
+        confirmLoading={deleteRoleMutation.isPending}
+        onCancel={() => setDeleteModalOpen(false)}
+        t={t}
+        onConfirm={async (roleId) => {
+          try {
+            await deleteRoleMutation.mutateAsync(roleId);
+            setDeleteModalOpen(false);
+            setSelectedRole(null);
+            setSelectedRoleIds([]);
+            showToast('success', t('access.notifications.deleteSuccess'));
+          } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : t('access.notifications.deleteError');
+            showToast('error', msg);
+          }
+        }}
+      />
+
+      <ExplainPanel
+        open={explainOpen}
+        onClose={() => setExplainOpen(false)}
+        modules={modules}
+        t={t}
       />
 
       {/* Variant Name Dialog */}

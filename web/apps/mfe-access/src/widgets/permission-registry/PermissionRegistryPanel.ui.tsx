@@ -104,11 +104,22 @@ const PermissionRegistryPanel: React.FC<PermissionRegistryPanelProps> = ({ t, fo
                 <td className="py-3 pr-4 text-text-primary">{entry.module}</td>
                 <td className="py-3 pr-4 text-text-primary">{entry.owner}</td>
                 <td className="py-3 pr-4">
-                  <Badge variant={entry.status === 'active' ? 'success' : 'warning'}>
-                    {entry.status === 'active'
-                      ? t('access.registry.status.active')
-                      : t('access.registry.status.deprecated')}
-                  </Badge>
+                  {(() => {
+                    const isOverdue = entry.status === 'deprecated' && entry.sunsetAt && (() => {
+                      const parsed = toValidDate(entry.sunsetAt);
+                      return parsed ? parsed.getTime() < Date.now() : false;
+                    })();
+                    if (isOverdue) {
+                      return <Badge variant="error">{t('access.registry.status.overdue')}</Badge>;
+                    }
+                    return (
+                      <Badge variant={entry.status === 'active' ? 'success' : 'warning'}>
+                        {entry.status === 'active'
+                          ? t('access.registry.status.active')
+                          : t('access.registry.status.deprecated')}
+                      </Badge>
+                    );
+                  })()}
                 </td>
                 <td className="py-3 pr-4 text-text-primary">{renderSunset(entry)}</td>
               </tr>
