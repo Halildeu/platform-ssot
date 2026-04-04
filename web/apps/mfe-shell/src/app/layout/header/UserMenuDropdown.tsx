@@ -4,8 +4,7 @@ import { ChevronDown, Shield, Settings, User, LogOut } from 'lucide-react';
 import { Avatar, Dropdown, Badge } from '@mfe/design-system';
 import type { DropdownEntry } from '@mfe/design-system';
 import { useAppDispatch, useAppSelector } from '../../store/store.hooks';
-import { useAuthorization } from '../../../features/auth/model/use-authorization.model';
-import { PERMISSIONS } from '../../../features/auth/lib/permissions.constants';
+import { usePermissions, MODULES } from '@mfe/auth';
 import { logout } from '../../../features/auth/model/auth.slice';
 import { buildAppRedirectUri } from '../../auth/auth-config';
 import keycloak from '../../auth/keycloakClient';
@@ -40,11 +39,12 @@ export const UserMenuDropdown: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { user } = useAppSelector((s) => s.auth);
-  const { hasPermission } = useAuthorization();
+  const { hasModule, isSuperAdmin } = usePermissions();
   const { t, locale } = useShellCommonI18n();
 
-  const canAudit = hasPermission(PERMISSIONS.AUDIT_MODULE);
-  const canThemeAdmin = hasPermission(PERMISSIONS.THEME_ADMIN);
+  const admin = isSuperAdmin();
+  const canAudit = admin || hasModule(MODULES.AUDIT);
+  const canThemeAdmin = admin || hasModule(MODULES.THEME);
 
   const initials = useMemo(() => getInitials(user), [user]);
   const displayName = useMemo(() => getDisplayName(user, t('shell.header.defaultUser')), [user, t]);

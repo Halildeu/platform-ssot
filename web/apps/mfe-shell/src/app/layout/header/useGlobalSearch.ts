@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { CommandPaletteItem } from '@mfe/design-system';
-import { useAuthorization } from '../../../features/auth/model/use-authorization.model';
+import { usePermissions } from '@mfe/auth';
 import { useAppSelector, useAppDispatch } from '../../store/store.hooks';
 import { toggleOpen } from '../../../features/notifications/model/notifications.slice';
 import {
@@ -33,7 +33,12 @@ export function useGlobalSearch(): GlobalSearchState {
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { hasPermission } = useAuthorization();
+  const { hasModule, isSuperAdmin } = usePermissions();
+  const hasPermission = (perm: string | undefined) => {
+    if (!perm) return true;
+    if (isSuperAdmin()) return true;
+    return hasModule(perm);
+  };
   const { initialized } = useAppSelector((s) => s.auth);
   const { t, manager: i18nManager } = useShellCommonI18n();
   const suggestionsEnabled = isSuggestionsRemoteEnabled();

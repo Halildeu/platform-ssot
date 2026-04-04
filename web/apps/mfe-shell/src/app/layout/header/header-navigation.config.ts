@@ -14,7 +14,7 @@ import {
   Lightbulb,
   Scale,
 } from 'lucide-react';
-import { PERMISSIONS } from '../../../features/auth/lib/permissions.constants';
+import { MODULES } from '@mfe/auth';
 
 /* ------------------------------------------------------------------ */
 /*  Navigation types                                                   */
@@ -84,7 +84,7 @@ export const NAV_GROUPS: NavGroup[] = [
         descriptionKey: 'shell.mega.hr.compensation.desc',
         path: '/admin/reports',
         icon: BarChart3,
-        permission: PERMISSIONS.REPORTING_MODULE,
+        permission: MODULES.REPORT,
       },
       {
         key: 'demographic',
@@ -92,7 +92,7 @@ export const NAV_GROUPS: NavGroup[] = [
         descriptionKey: 'shell.mega.hr.demographic.desc',
         path: '/admin/reports',
         icon: PieChart,
-        permission: PERMISSIONS.REPORTING_MODULE,
+        permission: MODULES.REPORT,
       },
     ],
   },
@@ -108,7 +108,7 @@ export const NAV_GROUPS: NavGroup[] = [
         descriptionKey: 'shell.mega.admin.users.desc',
         path: '/admin/users',
         icon: Users,
-        permission: PERMISSIONS.USER_MANAGEMENT_MODULE,
+        permission: MODULES.USER_MANAGEMENT,
       },
       {
         key: 'access',
@@ -116,7 +116,7 @@ export const NAV_GROUPS: NavGroup[] = [
         descriptionKey: 'shell.mega.admin.access.desc',
         path: '/access/roles',
         icon: Shield,
-        permission: PERMISSIONS.ACCESS_MODULE,
+        permission: MODULES.ACCESS,
       },
       {
         key: 'audit',
@@ -124,7 +124,7 @@ export const NAV_GROUPS: NavGroup[] = [
         descriptionKey: 'shell.mega.admin.audit.desc',
         path: '/audit/events',
         icon: FileSearch,
-        permission: PERMISSIONS.AUDIT_MODULE,
+        permission: MODULES.AUDIT,
       },
       {
         key: 'services',
@@ -132,7 +132,7 @@ export const NAV_GROUPS: NavGroup[] = [
         descriptionKey: 'shell.mega.admin.services.desc',
         path: '/admin/services',
         icon: Server,
-        permission: PERMISSIONS.THEME_ADMIN,
+        permission: MODULES.THEME,
       },
     ],
   },
@@ -141,7 +141,7 @@ export const NAV_GROUPS: NavGroup[] = [
     labelKey: 'shell.mega.reports',
     icon: BarChart3,
     directPath: '/admin/reports',
-    permission: PERMISSIONS.REPORTING_MODULE,
+    permission: MODULES.REPORT,
   },
   {
     key: 'tools',
@@ -162,7 +162,7 @@ export const NAV_GROUPS: NavGroup[] = [
         descriptionKey: 'shell.mega.tools.designlab.desc',
         path: '/admin/design-lab',
         icon: Palette,
-        permission: PERMISSIONS.THEME_ADMIN,
+        permission: MODULES.THEME,
       },
       {
         key: 'themes',
@@ -170,7 +170,7 @@ export const NAV_GROUPS: NavGroup[] = [
         descriptionKey: 'shell.mega.tools.themes.desc',
         path: '/admin/themes',
         icon: Paintbrush,
-        permission: PERMISSIONS.THEME_ADMIN,
+        permission: MODULES.THEME,
       },
     ],
   },

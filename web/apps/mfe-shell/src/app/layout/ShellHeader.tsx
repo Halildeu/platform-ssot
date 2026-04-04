@@ -7,8 +7,7 @@ import { useAppDispatch, useAppSelector } from "../store/store.hooks";
 import { buildAppRedirectUri, isPermitAllMode } from "../auth/auth-config";
 import keycloak from "../auth/keycloakClient";
 import { logout } from "../../features/auth/model/auth.slice";
-import { useAuthorization } from "../../features/auth/model/use-authorization.model";
-import { PERMISSIONS } from "../../features/auth/lib/permissions.constants";
+import { usePermissions, MODULES } from "@mfe/auth";
 import {
   isSuggestionsRemoteEnabled,
   isEthicRemoteEnabled,
@@ -34,18 +33,19 @@ export const ShellHeader: React.FC = () => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [launcherOpen, setLauncherOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const { hasPermission } = useAuthorization();
+  const { hasModule, isSuperAdmin } = usePermissions();
   const userMenuRef = useRef<HTMLDivElement | null>(null);
   const { t, manager: i18nManager, locale } = useShellCommonI18n();
   const permitAllMode = isPermitAllMode();
 
   const suggestionsEnabled = isSuggestionsRemoteEnabled();
   const ethicEnabled = isEthicRemoteEnabled();
-  const canAccess = initialized && hasPermission(PERMISSIONS.ACCESS_MODULE);
-  const canAudit = initialized && hasPermission(PERMISSIONS.AUDIT_MODULE);
-  const canReport = initialized && hasPermission(PERMISSIONS.REPORTING_MODULE);
-  const canManageUsers = initialized && hasPermission(PERMISSIONS.USER_MANAGEMENT_MODULE);
-  const canThemeAdmin = initialized && hasPermission(PERMISSIONS.THEME_ADMIN);
+  const admin = isSuperAdmin();
+  const canAccess = initialized && (admin || hasModule(MODULES.ACCESS));
+  const canAudit = initialized && (admin || hasModule(MODULES.AUDIT));
+  const canReport = initialized && (admin || hasModule(MODULES.REPORT));
+  const canManageUsers = initialized && (admin || hasModule(MODULES.USER_MANAGEMENT));
+  const canThemeAdmin = initialized && (admin || hasModule(MODULES.THEME));
 
   useEffect(() => {
     setLoginOpen(false);

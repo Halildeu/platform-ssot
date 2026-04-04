@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAuthorization } from '../../../features/auth/model/use-authorization.model';
+import { usePermissions } from '@mfe/auth';
 import { useAppSelector } from '../../store/store.hooks';
 import {
   isSuggestionsRemoteEnabled,
@@ -42,7 +42,12 @@ export interface HeaderNavigationState {
 
 export function useHeaderNavigation(): HeaderNavigationState {
   const { pathname } = useLocation();
-  const { hasPermission } = useAuthorization();
+  const { hasModule, isSuperAdmin } = usePermissions();
+  const hasPermission = (perm: string | undefined) => {
+    if (!perm || perm === 'any-child') return true;
+    if (isSuperAdmin()) return true;
+    return hasModule(perm);
+  };
   const { initialized } = useAppSelector((s) => s.auth);
   const { t } = useShellCommonI18n();
 
