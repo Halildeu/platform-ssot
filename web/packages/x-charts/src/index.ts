@@ -143,6 +143,18 @@ export { useResponsiveLegend } from "./responsive/useResponsiveLegend";
 export { useResponsiveChartType } from "./responsive/useResponsiveChartType";
 
 /* ------------------------------------------------------------------ */
+/*  AI Integration (P5)                                                */
+/* ------------------------------------------------------------------ */
+
+export { nlToChartSpec } from "./ai/nl-to-chart-spec";
+export type { NLToChartSpecOptions, NLToChartSpecResult } from "./ai/nl-to-chart-spec";
+export { detectAnomalies, identifyTrends } from "./ai/auto-insight";
+export type { Anomaly, Trend, InsightResult } from "./ai/auto-insight";
+export { suggestChartType } from "./ai/chart-type-suggestion";
+export type { ChartTypeSuggestion, DataShapeAnalysis } from "./ai/chart-type-suggestion";
+export { generateChartDescription } from "./ai/chart-description";
+
+/* ------------------------------------------------------------------ */
 /*  Grid Adapter (P4)                                                  */
 /* ------------------------------------------------------------------ */
 
