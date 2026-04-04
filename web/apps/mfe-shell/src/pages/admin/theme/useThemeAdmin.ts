@@ -169,13 +169,7 @@ export function useThemeAdmin() {
     return () => document.removeEventListener('keydown', handler);
   }, [undo, redo]);
 
-  /* --- beforeunload dirty warning (Phase 3) --- */
-  useEffect(() => {
-    if (!isDirty) return;
-    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
-    window.addEventListener('beforeunload', handler);
-    return () => window.removeEventListener('beforeunload', handler);
-  }, [isDirty]);
+  /* beforeunload removed — changes apply instantly, no save needed */
 
   /* --- axis option memos --- */
   const accentOptions = useMemo(() => getAccentOptions(t), [t]);
