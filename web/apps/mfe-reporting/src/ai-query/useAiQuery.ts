@@ -5,7 +5,7 @@
 import { useState, useCallback } from 'react';
 import type { AiQueryRequest, AiQueryResponse } from './types';
 
-const AI_API_BASE = '/api/v1/ai';
+const AI_API_BASE = '/api/v1/schema';
 
 export function useAiQuery() {
   const [response, setResponse] = useState<AiQueryResponse | null>(null);
@@ -18,7 +18,7 @@ export function useAiQuery() {
     setResponse(null);
 
     try {
-      const res = await fetch(`${AI_API_BASE}/query`, {
+      const res = await fetch(`${AI_API_BASE}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(request),
