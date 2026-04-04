@@ -47,6 +47,10 @@ const RecipeDetail = lazy(() => import("./pages/RecipeDetail"));
 const EcosystemListing = lazy(() => import("./pages/EcosystemListing"));
 const ExtensionDetail = lazy(() => import("./pages/ExtensionDetail"));
 
+/* Charts */
+const ChartsListing = lazy(() => import("./pages/ChartsListing"));
+const ChartDetail = lazy(() => import("./pages/ChartDetail"));
+
 /* Developer Experience */
 const DependencyGraphPage = lazy(() => import("./pages/DependencyGraphPage"));
 const UsageAnalyticsPage = lazy(() => import("./pages/UsageAnalyticsPage"));
@@ -292,6 +296,10 @@ export const DesignLabRoutes: React.FC = () => (
           path="ecosystem/:extensionId"
           element={<ExtensionDetail />}
         />
+
+        {/* Charts layer */}
+        <Route path="charts" element={<ChartsListing />} />
+        <Route path="charts/:chartId" element={<ChartDetail />} />
 
         {/* ---- Backward-compat redirects ---- */}
         <Route

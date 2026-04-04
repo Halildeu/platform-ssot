@@ -1,7 +1,7 @@
 import { normalizeDesignLabSectionId } from './designLabSectionRouting';
 import type { DesignLabPageShellLayerId } from './designLabPageShellLayerResolver';
 
-export type DesignLabWorkspaceMode = 'foundations' | 'components' | 'recipes' | 'pages' | 'ecosystem';
+export type DesignLabWorkspaceMode = 'foundations' | 'components' | 'recipes' | 'pages' | 'ecosystem' | 'charts';
 export type DesignLabFamilySelectionKind = 'recipes' | 'pages';
 export type DesignLabFamilySelectionState = {
   recipes: string | null;
@@ -38,6 +38,12 @@ export type DesignLabPanelUrlState = {
     quality: string | null;
     preview: string | null;
   };
+  charts: {
+    overview: string | null;
+    api: string | null;
+    quality: string | null;
+    preview: string | null;
+  };
 };
 
 type DesignLabRecipeLikeFamily = {
@@ -54,6 +60,8 @@ const RECIPE_PANEL_URL_KEYS = ['dl_recipe_overview', 'dl_recipe_api', 'dl_recipe
 const PAGE_PANEL_URL_KEYS = ['dl_template_overview', 'dl_template_api', 'dl_template_quality', 'dl_template_preview'] as const;
 const ECOSYSTEM_URL_KEYS = ['dl_ecosystem'] as const;
 const ECOSYSTEM_PANEL_URL_KEYS = ['dl_ecosystem_overview', 'dl_ecosystem_api', 'dl_ecosystem_quality', 'dl_ecosystem_preview'] as const;
+const CHARTS_URL_KEYS = ['dl_charts'] as const;
+const CHARTS_PANEL_URL_KEYS = ['dl_charts_overview', 'dl_charts_api', 'dl_charts_quality', 'dl_charts_preview'] as const;
 
 export const resolveWorkspaceModeForSection = (
   sectionId: string | null | undefined,
@@ -70,6 +78,10 @@ export const resolveWorkspaceModeForSection = (
 
   if (normalizedSectionId === 'ecosystem') {
     return 'ecosystem';
+  }
+
+  if (normalizedSectionId === 'charts') {
+    return 'charts';
   }
 
   return normalizedSectionId === 'recipes' ? 'recipes' : 'components';

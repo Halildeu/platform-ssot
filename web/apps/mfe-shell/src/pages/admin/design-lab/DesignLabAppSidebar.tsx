@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   CircleHelp, Menu, Star, UnfoldVertical, FoldVertical,
   Palette, Shapes, Box, Layout, BookOpen, Globe, Code,
-  PanelLeftClose, PanelLeftOpen,
+  PanelLeftClose, PanelLeftOpen, BarChart3,
 } from "lucide-react";
 import { IconButton, Text } from "@mfe/design-system";
 import { useDesignLabI18n } from "./useDesignLabI18n";
@@ -57,11 +57,12 @@ type LayerId =
   | "patterns"
   | "apis"
   | "recipes"
-  | "ecosystem";
+  | "ecosystem"
+  | "charts";
 
 const LAYER_IDS: LayerId[] = [
   "foundations", "primitives", "components", "patterns",
-  "apis", "recipes", "ecosystem",
+  "apis", "recipes", "ecosystem", "charts",
 ];
 
 const LAYER_ICONS: Record<LayerId, React.ReactNode> = {
@@ -72,6 +73,7 @@ const LAYER_ICONS: Record<LayerId, React.ReactNode> = {
   apis: <Code className="h-4 w-4" />,
   recipes: <BookOpen className="h-4 w-4" />,
   ecosystem: <Globe className="h-4 w-4" />,
+  charts: <BarChart3 className="h-4 w-4" />,
 };
 
 const DESIGN_TOKEN_GROUPS = [
