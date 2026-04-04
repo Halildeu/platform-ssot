@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useAppSelector } from "../store/store.hooks";
 import { isPermitAllMode } from "../auth/auth-config";
 import { ProtectedRoute } from "../guards/ProtectedRoute";
-import { MODULES } from "@mfe/auth";
+import { PERMISSIONS } from "../../features/auth/lib/permissions.constants";
 import {
   isEthicRemoteEnabled,
   isSuggestionsRemoteEnabled,
@@ -98,7 +98,7 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/access/roles"
           element={
-            <ProtectedRoute requiredModule={MODULES.ACCESS}>
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.ACCESS_MODULE]}>
               <AccessModule />
             </ProtectedRoute>
           }
@@ -107,7 +107,7 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/audit/events"
           element={
-            <ProtectedRoute requiredModule={MODULES.AUDIT}>
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.AUDIT_MODULE]}>
               <AuditModule />
             </ProtectedRoute>
           }
@@ -115,7 +115,7 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/admin/reports/builder"
           element={
-            <ProtectedRoute requiredModule={MODULES.REPORT}>
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.REPORTING_MODULE]}>
               <Suspense fallback={<div className="flex justify-center py-16"><span className="inline-flex h-6 w-6 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary" /></div>}>
                 <ReportBuilderWizard />
               </Suspense>
@@ -125,7 +125,7 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/admin/reports/builder/dashboard"
           element={
-            <ProtectedRoute requiredModule={MODULES.REPORT}>
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.REPORTING_MODULE]}>
               <Suspense fallback={<div className="flex justify-center py-16"><span className="inline-flex h-6 w-6 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary" /></div>}>
                 <DashboardBuilder />
               </Suspense>
@@ -135,7 +135,7 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/admin/reports/builder/edit/:reportKey"
           element={
-            <ProtectedRoute requiredModule={MODULES.REPORT}>
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.REPORTING_MODULE]}>
               <Suspense fallback={<div className="flex justify-center py-16"><span className="inline-flex h-6 w-6 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary" /></div>}>
                 <ReportEditorRoute />
               </Suspense>
@@ -145,7 +145,7 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/admin/reports/*"
           element={
-            <ProtectedRoute requiredModule={MODULES.REPORT}>
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.REPORTING_MODULE]}>
               <ReportingLayout />
             </ProtectedRoute>
           }
@@ -153,7 +153,7 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/admin/reports"
           element={
-            <ProtectedRoute requiredModule={MODULES.REPORT}>
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.REPORTING_MODULE]}>
               <ReportingLayout />
             </ProtectedRoute>
           }
@@ -165,7 +165,7 @@ export const AppRouter: React.FC = () => {
           element={
             <AuthTraceRoute>
               <ProtectedRoute
-                requiredModule={MODULES.USER_MANAGEMENT}
+                requiredPermissions={[PERMISSIONS.USER_MANAGEMENT_MODULE]}
               >
                 <UsersModule />
               </ProtectedRoute>
@@ -183,7 +183,7 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/admin/themes"
           element={
-            <ProtectedRoute requiredModule={MODULES.THEME}>
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.THEME_ADMIN]}>
               <ThemeAdminPage />
             </ProtectedRoute>
           }
@@ -191,7 +191,7 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/admin/design-lab/*"
           element={
-            <ProtectedRoute requiredModule={MODULES.THEME}>
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.THEME_ADMIN]}>
               <DesignLabRoutes />
             </ProtectedRoute>
           }
@@ -199,7 +199,7 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/admin/design-lab-legacy"
           element={
-            <ProtectedRoute requiredModule={MODULES.THEME}>
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.THEME_ADMIN]}>
               <DesignLabPage />
             </ProtectedRoute>
           }
@@ -207,7 +207,7 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/admin/x-suite-dashboard"
           element={
-            <ProtectedRoute requiredModule={MODULES.THEME}>
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.THEME_ADMIN]}>
               <XSuiteDashboardPage />
             </ProtectedRoute>
           }
@@ -215,7 +215,7 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/admin/services"
           element={
-            <ProtectedRoute requiredModule={MODULES.THEME}>
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.THEME_ADMIN]}>
               <ServiceControlPage />
             </ProtectedRoute>
           }
