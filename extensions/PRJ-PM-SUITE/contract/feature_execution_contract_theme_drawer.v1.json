@@ -1,0 +1,36 @@
+{
+  "version": "v1",
+  "kind": "feature-execution-contract",
+  "status": "ACTIVE",
+  "feature_id": "theme_drawer_panel",
+  "title": "Theme Drawer Panel — Header-Triggered Right Panel",
+  "summary": "Replace 981-line ThemeRuntimePanelButton dropdown with Drawer-based theme panel accessible from every page via header button. Includes live preview, theme doctor diagnostics, and UX redesign.",
+  "source_context": {
+    "source_type": "manual",
+    "source_refs": [
+      "web/apps/mfe-shell/src/app/layout/ThemeRuntimePanelButton.tsx",
+      "web/apps/mfe-shell/src/pages/admin/theme/ThemeDrawerPanel.tsx",
+      "web/apps/mfe-shell/src/lib/theme-doctor.ts"
+    ],
+    "business_goal": "Enable every user to customize theme appearance from any page without navigating to a separate admin page.",
+    "requested_outcome": "Header button opens a right-side drawer with live accent, mode, density, radius controls and built-in theme diagnostics."
+  },
+  "scope": {
+    "frontend": [
+      "web/apps/mfe-shell/src/app/layout/ThemeRuntimePanelButton.tsx",
+      "web/apps/mfe-shell/src/pages/admin/theme/ThemeDrawerPanel.tsx",
+      "web/apps/mfe-shell/src/pages/admin/theme/ThemeDrawerTabs.tsx",
+      "web/apps/mfe-shell/src/lib/theme-doctor.ts",
+      "web/apps/mfe-shell/src/index.tsx"
+    ],
+    "backend": [],
+    "shared": []
+  },
+  "definition_of_done": [
+    "Header button opens Drawer from every page",
+    "Accent/Mode/Density/Radius controls update page live",
+    "Theme Doctor scores 100/100",
+    "tsc --noEmit passes with 0 new errors",
+    "All existing theme admin functionality preserved"
+  ]
+}
