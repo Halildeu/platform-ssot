@@ -117,6 +117,13 @@ export default tseslint.config(
       // Token system is reliable — var(--token) without fallback is the correct pattern.
       'css-var-fallback/no-css-var-without-fallback': 'off',
       'no-ant-import/no-new-ant-import': 'error',
+      // Chart engine forbidden imports — D-004: app code must NOT import echarts/ag-charts directly
+      'no-restricted-imports': ['error', {
+        patterns: [
+          { group: ['echarts', 'echarts/*'], message: 'Import chart components from @mfe/x-charts or @mfe/design-system — direct echarts import is forbidden (DCP D-004).' },
+          { group: ['ag-charts-community', 'ag-charts-enterprise', 'ag-charts-react'], message: 'Import chart components from @mfe/x-charts or @mfe/design-system — direct ag-charts import is forbidden (DCP D-004).' },
+        ],
+      }],
       // Targeted overrides (options or off)
       // TS handles unused vars — disable vanilla rule to avoid double-counting
       'no-unused-vars': 'off',
@@ -150,6 +157,16 @@ export default tseslint.config(
       'css/no-invalid-at-rules': 'off', // False positives on Tailwind v4 @theme, @apply, etc.
       'css/no-invalid-properties': 'off', // False positives on CSS custom properties (--var)
       'css/no-duplicate-imports': 'error',
+    },
+  },
+  /* ---- Chart engine allowed in design-system and x-charts (internal consumers) ---- */
+  {
+    files: [
+      'packages/design-system/**/*.{ts,tsx}',
+      'packages/x-charts/**/*.{ts,tsx}',
+    ],
+    rules: {
+      'no-restricted-imports': 'off',
     },
   },
   {
