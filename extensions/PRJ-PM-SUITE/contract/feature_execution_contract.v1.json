@@ -79,14 +79,15 @@
       "docs/OPERATIONS/MULTI-PLANE-EXECUTION-MODEL.v1.md",
       "tenant/TENANT-DEFAULT/**/*",
       "extensions/PRJ-PM-SUITE/contract/**/*",
-      "web/apps/mfe-access/src/features/**/*",
+      "web/apps/mfe-access/src/**/*",
       "web/apps/mfe-shell/src/app/config/*",
       "web/apps/mfe-shell/vite-plugins/*",
       "web/apps/mfe-suggestions/src/*",
       "backend/schema-service/**",
       "backend/scripts/*",
       "web/apps/mfe-schema-explorer/**",
-      "web/apps/mfe-access/src/app/*",
+      "web/apps/mfe-users/src/widgets/**/*",
+      "web/packages/i18n-dicts/src/locales/**/*",
       "web/apps/mfe-users/**/*",
       "web/apps/mfe-reporting/**/*",
       "web/apps/mfe-shell/src/app/layout/*",
@@ -124,6 +125,11 @@
     "mode": "REQUIRED",
     "rationale": "Auth and permission foundation work must keep web and mobile entry flows aligned, minimal, and consistent while reusing shared UI surfaces.",
     "artifacts": [
+      {
+        "path_glob": "web/apps/mfe-access/src/**",
+        "ux_theme_id": "task_completion_architecture",
+        "ux_subtheme_id": "critical_path_minimization"
+      },
       {
         "path_glob": "web/apps/mfe-shell/src/app/auth/**",
         "ux_theme_id": "task_completion_architecture",
