@@ -6,7 +6,7 @@
     "start": "npx kill-port 3007 || true && vite",
     "build": "vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "test": "echo \"no tests\""
+    "test": "vitest run"
   },
   "dependencies": {
     "@platform/capabilities": "file:../../packages/platform-capabilities",
@@ -14,6 +14,7 @@
     "@mfe/shared-types": "*",
     "@mfe/i18n-dicts": "*",
     "@mfe/design-system": "*",
+    "@mfe/x-charts": "*",
     "ag-grid-community": "34.3.1",
     "ag-grid-enterprise": "34.3.1",
     "ag-grid-react": "34.3.1",
@@ -29,7 +30,11 @@
     "@types/node": "^25.5.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/jest-dom": "^6.4.0",
     "eslint": "^9.13.0",
-    "typescript": "^5.8.3"
+    "jsdom": "^25.0.0",
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.0"
   }
 }

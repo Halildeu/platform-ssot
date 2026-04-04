@@ -1,6 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { getSummary, getLiveKPIs, getLiveCharts } from './api';
 import type { DemographicSummary } from './types';
+import {
+  PieChart as XPieChart,
+  BarChart as XBarChart,
+  TreemapChart as XTreemapChart,
+  RadarChart as XRadarChart,
+} from '@mfe/x-charts';
 
 // ---------------------------------------------------------------------------
 // Color palette
@@ -140,9 +146,75 @@ function Legend({
 }
 
 // ---------------------------------------------------------------------------
-// Donut/Pie Chart
+// Charts — x-charts wrappers (replaced SVG implementations)
 // ---------------------------------------------------------------------------
-function PieChart({
+
+function PieChartLocal({
+  data,
+  size = 180,
+}: {
+  data: Array<{ label: string; value: number }>;
+  size?: number;
+}) {
+  if (!data.length || data.every((d) => d.value === 0)) return null;
+  return (
+    <div>
+      <XPieChart data={data} donut showLegend size="sm" />
+    </div>
+  );
+}
+
+function VerticalBarChartLocal({
+  data,
+}: {
+  data: Array<{ label: string; value: number }>;
+}) {
+  if (!data.length) return null;
+  return <XBarChart data={data} size="sm" showValues />;
+}
+
+function HorizontalBarChartLocal({
+  data,
+}: {
+  data: Array<{ label: string; value: number }>;
+}) {
+  if (!data.length) return null;
+  return <XBarChart data={data} orientation="horizontal" size="sm" />;
+}
+
+function TreemapLocal({ data }: { data: Array<{ label: string; value: number }> }) {
+  if (!data.length) return null;
+  return <XTreemapChart data={data} size="sm" />;
+}
+
+function GaugeLocal({
+  value,
+  label,
+  max = 100,
+}: {
+  value: number;
+  label: string;
+  max?: number;
+}) {
+  return (
+    <div className="text-center">
+      <div className="text-2xl font-bold text-text-primary">{value}</div>
+      <div className="text-xs text-text-secondary">{label}</div>
+    </div>
+  );
+}
+
+function RadarLocal({
+  data,
+}: {
+  data: Array<{ label: string; value: number }>;
+}) {
+  if (!data.length) return null;
+  return <XRadarChart data={data} size="sm" />;
+}
+
+// Legacy SVG PieChart (preserved for reference, replaced by PieChartLocal above)
+function _LegacyPieChart({
   data,
   size = 180,
 }: {
@@ -222,7 +294,7 @@ function PieChart({
 // ---------------------------------------------------------------------------
 // Vertical Bar Chart
 // ---------------------------------------------------------------------------
-function VerticalBarChart({
+function _LegacyVerticalBarChart({
   data,
 }: {
   data: Array<{ label: string; value: number }>;
@@ -303,9 +375,9 @@ function VerticalBarChart({
 }
 
 // ---------------------------------------------------------------------------
-// Horizontal Bar Chart
+// Horizontal Bar Chart (legacy SVG)
 // ---------------------------------------------------------------------------
-function HorizontalBarChart({
+function _LegacyHorizontalBarChart({
   data,
 }: {
   data: Array<{ label: string; value: number }>;
@@ -360,9 +432,9 @@ function HorizontalBarChart({
 }
 
 // ---------------------------------------------------------------------------
-// Treemap
+// Treemap (legacy SVG)
 // ---------------------------------------------------------------------------
-function Treemap({ data }: { data: Array<{ label: string; value: number }> }) {
+function _LegacyTreemap({ data }: { data: Array<{ label: string; value: number }> }) {
   const total = data.reduce((s, d) => s + d.value, 0);
   if (total === 0) return null;
 
@@ -462,9 +534,9 @@ function Treemap({ data }: { data: Array<{ label: string; value: number }> }) {
 }
 
 // ---------------------------------------------------------------------------
-// Gauge (semi-circle)
+// Gauge (legacy SVG semi-circle)
 // ---------------------------------------------------------------------------
-function Gauge({
+function _LegacyGauge({
   value,
   target,
   label,
@@ -887,6 +959,15 @@ function AgePyramidChart({
     </div>
   );
 }
+
+// ---------------------------------------------------------------------------
+// Aliases: map old SVG function names → x-charts wrappers
+// ---------------------------------------------------------------------------
+const PieChart = PieChartLocal;
+const VerticalBarChart = VerticalBarChartLocal;
+const HorizontalBarChart = HorizontalBarChartLocal;
+const Treemap = TreemapLocal;
+const Gauge = GaugeLocal;
 
 // ---------------------------------------------------------------------------
 // Section Header

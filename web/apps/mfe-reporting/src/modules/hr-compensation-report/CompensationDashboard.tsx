@@ -1,11 +1,9 @@
 import React from 'react';
 import { getLiveKPIs, getLiveCharts, refreshDashboardData } from './api';
 import type { DashboardKPI, DashboardChart, DashboardChartItem, DashboardFilters } from './api';
-import { BarChart, PieChart } from '@mfe/design-system';
-import type { ChartClickEvent } from '@mfe/design-system';
+import { BarChart, PieChart, useEChartsRenderer, buildDesignLabEChartsTheme } from '@mfe/x-charts';
+import type { ChartClickEvent } from '@mfe/x-charts';
 import { AgGridReact } from 'ag-grid-react';
-import { AgCharts } from 'ag-charts-react';
-import type { AgChartOptions } from 'ag-charts-community';
 import type { ColDef } from 'ag-grid-community';
 import type { CrossFilter } from './crossFilterTypes';
 import { CHART_FILTER_MAP, KPI_FILTER_MAP, toggleCrossFilter } from './crossFilterTypes';
@@ -202,71 +200,61 @@ const renderBarChart = (
 /** Dual-axis line chart — left axis: currency (Ort. Maaş), right axis: count (Çalışan) */
 const DualAxisLineChart: React.FC<{ data: DashboardChartItem[] }> = ({ data }) => {
   const hasDualSeries = data.some((d) => d.value2 != null);
+  const theme = React.useMemo(() => buildDesignLabEChartsTheme(), []);
 
-  const options = React.useMemo((): AgChartOptions => {
-    const chartData = data.map((d) => ({
-      label: d.label,
-      salary: d.value,
-      count: (d.value2 as number) ?? 0,
-    }));
+  const option = React.useMemo(() => {
+    const categories = data.map((d) => d.label);
+    const salaryData = data.map((d) => d.value);
+    const countData = data.map((d) => (d.value2 as number) ?? 0);
 
-    const series: AgChartOptions['series'] = [
+    const series: Record<string, unknown>[] = [
       {
-        type: 'line' as const,
-        xKey: 'label',
-        yKey: 'salary',
-        yName: 'Ort. Maaş',
-        stroke: '#3b82f6',
-        marker: { enabled: true, size: 6, fill: '#3b82f6' },
+        type: 'line',
+        name: 'Ort. Maaş',
+        data: salaryData,
+        yAxisIndex: 0,
+        lineStyle: { color: '#3b82f6', width: 2 },
+        itemStyle: { color: '#3b82f6' },
+        symbolSize: 6,
       },
     ];
 
     if (hasDualSeries) {
       series.push({
-        type: 'bar' as const,
-        xKey: 'label',
-        yKey: 'count',
-        yName: 'Çalışan Sayısı',
-        fill: '#f59e0b',
-        fillOpacity: 0.6,
-      } as any);
-    }
-
-    const axes: AgChartOptions['axes'] = [
-      {
-        type: 'category',
-        position: 'bottom',
-      },
-      {
-        type: 'number',
-        position: 'left',
-        keys: ['salary'],
-        title: { text: 'Ort. Maaş (₺)' },
-        label: { formatter: (p: any) => chartCurrencyFormatter(p.value) },
-        gridLine: { enabled: true },
-      },
-    ];
-
-    if (hasDualSeries) {
-      axes.push({
-        type: 'number',
-        position: 'right',
-        keys: ['count'],
-        title: { text: 'Çalışan Sayısı' },
-        label: { formatter: (p: any) => formatNumber(p.value) },
-        gridLine: { enabled: false },
-      } as any);
+        type: 'bar',
+        name: 'Çalışan Sayısı',
+        data: countData,
+        yAxisIndex: 1,
+        itemStyle: { color: '#f59e0b', opacity: 0.6 },
+        barMaxWidth: 30,
+      });
     }
 
     return {
-      data: chartData,
+      tooltip: { trigger: 'axis' as const },
+      legend: { show: true },
+      xAxis: { type: 'category' as const, data: categories },
+      yAxis: [
+        {
+          type: 'value' as const,
+          name: 'Ort. Maaş (₺)',
+          axisLabel: { formatter: (v: number) => chartCurrencyFormatter(v) },
+          splitLine: { show: true },
+        },
+        ...(hasDualSeries ? [{
+          type: 'value' as const,
+          name: 'Çalışan Sayısı',
+          axisLabel: { formatter: (v: number) => formatNumber(v) },
+          splitLine: { show: false },
+        }] : []),
+      ],
       series,
-      axes,
-      legend: { enabled: true },
-    } as AgChartOptions;
+    };
   }, [data, hasDualSeries]);
 
-  return <AgCharts options={options} style={{ height: 320, width: '100%' }} />;
+  const { containerRef } = useEChartsRenderer({ option, theme });
+
+  return <div ref={containerRef as React.Ref<HTMLDivElement>} style={{ height: 320, width: '100%' }} />;
 };
 
 const renderPieChart = (

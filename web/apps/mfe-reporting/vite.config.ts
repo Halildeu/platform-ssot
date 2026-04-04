@@ -67,6 +67,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: [
         { find: '@platform/capabilities', replacement: path.resolve(__dirname, '../../packages/platform-capabilities/src') },
+        { find: '@mfe/x-charts', replacement: path.resolve(__dirname, '../../packages/x-charts/src') },
         { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
         { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
         { find: '@tanstack/react-query', replacement: path.resolve(__dirname, 'node_modules/@tanstack/react-query/build/modern/index.js') },

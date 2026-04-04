@@ -6,12 +6,12 @@ import { ChartCard } from './ChartCard';
 import type { ChartResult, ChartDataRow, KpiResult, DrillToDto } from './types';
 
 import {
-  SmartDashboard,
   BarChart,
   LineChart,
   PieChart,
   AreaChart,
-} from '@mfe/design-system';
+} from '@mfe/x-charts';
+import { SmartDashboard } from '@mfe/design-system';
 
 type DashboardPageProps = {
   dashboardKey: string;

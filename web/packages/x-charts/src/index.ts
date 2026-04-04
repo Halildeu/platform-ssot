@@ -112,11 +112,11 @@ export type { ChartErrorBoundaryProps } from "./states/ChartErrorBoundary";
 /* ------------------------------------------------------------------ */
 
 export { createCrossFilterStore } from "./cross-filter/createCrossFilterStore";
-export { CrossFilterProvider, useCrossFilterStore } from "./cross-filter/useCrossFilterStore";
+export { CrossFilterProvider, useCrossFilter, useCrossFilterStoreApi } from "./cross-filter/useCrossFilterStore";
 export { useChartCrossFilter } from "./cross-filter/useChartCrossFilter";
 export { useGridCrossFilter } from "./cross-filter/useGridCrossFilter";
-export { eventBridge } from "./cross-filter/eventBridge";
-export { filtersByGroup, canUndo, canRedo } from "./cross-filter/selectors";
+export { createEventBridge } from "./cross-filter/eventBridge";
+export { filtersByGroup, filtersForChart, activeFilterCount, canUndo, canRedo } from "./cross-filter/selectors";
 export { useQueryCancellation } from "./cross-filter/useQueryCancellation";
 export type { CrossFilterEntry, DrillLevel, HistoryEntry } from "./cross-filter/types";
 export { useDrillDown } from "./drill-down/useDrillDown";
@@ -143,7 +143,67 @@ export { useResponsiveLegend } from "./responsive/useResponsiveLegend";
 export { useResponsiveChartType } from "./responsive/useResponsiveChartType";
 
 /* ------------------------------------------------------------------ */
+/*  AI Integration (P5)                                                */
+/* ------------------------------------------------------------------ */
+
+export { nlToChartSpec } from "./ai/nl-to-chart-spec";
+export type { NLToChartSpecOptions, NLToChartSpecResult } from "./ai/nl-to-chart-spec";
+export { detectAnomalies, identifyTrends } from "./ai/auto-insight";
+export type { Anomaly, Trend, InsightResult } from "./ai/auto-insight";
+export { suggestChartType } from "./ai/chart-type-suggestion";
+export type { ChartTypeSuggestion, DataShapeAnalysis } from "./ai/chart-type-suggestion";
+export { generateChartDescription } from "./ai/chart-description";
+
+/* ------------------------------------------------------------------ */
+/*  Grid Adapter (P4)                                                  */
+/* ------------------------------------------------------------------ */
+
+export { AGGridAdapter } from "./grid-adapter/AGGridAdapter";
+export { useChartGridLink, autoMapColumns } from "./grid-adapter/useChartGridLink";
+export type {
+  GridAdapter, GridColumnDef, GridFilterEntry, GridSortEntry,
+  GridSelectionEvent, ChartGridLinkConfig, ColumnChartMapping,
+} from "./grid-adapter/types";
+export type { AGGridApi } from "./grid-adapter/AGGridAdapter";
+export type { ChartGridLinkState } from "./grid-adapter/useChartGridLink";
+
+/* ------------------------------------------------------------------ */
+/*  Advanced Analytics (P8)                                            */
+/* ------------------------------------------------------------------ */
+
+export { chartPluginRegistry, registerChartPlugin } from "./advanced/plugin-registry";
+export type { ChartPlugin, ChartPluginConfig } from "./advanced/plugin-registry";
+export { renderDashboardFromConfig } from "./advanced/dashboard-as-code";
+export type { DashboardConfig, DashboardWidgetConfig } from "./advanced/dashboard-as-code";
+export { useWhatIfAnalysis } from "./advanced/what-if";
+export type { WhatIfParameter, WhatIfResult } from "./advanced/what-if";
+
+/* ------------------------------------------------------------------ */
+/*  Collaboration & Offline (P7)                                       */
+/* ------------------------------------------------------------------ */
+
+export { useDashboardState, serializeState, deserializeState } from "./collaboration/dashboard-state";
+export { useChartExport } from "./collaboration/chart-export";
+export type { ExportFormat, ExportOptions } from "./collaboration/chart-export";
+export { useDashboardSharing, createShareUrl, parseShareUrl } from "./collaboration/dashboard-sharing";
+export { useChartAnnotations } from "./collaboration/chart-annotations";
+export type { Annotation, AnnotationType } from "./collaboration/chart-annotations";
+export { useOfflineCache } from "./collaboration/offline-cache";
+
+/* ------------------------------------------------------------------ */
+/*  Performance (P6)                                                   */
+/* ------------------------------------------------------------------ */
+
+export { downsampleLTTB } from "./performance/lttb";
+export { createWorkerBridge } from "./performance/worker-bridge";
+export type { WorkerBridge, WorkerTask } from "./performance/worker-bridge";
+export { useProgressiveRender } from "./performance/progressive-render";
+export { useLazyChart } from "./performance/lazy-chart";
+export { LRUCache } from "./performance/lru-cache";
+export { lazyChartImport } from "./performance/code-split";
+
+/* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
-export type { ChartSize, ChartDataPoint, ChartSeries } from "./types";
+export type { ChartSize, ChartDataPoint, ChartSeries, ChartClickEvent, ChartLocaleText } from "./types";
