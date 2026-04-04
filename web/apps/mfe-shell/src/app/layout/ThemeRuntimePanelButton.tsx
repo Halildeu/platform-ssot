@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Drawer } from '@mfe/design-system';
 import { useShellCommonI18n } from '../i18n';
+import { useThemeContext } from '../theme/theme-context.provider';
 import { useThemeAdmin } from '../../pages/admin/theme/useThemeAdmin';
 import ThemeDrawerPanel from '../../pages/admin/theme/ThemeDrawerPanel';
 
@@ -8,6 +9,7 @@ export const ThemeRuntimePanelButton: React.FC = () => {
   const { t } = useShellCommonI18n();
   const [open, setOpen] = useState(false);
   const admin = useThemeAdmin();
+  const { axes } = useThemeContext();
 
   return (
     <>
@@ -35,7 +37,17 @@ export const ThemeRuntimePanelButton: React.FC = () => {
         closeOnEscape
         title={t('shell.theme.panel.dialogLabel')}
       >
-        <ThemeDrawerPanel admin={admin} />
+        <div
+          className="h-full"
+          data-theme-scope
+          data-theme={admin.themeMeta?.appearance ?? axes.appearance}
+          data-accent={admin.themeMeta?.axes.accent ?? axes.accent}
+          data-density={admin.themeMeta?.axes.density ?? axes.density}
+          data-radius={admin.themeMeta?.axes.radius ?? axes.radius}
+          data-elevation={admin.themeMeta?.axes.elevation ?? axes.elevation}
+        >
+          <ThemeDrawerPanel admin={admin} />
+        </div>
       </Drawer>
     </>
   );
