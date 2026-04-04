@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-/**
- * AreaChart — Thin passthrough to @mfe/x-charts
- */
-export { AreaChart as default, AreaChart } from "../../../../x-charts/src/AreaChart";
-export type { AreaChartProps } from "../../../../x-charts/src/AreaChart";
-=======
 import React, { useMemo } from "react";
 import { cn } from "../../utils/cn";
 import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
@@ -51,4 +44,3 @@ export const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
 );
 AreaChart.displayName = "AreaChart";
 export default AreaChart;
->>>>>>> main
