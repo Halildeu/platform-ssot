@@ -35,6 +35,8 @@ import { getCompanies, type CompanyDto } from '../../entities/companies/api/comp
 import RelationshipGraph from '../../widgets/access-management/ui/RelationshipGraph.ui';
 import PermissionMatrix from '../../widgets/access-management/ui/PermissionMatrix.ui';
 import ExplainPanel from '../../widgets/access-management/ui/ExplainPanel.ui';
+import ScopeAssignmentPanel from '../../widgets/access-management/ui/ScopeAssignmentPanel.ui';
+import type { AccessLevel } from '../../features/access-management/model/access.types';
 
 type ActiveTab = 'roles' | 'matrix' | 'graph';
 
@@ -67,6 +69,9 @@ const AccessPage: React.FC = () => {
   const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState<ActiveTab>('roles');
   const [explainOpen, setExplainOpen] = React.useState(false);
+  const [scopeOpen, setScopeOpen] = React.useState(false);
+  const [matrixChanges, setMatrixChanges] = React.useState<Map<string, { roleId: string; moduleKey: string; level: AccessLevel }>>(new Map());
+  const [matrixSaving, setMatrixSaving] = React.useState(false);
   const [pageLayout, setPageLayout] = React.useState<PageLayoutManifest | null>(null);
   const {
     roles,
@@ -421,6 +426,13 @@ const AccessPage: React.FC = () => {
               <Button
                 variant="ghost"
                 size="sm"
+                onClick={() => setScopeOpen(true)}
+              >
+                {t('access.scope.title')}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setExplainOpen(true)}
               >
                 {t('access.explain.title')}
@@ -461,8 +473,46 @@ const AccessPage: React.FC = () => {
               <PermissionMatrix
                 roles={roles}
                 modules={modules}
-                onLevelChange={() => {}}
-                onSaveAll={() => {}}
+                saving={matrixSaving}
+                onLevelChange={(roleId, moduleKey, level) => {
+                  setMatrixChanges((prev) => {
+                    const next = new Map(prev);
+                    next.set(`${roleId}:${moduleKey}`, { roleId, moduleKey, level });
+                    return next;
+                  });
+                }}
+                onSaveAll={async () => {
+                  if (matrixChanges.size === 0) return;
+                  setMatrixSaving(true);
+                  try {
+                    const grouped = new Map<string, { moduleKey: string; level: AccessLevel }[]>();
+                    for (const change of matrixChanges.values()) {
+                      const list = grouped.get(change.roleId) ?? [];
+                      list.push({ moduleKey: change.moduleKey, level: change.level });
+                      grouped.set(change.roleId, list);
+                    }
+                    for (const [roleId, changes] of grouped) {
+                      for (const { moduleKey, moduleLabel, level } of changes.map(c => ({
+                        ...c,
+                        moduleLabel: modules.get(c.moduleKey) ?? c.moduleKey,
+                      }))) {
+                        await bulkUpdateRoles({
+                          roleIds: [roleId],
+                          moduleKey,
+                          moduleLabel,
+                          level,
+                        });
+                      }
+                    }
+                    setMatrixChanges(new Map());
+                    showToast('success', t('access.matrix.saveAll'));
+                  } catch (error: unknown) {
+                    const msg = error instanceof Error ? error.message : 'Save failed';
+                    showToast('error', msg);
+                  } finally {
+                    setMatrixSaving(false);
+                  }
+                }}
                 t={t}
               />
             </div>
@@ -654,6 +704,14 @@ const AccessPage: React.FC = () => {
         open={explainOpen}
         onClose={() => setExplainOpen(false)}
         modules={modules}
+        t={t}
+      />
+
+      <ScopeAssignmentPanel
+        open={scopeOpen}
+        userId={singleSelectedRole ? singleSelectedRole.id : null}
+        userName={singleSelectedRole?.name}
+        onClose={() => setScopeOpen(false)}
         t={t}
       />
 
