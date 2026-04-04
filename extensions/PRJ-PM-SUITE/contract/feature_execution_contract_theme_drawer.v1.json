@@ -15,16 +15,16 @@
     "business_goal": "Enable every user to customize theme appearance from any page without navigating to a separate admin page.",
     "requested_outcome": "Header button opens a right-side drawer with live accent, mode, density, radius controls and built-in theme diagnostics."
   },
-  "scope": {
-    "frontend": [
+  "delivery_scope": {
+    "repo_root": ".",
+    "service_scopes": ["frontend"],
+    "change_path_globs": [
       "web/apps/mfe-shell/src/app/layout/ThemeRuntimePanelButton.tsx",
-      "web/apps/mfe-shell/src/pages/admin/theme/ThemeDrawerPanel.tsx",
-      "web/apps/mfe-shell/src/pages/admin/theme/ThemeDrawerTabs.tsx",
+      "web/apps/mfe-shell/src/pages/admin/theme/**",
       "web/apps/mfe-shell/src/lib/theme-doctor.ts",
       "web/apps/mfe-shell/src/index.tsx"
     ],
-    "backend": [],
-    "shared": []
+    "affected_modules": ["mfe-shell"]
   },
   "definition_of_done": [
     "Header button opens Drawer from every page",
