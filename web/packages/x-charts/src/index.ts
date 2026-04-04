@@ -126,6 +126,14 @@ export { buildDesignLabEChartsPrintTheme } from "./theme/DesignLabEChartsPrintTh
 export { COLORBLIND_PALETTES } from "./theme/colorblind-palettes";
 export { DECAL_PATTERNS } from "./theme/decal-patterns";
 
+/* i18n */
+export { registerEChartsLocale, getEChartsLocale, ECHARTS_LOCALE_MAP } from "./i18n/echarts-locale";
+export { createNumberFormatter, createDateFormatter } from "./i18n/formatters";
+export { isRTL, isRTLLocale, applyRTLTransforms } from "./i18n/rtl";
+
+/* Data Transforms */
+export { movingAverage, percentile, standardDeviation, linearRegression } from "./transforms/statistical";
+
 /* Security */
 export { sanitizeChartText, sanitizeChartData, validateStreamUrl } from "./security/sanitizeChartText";
 
