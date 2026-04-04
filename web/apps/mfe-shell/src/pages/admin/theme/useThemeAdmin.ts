@@ -701,6 +701,14 @@ export function useThemeAdmin() {
     [pushUndo],
   );
 
+  /* --- dark/light toggle (Phase 4) --- */
+  const toggleAppearance = useCallback(() => {
+    pushUndo();
+    setThemeMeta((prev) =>
+      prev ? { ...prev, appearance: prev.appearance === 'dark' ? 'light' : 'dark' } : prev,
+    );
+  }, [pushUndo]);
+
   /* --- manual theme selection --- */
   const selectThemeManually = (themeId: string | null) => {
     hasManualThemeSelectionRef.current = true;
@@ -732,7 +740,8 @@ export function useThemeAdmin() {
     /* undo/redo (Phase 3) */
     isDirty, canUndo, canRedo, undo, redo,
     /* actions */
-    setThemeMeta: setThemeMetaWithUndo, selectThemeManually,
+    setThemeMeta: setThemeMetaWithUndo, selectThemeManually, toggleAppearance,
+    registryCssVarsByKey,
     openColorPicker, handleValueChange,
     handleDefaultThemeSave, handlePaletteSave, handleSave,
   };

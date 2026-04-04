@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Segmented, ThemePreviewCard, createSegmentedPreset } from '@mfe/design-system';
 
 import { resolveThemeAttr, type ThemeAdminRow, type ThemeDetails, type ThemeMetaState, type ThemeSummary } from './ThemeAdminPage.shared';
 import { useThemeAdminI18n } from './useThemeAdminI18n';
+
+type PreviewViewport = 'desktop' | 'tablet' | 'mobile';
+const viewportWidths: Record<PreviewViewport, string> = { desktop: '100%', tablet: '768px', mobile: '375px' };
 
 type ThemeAdminPreviewPanelProps = {
   previewRef: React.RefObject<HTMLDivElement | null>;
@@ -16,6 +19,7 @@ type ThemeAdminPreviewPanelProps = {
   overrides: Record<string, string>;
   resolvedPreviewDisplayCssVars: Record<string, string>;
   onSelectTheme: (themeId: string) => void;
+  onToggleAppearance?: () => void;
 };
 
 const renderCssVarSwatch = (groupId: string, cssVar: string) => {
@@ -63,8 +67,10 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
   overrides,
   resolvedPreviewDisplayCssVars,
   onSelectTheme,
+  onToggleAppearance,
 }) => {
   const { t } = useThemeAdminI18n();
+  const [viewport, setViewport] = useState<PreviewViewport>('desktop');
   const surfacePreviewCards = React.useMemo(
     () => [
       { label: t('themeadmin.preview.surface.default'), className: 'bg-surface-default text-text-primary' },
@@ -134,6 +140,33 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
         {t('themeadmin.preview.sectionTitle')}
       </summary>
       <div className="mt-3 flex flex-col gap-4">
+        {/* Dark/Light toggle + Responsive viewport (Phase 4) */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onToggleAppearance}
+            className="rounded-md border border-border-subtle bg-surface-default px-2 py-1 text-[10px] font-semibold text-text-secondary hover:border-text-secondary"
+            title={themeMeta?.appearance === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
+          >
+            {themeMeta?.appearance === 'dark' ? '☀ Light' : '🌙 Dark'}
+          </button>
+          <div className="flex-1" />
+          {(['desktop', 'tablet', 'mobile'] as const).map((vp) => (
+            <button
+              key={vp}
+              type="button"
+              onClick={() => setViewport(vp)}
+              className={`rounded-md px-2 py-1 text-[10px] font-semibold transition-colors ${
+                viewport === vp
+                  ? 'bg-action-primary text-action-primary-text'
+                  : 'border border-border-subtle bg-surface-default text-text-secondary hover:border-text-secondary'
+              }`}
+            >
+              {vp === 'desktop' ? '🖥' : vp === 'tablet' ? '📱' : '📲'} {vp.charAt(0).toUpperCase() + vp.slice(1)}
+            </button>
+          ))}
+        </div>
+
         <div className="rounded-2xl border border-border-subtle bg-surface-default p-3">
           <div className="flex items-center justify-between gap-2">
             <div className="flex flex-col gap-0.5">
@@ -169,8 +202,9 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
         </div>
 
         <div
-          ref={previewRef}
-          className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-page"
+          ref={previewRef as React.LegacyRef<HTMLDivElement>}
+          className="mx-auto overflow-hidden rounded-2xl border border-border-subtle bg-surface-page transition-all duration-300"
+          style={{ ...previewStyle, maxWidth: viewportWidths[viewport] }}
           data-theme-scope
           data-theme={previewThemeAttr}
           data-accent={themeMeta?.axes.accent ?? selectedTheme?.axes?.accent}
@@ -179,7 +213,6 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
           data-elevation={themeMeta?.axes.elevation ?? selectedTheme?.axes?.elevation}
           data-motion={themeMeta?.axes.motion ?? selectedTheme?.axes?.motion}
           data-surface-tone={(themeMeta?.surfaceTone ?? selectedTheme?.surfaceTone) || undefined}
-          style={previewStyle}
         >
           <div className="border-b border-border-subtle bg-surface-header px-3 py-2">
             <div className="flex items-center justify-between gap-2">
