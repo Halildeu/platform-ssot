@@ -13,6 +13,18 @@ export interface ChartToolbarProps {
   onExportPNG?: () => void;
   /** Callback to export the chart as SVG. */
   onExportSVG?: () => void;
+  /** Undo callback (from cross-filter store). */
+  onUndo?: () => void;
+  /** Redo callback (from cross-filter store). */
+  onRedo?: () => void;
+  /** Whether undo is available. */
+  canUndo?: boolean;
+  /** Whether redo is available. */
+  canRedo?: boolean;
+  /** Drill-up callback. */
+  onDrillUp?: () => void;
+  /** Current drill depth (0 = root, hide drill-up). */
+  drillDepth?: number;
   /** Additional class name for the toolbar wrapper. */
   className?: string;
 }
@@ -131,6 +143,12 @@ export function ChartToolbar({
   interactions,
   onExportPNG,
   onExportSVG,
+  onUndo,
+  onRedo,
+  canUndo: canUndoProp = false,
+  canRedo: canRedoProp = false,
+  onDrillUp,
+  drillDepth: drillDepthProp = 0,
   className,
 }: ChartToolbarProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -210,6 +228,35 @@ export function ChartToolbar({
         <ToolbarButton label="Export SVG" onClick={onExportSVG}>
           <DownloadIcon />
         </ToolbarButton>
+      )}
+
+      {/* Undo/Redo */}
+      {(onUndo || onRedo) && (hasExport || hasBrush || hasZoom) && <Sep />}
+      {onUndo && (
+        <ToolbarButton label="Undo" onClick={onUndo} disabled={!canUndoProp}>
+          <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M3 7v6h6" /><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
+          </svg>
+        </ToolbarButton>
+      )}
+      {onRedo && (
+        <ToolbarButton label="Redo" onClick={onRedo} disabled={!canRedoProp}>
+          <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M21 7v6h-6" /><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13" />
+          </svg>
+        </ToolbarButton>
+      )}
+
+      {/* Drill-up */}
+      {onDrillUp && drillDepthProp > 0 && (
+        <>
+          <Sep />
+          <ToolbarButton label="Drill up" onClick={onDrillUp}>
+            <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="M12 19V5M5 12l7-7 7 7" />
+            </svg>
+          </ToolbarButton>
+        </>
       )}
 
       {/* Fullscreen */}
