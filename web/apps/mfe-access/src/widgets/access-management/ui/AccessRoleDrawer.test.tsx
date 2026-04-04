@@ -7,14 +7,14 @@ import { configureShellServices } from '../../../app/services/shell-services';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
 import AccessRoleDrawer from './AccessRoleDrawer.ui';
 
-test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async () => {
+test('AccessRoleDrawer renders module policies and permission toggles', async () => {
   configureShellServices({
     http: {
       get: async () => ({
         data: {
           items: [
-            { id: 'perm.view', code: 'PERM_VIEW', moduleLabel: 'Users' },
-            { id: 'perm.manage', code: 'PERM_MANAGE', moduleLabel: 'Admin' },
+            { id: 'perm.view', code: 'PERM_VIEW', moduleKey: 'erp.users', moduleLabel: 'Users' },
+            { id: 'perm.manage', code: 'PERM_MANAGE', moduleKey: 'erp.users', moduleLabel: 'Users' },
           ],
         },
       }),
@@ -22,15 +22,10 @@ test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async ()
   });
 
   const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
+    defaultOptions: { queries: { retry: false } },
   });
 
   const saves: Array<{ roleId: string; permissionIds: string[] }> = [];
-  const closes: string[] = [];
 
   const role: AccessRole = {
     id: 'role-admin',
@@ -57,7 +52,7 @@ test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async ()
       <AccessRoleDrawer
         open
         role={role}
-        onClose={() => closes.push('close')}
+        onClose={() => {}}
         onPermissionsSave={async (roleId, permissionIds) => {
           saves.push({ roleId, permissionIds: [...permissionIds].sort() });
         }}
@@ -73,25 +68,25 @@ test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async ()
     </QueryClientProvider>,
   );
 
-  await act(async () => {
-    await Promise.resolve();
-  });
+  // Wait for query to resolve
+  await act(async () => { await Promise.resolve(); });
+  await act(async () => { await new Promise((r) => setTimeout(r, 0)); });
 
-  await act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 0));
-  });
+  // Module policy card should render (multiple "Users" text nodes expected)
+  expect(screen.getAllByText('Users').length).toBeGreaterThan(0);
 
-  const permissionCheckbox = screen.getByTestId('access-role-permission-perm.manage') as HTMLInputElement;
+  // Permission switch for perm.manage should exist
+  const permSwitch = screen.getByTestId('access-role-permission-perm.manage');
+  expect(permSwitch).toBeTruthy();
 
-  await act(async () => {
-    fireEvent.click(permissionCheckbox);
-  });
+  // Toggle the switch to add perm.manage
+  await act(async () => { fireEvent.click(permSwitch); });
 
+  // Save button should be enabled (dirty)
   const saveButton = screen.getByTestId('access-role-drawer-save');
+  expect((saveButton as HTMLButtonElement).disabled).toBe(false);
 
-  await act(async () => {
-    fireEvent.click(saveButton);
-  });
+  await act(async () => { fireEvent.click(saveButton); });
 
   expect(saves.length).toBe(1);
   expect(saves[0]).toEqual({
@@ -99,11 +94,70 @@ test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async ()
     permissionIds: ['perm.manage', 'perm.view'],
   });
 
-  const cancelButton = screen.getByText('access.clone.cancelText');
+  queryClient.clear();
+});
 
-  await act(async () => {
-    fireEvent.click(cancelButton);
+test('AccessRoleDrawer shows discard dialog on close with dirty state', async () => {
+  configureShellServices({
+    http: {
+      get: async () => ({
+        data: {
+          items: [
+            { id: 'perm.view', code: 'PERM_VIEW', moduleKey: 'erp.users', moduleLabel: 'Users' },
+          ],
+        },
+      }),
+    } as never,
   });
+
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  const closes: string[] = [];
+
+  const role: AccessRole = {
+    id: 'role-1',
+    name: 'Test',
+    memberCount: 0,
+    policies: [
+      { moduleKey: 'erp.users', moduleLabel: 'Users', level: 'VIEW', lastUpdatedAt: new Date().toISOString(), updatedBy: 'system' },
+    ],
+    permissions: [],
+    lastModifiedAt: new Date().toISOString(),
+    lastModifiedBy: 'system',
+  };
+
+  render(
+    <QueryClientProvider client={queryClient}>
+      <AccessRoleDrawer
+        open
+        role={role}
+        onClose={() => closes.push('close')}
+        t={(key) => key}
+        formatNumber={(v) => String(v)}
+        formatDate={(v) => { try { const d = new Date(v); return Number.isNaN(d.getTime()) ? '-' : d.toISOString(); } catch { return '-'; } }}
+      />
+    </QueryClientProvider>,
+  );
+
+  await act(async () => { await Promise.resolve(); });
+  await act(async () => { await new Promise((r) => setTimeout(r, 0)); });
+
+  // Toggle a permission to make dirty
+  const permSwitch = screen.getByTestId('access-role-permission-perm.view');
+  await act(async () => { fireEvent.click(permSwitch); });
+
+  // Click close — should show discard dialog, not close immediately
+  const closeButton = screen.getByText('access.clone.cancelText');
+  await act(async () => { fireEvent.click(closeButton); });
+
+  // Should show discard dialog
+  expect(screen.getByText('access.drawer.discardMessage')).toBeTruthy();
+
+  // Confirm discard
+  const discardButton = screen.getByText('access.drawer.discardConfirm');
+  await act(async () => { fireEvent.click(discardButton); });
 
   expect(closes.length).toBe(1);
   queryClient.clear();

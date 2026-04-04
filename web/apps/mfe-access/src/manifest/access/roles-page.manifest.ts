@@ -42,7 +42,6 @@ export const accessRolesPageManifest: AccessPageManifest = {
       key: 'create-role',
       label: 'access.actions.create',
       intent: 'primary',
-      isComingSoon: true,
       tooltip: 'access.actions.create.tooltip'
     },
     {
@@ -56,6 +55,13 @@ export const accessRolesPageManifest: AccessPageManifest = {
       label: 'access.actions.bulk',
       requiresSelection: 'multi',
       tooltip: 'access.actions.bulk.tooltip'
+    },
+    {
+      key: 'delete-role',
+      label: 'access.actions.delete',
+      intent: 'default',
+      requiresSelection: 'single',
+      tooltip: 'access.actions.delete.tooltip'
     }
   ],
   grid: {

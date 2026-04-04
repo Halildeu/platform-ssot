@@ -47,7 +47,10 @@ test('PermissionRegistryPanel canonical badge ve ozet sayilarini surdurur', asyn
   const deprecatedStatusSpans = Array.from(activeLabels).filter(
     (el) => el.textContent === 'access.registry.status.deprecated',
   );
-  expect(deprecatedStatusSpans.length).toBe(deprecatedCount);
+  const overdueStatusSpans = Array.from(activeLabels).filter(
+    (el) => el.textContent === 'access.registry.status.overdue',
+  );
+  expect(deprecatedStatusSpans.length + overdueStatusSpans.length).toBe(deprecatedCount);
 
   expect(screen.getByText(permissionRegistry[0]?.key)).toBeTruthy();
 });

@@ -170,6 +170,15 @@ export type UpdateRolePermissionsRequestDto = {
   permissionIds: string[];
 };
 
+export const deleteRole = async (id: string): Promise<void> => {
+  try {
+    const client = resolveHttpClient();
+    await client.delete(`/v1/roles/${encodeURIComponent(id)}`);
+  } catch (err: unknown) {
+    parseError(err);
+  }
+};
+
 export const updateRolePermissions = async (
   id: string,
   payload: UpdateRolePermissionsRequestDto,

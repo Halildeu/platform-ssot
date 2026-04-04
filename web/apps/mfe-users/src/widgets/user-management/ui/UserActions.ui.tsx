@@ -39,14 +39,6 @@ const UserActions: React.FC<UserActionsProps> = ({ user, onSelect }) => {
       },
     ];
 
-    if (hasPermission('EDIT_USERS') || hasPermission(PERMISSIONS.USER_MANAGEMENT_EDIT)) {
-      menu.push({
-        key: 'edit',
-        label: t('users.actions.editRole'),
-        onClick: onSelect,
-      });
-    }
-
     if (hasPermission(PERMISSIONS.USER_MANAGEMENT_RESET_PASSWORD)) {
       menu.push({
         key: 'reset-password',
