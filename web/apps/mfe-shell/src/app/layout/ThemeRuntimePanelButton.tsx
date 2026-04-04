@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Drawer } from '@mfe/design-system';
 import { useShellCommonI18n } from '../i18n';
 import { useThemeContext } from '../theme/theme-context.provider';
@@ -10,6 +10,23 @@ export const ThemeRuntimePanelButton: React.FC = () => {
   const [open, setOpen] = useState(false);
   const admin = useThemeAdmin();
   const { axes } = useThemeContext();
+  const innerRef = useRef<HTMLDivElement | null>(null);
+
+  /* Sync data-theme on Drawer's portal panel so bg-surface-* adapts */
+  const currentAppearance = admin.themeMeta?.appearance ?? axes.appearance ?? 'light';
+  const currentAccent = admin.themeMeta?.axes.accent ?? axes.accent ?? 'neutral';
+  const currentDensity = admin.themeMeta?.axes.density ?? axes.density ?? 'comfortable';
+
+  useEffect(() => {
+    if (!open || !innerRef.current) return;
+    // Walk up to the Drawer's dialog panel (role="dialog")
+    let el: HTMLElement | null = innerRef.current;
+    while (el && el.getAttribute('role') !== 'dialog') el = el.parentElement;
+    if (!el) return;
+    el.setAttribute('data-theme', currentAppearance === 'dark' ? 'dark' : 'light');
+    el.setAttribute('data-accent', currentAccent);
+    el.setAttribute('data-density', currentDensity);
+  }, [open, currentAppearance, currentAccent, currentDensity]);
 
   return (
     <>
@@ -37,15 +54,7 @@ export const ThemeRuntimePanelButton: React.FC = () => {
         closeOnEscape
         title={t('shell.theme.panel.dialogLabel')}
       >
-        <div
-          className="h-full"
-          data-theme-scope
-          data-theme={admin.themeMeta?.appearance ?? axes.appearance}
-          data-accent={admin.themeMeta?.axes.accent ?? axes.accent}
-          data-density={admin.themeMeta?.axes.density ?? axes.density}
-          data-radius={admin.themeMeta?.axes.radius ?? axes.radius}
-          data-elevation={admin.themeMeta?.axes.elevation ?? axes.elevation}
-        >
+        <div ref={innerRef} className="h-full">
           <ThemeDrawerPanel admin={admin} />
         </div>
       </Drawer>
