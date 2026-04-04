@@ -1,6 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { getSummary, getLiveKPIs, getLiveCharts } from './api';
 import type { DemographicSummary } from './types';
+import {
+  PieChart as XPieChart,
+  BarChart as XBarChart,
+  TreemapChart as XTreemapChart,
+  RadarChart as XRadarChart,
+} from '@mfe/x-charts';
 
 // ---------------------------------------------------------------------------
 // Color palette

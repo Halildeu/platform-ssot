@@ -1,2 +1,2 @@
-export { default } from './AccessPage.ui';
+export { default } from '../roles/RolesPage.ui';
 export { accessRolesPageManifest } from '../../manifest/access/roles-page.manifest';

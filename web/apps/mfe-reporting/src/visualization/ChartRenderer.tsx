@@ -1,17 +1,27 @@
 /**
- * ChartRenderer — Renders the appropriate chart from Design Lab based on ChartConfig.
+ * ChartRenderer — Renders charts from @mfe/x-charts.
  *
- * Transforms report row data into Design Lab chart props format.
+ * All chart types (core + enterprise) are rendered via x-charts.
+ * Enterprise charts use React.lazy for code splitting.
  */
 
-import React, { useMemo } from 'react';
+import React, { Suspense, useMemo } from 'react';
 import {
   BarChart,
   LineChart,
   PieChart,
   AreaChart,
-} from '@mfe/design-system';
-import type { ChartDataPoint, ChartSeries } from '@mfe/design-system';
+  ScatterChart,
+  GaugeChart,
+  RadarChart,
+  TreemapChart,
+  HeatmapChart,
+  WaterfallChart,
+  FunnelChart,
+  SankeyChart,
+  SunburstChart,
+  KPICard,
+} from '@mfe/x-charts';
 import type { ChartConfig, ChartType } from './types';
 
 interface ChartRendererProps {
@@ -25,11 +35,23 @@ interface ChartRendererProps {
 /*  Data transformers                                                  */
 /* ------------------------------------------------------------------ */
 
+interface DataPoint {
+  label: string;
+  value: number;
+  color?: string;
+}
+
+interface Series {
+  name: string;
+  data: number[];
+  color?: string;
+}
+
 function toDataPoints(
   data: Record<string, unknown>[],
   xField: string,
   yField: string,
-): ChartDataPoint[] {
+): DataPoint[] {
   return data.map((row) => ({
     label: String(row[xField] ?? ''),
     value: Number(row[yField] ?? 0),
@@ -40,9 +62,9 @@ function toMultiSeries(
   data: Record<string, unknown>[],
   xField: string,
   yFields: string[],
-): { labels: string[]; series: ChartSeries[] } {
+): { labels: string[]; series: Series[] } {
   const labels = data.map((row) => String(row[xField] ?? ''));
-  const series: ChartSeries[] = yFields.map((field) => ({
+  const series: Series[] = yFields.map((field) => ({
     name: field,
     data: data.map((row) => Number(row[field] ?? 0)),
   }));
@@ -54,7 +76,7 @@ function aggregateByCategory(
   categoryField: string,
   valueField: string,
   aggregation: 'sum' | 'avg' | 'count' | 'min' | 'max' = 'sum',
-): ChartDataPoint[] {
+): DataPoint[] {
   const groups = new Map<string, number[]>();
 
   for (const row of data) {
@@ -77,6 +99,16 @@ function aggregateByCategory(
 }
 
 /* ------------------------------------------------------------------ */
+/*  Loading fallback                                                   */
+/* ------------------------------------------------------------------ */
+
+const ChartLoading: React.FC<{ height: number }> = ({ height }) => (
+  <div className="flex items-center justify-center animate-pulse" style={{ height }}>
+    <div className="h-8 w-8 rounded-full border-2 border-action-primary border-t-transparent animate-spin" />
+  </div>
+);
+
+/* ------------------------------------------------------------------ */
 /*  Renderer                                                           */
 /* ------------------------------------------------------------------ */
 
@@ -88,27 +120,21 @@ export const ChartRenderer: React.FC<ChartRendererProps> = ({
 }) => {
   const chartData = useMemo(() => {
     if (!data.length || !config.xAxis) return [];
-
     const yField = config.yAxis[0];
-    if (!yField && config.type !== 'pie') return [];
+    if (!yField && config.type !== 'pie' && config.type !== 'kpi') return [];
 
     if (config.aggregation) {
       return aggregateByCategory(data, config.xAxis, yField, config.aggregation);
     }
-
     return toDataPoints(data, config.xAxis, yField);
   }, [data, config]);
 
-  const commonProps = {
-    data: chartData,
-    title: config.title,
-    showLegend: config.showLegend ?? false,
-    showValues: config.showLabels ?? false,
-    animate: true,
-    size: config.size ?? 'md' as const,
-  };
+  const multiSeries = useMemo(() => {
+    if (config.yAxis.length <= 1 || !config.xAxis) return null;
+    return toMultiSeries(data, config.xAxis, config.yAxis);
+  }, [data, config]);
 
-  if (!chartData.length) {
+  if (!chartData.length && config.type !== 'kpi') {
     return (
       <div className={`flex items-center justify-center text-sm text-text-tertiary ${className}`} style={{ height }}>
         Grafik verisi yok
@@ -116,54 +142,48 @@ export const ChartRenderer: React.FC<ChartRendererProps> = ({
     );
   }
 
+  const commonProps = {
+    title: config.title,
+    showLegend: config.showLegend ?? false,
+    animate: true,
+    size: config.size ?? 'md' as const,
+  };
+
+  const wrap = (el: React.ReactNode) => (
+    <Suspense fallback={<ChartLoading height={height} />}>
+      <div className={className} style={{ height }}>{el}</div>
+    </Suspense>
+  );
+
   switch (config.type) {
     case 'bar':
-      return (
-        <div className={className} style={{ height }}>
-          <BarChart {...commonProps} orientation={config.stacked ? 'horizontal' : 'vertical'} />
-        </div>
-      );
-
+      return wrap(<BarChart data={chartData} {...commonProps} showValues={config.showLabels} orientation={config.stacked ? 'horizontal' : 'vertical'} />);
     case 'line':
-      return (
-        <div className={className} style={{ height }}>
-          <LineChart {...commonProps} />
-        </div>
-      );
-
+      return multiSeries
+        ? wrap(<LineChart series={multiSeries.series} labels={multiSeries.labels} {...commonProps} />)
+        : wrap(<LineChart series={[{ name: config.yAxis[0], data: chartData.map(d => d.value) }]} labels={chartData.map(d => d.label)} {...commonProps} />);
     case 'pie':
-      return (
-        <div className={className} style={{ height }}>
-          <PieChart {...commonProps} />
-        </div>
-      );
-
+      return wrap(<PieChart data={chartData} {...commonProps} />);
     case 'area':
-      return (
-        <div className={className} style={{ height }}>
-          <AreaChart {...commonProps} />
-        </div>
-      );
-
-    /* Enterprise charts — lazy import to avoid bundle bloat */
-    case 'funnel':
+      return multiSeries
+        ? wrap(<AreaChart series={multiSeries.series} labels={multiSeries.labels} {...commonProps} />)
+        : wrap(<AreaChart series={[{ name: config.yAxis[0], data: chartData.map(d => d.value) }]} labels={chartData.map(d => d.label)} {...commonProps} />);
+    case 'scatter':
+      return wrap(<ScatterChart data={chartData} {...commonProps} />);
     case 'gauge':
+      return wrap(<GaugeChart value={chartData[0]?.value ?? 0} {...commonProps} />);
     case 'radar':
+      return wrap(<RadarChart data={chartData} {...commonProps} />);
     case 'treemap':
+      return wrap(<TreemapChart data={chartData} {...commonProps} />);
+    case 'heatmap':
+      return wrap(<HeatmapChart data={chartData} {...commonProps} />);
     case 'waterfall':
-    case 'histogram':
-    case 'bullet':
-    case 'pareto':
-      return (
-        <div className={`flex items-center justify-center text-sm text-text-secondary ${className}`} style={{ height }}>
-          <div className="text-center">
-            <div className="text-2xl mb-2">{config.type === 'funnel' ? '▽' : config.type === 'gauge' ? '◔' : '📊'}</div>
-            <div>{config.type.charAt(0).toUpperCase() + config.type.slice(1)} Chart</div>
-            <div className="text-xs text-text-tertiary mt-1">Enterprise bileşen — Design Lab'dan yüklenecek</div>
-          </div>
-        </div>
-      );
-
+      return wrap(<WaterfallChart data={chartData} {...commonProps} />);
+    case 'funnel':
+      return wrap(<FunnelChart data={chartData} {...commonProps} />);
+    case 'kpi':
+      return wrap(<KPICard title={config.title ?? ''} value={String(chartData[0]?.value ?? 0)} />);
     default:
       return null;
   }

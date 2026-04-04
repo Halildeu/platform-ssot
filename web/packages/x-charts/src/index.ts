@@ -206,4 +206,4 @@ export { lazyChartImport } from "./performance/code-split";
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
-export type { ChartSize, ChartDataPoint, ChartSeries } from "./types";
+export type { ChartSize, ChartDataPoint, ChartSeries, ChartClickEvent, ChartLocaleText } from "./types";

@@ -1,6 +1,6 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import AccessPage from '../pages/access/AccessPage.ui';
+import RolesPage from '../pages/roles/RolesPage.ui';
 
 /**
  * AccessApp — MF remote entry component.
@@ -63,7 +63,7 @@ const AccessApp: React.FC = () => {
   return (
     <QueryClientProvider client={effectiveQueryClient}>
       <AccessAppErrorBoundary>
-        <AccessPage />
+        <RolesPage />
       </AccessAppErrorBoundary>
     </QueryClientProvider>
   );
