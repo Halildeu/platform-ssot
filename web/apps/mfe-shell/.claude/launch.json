@@ -4,7 +4,7 @@
     {
       "name": "mfe-shell-dev",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["webpack", "serve", "--config", "webpack.dev.js", "--no-watch-options-stdin"],
+      "runtimeArgs": ["vite", "--port", "3000"],
       "port": 3000
     }
   ]
