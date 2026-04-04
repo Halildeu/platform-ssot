@@ -168,6 +168,17 @@ export type { AGGridApi } from "./grid-adapter/AGGridAdapter";
 export type { ChartGridLinkState } from "./grid-adapter/useChartGridLink";
 
 /* ------------------------------------------------------------------ */
+/*  Advanced Analytics (P8)                                            */
+/* ------------------------------------------------------------------ */
+
+export { chartPluginRegistry, registerChartPlugin } from "./advanced/plugin-registry";
+export type { ChartPlugin, ChartPluginConfig } from "./advanced/plugin-registry";
+export { renderDashboardFromConfig } from "./advanced/dashboard-as-code";
+export type { DashboardConfig, DashboardWidgetConfig } from "./advanced/dashboard-as-code";
+export { useWhatIfAnalysis } from "./advanced/what-if";
+export type { WhatIfParameter, WhatIfResult } from "./advanced/what-if";
+
+/* ------------------------------------------------------------------ */
 /*  Collaboration & Offline (P7)                                       */
 /* ------------------------------------------------------------------ */
 
