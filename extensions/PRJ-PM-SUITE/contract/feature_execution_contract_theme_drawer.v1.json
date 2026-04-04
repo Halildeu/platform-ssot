@@ -26,6 +26,32 @@
     ],
     "affected_modules": ["mfe-shell"]
   },
+  "ux_contract": {
+    "mode": "REQUIRED",
+    "rationale": "Theme drawer is a core UX surface — every control affects visual appearance across all pages.",
+    "artifacts": [
+      {
+        "path_glob": "web/apps/mfe-shell/src/pages/admin/theme/**",
+        "ux_theme_id": "personalization_adaptive_productivity",
+        "ux_subtheme_id": "adaptive_density_layout_preferences"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/layout/ThemeRuntimePanelButton.tsx",
+        "ux_theme_id": "personalization_adaptive_productivity",
+        "ux_subtheme_id": "adaptive_density_layout_preferences"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/lib/theme-doctor.ts",
+        "ux_theme_id": "measurement_kpi_experimentation",
+        "ux_subtheme_id": "a11y_consistency_violation_gate"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/index.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      }
+    ]
+  },
   "definition_of_done": [
     "Header button opens Drawer from every page",
     "Accent/Mode/Density/Radius controls update page live",
