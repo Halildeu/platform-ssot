@@ -64,13 +64,14 @@ const COLOR_TOKEN_VARS = [
   '--border-default', '--border-subtle',
   '--action-primary', '--action-primary-text', '--action-primary-border',
   '--selection-bg', '--selection-outline',
-  '--status-danger', '--status-warning', '--status-success',
+  '--state-danger', '--status-warning', '--status-success',
   '--accent-primary', '--accent-soft',
 ];
 
 const RADIUS_TOKEN_VARS = [
   '--radius-xs', '--radius-sm', '--radius-md', '--radius-lg',
-  '--radius-xl', '--radius-2xl', '--radius-3xl', '--radius-full',
+  '--radius-xl', '--radius-2xl', '--radius-3xl', '--radius-4xl',
+  '--radius-control', '--radius-surface',
 ];
 
 const HARDCODED_COLOR_PATTERN = /(?:^|\s)(#[0-9a-f]{3,8}|rgb\(|rgba\(|hsl\(|hsla\()/i;
