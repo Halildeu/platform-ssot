@@ -69,6 +69,7 @@ export default defineConfig(({ mode }) => {
         { find: '@platform/capabilities', replacement: path.resolve(__dirname, '../../packages/platform-capabilities/src') },
         { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
         { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
+        { find: '@mfe/i18n-dicts', replacement: path.resolve(__dirname, '../../packages/i18n-dicts/src') },
         { find: '@tanstack/react-query', replacement: path.resolve(__dirname, 'node_modules/@tanstack/react-query/build/modern/index.js') },
       ],
     },
