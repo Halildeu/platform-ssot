@@ -83,9 +83,46 @@
         "x_editor",
         "x_form_builder"
       ]
+    },
+    {
+      "id": "charts",
+      "title": "Charts",
+      "description": "@mfe/x-charts — 13 chart tipi, cross-filter, AI integration, performance optimization. ECharts engine.",
+      "groupIds": [
+        "charts_core",
+        "charts_enterprise",
+        "charts_interaction",
+        "charts_ai",
+        "charts_perf"
+      ]
     }
   ],
   "groups": [
+    {
+      "id": "charts_core",
+      "title": "Core Charts",
+      "subgroups": ["BarChart", "LineChart", "AreaChart", "PieChart", "ScatterChart"]
+    },
+    {
+      "id": "charts_enterprise",
+      "title": "Enterprise Charts",
+      "subgroups": ["GaugeChart", "RadarChart", "TreemapChart", "HeatmapChart", "WaterfallChart", "FunnelChart", "SankeyChart", "SunburstChart"]
+    },
+    {
+      "id": "charts_interaction",
+      "title": "Interaction & Composition",
+      "subgroups": ["ChartContainer", "ChartDashboard", "ChartToolbar", "CrossFilterProvider", "DrillDownBreadcrumb", "KPICard", "SparklineChart", "StatWidget"]
+    },
+    {
+      "id": "charts_ai",
+      "title": "AI & Transforms",
+      "subgroups": ["nlToChartSpec", "suggestChartType", "detectAnomalies", "identifyTrends", "generateChartDescription", "movingAverage", "linearRegression"]
+    },
+    {
+      "id": "charts_perf",
+      "title": "Performance & Infra",
+      "subgroups": ["downsampleLTTB", "useProgressiveRender", "useLazyChart", "LRUCache", "lazyChartImport", "useChartExport", "useDashboardState"]
+    },
     {
       "id": "enterprise",
       "title": "Enterprise Components",
