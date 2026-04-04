@@ -189,9 +189,11 @@ const AccessPage: React.FC = () => {
     [columns, t],
   );
 
-  const layoutTitle = t(pageLayout?.title ?? accessRolesPageManifest.layout.title);
-  const descriptionKey = pageLayout?.description ?? accessRolesPageManifest.layout.description;
-  const layoutDescription = descriptionKey ? t(descriptionKey) : undefined;
+  // Always use manifest keys (pageLayout may return non-existent keys like access.roles.title)
+  const layoutTitle = t(accessRolesPageManifest.layout.title);
+  const layoutDescription = accessRolesPageManifest.layout.description
+    ? t(accessRolesPageManifest.layout.description)
+    : undefined;
   const breadcrumbs = createPageLayoutBreadcrumbItems(
     (accessRolesPageManifest.layout.breadcrumbItems ?? []).map((item) => ({
       ...item,
@@ -230,78 +232,36 @@ const AccessPage: React.FC = () => {
     void trackAction(event);
   }, []);
 
-  const actionButtons = React.useMemo(() => {
-    if (!accessRolesPageManifest.actions) {
-      return null;
-    }
-    return accessRolesPageManifest.actions.map((action) => {
-      const requires = action.requiresSelection ?? 'none';
-      let disabled = Boolean(action.isComingSoon);
-      if (!disabled) {
-        if (requires === 'single') {
-          disabled = selectionCount !== 1;
-        } else if (requires === 'multi') {
-          disabled = selectionCount === 0;
-        }
-      }
-
-      const activateAction = () => {
-        if (disabled) {
-          return;
-        }
-        emitActionTelemetry(action.key);
-        if (action.key === 'create-role') {
-          setCreateModalOpen(true);
-          return;
-        }
-        if (action.key === 'clone-role') {
-          setCloneModalOpen(true);
-          return;
-        }
-        if (action.key === 'bulk-permission') {
-          setBulkModalOpen(true);
-          return;
-        }
-        if (action.key === 'delete-role') {
-          setDeleteModalOpen(true);
-          return;
-        }
-      };
-
-      const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
-        if (disabled) {
-          return;
-        }
-        if (!['create-role', 'clone-role', 'bulk-permission', 'delete-role'].includes(action.key)) {
-          return;
-        }
-        // Grid seçimi toolbar click'inde düşse bile aksiyon state'i yakalansın.
-        event.preventDefault();
-        activateAction();
-      };
-
-      const handleClick = () => {
-        activateAction();
-      };
-
-      const label = t(action.label);
-      const tooltip = action.tooltip ? t(action.tooltip) : undefined;
-
-      return (
-        <Button
-          key={action.key}
-          type="button"
-          title={tooltip}
-          disabled={disabled}
-          onMouseDown={handleMouseDown}
-          onClick={handleClick}
-          variant={action.intent === 'primary' ? 'primary' : 'secondary'}
-        >
-          {label}
-        </Button>
-      );
-    });
-  }, [accessRolesPageManifest.actions, emitActionTelemetry, selectionCount, t]);
+  const actionButtons = (
+    <div className="flex flex-wrap gap-2">
+      <Button
+        onClick={() => { emitActionTelemetry('create-role'); setCreateModalOpen(true); }}
+      >
+        {t('access.actions.create')}
+      </Button>
+      <Button
+        variant="secondary"
+        disabled={selectionCount !== 1}
+        onClick={() => { emitActionTelemetry('clone-role'); setCloneModalOpen(true); }}
+      >
+        {t('access.actions.clone')}
+      </Button>
+      <Button
+        variant="secondary"
+        disabled={selectionCount === 0}
+        onClick={() => { emitActionTelemetry('bulk-permission'); setBulkModalOpen(true); }}
+      >
+        {t('access.actions.bulk')}
+      </Button>
+      <Button
+        variant="secondary"
+        disabled={selectionCount !== 1 || (singleSelectedRole?.isSystemRole ?? false)}
+        onClick={() => { emitActionTelemetry('delete-role'); setDeleteModalOpen(true); }}
+      >
+        {t('access.actions.delete')}
+      </Button>
+    </div>
+  );
 
   // Variant dialog state
   const [variantNameDialogOpen, setVariantNameDialogOpen] = React.useState(false);
@@ -348,25 +308,26 @@ const AccessPage: React.FC = () => {
 
   const filterBar = React.useMemo(
     () => (
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
         <AccessFilterBar filters={filters} modules={modules} onChange={setFilters} t={t} />
-        <AccessVariantToolbar
-          selectedVariantId={selectedVariantId}
-          variantOptions={variantOptions}
-          isDirty={isDirty}
-          onSelectVariant={selectVariant}
-          onSaveVariant={handleSaveVariant}
-          onSaveAsVariant={handleSaveAsVariant}
-          onDeleteVariant={handleDeleteVariant}
-          t={t}
-        />
+        {(selectedVariantId || isDirty) && (
+          <AccessVariantToolbar
+            selectedVariantId={selectedVariantId}
+            variantOptions={variantOptions}
+            isDirty={isDirty}
+            onSelectVariant={selectVariant}
+            onSaveVariant={handleSaveVariant}
+            onSaveAsVariant={handleSaveAsVariant}
+            onDeleteVariant={handleDeleteVariant}
+            t={t}
+          />
+        )}
       </div>
     ),
     [
       filters,
       modules,
       selectedVariantId,
-      variants,
       variantOptions,
       selectVariant,
       handleDeleteVariant,
@@ -389,7 +350,7 @@ const AccessPage: React.FC = () => {
           title={layoutTitle}
           description={layoutDescription}
           breadcrumbItems={breadcrumbs}
-          actions={actionButtons ? <div className="flex flex-wrap gap-2">{actionButtons}</div> : undefined}
+          actions={actionButtons}
           headerExtra={
             <div className="flex items-center gap-2">
               {authUser?.superAdmin && (
@@ -410,9 +371,8 @@ const AccessPage: React.FC = () => {
               )}
             </div>
           }
-          filterBar={filterBar}
           secondaryNav={
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between">
               <Segmented
                 items={[
                   { value: 'roles', label: t('access.breadcrumb.roles') },
@@ -423,22 +383,17 @@ const AccessPage: React.FC = () => {
                 onValueChange={(v) => setActiveTab(v as ActiveTab)}
                 size="sm"
               />
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setScopeOpen(true)}
-              >
-                {t('access.scope.title')}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setExplainOpen(true)}
-              >
-                {t('access.explain.title')}
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" onClick={() => setScopeOpen(true)}>
+                  {t('access.scope.title')}
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setExplainOpen(true)}>
+                  {t('access.explain.title')}
+                </Button>
+              </div>
             </div>
           }
+          filterBar={activeTab === 'roles' ? filterBar : undefined}
         >
           {activeTab === 'roles' && (
             <div className="flex flex-col gap-6">

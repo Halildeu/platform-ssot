@@ -107,7 +107,7 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
           fullWidth
         />
       </div>
-      <label className="flex min-w-[280px] flex-col text-xs font-semibold uppercase tracking-wide text-text-secondary">
+      <label className="flex min-w-[320px] flex-col text-xs font-semibold uppercase tracking-wide text-text-secondary">
         <span>{t('access.filter.level.all')}</span>
         <Segmented
           items={accessLevels}

@@ -1,184 +1,39 @@
-import React, { useMemo } from "react";
-import { AgCharts as AgChartsBase } from "ag-charts-react";
-import type { AgChartOptions } from "ag-charts-community";
-
-// React 18/19 types compatibility shim
-const AgCharts = AgChartsBase as unknown as React.FC<{ options: AgChartOptions; style?: React.CSSProperties; className?: string }>;
+/**
+ * WaterfallChart — ECharts-powered waterfall (stacked bar)
+ * @migration AG Charts → ECharts (P3)
+ */
+import React, { useMemo, useCallback } from "react";
 import { cn } from "@mfe/design-system";
-import { getChartThemeOverrides } from "./chart-theme-bridge";
-
-/* ------------------------------------------------------------------ */
-/*  Types                                                              */
-/* ------------------------------------------------------------------ */
+import { useEChartsRenderer } from "./renderers";
+import type { EChartsOption } from "./renderers/echarts-imports";
 
 export type ChartSize = "sm" | "md" | "lg";
-
-export type WaterfallDataPoint = {
-  /** Category label shown on the X axis. */
-  label: string;
-  /** Numeric value (positive for increases, negative for decreases). */
-  value: number;
-  /** Semantic type. "total" renders as a cumulative bar from zero. */
-  type: "increase" | "decrease" | "total";
-};
-
-export interface WaterfallChartProps {
-  /** Waterfall data points. */
-  data: WaterfallDataPoint[];
-  /** Visual size variant. @default "md" */
-  size?: ChartSize;
-  /** Override colours in order: [increase, decrease, total]. */
-  colors?: [string, string, string];
-  /** Custom value formatter for axis / labels. */
-  valueFormatter?: (value: number) => string;
-  /** Show value labels on bars. @default false */
-  showValues?: boolean;
-  /** Show grid lines. @default true */
-  showGrid?: boolean;
-  /** Chart title. */
-  title?: string;
-  /** Accessible description. */
-  description?: string;
-  /** Additional class name. */
-  className?: string;
-  /** Text shown when data is empty. @default "Veri yok" */
-  noDataText?: string;
-}
-
-/* ------------------------------------------------------------------ */
-/*  Constants                                                          */
-/* ------------------------------------------------------------------ */
+export type WaterfallDataPoint = { label: string; value: number; type?: "increase" | "decrease" | "total" };
+export interface WaterfallChartProps { data: WaterfallDataPoint[]; size?: ChartSize; title?: string; description?: string; valueFormatter?: (v: number) => string; animate?: boolean; className?: string; noDataText?: string; increaseColor?: string; decreaseColor?: string; totalColor?: string }
 
 const SIZE_HEIGHT: Record<ChartSize, number> = { sm: 200, md: 300, lg: 400 };
-
-/* ------------------------------------------------------------------ */
-/*  Component                                                          */
-/* ------------------------------------------------------------------ */
+const esc = (t: string) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartProps>(
-  function WaterfallChart(
-    {
-      data,
-      size = "md",
-      colors,
-      valueFormatter,
-      showValues = false,
-      showGrid = true,
-      title,
-      description,
-      className,
-      noDataText = "Veri yok",
-      ...rest
-    },
-    forwardedRef,
-  ) {
-    const height = SIZE_HEIGHT[size];
-
-    const options = useMemo((): AgChartOptions => {
-      if (!data || data.length === 0) return { data: [] } as AgChartOptions;
-
-      const palette = colors ?? [
-        "var(--state-success-text))", // increase
-        "var(--state-error-text))",   // decrease
-        "var(--action-primary))",     // total
-      ];
-      const themeOverrides = getChartThemeOverrides();
-
-      return {
-        data,
-        title: title ? { text: title, ...themeOverrides.common?.title } : undefined,
-        subtitle: description ? { text: description } : undefined,
-        series: [
-          {
-            type: "waterfall" as const,
-            xKey: "label",
-            yKey: "value",
-            item: {
-              positive: {
-                fill: palette[0],
-                stroke: palette[0],
-                name: "Increase",
-              },
-              negative: {
-                fill: palette[1],
-                stroke: palette[1],
-                name: "Decrease",
-              },
-              total: {
-                fill: palette[2],
-                stroke: palette[2],
-                name: "Total",
-              },
-            },
-            label: showValues
-              ? {
-                  formatter: (p: any) =>
-                    valueFormatter ? valueFormatter(p.value) : String(p.value),
-                }
-              : undefined,
-            tooltip: {
-              renderer: (params: any) => ({
-                content: valueFormatter
-                  ? `${params.datum.label}: ${valueFormatter(params.datum.value)}`
-                  : `${params.datum.label}: ${params.datum.value}`,
-              }),
-            },
-          } as any,
-        ],
-        axes: [
-          {
-            type: "category",
-            position: "bottom",
-            label: { ...themeOverrides.common?.axes?.category?.label },
-          },
-          {
-            type: "number",
-            position: "left",
-            label: {
-              ...themeOverrides.common?.axes?.number?.label,
-              formatter: valueFormatter ? (p: any) => valueFormatter(p.value) : undefined,
-            },
-            gridLine: { enabled: showGrid },
-          },
-        ],
-      } as AgChartOptions;
-    }, [data, colors, valueFormatter, showValues, showGrid, title, description]);
-
-    /* ---- empty state ---- */
-    if (!data || data.length === 0) {
-      return (
-        <div
-          ref={forwardedRef}
-          className={cn(
-            "inline-flex items-center justify-center text-sm text-[var(--text-secondary)]",
-            className,
-          )}
-          style={{ height }}
-          role="img"
-          aria-label={title ?? "Waterfall chart — no data"}
-          data-testid="waterfall-chart-empty"
-          {...rest}
-        >
-          {noDataText}
-        </div>
-      );
-    }
-
-    return (
-      <div
-        ref={forwardedRef}
-        className={cn("w-full", className)}
-        role="img"
-        aria-label={title ?? "Waterfall chart"}
-        data-testid="waterfall-chart"
-        {...rest}
-      >
-        <AgCharts options={options} style={{ height, width: "100%" }} />
-      </div>
-    );
+  function WaterfallChart({ data, size = "md", title, description, valueFormatter, animate = true, className, noDataText = "Veri yok", increaseColor = "#22c55e", decreaseColor = "#ef4444", totalColor = "#3b82f6", ...rest }, ref) {
+    const h = SIZE_HEIGHT[size];
+    const empty = !data?.length;
+    const option = useMemo((): EChartsOption | null => {
+      if (empty) return null;
+      const cats: string[] = []; const base: number[] = []; const vals: Record<string, unknown>[] = [];
+      let run = 0;
+      for (const d of data) { cats.push(d.label); if (d.type === "total") { base.push(0); vals.push({ value: run, itemStyle: { color: totalColor } }); } else { const inc = d.value >= 0; base.push(inc ? run : run + d.value); vals.push({ value: Math.abs(d.value), itemStyle: { color: inc ? increaseColor : decreaseColor } }); run += d.value; } }
+      return { animation: animate, title: title ? { text: esc(title), left: "center", textStyle: { fontSize: 16, fontWeight: 600 } } : undefined,
+        tooltip: { trigger: "axis", axisPointer: { type: "shadow" } }, grid: { top: title ? 50 : 24, right: 16, bottom: 24, left: 16, containLabel: true },
+        xAxis: { type: "category", data: cats }, yAxis: { type: "value" },
+        series: [{ type: "bar", stack: "w", data: base, itemStyle: { color: "transparent" }, emphasis: { itemStyle: { color: "transparent" } } }, { type: "bar", stack: "w", data: vals, label: { show: true, position: "top", fontSize: 11 } }],
+        aria: { enabled: true, label: { description: description ? esc(description) : "Waterfall chart" } } } as EChartsOption;
+    }, [data, animate, title, description, increaseColor, decreaseColor, totalColor, empty]);
+    const { containerRef } = useEChartsRenderer({ option: option ?? ({} as EChartsOption), respectReducedMotion: true });
+    const setRefs = useCallback((n: HTMLDivElement | null) => { (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = n; if (typeof ref === "function") ref(n); else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = n; }, [ref, containerRef]);
+    if (empty) return <div ref={ref} className={cn("inline-flex items-center justify-center text-sm text-[var(--text-secondary)]", className)} style={{ height: h }} role="img" aria-label="Waterfall — no data" data-testid="waterfall-chart-empty" {...rest}>{noDataText}</div>;
+    return <div ref={setRefs} className={cn("w-full", className)} style={{ height: h, width: "100%" }} role="img" aria-label={title ? `Waterfall: ${esc(title)}` : "Waterfall chart"} data-testid="waterfall-chart" {...rest} />;
   },
 );
-
 WaterfallChart.displayName = "WaterfallChart";
-
 export default WaterfallChart;

@@ -44,9 +44,9 @@ const access = {
   'access.filter.apply': 'Uygula',
   'access.filter.reset': 'Sıfırla',
   'access.filter.level.all': 'Tümü',
-  'access.filter.level.none': 'Yetki yok',
-  'access.filter.level.view': 'Görüntüle',
-  'access.filter.level.edit': 'Düzenle',
+  'access.filter.level.none': 'Yok',
+  'access.filter.level.view': 'Oku',
+  'access.filter.level.edit': 'Düz.',
   'access.filter.level.manage': 'Yönet',
 
   'access.drawer.noDescription': 'Bu rol için henüz açıklama girilmedi.',
