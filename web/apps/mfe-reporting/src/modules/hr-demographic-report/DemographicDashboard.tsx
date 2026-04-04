@@ -146,9 +146,75 @@ function Legend({
 }
 
 // ---------------------------------------------------------------------------
-// Donut/Pie Chart
+// Charts — x-charts wrappers (replaced SVG implementations)
 // ---------------------------------------------------------------------------
-function PieChart({
+
+function PieChartLocal({
+  data,
+  size = 180,
+}: {
+  data: Array<{ label: string; value: number }>;
+  size?: number;
+}) {
+  if (!data.length || data.every((d) => d.value === 0)) return null;
+  return (
+    <div>
+      <XPieChart data={data} donut showLegend size="sm" />
+    </div>
+  );
+}
+
+function VerticalBarChartLocal({
+  data,
+}: {
+  data: Array<{ label: string; value: number }>;
+}) {
+  if (!data.length) return null;
+  return <XBarChart data={data} size="sm" showValues />;
+}
+
+function HorizontalBarChartLocal({
+  data,
+}: {
+  data: Array<{ label: string; value: number }>;
+}) {
+  if (!data.length) return null;
+  return <XBarChart data={data} orientation="horizontal" size="sm" />;
+}
+
+function TreemapLocal({ data }: { data: Array<{ label: string; value: number }> }) {
+  if (!data.length) return null;
+  return <XTreemapChart data={data} size="sm" />;
+}
+
+function GaugeLocal({
+  value,
+  label,
+  max = 100,
+}: {
+  value: number;
+  label: string;
+  max?: number;
+}) {
+  return (
+    <div className="text-center">
+      <div className="text-2xl font-bold text-text-primary">{value}</div>
+      <div className="text-xs text-text-secondary">{label}</div>
+    </div>
+  );
+}
+
+function RadarLocal({
+  data,
+}: {
+  data: Array<{ label: string; value: number }>;
+}) {
+  if (!data.length) return null;
+  return <XRadarChart data={data} size="sm" />;
+}
+
+// Legacy SVG PieChart (preserved for reference, replaced by PieChartLocal above)
+function _LegacyPieChart({
   data,
   size = 180,
 }: {
@@ -893,6 +959,15 @@ function AgePyramidChart({
     </div>
   );
 }
+
+// ---------------------------------------------------------------------------
+// Aliases: map old SVG function names → x-charts wrappers
+// ---------------------------------------------------------------------------
+const PieChart = PieChartLocal;
+const VerticalBarChart = VerticalBarChartLocal;
+const HorizontalBarChart = HorizontalBarChartLocal;
+const Treemap = TreemapLocal;
+const Gauge = GaugeLocal;
 
 // ---------------------------------------------------------------------------
 // Section Header
