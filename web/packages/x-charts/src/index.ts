@@ -137,5 +137,30 @@ export type { ChartErrorStateProps } from "./states/ChartErrorState";
 export { ChartErrorBoundary } from "./states/ChartErrorBoundary";
 export type { ChartErrorBoundaryProps } from "./states/ChartErrorBoundary";
 
+/* ------------------------------------------------------------------ */
+/*  P2 Interaction Layer                                               */
+/* ------------------------------------------------------------------ */
+
+/* Cross-Filter Bus */
+export {
+  createCrossFilterStore,
+  createEventBridge,
+  CrossFilterProvider,
+  useCrossFilter,
+  useCrossFilterStoreApi,
+  filtersByGroup, filtersForChart, activeFilterCount,
+  canUndo, canRedo, bookmarkList, drillDepth, isQuerying,
+} from "./cross-filter";
+export type {
+  CrossFilterEntry, CrossFilterState, CrossFilterStore,
+  CrossFilterEvent, CrossFilterEventType, FilterOperator,
+  DrillLevel, HistoryEntry, Bookmark,
+  CrossFilterStoreApi, CrossFilterBridge, CrossFilterProviderProps,
+} from "./cross-filter";
+
+/* Data Volume Indicator */
+export { DataVolumeIndicator } from "./components/DataVolumeIndicator";
+export type { DataVolumeIndicatorProps } from "./components/DataVolumeIndicator";
+
 /* Types */
 export type { ChartSize, ChartDataPoint, ChartSeries } from "@mfe/design-system";
