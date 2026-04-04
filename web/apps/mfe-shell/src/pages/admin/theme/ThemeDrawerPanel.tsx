@@ -79,11 +79,12 @@ const ThemeDrawerPanel: React.FC<ThemeDrawerPanelProps> = ({ admin }) => {
     /* Radius token override — design-system doesn't bind data-radius to CSS vars yet */
     if (axis === 'radius') {
       const root = document.documentElement;
-      const radiusVars = ['--radius-xs', '--radius-sm', '--radius-md', '--radius-lg', '--radius-xl', '--radius-2xl', '--radius-3xl', '--radius-full'];
+      const radiusVars = ['--radius-xs', '--radius-sm', '--radius-md', '--radius-lg', '--radius-xl', '--radius-2xl', '--radius-3xl', '--radius-4xl', '--radius-control', '--radius-surface', '--ds-radius-md'];
       if (value === 'sharp') {
         const sharpValues: Record<string, string> = {
           '--radius-xs': '0', '--radius-sm': '1px', '--radius-md': '2px', '--radius-lg': '3px',
-          '--radius-xl': '4px', '--radius-2xl': '4px', '--radius-3xl': '6px', '--radius-full': '4px',
+          '--radius-xl': '4px', '--radius-2xl': '4px', '--radius-3xl': '6px', '--radius-4xl': '6px',
+          '--radius-control': '4px', '--radius-surface': '4px', '--ds-radius-md': '2px',
         };
         radiusVars.forEach((v) => root.style.setProperty(v, sharpValues[v] ?? '2px'));
       } else {
