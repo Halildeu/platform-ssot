@@ -131,6 +131,11 @@ export { registerEChartsLocale, getEChartsLocale, ECHARTS_LOCALE_MAP } from "./i
 export { createNumberFormatter, createDateFormatter } from "./i18n/formatters";
 export { isRTL, isRTLLocale, applyRTLTransforms } from "./i18n/rtl";
 
+/* Responsive */
+export { useAutoGranularity, resolveGranularity } from "./responsive/useAutoGranularity";
+export { useResponsiveLegend } from "./responsive/useResponsiveLegend";
+export { useResponsiveChartType } from "./responsive/useResponsiveChartType";
+
 /* Data Transforms */
 export { movingAverage, percentile, standardDeviation, linearRegression } from "./transforms/statistical";
 
