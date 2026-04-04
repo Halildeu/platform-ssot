@@ -1,93 +1,84 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- AG Charts API uses any extensively */
-import React, { useMemo } from "react";
-import { AgCharts as AgChartsBase } from "ag-charts-react";
-import type { AgChartOptions } from "ag-charts-community";
-
-// React 18/19 types compatibility shim
-const AgCharts = AgChartsBase as unknown as React.FC<{ options: AgChartOptions; style?: React.CSSProperties; className?: string }>;
+/**
+ * AreaChart — ECharts-powered area chart with Design Lab integration
+ *
+ * @migration AG Charts → ECharts (P1, chart-viz-engine-selection D-001)
+ */
+import React, { useMemo, useRef, useEffect, useCallback } from "react";
+import * as echarts from "echarts/core";
+import { LineChart as EChartsLine } from "echarts/charts";
+import { CanvasRenderer } from "echarts/renderers";
+import {
+  TitleComponent, TooltipComponent, LegendComponent,
+  GridComponent, AriaComponent,
+} from "echarts/components";
+import type { ECharts as EChartsInstance } from "echarts/core";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState, _accessStyles,
+  resolveAccessState,
   type AccessControlledProps,
 } from "../../internal/access-controller";
-import { getChartThemeOverrides, getChartColorPalette } from "../../advanced/data-grid/chart-theme-bridge";
 import type { ChartSize, ChartSeries, ChartLocaleText } from "./types";
+
+let _registered = false;
+function ensureRegistered() {
+  if (_registered) return;
+  echarts.use([CanvasRenderer, EChartsLine, TitleComponent, TooltipComponent, LegendComponent, GridComponent, AriaComponent]);
+  _registered = true;
+}
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
 export interface AreaChartProps extends AccessControlledProps {
-  /** Series to render as filled areas. */
   series: ChartSeries[];
-  /** X-axis labels. */
   labels: string[];
-  /** Visual size variant. @default "md" */
   size?: ChartSize;
-  /** Stack areas on top of each other. @default false */
   stacked?: boolean;
-  /** Show dot markers at data points. @default true */
   showDots?: boolean;
-  /** Show grid lines. @default true */
   showGrid?: boolean;
-  /** Show legend below the chart. @default false */
   showLegend?: boolean;
-  /** Use gradient fills instead of flat color. @default true */
   gradient?: boolean;
-  /** Use bezier curves instead of straight lines. @default false */
   curved?: boolean;
-  /** Custom value formatter. */
   valueFormatter?: (value: number) => string;
-  /** Animate on mount. @default true */
   animate?: boolean;
-  /** Chart title. */
   title?: string;
-  /** Accessible description. */
   description?: string;
-  /** Locale overrides. */
   localeText?: ChartLocaleText;
-  /** Additional class name. */
   className?: string;
 }
 
-/* ------------------------------------------------------------------ */
-/*  Constants                                                          */
-/* ------------------------------------------------------------------
-   */
-
 const SIZE_HEIGHT: Record<ChartSize, number> = { sm: 200, md: 300, lg: 400 };
+
+const getCSSVar = (v: string, fb: string): string => {
+  if (typeof document === "undefined") return fb;
+  return getComputedStyle(document.documentElement).getPropertyValue(v).trim() || fb;
+};
+
+const escapeHtml = (t: string): string =>
+  t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+const prefersReducedMotion = (): boolean =>
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const getDefaultPalette = (): string[] => [
+  getCSSVar("--action-primary", "#3b82f6"), getCSSVar("--state-success-text", "#22c55e"),
+  getCSSVar("--state-warning-text", "#f59e0b"), getCSSVar("--state-error-text", "#ef4444"),
+  getCSSVar("--state-info-text", "#06b6d4"), getCSSVar("--action-secondary", "#8b5cf6"),
+  "#ec4899", "#14b8a6", "#f97316", "#6366f1",
+];
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
-/* ------------------------------------------------------------------ 
- * @example
- * ```tsx
- * <AreaChart />
- * ```
- * @since 1.0.0
- * @see [Docs](https://design.mfe.dev/components/area-chart)
- */
+/* ------------------------------------------------------------------ */
+
 export const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
   function AreaChart(
     {
-      series: seriesData,
-      labels,
-      size = "md",
-      stacked = false,
-      showDots = true,
-      showGrid = true,
-      showLegend = false,
-      gradient = true,
-      curved = false,
-      valueFormatter,
-      animate = true,
-      title,
-      description,
-      localeText,
-      className,
-      access = "full",
-      accessReason,
-      ...rest
+      series: seriesData, labels, size = "md", stacked = false, showDots = true,
+      showGrid = true, showLegend = false, gradient = true, curved = false,
+      valueFormatter, animate = true, title, description, localeText, className,
+      access = "full", accessReason, ...rest
     },
     forwardedRef,
   ) {
@@ -96,106 +87,109 @@ export const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
 
     const noDataText = localeText?.noData ?? "Veri yok";
     const height = SIZE_HEIGHT[size];
-
     const isEmpty = !seriesData || seriesData.length === 0 || !labels || labels.length === 0;
 
-    const options = useMemo((): AgChartOptions => {
-      if (isEmpty) return { data: [] } as AgChartOptions;
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const chartRef = useRef<EChartsInstance | null>(null);
 
-      const palette = getChartColorPalette();
-      const themeOverrides = getChartThemeOverrides();
+    ensureRegistered();
 
-      const chartData = labels.map((label, i) => {
-        const row: Record<string, any> = { label };
-        seriesData.forEach((s) => {
-          row[s.name] = s.data[i] ?? 0;
-        });
-        return row;
-      });
+    const option = useMemo(() => {
+      if (isEmpty) return null;
 
-      const agSeries: AgChartOptions["series"] = seriesData.map((s, i) => ({
-        type: "area" as const,
-        xKey: "label",
-        yKey: s.name,
-        yName: s.name,
-        fill: s.color ?? palette[i % palette.length],
-        stroke: s.color ?? palette[i % palette.length],
-        fillOpacity: gradient ? 0.3 : 0.6,
-        marker: { enabled: showDots, size: 5 },
-        stacked,
-        interpolation: curved ? { type: "smooth" as const } : undefined,
+      const palette = getDefaultPalette();
+      const fontFamily = getCSSVar("--font-family-sans", "Inter, system-ui, sans-serif");
+      const textPrimary = getCSSVar("--text-primary", "#1a1a2e");
+      const textSecondary = getCSSVar("--text-secondary", "#6b7280");
+      const borderDefault = getCSSVar("--border-default", "#e5e7eb");
+      const bgMuted = getCSSVar("--bg-muted", "#f9fafb");
+      const shouldAnimate = animate && !prefersReducedMotion();
+
+      const seriesList = seriesData.map((s, i) => ({
+        type: "line" as const,
+        name: s.name,
+        data: s.data,
+        smooth: curved,
+        symbol: showDots ? "circle" : "none",
+        symbolSize: 5,
+        stack: stacked ? "total" : undefined,
+        lineStyle: { width: 2, color: s.color ?? palette[i % palette.length] },
+        itemStyle: { color: s.color ?? palette[i % palette.length] },
+        areaStyle: { opacity: gradient ? 0.3 : 0.6 },
       }));
 
       return {
-        data: chartData,
-        title: title ? { text: title, ...themeOverrides.common?.title } : undefined,
-        subtitle: description ? { text: description } : undefined,
-        series: agSeries,
-        axes: [
-          {
-            type: "category",
-            position: "bottom",
-            label: { ...themeOverrides.common?.axes?.category?.label },
-          },
-          {
-            type: "number",
-            position: "left",
-            label: {
-              ...themeOverrides.common?.axes?.number?.label,
-              formatter: valueFormatter ? (p: any) => valueFormatter(p.value) : undefined,
-            },
-            gridLine: { enabled: showGrid },
-          },
-        ],
-        legend: { enabled: showLegend || seriesData.length > 1 },
-      } as AgChartOptions;
+        animation: shouldAnimate, animationDuration: shouldAnimate ? 500 : 0, animationEasing: "cubicOut",
+        title: title ? {
+          text: escapeHtml(title), subtext: description ? escapeHtml(description) : undefined,
+          left: "center",
+          textStyle: { fontFamily, color: textPrimary, fontSize: 16, fontWeight: 600 },
+          subtextStyle: { fontFamily, color: textSecondary, fontSize: 13 },
+        } : undefined,
+        tooltip: { trigger: "axis" as const, confine: true, textStyle: { fontFamily, fontSize: 13 } },
+        legend: {
+          show: showLegend || seriesData.length > 1, bottom: 0,
+          textStyle: { fontFamily, color: textPrimary, fontSize: 12 }, icon: "roundRect", itemWidth: 12, itemHeight: 12,
+        },
+        grid: { top: title ? 60 : 24, right: 16, bottom: showLegend || seriesData.length > 1 ? 48 : 24, left: 16, containLabel: true },
+        xAxis: {
+          type: "category" as const, data: labels,
+          axisLine: { lineStyle: { color: borderDefault } }, axisTick: { lineStyle: { color: borderDefault } },
+          axisLabel: { color: textSecondary, fontFamily, fontSize: 11 },
+        },
+        yAxis: {
+          type: "value" as const, axisLine: { show: false }, axisTick: { show: false },
+          axisLabel: { color: textSecondary, fontFamily, fontSize: 11, formatter: valueFormatter ? (v: number) => valueFormatter(v) : undefined },
+          splitLine: { show: showGrid, lineStyle: { color: bgMuted, type: "dashed" as const } },
+        },
+        series: seriesList,
+        aria: { enabled: true, label: { description: description ? escapeHtml(description) : title ? `Area chart: ${escapeHtml(title)}` : "Area chart" } },
+      };
     }, [seriesData, labels, stacked, showDots, showGrid, showLegend, gradient, curved, valueFormatter, animate, title, description, isEmpty]);
+
+    useEffect(() => {
+      const container = containerRef.current;
+      if (!container) return;
+      const instance = echarts.init(container, undefined, { renderer: "canvas", useDirtyRect: true });
+      chartRef.current = instance;
+      const observer = new ResizeObserver(() => instance.resize({ animation: { duration: 200 } }));
+      observer.observe(container);
+      return () => { observer.disconnect(); instance.dispose(); chartRef.current = null; };
+    }, []);
+
+    useEffect(() => {
+      if (chartRef.current && option) chartRef.current.setOption(option, { notMerge: true });
+    }, [option]);
+
+    const setRefs = useCallback((node: HTMLDivElement | null) => {
+      (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      if (typeof forwardedRef === "function") forwardedRef(node);
+      else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+    }, [forwardedRef]);
 
     if (isEmpty) {
       return (
-        <div
-          ref={forwardedRef}
-          data-access-state={accessState.state}
-          className={cn(
-            "inline-flex items-center justify-center text-sm text-text-secondary",
-            accessState.isDisabled && "opacity-50",
-            className,
-          )}
-          style={{ height }}
-          title={accessReason}
-          data-testid="area-chart-empty"
-          {...rest}
-        >
+        <div ref={setRefs} data-access-state={accessState.state}
+          className={cn("inline-flex items-center justify-center text-sm text-text-secondary", accessState.isDisabled && "opacity-50", className)}
+          style={{ height }} title={accessReason} data-testid="area-chart-empty" {...rest}>
           {noDataText}
         </div>
       );
     }
 
     return (
-      <div
-        ref={forwardedRef}
-        className={cn(
-          "w-full",
-          accessState.isDisabled && "opacity-50",
-          className,
-        )}
-        title={accessReason}
-        data-testid="area-chart"
-        {...rest}
-      >
-        <AgCharts options={options} style={{ height, width: "100%" }} />
-      </div>
+      <div ref={setRefs}
+        className={cn("w-full", accessState.isDisabled && "opacity-50", className)}
+        style={{ height, width: "100%" }} title={accessReason} data-testid="area-chart"
+        data-access-state={accessState.state} role="img"
+        aria-label={description ? escapeHtml(description) : title ? `Area chart: ${escapeHtml(title)}` : "Area chart"}
+        {...rest} />
     );
   },
 );
 
 AreaChart.displayName = "AreaChart";
-
 export default AreaChart;
-
-/** Type alias for AreaChart ref. */
 export type AreaChartRef = React.Ref<HTMLElement>;
-/** Type alias for AreaChart element. */
 export type AreaChartElement = HTMLElement;
-/** Type alias for AreaChart cssproperties. */
 export type AreaChartCSSProperties = React.CSSProperties;

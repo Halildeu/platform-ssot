@@ -1,93 +1,87 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- AG Charts API uses any extensively */
-import React, { useMemo } from "react";
-import { AgCharts as AgChartsBase } from "ag-charts-react";
-import type { AgChartOptions } from "ag-charts-community";
-
-// React 18/19 types compatibility shim
-const AgCharts = AgChartsBase as unknown as React.FC<{ options: AgChartOptions; style?: React.CSSProperties; className?: string }>;
+/**
+ * LineChart — ECharts-powered line chart with Design Lab integration
+ *
+ * @migration AG Charts → ECharts (P1, chart-viz-engine-selection D-001)
+ */
+import React, { useMemo, useRef, useEffect, useCallback } from "react";
+import * as echarts from "echarts/core";
+import { LineChart as EChartsLine } from "echarts/charts";
+import { CanvasRenderer } from "echarts/renderers";
+import {
+  TitleComponent, TooltipComponent, LegendComponent,
+  GridComponent, AriaComponent,
+} from "echarts/components";
+import type { ECharts as EChartsInstance } from "echarts/core";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState, _accessStyles,
+  resolveAccessState,
   type AccessControlledProps,
 } from "../../internal/access-controller";
-import { getChartThemeOverrides, getChartColorPalette } from "../../advanced/data-grid/chart-theme-bridge";
 import type { ChartSize, ChartSeries, ChartLocaleText, ChartClickEvent } from "./types";
+
+let _registered = false;
+function ensureRegistered() {
+  if (_registered) return;
+  echarts.use([CanvasRenderer, EChartsLine, TitleComponent, TooltipComponent, LegendComponent, GridComponent, AriaComponent]);
+  _registered = true;
+}
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
 export interface LineChartProps extends AccessControlledProps {
-  /** Series to render as lines. */
   series: ChartSeries[];
-  /** X-axis labels. */
   labels: string[];
-  /** Visual size variant. @default "md" */
   size?: ChartSize;
-  /** Show dot markers at data points. @default true */
   showDots?: boolean;
-  /** Show grid lines. @default true */
   showGrid?: boolean;
-  /** Show legend below the chart. @default false */
   showLegend?: boolean;
-  /** Fill area under the lines. @default false */
   showArea?: boolean;
-  /** Use bezier curves instead of straight lines. @default false */
   curved?: boolean;
-  /** Custom value formatter. */
   valueFormatter?: (value: number) => string;
-  /** Animate line drawing on mount. @default true */
   animate?: boolean;
-  /** Chart title. */
   title?: string;
-  /** Accessible description. */
   description?: string;
-  /** Locale overrides. */
   localeText?: ChartLocaleText;
-  /** Additional class name. */
   className?: string;
-  /** Callback fired when a data point (marker) is clicked. */
   onDataPointClick?: (event: ChartClickEvent) => void;
 }
 
-/* ------------------------------------------------------------------ */
-/*  Constants                                                          */
-/* ------------------------------------------------------------------
-   */
-
 const SIZE_HEIGHT: Record<ChartSize, number> = { sm: 200, md: 300, lg: 400 };
+
+const getCSSVar = (v: string, fb: string): string => {
+  if (typeof document === "undefined") return fb;
+  return getComputedStyle(document.documentElement).getPropertyValue(v).trim() || fb;
+};
+
+const escapeHtml = (t: string): string =>
+  t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+const prefersReducedMotion = (): boolean =>
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const getDefaultPalette = (): string[] => [
+  getCSSVar("--action-primary", "#3b82f6"),
+  getCSSVar("--state-success-text", "#22c55e"),
+  getCSSVar("--state-warning-text", "#f59e0b"),
+  getCSSVar("--state-error-text", "#ef4444"),
+  getCSSVar("--state-info-text", "#06b6d4"),
+  getCSSVar("--action-secondary", "#8b5cf6"),
+  "#ec4899", "#14b8a6", "#f97316", "#6366f1",
+];
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
-/* ------------------------------------------------------------------
- * @example
- * ```tsx
- * <LineChart />
- * ```
- * @since 1.0.0
- * @see [Docs](https://design.mfe.dev/components/line-chart)
- */
+/* ------------------------------------------------------------------ */
+
 export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
   function LineChart(
     {
-      series: seriesData,
-      labels,
-      size = "md",
-      showDots = true,
-      showGrid = true,
-      showLegend = false,
-      showArea = false,
-      curved = false,
-      valueFormatter,
-      animate = true,
-      title,
-      description,
-      localeText,
-      className,
-      onDataPointClick,
-      access = "full",
-      accessReason,
-      ...rest
+      series: seriesData, labels, size = "md", showDots = true, showGrid = true,
+      showLegend = false, showArea = false, curved = false, valueFormatter,
+      animate = true, title, description, localeText, className,
+      onDataPointClick, access = "full", accessReason, ...rest
     },
     forwardedRef,
   ) {
@@ -96,121 +90,128 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
 
     const noDataText = localeText?.noData ?? "Veri yok";
     const height = SIZE_HEIGHT[size];
-
     const isEmpty = !seriesData || seriesData.length === 0 || !labels || labels.length === 0;
 
-    const options = useMemo((): AgChartOptions => {
-      if (isEmpty) return { data: [] } as AgChartOptions;
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const chartRef = useRef<EChartsInstance | null>(null);
 
-      const palette = getChartColorPalette();
-      const themeOverrides = getChartThemeOverrides();
+    ensureRegistered();
 
-      // Transform series data into row-based format for AG Charts
-      const chartData = labels.map((label, i) => {
-        const row: Record<string, any> = { label };
-        seriesData.forEach((s) => {
-          row[s.name] = s.data[i] ?? 0;
-        });
-        return row;
-      });
+    const option = useMemo(() => {
+      if (isEmpty) return null;
 
-      const clickListener = onDataPointClick ? {
-        seriesNodeClick: (e: any) => {
-          onDataPointClick({
-            datum: e.datum ?? {},
-            seriesId: e.seriesId,
-            xKey: e.xKey,
-            yKey: e.yKey,
-            value: e.datum?.[e.yKey],
-            label: e.datum?.[e.xKey],
-          });
-        },
-      } : undefined;
+      const palette = getDefaultPalette();
+      const fontFamily = getCSSVar("--font-family-sans", "Inter, system-ui, sans-serif");
+      const textPrimary = getCSSVar("--text-primary", "#1a1a2e");
+      const textSecondary = getCSSVar("--text-secondary", "#6b7280");
+      const borderDefault = getCSSVar("--border-default", "#e5e7eb");
+      const bgMuted = getCSSVar("--bg-muted", "#f9fafb");
+      const shouldAnimate = animate && !prefersReducedMotion();
 
-      const agSeries: AgChartOptions["series"] = seriesData.map((s, i) => ({
-        type: showArea ? ("area" as const) : ("line" as const),
-        xKey: "label",
-        yKey: s.name,
-        yName: s.name,
-        fill: showArea ? (s.color ?? palette[i % palette.length]) : undefined,
-        fillOpacity: showArea ? 0.18 : undefined,
-        stroke: s.color ?? palette[i % palette.length],
-        marker: { enabled: showDots, size: 6 },
-        cursor: onDataPointClick ? "pointer" : undefined,
-        interpolation: curved ? { type: "smooth" as const } : undefined,
-        listeners: clickListener,
+      const seriesList = seriesData.map((s, i) => ({
+        type: "line" as const,
+        name: s.name,
+        data: s.data,
+        smooth: curved,
+        symbol: showDots ? "circle" : "none",
+        symbolSize: 6,
+        lineStyle: { width: 2, color: s.color ?? palette[i % palette.length] },
+        itemStyle: { color: s.color ?? palette[i % palette.length] },
+        areaStyle: showArea ? { opacity: 0.18 } : undefined,
+        cursor: onDataPointClick ? "pointer" : "default",
       }));
 
       return {
-        data: chartData,
-        title: title ? { text: title, ...themeOverrides.common?.title } : undefined,
-        subtitle: description ? { text: description } : undefined,
-        series: agSeries,
-        axes: [
-          {
-            type: "category",
-            position: "bottom",
-            label: { ...themeOverrides.common?.axes?.category?.label },
-          },
-          {
-            type: "number",
-            position: "left",
-            label: {
-              ...themeOverrides.common?.axes?.number?.label,
-              formatter: valueFormatter ? (p: any) => valueFormatter(p.value) : undefined,
-            },
-            gridLine: { enabled: showGrid },
-          },
-        ],
-        legend: { enabled: showLegend || seriesData.length > 1 },
-      } as AgChartOptions;
+        animation: shouldAnimate,
+        animationDuration: shouldAnimate ? 500 : 0,
+        animationEasing: "cubicOut",
+        title: title ? {
+          text: escapeHtml(title),
+          subtext: description ? escapeHtml(description) : undefined,
+          left: "center",
+          textStyle: { fontFamily, color: textPrimary, fontSize: 16, fontWeight: 600 },
+          subtextStyle: { fontFamily, color: textSecondary, fontSize: 13 },
+        } : undefined,
+        tooltip: { trigger: "axis" as const, confine: true, textStyle: { fontFamily, fontSize: 13 } },
+        legend: {
+          show: showLegend || seriesData.length > 1,
+          bottom: 0,
+          textStyle: { fontFamily, color: textPrimary, fontSize: 12 },
+          icon: "roundRect", itemWidth: 12, itemHeight: 12,
+        },
+        grid: { top: title ? 60 : 24, right: 16, bottom: showLegend || seriesData.length > 1 ? 48 : 24, left: 16, containLabel: true },
+        xAxis: {
+          type: "category" as const,
+          data: labels,
+          axisLine: { lineStyle: { color: borderDefault } },
+          axisTick: { lineStyle: { color: borderDefault } },
+          axisLabel: { color: textSecondary, fontFamily, fontSize: 11 },
+        },
+        yAxis: {
+          type: "value" as const,
+          axisLine: { show: false },
+          axisTick: { show: false },
+          axisLabel: { color: textSecondary, fontFamily, fontSize: 11, formatter: valueFormatter ? (v: number) => valueFormatter(v) : undefined },
+          splitLine: { show: showGrid, lineStyle: { color: bgMuted, type: "dashed" as const } },
+        },
+        series: seriesList,
+        aria: { enabled: true, label: { description: description ? escapeHtml(description) : title ? `Line chart: ${escapeHtml(title)}` : "Line chart" } },
+      };
     }, [seriesData, labels, showDots, showGrid, showLegend, showArea, curved, valueFormatter, animate, title, description, isEmpty, onDataPointClick]);
+
+    useEffect(() => {
+      const container = containerRef.current;
+      if (!container) return;
+      const instance = echarts.init(container, undefined, { renderer: "canvas", useDirtyRect: true });
+      chartRef.current = instance;
+      const observer = new ResizeObserver(() => instance.resize({ animation: { duration: 200 } }));
+      observer.observe(container);
+      return () => { observer.disconnect(); instance.dispose(); chartRef.current = null; };
+    }, []);
+
+    useEffect(() => {
+      if (chartRef.current && option) chartRef.current.setOption(option, { notMerge: true });
+    }, [option]);
+
+    useEffect(() => {
+      const inst = chartRef.current;
+      if (!inst || !onDataPointClick) return;
+      const handler = (p: Record<string, unknown>) => {
+        onDataPointClick({ datum: (p.data as Record<string, unknown>) ?? {}, seriesId: p.seriesName as string, xKey: "label", yKey: "value", value: p.value as number, label: p.name as string });
+      };
+      inst.on("click", handler);
+      return () => { inst.off("click", handler); };
+    }, [onDataPointClick]);
+
+    const setRefs = useCallback((node: HTMLDivElement | null) => {
+      (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      if (typeof forwardedRef === "function") forwardedRef(node);
+      else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+    }, [forwardedRef]);
 
     if (isEmpty) {
       return (
-        <div
-          ref={forwardedRef}
-          data-access-state={accessState.state}
-          className={cn(
-            "inline-flex items-center justify-center text-sm text-text-secondary",
-            accessState.isDisabled && "opacity-50",
-            className,
-          )}
-          style={{ height }}
-          title={accessReason}
-          data-testid="line-chart-empty"
-          {...rest}
-        >
+        <div ref={setRefs} data-access-state={accessState.state}
+          className={cn("inline-flex items-center justify-center text-sm text-text-secondary", accessState.isDisabled && "opacity-50", className)}
+          style={{ height }} title={accessReason} data-testid="line-chart-empty" {...rest}>
           {noDataText}
         </div>
       );
     }
 
     return (
-      <div
-        ref={forwardedRef}
-        className={cn(
-          "w-full",
-          accessState.isDisabled && "opacity-50",
-          className,
-        )}
-        title={accessReason}
-        data-testid="line-chart"
-        {...rest}
-      >
-        <AgCharts options={options} style={{ height, width: "100%" }} />
-      </div>
+      <div ref={setRefs}
+        className={cn("w-full", accessState.isDisabled && "opacity-50", className)}
+        style={{ height, width: "100%" }} title={accessReason} data-testid="line-chart"
+        data-access-state={accessState.state} role="img"
+        aria-label={description ? escapeHtml(description) : title ? `Line chart: ${escapeHtml(title)}` : "Line chart"}
+        {...rest} />
     );
   },
 );
 
 LineChart.displayName = "LineChart";
-
 export default LineChart;
-
-/** Type alias for LineChart ref. */
 export type LineChartRef = React.Ref<HTMLElement>;
-/** Type alias for LineChart element. */
 export type LineChartElement = HTMLElement;
-/** Type alias for LineChart cssproperties. */
 export type LineChartCSSProperties = React.CSSProperties;

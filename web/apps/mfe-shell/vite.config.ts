@@ -239,6 +239,11 @@ export default defineConfig(({ mode }) => {
         'ag-grid-react',
         '@sentry/react',
         'lucide-react',
+        // ECharts — tree-shaken modules, pre-bundle for speed
+        'echarts/core',
+        'echarts/charts',
+        'echarts/renderers',
+        'echarts/components',
         // Monorepo packages — stable, rarely change → pre-bundle for speed
         '@mfe/shared-http',
         '@platform/capabilities',

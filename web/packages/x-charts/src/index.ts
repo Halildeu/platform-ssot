@@ -96,5 +96,46 @@ export type {
   ResponsiveChartConfig,
 } from "./useResponsiveChart";
 
+/* ------------------------------------------------------------------ */
+/*  ECharts Foundation (P1)                                           */
+/* ------------------------------------------------------------------ */
+
+/* Renderers */
+export { registerECharts, echarts } from "./renderers/echarts-imports";
+export { useEChartsRenderer } from "./renderers/echarts-renderer";
+export type { EChartsRendererOptions, EChartsRendererState } from "./renderers/echarts-renderer";
+
+/* Spec (declarative chart contract) */
+export { chartSpecToEChartsOption } from "./spec/chartSpecToEChartsOption";
+export { validateChartSpec } from "./spec/validateChartSpec";
+export type { ChartSpec, ChartType, ChartChannel, ChartEncoding } from "./spec/ChartSpec";
+
+/* Theme */
+export { DesignLabEChartsTheme } from "./theme/DesignLabEChartsTheme";
+export { COLORBLIND_PALETTES } from "./theme/colorblind-palettes";
+export { DECAL_PATTERNS } from "./theme/decal-patterns";
+
+/* Security */
+export { sanitizeChartText, sanitizeChartData, validateStreamUrl } from "./security/sanitizeChartText";
+
+/* A11y */
+export { ChartKeyboardNav } from "./a11y/ChartKeyboardNav";
+export type { ChartKeyboardNavProps } from "./a11y/ChartKeyboardNav";
+export { ChartDataTable } from "./a11y/ChartDataTable";
+export type { ChartDataTableProps, ChartDataTableColumn } from "./a11y/ChartDataTable";
+export { ChartAriaLive } from "./a11y/ChartAriaLive";
+export type { ChartAriaLiveProps } from "./a11y/ChartAriaLive";
+export { useReducedMotion } from "./a11y/useReducedMotion";
+
+/* States */
+export { ChartLoadingState } from "./states/ChartLoadingState";
+export type { ChartLoadingStateProps } from "./states/ChartLoadingState";
+export { ChartEmptyState } from "./states/ChartEmptyState";
+export type { ChartEmptyStateProps } from "./states/ChartEmptyState";
+export { ChartErrorState } from "./states/ChartErrorState";
+export type { ChartErrorStateProps } from "./states/ChartErrorState";
+export { ChartErrorBoundary } from "./states/ChartErrorBoundary";
+export type { ChartErrorBoundaryProps } from "./states/ChartErrorBoundary";
+
 /* Types */
 export type { ChartSize, ChartDataPoint, ChartSeries } from "@mfe/design-system";
