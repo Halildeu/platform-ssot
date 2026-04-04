@@ -50,6 +50,8 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/v1/reports/**").authenticated()
                         .requestMatchers("/api/v1/dashboards/**").authenticated()
+                        .requestMatchers("/api/v1/alerts/**").authenticated()
+                        .requestMatchers("/api/v1/schedules/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

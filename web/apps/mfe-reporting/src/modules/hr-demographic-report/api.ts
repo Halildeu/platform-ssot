@@ -93,7 +93,58 @@ export const fetchHrDemographicRows = async (
   filters: HrDemographicFilters,
   request: GridRequest,
 ): Promise<GridResponse<HrDemographicRow>> => {
-  // Grid still uses mock data (individual row data not available from dashboard API)
+  const client = resolveHttp();
+
+  // Try live backend first (hr-personel-listesi report endpoint)
+  try {
+    const pageSize = request.pageSize ?? 50;
+    const page = request.page ?? 1;
+
+    const params = new URLSearchParams();
+    params.set('page', String(page));
+    params.set('pageSize', String(pageSize));
+
+    if (request.sortModel && request.sortModel.length > 0) {
+      params.set('sort', JSON.stringify(request.sortModel));
+    }
+    if (filters.search) {
+      params.set('advancedFilter', JSON.stringify({ EMPLOYEE_NAME: { filterType: 'text', type: 'contains', filter: filters.search } }));
+    }
+
+    const { data } = await client.get<{ items: Record<string, unknown>[]; total: number }>(
+      `/v1/reports/hr-personel-listesi/data?${params.toString()}`,
+    );
+
+    if (data?.items) {
+      const rows: HrDemographicRow[] = data.items.map((item) => ({
+        id: String(item.EMPLOYEE_ID ?? item.POSITION_ID ?? ''),
+        fullName: `${item.EMPLOYEE_NAME ?? ''} ${item.EMPLOYEE_SURNAME ?? ''}`.trim(),
+        department: String(item.DEPARTMENT_ID ?? ''),
+        position: String(item.POSITION_NAME ?? ''),
+        gender: 'Diğer' as const,
+        birthDate: '',
+        age: 0,
+        education: '',
+        maritalStatus: '',
+        employmentType: Number(item.COLLAR_TYPE) === 1 ? 'Mavi Yaka' : 'Beyaz Yaka',
+        hireDate: '',
+        tenureYears: 0,
+        location: String(item.BRANCH_ID ?? ''),
+        isManager: false,
+        hasDisability: false,
+        militaryStatus: '',
+        generation: '',
+        ethicsTrainingComplete: false,
+        positionLevel: String(item.TITLE_NAME ?? ''),
+      }));
+
+      return { rows, total: data.total };
+    }
+  } catch (err) {
+    console.warn('[hr-demographic] Live grid fetch failed, falling back to mock:', err);
+  }
+
+  // Fallback to mock data
   let filtered = [...mockRows];
 
   if (filters.search) {

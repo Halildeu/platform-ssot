@@ -22,6 +22,12 @@ spring:
     open-in-view: false
   flyway:
     enabled: true
+  mail:
+    host: ${SPRING_MAIL_HOST:localhost}
+    port: ${SPRING_MAIL_PORT:1025}
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
 
 # PostgreSQL metadata persistence (custom reports, alerts, schedules)
 report:
@@ -59,6 +65,12 @@ report:
     max-export-rows: 500000
   audit:
     internal-api-key: ${PERMISSION_SERVICE_INTERNAL_API_KEY:}
+  alert:
+    enabled: ${REPORT_ALERT_ENABLED:true}
+    evaluation-interval-ms: ${REPORT_ALERT_INTERVAL_MS:300000}
+  schedule:
+    enabled: ${REPORT_SCHEDULE_ENABLED:true}
+    export-dir: ${REPORT_SCHEDULE_EXPORT_DIR:/tmp/report-exports}
 
 logging:
   level:

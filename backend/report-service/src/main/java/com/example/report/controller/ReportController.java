@@ -184,6 +184,29 @@ public class ReportController {
         return ResponseEntity.ok(new PagedResultDto<>(result.items(), result.total(), result.page(), result.pageSize()));
     }
 
+    @GetMapping("/{key}/filter-options/{column}")
+    public ResponseEntity<List<String>> getFilterOptions(
+            @PathVariable String key,
+            @PathVariable String column,
+            @AuthenticationPrincipal Jwt jwt) {
+        ReportDefinition def = findReportOrThrow(key);
+        AuthzMeResponse authz = resolveAndCheckAccess(def, jwt);
+        List<String> options = queryEngine.executeReportFilterOptions(def, authz, column);
+        return ResponseEntity.ok(options);
+    }
+
+    @PutMapping("/{key}/rollback/{version}")
+    public ResponseEntity<Map<String, Object>> rollbackReport(
+            @PathVariable String key,
+            @PathVariable int version,
+            @AuthenticationPrincipal Jwt jwt) {
+        Map<String, Object> restored = customReportRepository.rollbackToVersion(key, version);
+        if (restored == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Version not found");
+        }
+        return ResponseEntity.ok(restored);
+    }
+
     private ReportDefinition findReportOrThrow(String key) {
         return registry.get(key)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Report not found: " + key));

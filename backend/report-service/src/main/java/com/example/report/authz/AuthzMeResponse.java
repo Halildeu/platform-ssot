@@ -51,6 +51,19 @@ public class AuthzMeResponse {
         return permissions != null && permissions.contains(permission);
     }
 
+    /**
+     * Creates a synthetic system-level auth response for scheduled execution.
+     * SuperAdmin=true bypasses RLS in RowFilterInjector.
+     */
+    public static AuthzMeResponse systemExecution() {
+        AuthzMeResponse auth = new AuthzMeResponse();
+        auth.setUserId("system:alert-scheduler");
+        auth.setPermissions(List.of("REPORT_VIEW", "REPORT_EXPORT"));
+        auth.setAllowedScopes(List.of());
+        auth.setSuperAdmin(true);
+        return auth;
+    }
+
     public Set<String> getScopeRefIds(String scopeType) {
         if (allowedScopes == null) {
             return Collections.emptySet();

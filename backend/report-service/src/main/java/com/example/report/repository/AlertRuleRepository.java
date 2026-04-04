@@ -72,6 +72,21 @@ public class AlertRuleRepository {
         return jdbc.update(sql, params) > 0;
     }
 
+    public List<Map<String, Object>> findAllEnabled() {
+        return jdbc.query(
+                "SELECT * FROM alert_rules WHERE enabled = true ORDER BY report_key",
+                new MapSqlParameterSource(),
+                this::mapRow
+        );
+    }
+
+    public void updateLastTriggered(String ruleId, OffsetDateTime triggeredAt) {
+        jdbc.update(
+                "UPDATE alert_rules SET last_triggered_at = :triggeredAt WHERE id = :id::uuid",
+                new MapSqlParameterSource("id", ruleId).addValue("triggeredAt", triggeredAt)
+        );
+    }
+
     public boolean delete(String ruleId) {
         return jdbc.update(
                 "DELETE FROM alert_rules WHERE id = :id::uuid",
@@ -93,6 +108,12 @@ public class AlertRuleRepository {
 
         Array channelsArr = rs.getArray("channels");
         row.put("channels", channelsArr != null ? Arrays.asList((String[]) channelsArr.getArray()) : List.of());
+
+        try { row.put("lastTriggeredAt", rs.getObject("last_triggered_at", OffsetDateTime.class)); }
+        catch (SQLException ignored) { /* column may not exist yet before V3 migration */ }
+        try { row.put("cooldownMinutes", rs.getInt("cooldown_minutes")); }
+        catch (SQLException ignored) { /* column may not exist yet before V3 migration */ }
+
         return row;
     }
 }

@@ -105,4 +105,42 @@ public class QueryEngine {
             return -1;
         }
     }
+
+    /**
+     * Execute a DISTINCT query for a single column's values in a report.
+     * Reuses RLS and column validation from the standard query path.
+     */
+    public List<String> executeReportFilterOptions(ReportDefinition def, AuthzMeResponse authz, String column) {
+        // Validate column exists in definition
+        boolean validColumn = def.columns().stream().anyMatch(c -> c.field().equalsIgnoreCase(column));
+        if (!validColumn) {
+            log.warn("Filter options requested for unknown column '{}' in report '{}'", column, def.key());
+            return List.of();
+        }
+
+        RowFilterInjector.RlsResult rls = rowFilterInjector.build(def.source(), def.access(), authz);
+        MapSqlParameterSource params = rls.params() != null ? rls.params() : new MapSqlParameterSource();
+
+        String schema = def.sourceSchema();
+        String source = def.hasSourceQuery() ? "(" + def.sourceQuery() + ")" : "[" + schema + "].[" + def.source() + "]";
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT DISTINCT [").append(column).append("] AS opt_value");
+        sql.append(" FROM ").append(source).append(" WITH (NOLOCK)");
+        sql.append(" WHERE [").append(column).append("] IS NOT NULL");
+        sql.append(" AND RTRIM(CAST([").append(column).append("] AS VARCHAR(500))) != ''");
+
+        if (rls.whereClause() != null && !rls.whereClause().isBlank()) {
+            sql.append(" AND ").append(rls.whereClause());
+        }
+
+        sql.append(" ORDER BY opt_value");
+
+        try {
+            return jdbc.queryForList(sql.toString(), params, String.class);
+        } catch (Exception e) {
+            log.error("Failed to execute filter options for column '{}' in report '{}': {}", column, def.key(), e.getMessage());
+            return List.of();
+        }
+    }
 }

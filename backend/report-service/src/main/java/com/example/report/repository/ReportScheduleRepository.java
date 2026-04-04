@@ -55,6 +55,21 @@ public class ReportScheduleRepository {
         return jdbc.update(sql, params) > 0;
     }
 
+    public List<Map<String, Object>> findAllEnabled() {
+        return jdbc.query(
+                "SELECT * FROM report_schedules WHERE enabled = true ORDER BY report_key",
+                new MapSqlParameterSource(),
+                this::mapRow
+        );
+    }
+
+    public void updateLastRun(String scheduleId, OffsetDateTime lastRunAt) {
+        jdbc.update(
+                "UPDATE report_schedules SET last_run_at = :lastRunAt WHERE id = :id::uuid",
+                new MapSqlParameterSource("id", scheduleId).addValue("lastRunAt", lastRunAt)
+        );
+    }
+
     public boolean delete(String scheduleId) {
         return jdbc.update(
                 "DELETE FROM report_schedules WHERE id = :id::uuid",

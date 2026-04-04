@@ -18,6 +18,11 @@ import { buildColDefs, buildDetailRenderer, buildProcessCellCallback } from '@mf
 import { useReportSchemaContext } from '../../hooks/useReportSchemaContext';
 import { enrichColumnsWithSchema } from '../../utils/enrichColumnsWithSchema';
 import { getShellServices } from '../services/shell-services';
+import { AlertRuleEditor } from '../../alerting/AlertRuleEditor';
+import { ScheduleEditor } from '../../alerting/ScheduleEditor';
+import { useAlertRules, useAlertMutations } from '../../alerting/useAlertRules';
+import { useSchedule, useScheduleMutations } from '../../alerting/useSchedule';
+import type { AlertRule, ScheduleConfig } from '../../alerting/types';
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -377,7 +382,79 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
           exportConfig={exportConfig}
           onServerExport={exportEnabled ? handleServerExport : undefined}
         />
+
+        <ReportAlertSchedulePanel reportKey={module.id} />
       </PageLayout>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Alert & Schedule Panel                                             */
+/* ------------------------------------------------------------------ */
+
+function ReportAlertSchedulePanel({ reportKey }: { reportKey: string }) {
+  const [open, setOpen] = React.useState(false);
+  const { data: alertRules } = useAlertRules(reportKey);
+  const { create: createAlert } = useAlertMutations(reportKey);
+  const { data: schedule } = useSchedule(reportKey);
+  const { create: createSched, update: updateSched } = useScheduleMutations(reportKey);
+
+  const handleAlertSave = React.useCallback(
+    (rules: AlertRule[]) => {
+      for (const rule of rules) {
+        if (!rule.id || rule.id.startsWith('temp-')) {
+          createAlert.mutate(rule);
+        }
+      }
+    },
+    [createAlert],
+  );
+
+  const handleScheduleSave = React.useCallback(
+    (config: ScheduleConfig) => {
+      if (schedule?.id) {
+        updateSched.mutate({ scheduleId: schedule.id, updates: config });
+      } else {
+        createSched.mutate(config);
+      }
+    },
+    [schedule, createSched, updateSched],
+  );
+
+  return (
+    <div style={{ marginTop: 16 }}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          background: 'none',
+          border: '1px solid var(--color-border, #d1d5db)',
+          borderRadius: 6,
+          padding: '8px 16px',
+          cursor: 'pointer',
+          fontSize: 14,
+          color: 'var(--color-text-secondary, #6b7280)',
+        }}
+      >
+        {open ? '▼' : '▶'} Uyarılar & Zamanlama
+        {(alertRules?.length ?? 0) > 0 && ` (${alertRules!.length} kural)`}
+      </button>
+
+      {open && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginTop: 12 }}>
+          <AlertRuleEditor
+            reportId={reportKey}
+            existingRules={alertRules ?? []}
+            onSave={handleAlertSave}
+          />
+          <ScheduleEditor
+            reportId={reportKey}
+            existing={schedule ?? undefined}
+            onSave={handleScheduleSave}
+          />
+        </div>
+      )}
     </div>
   );
 }

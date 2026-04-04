@@ -6,6 +6,7 @@ import com.example.report.dto.*;
 import com.example.report.query.DashboardQueryEngine;
 import com.example.report.registry.DashboardDefinition;
 import com.example.report.registry.DashboardRegistry;
+import com.example.report.repository.CustomDashboardRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,13 +31,16 @@ public class DashboardController {
     private final DashboardRegistry registry;
     private final PermissionResolver permissionResolver;
     private final DashboardQueryEngine queryEngine;
+    private final CustomDashboardRepository customDashboardRepository;
 
     public DashboardController(DashboardRegistry registry,
                                 PermissionResolver permissionResolver,
-                                DashboardQueryEngine queryEngine) {
+                                DashboardQueryEngine queryEngine,
+                                CustomDashboardRepository customDashboardRepository) {
         this.registry = registry;
         this.permissionResolver = permissionResolver;
         this.queryEngine = queryEngine;
+        this.customDashboardRepository = customDashboardRepository;
     }
 
     @GetMapping
@@ -132,6 +136,36 @@ public class DashboardController {
         if (collarType != null) filterValues.put("collarType", collarType);
         if (education != null) filterValues.put("education", education);
         return filterValues;
+    }
+
+    /* ---- Custom Dashboard CRUD ---- */
+
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> createCustomDashboard(
+            @RequestBody Map<String, Object> body,
+            @AuthenticationPrincipal Jwt jwt) {
+        body.put("createdBy", jwt != null ? jwt.getClaimAsString("preferred_username") : "system");
+        Map<String, Object> saved = customDashboardRepository.save(body);
+        return ResponseEntity.status(201).body(saved);
+    }
+
+    @PutMapping("/custom/{key}")
+    public ResponseEntity<Map<String, Object>> updateCustomDashboard(
+            @PathVariable String key,
+            @RequestBody Map<String, Object> body) {
+        Map<String, Object> updated = customDashboardRepository.update(key, body);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/custom/{key}")
+    public ResponseEntity<Void> deleteCustomDashboard(@PathVariable String key) {
+        boolean deleted = customDashboardRepository.delete(key);
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/custom")
+    public ResponseEntity<List<Map<String, Object>>> listCustomDashboards() {
+        return ResponseEntity.ok(customDashboardRepository.findAll());
     }
 
     private DashboardDefinition findOrThrow(String key) {

@@ -107,6 +107,44 @@ public class CustomReportRepository {
         );
     }
 
+    public Map<String, Object> rollbackToVersion(String key, int targetVersion) {
+        // Find the version snapshot
+        List<Map<String, Object>> versions = jdbc.query("""
+                SELECT v.columns, v.source_table
+                FROM custom_report_versions v
+                JOIN custom_reports r ON r.id = v.report_id
+                WHERE r.key = :key AND v.version = :version
+                """,
+                new MapSqlParameterSource("key", key).addValue("version", targetVersion),
+                (rs, rowNum) -> {
+                    Map<String, Object> row = new LinkedHashMap<>();
+                    row.put("columns", rs.getString("columns"));
+                    row.put("sourceTable", rs.getString("source_table"));
+                    return row;
+                }
+        );
+
+        if (versions.isEmpty()) return null;
+
+        // Save current state as a new version before rollback
+        saveVersion(key);
+
+        Map<String, Object> snapshot = versions.get(0);
+        int updated = jdbc.update("""
+                UPDATE custom_reports SET
+                    columns = :columns::jsonb, source_table = :sourceTable,
+                    version = version + 1, updated_at = NOW()
+                WHERE key = :key AND NOT deleted
+                """,
+                new MapSqlParameterSource("key", key)
+                        .addValue("columns", snapshot.get("columns"))
+                        .addValue("sourceTable", snapshot.get("sourceTable"))
+        );
+
+        if (updated == 0) return null;
+        return findByKey(key).orElse(null);
+    }
+
     private void saveVersion(String key) {
         jdbc.update("""
                 INSERT INTO custom_report_versions (report_id, version, columns, source_table, changed_by)
