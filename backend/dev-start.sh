@@ -80,8 +80,8 @@ wait_healthy api-gateway 90
 
 # ---- Opsiyonel servisler ----
 header "5/6 EK SERViSLER"
-docker compose up -d report-service observability-prometheus observability-grafana 2>&1 | grep -v "^$"
-log "Report-service baslatildi (SQL Server erisimi opsiyonel)"
+docker compose up -d report-service schema-service openfga-migrate openfga observability-prometheus observability-grafana loki tempo 2>&1 | grep -v "^$"
+log "Report-service, schema-service, OpenFGA, Loki, Tempo baslatildi"
 
 # ---- Frontend ----
 header "6/6 FRONTEND"
