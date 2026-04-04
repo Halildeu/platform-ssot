@@ -1,5 +1,4 @@
 import { getSharedReport } from '@platform/capabilities';
-import { PERMISSIONS } from '../features/auth/lib/permissions.constants';
 
 const defaultReportingRoute = getSharedReport('users-overview').webRoute;
 
@@ -39,38 +38,10 @@ export const isEthicRemoteEnabled = (): boolean => (
 );
 
 type DefaultShellPathOptions = {
-  permitAllMode: boolean;
-  permissions: readonly string[];
+  permitAllMode?: boolean;
+  permissions?: readonly string[];
 };
 
-const hasPermission = (permissions: readonly string[], permission: string): boolean => permissions.includes(permission);
-
-export const resolveDefaultShellPath = ({
-  permitAllMode,
-  permissions,
-}: DefaultShellPathOptions): string => {
-  // Dashboard as default landing page
+export const resolveDefaultShellPath = (_opts?: DefaultShellPathOptions): string => {
   return '/home';
-  if (isSuggestionsRemoteEnabled()) {
-    return '/suggestions';
-  }
-  if (isEthicRemoteEnabled()) {
-    return '/ethic';
-  }
-  if (permitAllMode || hasPermission(permissions, PERMISSIONS.ACCESS_MODULE)) {
-    return '/access/roles';
-  }
-  if (permitAllMode || hasPermission(permissions, PERMISSIONS.AUDIT_MODULE)) {
-    return '/audit/events';
-  }
-  if (permitAllMode || hasPermission(permissions, PERMISSIONS.REPORTING_MODULE)) {
-    return defaultReportingRoute;
-  }
-  if (permitAllMode || hasPermission(permissions, PERMISSIONS.USER_MANAGEMENT_MODULE)) {
-    return '/admin/users';
-  }
-  if (permitAllMode || hasPermission(permissions, PERMISSIONS.THEME_ADMIN)) {
-    return '/admin/themes';
-  }
-  return '/unauthorized';
 };

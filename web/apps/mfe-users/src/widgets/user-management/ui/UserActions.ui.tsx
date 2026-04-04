@@ -2,8 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { UserSummary } from '@mfe/shared-types';
 import { useUserMutations } from '../../../features/user-management/model/use-users-query.model';
-import { useAuthorization } from '../../../features/user-management/model/use-authorization.model';
-import { PERMISSIONS } from '../../../features/user-management/lib/permissions.constants';
+import { usePermissions, MODULES } from '@mfe/auth';
 import { useUsersI18n } from '../../../i18n/useUsersI18n';
 import { pushToast } from '../../../shared/notifications';
 
@@ -14,7 +13,8 @@ interface UserActionsProps {
 
 const UserActions: React.FC<UserActionsProps> = ({ user, onSelect }) => {
   const { resetPasswordMutation, toggleStatusMutation } = useUserMutations();
-  const { hasPermission } = useAuthorization();
+  const { hasModule, isSuperAdmin } = usePermissions();
+  const canManageUsers = isSuperAdmin() || hasModule(MODULES.USER_MANAGEMENT);
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
@@ -39,7 +39,7 @@ const UserActions: React.FC<UserActionsProps> = ({ user, onSelect }) => {
       },
     ];
 
-    if (hasPermission('EDIT_USERS') || hasPermission(PERMISSIONS.USER_MANAGEMENT_EDIT)) {
+    if (canManageUsers) {
       menu.push({
         key: 'edit',
         label: t('users.actions.editRole'),
@@ -47,7 +47,7 @@ const UserActions: React.FC<UserActionsProps> = ({ user, onSelect }) => {
       });
     }
 
-    if (hasPermission(PERMISSIONS.USER_MANAGEMENT_RESET_PASSWORD)) {
+    if (canManageUsers) {
       menu.push({
         key: 'reset-password',
         label: t('users.actions.resetPassword'),
@@ -62,7 +62,7 @@ const UserActions: React.FC<UserActionsProps> = ({ user, onSelect }) => {
       });
     }
 
-    if (hasPermission(PERMISSIONS.USER_MANAGEMENT_TOGGLE_STATUS)) {
+    if (canManageUsers) {
       const nextEnabled = user.status !== 'ACTIVE';
       menu.push({
         key: 'toggle-status',

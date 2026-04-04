@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { UserDetail, UserModulePermission, UserModuleAccessLevel } from '@mfe/shared-types';
 import { useUserMutations } from '../../../features/user-management/model/use-users-query.model';
-import { PERMISSIONS } from '../../../features/user-management/lib/permissions.constants';
-import { useAuthorization } from '../../../features/user-management/model/use-authorization.model';
+import { usePermissions, MODULES } from '@mfe/auth';
 import { DetailDrawer } from '@mfe/design-system';
 import { useUsersI18n } from '../../../i18n/useUsersI18n';
 import { pushToast } from '../../../shared/notifications';
@@ -89,12 +88,15 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
     projectId: storedScope.projectId,
     warehouseId: storedScope.warehouseId,
   });
-  const { hasPermission, userId: currentUserId, role: currentRole } = useAuthorization();
+  const { hasModule, isSuperAdmin } = usePermissions();
+  const canManage = isSuperAdmin() || hasModule(MODULES.USER_MANAGEMENT);
+  const currentUserId: string | null = null;
+  const currentRole: string | null = null;
 
-  const canEditRole = hasPermission('EDIT_USERS') || hasPermission(PERMISSIONS.USER_MANAGEMENT_EDIT);
-  const canEditSessionTimeout = canEditRole;
-  const canToggleStatus = hasPermission(PERMISSIONS.USER_MANAGEMENT_TOGGLE_STATUS);
-  const canEditUserModule = hasPermission('EDIT_USERS') || hasPermission(PERMISSIONS.USER_MANAGEMENT_EDIT);
+  const canEditRole = canManage;
+  const canEditSessionTimeout = canManage;
+  const canToggleStatus = canManage;
+  const canEditUserModule = canManage;
 
   const statusToneMap: Record<string, string> = {
     ACTIVE: 'success',
