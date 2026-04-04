@@ -186,11 +186,12 @@ function checkHardcodedColors(maxElements: number): DoctorCheck[] {
 
     // Skip browser extensions, 3rd-party injected elements, AG Grid, and shell wrapper
     const elId = el.id ?? '';
+    const elCls = typeof el.className === 'string' ? el.className : '';
     if (
-      elId.startsWith('claude-') || elId.startsWith('grammarly') ||
-      el.closest('[data-ag-grid],.ag-root-wrapper,.ag-cell,[role="gridcell"],[role="row"]') ||
-      el.matches('.min-h-screen') ||
-      el.closest('#root > div:first-child')?.classList.contains('min-h-screen')
+      elId.startsWith('claude') || elId.startsWith('grammarly') ||
+      elCls.includes('min-h-screen') ||
+      elCls.includes('ag-') ||
+      el.closest('.ag-root-wrapper,[role="gridcell"],[role="row"]')
     ) continue;
 
     // Check for hardcoded colors in inline styles
