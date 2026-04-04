@@ -168,6 +168,18 @@ export type { AGGridApi } from "./grid-adapter/AGGridAdapter";
 export type { ChartGridLinkState } from "./grid-adapter/useChartGridLink";
 
 /* ------------------------------------------------------------------ */
+/*  Collaboration & Offline (P7)                                       */
+/* ------------------------------------------------------------------ */
+
+export { useDashboardState, serializeState, deserializeState } from "./collaboration/dashboard-state";
+export { useChartExport } from "./collaboration/chart-export";
+export type { ExportFormat, ExportOptions } from "./collaboration/chart-export";
+export { useDashboardSharing, createShareUrl, parseShareUrl } from "./collaboration/dashboard-sharing";
+export { useChartAnnotations } from "./collaboration/chart-annotations";
+export type { Annotation, AnnotationType } from "./collaboration/chart-annotations";
+export { useOfflineCache } from "./collaboration/offline-cache";
+
+/* ------------------------------------------------------------------ */
 /*  Performance (P6)                                                   */
 /* ------------------------------------------------------------------ */
 
