@@ -30,7 +30,8 @@ export const ThemeRuntimePanelButton: React.FC = () => {
         onClose={() => setOpen(false)}
         placement="right"
         size="md"
-        showOverlay={false}
+        showOverlay
+        closeOnOverlayClick
         closeOnEscape
         title={t('shell.theme.panel.dialogLabel')}
       >

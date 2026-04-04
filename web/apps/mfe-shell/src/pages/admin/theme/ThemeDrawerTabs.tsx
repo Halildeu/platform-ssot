@@ -224,7 +224,6 @@ const ThemeDrawerTabs: React.FC<ThemeDrawerTabsProps> = ({ admin }) => {
   const { t } = admin;
   const items = useMemo(
     () => [
-      { key: 'theme', label: 'Tema', content: <ThemeTab admin={admin} /> },
       { key: 'style', label: 'Stil', content: <StyleTab admin={admin} /> },
       { key: 'colors', label: 'Renkler', content: <ColorsTab admin={admin} /> },
       { key: 'export', label: 'Export', content: <ExportTab admin={admin} /> },
@@ -235,7 +234,7 @@ const ThemeDrawerTabs: React.FC<ThemeDrawerTabsProps> = ({ admin }) => {
   return (
     <Tabs
       items={items}
-      defaultActiveKey="theme"
+      defaultActiveKey="style"
       variant="enclosed"
       size="sm"
       density="compact"
