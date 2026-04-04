@@ -95,6 +95,8 @@
       "web/apps/mfe-shell/src/app/createLazyRemoteModule.tsx",
       "web/apps/mfe-shell/src/types/*",
       "web/apps/mfe-shell/src/pages/**/*",
+      "web/apps/mfe-shell/src/lib/*",
+      "web/apps/mfe-shell/src/index.tsx",
       "web/packages/design-system/src/**",
       "web/packages/design-system/src/index.ts",
       "web/packages/shared-types/**/*"

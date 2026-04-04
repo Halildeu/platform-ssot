@@ -147,7 +147,7 @@ const ThemeAxisControls: React.FC<ThemeAxisControlsProps> = ({
                       } disabled:cursor-not-allowed disabled:opacity-50`}
                       style={{
                         backgroundColor: band === 'ultra' ? `hsl(0 0% ${95 - i * 3}%)` : band === 'mid' ? `hsl(0 0% ${75 - i * 5}%)` : `hsl(0 0% ${50 - i * 6}%)`,
-                        color: band === 'deep' && i > 2 ? '#fff' : '#333',
+                        color: (band === 'deep') || (band === 'mid' && i > 3) ? '#fff' : '#333',
                       }}
                     >
                       {i + 1}
