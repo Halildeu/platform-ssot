@@ -1,7 +1,13 @@
 import { defineConfig } from 'vitest/config';
+import path from 'path';
 
 export default defineConfig({
   root: __dirname,
+  resolve: {
+    alias: {
+      '@mfe/x-charts': path.resolve(__dirname, '../x-charts/src/index.ts'),
+    },
+  },
   test: {
     root: __dirname,
     include: ['src/**/*.{test,spec}.{ts,tsx,js,jsx}'],
