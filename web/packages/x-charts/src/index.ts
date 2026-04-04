@@ -168,6 +168,18 @@ export type { AGGridApi } from "./grid-adapter/AGGridAdapter";
 export type { ChartGridLinkState } from "./grid-adapter/useChartGridLink";
 
 /* ------------------------------------------------------------------ */
+/*  Performance (P6)                                                   */
+/* ------------------------------------------------------------------ */
+
+export { downsampleLTTB } from "./performance/lttb";
+export { createWorkerBridge } from "./performance/worker-bridge";
+export type { WorkerBridge, WorkerTask } from "./performance/worker-bridge";
+export { useProgressiveRender } from "./performance/progressive-render";
+export { useLazyChart } from "./performance/lazy-chart";
+export { LRUCache } from "./performance/lru-cache";
+export { lazyChartImport } from "./performance/code-split";
+
+/* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
