@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { api } from '@mfe/shared-http';
 import { createSegmentedPreset } from '@mfe/design-system';
 import { useThemeContext } from '../../../app/theme/theme-context.provider';
@@ -101,6 +101,81 @@ export function useThemeAdmin() {
   const [success, setSuccess] = useState<string | null>(null);
   const [contrastWarnings, setContrastWarnings] = useState<Record<string, string>>({});
   const [activeColorPicker, setActiveColorPicker] = useState<ThemeColorPickerState | null>(null);
+
+  /* --- undo/redo (Phase 3) --- */
+  type ThemeSnapshot = { overrides: Record<string, string>; themeMeta: ThemeMetaState | null };
+  const [undoStack, setUndoStack] = useState<ThemeSnapshot[]>([]);
+  const [redoStack, setRedoStack] = useState<ThemeSnapshot[]>([]);
+  const savedSnapshotRef = useRef<ThemeSnapshot>({ overrides: {}, themeMeta: null });
+
+  const captureSnapshot = useCallback(
+    (): ThemeSnapshot => ({
+      overrides: { ...overrides },
+      themeMeta: themeMeta ? { ...themeMeta, axes: { ...themeMeta.axes } } : null,
+    }),
+    [overrides, themeMeta],
+  );
+
+  const pushUndo = useCallback(() => {
+    const snap = captureSnapshot();
+    setUndoStack((prev) => [...prev.slice(-(50 - 1)), snap]);
+    setRedoStack([]);
+  }, [captureSnapshot]);
+
+  const undo = useCallback(() => {
+    setUndoStack((prev) => {
+      if (prev.length === 0) return prev;
+      const snap = prev[prev.length - 1];
+      setRedoStack((redo) => [...redo, captureSnapshot()]);
+      setOverrides(snap.overrides);
+      setThemeMeta(snap.themeMeta);
+      return prev.slice(0, -1);
+    });
+  }, [captureSnapshot]);
+
+  const redo = useCallback(() => {
+    setRedoStack((prev) => {
+      if (prev.length === 0) return prev;
+      const snap = prev[prev.length - 1];
+      setUndoStack((undos) => [...undos, captureSnapshot()]);
+      setOverrides(snap.overrides);
+      setThemeMeta(snap.themeMeta);
+      return prev.slice(0, -1);
+    });
+  }, [captureSnapshot]);
+
+  const canUndo = undoStack.length > 0;
+  const canRedo = redoStack.length > 0;
+
+  /* --- dirty state (Phase 3) --- */
+  const isDirty = useMemo(() => {
+    const saved = savedSnapshotRef.current;
+    return JSON.stringify(overrides) !== JSON.stringify(saved.overrides)
+      || JSON.stringify(themeMeta) !== JSON.stringify(saved.themeMeta);
+  }, [overrides, themeMeta]);
+
+  /* --- keyboard shortcuts: Cmd+Z / Cmd+Shift+Z (Phase 3) --- */
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod || e.key.toLowerCase() !== 'z') return;
+      // Don't intercept when input/textarea is focused
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      e.preventDefault();
+      if (e.shiftKey) { redo(); } else { undo(); }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [undo, redo]);
+
+  /* --- beforeunload dirty warning (Phase 3) --- */
+  useEffect(() => {
+    if (!isDirty) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [isDirty]);
 
   /* --- axis option memos --- */
   const accentOptions = useMemo(() => getAccentOptions(t), [t]);
@@ -280,9 +355,8 @@ export function useThemeAdmin() {
           `theme.${selectedThemeId}`,
         );
         if (cancelled) return;
-        setOverrides(themeData.overrides ?? {});
-        setSelectedTheme(themeData ?? null);
-        setThemeMeta({
+        const loadedOverrides = themeData.overrides ?? {};
+        const loadedMeta: ThemeMetaState = {
           appearance: themeData.appearance ?? 'light',
           surfaceTone: themeData.surfaceTone ?? null,
           axes: {
@@ -292,7 +366,13 @@ export function useThemeAdmin() {
             elevation: themeData.axes?.elevation ?? 'raised',
             motion: themeData.axes?.motion ?? 'standard',
           },
-        });
+        };
+        setOverrides(loadedOverrides);
+        setSelectedTheme(themeData ?? null);
+        setThemeMeta(loadedMeta);
+        savedSnapshotRef.current = { overrides: { ...loadedOverrides }, themeMeta: { ...loadedMeta, axes: { ...loadedMeta.axes } } };
+        setUndoStack([]);
+        setRedoStack([]);
       } catch {
         if (!cancelled) {
           setError(t('themeadmin.error.loadThemeDetails'));
@@ -471,6 +551,7 @@ export function useThemeAdmin() {
   };
 
   const handleValueChange = (key: string, value: string) => {
+    pushUndo();
     const trimmed = value.trim();
     setOverrides((prev) => {
       const next = { ...prev };
@@ -600,6 +681,9 @@ export function useThemeAdmin() {
           : prev,
       );
       setSuccess(t('themeadmin.success.themeSaved'));
+      savedSnapshotRef.current = captureSnapshot();
+      setUndoStack([]);
+      setRedoStack([]);
       void refreshResolvedTheme({ force: true });
     } catch (err: unknown) {
       setError(formatHttpError(err, t('themeadmin.error.themeSave')));
@@ -607,6 +691,15 @@ export function useThemeAdmin() {
       setSaving(false);
     }
   };
+
+  /* --- theme meta with undo tracking --- */
+  const setThemeMetaWithUndo = useCallback(
+    (updater: (prev: ThemeMetaState | null) => ThemeMetaState | null) => {
+      pushUndo();
+      setThemeMeta(updater);
+    },
+    [pushUndo],
+  );
 
   /* --- manual theme selection --- */
   const selectThemeManually = (themeId: string | null) => {
@@ -636,8 +729,10 @@ export function useThemeAdmin() {
     contrastWarnings,
     /* status */
     loading, saving, error, success,
+    /* undo/redo (Phase 3) */
+    isDirty, canUndo, canRedo, undo, redo,
     /* actions */
-    setThemeMeta, selectThemeManually,
+    setThemeMeta: setThemeMetaWithUndo, selectThemeManually,
     openColorPicker, handleValueChange,
     handleDefaultThemeSave, handlePaletteSave, handleSave,
   };

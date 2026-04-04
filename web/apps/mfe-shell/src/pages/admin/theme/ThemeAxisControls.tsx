@@ -82,22 +82,35 @@ const ThemeAxisControls: React.FC<ThemeAxisControlsProps> = ({
           </div>
         </div>
 
-        {/* Accent dropdown */}
-        <label className="text-[11px] font-semibold text-text-secondary">
+        {/* Accent swatch grid (Phase 5) */}
+        <div className="text-[11px] font-semibold text-text-secondary">
           {t('themeadmin.meta.accent')}
-          <select
-            className="mt-1 h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-text-subtle"
-            value={themeMeta?.axes.accent ?? ''}
-            disabled={disabled}
-            onChange={(event) => updateAxis('accent', event.target.value)}
-          >
-            {accentOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
+          <div className="mt-1 flex flex-wrap gap-1.5">
+            {accentOptions.map((option) => {
+              const isSelected = themeMeta?.axes.accent === option.value;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  disabled={disabled}
+                  title={option.label}
+                  onClick={() => updateAxis('accent', option.value)}
+                  className={`flex h-8 items-center gap-1.5 rounded-lg border px-2 text-[10px] font-semibold transition-all ${
+                    isSelected
+                      ? 'border-action-primary bg-action-primary/10 text-action-primary ring-1 ring-action-primary'
+                      : 'border-border-subtle bg-surface-default text-text-secondary hover:border-text-secondary'
+                  } disabled:cursor-not-allowed disabled:opacity-50`}
+                >
+                  <span
+                    className="inline-block h-3.5 w-3.5 rounded-full border border-black/10"
+                    style={{ backgroundColor: `var(--color-accent-${option.value}, var(--color-action-primary))` }}
+                  />
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         {/* Surface tone dropdown */}
         <label className="text-[11px] font-semibold text-text-secondary">

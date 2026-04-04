@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   PageLayout,
   Text,
@@ -11,14 +11,24 @@ import { useThemeAdmin } from './theme/useThemeAdmin';
 import ThemeDefaultSelector from './theme/ThemeDefaultSelector';
 import ThemePaletteSelector from './theme/ThemePaletteSelector';
 import ThemeAxisControls from './theme/ThemeAxisControls';
+import ThemeExportDialog from './theme/ThemeExportDialog';
 
 // STORY-0022: Theme Personalization v1.0
 const ThemeAdminPage: React.FC = () => {
   const admin = useThemeAdmin();
   const { t } = admin;
+  const [exportOpen, setExportOpen] = useState(false);
 
   const title = t('themeadmin.page.title');
   const description = t('themeadmin.page.description');
+
+  const registryCssVarsByKey = useMemo(() => {
+    const map: Record<string, string[]> = {};
+    admin.registry.forEach((entry) => {
+      map[entry.key] = Array.isArray(entry.cssVars) ? entry.cssVars : [];
+    });
+    return map;
+  }, [admin.registry]);
 
   return (
     <PageLayout
@@ -35,6 +45,41 @@ const ThemeAdminPage: React.FC = () => {
           <Text variant="secondary">{t('themeadmin.loading')}</Text>
         ) : (
           <>
+            {/* Status bar: dirty indicator + undo/redo + export */}
+            <div className="flex flex-wrap items-center gap-2">
+              {admin.isDirty ? (
+                <span className="rounded-full bg-status-warning px-2 py-0.5 text-[10px] font-semibold text-status-warning-text">
+                  {t('themeadmin.dirty.unsaved')}
+                </span>
+              ) : null}
+              <button
+                type="button"
+                title="Undo (Cmd+Z)"
+                className="rounded-md border border-border-subtle bg-surface-default px-2 py-1 text-[11px] font-semibold text-text-secondary hover:border-text-secondary disabled:cursor-not-allowed disabled:text-text-subtle"
+                onClick={admin.undo}
+                disabled={!admin.canUndo}
+              >
+                ↩ Undo
+              </button>
+              <button
+                type="button"
+                title="Redo (Cmd+Shift+Z)"
+                className="rounded-md border border-border-subtle bg-surface-default px-2 py-1 text-[11px] font-semibold text-text-secondary hover:border-text-secondary disabled:cursor-not-allowed disabled:text-text-subtle"
+                onClick={admin.redo}
+                disabled={!admin.canRedo}
+              >
+                ↪ Redo
+              </button>
+              <div className="flex-1" />
+              <button
+                type="button"
+                className="rounded-md border border-border-subtle bg-surface-default px-2 py-1 text-[11px] font-semibold text-text-secondary hover:border-text-secondary"
+                onClick={() => setExportOpen(true)}
+              >
+                Export
+              </button>
+            </div>
+
             {admin.error ? (
               <div className="rounded-xl border border-status-danger-border bg-status-danger px-3 py-2 text-[11px] font-semibold text-status-danger-text">
                 {admin.error}
@@ -149,6 +194,16 @@ const ThemeAdminPage: React.FC = () => {
                 onSelectTheme={(themeId) => admin.selectThemeManually(themeId)}
               />
             </div>
+
+            {/* Export dialog (Phase 6) */}
+            <ThemeExportDialog
+              t={t}
+              open={exportOpen}
+              onClose={() => setExportOpen(false)}
+              overrides={admin.overrides}
+              themeMeta={admin.themeMeta}
+              registryCssVarsByKey={registryCssVarsByKey}
+            />
           </>
         )}
       </div>
