@@ -76,20 +76,15 @@ const ThemeDrawerPanel: React.FC<ThemeDrawerPanelProps> = ({ admin }) => {
     /* Radius token override — design-system doesn't bind data-radius to CSS vars yet */
     if (axis === 'radius') {
       const root = document.documentElement;
+      const radiusVars = ['--radius-xs', '--radius-sm', '--radius-md', '--radius-lg', '--radius-xl', '--radius-2xl', '--radius-3xl', '--radius-full'];
       if (value === 'sharp') {
-        root.style.setProperty('--radius-xs', '0');
-        root.style.setProperty('--radius-sm', '2px');
-        root.style.setProperty('--radius-md', '4px');
-        root.style.setProperty('--radius-lg', '6px');
-        root.style.setProperty('--radius-xl', '8px');
-        root.style.setProperty('--radius-full', '4px');
+        const sharpValues: Record<string, string> = {
+          '--radius-xs': '0', '--radius-sm': '1px', '--radius-md': '2px', '--radius-lg': '3px',
+          '--radius-xl': '4px', '--radius-2xl': '4px', '--radius-3xl': '6px', '--radius-full': '4px',
+        };
+        radiusVars.forEach((v) => root.style.setProperty(v, sharpValues[v] ?? '2px'));
       } else {
-        root.style.removeProperty('--radius-xs');
-        root.style.removeProperty('--radius-sm');
-        root.style.removeProperty('--radius-md');
-        root.style.removeProperty('--radius-lg');
-        root.style.removeProperty('--radius-xl');
-        root.style.removeProperty('--radius-full');
+        radiusVars.forEach((v) => root.style.removeProperty(v));
       }
     }
   }, [admin, liveUpdate]);
