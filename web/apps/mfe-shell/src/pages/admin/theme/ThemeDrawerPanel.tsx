@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { updateThemeAxes } from '@mfe/design-system';
 import type { UseThemeAdminReturn } from './useThemeAdmin';
+import { useThemeDoctor, type DoctorCheckStatus } from './useThemeDoctor';
 
 type ThemeDrawerPanelProps = {
   admin: UseThemeAdminReturn;
@@ -54,6 +55,7 @@ const ThemeDrawerPanel: React.FC<ThemeDrawerPanelProps> = ({ admin }) => {
   const { t } = admin;
   const [exportFormat, setExportFormat] = useState<'css' | 'json' | 'ts'>('css');
   const [copied, setCopied] = useState(false);
+  const doctor = useThemeDoctor();
 
   const appearance = admin.themeMeta?.appearance ?? 'light';
   const accent = admin.themeMeta?.axes.accent ?? 'neutral';
@@ -343,6 +345,72 @@ const ThemeDrawerPanel: React.FC<ThemeDrawerPanelProps> = ({ admin }) => {
                 İndir .{exportFormat}
               </button>
             </div>
+          </Section>
+
+          {/* ── Doktor (collapsible) ──────────────────── */}
+          <Section title="Doktor" collapsible defaultOpen={false}>
+            <button
+              type="button"
+              onClick={doctor.runDiagnostics}
+              disabled={doctor.running}
+              className="w-full rounded-lg border border-border-subtle bg-surface-muted px-3 py-2 text-[10px] font-semibold text-text-secondary hover:border-text-secondary disabled:opacity-50"
+            >
+              {doctor.running ? 'Kontrol ediliyor...' : '🩺 Tema Sağlık Kontrolü Çalıştır'}
+            </button>
+            {doctor.report ? (
+              <div className="flex flex-col gap-2">
+                {/* Summary bar */}
+                <div className="flex items-center gap-2 text-[10px] font-semibold">
+                  <span className="text-status-success-text">✓ {doctor.report.summary.pass}</span>
+                  {doctor.report.summary.warn > 0 && <span className="text-status-warning-text">⚠ {doctor.report.summary.warn}</span>}
+                  {doctor.report.summary.fail > 0 && <span className="text-status-danger-text">✗ {doctor.report.summary.fail}</span>}
+                  <span className="text-text-subtle">/ {doctor.report.checks.length} kontrol</span>
+                </div>
+                {/* Check list — only show warn/fail by default, pass collapsed */}
+                {doctor.report.checks.filter((c) => c.status !== 'pass').length > 0 && (
+                  <div className="flex flex-col gap-1">
+                    {doctor.report.checks
+                      .filter((c) => c.status !== 'pass')
+                      .map((check) => (
+                        <div
+                          key={check.id}
+                          className={`rounded-md border px-2 py-1.5 text-[9px] ${
+                            check.status === 'fail'
+                              ? 'border-status-danger-border bg-status-danger/10'
+                              : 'border-status-warning-border bg-status-warning/10'
+                          }`}
+                        >
+                          <div className="flex items-center gap-1 font-semibold">
+                            <span>{check.status === 'fail' ? '✗' : '⚠'}</span>
+                            <span className="text-text-primary">{check.label}</span>
+                          </div>
+                          <div className="mt-0.5 text-text-subtle">
+                            Beklenen: <span className="text-text-secondary">{check.expected}</span> — Gerçek: <span className="text-text-secondary">{check.actual}</span>
+                          </div>
+                          {check.detail && <div className="mt-0.5 text-text-subtle italic">{check.detail}</div>}
+                        </div>
+                      ))}
+                  </div>
+                )}
+                {/* Passed checks (collapsed) */}
+                <details className="text-[9px]">
+                  <summary className="cursor-pointer text-text-subtle hover:text-text-secondary">
+                    Geçen kontroller ({doctor.report.summary.pass})
+                  </summary>
+                  <div className="mt-1 flex flex-col gap-0.5">
+                    {doctor.report.checks
+                      .filter((c) => c.status === 'pass')
+                      .map((check) => (
+                        <div key={check.id} className="flex items-center gap-1 text-text-subtle">
+                          <span className="text-status-success-text">✓</span>
+                          <span>{check.label}</span>
+                          <span className="ml-auto font-mono">{check.actual}</span>
+                        </div>
+                      ))}
+                  </div>
+                </details>
+              </div>
+            ) : null}
           </Section>
 
         </div>
