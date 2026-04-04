@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { updateThemeAxes } from '@mfe/design-system';
 import type { ThemeOption, ThemeAdminTranslator } from '../ThemeAdminPage.shared';
 import type { UseThemeAdminReturn } from './useThemeAdmin';
 import ThemeDrawerTabs from './ThemeDrawerTabs';
@@ -121,6 +122,22 @@ const DensityToggle: React.FC<{
 
 const ThemeDrawerPanel: React.FC<ThemeDrawerPanelProps> = ({ admin }) => {
   const { t } = admin;
+  /* --- live context bridge: updateThemeAxes directly patches DOM + CSS vars --- */
+  const handleAccentChange = useCallback((value: string) => {
+    admin.setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, accent: value } } : prev));
+    updateThemeAxes({ accent: value });
+  }, [admin]);
+
+  const handleModeToggle = useCallback(() => {
+    const next = admin.themeMeta?.appearance === 'dark' ? 'light' : 'dark';
+    admin.toggleAppearance();
+    updateThemeAxes({ appearance: next });
+  }, [admin]);
+
+  const handleDensityChange = useCallback((value: string) => {
+    admin.setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, density: value } } : prev));
+    updateThemeAxes({ density: value });
+  }, [admin]);
 
   return (
     <div className="flex h-full flex-col">
@@ -129,22 +146,18 @@ const ThemeDrawerPanel: React.FC<ThemeDrawerPanelProps> = ({ admin }) => {
         <ModeToggle
           t={t}
           appearance={admin.themeMeta?.appearance ?? 'light'}
-          onToggle={admin.toggleAppearance}
+          onToggle={handleModeToggle}
         />
         <AccentGrid
           t={t}
           options={admin.accentOptions}
           selected={admin.themeMeta?.axes.accent ?? 'neutral'}
-          onSelect={(value) =>
-            admin.setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, accent: value } } : prev))
-          }
+          onSelect={handleAccentChange}
         />
         <DensityToggle
           t={t}
           selected={admin.themeMeta?.axes.density ?? 'comfortable'}
-          onSelect={(value) =>
-            admin.setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, density: value } } : prev))
-          }
+          onSelect={handleDensityChange}
         />
       </div>
 
