@@ -72,6 +72,26 @@ const ThemeDrawerPanel: React.FC<ThemeDrawerPanelProps> = ({ admin }) => {
       prev ? { ...prev, axes: { ...prev.axes, [axis]: value } } : prev,
     );
     liveUpdate({ [axis]: value });
+
+    /* Radius token override — design-system doesn't bind data-radius to CSS vars yet */
+    if (axis === 'radius') {
+      const root = document.documentElement;
+      if (value === 'sharp') {
+        root.style.setProperty('--radius-xs', '0');
+        root.style.setProperty('--radius-sm', '2px');
+        root.style.setProperty('--radius-md', '4px');
+        root.style.setProperty('--radius-lg', '6px');
+        root.style.setProperty('--radius-xl', '8px');
+        root.style.setProperty('--radius-full', '4px');
+      } else {
+        root.style.removeProperty('--radius-xs');
+        root.style.removeProperty('--radius-sm');
+        root.style.removeProperty('--radius-md');
+        root.style.removeProperty('--radius-lg');
+        root.style.removeProperty('--radius-xl');
+        root.style.removeProperty('--radius-full');
+      }
+    }
   }, [admin, liveUpdate]);
 
   const toggleMode = useCallback(() => {
@@ -333,22 +353,11 @@ const ThemeDrawerPanel: React.FC<ThemeDrawerPanelProps> = ({ admin }) => {
         </div>
       </div>
 
-      {/* ── Footer ─────────────────────────────────────── */}
-      <div className="flex items-center gap-2 border-t border-border-subtle px-5 py-3">
-        {admin.isDirty ? (
-          <span className="text-[10px] font-medium text-status-warning-text">Kaydedilmedi</span>
-        ) : (
-          <span className="text-[10px] text-text-subtle">Güncel</span>
-        )}
-        <div className="flex-1" />
-        <button
-          type="button"
-          className="rounded-lg bg-action-primary px-5 py-2 text-xs font-semibold text-action-primary-text hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-          onClick={() => void admin.handleSave()}
-          disabled={admin.saving || !admin.selectedThemeId || !admin.themeMeta}
-        >
-          {admin.saving ? 'Kaydediliyor...' : 'Kaydet'}
-        </button>
+      {/* ── Footer — minimal status ──────────────────── */}
+      <div className="flex items-center justify-center border-t border-border-subtle px-5 py-2">
+        <span className="text-[10px] text-text-subtle">
+          Değişiklikler anlık uygulanır
+        </span>
       </div>
     </div>
   );
