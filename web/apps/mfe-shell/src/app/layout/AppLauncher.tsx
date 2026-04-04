@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuthorization } from '../../features/auth/model/use-authorization.model';
-import { PERMISSIONS } from '../../features/auth/lib/permissions.constants';
+import { usePermissions, MODULES } from '@mfe/auth';
 import { useShellCommonI18n } from '../i18n';
 import { useThemeContext } from '../theme/theme-context.provider';
 import { isEthicRemoteEnabled, isSuggestionsRemoteEnabled } from '../shell-navigation';
@@ -34,7 +33,7 @@ const baseLauncherItems = [
     titleKey: 'shell.nav.access',
     descriptionKey: 'shell.launcher.access.description',
     to: '/access/roles',
-    requiredPermission: PERMISSIONS.ACCESS_MODULE,
+    requiredModule: MODULES.ACCESS,
   },
   {
     key: 'users',
@@ -42,12 +41,12 @@ const baseLauncherItems = [
     titleKey: 'shell.nav.users',
     descriptionKey: 'shell.launcher.users.description',
     to: '/admin/users',
-    requiredPermission: PERMISSIONS.USER_MANAGEMENT_MODULE,
+    requiredModule: MODULES.USER_MANAGEMENT,
   },
-];
+] as const;
 
 const AppLauncher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { hasPermission } = useAuthorization();
+  const { hasModule, isSuperAdmin } = usePermissions();
   const { t, locale } = useShellCommonI18n();
   const { axes } = useThemeContext();
   const suggestionsEnabled = isSuggestionsRemoteEnabled();
@@ -72,13 +71,13 @@ const AppLauncher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         }
         return true;
       })
-      .filter((item) => !item.requiredPermission || hasPermission(item.requiredPermission))
+      .filter((item) => !item.requiredModule || isSuperAdmin() || hasModule(item.requiredModule))
       .map((item) => ({
         ...item,
         title: t(item.titleKey),
         description: t(item.descriptionKey),
       }))
-  ), [ethicEnabled, hasPermission, locale, suggestionsEnabled, t]);
+  ), [ethicEnabled, hasModule, isSuperAdmin, locale, suggestionsEnabled, t]);
 
   return (
     <div className="fixed inset-0 z-[1600]" role="dialog" aria-modal="true" aria-label={t('shell.launcher.title')}>
