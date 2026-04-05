@@ -29,8 +29,111 @@ Owner: @team/platform
   - Ubuntu host `deploy/ubuntu/deploy-backend.sh`
 
 -------------------------------------------------------------------------------
-3. CANONICAL PATH / DOSYA HARİTASI
+3. BAŞLATMA / DURDURMA
 -------------------------------------------------------------------------------
+
+### 3.1 Başlatma akışı
+
+- Önce Vault runtime config path’i doldurulur:
+  - `secret/<env>/backend-deploy/config`
+- Ardından GitHub deploy integration path’i doldurulur:
+  - `secret/<env>/ops/github/backend-deploy`
+- Önce dry-run, sonra gerçek sync çalıştırılır.
+- Ubuntu hostta `backend.env` materialize edilir.
+- `main` merge sonrası GitHub Actions GHCR image’larını üretir ve host deploy adımını tetikler.
+
+### 3.2 Vault yazımı
+
+- Stage için:
+
+```bash
+ENV=stage \
+VAULT_ADDR="https://vault.example.com" \
+VAULT_TOKEN="..." \
+GIT_REMOTE_URL="git@github.com:Halildeu/platform-ssot.git" \
+REPO_BRANCH="main" \
+GHCR_OWNER="halildeu" \
+GHCR_USERNAME="github-user" \
+GHCR_TOKEN="..." \
+BACKEND_SSH_DEPLOY_ENABLED="true" \
+BACKEND_DEPLOY_SSH_HOST="10.9.10.53" \
+BACKEND_DEPLOY_SSH_USER="halil" \
+BACKEND_DEPLOY_SSH_KEY="..." \
+BACKEND_DEPLOY_SSH_KNOWN_HOSTS="..." \
+BACKEND_HEALTH_URLS="https://api.example.com/actuator/health" \
+bash backend/scripts/vault/write-backend-deploy-stage.sh
+```
+
+- Prod için aynı içerik `write-backend-deploy-prod.sh` ile yazılır.
+
+### 3.3 Vault preflight
+
+- Secret değerlerini göstermeden kontrat doğrulaması:
+
+```bash
+ENV=stage \
+VAULT_ADDR="https://vault.example.com" \
+VAULT_TOKEN="..." \
+bash backend/scripts/vault/check-backend-deploy-stage.sh
+```
+
+### 3.4 GitHub secrets sync
+
+- Önce dry-run:
+
+```text
+workflow: vault-secrets-sync.yml
+mode: backend-deploy
+env: stage
+secret_scope: environment
+github_environment: stage
+dry_run: true
+```
+
+- Sonra gerçek sync:
+
+```text
+workflow: vault-secrets-sync.yml
+mode: backend-deploy
+env: stage
+secret_scope: environment
+github_environment: stage
+dry_run: false
+```
+
+### 3.5 GitHub environment standardı
+
+- Stage backend deploy secret'ları `stage` environment altında tutulur.
+- Prod backend deploy secret'ları `prod` environment altında tutulur.
+- Repo-level BACKEND_* secret'ları yalnız geçiş dönemi fallback'i olarak kalır; merge sonrası temizlenir.
+
+### 3.6 Ubuntu host render
+
+```bash
+export VAULT_ADDR="https://vault.example.com"
+export VAULT_TOKEN="..."
+export DEPLOY_ENV="stage"
+
+deploy/ubuntu/render-backend-env.sh
+```
+
+### 3.7 Deploy / durdurma / rollback
+
+- `main` branch’e merge sonrası:
+  - `deploy-backend.yml`
+  - GHCR push
+  - SSH deploy
+  - `post-deploy-validate.yml`
+  - gerekirse `rollback.yml`
+- Host rollback giriş noktası:
+  - `deploy/ubuntu/rollback-backend.sh`
+- Hosttaki compose stack’i durdurma / yeniden başlatma işlemleri aynı deploy kökünde ve aynı env dosyasıyla yapılır; ad-hoc ikinci compose projesi açılmaz.
+
+-------------------------------------------------------------------------------
+4. GÖZLEMLEME / LOG / METRİKLER
+-------------------------------------------------------------------------------
+
+### 4.1 Canonical path / dosya haritası
 
 - Vault runtime config:
   - `secret/<env>/backend-deploy/config`
@@ -52,11 +155,9 @@ Owner: @team/platform
   - `.github/workflows/rollback.yml`
   - `.github/workflows/vault-secrets-sync.yml`
 
--------------------------------------------------------------------------------
-4. VAULT KEY MATRİSİ
--------------------------------------------------------------------------------
+### 4.2 Vault key matrisi
 
-### 4.1 `secret/<env>/backend-deploy/config`
+`secret/<env>/backend-deploy/config`
 
 Zorunlu:
 - `GIT_REMOTE_URL`
@@ -97,7 +198,7 @@ Zorunlu:
 - `REPORT_*`
 - `SCHEMA_*`
 
-### 4.2 `secret/<env>/ops/github/backend-deploy`
+`secret/<env>/ops/github/backend-deploy`
 
 Her durumda zorunlu:
 - `BACKEND_SSH_DEPLOY_ENABLED`
@@ -115,96 +216,21 @@ Opsiyonel:
 - `BACKEND_DEPLOY_REMOTE_REPO_DIR`
 - `BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES`
 
--------------------------------------------------------------------------------
-5. ADIM ADIM AKIŞ
--------------------------------------------------------------------------------
+### 4.3 Gözlemleme referansları
 
-### 5.1 Vault yazımı
-
-- Stage için:
-
-```bash
-ENV=stage \
-VAULT_ADDR="https://vault.example.com" \
-VAULT_TOKEN="..." \
-GIT_REMOTE_URL="git@github.com:Halildeu/platform-ssot.git" \
-REPO_BRANCH="main" \
-GHCR_OWNER="halildeu" \
-GHCR_USERNAME="github-user" \
-GHCR_TOKEN="..." \
-BACKEND_SSH_DEPLOY_ENABLED="true" \
-BACKEND_DEPLOY_SSH_HOST="10.9.10.53" \
-BACKEND_DEPLOY_SSH_USER="halil" \
-BACKEND_DEPLOY_SSH_KEY="..." \
-BACKEND_DEPLOY_SSH_KNOWN_HOSTS="..." \
-BACKEND_HEALTH_URLS="https://api.example.com/actuator/health" \
-bash backend/scripts/vault/write-backend-deploy-stage.sh
-```
-
-- Prod için aynı içerik `write-backend-deploy-prod.sh` ile yazılır.
-
-### 5.2 Vault preflight
-
-- Secret değerlerini göstermeden kontrat doğrulaması:
-
-```bash
-ENV=stage \
-VAULT_ADDR="https://vault.example.com" \
-VAULT_TOKEN="..." \
-bash backend/scripts/vault/check-backend-deploy-stage.sh
-```
-
-### 5.3 GitHub secrets sync
-
-- Önce dry-run:
-
-```text
-workflow: vault-secrets-sync.yml
-mode: backend-deploy
-env: stage
-secret_scope: environment
-github_environment: stage
-dry_run: true
-```
-
-- Sonra gerçek sync:
-
-```text
-workflow: vault-secrets-sync.yml
-mode: backend-deploy
-env: stage
-secret_scope: environment
-github_environment: stage
-dry_run: false
-```
-
-### 5.3.1 GitHub environment standardı
-
-- Stage backend deploy secret'ları `stage` environment altında tutulur.
-- Prod backend deploy secret'ları `prod` environment altında tutulur.
-- Repo-level BACKEND_* secret'ları yalnız geçiş dönemi fallback'i olarak kalır; merge sonrası temizlenir.
-
-### 5.4 Ubuntu host render
-
-```bash
-export VAULT_ADDR="https://vault.example.com"
-export VAULT_TOKEN="..."
-export DEPLOY_ENV="stage"
-
-deploy/ubuntu/render-backend-env.sh
-```
-
-### 5.5 Deploy
-
-- `main` branch’e merge sonrası:
-  - `deploy-backend.yml`
-  - GHCR push
-  - SSH deploy
-  - `post-deploy-validate.yml`
-  - gerekirse `rollback.yml`
+- GitHub tarafında izlenecek workflow’lar:
+  - `.github/workflows/deploy-backend.yml`
+  - `.github/workflows/post-deploy-validate.yml`
+  - `.github/workflows/rollback.yml`
+- Host tarafında doğrulanacak temel health yüzeyleri:
+  - gateway actuator health
+  - servis bazlı actuator health endpoint’leri
+- Operasyonel state dosyaları:
+  - `backend.current-image-tag`
+  - `backend.previous-image-tag`
 
 -------------------------------------------------------------------------------
-6. ARIZA DURUMLARI VE ADIMLAR
+5. ARIZA DURUMLARI VE ADIMLAR
 -------------------------------------------------------------------------------
 
 - [ ] Arıza senaryosu 1 – Vault config eksik:
@@ -228,7 +254,7 @@ deploy/ubuntu/render-backend-env.sh
   - Then: image’lar GHCR’ye push edilir ama host deploy ve backend validate atlanır.
 
 -------------------------------------------------------------------------------
-7. ÖZET
+6. ÖZET
 -------------------------------------------------------------------------------
 
 - Secret source of truth Vault’tur.
@@ -238,9 +264,10 @@ deploy/ubuntu/render-backend-env.sh
 - Dry-run ve Vault preflight PASS olmadan canlı deploy zinciri başlatılmaz.
 
 -------------------------------------------------------------------------------
-8. LİNKLER
+7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
+- `docs/99-templates/RUNBOOK.template.md`
 - `docs/04-operations/RUNBOOKS/RB-vault.md`
 - `docs/04-operations/RUNBOOKS/RB-local-merge-deploy-orchestrator.md`
 - `deploy/ubuntu/README.md`

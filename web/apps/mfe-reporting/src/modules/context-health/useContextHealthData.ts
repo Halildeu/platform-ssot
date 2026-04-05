@@ -68,7 +68,7 @@ export function useContextHealthData(): UseContextHealthDataReturn {
 
   useEffect(() => {
     fetchAll();
-  }, [refreshKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fetchAll, refreshKey]);
 
   useEffect(() => {
     if (!activeGridId) return;

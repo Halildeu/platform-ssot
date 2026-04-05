@@ -39,7 +39,10 @@
     ],
     "change_path_globs": [
       "backend/auth-service/**/*",
+      "backend/.env.prod.example",
+      "backend/.gitignore",
       "backend/permission-service/**/*",
+      "backend/permission-service/Dockerfile",
       "backend/user-service/**/*",
       "backend/common-auth/**/*",
       "backend/api-gateway/**/*",
