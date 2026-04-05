@@ -23,7 +23,6 @@ jobs:
       && (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch')
     env:
       DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
-      BACKEND_SSH_DEPLOY_ENABLED: ${{ secrets.BACKEND_SSH_DEPLOY_ENABLED }}
 
     steps:
       - name: Skip if deploy disabled
@@ -34,7 +33,6 @@ jobs:
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         env:
           TRIGGER_WORKFLOW: ${{ github.event.workflow_run.name }}
-          BACKEND_SSH_DEPLOY_ENABLED: ${{ secrets.BACKEND_SSH_DEPLOY_ENABLED }}
           WEB_SMOKE_URL: ${{ secrets.WEB_SMOKE_URL }}
           BACKEND_HEALTH_URLS: ${{ secrets.BACKEND_HEALTH_URLS }}
         shell: bash
@@ -53,9 +51,7 @@ jobs:
               validate_web=1
               ;;
             deploy-backend)
-              if [ "${BACKEND_SSH_DEPLOY_ENABLED:-}" = "true" ]; then
-                validate_backend=1
-              fi
+              echo "::notice title=post-deploy-validate::Backend validation delegated to stage self-hosted runner."
               ;;
             *)
               [ -n "${WEB_SMOKE_URL:-}" ] && validate_web=1
@@ -93,6 +89,56 @@ jobs:
           else
             echo "::notice title=post-deploy-validate::Backend validation skipped for ${TRIGGER_WORKFLOW}."
           fi
+
+          if [ "${fail}" = "1" ]; then
+            echo "::error title=post-deploy-validate::Validation failed."
+            exit 1
+          fi
+
+          echo "::notice title=post-deploy-validate::PASS"
+
+  validate-stage-backend:
+    runs-on:
+      - self-hosted
+      - linux
+      - x64
+      - stage-backend
+    environment: stage
+    if: >-
+      github.event.workflow_run.conclusion == 'success'
+      && github.event.workflow_run.name == 'deploy-backend'
+      && (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch')
+    env:
+      DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
+
+    steps:
+      - name: Skip if deploy disabled
+        if: ${{ env.DEPLOY_ENABLED != 'true' }}
+        run: echo "::notice title=post-deploy-validate::DEPLOY_ENABLED!=true; skipping stage backend validation."
+
+      - name: Validate stage backend (self-hosted)
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        env:
+          BACKEND_HEALTH_URLS: ${{ secrets.BACKEND_HEALTH_URLS }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +x
+
+          if [ -z "${BACKEND_HEALTH_URLS:-}" ]; then
+            echo "::error title=post-deploy-validate::BACKEND_HEALTH_URLS missing; refusing to validate backend deploy."
+            exit 1
+          fi
+
+          fail=0
+          echo "::group::backend healthchecks"
+          IFS=',' read -r -a urls <<< "${BACKEND_HEALTH_URLS}"
+          for u in "${urls[@]}"; do
+            u="$(echo "${u}" | xargs)"
+            [ -n "${u}" ] || continue
+            curl -fsS "${u}" >/dev/null || fail=1
+          done
+          echo "::endgroup::"
 
           if [ "${fail}" = "1" ]; then
             echo "::error title=post-deploy-validate::Validation failed."

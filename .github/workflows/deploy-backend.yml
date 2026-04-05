@@ -137,7 +137,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Deploy to Ubuntu via SSH (required)
-        if: ${{ env.DEPLOY_ENABLED == 'true' && env.BACKEND_SSH_DEPLOY_ENABLED == 'true' }}
+        if: ${{ env.DEPLOY_ENABLED == 'true' && env.BACKEND_SSH_DEPLOY_ENABLED == 'true' && (github.event.inputs.env || 'stage') != 'stage' }}
         env:
           SHA: ${{ github.sha }}
           GITHUB_TOKEN: ${{ github.token }}
@@ -239,5 +239,60 @@ jobs:
           EOF
 
       - name: Backend host deploy skipped
-        if: ${{ env.DEPLOY_ENABLED == 'true' && env.BACKEND_SSH_DEPLOY_ENABLED != 'true' }}
+        if: ${{ env.DEPLOY_ENABLED == 'true' && env.BACKEND_SSH_DEPLOY_ENABLED != 'true' && (github.event.inputs.env || 'stage') != 'stage' }}
         run: echo "::notice title=deploy-backend::Images pushed to GHCR; SSH host deploy skipped because BACKEND_SSH_DEPLOY_ENABLED!=true."
+
+  deploy-stage-host:
+    runs-on:
+      - self-hosted
+      - linux
+      - x64
+      - stage-backend
+    needs: deploy-backend
+    if: ${{ needs.deploy-backend.result == 'success' && (github.event.inputs.env || 'stage') == 'stage' }}
+    environment: stage
+    env:
+      DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
+
+    steps:
+      - name: Skip if deploy disabled
+        if: ${{ env.DEPLOY_ENABLED != 'true' }}
+        run: echo "::notice title=deploy-backend::DEPLOY_ENABLED!=true; skipping stage host deploy."
+
+      - uses: actions/checkout@v4
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        with:
+          fetch-depth: 0
+
+      - name: Deploy on stage host (self-hosted)
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          BACKEND_DEPLOY_REMOTE_ENV_FILE: ${{ secrets.BACKEND_DEPLOY_REMOTE_ENV_FILE }}
+          BACKEND_DEPLOY_REMOTE_REPO_DIR: ${{ secrets.BACKEND_DEPLOY_REMOTE_REPO_DIR }}
+          BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES: ${{ secrets.BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +x
+
+          short_sha="${GITHUB_SHA:0:7}"
+          remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
+          remote_repo_dir="${BACKEND_DEPLOY_REMOTE_REPO_DIR:-/home/halil/platform/repo}"
+          remote_profiles="${BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES:-}"
+
+          if [ ! -f "${remote_env_file}" ]; then
+            echo "::error title=deploy-backend::backend env file missing: ${remote_env_file}"
+            exit 1
+          fi
+
+          chmod +x deploy/ubuntu/deploy-backend.sh deploy/ubuntu/rollback-backend.sh
+
+          ENV_FILE="${remote_env_file}" \
+          REPO_DIR="${remote_repo_dir}" \
+          COMPOSE_PROFILES="${remote_profiles}" \
+          GHCR_USERNAME="${GITHUB_ACTOR}" \
+          GHCR_TOKEN="${GITHUB_TOKEN}" \
+          TARGET_IMAGE_TAG="sha-${short_sha}" \
+          deploy/ubuntu/deploy-backend.sh
