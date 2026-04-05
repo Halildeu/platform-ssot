@@ -122,6 +122,12 @@ sync_repo() {
   git clone --branch "${REPO_BRANCH}" --depth 1 "${GIT_REMOTE_URL}" "${REPO_DIR}"
 }
 
+pre_sync_existing_repo() {
+  if [[ -d "${REPO_DIR}/.git" ]]; then
+    sync_repo
+  fi
+}
+
 compose_cmd() {
   local args=()
   local profile
@@ -140,6 +146,7 @@ main() {
   require_cmd git
   require_cmd docker
 
+  pre_sync_existing_repo
   maybe_render_env
   load_env_file
   sync_repo
