@@ -35,14 +35,7 @@ kv_get_json() {
 
 json_get() {
   local key="$1"
-  python3 - "$key" <<'PY'
-import json
-import sys
-
-payload = json.load(sys.stdin)
-key = sys.argv[1]
-print(payload.get("data", {}).get("data", {}).get(key, ""), end="")
-PY
+  python3 -c 'import json, sys; payload = json.load(sys.stdin); print(payload.get("data", {}).get("data", {}).get(sys.argv[1], ""), end="")' "$key"
 }
 
 write_kv() {
