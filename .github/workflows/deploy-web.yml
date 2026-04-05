@@ -32,12 +32,12 @@ jobs:
         if: ${{ env.DEPLOY_ENABLED != 'true' }}
         run: echo "::notice title=deploy-web::DEPLOY_ENABLED!=true; skipping."
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         with:
           python-version: "3.11"
@@ -79,7 +79,7 @@ jobs:
               --out .cache/reports/deploy_scope_gate_web.v1.json
           fi
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         with:
           node-version: 20

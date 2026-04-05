@@ -47,6 +47,8 @@
       "backend/common-auth/**/*",
       "backend/api-gateway/**/*",
       "backend/scripts/ci/security/*",
+      "backend/scripts/vault/**/*",
+      "backend/infra/vault/**/*",
       "web/packages/platform-capabilities/**",
       "web/.gitignore",
       "web/.npmrc",
