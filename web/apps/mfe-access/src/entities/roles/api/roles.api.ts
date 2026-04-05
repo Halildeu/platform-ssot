@@ -62,7 +62,7 @@ const resolveHttpClient = (): ApiInstance => {
 const toAccessLevel = (value?: string): AccessLevel => {
   const upper = (value || '').toUpperCase();
   if (upper === 'VIEW') return 'VIEW';
-  if (upper === 'EDIT') return 'EDIT';
+  if (upper === 'EDIT') return 'MANAGE'; // EDIT → MANAGE per STORY-0318 K1
   if (upper === 'MANAGE') return 'MANAGE';
   return 'NONE';
 };
