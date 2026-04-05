@@ -48,11 +48,13 @@ export function useInlineECharts(options: InlineEChartsOptions) {
 
     if (onClick) instance.on('click', onClick);
 
-    const observer = new ResizeObserver(() => instance.resize());
-    observer.observe(el);
+    const observer = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(() => instance.resize())
+      : null;
+    observer?.observe(el);
 
     return () => {
-      observer.disconnect();
+      observer?.disconnect();
       if (onClick) instance.off('click', onClick);
       instance.dispose();
       instanceRef.current = null;
