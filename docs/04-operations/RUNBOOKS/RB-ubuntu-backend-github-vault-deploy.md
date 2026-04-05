@@ -37,10 +37,10 @@ Owner: @team/platform
 - Vault GitHub backend deploy secrets:
   - `secret/<env>/ops/github/backend-deploy`
 - Ubuntu materialized env:
-  - `/opt/platform/env/backend.env`
+  - `/home/halil/platform/env/backend.env`
 - Ubuntu deploy state:
-  - `/opt/platform/state/backend.current-image-tag`
-  - `/opt/platform/state/backend.previous-image-tag`
+  - `/home/halil/platform/state/backend.current-image-tag`
+  - `/home/halil/platform/state/backend.previous-image-tag`
 - Repo dosyaları:
   - `backend/docker-compose.prod.yml`
   - `backend/.env.prod.example`
@@ -62,8 +62,6 @@ Zorunlu:
 - `GIT_REMOTE_URL`
 - `REPO_BRANCH`
 - `GHCR_OWNER`
-- `GHCR_USERNAME`
-- `GHCR_TOKEN`
 - `VAULT_URI`
 - `VAULT_TOKEN`
 - `KEYCLOAK_ISSUER_URI`
@@ -164,6 +162,8 @@ bash backend/scripts/vault/check-backend-deploy-stage.sh
 workflow: vault-secrets-sync.yml
 mode: backend-deploy
 env: stage
+secret_scope: environment
+github_environment: stage
 dry_run: true
 ```
 
@@ -173,8 +173,16 @@ dry_run: true
 workflow: vault-secrets-sync.yml
 mode: backend-deploy
 env: stage
+secret_scope: environment
+github_environment: stage
 dry_run: false
 ```
+
+### 5.3.1 GitHub environment standardı
+
+- Stage backend deploy secret'ları `stage` environment altında tutulur.
+- Prod backend deploy secret'ları `prod` environment altında tutulur.
+- Repo-level BACKEND_* secret'ları yalnız geçiş dönemi fallback'i olarak kalır; merge sonrası temizlenir.
 
 ### 5.4 Ubuntu host render
 

@@ -6,7 +6,7 @@ VAULT_ADDR="${VAULT_ADDR:?VAULT_ADDR required}"
 VAULT_TOKEN="${VAULT_TOKEN:?VAULT_TOKEN required}"
 VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-secret}"
 BACKEND_CONFIG_PATH_TEMPLATE="${BACKEND_CONFIG_PATH_TEMPLATE:-<env>/backend-deploy/config}"
-OUTPUT_FILE="${OUTPUT_FILE:-/opt/platform/env/backend.env}"
+OUTPUT_FILE="${OUTPUT_FILE:-/home/halil/platform/env/backend.env}"
 
 require_cmd() {
   if ! command -v "$1" >/dev/null 2>&1; then

@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_DIR="${REPO_DIR:-/opt/platform/repo}"
+REPO_DIR="${REPO_DIR:-/home/halil/platform/repo}"
 BACKEND_DIR="${BACKEND_DIR:-${REPO_DIR}/backend}"
-ENV_FILE="${ENV_FILE:-/opt/platform/env/backend.env}"
+ENV_FILE="${ENV_FILE:-/home/halil/platform/env/backend.env}"
 COMPOSE_FILE="${COMPOSE_FILE:-${BACKEND_DIR}/docker-compose.prod.yml}"
 REPO_BRANCH="${REPO_BRANCH:-main}"
 GIT_REMOTE_URL="${GIT_REMOTE_URL:-}"
 COMPOSE_PROFILES="${COMPOSE_PROFILES:-}"
-STATE_DIR="${STATE_DIR:-/opt/platform/state}"
+STATE_DIR="${STATE_DIR:-/home/halil/platform/state}"
 CURRENT_TAG_FILE="${CURRENT_TAG_FILE:-${STATE_DIR}/backend.current-image-tag}"
 PREVIOUS_TAG_FILE="${PREVIOUS_TAG_FILE:-${STATE_DIR}/backend.previous-image-tag}"
 TARGET_IMAGE_TAG="${TARGET_IMAGE_TAG:-}"

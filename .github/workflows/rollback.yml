@@ -6,6 +6,10 @@ on:
     types: [completed]
   workflow_dispatch:
     inputs:
+      env:
+        description: "Rollback environment"
+        required: true
+        default: "stage"
       confirm:
         description: "Type ROLLBACK to confirm"
         required: true
@@ -26,6 +30,7 @@ concurrency:
 jobs:
   rollback:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.env || 'stage' }}
     if: >-
       (github.event_name == 'workflow_dispatch' && github.event.inputs.confirm == 'ROLLBACK')
       || (github.event_name == 'workflow_run' && (github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'timed_out'))
@@ -98,8 +103,8 @@ jobs:
             curl -fsS -X POST "${BACKEND_ROLLBACK_HOOK_URL}"
           else
             ssh_port="${BACKEND_DEPLOY_SSH_PORT:-22}"
-            remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/opt/platform/env/backend.env}"
-            remote_repo_dir="${BACKEND_DEPLOY_REMOTE_REPO_DIR:-/opt/platform/repo}"
+            remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
+            remote_repo_dir="${BACKEND_DEPLOY_REMOTE_REPO_DIR:-/home/halil/platform/repo}"
             remote_profiles="${BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES:-}"
 
             key_path="${RUNNER_TEMP}/backend_rollback_ssh_key"

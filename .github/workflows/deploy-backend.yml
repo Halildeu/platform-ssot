@@ -26,6 +26,7 @@ jobs:
   deploy-backend:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
+    environment: ${{ github.event.inputs.env || 'stage' }}
     env:
       DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
       BACKEND_SSH_DEPLOY_ENABLED: ${{ secrets.BACKEND_SSH_DEPLOY_ENABLED }}
@@ -161,8 +162,8 @@ jobs:
           fi
 
           short_sha="${SHA:0:7}"
-          remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/opt/platform/env/backend.env}"
-          remote_repo_dir="${BACKEND_DEPLOY_REMOTE_REPO_DIR:-/opt/platform/repo}"
+          remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
+          remote_repo_dir="${BACKEND_DEPLOY_REMOTE_REPO_DIR:-/home/halil/platform/repo}"
           remote_profiles="${BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES:-}"
           ssh_port="${BACKEND_DEPLOY_SSH_PORT:-22}"
 

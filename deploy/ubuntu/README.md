@@ -16,16 +16,17 @@ Bu klasör GitHub-first backend deploy akışının Ubuntu tarafındaki scriptle
 - `docker` + Compose v2
 - `curl`
 - `jq`
-- `/opt/platform/env/backend.env`
+- `/home/halil/platform/env/backend.env`
 - GitHub repo clone erişimi (`GIT_REMOTE_URL`)
 - GHCR read erişimi deploy workflow tarafından ephemeral olarak taşınır
+- Backend deploy secret'ları için önerilen GitHub target'ı environment bazlı `stage` / `prod` secret setidir
 
 ## Vault sözleşmesi
 
 - Canonical deploy env path'i: `secret/<env>/backend-deploy/config`
 - Canonical GitHub backend deploy secret path'i: `secret/<env>/ops/github/backend-deploy`
 - Host üzerindeki materialized env dosyası:
-  - `/opt/platform/env/backend.env`
+  - `/home/halil/platform/env/backend.env`
 - Render script:
   - `deploy/ubuntu/render-backend-env.sh`
 - Preflight script:
@@ -35,8 +36,7 @@ Bu klasör GitHub-first backend deploy akışının Ubuntu tarafındaki scriptle
 Örnek kullanım:
 
 ```bash
-sudo mkdir -p /opt/platform/env
-sudo chown "$USER":"$USER" /opt/platform/env
+mkdir -p "$HOME/platform/env"
 
 export VAULT_ADDR="https://vault.example.com"
 export VAULT_TOKEN="..."
@@ -68,6 +68,11 @@ bash backend/scripts/vault/check-backend-deploy-stage.sh
 - `BACKEND_HEALTH_URLS`
 
 Bu secret'lar elle yazılmak zorunda değil. `vault-secrets-sync.yml` artık `mode=backend-deploy` ile `secret/<env>/ops/github/backend-deploy` path'inden GitHub Actions secret'larına senkron yapabiliyor.
+
+Önerilen hedef:
+- `stage` backend secret'ları GitHub `stage` environment'ına yazılır
+- `prod` backend secret'ları GitHub `prod` environment'ına yazılır
+- Repo-level duplicate secret'lar merge sonrası temizlenir
 
 ## GHCR erişimi
 

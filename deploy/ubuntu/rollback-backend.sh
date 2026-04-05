@@ -2,9 +2,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
-REPO_DIR="${REPO_DIR:-/opt/platform/repo}"
-ENV_FILE="${ENV_FILE:-/opt/platform/env/backend.env}"
-STATE_DIR="${STATE_DIR:-/opt/platform/state}"
+REPO_DIR="${REPO_DIR:-/home/halil/platform/repo}"
+ENV_FILE="${ENV_FILE:-/home/halil/platform/env/backend.env}"
+STATE_DIR="${STATE_DIR:-/home/halil/platform/state}"
 PREVIOUS_TAG_FILE="${PREVIOUS_TAG_FILE:-${STATE_DIR}/backend.previous-image-tag}"
 CURRENT_TAG_FILE="${CURRENT_TAG_FILE:-${STATE_DIR}/backend.current-image-tag}"
 
@@ -34,4 +34,3 @@ REPO_DIR="${REPO_DIR}" \
 STATE_DIR="${STATE_DIR}" \
 TARGET_IMAGE_TAG="${previous_tag}" \
 "${SCRIPT_DIR}/deploy-backend.sh"
-
