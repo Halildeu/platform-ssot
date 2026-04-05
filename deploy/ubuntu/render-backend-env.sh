@@ -35,7 +35,14 @@ kv_get_json() {
 
 json_get() {
   local key="$1"
-  jq -r --arg key "${key}" '.data.data[$key] // empty'
+  python3 - "$key" <<'PY'
+import json
+import sys
+
+payload = json.load(sys.stdin)
+key = sys.argv[1]
+print(payload.get("data", {}).get("data", {}).get(key, ""), end="")
+PY
 }
 
 write_kv() {
@@ -53,7 +60,7 @@ write_kv() {
 
 main() {
   require_cmd curl
-  require_cmd jq
+  require_cmd python3
 
   local mount
   local config_path
