@@ -39,7 +39,7 @@ function buildRuntimeEnv(mode: string): Record<string, string> {
   ]);
   const payload: Record<string, string> = {};
   for (const [key, value] of Object.entries(merged)) {
-    if (!allowlist.has(key) && !key.startsWith('VITE_')) continue;
+    if (!allowlist.has(key) && !key.startsWith('VITE_') && !key.startsWith('MFE_')) continue;
     if (typeof value === 'string') payload[key] = value;
   }
   payload.NODE_ENV ??= mode;
@@ -61,6 +61,19 @@ function readEnvBoolean(keys: string[], fallback = true): boolean {
   return fallback;
 }
 
+function readEnvString(keys: string[], fallback: string): string {
+  const dotEnv = loadDotEnvLocal();
+  for (const key of keys) {
+    const value = dotEnv[key] ?? process.env[key];
+    if (typeof value !== 'string') continue;
+    const normalized = value.trim();
+    if (normalized.length > 0) {
+      return normalized;
+    }
+  }
+  return fallback;
+}
+
 function buildRemotes() {
   const enabled = {
     suggestions: readEnvBoolean(['VITE_SHELL_ENABLE_SUGGESTIONS_REMOTE', 'SHELL_ENABLE_SUGGESTIONS_REMOTE']),
@@ -77,15 +90,55 @@ function buildRemotes() {
   // empty modules — the dynamic import() in shell-services-wiring.ts
   // will catch the error and gracefully skip.
   const STUB = 'data:text/javascript,export default {}; export function configureShellServices(){}';
+  const remoteEntries = {
+    suggestions: readEnvString(['MFE_SUGGESTIONS_URL', 'VITE_MFE_SUGGESTIONS_URL'], 'http://localhost:3001/remoteEntry.js'),
+    ethic: readEnvString(['MFE_ETHIC_URL', 'VITE_MFE_ETHIC_URL'], 'http://localhost:3002/remoteEntry.js'),
+    users: readEnvString(['MFE_USERS_URL', 'VITE_MFE_USERS_URL'], 'http://localhost:3004/remoteEntry.js'),
+    access: readEnvString(['MFE_ACCESS_URL', 'VITE_MFE_ACCESS_URL'], 'http://localhost:3005/remoteEntry.js'),
+    audit: readEnvString(['MFE_AUDIT_URL', 'VITE_MFE_AUDIT_URL'], 'http://localhost:3006/remoteEntry.js'),
+    reporting: readEnvString(['MFE_REPORTING_URL', 'VITE_MFE_REPORTING_URL'], 'http://localhost:3007/remoteEntry.js'),
+    schemaExplorer: readEnvString(
+      ['MFE_SCHEMA_EXPLORER_URL', 'VITE_MFE_SCHEMA_EXPLORER_URL'],
+      'http://localhost:3008/remoteEntry.js',
+    ),
+  };
 
   return {
-    mfe_suggestions: { type: 'module', name: 'mfe_suggestions', entry: enabled.suggestions ? 'http://localhost:3001/remoteEntry.js' : STUB },
-    mfe_ethic:       { type: 'module', name: 'mfe_ethic',       entry: enabled.ethic ? 'http://localhost:3002/remoteEntry.js' : STUB },
-    mfe_access:      { type: 'module', name: 'mfe_access',      entry: enabled.access ? 'http://localhost:3005/remoteEntry.js' : STUB },
-    mfe_audit:       { type: 'module', name: 'mfe_audit',       entry: enabled.audit ? 'http://localhost:3006/remoteEntry.js' : STUB },
-    mfe_users:       { type: 'module', name: 'mfe_users',       entry: enabled.users ? 'http://localhost:3004/remoteEntry.js' : STUB },
-    mfe_reporting:          { type: 'module', name: 'mfe_reporting',          entry: enabled.reporting ? 'http://localhost:3007/remoteEntry.js' : STUB },
-    mfe_schema_explorer:   { type: 'module', name: 'mfe_schema_explorer',   entry: enabled.schemaExplorer ? 'http://localhost:3008/remoteEntry.js' : STUB },
+    mfe_suggestions: {
+      type: 'module',
+      name: 'mfe_suggestions',
+      entry: enabled.suggestions ? remoteEntries.suggestions : STUB,
+    },
+    mfe_ethic: {
+      type: 'module',
+      name: 'mfe_ethic',
+      entry: enabled.ethic ? remoteEntries.ethic : STUB,
+    },
+    mfe_access: {
+      type: 'module',
+      name: 'mfe_access',
+      entry: enabled.access ? remoteEntries.access : STUB,
+    },
+    mfe_audit: {
+      type: 'module',
+      name: 'mfe_audit',
+      entry: enabled.audit ? remoteEntries.audit : STUB,
+    },
+    mfe_users: {
+      type: 'module',
+      name: 'mfe_users',
+      entry: enabled.users ? remoteEntries.users : STUB,
+    },
+    mfe_reporting: {
+      type: 'module',
+      name: 'mfe_reporting',
+      entry: enabled.reporting ? remoteEntries.reporting : STUB,
+    },
+    mfe_schema_explorer: {
+      type: 'module',
+      name: 'mfe_schema_explorer',
+      entry: enabled.schemaExplorer ? remoteEntries.schemaExplorer : STUB,
+    },
   };
 }
 
