@@ -144,6 +144,12 @@ deploy/ubuntu/render-backend-env-approle.sh
 - Host rollback giriş noktası:
   - `deploy/ubuntu/rollback-backend.sh`
 - Hosttaki compose stack’i durdurma / yeniden başlatma işlemleri aynı deploy kökünde ve aynı env dosyasıyla yapılır; ad-hoc ikinci compose projesi açılmaz.
+- Production backend doğrulaması için:
+  - `post-deploy-validate.yml` workflow_dispatch
+  - `env=prod`
+  - `target=backend` veya frontend hazırsa `target=all`
+- Production promote tamamı için ek checklist:
+  - `docs/04-operations/RUNBOOKS/RB-production-cutover-checklist.md`
 
 -------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER
