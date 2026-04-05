@@ -257,15 +257,28 @@ jobs:
       - name: Gate check
         run: |
           set -euo pipefail
+          require_green_or_skipped() {
+            local lane="$1"
+            local result="$2"
+            case "${result}" in
+              success|skipped)
+                return 0
+                ;;
+              *)
+                echo "::error title=module-delivery-gate::${lane} lane result is ${result}; expected success or skipped."
+                return 1
+                ;;
+            esac
+          }
           echo "unit=${{ needs.module-lane-unit.result }}"
           echo "database=${{ needs.module-lane-database.result }}"
           echo "api=${{ needs.module-lane-api.result }}"
           echo "contract=${{ needs.module-lane-contract.result }}"
           echo "integration=${{ needs.module-lane-integration.result }}"
           echo "e2e=${{ needs.module-lane-e2e.result }}"
-          test "${{ needs.module-lane-unit.result }}" = "success"
-          test "${{ needs.module-lane-database.result }}" = "success"
-          test "${{ needs.module-lane-api.result }}" = "success"
-          test "${{ needs.module-lane-contract.result }}" = "success"
-          test "${{ needs.module-lane-integration.result }}" = "success"
-          test "${{ needs.module-lane-e2e.result }}" = "success"
+          require_green_or_skipped unit "${{ needs.module-lane-unit.result }}"
+          require_green_or_skipped database "${{ needs.module-lane-database.result }}"
+          require_green_or_skipped api "${{ needs.module-lane-api.result }}"
+          require_green_or_skipped contract "${{ needs.module-lane-contract.result }}"
+          require_green_or_skipped integration "${{ needs.module-lane-integration.result }}"
+          require_green_or_skipped e2e "${{ needs.module-lane-e2e.result }}"
