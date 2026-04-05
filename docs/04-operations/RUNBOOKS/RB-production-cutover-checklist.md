@@ -1,8 +1,8 @@
 # RB-production-cutover-checklist – Production Promote Checklist
 
-ID: RB-production-cutover-checklist  
-Service: production-cutover  
-Status: Draft  
+ID: RB-production-cutover-checklist
+Service: production-cutover
+Status: Draft
 Owner: @team/platform
 
 -------------------------------------------------------------------------------
@@ -11,168 +11,158 @@ Owner: @team/platform
 
 - Stage'de doğrulanmış backend ve deploy zincirini production'a kontrollü taşımak.
 - Secret source of truth olarak Vault'u korumak.
-- DNS/TLS/reverse proxy/frontend bağımlılıklarını tek checklist altında toplamak.
+- DNS, TLS, reverse proxy ve frontend bağımlılıklarını tek operasyon checklist'inde toplamak.
 
 -------------------------------------------------------------------------------
-2. BAŞLAMADAN ÖNCE
+2. KAPSAM
 -------------------------------------------------------------------------------
 
-- [ ] Stage backend deploy yeşil:
-  - `deploy-backend` PASS
-  - `post-deploy-validate` PASS
-- [ ] Production hedefi net:
-  - aynı host mu, ayrı host mu
-  - public edge / reverse proxy hangi katmanda
-- [ ] Rollback kararı net:
-  - eski çalışan release tag'i biliniyor
-  - `rollback.yml` prod manual akışı erişilebilir
+- Bu runbook production backend promote, production frontend publish ve public açılış öncesi kontrol noktalarını kapsar.
+- Kapsama dahil ana akışlar:
+  - `secret/prod/backend-deploy/config` ve ilişkili prod Vault path'leri
+  - GitHub `prod` environment ve deploy secret sync hattı
+  - Prod hostta AppRole materialization, env render ve deploy
+  - `ai.acik.com` için public DNS, TLS ve reverse proxy hazırlığı
+  - Frontend publish, public smoke ve rollback kapısı
+- Başlamadan önce aşağıdakiler zaten yeşil olmalıdır:
+  - stage backend deploy PASS
+  - stage post-deploy validate PASS
+  - son iyi release tag'i ve rollback yolu biliniyor
 
 -------------------------------------------------------------------------------
-3. PROD VAULT HAZIRLIĞI
+3. BAŞLATMA / DURDURMA
 -------------------------------------------------------------------------------
 
-Canonical path'ler:
-- `secret/prod/backend-deploy/config`
-- `secret/prod/ops/github/backend-deploy`
-- `secret/prod/db/auth-service`
-- `secret/prod/db/user-service`
-- `secret/prod/db/permission-service`
-- `secret/prod/db/variant-service`
-- `secret/prod/jwt/auth-service`
+Production promote adımları:
 
-Zorunlu `backend-deploy/config` anahtarları:
-- `GIT_REMOTE_URL`
-- `REPO_BRANCH`
-- `GHCR_OWNER`
-- `VAULT_URI`
-- `VAULT_TOKEN`
-- `KEYCLOAK_ISSUER_URI`
-- `KEYCLOAK_JWKS_URI`
-- `AUTH_VERIFICATION_BASE_URL`
-- `AUTH_RESET_BASE_URL`
-- `SERVICE_CLIENT_USER_SERVICE_SECRET`
-- `PERMISSION_SERVICE_INTERNAL_API_KEY`
-- `POSTGRES_USER`
-- `POSTGRES_PASSWORD`
-- `OPENFGA_STORE_ID`
-- `OPENFGA_MODEL_ID`
-- `CORE_DATA_DB_URL`
-- `CORE_DATA_DB_USERNAME`
-- `CORE_DATA_DB_PASSWORD`
-
-Önerilen ama ortama göre opsiyonel:
-- `WEB_ORIGIN`
-- `SECURITY_AUTH_ALLOWED_CLIENT_IDS`
-- `COMPOSE_PROFILES`
-- `REPORT_*`
-- `SCHEMA_*`
-
-Doğrulama:
-- [ ] `backend/scripts/vault/check-backend-deploy-prod.sh` PASS
-- [ ] `backend/scripts/vault/check-backend-deploy-stage.sh` ile stage/prod farkları karşılaştırıldı
-
--------------------------------------------------------------------------------
-4. PROD GITHUB ENVIRONMENT
--------------------------------------------------------------------------------
-
-Canonical environment:
-- `prod`
-
-Backend deploy secret'ları:
-- `DEPLOY_ENABLED`
-- `ROLLBACK_ENABLED`
-- `BACKEND_SSH_DEPLOY_ENABLED`
-- `BACKEND_DEPLOY_SSH_HOST`
-- `BACKEND_DEPLOY_SSH_PORT`
-- `BACKEND_DEPLOY_SSH_USER`
-- `BACKEND_DEPLOY_SSH_KEY`
-- `BACKEND_DEPLOY_SSH_KNOWN_HOSTS`
-- `BACKEND_DEPLOY_REMOTE_ENV_FILE`
-- `BACKEND_DEPLOY_REMOTE_REPO_DIR`
-- `BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES`
-- `BACKEND_HEALTH_URLS`
-- `AUTONOMOUS_PIPELINE_SIGNING_PUBLIC_KEY_PEM`
-
-Frontend/public smoke gerekiyorsa:
-- `WEB_SMOKE_URL`
-- `WEB_ROLLBACK_HOOK_URL`
-
-Doğrulama:
-- [ ] `vault-secrets-sync.yml` `mode=backend-deploy`, `env=prod`, `secret_scope=environment`, `github_environment=prod`, `dry_run=true`
-- [ ] Aynı workflow `dry_run=false`
+- Vault hazırlığı:
+  - [ ] `secret/prod/backend-deploy/config`
+  - [ ] `secret/prod/ops/github/backend-deploy`
+  - [ ] `secret/prod/db/auth-service`
+  - [ ] `secret/prod/db/user-service`
+  - [ ] `secret/prod/db/permission-service`
+  - [ ] `secret/prod/db/variant-service`
+  - [ ] `secret/prod/jwt/auth-service`
+- `backend-deploy/config` içinde zorunlu anahtarlar doğrulandı:
+  - [ ] `GIT_REMOTE_URL`
+  - [ ] `REPO_BRANCH`
+  - [ ] `GHCR_OWNER`
+  - [ ] `VAULT_URI`
+  - [ ] `VAULT_TOKEN`
+  - [ ] `KEYCLOAK_ISSUER_URI`
+  - [ ] `KEYCLOAK_JWKS_URI`
+  - [ ] `AUTH_VERIFICATION_BASE_URL`
+  - [ ] `AUTH_RESET_BASE_URL`
+  - [ ] `SERVICE_CLIENT_USER_SERVICE_SECRET`
+  - [ ] `PERMISSION_SERVICE_INTERNAL_API_KEY`
+  - [ ] `POSTGRES_USER`
+  - [ ] `POSTGRES_PASSWORD`
+  - [ ] `OPENFGA_STORE_ID`
+  - [ ] `OPENFGA_MODEL_ID`
+  - [ ] `CORE_DATA_DB_URL`
+  - [ ] `CORE_DATA_DB_USERNAME`
+  - [ ] `CORE_DATA_DB_PASSWORD`
+- Prod GitHub environment hazırlığı:
+  - [ ] `prod` environment mevcut
+  - [ ] `vault-secrets-sync.yml` `mode=backend-deploy`, `env=prod`, `secret_scope=environment`, `github_environment=prod`, `dry_run=true`
+  - [ ] aynı workflow `dry_run=false`
+  - [ ] `BACKEND_SSH_DEPLOY_ENABLED`
+  - [ ] `BACKEND_DEPLOY_SSH_HOST`
+  - [ ] `BACKEND_DEPLOY_SSH_PORT`
+  - [ ] `BACKEND_DEPLOY_SSH_USER`
+  - [ ] `BACKEND_DEPLOY_SSH_KEY`
+  - [ ] `BACKEND_DEPLOY_SSH_KNOWN_HOSTS`
+  - [ ] `BACKEND_DEPLOY_REMOTE_ENV_FILE`
+  - [ ] `BACKEND_DEPLOY_REMOTE_REPO_DIR`
+  - [ ] `BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES`
+  - [ ] `BACKEND_HEALTH_URLS`
+- Prod host hazırlığı:
+  - [ ] `/home/halil/platform/repo`
+  - [ ] `/home/halil/platform/env/backend.env`
+  - [ ] `/home/halil/platform/state/vault/approle/backend-deploy-prod.role-id`
+  - [ ] `/home/halil/platform/state/vault/approle/backend-deploy-prod.secret-id`
+  - [ ] `backend/scripts/vault/materialize-backend-deploy-approle.sh`
+  - [ ] `deploy/ubuntu/render-backend-env-approle.sh`
+  - [ ] `docker compose -f backend/docker-compose.prod.yml config --services`
+- Deploy ve durdurma akışı:
+  - [ ] `deploy-backend.yml` workflow_dispatch `env=prod`
+  - [ ] rollback gerekiyorsa `rollback.yml` workflow_dispatch `env=prod`, `confirm=ROLLBACK`
 
 -------------------------------------------------------------------------------
-5. PROD HOST HAZIRLIĞI
+4. GÖZLEMLEME / LOG / METRİKLER
 -------------------------------------------------------------------------------
 
-Host'ta beklenenler:
-- `/home/halil/platform/repo`
-- `/home/halil/platform/env/backend.env`
-- `/home/halil/platform/state/vault/approle/backend-deploy-prod.role-id`
-- `/home/halil/platform/state/vault/approle/backend-deploy-prod.secret-id`
+Production gözlemleme ve doğrulama kapıları:
 
-Adımlar:
-- [ ] `backend/scripts/vault/materialize-backend-deploy-approle.sh` ile prod AppRole dosyaları üretildi
-- [ ] `deploy/ubuntu/render-backend-env-approle.sh` ile prod `backend.env` render edildi
-- [ ] `git`, `docker`, `curl`, `python3` hostta mevcut
-- [ ] `docker compose -f backend/docker-compose.prod.yml config --services` PASS
-
--------------------------------------------------------------------------------
-6. DOMAIN / TLS / REVERSE PROXY
--------------------------------------------------------------------------------
-
-Minimum public edge gereksinimi:
-- `ai.acik.com -> <public-edge-ip>` DNS A kaydı
-- `Host: ai.acik.com` için ayrı binding / vhost / route
-- hedef backend:
-  - `10.9.10.53:8082` ya da prod host hangi iç hedefse o
-- TLS sertifikası
-
-Doğrulama:
-- [ ] `dig ai.acik.com` public IP döndürüyor
-- [ ] `curl -I https://ai.acik.com` HTTP cevap veriyor
-- [ ] host binding yanlış siteye düşmüyor
+- Vault tarafı:
+  - [ ] `backend/scripts/vault/check-backend-deploy-prod.sh` PASS
+  - [ ] stage/prod farkları gerektiğinde `backend/scripts/vault/check-backend-deploy-stage.sh` ile karşılaştırıldı
+- Public edge:
+  - [ ] `ai.acik.com -> <public-edge-ip>` DNS A kaydı
+  - [ ] `Host: ai.acik.com` için binding, vhost veya route tanımlı
+  - [ ] hedef backend `10.9.10.53:8082` veya production iç hedef
+  - [ ] TLS sertifikası aktif
+  - [ ] `dig ai.acik.com` beklenen IP'yi döndürüyor
+  - [ ] `curl -I https://ai.acik.com` HTTP cevap veriyor
+- Frontend:
+  - [ ] static hosting prod publish tamam
+  - [ ] shell ve remote URL'leri prod domainlerle hizalı
+  - [ ] gateway URL kararı net
+  - [ ] Keycloak redirect ve origin ayarları prod domainlerle uyumlu
+- Uygulama doğrulaması:
+  - [ ] `post-deploy-validate.yml` workflow_dispatch `env=prod`, `target=backend`
+  - [ ] frontend hazırsa `target=all`
+  - [ ] backend health PASS
+  - [ ] login, token ve protected endpoint PASS
+  - [ ] frontend -> gateway -> backend zinciri PASS
 
 -------------------------------------------------------------------------------
-7. FRONTEND CANLI YAYIN
+5. ARIZA DURUMLARI VE ADIMLAR
 -------------------------------------------------------------------------------
 
-- [ ] frontend static hosting prod publish tamam
-- [ ] shell + remote URL'leri prod domainlerle hizalı
-- [ ] backend gateway URL kararı net:
-  - doğrudan `https://ai.acik.com/api`
-  - veya ayrı API domain
-- [ ] Keycloak redirect/origin ayarları prod domainlerle uyumlu
+Sık görülen production promote arızaları ve ilk adımlar:
+
+- Vault check FAIL:
+  - `secret/prod/backend-deploy/config` içindeki zorunlu anahtarlar eksik olabilir.
+  - `check-backend-deploy-prod.sh` ile eksik key listesini yeniden üret.
+- GitHub environment sync FAIL:
+  - `secret/prod/ops/github/backend-deploy` path'ini ve `github_environment=prod` parametresini kontrol et.
+  - Gerekirse önce `dry_run=true` ile yeniden doğrula.
+- Host render FAIL:
+  - AppRole dosyalarının varlığını ve `render-backend-env-approle.sh` çıktısını kontrol et.
+  - Prod `backend.env` render edilmeden deploy başlatma.
+- Public domain yanlış siteye düşüyor:
+  - Edge üzerinde `Host: ai.acik.com` binding'i eksik veya yanlış hedefe gidiyor olabilir.
+  - DNS doğru olsa bile vhost veya route ayrı doğrulanmalıdır.
+- Frontend çalışıyor ama auth kırık:
+  - Keycloak issuer, JWKS, redirect URI ve web origin ayarlarını prod domainlerle yeniden hizala.
+- Deploy sonrası servis health FAIL:
+  - `post-deploy-validate.yml` ile backend doğrulamasını tekrar çalıştır.
+  - Gerekirse `rollback.yml` `env=prod` ile son iyi release'e dön.
 
 -------------------------------------------------------------------------------
-8. PROD DEPLOY / VALIDATE / ROLLBACK
+6. ÖZET
 -------------------------------------------------------------------------------
 
-Deploy:
-- [ ] `deploy-backend.yml` workflow_dispatch `env=prod`
-
-Validate:
-- [ ] `post-deploy-validate.yml` workflow_dispatch `env=prod`, `target=backend`
-- [ ] frontend hazırsa `target=all`
-
-Rollback:
-- [ ] `rollback.yml` workflow_dispatch `env=prod`, `confirm=ROLLBACK`
-
-Canlı kapısı:
-- [ ] backend health PASS
-- [ ] login / token / protected endpoint PASS
-- [ ] frontend -> gateway -> backend zinciri PASS
-- [ ] rollback dry-run planı hazır
+- Production canlı sayılması için şu kapılar birlikte yeşil olmalıdır:
+  - [ ] prod Vault PASS
+  - [ ] prod GitHub environment PASS
+  - [ ] prod host render ve deploy PASS
+  - [ ] domain ve TLS canlı
+  - [ ] frontend canlı
+  - [ ] public smoke PASS
+  - [ ] rollback yolu doğrulanmış
+- Bu checklist tamamlanmadan public production açılışı yapılmamalıdır.
 
 -------------------------------------------------------------------------------
-9. CUTOVER ÇIKIŞ KRİTERİ
+7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
-Production canlı sayılması için:
-- [ ] prod Vault PASS
-- [ ] prod GitHub environment PASS
-- [ ] prod host render/deploy PASS
-- [ ] domain/TLS canlı
-- [ ] frontend canlı
-- [ ] public smoke PASS
-- [ ] rollback yolu doğrulanmış
+- `deploy/ubuntu/README.md`
+- `docs/04-operations/RUNBOOKS/RB-ubuntu-backend-github-vault-deploy.md`
+- `.github/workflows/deploy-backend.yml`
+- `.github/workflows/post-deploy-validate.yml`
+- `.github/workflows/rollback.yml`
+- `.github/workflows/vault-secrets-sync.yml`
+- `backend/.env.prod.example`
+- `backend/docker-compose.prod.yml`
