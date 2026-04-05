@@ -40,6 +40,7 @@ Owner: @team/platform
   - `secret/<env>/ops/github/backend-deploy`
 - Önce dry-run, sonra gerçek sync çalıştırılır.
 - Ubuntu hostta `backend.env` materialize edilir.
+- Tercih edilen host kimliği AppRole’dur; doğrudan uzun ömürlü `VAULT_TOKEN` yalnız bootstrap/break-glass içindir.
 - `main` merge sonrası GitHub Actions GHCR image’larını üretir ve host deploy adımını tetikler.
 
 ### 3.2 Vault yazımı
@@ -117,6 +118,20 @@ export DEPLOY_ENV="stage"
 deploy/ubuntu/render-backend-env.sh
 ```
 
+Tercih edilen AppRole akışı:
+
+```bash
+ENV=stage \
+VAULT_ADDR="https://vault.example.com" \
+VAULT_TOKEN="..." \
+bash backend/scripts/vault/materialize-backend-deploy-approle.sh
+
+export VAULT_ADDR="https://vault.example.com"
+export DEPLOY_ENV="stage"
+
+deploy/ubuntu/render-backend-env-approle.sh
+```
+
 ### 3.7 Deploy / durdurma / rollback
 
 - `main` branch’e merge sonrası:
@@ -125,6 +140,7 @@ deploy/ubuntu/render-backend-env.sh
   - SSH deploy
   - `post-deploy-validate.yml`
   - gerekirse `rollback.yml`
+- Stage self-hosted deploy job’u deploy öncesi `RENDER_ENV_BEFORE_DEPLOY=true` ile Vault render adımını otomatik çalıştırır.
 - Host rollback giriş noktası:
   - `deploy/ubuntu/rollback-backend.sh`
 - Hosttaki compose stack’i durdurma / yeniden başlatma işlemleri aynı deploy kökünde ve aynı env dosyasıyla yapılır; ad-hoc ikinci compose projesi açılmaz.
@@ -141,6 +157,9 @@ deploy/ubuntu/render-backend-env.sh
   - `secret/<env>/ops/github/backend-deploy`
 - Ubuntu materialized env:
   - `/home/halil/platform/env/backend.env`
+- Ubuntu AppRole materialized files:
+  - `/home/halil/platform/state/vault/approle/backend-deploy-stage.role-id`
+  - `/home/halil/platform/state/vault/approle/backend-deploy-stage.secret-id`
 - Ubuntu deploy state:
   - `/home/halil/platform/state/backend.current-image-tag`
   - `/home/halil/platform/state/backend.previous-image-tag`
@@ -148,8 +167,10 @@ deploy/ubuntu/render-backend-env.sh
   - `backend/docker-compose.prod.yml`
   - `backend/.env.prod.example`
   - `deploy/ubuntu/render-backend-env.sh`
+  - `deploy/ubuntu/render-backend-env-approle.sh`
   - `deploy/ubuntu/deploy-backend.sh`
   - `deploy/ubuntu/rollback-backend.sh`
+  - `backend/scripts/vault/materialize-backend-deploy-approle.sh`
   - `.github/workflows/deploy-backend.yml`
   - `.github/workflows/post-deploy-validate.yml`
   - `.github/workflows/rollback.yml`

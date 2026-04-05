@@ -119,6 +119,9 @@ jobs:
           ENV_FILE="${remote_env_file}" \
           REPO_DIR="${remote_repo_dir}" \
           COMPOSE_PROFILES="${remote_profiles}" \
+          RENDER_ENV_BEFORE_DEPLOY="true" \
+          DEPLOY_ENV="stage" \
+          VAULT_ADDR="http://127.0.0.1:8200" \
           GHCR_USERNAME="${GITHUB_ACTOR}" \
           GHCR_TOKEN="${GITHUB_TOKEN}" \
           deploy/ubuntu/rollback-backend.sh
@@ -260,6 +263,9 @@ jobs:
           ENV_FILE="${remote_env_file}" \
           REPO_DIR="${remote_repo_dir}" \
           COMPOSE_PROFILES="${remote_profiles}" \
+          RENDER_ENV_BEFORE_DEPLOY="true" \
+          DEPLOY_ENV="stage" \
+          VAULT_ADDR="http://127.0.0.1:8200" \
           GHCR_USERNAME="${GITHUB_ACTOR}" \
           GHCR_TOKEN="${GITHUB_TOKEN}" \
           deploy/ubuntu/rollback-backend.sh
