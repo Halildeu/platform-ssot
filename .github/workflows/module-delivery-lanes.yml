@@ -146,7 +146,7 @@ jobs:
 
   module-lane-api:
     runs-on: ubuntu-latest
-    needs: [module-lane-database]
+    needs: [module-lane-unit]
     steps:
       - uses: actions/checkout@v6
       - name: Set up Python
@@ -172,7 +172,7 @@ jobs:
 
   module-lane-contract:
     runs-on: ubuntu-latest
-    needs: [module-lane-api]
+    needs: [module-lane-unit]
     steps:
       - uses: actions/checkout@v6
       - name: Set up Python
@@ -197,7 +197,7 @@ jobs:
 
   module-lane-integration:
     runs-on: ubuntu-latest
-    needs: [module-lane-contract]
+    needs: [module-lane-database, module-lane-api, module-lane-contract]
     steps:
       - uses: actions/checkout@v6
       - name: Set up Python
