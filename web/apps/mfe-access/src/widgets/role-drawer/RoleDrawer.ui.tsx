@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge, Button, Checkbox, DetailDrawer, Select, Switch, TextInput } from '@mfe/design-system';
 import type { AccessRole, AccessLevel } from '../../features/access-management/model/access.types';
 import { getPermissions } from '../../entities/permissions/api/permissions.api';
-import { httpGet, httpPost, httpPut, httpDelete } from '@mfe/shared-http';
+import { api } from '@mfe/shared-http';
 
 interface RoleDrawerProps {
   open: boolean;
@@ -42,7 +42,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   // --- Catalog query ---
   const catalogQuery = useQuery({
     queryKey: ['permission-catalog'],
-    queryFn: async () => { const res = await httpGet('/api/v1/authz/catalog'); return res.data as Catalog; },
+    queryFn: async () => { const res = await api.get('/api/v1/authz/catalog'); return res.data as Catalog; },
     enabled: open && mode === 'view',
     staleTime: 120_000,
   });
@@ -50,7 +50,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   // --- Members query ---
   const membersQuery = useQuery({
     queryKey: ['role-members', role?.id],
-    queryFn: async () => { const res = await httpGet(`/api/v1/roles/${role!.id}/members`); return res.data as RoleMember[]; },
+    queryFn: async () => { const res = await api.get(`/api/v1/roles/${role!.id}/members`); return res.data as RoleMember[]; },
     enabled: open && mode === 'view' && !!role,
   });
 
@@ -90,7 +90,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
       for (const [key, grant] of Object.entries(pageGrants)) {
         granules.push({ type: 'page', key, grant });
       }
-      await httpPut(`/api/v1/roles/${role!.id}/granules`, { permissions: granules });
+      await api.put(`/api/v1/roles/${role!.id}/granules`, { permissions: granules });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles'] });
@@ -101,7 +101,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   // --- Add member mutation ---
   const addMemberMutation = useMutation({
     mutationFn: async (userId: number) => {
-      await httpPost(`/api/v1/roles/${role!.id}/members`, { userIds: [userId] });
+      await api.post(`/api/v1/roles/${role!.id}/members`, { userIds: [userId] });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['role-members', role?.id] });
@@ -112,7 +112,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   // --- Remove member mutation ---
   const removeMemberMutation = useMutation({
     mutationFn: async (userId: number) => {
-      await httpDelete(`/api/v1/roles/${role!.id}/members/${userId}`);
+      await api.delete(`/api/v1/roles/${role!.id}/members/${userId}`);
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['role-members', role?.id] }),
   });

@@ -7,7 +7,7 @@ import { DetailDrawer, Tabs, Checkbox, Button, Badge } from '@mfe/design-system'
 import { useUsersI18n } from '../../../i18n/useUsersI18n';
 import { pushToast } from '../../../shared/notifications';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { httpGet, httpPost } from '@mfe/shared-http';
+import { api } from '@mfe/shared-http';
 
 const badgeBaseClass =
   'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold leading-tight';
@@ -63,7 +63,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
   const rolesQuery = useQuery({
     queryKey: ['roles-list'],
     queryFn: async () => {
-      const res = await httpGet('/api/v1/roles');
+      const res = await api.get('/api/v1/roles');
       const data = res.data as any;
       const items = data?.items ?? data?.content ?? data ?? [];
       return (Array.isArray(items) ? items : []).map((r: any) => ({ id: r.id, name: r.name })) as RoleOption[];
@@ -74,7 +74,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
   const userRolesQuery = useQuery({
     queryKey: ['user-roles', user?.id],
     queryFn: async () => {
-      const res = await httpGet(`/api/v1/authz/users/${user!.id}/roles`);
+      const res = await api.get(`/api/v1/authz/users/${user!.id}/roles`);
       return (res.data as any[]).map((r: any) => r.roleId as number);
     },
     enabled: open && !!user,
@@ -97,7 +97,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
   // --- Mutations ---
   const assignMutation = useMutation({
     mutationFn: async () => {
-      await httpPost(`/api/v1/authz/users/${user!.id}/assignments`, {
+      await api.post(`/api/v1/authz/users/${user!.id}/assignments`, {
         roleIds: selectedRoleIds,
         scopes: {
           companyIds: selectedCompanyIds,
