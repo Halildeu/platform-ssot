@@ -1,0 +1,117 @@
+name: Seed Backend Deploy Vault (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Vault env (stage|prod)"
+        required: true
+        default: "stage"
+        type: choice
+        options:
+          - stage
+          - prod
+      ssh_host:
+        description: "Deploy SSH host"
+        required: true
+        default: "10.9.10.53"
+        type: string
+      ssh_port:
+        description: "Deploy SSH port"
+        required: true
+        default: "22"
+        type: string
+      ssh_user:
+        description: "Deploy SSH user"
+        required: true
+        default: "halil"
+        type: string
+      health_urls:
+        description: "Comma-separated backend health URLs"
+        required: true
+        default: "http://10.9.10.53:8080/actuator/health"
+        type: string
+      ssh_key_path:
+        description: "Runner-local SSH private key path"
+        required: true
+        default: "~/.ssh/platform_ssot_backend_deploy_ed25519"
+        type: string
+      remote_env_file:
+        description: "Remote backend env file path"
+        required: false
+        default: "/opt/platform/env/backend.env"
+        type: string
+      remote_repo_dir:
+        description: "Remote repo checkout path"
+        required: false
+        default: "/opt/platform/repo"
+        type: string
+      remote_compose_profiles:
+        description: "Optional compose profiles"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  seed:
+    runs-on: [self-hosted, vault-local]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Seed backend deploy GitHub secret path in Vault
+        shell: bash
+        env:
+          VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+          ENV_NAME: ${{ inputs.env }}
+          SSH_HOST: ${{ inputs.ssh_host }}
+          SSH_PORT: ${{ inputs.ssh_port }}
+          SSH_USER: ${{ inputs.ssh_user }}
+          HEALTH_URLS: ${{ inputs.health_urls }}
+          SSH_KEY_PATH: ${{ inputs.ssh_key_path }}
+          REMOTE_ENV_FILE: ${{ inputs.remote_env_file }}
+          REMOTE_REPO_DIR: ${{ inputs.remote_repo_dir }}
+          REMOTE_COMPOSE_PROFILES: ${{ inputs.remote_compose_profiles }}
+        run: |
+          set -euo pipefail
+          set +x
+
+          if [ -z "${VAULT_ADDR:-}" ] || [ -z "${VAULT_TOKEN:-}" ]; then
+            echo "[seed] HATA: VAULT_ADDR/VAULT_TOKEN missing."
+            exit 1
+          fi
+
+          expanded_key_path="${SSH_KEY_PATH/#\~/$HOME}"
+          if [ ! -f "${expanded_key_path}" ]; then
+            echo "[seed] HATA: SSH key not found at ${expanded_key_path}"
+            exit 1
+          fi
+
+          ssh_known_hosts="$(ssh-keyscan -p "${SSH_PORT}" "${SSH_HOST}" 2>/dev/null)"
+          if [ -z "${ssh_known_hosts}" ]; then
+            echo "[seed] HATA: ssh-keyscan returned no host keys for ${SSH_HOST}:${SSH_PORT}"
+            exit 1
+          fi
+
+          ssh_private_key="$(cat "${expanded_key_path}")"
+          echo "::add-mask::${ssh_private_key}"
+          echo "::add-mask::${ssh_known_hosts}"
+
+          payload="$(
+            SSH_PRIVATE_KEY="${ssh_private_key}" \
+            SSH_KNOWN_HOSTS="${ssh_known_hosts}" \
+            python3 -c 'import json, os; print(json.dumps({"data": {"BACKEND_SSH_DEPLOY_ENABLED": "true", "BACKEND_DEPLOY_SSH_HOST": os.environ["SSH_HOST"], "BACKEND_DEPLOY_SSH_PORT": os.environ["SSH_PORT"], "BACKEND_DEPLOY_SSH_USER": os.environ["SSH_USER"], "BACKEND_DEPLOY_SSH_KEY": os.environ["SSH_PRIVATE_KEY"], "BACKEND_DEPLOY_SSH_KNOWN_HOSTS": os.environ["SSH_KNOWN_HOSTS"], "BACKEND_DEPLOY_REMOTE_ENV_FILE": os.environ.get("REMOTE_ENV_FILE", ""), "BACKEND_DEPLOY_REMOTE_REPO_DIR": os.environ.get("REMOTE_REPO_DIR", ""), "BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES": os.environ.get("REMOTE_COMPOSE_PROFILES", ""), "BACKEND_HEALTH_URLS": os.environ["HEALTH_URLS"]}}))'
+          )"
+
+          curl -sSf \
+            -H "X-Vault-Token: ${VAULT_TOKEN}" \
+            -H 'Content-Type: application/json' \
+            -X POST "${VAULT_ADDR%/}/v1/secret/data/${ENV_NAME}/ops/github/backend-deploy" \
+            -d "${payload}" >/dev/null
+
+          echo "[seed] WROTE keys: secret/${ENV_NAME}/ops/github/backend-deploy"

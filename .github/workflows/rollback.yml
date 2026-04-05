@@ -41,6 +41,8 @@ jobs:
       - name: Rollback (required)
         if: ${{ env.ROLLBACK_ENABLED == 'true' }}
         env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_ACTOR: ${{ github.actor }}
           WEB_ROLLBACK_HOOK_URL: ${{ secrets.WEB_ROLLBACK_HOOK_URL }}
           BACKEND_ROLLBACK_HOOK_URL: ${{ secrets.BACKEND_ROLLBACK_HOOK_URL }}
           BACKEND_DEPLOY_SSH_HOST: ${{ secrets.BACKEND_DEPLOY_SSH_HOST }}
@@ -121,6 +123,8 @@ jobs:
               REMOTE_ENV_FILE="${remote_env_file}" \
               REMOTE_REPO_DIR="${remote_repo_dir}" \
               REMOTE_COMPOSE_PROFILES="${remote_profiles}" \
+              GITHUB_ACTOR="${GITHUB_ACTOR}" \
+              GITHUB_TOKEN="${GITHUB_TOKEN}" \
               'bash -se' <<'EOF'
             set -euo pipefail
 
@@ -149,6 +153,8 @@ jobs:
             ENV_FILE="${REMOTE_ENV_FILE}" \
             REPO_DIR="${REMOTE_REPO_DIR}" \
             COMPOSE_PROFILES="${REMOTE_COMPOSE_PROFILES}" \
+            GHCR_USERNAME="${GITHUB_ACTOR}" \
+            GHCR_TOKEN="${GITHUB_TOKEN}" \
             deploy/ubuntu/rollback-backend.sh
             EOF
           fi

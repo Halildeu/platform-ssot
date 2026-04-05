@@ -18,7 +18,7 @@ Bu klasör GitHub-first backend deploy akışının Ubuntu tarafındaki scriptle
 - `jq`
 - `/opt/platform/env/backend.env`
 - GitHub repo clone erişimi (`GIT_REMOTE_URL`)
-- GHCR read erişimi (`GHCR_USERNAME`, `GHCR_TOKEN`)
+- GHCR read erişimi deploy workflow tarafından ephemeral olarak taşınır
 
 ## Vault sözleşmesi
 
@@ -68,6 +68,12 @@ bash backend/scripts/vault/check-backend-deploy-stage.sh
 - `BACKEND_HEALTH_URLS`
 
 Bu secret'lar elle yazılmak zorunda değil. `vault-secrets-sync.yml` artık `mode=backend-deploy` ile `secret/<env>/ops/github/backend-deploy` path'inden GitHub Actions secret'larına senkron yapabiliyor.
+
+## GHCR erişimi
+
+- Server üzerinde kalıcı `GHCR_TOKEN` tutmuyoruz.
+- `deploy-backend.yml` ve `rollback.yml`, GitHub Actions runtime token'ını SSH oturumu üzerinden `deploy-backend.sh` / `rollback-backend.sh` script'lerine ephemeral geçirir.
+- Bu yüzden `backend.env` içinde `GHCR_USERNAME` ve `GHCR_TOKEN` zorunlu değildir.
 
 ## Notlar
 

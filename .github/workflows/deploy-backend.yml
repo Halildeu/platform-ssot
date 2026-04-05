@@ -126,6 +126,8 @@ jobs:
         if: ${{ env.DEPLOY_ENABLED == 'true' && env.BACKEND_SSH_DEPLOY_ENABLED == 'true' }}
         env:
           SHA: ${{ github.sha }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_ACTOR: ${{ github.actor }}
           BACKEND_DEPLOY_SSH_HOST: ${{ secrets.BACKEND_DEPLOY_SSH_HOST }}
           BACKEND_DEPLOY_SSH_PORT: ${{ secrets.BACKEND_DEPLOY_SSH_PORT }}
           BACKEND_DEPLOY_SSH_USER: ${{ secrets.BACKEND_DEPLOY_SSH_USER }}
@@ -185,6 +187,8 @@ jobs:
             REMOTE_ENV_FILE="${remote_env_file}" \
             REMOTE_REPO_DIR="${remote_repo_dir}" \
             REMOTE_COMPOSE_PROFILES="${remote_profiles}" \
+            GITHUB_ACTOR="${GITHUB_ACTOR}" \
+            GITHUB_TOKEN="${GITHUB_TOKEN}" \
             TARGET_IMAGE_TAG="sha-${short_sha}" \
             'bash -se' <<'EOF'
           set -euo pipefail
@@ -214,6 +218,8 @@ jobs:
           ENV_FILE="${REMOTE_ENV_FILE}" \
           REPO_DIR="${REMOTE_REPO_DIR}" \
           COMPOSE_PROFILES="${REMOTE_COMPOSE_PROFILES}" \
+          GHCR_USERNAME="${GITHUB_ACTOR}" \
+          GHCR_TOKEN="${GITHUB_TOKEN}" \
           TARGET_IMAGE_TAG="${TARGET_IMAGE_TAG}" \
           deploy/ubuntu/deploy-backend.sh
           EOF
