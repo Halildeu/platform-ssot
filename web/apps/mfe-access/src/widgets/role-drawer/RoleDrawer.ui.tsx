@@ -18,11 +18,10 @@ interface RoleDrawerProps {
   formatDate: (value: Date | number, options?: Intl.DateTimeFormatOptions) => string;
 }
 
-const LEVEL_OPTIONS: AccessLevel[] = ['NONE', 'VIEW', 'EDIT', 'MANAGE'];
+const LEVEL_OPTIONS: AccessLevel[] = ['NONE', 'VIEW', 'MANAGE'];
 
 const levelVariant: Record<string, 'info' | 'warning' | 'error' | 'muted'> = {
   VIEW: 'info',
-  EDIT: 'warning',
   MANAGE: 'error',
   NONE: 'muted',
 };
