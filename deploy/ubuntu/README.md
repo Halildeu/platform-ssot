@@ -15,11 +15,14 @@ Bu klasör GitHub-first backend deploy akışının Ubuntu tarafındaki scriptle
 - `git`
 - `docker` + Compose v2
 - `curl`
-- `jq`
+- `python3`
 - `/home/halil/platform/env/backend.env`
 - GitHub repo clone erişimi (`GIT_REMOTE_URL`)
 - GHCR read erişimi deploy workflow tarafından ephemeral olarak taşınır
 - Backend deploy secret'ları için önerilen GitHub target'ı environment bazlı `stage` / `prod` secret setidir
+- AppRole tabanlı render kullanılacaksa:
+  - `/home/halil/platform/state/vault/approle/backend-deploy-<env>.role-id`
+  - `/home/halil/platform/state/vault/approle/backend-deploy-<env>.secret-id`
 
 ## Vault sözleşmesi
 
@@ -29,9 +32,13 @@ Bu klasör GitHub-first backend deploy akışının Ubuntu tarafındaki scriptle
   - `/home/halil/platform/env/backend.env`
 - Render script:
   - `deploy/ubuntu/render-backend-env.sh`
+- AppRole render wrapper:
+  - `deploy/ubuntu/render-backend-env-approle.sh`
 - Preflight script:
   - `backend/scripts/vault/check-backend-deploy-stage.sh`
   - `backend/scripts/vault/check-backend-deploy-prod.sh`
+- AppRole credential materializer:
+  - `backend/scripts/vault/materialize-backend-deploy-approle.sh`
 
 Örnek kullanım:
 
@@ -43,6 +50,20 @@ export VAULT_TOKEN="..."
 export DEPLOY_ENV="stage"
 
 deploy/ubuntu/render-backend-env.sh
+```
+
+AppRole ile render:
+
+```bash
+ENV=stage \
+VAULT_ADDR="https://vault.example.com" \
+VAULT_TOKEN="..." \
+bash backend/scripts/vault/materialize-backend-deploy-approle.sh
+
+export DEPLOY_ENV="stage"
+export VAULT_ADDR="https://vault.example.com"
+
+deploy/ubuntu/render-backend-env-approle.sh
 ```
 
 Vault preflight:
@@ -86,4 +107,5 @@ Bu secret'lar elle yazılmak zorunda değil. `vault-secrets-sync.yml` artık `mo
 - Host üzerindeki `backend.env` dosyası Vault kaynaklı tek materialized secret setidir.
 - `IMAGE_TAG` alanı deploy/rollback sırasında script tarafından güncellenir.
 - `backend/scripts/vault/write-backend-deploy-stage.sh` ve `write-backend-deploy-prod.sh` helper script'leri ilgili Vault path'lerini doldurmak için eklendi.
+- `deploy-backend.sh`, `RENDER_ENV_BEFORE_DEPLOY=true` verildiğinde deploy öncesi `backend.env` dosyasını Vault'tan otomatik yenileyebilir.
 - `RB-ubuntu-backend-github-vault-deploy.md` deploy zincirinin canonical runbook özetidir.

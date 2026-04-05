@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 REPO_DIR="${REPO_DIR:-/home/halil/platform/repo}"
 BACKEND_DIR="${BACKEND_DIR:-${REPO_DIR}/backend}"
 ENV_FILE="${ENV_FILE:-/home/halil/platform/env/backend.env}"
@@ -12,6 +13,13 @@ STATE_DIR="${STATE_DIR:-/home/halil/platform/state}"
 CURRENT_TAG_FILE="${CURRENT_TAG_FILE:-${STATE_DIR}/backend.current-image-tag}"
 PREVIOUS_TAG_FILE="${PREVIOUS_TAG_FILE:-${STATE_DIR}/backend.previous-image-tag}"
 TARGET_IMAGE_TAG="${TARGET_IMAGE_TAG:-}"
+RENDER_ENV_BEFORE_DEPLOY="${RENDER_ENV_BEFORE_DEPLOY:-false}"
+DEPLOY_ENV="${DEPLOY_ENV:-stage}"
+VAULT_ADDR="${VAULT_ADDR:-}"
+VAULT_APPROLE_ROLE_NAME="${VAULT_APPROLE_ROLE_NAME:-}"
+VAULT_APPROLE_ROLE_ID_FILE="${VAULT_APPROLE_ROLE_ID_FILE:-}"
+VAULT_APPROLE_SECRET_ID_FILE="${VAULT_APPROLE_SECRET_ID_FILE:-}"
+VAULT_TOKEN_REVOKE_ON_EXIT="${VAULT_TOKEN_REVOKE_ON_EXIT:-true}"
 
 require_cmd() {
   if ! command -v "$1" >/dev/null 2>&1; then
@@ -62,6 +70,41 @@ upsert_env_value() {
   mv "${tmp_file}" "${ENV_FILE}"
 }
 
+maybe_render_env() {
+  local render_flag
+  render_flag="$(printf '%s' "${RENDER_ENV_BEFORE_DEPLOY}" | tr '[:upper:]' '[:lower:]')"
+  case "${render_flag}" in
+    true|1|yes)
+      ;;
+    *)
+      return 0
+      ;;
+  esac
+
+  if [[ -z "${VAULT_ADDR}" ]]; then
+    echo "[error] VAULT_ADDR required when RENDER_ENV_BEFORE_DEPLOY=true." >&2
+    exit 1
+  fi
+
+  if [[ -n "${VAULT_TOKEN:-}" ]]; then
+    DEPLOY_ENV="${DEPLOY_ENV}" \
+    VAULT_ADDR="${VAULT_ADDR}" \
+    VAULT_TOKEN="${VAULT_TOKEN}" \
+    OUTPUT_FILE="${ENV_FILE}" \
+    "${SCRIPT_DIR}/render-backend-env.sh"
+    return 0
+  fi
+
+  DEPLOY_ENV="${DEPLOY_ENV}" \
+  VAULT_ADDR="${VAULT_ADDR}" \
+  OUTPUT_FILE="${ENV_FILE}" \
+  VAULT_APPROLE_ROLE_NAME="${VAULT_APPROLE_ROLE_NAME}" \
+  VAULT_APPROLE_ROLE_ID_FILE="${VAULT_APPROLE_ROLE_ID_FILE}" \
+  VAULT_APPROLE_SECRET_ID_FILE="${VAULT_APPROLE_SECRET_ID_FILE}" \
+  VAULT_TOKEN_REVOKE_ON_EXIT="${VAULT_TOKEN_REVOKE_ON_EXIT}" \
+  "${SCRIPT_DIR}/render-backend-env-approle.sh"
+}
+
 sync_repo() {
   if [[ -d "${REPO_DIR}/.git" ]]; then
     git -C "${REPO_DIR}" fetch origin "${REPO_BRANCH}"
@@ -97,6 +140,7 @@ main() {
   require_cmd git
   require_cmd docker
 
+  maybe_render_env
   load_env_file
   sync_repo
   mkdir -p "${STATE_DIR}"
