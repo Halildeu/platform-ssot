@@ -480,6 +480,30 @@ export default function QualityDashboardPage() {
         </div>
       </div>
 
+      {/* ─── Leadership Summary ─── */}
+      {scorecardAgg && (
+        <div className="grid grid-cols-4 gap-3">
+          <div className="rounded-xl border border-border-subtle bg-surface-default p-4 text-center">
+            <Text className="text-3xl font-bold text-text-primary">{scorecardAgg.total}</Text>
+            <Text variant="secondary" className="text-xs">Toplam Bilesen</Text>
+          </div>
+          <div className="rounded-xl border border-border-subtle bg-surface-default p-4 text-center">
+            <Text className="text-3xl font-bold text-action-primary">{scorecardAgg.avgTotal}</Text>
+            <Text variant="secondary" className="text-xs">Ortalama Skor</Text>
+          </div>
+          <div className="rounded-xl border border-border-subtle bg-surface-default p-4 text-center">
+            <Text className={`text-3xl font-bold ${(scorecardAgg.grades.D + scorecardAgg.grades.F) > 0 ? 'text-state-danger-text' : 'text-state-success-text'}`}>
+              {scorecardAgg.grades.D + scorecardAgg.grades.F}
+            </Text>
+            <Text variant="secondary" className="text-xs">Kritik (D+F)</Text>
+          </div>
+          <div className="rounded-xl border border-border-subtle bg-surface-default p-4 text-center">
+            <Text className="text-3xl font-bold text-state-warning-text">{scorecardAgg.shallowTests}</Text>
+            <Text variant="secondary" className="text-xs">Shallow Test</Text>
+          </div>
+        </div>
+      )}
+
       {/* ─── Actionable Alerts ─── */}
       <AlertPanel alerts={alerts} />
 
@@ -563,6 +587,52 @@ export default function QualityDashboardPage() {
               <Text variant="secondary" className="text-[10px]">AccessControl Yok</Text>
             </div>
           </div>
+
+          {/* Expandable: Shallow Tests + A11y Zero Lists */}
+          {(() => {
+            const shallowList = scorecardData.filter(c => c.scores.testDepth < 30);
+            const a11yZeroList = scorecardData.filter(c => c.scores.a11y === 0);
+            return (
+              <div className="mt-4 space-y-2">
+                {shallowList.length > 0 && (
+                  <details className="rounded-lg border border-state-danger-bg bg-state-danger-bg/10 p-3">
+                    <summary className="cursor-pointer text-xs font-semibold text-state-danger-text">
+                      Shallow Test ({shallowList.length}) — testDepth &lt; 30
+                    </summary>
+                    <div className="mt-2 space-y-1">
+                      {shallowList.map(c => (
+                        <div key={c.path} className="flex items-center justify-between rounded-md bg-surface-default/60 px-2 py-1 text-[10px]">
+                          <span className="font-medium text-text-primary">{c.name}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-text-secondary">{c.dir}</span>
+                            <span className={`rounded-full px-1.5 py-0.5 font-bold ${GRADE_COLORS[c.grade]}`}>{c.grade}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                )}
+                {a11yZeroList.length > 0 && (
+                  <details className="rounded-lg border border-state-warning-bg bg-state-warning-bg/10 p-3">
+                    <summary className="cursor-pointer text-xs font-semibold text-state-warning-text">
+                      A11y Skor = 0 ({a11yZeroList.length}) — erisilebilirlik destegi yok
+                    </summary>
+                    <div className="mt-2 space-y-1">
+                      {a11yZeroList.map(c => (
+                        <div key={c.path} className="flex items-center justify-between rounded-md bg-surface-default/60 px-2 py-1 text-[10px]">
+                          <span className="font-medium text-text-primary">{c.name}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-text-secondary">{c.dir}</span>
+                            <span className="text-text-secondary">a11y:{c.scores.a11y} testDepth:{c.scores.testDepth}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                )}
+              </div>
+            );
+          })()}
         </div>
       )}
 
