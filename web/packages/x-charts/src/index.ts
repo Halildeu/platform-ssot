@@ -111,6 +111,8 @@ export type { ChartErrorBoundaryProps } from "./states/ChartErrorBoundary";
 /*  Cross-Filter Bus (P2)                                             */
 /* ------------------------------------------------------------------ */
 
+export { CrossFilterChart } from "./cross-filter/CrossFilterChart";
+export type { CrossFilterChartProps } from "./cross-filter/CrossFilterChart";
 export { createCrossFilterStore } from "./cross-filter/createCrossFilterStore";
 export { CrossFilterProvider, useCrossFilter, useCrossFilterStoreApi } from "./cross-filter/useCrossFilterStore";
 export { useChartCrossFilter } from "./cross-filter/useChartCrossFilter";
