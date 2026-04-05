@@ -29,6 +29,7 @@ Owner: @team/platform
 - Repo artefaktları:
   - `web/deploy/cloudflare/worker.mjs`
   - `web/deploy/cloudflare/wrangler.ai-acik-com.example.jsonc`
+  - `web/scripts/cloudflare/render-wrangler-config.mjs`
   - `web/scripts/cloudflare/build-single-domain.mjs`
 
 -------------------------------------------------------------------------------
@@ -57,7 +58,11 @@ Build ve assemble adımları:
   - `MFE_ACCESS_URL=https://ai.acik.com/remotes/access/remoteEntry.js`
   - `MFE_AUDIT_URL=https://ai.acik.com/remotes/audit/remoteEntry.js`
   - `MFE_REPORTING_URL=https://ai.acik.com/remotes/reporting/remoteEntry.js`
-  - `BACKEND_ORIGIN=https://<ubuntu-origin>`
+  - `CLOUDFLARE_WORKER_NAME=ai-acik-com`
+  - `CLOUDFLARE_ZONE_NAME=ai.acik.com`
+  - `CLOUDFLARE_ROUTE_PATTERN=ai.acik.com/*`
+  - `CLOUDFLARE_ACCOUNT_ID=<cloudflare-account-id>`
+  - `CLOUDFLARE_BACKEND_ORIGIN=https://<cloudflare-reachable-origin>`
 
 -------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER
@@ -71,6 +76,7 @@ Build ve assemble adımları:
   - `/api/*` ve `/actuator/*` istekleri origin proxy loglarında görünmelidir.
   - `remoteEntry.js` yanıtları `no-store` cache başlığıyla dönmelidir.
   - HTML yanıtları `must-revalidate` cache başlığıyla dönmelidir.
+  - `CLOUDFLARE_BACKEND_ORIGIN` private `10.x` ise deploy öncesi blocker kabul edilmelidir.
 - Smoke doğrulamaları:
   - `GET /`
   - `GET /remoteEntry.js`
@@ -96,9 +102,10 @@ Build ve assemble adımları:
   - Given: frontend açılıyor ama backend çağrıları hata veriyor
   - When: Worker proxy path'leri 5xx veya timeout dönüyor
   - Then:
-    - `BACKEND_ORIGIN` değerini doğrula.
+    - `CLOUDFLARE_BACKEND_ORIGIN` değerini doğrula.
     - Worker route'unun `/api/*` ve `/actuator/*` path'lerini origin'e taşıdığını doğrula.
-    - Ubuntu gateway health yüzeyinin erişilebilir olduğunu doğrula.
+    - Origin'in Cloudflare edge tarafindan erisilebilir oldugunu doğrula.
+    - Ubuntu gateway health yüzeyinin origin tarafinda erişilebilir olduğunu doğrula.
 
 - [ ] Arıza senaryosu 3 – Shell açılıyor ama remote yüklenmiyor
   - Given: shell render oldu, ilgili ekran remote yüklerken düşüyor
@@ -121,6 +128,7 @@ Build ve assemble adımları:
 -------------------------------------------------------------------------------
 
 - `wrangler.ai-acik-com.example.jsonc` dosyası zone ve route bilgileri geldikten sonra gerçek `wrangler.jsonc` haline getirilir.
+- `render-wrangler-config.mjs`, GitHub environment var/secret degerlerinden gercek deploy config'ini uretir.
 - `worker.mjs`, `/api` ve `/actuator` path'lerini `BACKEND_ORIGIN` hedefine proxy eder.
 - `remoteEntry.js` dosyaları `no-store`, HTML yanıtları `must-revalidate` cache başlıklarıyla servis edilir.
 - Public canlı için Cloudflare zone veya child-zone delegation tarafı tamamlanmış olmalıdır.

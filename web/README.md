@@ -94,6 +94,23 @@ Bu komut:
 - tek publish klasoru uretir: `dist/cloudflare-single-domain`
 - Cloudflare Worker ile `/api/*` ve `/actuator/*` isteklerini backend origin'e proxy etmek uzere tasarlanmistir
 
+Cloudflare deploy config render:
+
+```bash
+CLOUDFLARE_WORKER_NAME=ai-acik-com \
+CLOUDFLARE_ACCOUNT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \
+CLOUDFLARE_ZONE_NAME=ai.acik.com \
+CLOUDFLARE_ROUTE_PATTERN=ai.acik.com/* \
+CLOUDFLARE_PUBLIC_ORIGIN=https://ai.acik.com \
+CLOUDFLARE_BACKEND_ORIGIN=https://backend-origin.example.internal \
+npm run cloudflare:render-config
+```
+
+Not:
+
+- `CLOUDFLARE_BACKEND_ORIGIN` Cloudflare edge tarafindan erisilebilir olmalidir.
+- Private `10.x` originler Cloudflare Worker tarafindan dogrudan erisilemez; public origin veya Cloudflare Tunnel gerekir.
+
 ## Documentation
 
 - [Architecture Overview](./docs/architecture-overview.md)
