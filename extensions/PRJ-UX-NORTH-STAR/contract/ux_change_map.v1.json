@@ -332,6 +332,26 @@
       "path": "web/apps/mfe-shell/src/app/shortcuts/useShellShortcuts.model.ts",
       "ux_theme_id": "task_completion_architecture",
       "ux_subtheme_id": "critical_path_minimization"
+    },
+    {
+      "path": "web/deploy/cloudflare/worker.mjs",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/deploy/cloudflare/wrangler.ai-acik-com.example.jsonc",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/scripts/cloudflare/build-single-domain.mjs",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/scripts/cloudflare/render-wrangler-config.mjs",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
     }
   ]
 }
