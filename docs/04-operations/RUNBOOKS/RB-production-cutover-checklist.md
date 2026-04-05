@@ -161,6 +161,7 @@ Sık görülen production promote arızaları ve ilk adımlar:
 - `deploy/ubuntu/README.md`
 - `docs/04-operations/RUNBOOKS/RB-ubuntu-backend-github-vault-deploy.md`
 - `docs/OPERATIONS/prod-vault-key-matrix.v1.json`
+- `docs/OPERATIONS/prod-github-environment-secret-map.v1.json`
 - `.github/workflows/deploy-backend.yml`
 - `.github/workflows/post-deploy-validate.yml`
 - `.github/workflows/rollback.yml`

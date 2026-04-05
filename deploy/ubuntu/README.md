@@ -113,5 +113,7 @@ Bu secret'lar elle yazılmak zorunda değil. `vault-secrets-sync.yml` artık `mo
   - `docs/04-operations/RUNBOOKS/RB-production-cutover-checklist.md`
 - Production Vault key matrisi:
   - `docs/OPERATIONS/prod-vault-key-matrix.v1.json`
+- Production GitHub environment secret matrisi:
+  - `docs/OPERATIONS/prod-github-environment-secret-map.v1.json`
 - Production backend validate için:
   - `post-deploy-validate.yml` workflow_dispatch `env=prod` ve `target=backend|all`
