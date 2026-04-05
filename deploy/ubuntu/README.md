@@ -115,5 +115,9 @@ Bu secret'lar elle yazılmak zorunda değil. `vault-secrets-sync.yml` artık `mo
   - `docs/OPERATIONS/prod-vault-key-matrix.v1.json`
 - Production GitHub environment secret matrisi:
   - `docs/OPERATIONS/prod-github-environment-secret-map.v1.json`
+- Production public edge matrisi:
+  - `docs/OPERATIONS/prod-public-edge-map.v1.json`
+- `ai.acik.com` icin ornek Caddy config:
+  - `deploy/ubuntu/Caddyfile.ai-acik.com.example`
 - Production backend validate için:
   - `post-deploy-validate.yml` workflow_dispatch `env=prod` ve `target=backend|all`
