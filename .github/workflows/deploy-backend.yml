@@ -99,6 +99,12 @@ jobs:
           echo "::add-mask::${GH_TOKEN}"
           echo "${GH_TOKEN}" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
 
+          ghcr_owner="$(printf '%s' "${GHCR_OWNER}" | tr '[:upper:]' '[:lower:]')"
+          if [ -z "${ghcr_owner}" ]; then
+            echo "::error title=deploy-backend::Unable to resolve lowercase GHCR owner."
+            exit 1
+          fi
+
           echo "::group::docker compose build (backend/docker-compose.yml)"
           docker compose -f backend/docker-compose.yml build
           echo "::endgroup::"
@@ -109,7 +115,7 @@ jobs:
             stable_tag="main-stable"
           fi
 
-          echo "::group::tag + push (serban-* -> ghcr.io/${GHCR_OWNER}/...)"
+          echo "::group::tag + push (serban-* -> ghcr.io/${ghcr_owner}/...)"
           images="$(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^serban-' || true)"
           if [ -z "${images}" ]; then
             echo "::error title=deploy-backend::No serban-* images found; failing deploy-backend."
@@ -119,7 +125,7 @@ jobs:
           while IFS= read -r img; do
             name="${img%%:*}"
             svc="${name#serban-}"
-            target="ghcr.io/${GHCR_OWNER}/platform-ssot-${svc}"
+            target="ghcr.io/${ghcr_owner}/platform-ssot-${svc}"
 
             docker tag "${img}" "${target}:sha-${short_sha}"
             docker push "${target}:sha-${short_sha}"
