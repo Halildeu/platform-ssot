@@ -31,6 +31,19 @@ interface Granule { type: string; key: string; grant: string; }
 const LEVEL_OPTIONS: AccessLevel[] = ['NONE', 'VIEW', 'MANAGE'];
 const levelVariant: Record<string, 'info' | 'warning' | 'error' | 'muted'> = { VIEW: 'info', MANAGE: 'error', NONE: 'muted' };
 
+const isPersistedRoleId = (value: string | undefined) => /^\d+$/.test(String(value ?? ''));
+
+const buildFallbackCatalog = (role: AccessRole | null): Catalog => ({
+  modules: (role?.policies ?? []).map((policy) => ({
+    key: policy.moduleKey,
+    label: policy.moduleLabel,
+    levels: ['NONE', 'VIEW', 'MANAGE'],
+  })),
+  actions: [],
+  reports: [],
+  pages: [],
+});
+
 const RoleDrawer: React.FC<RoleDrawerProps> = ({
   open, mode, role, onClose, onSavePermissions, onCreateRole,
   savingPermissions, creatingRole, t, formatNumber, formatDate,
@@ -42,7 +55,13 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   // --- Catalog query ---
   const catalogQuery = useQuery({
     queryKey: ['permission-catalog'],
-    queryFn: async () => { const res = await api.get('/api/v1/authz/catalog'); return res.data as Catalog; },
+    queryFn: async () => {
+      if (!isPersistedRoleId(role?.id)) {
+        return buildFallbackCatalog(role);
+      }
+      const res = await api.get('/api/v1/authz/catalog');
+      return res.data as Catalog;
+    },
     enabled: open && mode === 'view',
     staleTime: 120_000,
   });
@@ -50,7 +69,13 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   // --- Members query ---
   const membersQuery = useQuery({
     queryKey: ['role-members', role?.id],
-    queryFn: async () => { const res = await api.get(`/api/v1/roles/${role!.id}/members`); return res.data as RoleMember[]; },
+    queryFn: async () => {
+      if (!isPersistedRoleId(role?.id)) {
+        return [] as RoleMember[];
+      }
+      const res = await api.get(`/api/v1/roles/${role!.id}/members`);
+      return res.data as RoleMember[];
+    },
     enabled: open && mode === 'view' && !!role,
   });
 
@@ -77,6 +102,9 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   // --- Save granules mutation ---
   const saveGranulesMutation = useMutation({
     mutationFn: async () => {
+      if (!isPersistedRoleId(role?.id)) {
+        return;
+      }
       const granules: Granule[] = [];
       for (const [key, grant] of Object.entries(moduleGrants)) {
         if (grant !== 'NONE') granules.push({ type: 'module', key, grant });
@@ -101,6 +129,9 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   // --- Add member mutation ---
   const addMemberMutation = useMutation({
     mutationFn: async (userId: number) => {
+      if (!isPersistedRoleId(role?.id)) {
+        return;
+      }
       await api.post(`/api/v1/roles/${role!.id}/members`, { userIds: [userId] });
     },
     onSuccess: () => {
@@ -112,6 +143,9 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   // --- Remove member mutation ---
   const removeMemberMutation = useMutation({
     mutationFn: async (userId: number) => {
+      if (!isPersistedRoleId(role?.id)) {
+        return;
+      }
       await api.delete(`/api/v1/roles/${role!.id}/members/${userId}`);
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['role-members', role?.id] }),
@@ -147,7 +181,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
 
   if (!role) return null;
 
-  const catalog = catalogQuery.data;
+  const catalog = catalogQuery.data ?? buildFallbackCatalog(role);
   const members = membersQuery.data ?? [];
 
   // --- Helpers ---

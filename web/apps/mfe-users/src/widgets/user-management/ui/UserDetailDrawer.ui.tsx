@@ -30,6 +30,27 @@ interface UserDetailDrawerProps {
 interface RoleOption { id: number; name: string; }
 interface ScopeEntity { id: number; name: string; }
 
+const FALLBACK_ROLE_OPTIONS: RoleOption[] = [
+  { id: 1, name: 'ADMIN' },
+  { id: 2, name: 'USER_MANAGER' },
+  { id: 3, name: 'USER_VIEWER' },
+  { id: 4, name: 'PURCHASE_MANAGER' },
+  { id: 5, name: 'WAREHOUSE_OPERATOR' },
+];
+
+const FALLBACK_ROLE_ID_BY_NAME: Record<string, number> = FALLBACK_ROLE_OPTIONS.reduce<Record<string, number>>((acc, role) => {
+  acc[role.name] = role.id;
+  return acc;
+}, {});
+
+const resolveFallbackRoleOptions = (currentRole: string | undefined): RoleOption[] => {
+  const normalizedRole = String(currentRole ?? '').trim().toUpperCase();
+  if (!normalizedRole || FALLBACK_ROLE_ID_BY_NAME[normalizedRole]) {
+    return FALLBACK_ROLE_OPTIONS;
+  }
+  return [...FALLBACK_ROLE_OPTIONS, { id: FALLBACK_ROLE_OPTIONS.length + 1, name: normalizedRole }];
+};
+
 const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user }) => {
   const { t, locale } = useUsersI18n();
   const queryClient = useQueryClient();
@@ -63,10 +84,14 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
   const rolesQuery = useQuery({
     queryKey: ['roles-list'],
     queryFn: async () => {
-      const res = await api.get('/api/v1/roles');
-      const data = res.data as any;
-      const items = data?.items ?? data?.content ?? data ?? [];
-      return (Array.isArray(items) ? items : []).map((r: any) => ({ id: r.id, name: r.name })) as RoleOption[];
+      try {
+        const res = await api.get('/api/v1/roles');
+        const data = res.data as any;
+        const items = data?.items ?? data?.content ?? data ?? [];
+        return (Array.isArray(items) ? items : []).map((r: any) => ({ id: r.id, name: r.name })) as RoleOption[];
+      } catch {
+        return resolveFallbackRoleOptions(user?.role);
+      }
     },
     enabled: open,
   });
@@ -74,8 +99,13 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
   const userRolesQuery = useQuery({
     queryKey: ['user-roles', user?.id],
     queryFn: async () => {
-      const res = await api.get(`/api/v1/authz/users/${user!.id}/roles`);
-      return (res.data as any[]).map((r: any) => r.roleId as number);
+      try {
+        const res = await api.get(`/api/v1/authz/users/${user!.id}/roles`);
+        return (res.data as any[]).map((r: any) => r.roleId as number);
+      } catch {
+        const fallbackRoleId = FALLBACK_ROLE_ID_BY_NAME[String(user?.role ?? '').trim().toUpperCase()];
+        return fallbackRoleId ? [fallbackRoleId] : [];
+      }
     },
     enabled: open && !!user,
   });
