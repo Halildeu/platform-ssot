@@ -87,6 +87,8 @@
       "web/apps/mfe-access/src/**/*",
       "web/apps/mfe-shell/src/app/config/*",
       "web/apps/mfe-shell/vite-plugins/*",
+      "web/deploy/cloudflare/**",
+      "web/scripts/cloudflare/**",
       "web/apps/mfe-suggestions/src/*",
       "backend/schema-service/**",
       "backend/scripts/*",
@@ -272,6 +274,16 @@
       },
       {
         "path_glob": "web/apps/mfe-shell/vite-plugins/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/deploy/cloudflare/**",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/scripts/cloudflare/**",
         "ux_theme_id": "consistency_and_pattern_governance",
         "ux_subtheme_id": "single_component_source_of_truth"
       },
