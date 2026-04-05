@@ -36,12 +36,12 @@ jobs:
         if: ${{ env.DEPLOY_ENABLED != 'true' }}
         run: echo "::notice title=deploy-backend::DEPLOY_ENABLED!=true; skipping."
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         with:
           python-version: "3.11"
@@ -259,7 +259,7 @@ jobs:
         if: ${{ env.DEPLOY_ENABLED != 'true' }}
         run: echo "::notice title=deploy-backend::DEPLOY_ENABLED!=true; skipping stage host deploy."
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         with:
           fetch-depth: 0

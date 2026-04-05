@@ -48,7 +48,11 @@ jobs:
 
           case "${TRIGGER_WORKFLOW}" in
             deploy-web)
-              validate_web=1
+              if [ -n "${WEB_SMOKE_URL:-}" ]; then
+                validate_web=1
+              else
+                echo "::notice title=post-deploy-validate::WEB_SMOKE_URL missing; skipping web deploy validation."
+              fi
               ;;
             deploy-backend)
               echo "::notice title=post-deploy-validate::Backend validation delegated to stage self-hosted runner."
