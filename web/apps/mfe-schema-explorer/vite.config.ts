@@ -5,6 +5,27 @@ import { federation } from '@module-federation/vite';
 import path from 'node:path';
 import { readFileSync } from 'node:fs';
 
+function readEnvString(keys: string[], fallback: string): string {
+  for (const key of keys) {
+    const value = process.env[key];
+    if (typeof value !== 'string') continue;
+    const normalized = value.trim();
+    if (normalized.length > 0) {
+      return normalized;
+    }
+  }
+  return fallback;
+}
+
+function normalizeBasePath(value: string): string {
+  const normalized = value.trim();
+  if (!normalized || normalized === '/') {
+    return '/';
+  }
+  const withLeadingSlash = normalized.startsWith('/') ? normalized : `/${normalized}`;
+  return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`;
+}
+
 const pkg = JSON.parse(readFileSync(path.resolve(__dirname, 'package.json'), 'utf8'));
 const deps = pkg.dependencies as Record<string, string>;
 const singleton = (name: string, fallback: string | boolean = false) => ({
@@ -21,7 +42,11 @@ const sharedCore = {
 const sharedProdOnly = {};
 
 export default defineConfig(({ mode }) => {
+  const appBasePath = normalizeBasePath(readEnvString(['APP_BASE_PATH', 'VITE_APP_BASE_PATH'], '/'));
+  const shellRemoteEntry = readEnvString(['MFE_SHELL_URL', 'VITE_MFE_SHELL_URL'], 'http://localhost:3000/remoteEntry.js');
+
   return {
+    base: appBasePath,
     plugins: [
       react(),
       federation({
@@ -29,7 +54,7 @@ export default defineConfig(({ mode }) => {
         filename: 'remoteEntry.js',
         dts: false,
         remotes: {
-          mfe_shell: { type: 'module', name: 'mfe_shell', entry: 'http://localhost:3000/remoteEntry.js' },
+          mfe_shell: { type: 'module', name: 'mfe_shell', entry: shellRemoteEntry },
         },
         exposes: {
           './SchemaExplorerApp': './src/App.tsx',

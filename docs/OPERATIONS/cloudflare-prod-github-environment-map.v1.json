@@ -1,0 +1,91 @@
+{
+  "version": "v1",
+  "kind": "cloudflare-prod-github-environment-map",
+  "environment": "prod",
+  "deployment_target": "Cloudflare Workers + Static Assets",
+  "notes": [
+    "Bu dosya ai.acik.com tek-domain Cloudflare yayini icin GitHub environment seviyesinde tutulacak degisken ve secret sozlesmesini tanimlar.",
+    "CLOUDFLARE_BACKEND_ORIGIN Cloudflare edge tarafindan erisilebilir bir origin olmalidir; private 10.x adresi dogrudan kullanilamaz.",
+    "Route/zone degerleri Cloudflare delegation modeli netlestiginde kesinlestirilir."
+  ],
+  "required_vars": [
+    {
+      "name": "WEB_DEPLOY_PROVIDER",
+      "required": true,
+      "recommended_value": "cloudflare",
+      "purpose": "deploy-web workflow'unun Cloudflare yolunu secmesini saglar"
+    },
+    {
+      "name": "CLOUDFLARE_PUBLIC_ORIGIN",
+      "required": true,
+      "recommended_value": "https://ai.acik.com",
+      "purpose": "shell ve remote build pathlerinin canonical public origin'i"
+    },
+    {
+      "name": "CLOUDFLARE_WORKER_NAME",
+      "required": true,
+      "recommended_value": "ai-acik-com",
+      "purpose": "Wrangler Worker adi"
+    },
+    {
+      "name": "CLOUDFLARE_ZONE_NAME",
+      "required": true,
+      "recommended_value": "ai.acik.com",
+      "purpose": "Cloudflare tarafinda route'un baglanacagi zone"
+    },
+    {
+      "name": "CLOUDFLARE_ROUTE_PATTERN",
+      "required": true,
+      "recommended_value": "ai.acik.com/*",
+      "purpose": "Worker route pattern'i"
+    },
+    {
+      "name": "CLOUDFLARE_BACKEND_ORIGIN",
+      "required": true,
+      "recommended_value": "https://backend-origin.example.internal",
+      "purpose": "Cloudflare'dan erisilebilir backend origin",
+      "constraints": [
+        "publicly reachable or Cloudflare tunnel reachable",
+        "must not be a private 10.x-only address unless tunneled"
+      ]
+    },
+    {
+      "name": "CLOUDFLARE_COMPATIBILITY_DATE",
+      "required": false,
+      "recommended_value": "2026-04-06",
+      "purpose": "Wrangler compatibility date override"
+    }
+  ],
+  "required_secrets": [
+    {
+      "name": "DEPLOY_ENABLED",
+      "required": true,
+      "expected_shape": "boolean-string",
+      "purpose": "deploy-web workflow genel gate"
+    },
+    {
+      "name": "CLOUDFLARE_API_TOKEN",
+      "required": true,
+      "expected_shape": "api-token",
+      "purpose": "Wrangler deploy auth"
+    },
+    {
+      "name": "CLOUDFLARE_ACCOUNT_ID",
+      "required": true,
+      "expected_shape": "account-id",
+      "purpose": "Wrangler account scope"
+    },
+    {
+      "name": "WEB_SMOKE_URL",
+      "required": true,
+      "expected_shape": "https-url",
+      "purpose": "Deploy sonrasi ayni workflow icinde web smoke kontrolu"
+    },
+    {
+      "name": "AUTONOMOUS_PIPELINE_SIGNING_PUBLIC_KEY_PEM",
+      "required": true,
+      "expected_shape": "pem-public-key",
+      "purpose": "Prod deploy gate imza dogrulamasi"
+    }
+  ]
+}

@@ -70,14 +70,46 @@ pnpm run verify
 Ornek:
 
 ```bash
-MFE_USERS_URL=https://users.ai.acik.com/remoteEntry.js
-MFE_ACCESS_URL=https://access.ai.acik.com/remoteEntry.js
-MFE_AUDIT_URL=https://audit.ai.acik.com/remoteEntry.js
-MFE_REPORTING_URL=https://reporting.ai.acik.com/remoteEntry.js
+MFE_USERS_URL=https://ai.acik.com/remotes/users/remoteEntry.js
+MFE_ACCESS_URL=https://ai.acik.com/remotes/access/remoteEntry.js
+MFE_AUDIT_URL=https://ai.acik.com/remotes/audit/remoteEntry.js
+MFE_REPORTING_URL=https://ai.acik.com/remotes/reporting/remoteEntry.js
 VITE_GATEWAY_URL=https://ai.acik.com/api
 ```
 
 `VITE_MFE_*` varyantlari da desteklenir; runtime inject tarafinda `MFE_*` anahtarlari da `window.__env__` icine yazilir.
+
+## Cloudflare Single-Domain Build
+
+Tek domain (`ai.acik.com`) altinda shell + remotes + `/api` proxy icin:
+
+```bash
+npm run build:cloudflare:single-domain
+```
+
+Bu komut:
+
+- shell'i `/` icin build eder
+- remote MFE'leri `/remotes/<slug>/` tabanina gore build eder
+- tek publish klasoru uretir: `dist/cloudflare-single-domain`
+- Cloudflare Worker ile `/api/*` ve `/actuator/*` isteklerini backend origin'e proxy etmek uzere tasarlanmistir
+
+Cloudflare deploy config render:
+
+```bash
+CLOUDFLARE_WORKER_NAME=ai-acik-com \
+CLOUDFLARE_ACCOUNT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \
+CLOUDFLARE_ZONE_NAME=ai.acik.com \
+CLOUDFLARE_ROUTE_PATTERN=ai.acik.com/* \
+CLOUDFLARE_PUBLIC_ORIGIN=https://ai.acik.com \
+CLOUDFLARE_BACKEND_ORIGIN=https://backend-origin.example.internal \
+npm run cloudflare:render-config
+```
+
+Not:
+
+- `CLOUDFLARE_BACKEND_ORIGIN` Cloudflare edge tarafindan erisilebilir olmalidir.
+- Private `10.x` originler Cloudflare Worker tarafindan dogrudan erisilemez; public origin veya Cloudflare Tunnel gerekir.
 
 ## Documentation
 

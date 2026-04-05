@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ai-acik-com",
+  "main": "./deploy/cloudflare/worker.mjs",
+  "compatibility_date": "2026-04-06",
+  "workers_dev": false,
+  "assets": {
+    "directory": "./dist/cloudflare-single-domain",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "vars": {
+    "BACKEND_ORIGIN": "https://backend-origin.example.internal"
+  }
+}
