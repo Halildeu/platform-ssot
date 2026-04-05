@@ -5,6 +5,27 @@ import { federation } from '@module-federation/vite';
 import path from 'node:path';
 import { readFileSync } from 'node:fs';
 
+function readEnvString(keys: string[], fallback: string): string {
+  for (const key of keys) {
+    const value = process.env[key];
+    if (typeof value !== 'string') continue;
+    const normalized = value.trim();
+    if (normalized.length > 0) {
+      return normalized;
+    }
+  }
+  return fallback;
+}
+
+function normalizeBasePath(value: string): string {
+  const normalized = value.trim();
+  if (!normalized || normalized === '/') {
+    return '/';
+  }
+  const withLeadingSlash = normalized.startsWith('/') ? normalized : `/${normalized}`;
+  return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`;
+}
+
 const pkg = JSON.parse(readFileSync(path.resolve(__dirname, 'package.json'), 'utf8'));
 const deps = pkg.dependencies as Record<string, string>;
 const singleton = (name: string, fallback: string | boolean = false) => ({
@@ -29,81 +50,99 @@ const sharedProdOnly = {
 };
 
 const isTest = !!process.env['VITEST'];
+const isCloudflareSingleDomainBuild = process.env['CLOUDFLARE_SINGLE_DOMAIN_BUILD'] === '1';
 
-export default defineConfig(({ mode }) => ({
-  plugins: [
-    react(),
-    tailwindcss(),
-    ...(isTest ? [] : [federation({
-      name: 'mfe_access',
-      filename: 'remoteEntry.js',
-      dts: false,
-      remotes: {
-        mfe_shell: {
-          type: 'module',
-          name: 'mfe_shell',
-          entry: 'http://localhost:3000/remoteEntry.js',
+export default defineConfig(({ mode }) => {
+  const appBasePath = normalizeBasePath(readEnvString(['APP_BASE_PATH', 'VITE_APP_BASE_PATH'], '/'));
+  const shellRemoteEntry = readEnvString(['MFE_SHELL_URL', 'VITE_MFE_SHELL_URL'], 'http://localhost:3000/remoteEntry.js');
+
+  return ({
+    base: appBasePath,
+    plugins: [
+      react(),
+      tailwindcss(),
+      ...(isTest ? [] : [federation({
+        name: 'mfe_access',
+        filename: 'remoteEntry.js',
+        dts: false,
+        remotes: {
+          mfe_shell: {
+            type: 'module',
+            name: 'mfe_shell',
+            entry: shellRemoteEntry,
+          },
         },
-      },
-      exposes: {
-        './AccessApp': './src/app/AccessApp.ui.tsx',
-        './shell-services': './src/app/services/shell-services.ts',
-      },
-      shared: {
-        ...sharedCore,
-        ...(mode === 'production' ? sharedProdOnly : {}),
-      },
-    })]),
-  ],
-
-  resolve: {
-    alias: [
-      { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
-      { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
-      // mfe_shell/i18n: only alias in test mode — in dev/prod, MF remote handles it.
-      // Alias + MF plugin conflict: plugin rewrites to __moduleExports (enforce: pre)
-      // then alias resolves to raw TS file that doesn't have __moduleExports → crash.
-      ...(isTest ? [{ find: 'mfe_shell/i18n', replacement: path.resolve(__dirname, '../mfe-shell/src/app/i18n/index.ts') }] : []),
-      { find: '@tanstack/react-query', replacement: path.resolve(__dirname, 'node_modules/@tanstack/react-query/build/modern/index.js') },
+        exposes: {
+          './AccessApp': './src/app/AccessApp.ui.tsx',
+          './shell-services': './src/app/services/shell-services.ts',
+        },
+        shared: {
+          ...(isCloudflareSingleDomainBuild
+            ? {
+                react: sharedCore.react,
+                'react-dom': sharedCore['react-dom'],
+                'react-router': sharedCore['react-router'],
+                'react-router-dom': sharedCore['react-router-dom'],
+                '@reduxjs/toolkit': sharedCore['@reduxjs/toolkit'],
+                'react-redux': sharedCore['react-redux'],
+              }
+            : {
+                ...sharedCore,
+                ...(mode === 'production' ? sharedProdOnly : {}),
+              }),
+        },
+      })]),
     ],
-  },
 
-  optimizeDeps: {
-    include: [
-      'react',
-      'react-dom',
-      'react-dom/client',
-      'react/jsx-runtime',
-      'react/jsx-dev-runtime',
-      'react-router',
-      'react-router-dom',
-      'axios',
-      'ag-grid-community',
-      'ag-grid-enterprise',
-      'ag-grid-react',
-    ],
-    exclude: ['mfe_shell', '@tanstack/react-query'],
-  },
-
-  server: {
-    host: '127.0.0.1',
-    port: 3005,
-    strictPort: true,
-    cors: true,
-    headers: { 'Access-Control-Allow-Origin': '*' },
-  },
-
-  build: {
-    target: 'esnext',
-    outDir: 'dist',
-    rolldownOptions: {
-      external: [/^mfe_shell\//],
+    resolve: {
+      alias: [
+        { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
+        { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
+        // mfe_shell/i18n: only alias in test mode — in dev/prod, MF remote handles it.
+        // Alias + MF plugin conflict: plugin rewrites to __moduleExports (enforce: pre)
+        // then alias resolves to raw TS file that doesn't have __moduleExports → crash.
+        ...(isTest ? [{ find: 'mfe_shell/i18n', replacement: path.resolve(__dirname, '../mfe-shell/src/app/i18n/index.ts') }] : []),
+        { find: '@tanstack/react-query', replacement: path.resolve(__dirname, 'node_modules/@tanstack/react-query/build/modern/index.js') },
+      ],
     },
-  },
 
-  test: {
-    environment: 'jsdom',
-    globals: true,
-    setupFiles: ['./src/test-setup.ts'],
-  },
-}));
+    optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react-dom/client',
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime',
+        'react-router',
+        'react-router-dom',
+        'axios',
+        'ag-grid-community',
+        'ag-grid-enterprise',
+        'ag-grid-react',
+      ],
+      exclude: ['mfe_shell', '@tanstack/react-query'],
+    },
+
+    server: {
+      host: '127.0.0.1',
+      port: 3005,
+      strictPort: true,
+      cors: true,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+    },
+
+    build: {
+      target: 'esnext',
+      outDir: 'dist',
+      rolldownOptions: {
+        external: [/^mfe_shell\//],
+      },
+    },
+
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: ['./src/test-setup.ts'],
+    },
+  });
+});

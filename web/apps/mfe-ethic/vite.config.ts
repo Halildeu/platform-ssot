@@ -5,6 +5,27 @@ import { federation } from '@module-federation/vite';
 import path from 'node:path';
 import { readFileSync } from 'node:fs';
 
+function readEnvString(keys: string[], fallback: string): string {
+  for (const key of keys) {
+    const value = process.env[key];
+    if (typeof value !== 'string') continue;
+    const normalized = value.trim();
+    if (normalized.length > 0) {
+      return normalized;
+    }
+  }
+  return fallback;
+}
+
+function normalizeBasePath(value: string): string {
+  const normalized = value.trim();
+  if (!normalized || normalized === '/') {
+    return '/';
+  }
+  const withLeadingSlash = normalized.startsWith('/') ? normalized : `/${normalized}`;
+  return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`;
+}
+
 const pkg = JSON.parse(readFileSync(path.resolve(__dirname, 'package.json'), 'utf8'));
 const deps = pkg.dependencies as Record<string, string>;
 const singleton = (name: string, fallback: string | boolean = false) => ({
@@ -28,24 +49,28 @@ const sharedProdOnly = {
 
 const isTest = !!process.env['VITEST'];
 
-export default defineConfig(({ mode }) => ({
-  plugins: [
-    react(),
-    tailwindcss(),
-    ...(isTest ? [] : [federation({
-      name: 'mfe_ethic',
-      filename: 'remoteEntry.js',
-      dts: false,
-      remotes: {},
-      exposes: {
-        './EthicApp': './src/App.tsx',
-      },
-      shared: {
-        ...sharedCore,
-        ...(mode === 'production' ? sharedProdOnly : {}),
-      },
-    })]),
-  ],
+export default defineConfig(({ mode }) => {
+  const appBasePath = normalizeBasePath(readEnvString(['APP_BASE_PATH', 'VITE_APP_BASE_PATH'], '/'));
+
+  return ({
+    base: appBasePath,
+    plugins: [
+      react(),
+      tailwindcss(),
+      ...(isTest ? [] : [federation({
+        name: 'mfe_ethic',
+        filename: 'remoteEntry.js',
+        dts: false,
+        remotes: {},
+        exposes: {
+          './EthicApp': './src/App.tsx',
+        },
+        shared: {
+          ...sharedCore,
+          ...(mode === 'production' ? sharedProdOnly : {}),
+        },
+      })]),
+    ],
 
   resolve: {
     alias: [
@@ -78,20 +103,21 @@ export default defineConfig(({ mode }) => ({
     headers: { 'Access-Control-Allow-Origin': '*' },
   },
 
-  build: {
-    target: 'esnext',
-    outDir: 'dist',
-    rolldownOptions: {},
-  },
+    build: {
+      target: 'esnext',
+      outDir: 'dist',
+      rolldownOptions: {},
+    },
 
-  test: {
-    environment: 'jsdom',
-    globals: true,
-    setupFiles: ['./src/test-setup.ts'],
-    resolve: {
-      alias: {
-        'mfe_shell/logic': '/src/__mocks__/mfe-shell.ts',
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: ['./src/test-setup.ts'],
+      resolve: {
+        alias: {
+          'mfe_shell/logic': '/src/__mocks__/mfe-shell.ts',
+        },
       },
     },
-  },
-}));
+  });
+});
