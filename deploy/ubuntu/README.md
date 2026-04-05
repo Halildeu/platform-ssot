@@ -111,5 +111,7 @@ Bu secret'lar elle yazılmak zorunda değil. `vault-secrets-sync.yml` artık `mo
 - `RB-ubuntu-backend-github-vault-deploy.md` deploy zincirinin canonical runbook özetidir.
 - Production promote/cutover checklist'i:
   - `docs/04-operations/RUNBOOKS/RB-production-cutover-checklist.md`
+- Production Vault key matrisi:
+  - `docs/OPERATIONS/prod-vault-key-matrix.v1.json`
 - Production backend validate için:
   - `post-deploy-validate.yml` workflow_dispatch `env=prod` ve `target=backend|all`
