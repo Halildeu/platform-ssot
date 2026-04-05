@@ -109,3 +109,7 @@ Bu secret'lar elle yazılmak zorunda değil. `vault-secrets-sync.yml` artık `mo
 - `backend/scripts/vault/write-backend-deploy-stage.sh` ve `write-backend-deploy-prod.sh` helper script'leri ilgili Vault path'lerini doldurmak için eklendi.
 - `deploy-backend.sh`, `RENDER_ENV_BEFORE_DEPLOY=true` verildiğinde deploy öncesi `backend.env` dosyasını Vault'tan otomatik yenileyebilir.
 - `RB-ubuntu-backend-github-vault-deploy.md` deploy zincirinin canonical runbook özetidir.
+- Production promote/cutover checklist'i:
+  - `docs/04-operations/RUNBOOKS/RB-production-cutover-checklist.md`
+- Production backend validate için:
+  - `post-deploy-validate.yml` workflow_dispatch `env=prod` ve `target=backend|all`
