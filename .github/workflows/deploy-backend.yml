@@ -25,7 +25,7 @@ concurrency:
 jobs:
   deploy-backend:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' }}
     environment: ${{ github.event.inputs.env || 'stage' }}
     env:
       DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
@@ -89,6 +89,8 @@ jobs:
           GHCR_OWNER: ${{ github.repository_owner }}
           GH_TOKEN: ${{ github.token }}
           SHA: ${{ github.sha }}
+          REF_NAME: ${{ github.ref_name }}
+          GITHUB_REF: ${{ github.ref }}
         shell: bash
         run: |
           set -euo pipefail
@@ -102,7 +104,10 @@ jobs:
           echo "::endgroup::"
 
           short_sha="${SHA:0:7}"
-          stable_tag="main-stable"
+          stable_tag=""
+          if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
+            stable_tag="main-stable"
+          fi
 
           echo "::group::tag + push (serban-* -> ghcr.io/${GHCR_OWNER}/...)"
           images="$(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^serban-' || true)"
@@ -117,9 +122,11 @@ jobs:
             target="ghcr.io/${GHCR_OWNER}/platform-ssot-${svc}"
 
             docker tag "${img}" "${target}:sha-${short_sha}"
-            docker tag "${img}" "${target}:${stable_tag}"
             docker push "${target}:sha-${short_sha}"
-            docker push "${target}:${stable_tag}"
+            if [ -n "${stable_tag}" ]; then
+              docker tag "${img}" "${target}:${stable_tag}"
+              docker push "${target}:${stable_tag}"
+            fi
           done <<< "${images}"
           echo "::endgroup::"
 
