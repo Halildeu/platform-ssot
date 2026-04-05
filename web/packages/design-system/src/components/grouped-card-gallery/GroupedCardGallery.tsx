@@ -280,7 +280,7 @@ export const GroupedCardGallery = React.forwardRef<
     return (
       <div
         ref={ref}
-        className={cn("flex flex-col gap-4", className)}
+        className={cn("flex flex-col gap-4 rounded-surface bg-surface-default p-4 border border-border-subtle shadow-elevation-sm", className)}
         data-component="grouped-card-gallery"
       >
         {/* Search bar */}

@@ -37,10 +37,10 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({ item, onClick }) => {
       type="button"
       onClick={onClick}
       className={cn(
-        "group relative flex w-full flex-col items-start gap-2 rounded-2xl p-4 text-start",
+        "group relative flex w-full flex-col items-start gap-2 rounded-surface p-4 text-start",
         "border border-border-subtle bg-surface-default",
-        "transition-all duration-150",
-        "hover:border-action-primary/30 hover:shadow-md",
+        "transition-all duration-motion-fast",
+        "hover:border-action-primary/30 hover:shadow-elevation-surface",
         "active:scale-[0.99]",
         "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-action-primary/40",
       )}
@@ -50,7 +50,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({ item, onClick }) => {
       {badge && (
         <span
           className={cn(
-            "absolute end-3 top-3 rounded-md px-2 py-0.5 text-[10px] font-medium",
+            "absolute end-3 top-3 rounded-control px-2 py-0.5 text-[10px] font-medium",
             badgeToneStyles[badge.tone ?? "default"],
           )}
         >
@@ -62,7 +62,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({ item, onClick }) => {
       {icon && (
         <span
           className={cn(
-            "flex h-9 w-9 items-center justify-center rounded-lg",
+            "flex h-9 w-9 items-center justify-center rounded-surface",
             "bg-surface-muted text-base",
           )}
         >
@@ -89,7 +89,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({ item, onClick }) => {
             <span
               key={tag}
               className={cn(
-                "rounded-md px-1.5 py-0.5 text-[10px]",
+                "rounded-control px-1.5 py-0.5 text-[10px]",
                 "bg-surface-muted text-text-secondary",
               )}
             >

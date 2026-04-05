@@ -70,12 +70,12 @@ const ContextHealthDashboard: React.FC = () => {
 
   if (error && kpis.length === 0) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-6">
-        <h3 className="text-sm font-semibold text-red-800">Failed to load Context Health data</h3>
-        <p className="mt-1 text-sm text-red-600">{error}</p>
+      <div className="rounded-lg border border-status-danger-border bg-status-danger/5 p-6">
+        <h3 className="text-sm font-semibold text-status-danger-text">Failed to load Context Health data</h3>
+        <p className="mt-1 text-sm text-status-danger-text">{error}</p>
         <button
           onClick={refresh}
-          className="mt-3 rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700"
+          className="mt-3 rounded bg-status-danger-text px-3 py-1.5 text-sm font-medium text-white hover:bg-status-danger-text/90"
         >
           Retry
         </button>
@@ -101,11 +101,11 @@ const ContextHealthDashboard: React.FC = () => {
             onClick={toggleAutoRefresh}
             className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors ${
               autoRefresh
-                ? 'bg-emerald-50 text-emerald-700'
+                ? 'bg-status-success/5 text-status-success-text'
                 : 'bg-surface-muted text-text-subtle hover:bg-surface-hover'
             }`}
           >
-            {autoRefresh && <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />}
+            {autoRefresh && <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-status-success-text" />}
             Auto-refresh
           </button>
           <button

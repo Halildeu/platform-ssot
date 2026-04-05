@@ -139,7 +139,7 @@ export const PromptComposer = React.forwardRef<HTMLDivElement, PromptComposerPro
 
   return (
     <section
-      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-xs ${className}`.trim()}
+      className={`rounded-surface border border-border-subtle bg-surface-muted p-5 shadow-elevation-sm ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="prompt-composer"
       title={accessReason}
@@ -218,7 +218,7 @@ export const PromptComposer = React.forwardRef<HTMLDivElement, PromptComposerPro
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="rounded-[24px] border border-border-subtle bg-surface-muted p-4">
+          <div className="rounded-control border border-border-subtle bg-surface-muted p-4">
             <Text variant="secondary" size="xs" weight="medium">Current contract</Text>
             <div className="mt-3 flex flex-wrap gap-2">
               <Badge variant="info">scope: {currentScope}</Badge>
@@ -228,7 +228,7 @@ export const PromptComposer = React.forwardRef<HTMLDivElement, PromptComposerPro
           </div>
 
           {guardrails.length > 0 ? (
-            <div className="rounded-[24px] border border-border-subtle bg-surface-muted p-4">
+            <div className="rounded-control border border-border-subtle bg-surface-muted p-4">
               <Text variant="secondary" size="xs" weight="medium">Guardrails</Text>
               <div className="mt-3 flex flex-wrap gap-2">
                 {guardrails.map((item) => (
@@ -241,7 +241,7 @@ export const PromptComposer = React.forwardRef<HTMLDivElement, PromptComposerPro
           ) : null}
 
           {citations.length > 0 ? (
-            <div className="rounded-[24px] border border-border-subtle bg-surface-muted p-4">
+            <div className="rounded-control border border-border-subtle bg-surface-muted p-4">
               <Text variant="secondary" size="xs" weight="medium">Source anchors</Text>
               <div className="mt-3 flex flex-wrap gap-2">
                 {citations.map((item) => (

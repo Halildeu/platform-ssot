@@ -31,7 +31,7 @@ const SurfaceOverviewCanvas = () => {
   return (
     <div className="min-h-screen bg-surface-canvas px-6 py-8 text-text-primary">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <div className="space-y-3">
             <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
               Release-ready surface
@@ -136,7 +136,7 @@ const SurfaceOverviewCanvas = () => {
           </div>
         </section>
 
-        <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4">
             <Text as="div" className="text-sm font-semibold text-text-primary">
               Empty state fallback

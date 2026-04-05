@@ -117,7 +117,7 @@ export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
             key={item.key}
             className={cn(
               "relative inline-block ring-2 ring-surface-default",
-              shape === "circle" ? "rounded-full" : "rounded-lg",
+              shape === "circle" ? "rounded-full" : "rounded-surface",
               idx > 0 && SPACING_ML[spacing],
             )}
             style={{ zIndex: visibleItems.length - idx }}
@@ -150,7 +150,7 @@ export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
               "ring-2 ring-surface-default",
               "bg-surface-muted text-text-secondary",
               "font-medium select-none",
-              shape === "circle" ? "rounded-full" : "rounded-lg",
+              shape === "circle" ? "rounded-full" : "rounded-surface",
               idx0SpacingClass(spacing),
               sizeToExcessClass(size),
             )}

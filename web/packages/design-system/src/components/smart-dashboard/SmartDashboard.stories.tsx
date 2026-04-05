@@ -27,7 +27,7 @@ const widgets: DashboardWidget[] = [
   { key: 'revenue', title: 'Aylik Gelir', type: 'kpi', value: '₺45.678', tone: 'success', trend: { direction: 'up', percentage: 8 } },
   { key: 'errors', title: 'Hata Orani', type: 'kpi', value: '%2.3', tone: 'danger', trend: { direction: 'down', percentage: 5 } },
   { key: 'tasks', title: 'Bekleyen Gorevler', type: 'kpi', value: '18', tone: 'warning', trend: { direction: 'stable', percentage: 0 } },
-  { key: 'activity', title: 'Son Aktiviteler', type: 'list', size: 'lg', content: <div style={{ fontSize: 13 }}>Aktivite listesi</div> },
+  { key: 'activity', title: 'Son Aktiviteler', type: 'list', size: 'lg', content: <div className="text-xs">Aktivite listesi</div> },
 ];
 
 export const Default: Story = {
@@ -141,8 +141,8 @@ const widgetsWithActions: DashboardWidget[] = [
     type: 'custom',
     content: (
       <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-        <button type="button" style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid var(--border-subtle)', fontSize: 12 }}>Detay</button>
-        <button type="button" style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid var(--border-subtle)', fontSize: 12 }}>Duzenle</button>
+        <button type="button" className="text-xs" style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid var(--border-subtle)' }}>Detay</button>
+        <button type="button" className="text-xs" style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid var(--border-subtle)' }}>Duzenle</button>
       </div>
     ),
     onRefresh: () => {},

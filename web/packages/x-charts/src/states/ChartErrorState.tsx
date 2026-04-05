@@ -43,7 +43,7 @@ export function ChartErrorState({
         background: "var(--state-error-bg, #fef2f2)",
         borderRadius: 8,
         border: "1px solid var(--state-error-border, #fecaca)",
-        fontFamily: "var(--font-family-sans, Inter, system-ui, sans-serif)",
+        fontFamily: "var(--font-family-base, Inter, system-ui, sans-serif)",
       }}
       data-testid="chart-error-state"
     >
@@ -77,7 +77,7 @@ export function ChartErrorState({
             fontSize: 11,
             maxWidth: 300,
             textAlign: "center",
-            fontFamily: "var(--font-family-mono, monospace)",
+            fontFamily: "var(--font-mono, monospace)",
           }}
         >
           {detail}

@@ -113,7 +113,7 @@ const searchSizeClass: Record<TransferSize, string> = {
 /* ---- Styling constants ---- */
 
 const panelSurface =
-  "flex flex-col overflow-hidden rounded-2xl bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 border border-border-subtle/80 backdrop-blur-xs";
+  "flex flex-col overflow-hidden rounded-surface bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 border border-border-subtle/80 backdrop-blur-xs";
 
 /* ---- Icons ---- */
 
@@ -269,7 +269,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
                 onChange={handleSelectAll}
                 disabled={blocked || enabledItems.length === 0}
                 className={cn(
-                  "h-3.5 w-3.5 rounded-xs border-border-subtle text-action-primary",
+                  "h-3.5 w-3.5 rounded-control border-border-subtle text-action-primary",
                   "focus:ring-2 focus:ring-action-primary/20 focus:ring-offset-0",
                   "accent-action-primary",
                 )}
@@ -303,7 +303,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
               placeholder={locale.searchPlaceholder}
               disabled={blocked}
               className={cn(
-                "w-full rounded-lg border border-border-subtle/60 ps-7",
+                "w-full rounded-surface border border-border-subtle/60 ps-7",
                 "bg-[var(--surface-canvas)] text-text-primary",
                 "placeholder:text-[var(--text-disabled)]",
                 "focus:border-action-primary focus:outline-hidden focus:ring-2 focus:ring-action-primary/20",
@@ -344,7 +344,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
                 aria-disabled={itemBlocked || undefined}
                 data-testid={`transfer-item-${item.key}`}
                 className={cn(
-                  "group flex cursor-pointer items-center gap-2 border-b border-border-subtle/20 transition-colors duration-100 last:border-b-0",
+                  "group flex cursor-pointer items-center gap-2 border-b border-border-subtle/20 transition-colors duration-motion-fast last:border-b-0",
                   itemSizeClass[size],
                   itemBlocked
                     ? "cursor-not-allowed opacity-50"
@@ -367,7 +367,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
                   role="presentation"
                   aria-hidden="true"
                   className={cn(
-                    "inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-xs border",
+                    "inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-control border",
                     checked
                       ? "border-action-primary bg-action-primary text-text-inverse"
                       : "border-border-subtle bg-[var(--surface-canvas)]",
@@ -592,7 +592,7 @@ export const Transfer = React.forwardRef<HTMLDivElement, TransferProps>(({
             if (e.key === "Enter") moveToRight();
           }}
           className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-xl border transition-all duration-150",
+            "flex h-8 w-8 items-center justify-center rounded-surface border transition-all duration-motion-fast",
             leftSelectedCount > 0 && !blocked
               ? "border-action-primary/40 bg-action-primary text-text-inverse shadow-[0_8px_16px_-8px_var(--action-primary)] hover:shadow-[0_12px_20px_-8px_var(--action-primary)] active:translate-y-px"
               : "border-border-subtle/60 bg-surface-default text-[var(--text-disabled)] cursor-not-allowed",
@@ -610,7 +610,7 @@ export const Transfer = React.forwardRef<HTMLDivElement, TransferProps>(({
             if (e.key === "Enter") moveToLeft();
           }}
           className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-xl border transition-all duration-150",
+            "flex h-8 w-8 items-center justify-center rounded-surface border transition-all duration-motion-fast",
             rightSelectedCount > 0 && !blocked
               ? "border-action-primary/40 bg-action-primary text-text-inverse shadow-[0_8px_16px_-8px_var(--action-primary)] hover:shadow-[0_12px_20px_-8px_var(--action-primary)] active:translate-y-px"
               : "border-border-subtle/60 bg-surface-default text-[var(--text-disabled)] cursor-not-allowed",

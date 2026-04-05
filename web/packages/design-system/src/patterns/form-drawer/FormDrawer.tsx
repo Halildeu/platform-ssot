@@ -128,7 +128,7 @@ export const FormDrawer = React.forwardRef<HTMLDivElement, FormDrawerProps>(({
         {...stateAttrs({ component: "form-drawer", state: "open", loading })}
         title={accessReason}
         className={cn(
-          "relative flex flex-col w-full bg-surface-default shadow-2xl",
+          "relative flex flex-col w-full bg-surface-default shadow-elevation-overlay",
           "animate-in",
           isRight ? "ml-auto slide-in-from-right" : "mr-auto slide-in-from-left",
           accessState.isDisabled && "pointer-events-none opacity-50",
@@ -150,7 +150,7 @@ export const FormDrawer = React.forwardRef<HTMLDivElement, FormDrawerProps>(({
             type="button"
             onClick={onClose}
             className={cn(
-              "shrink-0 rounded-lg p-1.5 text-[var(--text-tertiary)]",
+              "shrink-0 rounded-surface p-1.5 text-[var(--text-tertiary)]",
               "hover:bg-[var(--surface-hover)] hover:text-text-primary",
               focusRingClass("ring"),
               "transition-colors",

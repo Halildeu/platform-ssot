@@ -64,7 +64,7 @@ export const AllSizes: Story = {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       {(['sm', 'md', 'lg'] as const).map((size) => (
         <div key={size}>
-          <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 8 }}>{size}</div>
+          <div className="text-xs font-semibold" style={{ marginBottom: 8 }}>{size}</div>
           <Transfer dataSource={dataSource.slice(0, 4)} size={size} titles={['Kaynak', 'Hedef']} />
         </div>
       ))}

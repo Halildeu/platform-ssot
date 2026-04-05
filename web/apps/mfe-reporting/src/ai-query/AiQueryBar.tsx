@@ -43,7 +43,7 @@ export const AiQueryBar: React.FC<Props> = ({ schema, onResult, className }) => 
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           placeholder="Doğal dille rapor oluşturun... (ör: 'Son 3 aydaki faturaları departmana göre göster')"
-          className="min-w-0 flex-1 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-disabled"
+          className="min-w-0 flex-1 bg-transparent text-sm text-text-primary outline-hidden placeholder:text-text-disabled"
           disabled={isLoading}
         />
         {prompt && !isLoading && (
@@ -58,7 +58,7 @@ export const AiQueryBar: React.FC<Props> = ({ schema, onResult, className }) => 
           className="inline-flex items-center gap-1 rounded-xl bg-action-primary px-3 py-1.5 text-xs font-medium text-action-primary-text transition hover:opacity-90 disabled:opacity-40"
         >
           {isLoading ? (
-            <span className="inline-flex h-3.5 w-3.5 animate-spin rounded-full border-2 border-action-primary-text/30 border-t-action-primary-text" />
+            <span className="inline-flex h-3.5 w-3.5 animate-spin rounded-full border-2 border-action-primary-text/30 border-t-action-primary" />
           ) : (
             <ArrowRight className="h-3.5 w-3.5" />
           )}

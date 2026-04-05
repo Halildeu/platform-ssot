@@ -188,13 +188,13 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
           title={<HoverDescription description={pageDescription}>{pageTitle}</HoverDescription>}
           description={undefined}
           classes={{
-            header: '!px-6 !rounded-2xl !border !border-border-subtle shadow-sm !overflow-visible',
+            header: '!px-6 !rounded-2xl !border !border-border-subtle shadow-xs !overflow-visible',
           }}
           breadcrumbItems={pageBreadcrumbItems}
           contentClassName="!px-0 !py-4"
         >
           <div
-            className="overflow-hidden !rounded-2xl border border-border-subtle bg-surface-default shadow-sm"
+            className="overflow-hidden !rounded-2xl border border-border-subtle bg-surface-default shadow-xs"
             data-testid={GRID_TEST_ID}
           >
             <UsersGrid

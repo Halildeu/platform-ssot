@@ -162,7 +162,7 @@ export const TourCoachmarks = React.forwardRef<HTMLDivElement, TourCoachmarksPro
     >
       {resolvedOpen ? (
         <div
-          className="relative overflow-hidden rounded-[2rem] border border-border-subtle bg-surface-muted shadow-2xl"
+          className="relative overflow-hidden rounded-[2rem] border border-border-subtle bg-surface-muted shadow-elevation-overlay"
           data-testid={testIdPrefix ? `${testIdPrefix}-panel` : undefined}
         >
           <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-[var(--action-primary)] via-[var(--action-primary-hover)] to-[var(--action-primary)]" />
@@ -216,7 +216,7 @@ export const TourCoachmarks = React.forwardRef<HTMLDivElement, TourCoachmarksPro
                           ? `${testIdPrefix}-step-${candidate.id}`
                           : undefined
                       }
-                      className={`rounded-2xl border px-3 py-2 text-left text-xs font-semibold transition ${
+                      className={`rounded-surface border px-3 py-2 text-left text-xs font-semibold transition ${
                         active
                           ? "border-action-primary bg-action-primary/10 text-text-primary"
                           : "border-border-subtle bg-surface-muted text-text-secondary hover:bg-surface-default"

@@ -130,7 +130,7 @@ const densityPadding: Record<LayoutDensity, string> = {
 };
 
 const _SKELETON_PULSE =
-  "animate-pulse rounded-lg bg-surface-muted";
+  "animate-pulse rounded-surface bg-surface-muted";
 
 /* ---- Helpers ---- */
 
@@ -175,7 +175,7 @@ const BlockCard: React.FC<{
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-border-subtle/80 bg-[var(--surface-card))] shadow-xs transition-all duration-200",
+        "relative overflow-hidden rounded-surface border border-border-subtle/80 bg-[var(--surface-card))] shadow-elevation-sm transition-all duration-motion-medium",
         densityPadding[density],
         isDraggable && "cursor-grab active:cursor-grabbing",
       )}
@@ -200,7 +200,7 @@ const BlockCard: React.FC<{
             <button
               type="button"
               onClick={() => onToggle?.(block.key, !collapsed)}
-              className="inline-flex h-6 w-6 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-muted"
+              className="inline-flex h-6 w-6 items-center justify-center rounded-control text-text-secondary transition-colors hover:bg-surface-muted"
               aria-expanded={!collapsed}
               aria-label={
                 collapsed
@@ -215,7 +215,7 @@ const BlockCard: React.FC<{
                 fill="none"
                 aria-hidden="true"
                 className={cn(
-                  "transition-[rotate] duration-200",
+                  "transition-[rotate] duration-motion-medium",
                   collapsed && "-rotate-90",
                 )}
               >
@@ -234,7 +234,7 @@ const BlockCard: React.FC<{
 
       {/* Content */}
       {!collapsed && (
-        <div className="transition-all duration-200">{block.content}</div>
+        <div className="transition-all duration-motion-medium">{block.content}</div>
       )}
     </div>
   );

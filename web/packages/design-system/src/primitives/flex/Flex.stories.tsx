@@ -20,7 +20,7 @@ export default meta;
 type Story = StoryObj<typeof Flex>;
 
 const Box = ({ children }: { children: React.ReactNode }) => (
-  <div className="rounded-lg border border-border-subtle bg-surface-muted px-4 py-2 text-sm">{children}</div>
+  <div className="rounded-surface border border-border-subtle bg-surface-muted px-4 py-2 text-sm">{children}</div>
 );
 
 export const Default: Story = {

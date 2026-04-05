@@ -82,7 +82,7 @@ function TokenSwatch({
       role="img"
       className={cn(
         dim,
-        "rounded-sm border border-border-subtle transition-transform hover:scale-125",
+        "rounded-control border border-border-subtle transition-transform hover:scale-125",
         onClick && "cursor-pointer",
       )}
       style={{ backgroundColor: `var(${token.cssVar})` }}
@@ -127,7 +127,7 @@ function ThemeChips({
       <span
         className={cn(
           "inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5",
-          isDark ? "bg-gray-800 text-gray-200" : "bg-gray-100 text-gray-700",
+          isDark ? "bg-text-primary text-border-subtle" : "bg-surface-muted text-text-secondary",
         )}
       >
         {isDark ? "☾" : "☀"}
@@ -169,7 +169,7 @@ function FullTokenCatalog({
                   key={t.cssVar}
                   role="img"
                   className={cn(
-                    "h-4 w-4 rounded-sm border border-border-subtle transition-transform hover:scale-125",
+                    "h-4 w-4 rounded-control border border-border-subtle transition-transform hover:scale-125",
                     onClick && "cursor-pointer",
                   )}
                   style={{ backgroundColor: t.value || `var(${t.cssVar})` }}
@@ -239,11 +239,11 @@ export const ThemePreviewCard = React.forwardRef<HTMLDivElement, ThemePreviewCar
       <div
         ref={ref}
         className={cn(
-          "relative flex flex-col rounded-xl border text-[10px] transition",
+          "relative flex flex-col rounded-surface border text-[10px] transition",
           "bg-surface-default",
           sizeClasses[size],
           selected
-            ? "border-action-primary shadow-xs ring-1 ring-action-primary/30"
+            ? "border-action-primary shadow-elevation-sm ring-1 ring-action-primary/30"
             : "border-border-subtle hover:border-text-secondary",
           className,
         )}
@@ -269,7 +269,7 @@ export const ThemePreviewCard = React.forwardRef<HTMLDivElement, ThemePreviewCar
           ref={scopeRef}
           {...(themeAxes ? scoped.attrs : {})}
           style={themeAxes ? scoped.style : undefined}
-          className="flex flex-col gap-1.5 rounded-lg border border-border-subtle bg-surface-muted p-2"
+          className="flex flex-col gap-1.5 rounded-surface border border-border-subtle bg-surface-muted p-2"
         >
           {/* Token swatches */}
           {showTokenSwatches && (

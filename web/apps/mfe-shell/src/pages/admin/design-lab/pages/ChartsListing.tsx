@@ -125,7 +125,7 @@ const ChartsListing: React.FC = () => {
                   key={item.id}
                   type="button"
                   onClick={() => navigate(`/admin/design-lab/charts/${item.id}`)}
-                  className="group flex flex-col gap-1 rounded-xl border border-border-subtle bg-surface-default p-4 text-left transition hover:border-action-primary hover:shadow-sm"
+                  className="group flex flex-col gap-1 rounded-xl border border-border-subtle bg-surface-default p-4 text-left transition hover:border-action-primary hover:shadow-xs"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold text-text-primary group-hover:text-action-primary">

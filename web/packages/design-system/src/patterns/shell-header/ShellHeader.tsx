@@ -95,7 +95,7 @@ export const ShellHeader: React.FC<ShellHeaderProps> = ({
         itemClassName:
           'min-h-0! rounded-full! px-3! py-1! text-xs! font-medium!',
         activeClassName:
-          'border-[var(--accent-primary-hover)]! bg-[var(--accent-primary)]! text-[var(--action-primary-text)]! shadow-xs!',
+          'border-[var(--accent-primary-hover)]! bg-[var(--accent-primary)]! text-[var(--action-primary-text)]! shadow-elevation-sm!',
       })),
     [activeKey, itemTestIdPrefix, navItems],
   );
@@ -138,3 +138,5 @@ export const ShellHeader: React.FC<ShellHeaderProps> = ({
     </HeaderBar>
   );
 };
+
+ShellHeader.displayName = 'ShellHeader';

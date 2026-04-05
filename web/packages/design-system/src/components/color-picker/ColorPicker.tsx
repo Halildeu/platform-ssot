@@ -382,7 +382,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
           ref={triggerRef}
           type="button"
           className={cn(
-            "rounded-md border-2 border-border-subtle transition-all duration-150",
+            "rounded-control border-2 border-border-subtle transition-all duration-motion-fast",
             focusRingClass("ring"),
             isInteractive && "cursor-pointer hover:border-[var(--border-hover)]",
             accessState.isDisabled && "opacity-50 cursor-not-allowed",
@@ -408,8 +408,8 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
           <div
             ref={popoverRef}
             className={cn(
-              "mt-1 rounded-lg border border-border-subtle",
-              "bg-[var(--surface-primary)] p-3 shadow-lg",
+              "mt-1 rounded-surface border border-border-subtle",
+              "bg-[var(--surface-primary)] p-3 shadow-elevation-overlay",
               "flex flex-col gap-3",
               "w-full max-w-[232px]",
             )}
@@ -421,7 +421,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
           >
             {/* Saturation-Value gradient */}
             <div
-              className="relative w-full rounded-xs cursor-crosshair"
+              className="relative w-full rounded-control cursor-crosshair"
               style={{
                 maxWidth: 200,
                 height: 150,
@@ -439,7 +439,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
             >
               {/* Indicator dot */}
               <div
-                className="absolute w-3 h-3 rounded-full border-2 border-surface-default shadow-xs pointer-events-none -translate-x-1/2 -translate-y-1/2"
+                className="absolute w-3 h-3 rounded-full border-2 border-surface-default shadow-elevation-sm pointer-events-none -translate-x-1/2 -translate-y-1/2"
                 style={{
                   left: `${hsv.s}%`,
                   top: `${100 - hsv.v}%`,
@@ -470,7 +470,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
             {showInput && (
               <div className="flex items-center gap-2">
                 <div
-                  className="w-6 h-6 rounded-xs border border-border-subtle"
+                  className="w-6 h-6 rounded-control border border-border-subtle"
                   style={{ backgroundColor: currentValue }}
                   data-testid="color-picker-preview"
                 />
@@ -480,7 +480,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                   onChange={handleInputChange}
                   onBlur={handleInputBlur}
                   className={cn(
-                    "flex-1 rounded-xs border border-border-subtle px-2 py-1",
+                    "flex-1 rounded-control border border-border-subtle px-2 py-1",
                     "bg-[var(--surface-primary)] text-text-primary",
                     "focus:outline-hidden focus:ring-1 focus:ring-[var(--focus-outline)]",
                     sizeConfig.font,
@@ -512,7 +512,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                           key={color}
                           type="button"
                           className={cn(
-                            "rounded-xs border transition-[scale] duration-100",
+                            "rounded-control border transition-[scale] duration-motion-fast",
                             `hover:scale-110 ${focusRingClass("ring")}`,
                             color.toLowerCase() === currentValue.toLowerCase()
                               ? "border-[var(--border-active)] ring-1 ring-[var(--focus-outline)]"

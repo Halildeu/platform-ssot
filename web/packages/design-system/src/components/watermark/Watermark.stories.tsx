@@ -21,8 +21,8 @@ export const Default: Story = {
     content: 'TASLAK',
     children: (
       <div style={{ height: 300, padding: 24, border: '1px solid var(--border-subtle)', borderRadius: 12 }}>
-        <h3 style={{ margin: 0, fontSize: 18 }}>Belge Basligi</h3>
-        <p style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
+        <h3 className="text-lg" style={{ margin: 0 }}>Belge Basligi</h3>
+        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
           Bu belge taslak durumundadir ve henuz onaylanmamistir.
         </p>
       </div>
@@ -39,7 +39,7 @@ export const MultilineContent: Story = {
     content: ['GIZLI', 'Sirket Ici'],
     children: (
       <div style={{ height: 250, padding: 24, border: '1px solid var(--border-subtle)', borderRadius: 12 }}>
-        <p style={{ fontSize: 14 }}>Gizli icerik alani.</p>
+        <p className="text-sm">Gizli icerik alani.</p>
       </div>
     ),
   },
@@ -54,7 +54,7 @@ export const CustomStyle: Story = {
     fontColor: 'var(--action-primary)',
     children: (
       <div style={{ height: 200, padding: 24, border: '1px solid var(--border-subtle)', borderRadius: 12 }}>
-        <p style={{ fontSize: 14 }}>Ozel stilli filigran.</p>
+        <p className="text-sm">Ozel stilli filigran.</p>
       </div>
     ),
   },
@@ -66,7 +66,7 @@ export const LightOpacity: Story = {
     opacity: 0.08,
     children: (
       <div style={{ height: 200, padding: 24, border: '1px solid var(--border-subtle)', borderRadius: 12 }}>
-        <p style={{ fontSize: 14 }}>Cok hafif filigran.</p>
+        <p className="text-sm">Cok hafif filigran.</p>
       </div>
     ),
   },
@@ -78,7 +78,7 @@ export const LargeFont: Story = {
     fontSize: 28,
     children: (
       <div style={{ height: 200, padding: 24, border: '1px solid var(--border-subtle)', borderRadius: 12 }}>
-        <p style={{ fontSize: 14 }}>Buyuk yazili filigran.</p>
+        <p className="text-sm">Buyuk yazili filigran.</p>
       </div>
     ),
   },
@@ -90,7 +90,7 @@ export const HorizontalRotation: Story = {
     rotate: 0,
     children: (
       <div style={{ height: 200, padding: 24, border: '1px solid var(--border-subtle)', borderRadius: 12 }}>
-        <p style={{ fontSize: 14 }}>Yatay filigran.</p>
+        <p className="text-sm">Yatay filigran.</p>
       </div>
     ),
   },

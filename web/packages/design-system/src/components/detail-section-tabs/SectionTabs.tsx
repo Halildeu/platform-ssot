@@ -109,7 +109,7 @@ function getDescriptionVisibilityClassName(
   visibility: SectionTabsDescriptionVisibility,
 ): string {
   const baseHidden =
-    'mt-0 block max-h-0 max-w-0 translate-y-[-2px] overflow-hidden whitespace-nowrap opacity-0 transition-all duration-150 ease-out';
+    'mt-0 block max-h-0 max-w-0 translate-y-[-2px] overflow-hidden whitespace-nowrap opacity-0 transition-all duration-motion-fast ease-out';
 
   switch (visibility) {
     case 'always':
@@ -245,7 +245,7 @@ export const SectionTabs = React.forwardRef<HTMLDivElement, SectionTabsProps>(fu
                   title={hintLabel}
                   data-testid={item.dataTestId ? `${item.dataTestId}-hint` : undefined}
                   className={cn(
-                    'inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-default/90 text-[10px] font-bold uppercase tracking-[0.12em] text-text-secondary shadow-xs transition hover:border-border-default hover:text-text-primary',
+                    'inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-default/90 text-[10px] font-bold uppercase tracking-[0.12em] text-text-secondary shadow-elevation-sm transition hover:border-border-default hover:text-text-primary',
                     classes?.hintTrigger,
                   )}
                 >
@@ -304,8 +304,8 @@ export const SectionTabs = React.forwardRef<HTMLDivElement, SectionTabsProps>(fu
           ariaLabel={ariaLabel}
           classes={{
             root: cn(
-              'border border-border-subtle bg-surface-default/95 p-1 shadow-xs backdrop-blur-xs sm:p-1.5',
-              resolvedLayout === 'scroll' ? 'inline-flex min-w-max rounded-[20px]' : 'w-full rounded-[20px]',
+              'border border-border-subtle bg-surface-default/95 p-1 shadow-elevation-sm backdrop-blur-xs sm:p-1.5',
+              resolvedLayout === 'scroll' ? 'inline-flex min-w-max rounded-control' : 'w-full rounded-control',
               classes?.root,
             ),
             list: cn(

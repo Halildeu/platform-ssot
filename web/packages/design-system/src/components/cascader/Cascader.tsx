@@ -400,7 +400,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
         aria-readonly={accessState.isReadonly || undefined}
         disabled={accessState.isDisabled}
         className={cn(
-          "inline-flex w-full items-center justify-between rounded-md border bg-[var(--surface-canvas)] text-start transition-colors focus-within:ring-2 focus-within:ring-focus-outline/30",
+          "inline-flex w-full items-center justify-between rounded-control border bg-[var(--surface-canvas)] text-start transition-colors focus-within:ring-2 focus-within:ring-focus-outline/30 focus-visible:ring-2 focus-visible:ring-focus-outline",
           SIZE_CLASS[size],
           error
             ? "border-[var(--border-danger)]"
@@ -447,7 +447,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
           ref={dropdownRef}
           role="listbox"
           className={cn(
-            "absolute z-50 mt-1 flex max-w-[calc(100vw-2rem)] rounded-md border border-border-default bg-[var(--surface-canvas)] shadow-lg",
+            "absolute z-50 mt-1 flex max-w-[calc(100vw-2rem)] rounded-control border border-border-default bg-[var(--surface-canvas)] shadow-elevation-overlay",
             searchable && searchQuery ? "flex-col" : "flex-row overflow-x-auto",
           )}
           data-testid="cascader-dropdown"
@@ -461,7 +461,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
-                className="w-full rounded-xs border border-border-default bg-transparent px-2 py-1 text-sm text-text-primary outline-hidden"
+                className="w-full rounded-control border border-border-default bg-transparent px-2 py-1 text-sm text-text-primary outline-hidden"
                 data-testid="cascader-search"
               />
             </div>

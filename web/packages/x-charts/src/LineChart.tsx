@@ -128,7 +128,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         lineStyle: { color: s.color ?? palette[i % palette.length], width: 2 },
         itemStyle: { color: s.color ?? palette[i % palette.length] },
         areaStyle: showArea
-          ? { color: s.color ?? palette[i % palette.length], opacity: 0.18 }
+          ? { color: s.color ?? palette[i % palette.length], opacity: 0.2 }
           : undefined,
         emphasis: {
           focus: "series" as const,

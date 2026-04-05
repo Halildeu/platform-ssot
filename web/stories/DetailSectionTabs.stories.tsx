@@ -46,7 +46,7 @@ const demoTabs = [
 export const DesignLabShell: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto max-w-6xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto max-w-6xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <DetailSectionTabs tabs={demoTabs} activeTabId="preview" onTabChange={() => undefined} />
         <div className="mt-6 rounded-[28px] border border-border-subtle bg-surface-panel p-6">
           <Text variant="secondary">

@@ -283,7 +283,7 @@ export const Mentions = React.forwardRef<HTMLDivElement, MentionsProps>(function
           aria-invalid={error || undefined}
           aria-autocomplete="list"
           className={cn(
-            "w-full resize-y rounded-md border transition-colors duration-150",
+            "w-full resize-y rounded-control border transition-colors duration-motion-fast",
             "bg-surface-default text-text-primary",
             "placeholder:text-[var(--text-disabled)]",
             "focus:outline-hidden focus:ring-2",
@@ -304,9 +304,9 @@ export const Mentions = React.forwardRef<HTMLDivElement, MentionsProps>(function
             role="listbox"
             aria-label="Bahsetme onerileri"
             className={cn(
-              "absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-md border",
+              "absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-control border",
               "bg-surface-default border-border-default",
-              "shadow-lg",
+              "shadow-elevation-overlay",
             )}
           >
             {filteredOptions.map((option, idx) => (

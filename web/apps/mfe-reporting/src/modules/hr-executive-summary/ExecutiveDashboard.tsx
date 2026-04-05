@@ -37,7 +37,7 @@ const ExecutiveDashboard: React.FC = () => {
               key={page.key}
               href={`${resolveBasePath()}/${page.key}`}
               onClick={(e) => { e.preventDefault(); handleNavigate(page.key); }}
-              className="flex items-start gap-3 rounded-lg border border-border-subtle bg-surface-primary p-3 text-left no-underline transition hover:border-action-primary/40 hover:shadow-sm"
+              className="flex items-start gap-3 rounded-lg border border-border-subtle bg-surface-primary p-3 text-left no-underline transition hover:border-action-primary/40 hover:shadow-xs"
             >
               <span className="text-2xl">{page.icon}</span>
               <div className="min-w-0">

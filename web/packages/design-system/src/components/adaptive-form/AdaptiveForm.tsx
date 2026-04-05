@@ -101,12 +101,12 @@ const SIZE_CLASSES: Record<FormSize, { input: string; label: string; text: strin
 };
 
 const INPUT_BASE =
-  "w-full rounded-lg border border-border-subtle bg-[var(--surface-default-bg))] text-text-primary outline-hidden transition-colors placeholder:text-text-secondary/60 focus:border-[var(--selection-outline))] focus:ring-1 focus:ring-[var(--selection-outline))]";
+  "w-full rounded-surface border border-border-subtle bg-[var(--surface-default-bg))] text-text-primary outline-hidden transition-colors placeholder:text-text-secondary/60 focus:border-[var(--selection-outline))] focus:ring-1 focus:ring-[var(--selection-outline))]";
 
-const ERROR_CLASS = "border-[var(--danger-color))] focus:border-[var(--danger-color))] focus:ring-[var(--danger-color))]";
+const ERROR_CLASS = "border-[var(--state-danger-text))] focus:border-[var(--state-danger-text))] focus:ring-[var(--state-danger-text))]";
 
 const SKELETON_PULSE =
-  "animate-pulse rounded-lg bg-surface-muted";
+  "animate-pulse rounded-surface bg-surface-muted";
 
 /* ---- Helpers ---- */
 
@@ -257,7 +257,7 @@ const FieldRenderer: React.FC<{
             checked={Boolean(value)}
             onChange={(e) => handleChange(e.target.checked)}
             disabled={disabled}
-            className="h-4 w-4 rounded-xs border-border-subtle text-[var(--action-primary-bg))] focus:ring-[var(--selection-outline))]"
+            className="h-4 w-4 rounded-control border-border-subtle text-[var(--action-primary-bg))] focus:ring-[var(--selection-outline))]"
             aria-invalid={hasError}
             aria-describedby={hasError ? `${id}-error` : undefined}
           />
@@ -298,7 +298,7 @@ const FieldRenderer: React.FC<{
           disabled={disabled}
           className={cn(
             sc.input,
-            "w-full cursor-pointer rounded-lg border border-border-subtle bg-[var(--surface-default-bg))] text-text-secondary file:me-3 file:rounded-md file:border-0 file:bg-[var(--action-primary-bg))] file:px-3 file:py-1 file:text-xs file:font-medium file:text-text-inverse",
+            "w-full cursor-pointer rounded-surface border border-border-subtle bg-[var(--surface-default-bg))] text-text-secondary file:me-3 file:rounded-control file:border-0 file:bg-[var(--action-primary-bg))] file:px-3 file:py-1 file:text-xs file:font-medium file:text-text-inverse",
           )}
           aria-invalid={hasError}
           aria-describedby={hasError ? `${id}-error` : undefined}
@@ -473,7 +473,7 @@ export const AdaptiveForm = React.forwardRef<HTMLDivElement, AdaptiveFormProps>(
               key={field.key}
               className={cn(
                 isInline ? "" : spanClass,
-                "transition-all duration-200",
+                "transition-all duration-motion-medium",
               )}
               style={isInline ? undefined : fieldStyle}
               data-field-key={field.key}
@@ -491,7 +491,7 @@ export const AdaptiveForm = React.forwardRef<HTMLDivElement, AdaptiveFormProps>(
                 >
                   {field.label}
                   {field.required && (
-                    <span className="ms-0.5 text-[var(--danger-color))]">
+                    <span className="ms-0.5 text-[var(--state-danger-text))]">
                       *
                     </span>
                   )}
@@ -524,7 +524,7 @@ export const AdaptiveForm = React.forwardRef<HTMLDivElement, AdaptiveFormProps>(
               {error && (
                 <p
                   id={`${id}-error`}
-                  className="mt-1 text-xs text-[var(--danger-color))]"
+                  className="mt-1 text-xs text-[var(--state-danger-text))]"
                   role="alert"
                 >
                   {error}
@@ -541,7 +541,7 @@ export const AdaptiveForm = React.forwardRef<HTMLDivElement, AdaptiveFormProps>(
           type="submit"
           disabled={isDisabled}
           className={cn(
-            "rounded-lg bg-[var(--action-primary-bg))] font-medium text-text-inverse transition-colors hover:bg-accent-primary-hover disabled:opacity-50",
+            "rounded-surface bg-[var(--action-primary-bg))] font-medium text-text-inverse transition-colors hover:bg-accent-primary-hover disabled:opacity-50",
             sc.input,
           )}
         >
@@ -553,7 +553,7 @@ export const AdaptiveForm = React.forwardRef<HTMLDivElement, AdaptiveFormProps>(
             onClick={handleReset}
             disabled={isDisabled}
             className={cn(
-              "rounded-lg border border-border-subtle font-medium text-text-primary transition-colors hover:bg-surface-muted disabled:opacity-50",
+              "rounded-surface border border-border-subtle font-medium text-text-primary transition-colors hover:bg-surface-muted disabled:opacity-50",
               sc.input,
             )}
           >

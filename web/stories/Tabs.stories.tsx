@@ -22,7 +22,7 @@ export const RouterAwareWorkspace: Story = {
 
     return (
       <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-        <div className="mx-auto max-w-6xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="mx-auto max-w-6xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <Text as="div" className="text-lg font-semibold text-text-primary">
             Router-aware workspace tabs
           </Text>
@@ -67,7 +67,7 @@ export const RouterAwareWorkspace: Story = {
 export const ManualActivationReview: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto max-w-5xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto max-w-5xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Text as="div" className="text-lg font-semibold text-text-primary">
           Manual activation review tabs
         </Text>
@@ -112,7 +112,7 @@ export const ManualActivationReview: Story = {
 export const NoLoopVertical: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto max-w-5xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto max-w-5xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Text as="div" className="text-lg font-semibold text-text-primary">
           Non-looping vertical tabs
         </Text>

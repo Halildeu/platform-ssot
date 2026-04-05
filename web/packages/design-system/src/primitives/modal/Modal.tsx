@@ -205,8 +205,8 @@ export const Modal = React.forwardRef<HTMLDialogElement, ModalProps>(({
       {...slotProps?.root}
       className={cn(
         /* positioning & base */
-        "fixed inset-0 z-[1400] m-auto rounded-2xl border border-border-subtle",
-        "bg-surface-default p-0 shadow-xl",
+        "fixed inset-0 z-[1400] m-auto rounded-surface border border-border-subtle",
+        "bg-surface-default p-0 shadow-elevation-overlay",
 
         /* backdrop */
         "backdrop:bg-[var(--surface-overlay)] backdrop:backdrop-blur-xs",
@@ -255,7 +255,7 @@ export const Modal = React.forwardRef<HTMLDialogElement, ModalProps>(({
                 type="button"
                 onClick={handleCloseButton}
                 className={cn(
-                  "shrink-0 rounded-lg p-1.5 text-text-secondary transition hover:bg-surface-muted hover:text-text-primary",
+                  "shrink-0 rounded-surface p-1.5 text-text-secondary transition hover:bg-surface-muted hover:text-text-primary",
                   classes?.closeButton,
                 )}
                 aria-label="Close"

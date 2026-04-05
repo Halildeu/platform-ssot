@@ -35,10 +35,10 @@ const mapColumnType = (col: GridColumnDef): ColDef => {
 
 const badgeTone = (value: string): string => {
   const v = value.toUpperCase();
-  if (['OK', 'READY', 'PASS', 'YES'].includes(v)) return 'bg-emerald-100 text-emerald-800';
-  if (['WARN', 'WARNING', 'MEDIUM'].includes(v)) return 'bg-amber-100 text-amber-800';
-  if (['FAIL', 'ERROR', 'NO', 'HIGH', 'BLOCKED'].includes(v)) return 'bg-red-100 text-red-800';
-  return 'bg-gray-100 text-gray-700';
+  if (['OK', 'READY', 'PASS', 'YES'].includes(v)) return 'bg-status-success/10 text-status-success-text';
+  if (['WARN', 'WARNING', 'MEDIUM'].includes(v)) return 'bg-status-warning/10 text-status-warning-text';
+  if (['FAIL', 'ERROR', 'NO', 'HIGH', 'BLOCKED'].includes(v)) return 'bg-status-danger/10 text-status-danger-text';
+  return 'bg-surface-muted text-text-secondary';
 };
 
 const GridTabPanel: React.FC<Props> = ({ grids, activeGridId, gridData, onSelectGrid }) => {

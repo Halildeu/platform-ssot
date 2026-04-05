@@ -128,11 +128,11 @@ export const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
       if (isEmpty) return null;
 
       const palette = colors ?? getDefaultPalette();
-      const fontFamily = getCSSVar("--font-family-sans", "Inter, system-ui, sans-serif");
+      const fontFamily = getCSSVar("--font-family-base", "Inter, system-ui, sans-serif");
       const textPrimary = getCSSVar("--text-primary", "#1a1a2e");
       const textSecondary = getCSSVar("--text-secondary", "#6b7280");
       const borderDefault = getCSSVar("--border-default", "#e5e7eb");
-      const bgMuted = getCSSVar("--bg-muted", "#f9fafb");
+      const bgMuted = getCSSVar("--surface-muted-bg", "#f9fafb");
 
       // Transform data: [x, y, size?, label?, color?]
       const scatterData = safeData.map((d, i) => ({

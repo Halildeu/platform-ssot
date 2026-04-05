@@ -74,8 +74,8 @@ export const HoverDescription: React.FC<HoverDescriptionProps> = ({
       {open && ReactDOM.createPortal(
         <div
           className={cn(
-            'fixed z-[9999] rounded-xl border border-border-subtle bg-surface-default px-4 py-3 shadow-lg',
-            'animate-in fade-in-0 slide-in-from-top-1 duration-200',
+            'fixed z-[9999] rounded-surface border border-border-subtle bg-surface-default px-4 py-3 shadow-elevation-overlay',
+            'animate-in fade-in-0 slide-in-from-top-1 duration-motion-medium',
             cardClassName,
           )}
           style={{ top: pos.top, left: pos.left, width }}

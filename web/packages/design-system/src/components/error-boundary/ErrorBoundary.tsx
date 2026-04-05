@@ -39,31 +39,16 @@ const DefaultFallback: React.FC<{ error: Error; onReset: () => void }> = ({
 }) => (
   <div
     role="alert"
-    style={{
-      padding: '24px',
-      border: '1px solid var(--border-default)',
-      borderRadius: '8px',
-      background: 'var(--surface-default)',
-      color: 'var(--text-primary)',
-      textAlign: 'center',
-    }}
+    className="p-6 border border-border-default rounded-lg bg-surface-default text-text-primary text-center"
   >
-    <p style={{ margin: '0 0 8px', fontWeight: 600 }}>Something went wrong</p>
-    <p style={{ margin: '0 0 16px', fontSize: '0.875rem', opacity: 0.7 }}>
+    <p className="mb-2 font-semibold">Something went wrong</p>
+    <p className="mb-4 text-sm opacity-70">
       {error.message}
     </p>
     <button
       type="button"
       onClick={onReset}
-      style={{
-        padding: '6px 16px',
-        borderRadius: '6px',
-        border: '1px solid var(--border-default)',
-        background: 'var(--surface-default)',
-        color: 'var(--text-primary)',
-        cursor: 'pointer',
-        fontSize: '0.875rem',
-      }}
+      className="px-4 py-1.5 rounded-md border border-border-default bg-surface-default text-text-primary cursor-pointer text-sm"
     >
       Try again
     </button>

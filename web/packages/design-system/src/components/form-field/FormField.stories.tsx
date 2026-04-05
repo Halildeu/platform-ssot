@@ -21,7 +21,7 @@ export const Default: Story = {
   args: {
     label: 'E-posta Adresi',
     help: 'Is e-posta adresinizi girin.',
-    children: <input type="email" placeholder="ornek@sirket.com" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-default)', fontSize: 14 }} />,
+    children: <input type="email" placeholder="ornek@sirket.com" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-default)' }} className="text-sm" />,
   },
   play: async ({ canvasElement }) => {
     const input = canvasElement.querySelector('input, textarea, select');
@@ -33,7 +33,7 @@ export const Required: Story = {
   args: {
     label: 'Kullanici Adi',
     required: true,
-    children: <input type="text" placeholder="Kullanici adi" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-default)', fontSize: 14 }} />,
+    children: <input type="text" placeholder="Kullanici adi" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-default)' }} className="text-sm" />,
   },
 };
 
@@ -42,7 +42,7 @@ export const WithError: Story = {
     label: 'Sifre',
     error: 'Sifre en az 8 karakter olmalidir.',
     required: true,
-    children: <input type="password" value="123" readOnly style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--state-error-text)', fontSize: 14 }} />,
+    children: <input type="password" value="123" readOnly style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--state-error-text)' }} className="text-sm" />,
   },
 };
 
@@ -50,7 +50,7 @@ export const Disabled: Story = {
   args: {
     label: 'Salt Okunur',
     disabled: true,
-    children: <input type="text" value="Degistirilemez" readOnly style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-default)', fontSize: 14 }} />,
+    children: <input type="text" value="Degistirilemez" readOnly style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-default)' }} className="text-sm" />,
   },
 };
 
@@ -58,7 +58,7 @@ export const Horizontal: Story = {
   args: {
     label: 'Ad Soyad',
     horizontal: true,
-    children: <input type="text" placeholder="Ad Soyad" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-default)', fontSize: 14 }} />,
+    children: <input type="text" placeholder="Ad Soyad" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-default)' }} className="text-sm" />,
   },
 };
 
@@ -67,6 +67,6 @@ export const Optional: Story = {
     label: 'Telefon',
     optional: true,
     help: 'Istege bagli alan.',
-    children: <input type="tel" placeholder="+90 555 123 4567" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-default)', fontSize: 14 }} />,
+    children: <input type="tel" placeholder="+90 555 123 4567" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-default)' }} className="text-sm" />,
   },
 };

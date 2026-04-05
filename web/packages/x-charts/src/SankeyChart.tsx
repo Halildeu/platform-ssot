@@ -218,7 +218,7 @@ export const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
             },
             itemStyle: {
               borderWidth: 1,
-              borderColor: "var(--bg-surface, #ffffff)",
+              borderColor: "var(--surface-default-bg, #ffffff)",
             },
             cursor: onNodeClick ? "pointer" : "default",
           },

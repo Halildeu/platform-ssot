@@ -19,7 +19,7 @@ type Story = StoryObj<typeof Accordion>;
 export const Overview: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto max-w-4xl rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto max-w-4xl rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Accordion
           ariaLabel="Release readiness accordion"
           defaultValue={['overview']}
@@ -93,7 +93,7 @@ export const NestedRecipes: Story = {
 
     return (
       <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-        <div className="mx-auto max-w-4xl rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="mx-auto max-w-4xl rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <Accordion
             ariaLabel="Nested settings accordion"
             items={recipeItems}

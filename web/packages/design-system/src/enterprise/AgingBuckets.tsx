@@ -88,7 +88,7 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
   return (
     <div
       className={cn(
-        'border border-border-default rounded-lg bg-surface-default p-4',
+        'border border-border-default rounded-surface bg-surface-default p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -98,7 +98,7 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
     >
       {/* Stacked bar */}
       {showStackedBar && (
-        <div className="mb-4 flex h-6 w-full overflow-hidden rounded-md">
+        <div className="mb-4 flex h-6 w-full overflow-hidden rounded-control">
           {buckets.map((bucket, i) => {
             const pct = getPercentage(bucket.value);
             const tone = bucket.tone ?? defaultTone(i, buckets.length);
@@ -106,7 +106,7 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
             return (
               <div
                 key={bucket.id}
-                className={cn('h-full transition-all duration-300 first:rounded-l-md last:rounded-r-md', onBucketClick && 'cursor-pointer hover:opacity-80')}
+                className={cn('h-full transition-all duration-motion-medium first:rounded-l-md last:rounded-r-md', onBucketClick && 'cursor-pointer hover:opacity-80')}
                 style={{ width: `${pct}%`, backgroundColor: toneColorMap[tone] }}
                 onClick={() => onBucketClick?.(bucket)}
                 title={`${bucket.label}: ${pct}%`}
@@ -133,10 +133,10 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
             <div
               key={bucket.id}
               className={cn(
-                'flex-1 min-w-[120px] rounded-lg border p-3 transition-all duration-200',
+                'flex-1 min-w-[120px] rounded-surface border p-3 transition-all duration-motion-medium',
                 toneClasses.border,
                 toneClasses.bg,
-                onBucketClick && 'cursor-pointer hover:shadow-md hover:scale-[1.02]',
+                onBucketClick && 'cursor-pointer hover:shadow-elevation-surface hover:scale-[1.02]',
               )}
               onClick={() => onBucketClick?.(bucket)}
             >
@@ -160,7 +160,7 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
               {/* Mini bar */}
               <div className="mt-2 h-1 w-full rounded-full bg-surface-muted overflow-hidden">
                 <div
-                  className="h-full rounded-full transition-all duration-500"
+                  className="h-full rounded-full transition-all duration-motion-slow"
                   style={{ width: `${pct}%`, backgroundColor: toneColorMap[tone] }}
                 />
               </div>

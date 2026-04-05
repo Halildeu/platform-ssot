@@ -223,7 +223,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
         </Text>
       ) : null}
 
-      <div className="mt-4 overflow-hidden rounded-[26px] border border-border-subtle bg-surface-default shadow-xs">
+      <div className="mt-4 overflow-hidden rounded-control border border-border-subtle bg-surface-default shadow-elevation-sm">
         {!loading && visibleNodes.length === 0 ? (
           <div className="p-5">
             <Empty description={resolvedEmptyFallbackDescription} />
@@ -304,7 +304,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
                               <button
                                 type="button"
                                 className={[
-                                  "min-w-0 flex-1 rounded-2xl px-1 text-start transition-colors",
+                                  "min-w-0 flex-1 rounded-surface px-1 text-start transition-colors",
                                   blocked ? "cursor-not-allowed opacity-70" : onNodeSelect ? "hover:bg-surface-muted active:bg-surface-muted/80" : "",
                                 ]
                                   .filter(Boolean)

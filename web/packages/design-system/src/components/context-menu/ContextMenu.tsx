@@ -189,8 +189,8 @@ export const ContextMenu = React.forwardRef<HTMLDivElement, ContextMenuProps>(({
           tabIndex={-1}
           onKeyDown={handleKeyDown}
           className={cn(
-            "fixed z-[1500] min-w-[160px] rounded-lg border border-border-default bg-surface-default py-1",
-            "shadow-lg animate-in fade-in-0 zoom-in-95",
+            "fixed z-50 min-w-[160px] rounded-surface border border-border-default bg-surface-default py-1",
+            "shadow-elevation-overlay animate-in fade-in-0 zoom-in-95",
             className,
           )}
           style={{ left: position.x, top: position.y }}

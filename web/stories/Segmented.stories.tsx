@@ -23,7 +23,7 @@ type Story = StoryObj<typeof Segmented>;
 export const Overview: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto max-w-4xl rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto max-w-4xl rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Segmented
           ariaLabel="Release cockpit view"
           defaultValue="overview"
@@ -56,7 +56,7 @@ export const Overview: Story = {
 export const VerticalMultiple: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto max-w-xl rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto max-w-xl rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Segmented
           ariaLabel="Filter channels"
           selectionMode="multiple"
@@ -94,7 +94,7 @@ export const VerticalMultiple: Story = {
 export const SurfaceVariants: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto flex max-w-5xl flex-col gap-6 rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto flex max-w-5xl flex-col gap-6 rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Segmented
           ariaLabel="Surface variant tabs"
           defaultValue="overview"
@@ -155,7 +155,7 @@ export const AdaptersAndPresets: Story = {
 
     return (
       <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-        <div className="mx-auto flex max-w-5xl flex-col gap-6 rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="mx-auto flex max-w-5xl flex-col gap-6 rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <Segmented
             ariaLabel="Route adapters"
             defaultValue="policy"

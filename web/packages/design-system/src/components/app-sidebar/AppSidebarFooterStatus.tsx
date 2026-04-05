@@ -48,7 +48,7 @@ export const AppSidebarFooterStatus = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        'group relative flex items-center rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-xs font-semibold text-text-secondary',
+        'group relative flex items-center rounded-surface border border-border-subtle bg-surface-default px-3 py-2 text-xs font-semibold text-text-secondary',
         isCollapsed && 'justify-center px-2',
         className,
       )}
@@ -64,10 +64,10 @@ export const AppSidebarFooterStatus = React.forwardRef<
           role="tooltip"
           className={cn(
             'pointer-events-none absolute left-full ml-2 z-50',
-            'whitespace-nowrap rounded-md px-2 py-1 text-xs',
+            'whitespace-nowrap rounded-control px-2 py-1 text-xs',
             'bg-[var(--text-primary)] text-[var(--surface-default)]',
             'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100',
-            'transition-opacity duration-150',
+            'transition-opacity duration-motion-fast',
           )}
         >
           {resolvedLabel}

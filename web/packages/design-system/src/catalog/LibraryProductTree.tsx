@@ -297,7 +297,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
           <div
             key={track.id}
             className={clsx(
-              'overflow-hidden rounded-[24px] border transition-colors',
+              'overflow-hidden rounded-control border transition-colors',
               isTrackSelected
                 ? track.selectedToneClassName ?? 'border-action-primary/35 bg-surface-default'
                 : 'border-border-subtle bg-surface-panel',
@@ -315,7 +315,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
               )}
             >
               {isTrackExpanded ? <ChevronDown /> : <ChevronRight />}
-              <span className={clsx('flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl', isTrackSelected ? 'bg-surface-panel' : 'bg-surface-canvas')}>
+              <span className={clsx('flex h-9 w-9 shrink-0 items-center justify-center rounded-surface', isTrackSelected ? 'bg-surface-panel' : 'bg-surface-canvas')}>
                 {track.icon}
               </span>
               <div className="min-w-0 flex-1">
@@ -336,7 +336,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                 {isTrackDisabled ? (
                   <Text
                     variant="secondary"
-                    className="block rounded-[18px] border border-dashed border-border-default bg-surface-canvas px-3 py-3 text-xs leading-6"
+                    className="block rounded-control border border-dashed border-border-default bg-surface-canvas px-3 py-3 text-xs leading-6"
                     data-testid={testIdPrefix ? `${testIdPrefix}-track-empty-${track.id}` : undefined}
                   >
                     {track.emptyStateLabel ?? 'Bu filtre ve lens icin gorunur oge yok.'}
@@ -359,9 +359,9 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                             onClick={() => toggleGroup(track, group)}
                             data-testid={testIdPrefix ? `${testIdPrefix}-group-${group.id}` : undefined}
                             className={clsx(
-                              'flex w-full items-center gap-3 rounded-[18px] border px-3 py-2.5 text-left transition-colors',
+                              'flex w-full items-center gap-3 rounded-control border px-3 py-2.5 text-left transition-colors',
                               isGroupSelected
-                                ? 'border-action-primary/30 bg-surface-default shadow-xs'
+                                ? 'border-action-primary/30 bg-surface-default shadow-elevation-sm'
                                 : 'border-border-subtle bg-surface-canvas hover:bg-surface-muted',
                             )}
                           >
@@ -372,7 +372,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                           </button>
 
                           {isGroupExpanded ? (
-                            <div className="flex flex-col mt-2 gap-2 rounded-[18px] border border-border-subtle bg-surface-default p-2">
+                            <div className="flex flex-col mt-2 gap-2 rounded-control border border-border-subtle bg-surface-default p-2">
                               {group.subgroups.map((subgroup) => {
                                 const subgroupKey = makeSubgroupKey(track.id, group.id, subgroup.id);
                                 const isSubgroupExpanded = expandedSubgroups.includes(subgroupKey);
@@ -391,7 +391,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                                           : undefined
                                       }
                                       className={clsx(
-                                        'grid w-full grid-cols-[auto_auto_minmax(0,1fr)] items-start gap-3 rounded-[16px] border px-3 py-2.5 text-left transition-colors',
+                                        'grid w-full grid-cols-[auto_auto_minmax(0,1fr)] items-start gap-3 rounded-control border px-3 py-2.5 text-left transition-colors',
                                         isSubgroupExpanded ? 'border-border-default bg-surface-panel' : 'border-transparent bg-transparent hover:bg-surface-muted',
                                       )}
                                     >
@@ -408,7 +408,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                                     </button>
 
                                     {isSubgroupExpanded ? (
-                                      <div className="flex flex-col mt-2 gap-1 rounded-[16px] bg-surface-canvas p-2">
+                                      <div className="flex flex-col mt-2 gap-1 rounded-control bg-surface-canvas p-2">
                                         {subgroup.items.map((item) => {
                                           const isItemActive =
                                             selection.trackId === track.id &&
@@ -430,9 +430,9 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                                                   : undefined
                                               }
                                               className={clsx(
-                                                'mb-1 grid w-full grid-cols-[auto_minmax(0,1fr)] items-start gap-3 rounded-[16px] border px-3 py-2.5 text-left transition-colors last:mb-0',
+                                                'mb-1 grid w-full grid-cols-[auto_minmax(0,1fr)] items-start gap-3 rounded-control border px-3 py-2.5 text-left transition-colors last:mb-0',
                                                 isItemActive
-                                                  ? 'border-action-primary/25 bg-surface-default shadow-xs'
+                                                  ? 'border-action-primary/25 bg-surface-default shadow-elevation-sm'
                                                   : 'border-transparent bg-transparent hover:bg-surface-muted',
                                               )}
                                             >

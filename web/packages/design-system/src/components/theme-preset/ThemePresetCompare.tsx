@@ -112,11 +112,11 @@ function LivePreviewPanels({
       ].map(({ preset, scoped }) => (
         <div
           key={preset.presetId}
-          className="rounded-[24px] border border-border-subtle bg-surface-default p-4"
+          className="rounded-control border border-border-subtle bg-surface-default p-4"
         >
           <div className="flex items-start gap-4">
             <div
-              className="shrink-0 rounded-[20px] border border-border-subtle bg-surface-muted p-3"
+              className="shrink-0 rounded-control border border-border-subtle bg-surface-muted p-3"
               {...(preset.themeAxes ? scoped.attrs : {})}
               style={preset.themeAxes ? scoped.style : undefined}
             >
@@ -156,7 +156,7 @@ function AxisComparisonTable({
   localeText?: ThemePresetCompareProps["localeText"];
 }) {
   return (
-    <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+    <div className="rounded-control border border-border-subtle bg-surface-default p-4">
       <table className="w-full text-sm" role="table" aria-label="Theme axis comparison">
         <thead>
           <tr className="border-b border-border-subtle">
@@ -224,7 +224,7 @@ function TokenDiffGroup({
   const [expanded, setExpanded] = useState(defaultExpanded);
 
   return (
-    <div className="rounded-2xl border border-border-subtle bg-surface-default">
+    <div className="rounded-surface border border-border-subtle bg-surface-default">
       <button
         type="button"
         className={cn(
@@ -262,7 +262,7 @@ function TokenDiffGroup({
                   {leftToken.name}
                 </span>
                 <div
-                  className="h-5 w-5 shrink-0 rounded-sm border border-border-subtle"
+                  className="h-5 w-5 shrink-0 rounded-control border border-border-subtle"
                   style={{ backgroundColor: leftToken.value || `var(${leftToken.cssVar})` }}
                   title={`${leftToken.cssVar}: ${leftToken.value}`}
                   role="img"
@@ -273,7 +273,7 @@ function TokenDiffGroup({
                 </span>
                 <span className="text-text-disabled">→</span>
                 <div
-                  className="h-5 w-5 shrink-0 rounded-sm border border-border-subtle"
+                  className="h-5 w-5 shrink-0 rounded-control border border-border-subtle"
                   style={{ backgroundColor: rightToken?.value || `var(${rightToken?.cssVar ?? ""})` }}
                   title={`${rightToken?.cssVar}: ${rightToken?.value}`}
                   role="img"
@@ -346,7 +346,7 @@ export const ThemePresetCompare = React.forwardRef<HTMLElement, ThemePresetCompa
     );
 
     const sectionClass = cn(
-      "rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-xs",
+      "rounded-surface border border-border-subtle bg-surface-muted p-5 shadow-elevation-sm",
       className,
     );
 
@@ -366,7 +366,7 @@ export const ThemePresetCompare = React.forwardRef<HTMLElement, ThemePresetCompa
           <Text variant="secondary" className="mt-1 block text-sm leading-6">
             {description}
           </Text>
-          <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-default p-4">
+          <div className="mt-4 rounded-control border border-border-subtle bg-surface-default p-4">
             <Empty description={localeText?.emptyMessage ?? "Karsilastirma icin iki preset gerekli."} />
           </div>
         </section>

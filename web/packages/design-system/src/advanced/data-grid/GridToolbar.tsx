@@ -248,7 +248,7 @@ export const GridToolbar = <RowData = unknown>({
         value={quickFilter}
         onChange={handleQuickFilterChange}
         placeholder={m.quickFilterPlaceholder ?? "Tüm sütunlarda ara..."}
-        className="h-8 min-w-[180px] rounded-md border border-border-default bg-surface-default px-3 text-sm text-text-primary placeholder:text-text-disabled focus:border-action-primary focus:outline-hidden focus:ring-2 focus:ring-accent-focus"
+        className="h-8 min-w-[180px] rounded-control border border-border-default bg-surface-default px-3 text-sm text-text-primary placeholder:text-text-disabled focus:border-action-primary focus:outline-hidden focus:ring-2 focus:ring-accent-focus"
         aria-label={m.quickFilterPlaceholder ?? "Quick filter"}
       />
 
@@ -258,7 +258,7 @@ export const GridToolbar = <RowData = unknown>({
       {/* Reset filters */}
       <button
         type="button"
-        className="h-8 rounded-md bg-surface-muted px-3 text-xs font-medium text-text-secondary hover:bg-surface-raised"
+        className="h-8 rounded-control bg-surface-muted px-3 text-xs font-medium text-text-secondary hover:bg-surface-raised"
         onClick={handleResetFilters}
       >
         {m.resetFiltersLabel ?? "Reset Filters"}
@@ -273,7 +273,7 @@ export const GridToolbar = <RowData = unknown>({
           <button
             type="button"
             disabled={exporting === 'excel'}
-            className="inline-flex h-8 items-center gap-1.5 rounded-md bg-surface-muted px-3 text-xs font-medium text-text-secondary hover:bg-surface-raised disabled:opacity-50"
+            className="inline-flex h-8 items-center gap-1.5 rounded-control bg-surface-muted px-3 text-xs font-medium text-text-secondary hover:bg-surface-raised disabled:opacity-50"
             onClick={() => handleExport('excel')}
             title="Excel"
           >
@@ -283,7 +283,7 @@ export const GridToolbar = <RowData = unknown>({
           <button
             type="button"
             disabled={exporting === 'csv'}
-            className="inline-flex h-8 items-center gap-1.5 rounded-md bg-surface-muted px-3 text-xs font-medium text-text-secondary hover:bg-surface-raised disabled:opacity-50"
+            className="inline-flex h-8 items-center gap-1.5 rounded-control bg-surface-muted px-3 text-xs font-medium text-text-secondary hover:bg-surface-raised disabled:opacity-50"
             onClick={() => handleExport('csv')}
             title="CSV"
           >
@@ -300,7 +300,7 @@ export const GridToolbar = <RowData = unknown>({
       {onRequestFullscreen && (
         <button
           type="button"
-          className="ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-surface-muted text-text-secondary transition-colors hover:bg-surface-raised hover:text-text-primary"
+          className="ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-control bg-surface-muted text-text-secondary transition-colors hover:bg-surface-raised hover:text-text-primary"
           onClick={onRequestFullscreen}
           title={m.fullscreenTooltip ?? (isFullscreen ? 'Exit fullscreen' : 'Fullscreen')}
           aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}

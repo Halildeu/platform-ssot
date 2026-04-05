@@ -59,7 +59,7 @@ export function useContextHealthData(): UseContextHealthDataReturn {
       if (gridsRes.length > 0 && !activeGridId) {
         setActiveGridId(gridsRes[0].gridId);
       }
-    } catch (e) {
+    } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Failed to fetch context health data');
     } finally {
       setLoading(false);

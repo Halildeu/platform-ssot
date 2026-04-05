@@ -1142,7 +1142,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
     >
       <div
         className={cn(
-          'relative flex min-h-12 w-full items-center gap-3 rounded-[28px] px-2 py-2 before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent',
+          'relative flex min-h-12 w-full items-center gap-3 rounded-control px-2 py-2 before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent',
           overflowBehavior === 'scroll' ? 'overflow-visible' : 'overflow-hidden',
           rootClassByAppearance[appearance],
         )}
@@ -1197,7 +1197,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
             || (resolvedLabelVisibility === 'active' && isActive)
             || (!item.icon && resolvedLabelVisibility === 'none');
           const commonClassName = cn(
-            `group relative inline-flex min-h-10 items-center gap-2 rounded-2xl border border-transparent font-medium transition duration-200 ${focusRingClass("ring")}`,
+            `group relative inline-flex min-h-10 items-center gap-2 rounded-surface border border-transparent font-medium transition duration-motion-medium ${focusRingClass("ring")}`,
             sizeClassNames[size],
             isActive
               ? 'border-border-default/70 bg-[var(--surface-card)] text-accent-primary shadow-[0_16px_34px_-26px_var(--shadow-color)] ring-1 ring-border-subtle/20 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent'
@@ -1258,7 +1258,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
               data-slot="favorite-toggle"
               data-favorite-active={isFavorite ? 'true' : undefined}
               className={cn(
-                'absolute right-2 top-1/2 z-[1] inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-border-subtle/70 bg-[var(--surface-card)] text-[10px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs transition hover:border-border-default hover:text-text-primary',
+                'absolute right-2 top-1/2 z-10 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-border-subtle/70 bg-[var(--surface-card)] text-[10px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs transition hover:border-border-default hover:text-text-primary',
                 isFavorite && 'border-state-warning-text/30 bg-state-warning-bg text-state-warning-text',
               )}
               onClick={(event) => {
@@ -1404,7 +1404,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
         align="start"
         flipOnCollision
         className={cn(
-          'fixed z-50 min-w-[14rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md',
+          'fixed z-50 min-w-[14rem] rounded-control border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md',
           openItem?.menuSurfaceClassName,
         )}
         style={{
@@ -1424,7 +1424,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
         side="bottom"
         align="end"
         flipOnCollision
-        className="fixed z-50 min-w-[14rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md"
+        className="fixed z-50 min-w-[14rem] rounded-control border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md"
         style={{
           color: 'var(--text-primary)',
           boxShadow: 'var(--elevation-overlay)',
@@ -1449,7 +1449,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
         side="bottom"
         align="start"
         flipOnCollision
-        className="fixed z-50 min-w-[18rem] max-w-[24rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md"
+        className="fixed z-50 min-w-[18rem] max-w-[24rem] rounded-control border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md"
         style={{
           color: 'var(--text-primary)',
           boxShadow: 'var(--elevation-overlay)',

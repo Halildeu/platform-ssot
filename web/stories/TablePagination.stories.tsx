@@ -20,7 +20,7 @@ type Story = StoryObj<typeof TablePagination>;
 export const UnknownTotalAuditFeed: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto flex max-w-4xl flex-col gap-6 rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto flex max-w-4xl flex-col gap-6 rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <TablePagination
           totalItems={60}
           page={3}
@@ -64,7 +64,7 @@ export const CustomActionsFooter: Story = {
 
     return (
       <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-        <div className="mx-auto flex max-w-4xl flex-col gap-6 rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="mx-auto flex max-w-4xl flex-col gap-6 rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <TablePagination
             totalItems={120}
             defaultPage={2}
@@ -90,7 +90,7 @@ export const CustomActionsFooter: Story = {
 export const RichPageSizePolicy: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto flex max-w-4xl flex-col gap-6 rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto flex max-w-4xl flex-col gap-6 rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <TablePagination
           totalItems={240}
           defaultPage={1}

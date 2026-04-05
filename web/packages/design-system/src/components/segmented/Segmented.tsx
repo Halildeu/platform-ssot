@@ -148,7 +148,7 @@ const sizeStyles: Record<"sm" | "md" | "lg", string> = {
 };
 
 const shapeStyles: Record<"rounded" | "pill", { container: string; item: string }> = {
-  rounded: { container: "rounded-lg", item: "rounded-lg" },
+  rounded: { container: "rounded-surface", item: "rounded-surface" },
   pill: { container: "rounded-full", item: "rounded-full" },
 };
 
@@ -161,7 +161,7 @@ const appearanceStyles: Record<
     active: cn(
       "bg-[var(--segmented-active-bg))]",
       "text-[var(--segmented-active-text))]",
-      "shadow-xs",
+      "shadow-elevation-sm",
     ),
     inactive: cn(
       "text-[var(--segmented-text))]",
@@ -391,7 +391,7 @@ export const Segmented = React.forwardRef<HTMLDivElement, SegmentedProps>(
                 onKeyDown={(e) => handleKeyDown(e, item.value)}
                 className={cn(
                   "inline-flex items-center justify-center font-medium",
-                  "transition-all duration-150",
+                  "transition-all duration-motion-fast",
                   "disabled:pointer-events-none disabled:opacity-40",
                   focusRingClass("ring"),
                   sizeStyles[size],

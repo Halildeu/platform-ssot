@@ -213,7 +213,7 @@ export const CommandPalette = React.forwardRef<HTMLDivElement, CommandPalettePro
 
       {/* Dialog */}
       <div
-        className="relative w-full max-w-3xl overflow-hidden rounded-[32px] border border-border-subtle bg-surface-muted shadow-2xl"
+        className="relative w-full max-w-3xl overflow-hidden rounded-control border border-border-subtle bg-surface-muted shadow-elevation-overlay"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -267,7 +267,7 @@ export const CommandPalette = React.forwardRef<HTMLDivElement, CommandPalettePro
         {/* Results */}
         <div className="max-h-[60vh] overflow-y-auto px-4 py-4">
           {filteredItems.length === 0 ? (
-            <div className="rounded-2xl border border-border-subtle bg-surface-default p-5">
+            <div className="rounded-surface border border-border-subtle bg-surface-default p-5">
               <Empty description={emptyStateLabel} />
             </div>
           ) : (
@@ -275,7 +275,7 @@ export const CommandPalette = React.forwardRef<HTMLDivElement, CommandPalettePro
               {Object.entries(groupedItems).map(([group, groupItems]) => (
                 <section
                   key={group}
-                  className="rounded-2xl border border-border-subtle bg-surface-default p-3"
+                  className="rounded-surface border border-border-subtle bg-surface-default p-3"
                 >
                   <div className="px-2 pb-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-text-secondary">
                     {group}
@@ -293,7 +293,7 @@ export const CommandPalette = React.forwardRef<HTMLDivElement, CommandPalettePro
                           onClick={() => handleSelect(item)}
                           disabled={item.disabled || !canExecute}
                           className={cn(
-                            "flex w-full items-start justify-between gap-4 rounded-2xl border px-4 py-3 text-left transition",
+                            "flex w-full items-start justify-between gap-4 rounded-surface border px-4 py-3 text-left transition",
                             isActive
                               ? "border-action-primary bg-[var(--action-primary-soft)]"
                               : "border-border-subtle bg-surface-muted hover:bg-[var(--surface-hover))]",

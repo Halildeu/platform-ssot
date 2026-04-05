@@ -73,7 +73,7 @@ const variantStyles: Record<ButtonVariant, string> = {
     "bg-action-primary text-text-inverse",
     "hover:bg-accent-primary-hover",
     "active:bg-[var(--action-primary-active)]",
-    "shadow-xs",
+    "shadow-elevation-sm",
   ].join(" "),
 
   secondary: [
@@ -98,7 +98,7 @@ const variantStyles: Record<ButtonVariant, string> = {
     "bg-state-danger-text text-text-inverse",
     "hover:brightness-110",
     "active:brightness-90",
-    "shadow-xs",
+    "shadow-elevation-sm",
   ].join(" "),
 
   link: [
@@ -110,19 +110,19 @@ const variantStyles: Record<ButtonVariant, string> = {
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  xs: "h-7 px-2.5 text-xs gap-1 rounded-md",
-  sm: "h-8 px-3 text-xs gap-1.5 rounded-lg",
-  md: "h-9 px-4 text-sm gap-2 rounded-lg",
-  lg: "h-10 px-5 text-sm gap-2 rounded-xl",
-  xl: "h-12 px-6 text-base gap-2.5 rounded-xl",
+  xs: "h-7 px-2.5 text-xs gap-1 rounded-control",
+  sm: "h-8 px-3 text-xs gap-1.5 rounded-surface",
+  md: "h-9 px-4 text-sm gap-2 rounded-surface",
+  lg: "h-10 px-5 text-sm gap-2 rounded-surface",
+  xl: "h-12 px-6 text-base gap-2.5 rounded-surface",
 };
 
 const iconOnlySizes: Record<ButtonSize, string> = {
-  xs: "h-7 w-7 rounded-md",
-  sm: "h-8 w-8 rounded-lg",
-  md: "h-9 w-9 rounded-lg",
-  lg: "h-10 w-10 rounded-xl",
-  xl: "h-12 w-12 rounded-xl",
+  xs: "h-7 w-7 rounded-control",
+  sm: "h-8 w-8 rounded-surface",
+  md: "h-9 w-9 rounded-surface",
+  lg: "h-10 w-10 rounded-surface",
+  xl: "h-12 w-12 rounded-surface",
 };
 
 /**
@@ -179,7 +179,7 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(
         : focusRingClass("ring");
 
     const mergedClassName = cn(
-      "inline-flex items-center justify-center font-medium transition-all duration-150",
+      "inline-flex items-center justify-center font-medium transition-all duration-motion-fast",
       "select-none whitespace-nowrap",
       "disabled:pointer-events-none disabled:opacity-50",
       accessState.isHidden && "invisible",

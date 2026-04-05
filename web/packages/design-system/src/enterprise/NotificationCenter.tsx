@@ -162,7 +162,7 @@ function NotificationRow({
   return (
     <div
       className={cn(
-        'group relative flex items-start gap-3 rounded-md px-3 py-2.5 transition-colors',
+        'group relative flex items-start gap-3 rounded-control px-3 py-2.5 transition-colors',
         isUnread && 'border-l-[3px] bg-surface-muted',
         !isUnread && 'border-l-[3px] border-l-transparent',
         !disabled && onClick && 'cursor-pointer hover:bg-surface-muted',
@@ -191,7 +191,7 @@ function NotificationRow({
         {item.type === 'action' && item.actionLabel && onAction && (
           <button
             type="button"
-            className="mt-1.5 inline-flex items-center rounded-xs bg-surface-muted px-2 py-1 text-xs font-medium text-text-primary hover:bg-border-default transition-colors disabled:opacity-50"
+            className="mt-1.5 inline-flex items-center rounded-control bg-surface-muted px-2 py-1 text-xs font-medium text-text-primary hover:bg-border-default transition-colors disabled:opacity-50"
             disabled={disabled}
             onClick={(e) => {
               e.stopPropagation();
@@ -207,7 +207,7 @@ function NotificationRow({
       {onDismiss && (
         <button
           type="button"
-          className="invisible group-hover:visible absolute top-2 right-2 rounded-xs p-0.5 text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors disabled:opacity-50"
+          className="invisible group-hover:visible absolute top-2 right-2 rounded-control p-0.5 text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors disabled:opacity-50"
           disabled={disabled}
           aria-label="Dismiss notification"
           onClick={(e) => {
@@ -295,7 +295,7 @@ export function NotificationCenter({
   return (
     <div
       className={cn(
-        'flex flex-col rounded-lg border border-border-default bg-[var(--surface-primary)] shadow-xs',
+        'flex flex-col rounded-surface border border-border-default bg-[var(--surface-primary)] shadow-elevation-sm',
         accessStyles(state),
         className,
       )}

@@ -214,7 +214,7 @@ export function RiskMatrix({
                     } : undefined}
                     className={[
                       'flex items-center justify-center border border-surface-default',
-                      'transition-[scale] duration-100',
+                      'transition-[scale] duration-motion-fast',
                       isClickable ? 'cursor-pointer hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]' : '',
                     ].join(' ')}
                     style={{
@@ -250,7 +250,7 @@ export function RiskMatrix({
       {/* Tooltip (portal-free, positioned via fixed) */}
       {tooltip && tooltip.risks.length > 0 && (
         <div
-          className="fixed z-50 px-2.5 py-1.5 rounded-xs shadow-lg bg-[var(--surface-elevated)] text-[var(--text-on-elevated)] text-xs max-w-[220px] pointer-events-none"
+          className="fixed z-50 px-2.5 py-1.5 rounded-control shadow-elevation-overlay bg-[var(--surface-elevated)] text-[var(--text-on-elevated)] text-xs max-w-[220px] pointer-events-none"
           style={{
             left: tooltip.x,
             top: tooltip.y,
@@ -280,7 +280,7 @@ export function RiskMatrix({
             return (
               <div key={level} className="flex items-center gap-1" role="listitem">
                 <span
-                  className="inline-block w-3 h-3 rounded-xs border"
+                  className="inline-block w-3 h-3 rounded-control border"
                   style={{ backgroundColor: c.bg, borderColor: c.text }}
                   aria-hidden="true"
                 />

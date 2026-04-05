@@ -127,7 +127,7 @@ const ScoreCell: React.FC<ScoreCellProps> = ({
     >
       {/* Score bar background */}
       <div
-        className="absolute inset-y-0 left-0 opacity-20 transition-all duration-200"
+        className="absolute inset-y-0 left-0 opacity-20 transition-all duration-motion-medium"
         style={{ width: barWidth, backgroundColor: color.text }}
       />
       {/* Score value */}
@@ -207,7 +207,7 @@ export function DecisionMatrix({
   return (
     <div
       className={cn(
-        'border border-border-default rounded-lg bg-surface-default overflow-hidden',
+        'border border-border-default rounded-surface bg-surface-default overflow-hidden',
         accessStyles(accessState.state),
         className,
       )}

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./styles/generated-theme-inline.css";
+@import "./styles/axis-tokens-inline.css";
 @import "./styles/theme.css";
 
 /* Content scanning for monorepo — TW4 native @source */
@@ -89,31 +90,71 @@ body {
   min-height: 100vh;
 }
 
-/* Radius aksı — v4 renames: rounded-sm→rounded-xs */
-[data-radius] .rounded,
-[data-radius] .rounded-xs,
-[data-radius] .rounded-sm,
-[data-radius] .rounded-md {
-  border-radius: var(--radius-control);
+/* ================================================================== */
+/*  THEME AXIS OVERRIDES                                               */
+/* ================================================================== */
+
+/* ── Radius Axis ───────────────────────────────────────────────────── */
+[data-radius="rounded"] :is(.rounded, .rounded-xs, .rounded-sm, .rounded-md) {
+  border-radius: var(--radius-control) !important;
+}
+[data-radius="rounded"] :is(.rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl) {
+  border-radius: var(--radius-surface) !important;
+}
+[data-radius="sharp"] :is(.rounded, .rounded-xs, .rounded-sm, .rounded-md) {
+  border-radius: var(--radius-control) !important;
+}
+[data-radius="sharp"] :is(.rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl) {
+  border-radius: var(--radius-surface) !important;
+}
+[data-radius="sharp"] [class*="rounded-["] {
+  border-radius: var(--radius-control) !important;
 }
 
-[data-radius] .rounded-lg,
-[data-radius] .rounded-xl,
-[data-radius] .rounded-2xl,
-[data-radius] .rounded-3xl {
-  border-radius: var(--radius-surface);
-}
-
-/* Elevation aksı */
-
-/* v4 renames: shadow-sm→shadow-xs, shadow→shadow-sm — both old and new covered */
+/* ── Elevation Axis ────────────────────────────────────────────────── */
 [data-elevation="raised"] :is(.shadow, .shadow-xs, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl) {
   box-shadow: var(--elevation-surface) !important;
 }
-
 [data-elevation="flat"] :is(.shadow, .shadow-xs, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl) {
-  box-shadow: var(--elevation-surface) !important;
+  box-shadow: none !important;
 }
+[data-elevation="flat"] [style*="box-shadow"] {
+  box-shadow: none !important;
+}
+
+/* ── Motion Axis ───────────────────────────────────────────────────── */
+[data-motion="reduced"] * {
+  transition-duration: 0ms !important;
+  animation-duration: 0ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion="standard"]) * {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+
+/* ── Density Axis ──────────────────────────────────────────────────── */
+[data-density="compact"] :is(.py-3, .py-4, .py-5, .py-6) {
+  padding-top: calc(var(--density-space) * 0.5) !important;
+  padding-bottom: calc(var(--density-space) * 0.5) !important;
+}
+[data-density="compact"] :is(.px-4, .px-5, .px-6) {
+  padding-left: var(--density-space) !important;
+  padding-right: var(--density-space) !important;
+}
+[data-density="compact"] :is(.gap-4, .gap-5, .gap-6) {
+  gap: var(--density-space) !important;
+}
+[data-density="compact"] :is(.text-base, .text-lg) {
+  font-size: 0.8125rem !important;
+  line-height: 1.25rem !important;
+}
+
+/* ── Contrast Ratio Axis (placeholder) ─────────────────────────────── */
+[data-contrast-ratio="aa"] { --contrast-mode: aa; }
+[data-contrast-ratio="aaa"] { --contrast-mode: aaa; }
 
 /* ------------------------------------------------------------------ */
 

@@ -199,7 +199,7 @@ const ActivityRow: React.FC<ActivityRowProps> = ({ item, isLast, canInteract, on
   return (
     <div
       className={cn(
-        'relative flex gap-3 py-3 px-2 rounded-md',
+        'relative flex gap-3 py-3 px-2 rounded-control',
         isClickable && 'cursor-pointer hover:bg-[var(--surface-hover)]',
         'transition-colors',
       )}
@@ -214,7 +214,7 @@ const ActivityRow: React.FC<ActivityRowProps> = ({ item, isLast, canInteract, on
       {/* Connector line */}
       {!isLast && (
         <div
-          className="absolute left-[17px] top-[44px] bottom-0 w-0.5"
+          className="absolute left-4 top-11 bottom-0 w-0.5"
           style={{ backgroundColor: 'var(--border-subtle)' }}
           aria-hidden="true"
         />
@@ -316,7 +316,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
       <div
         className={cn(
           'p-6 text-center text-sm text-[var(--text-tertiary)]',
-          'border border-[var(--border-default)] rounded-lg',
+          'border border-[var(--border-default)] rounded-surface',
           className,
         )}
         data-component="activity-feed"
@@ -345,7 +345,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default)] rounded-lg',
+        'border border-[var(--border-default)] rounded-surface',
         'bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
@@ -379,7 +379,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
           <button
             type="button"
             className={cn(
-              'px-4 py-1.5 text-xs font-medium rounded-md',
+              'px-4 py-1.5 text-xs font-medium rounded-control',
               'text-[var(--text-accent)]',
               'hover:bg-[var(--surface-hover)] transition-colors',
             )}

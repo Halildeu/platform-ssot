@@ -31,7 +31,7 @@ const StableSurfaceCanvas = () => {
   return (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <div>
             <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
               Stable release controls
@@ -147,7 +147,7 @@ const StableSurfaceCanvas = () => {
           />
         </section>
 
-        <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <ApprovalReview
             title="ApprovalReview publish checkpoint"
             description="Stable release oncesi insan onayi, citation panel ve audit timeline ayni review recipe altinda toplanir."

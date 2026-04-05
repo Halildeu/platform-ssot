@@ -50,9 +50,9 @@ export interface UploadProps
 }
 
 const sizeClass: Record<FieldSize, string> = {
-  sm: "rounded-xl px-3 py-3",
-  md: "rounded-2xl px-4 py-4",
-  lg: "rounded-2xl px-5 py-5",
+  sm: "rounded-surface px-3 py-3",
+  md: "rounded-surface px-4 py-4",
+  lg: "rounded-surface px-5 py-5",
 };
 
 const formatFileSize = (size: number) => {
@@ -159,7 +159,7 @@ export const Upload = React.forwardRef<HTMLInputElement, UploadProps>(function U
         <label
           htmlFor={inputId}
           className={cn(
-            "block border border-dashed shadow-xs transition",
+            "block border border-dashed shadow-elevation-sm transition",
             sizeClass[size],
             tone === "invalid"
               ? "border-state-danger-text bg-surface-muted"

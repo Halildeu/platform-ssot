@@ -69,7 +69,7 @@ export const DashboardBuilder: React.FC = () => {
             value={state.title}
             onChange={(e) => dispatch({ type: 'SET_TITLE', title: e.target.value })}
             placeholder="Dashboard Başlığı"
-            className="w-full text-2xl font-bold text-text-primary bg-transparent border-0 outline-none placeholder:text-text-disabled"
+            className="w-full text-2xl font-bold text-text-primary bg-transparent border-0 outline-hidden placeholder:text-text-disabled"
           />
         </div>
         <div className="flex items-center gap-2">

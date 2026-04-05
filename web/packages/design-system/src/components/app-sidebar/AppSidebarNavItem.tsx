@@ -60,8 +60,8 @@ export const AppSidebarNavItem = React.forwardRef<HTMLDivElement, AppSidebarNavI
   const depthPadding = isCollapsed ? 'px-2' : depth === 0 ? 'px-3' : depth === 1 ? 'pl-8 pr-3' : depth === 2 ? 'pl-12 pr-3' : 'pl-16 pr-3';
 
   const sharedClasses = cn(
-    'group relative flex items-center gap-3 rounded-md py-2 text-sm cursor-pointer',
-    'transition-all duration-200 outline-hidden',
+    'group relative flex items-center gap-3 rounded-control py-2 text-sm cursor-pointer',
+    'transition-all duration-motion-medium outline-hidden',
     'focus-visible:ring-2 focus-visible:ring-[var(--action-primary)]',
     depthPadding,
     active
@@ -93,8 +93,8 @@ export const AppSidebarNavItem = React.forwardRef<HTMLDivElement, AppSidebarNavI
           role="tooltip"
           style={{ position: 'fixed', top: tooltipPos.top, left: tooltipPos.left, transform: 'translateY(-50%)' }}
           className={cn(
-            'pointer-events-none z-[9999]',
-            'whitespace-nowrap rounded-md px-2 py-1 text-xs',
+            'pointer-events-none z-50',
+            'whitespace-nowrap rounded-control px-2 py-1 text-xs',
             'bg-[var(--text-primary)] text-[var(--surface-default)]',
           )}
         >

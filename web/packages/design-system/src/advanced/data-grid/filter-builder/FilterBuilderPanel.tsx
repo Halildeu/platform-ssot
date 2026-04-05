@@ -120,12 +120,12 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
       <div className="fixed inset-0 z-40 bg-surface-inverse/20" onClick={onClose} />
 
       {/* Panel */}
-      <div className="fixed bottom-0 right-0 top-0 z-50 flex w-[620px] flex-col bg-surface-default shadow-2xl">
+      <div className="fixed bottom-0 right-0 top-0 z-50 flex w-[620px] flex-col bg-surface-default shadow-elevation-overlay">
 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border-subtle px-6 py-4">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-action-primary/10">
+            <div className="flex h-8 w-8 items-center justify-center rounded-surface bg-action-primary/10">
               <Filter className="h-4 w-4 text-action-primary" />
             </div>
             <div>
@@ -136,7 +136,7 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-text-subtle hover:bg-surface-muted hover:text-text-primary"
+            className="rounded-surface p-1.5 text-text-subtle hover:bg-surface-muted hover:text-text-primary"
           >
             <X className="h-4 w-4" />
           </button>
@@ -179,7 +179,7 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
             <button
               type="button"
               onClick={handleClear}
-              className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-state-danger-text hover:bg-state-danger-bg"
+              className="flex items-center gap-1.5 rounded-surface px-3 py-2 text-xs font-medium text-state-danger-text hover:bg-state-danger-bg"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Temizle
@@ -188,7 +188,7 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
               type="button"
               onClick={handleApply}
               disabled={isEmpty}
-              className="flex items-center gap-1.5 rounded-lg bg-action-primary px-4 py-2 text-xs font-semibold text-text-inverse shadow-sm hover:bg-action-primary/90 disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-surface bg-action-primary px-4 py-2 text-xs font-semibold text-text-inverse shadow-elevation-sm hover:bg-action-primary/90 disabled:opacity-50"
             >
               <Check className="h-3.5 w-3.5" />
               Uygula
@@ -199,6 +199,8 @@ export const FilterBuilderPanel: React.FC<FilterBuilderPanelProps> = ({
     </>
   );
 };
+
+FilterBuilderPanel.displayName = 'FilterBuilderPanel';
 
 // ── Toolbar Button ──
 
@@ -227,7 +229,7 @@ export const FilterBuilderButton: React.FC<{
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className={`flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium transition ${
+        className={`flex h-8 items-center gap-1.5 rounded-control px-2.5 text-xs font-medium transition ${
           activeCount > 0
             ? 'bg-action-primary text-text-inverse'
             : 'bg-surface-muted text-text-secondary hover:bg-surface-raised'
@@ -251,3 +253,5 @@ export const FilterBuilderButton: React.FC<{
     </>
   );
 };
+
+FilterBuilderButton.displayName = 'FilterBuilderButton';

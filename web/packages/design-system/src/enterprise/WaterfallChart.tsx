@@ -187,7 +187,7 @@ export const WaterfallChart: React.FC<WaterfallChartProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-4',
+        'border border-[var(--border-default)] rounded-surface bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -250,7 +250,7 @@ export const WaterfallChart: React.FC<WaterfallChartProps> = ({
                 rx={3}
                 opacity={isHovered ? 1 : 0.85}
                 className={cn(
-                  'transition-opacity duration-100',
+                  'transition-opacity duration-motion-fast',
                   isClickable && 'cursor-pointer',
                 )}
                 onClick={() => handleClick(bar.item)}

@@ -128,7 +128,7 @@ export const LinkInline = React.forwardRef<HTMLElement, LinkInlineProps>(
     );
 
     const baseClassName = cn(
-      "inline-flex items-center gap-1 rounded-md font-medium transition",
+      "inline-flex items-center gap-1 rounded-control font-medium transition",
       focusRingClass("ring"),
       toneClasses[tone],
       underlineClasses[underline],

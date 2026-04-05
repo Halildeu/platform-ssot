@@ -139,7 +139,7 @@ const TreeNode: React.FC<{
     <div>
       <div
         className={cn(
-          'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm cursor-pointer transition-colors',
+          'flex items-center gap-1.5 rounded-control px-2 py-1.5 text-sm cursor-pointer transition-colors',
           isSelected ? 'bg-action-primary/10 text-action-primary font-medium' : 'text-text-primary hover:bg-surface-muted',
           isDisabled && 'pointer-events-none opacity-40',
         )}
@@ -317,7 +317,7 @@ export const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(
           ref={triggerRef}
           onClick={() => !disabled && setIsOpen(!isOpen)}
           className={cn(
-            'flex w-full cursor-pointer items-center gap-1.5 rounded-lg border px-3 transition-colors',
+            'flex w-full cursor-pointer items-center gap-1.5 rounded-surface border px-3 transition-colors',
             styles.trigger,
             isOpen ? 'border-action-primary ring-2 ring-action-primary/20' : 'border-border-default',
             'bg-surface-default hover:border-border-strong',
@@ -331,7 +331,7 @@ export const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(
             {multiple && selectedNodes.length > 0 ? (
               <>
                 {selectedNodes.slice(0, maxTagCount).map((node) => (
-                  <span key={node.value} className={cn('inline-flex items-center gap-1 rounded-md bg-surface-muted font-medium', styles.tag)}>
+                  <span key={node.value} className={cn('inline-flex items-center gap-1 rounded-control bg-surface-muted font-medium', styles.tag)}>
                     {node.label}
                     <button type="button" onClick={(e) => { e.stopPropagation(); onSelect(node); }} className="hover:text-state-danger-text" aria-label={`Remove ${node.label}`}>
                       <XIcon className="h-3 w-3" />
@@ -339,7 +339,7 @@ export const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(
                   </span>
                 ))}
                 {selectedNodes.length > maxTagCount && (
-                  <span className={cn('rounded-md bg-surface-muted font-medium', styles.tag)}>+{selectedNodes.length - maxTagCount}</span>
+                  <span className={cn('rounded-control bg-surface-muted font-medium', styles.tag)}>+{selectedNodes.length - maxTagCount}</span>
                 )}
               </>
             ) : selectedNodes.length === 1 ? (
@@ -358,7 +358,7 @@ export const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(
         {isOpen && (
           <div
             ref={dropdownRef}
-            className="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-auto rounded-lg border border-border-subtle bg-surface-panel p-1 shadow-xl"
+            className="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-auto rounded-surface border border-border-subtle bg-surface-panel p-1 shadow-elevation-overlay"
           >
             {searchable && (
               <div className="mb-1 px-1">
@@ -367,7 +367,7 @@ export const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search..."
-                  className="w-full rounded-md border border-border-subtle bg-surface-default px-2 py-1.5 text-sm outline-none focus:border-action-primary"
+                  className="w-full rounded-control border border-border-subtle bg-surface-default px-2 py-1.5 text-sm outline-hidden focus:border-action-primary"
                   autoFocus
                 />
               </div>

@@ -175,7 +175,7 @@ export const ToastProvider = React.forwardRef<HTMLDivElement, ToastProviderProps
       {/* Toast container */}
       <div
         className={cn(
-          "fixed z-[1700] flex flex-col gap-2 pointer-events-none",
+          "fixed z-50 flex flex-col gap-2 pointer-events-none",
           accessState.isDisabled && "pointer-events-none opacity-50",
           positionStyles[position],
         )}
@@ -225,7 +225,7 @@ function ToastItem({
   return (
     <div
       className={cn(
-        "pointer-events-auto flex w-80 items-start gap-3 rounded-xl border p-4 shadow-lg",
+        "pointer-events-auto flex w-80 items-start gap-3 rounded-surface border p-4 shadow-elevation-overlay",
         "animate-in slide-in-from-right-full fade-in-0",
         variantStyles[toast.variant],
       )}
@@ -254,7 +254,7 @@ function ToastItem({
       <button
         type="button"
         onClick={handleDismiss}
-        className="shrink-0 rounded-md p-1 text-text-secondary transition hover:bg-surface-muted"
+        className="shrink-0 rounded-control p-1 text-text-secondary transition hover:bg-surface-muted"
         aria-label="Dismiss"
       >
         <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">

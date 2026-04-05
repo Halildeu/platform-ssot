@@ -262,7 +262,7 @@ export const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
 
     const stepBtnClass = (isDisabled: boolean) =>
       cn(
-        "inline-flex h-5 w-5 items-center justify-center rounded-md text-xs font-bold transition select-none",
+        "inline-flex h-5 w-5 items-center justify-center rounded-control text-xs font-bold transition select-none",
         "text-text-secondary hover:text-text-primary hover:bg-surface-muted",
         "active:bg-border-subtle",
         isDisabled && "pointer-events-none opacity-40",
@@ -289,7 +289,7 @@ export const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
         data-access-state={accessState.state}
       >
         <div
-          className={getFieldFrameClass(size, tone, fullWidth, className)}
+          className={cn(getFieldFrameClass(size, tone, fullWidth, className), "focus-within:ring-2 focus-within:ring-focus-outline focus-visible:ring-2 focus-visible:ring-focus-outline")}
           data-field-tone={tone}
           data-size={size}
           data-field-type="input-number"

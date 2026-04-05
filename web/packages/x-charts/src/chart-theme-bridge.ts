@@ -23,7 +23,7 @@ const getCSSVar = (varName: string, fallback: string): string => {
 };
 
 export const getChartThemeOverrides = (): ChartThemeOverrides => {
-  const fontFamily = getCSSVar('--font-family-sans', 'Inter, system-ui, sans-serif');
+  const fontFamily = getCSSVar('--font-family-base', 'Inter, system-ui, sans-serif');
   const textPrimary = getCSSVar('--text-primary', 'var(--text-primary)');
   const textSecondary = getCSSVar('--text-secondary', 'var(--text-secondary)');
 

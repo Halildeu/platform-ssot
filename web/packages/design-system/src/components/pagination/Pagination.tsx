@@ -127,7 +127,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(({
   const pages = usePaginationRange(totalPages, current, siblingCount);
 
   const btnBase = cn(
-    "inline-flex items-center justify-center rounded-lg font-medium transition",
+    "inline-flex items-center justify-center rounded-surface font-medium transition",
     focusRingClass("ring"),
     "disabled:pointer-events-none disabled:opacity-40",
     sizeMap[size],
@@ -173,7 +173,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(({
             className={cn(
               btnBase,
               isActive
-                ? "bg-action-primary text-text-inverse shadow-xs"
+                ? "bg-action-primary text-text-inverse shadow-elevation-sm"
                 : "text-text-secondary hover:bg-surface-muted",
             )}
           >

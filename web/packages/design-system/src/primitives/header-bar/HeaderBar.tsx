@@ -100,7 +100,7 @@ export const HeaderBar = forwardRef<HTMLElement, HeaderBarProps>(
         {card ? (
           <div
             className={cn(
-              'flex items-center justify-between gap-3 rounded-xl border border-border-subtle bg-surface-panel px-3 py-2 shadow-xs',
+              'flex items-center justify-between gap-3 rounded-surface border border-border-subtle bg-surface-panel px-3 py-2 shadow-elevation-sm',
               cardClassName,
             )}
           >
@@ -113,3 +113,5 @@ export const HeaderBar = forwardRef<HTMLElement, HeaderBarProps>(
     );
   },
 );
+
+HeaderBar.displayName = 'HeaderBar';

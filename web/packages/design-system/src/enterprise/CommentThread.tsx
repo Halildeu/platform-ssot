@@ -164,7 +164,7 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ onSubmit, currentUser, placeholde
       <div className="flex-1 flex flex-col gap-2">
         <textarea
           className={cn(
-            'w-full rounded-md border px-3 py-2 text-sm resize-none',
+            'w-full rounded-control border px-3 py-2 text-sm resize-none',
             'bg-[var(--surface-default)] text-[var(--text-primary)]',
             'border-[var(--border-default)]',
             'placeholder:text-[var(--text-tertiary)]',
@@ -182,7 +182,7 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ onSubmit, currentUser, placeholde
           <button
             type="button"
             className={cn(
-              'px-3 py-1.5 text-xs font-medium rounded-md',
+              'px-3 py-1.5 text-xs font-medium rounded-control',
               'bg-[var(--surface-accent)] text-[var(--text-on-accent)]',
               'hover:opacity-90 transition-opacity',
               'disabled:opacity-40 disabled:cursor-not-allowed',
@@ -269,7 +269,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
 
       <div
         className={cn(
-          'flex gap-3 py-3 px-2 rounded-md',
+          'flex gap-3 py-3 px-2 rounded-control',
           'hover:bg-[var(--surface-hover)] transition-colors',
         )}
         role="article"
@@ -300,7 +300,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
             <div className="mt-1">
               <textarea
                 className={cn(
-                  'w-full rounded-md border px-3 py-2 text-sm resize-none',
+                  'w-full rounded-control border px-3 py-2 text-sm resize-none',
                   'bg-[var(--surface-default)] text-[var(--text-primary)]',
                   'border-[var(--border-default)]',
                   'focus:outline-hidden focus:ring-2 focus:ring-[var(--ring-primary)]',
@@ -464,7 +464,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
       <div
         className={cn(
           'p-6 text-center text-sm text-[var(--text-tertiary)]',
-          'border border-[var(--border-default)] rounded-lg',
+          'border border-[var(--border-default)] rounded-surface',
           className,
         )}
         data-component="comment-thread"
@@ -484,7 +484,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default)] rounded-lg',
+        'border border-[var(--border-default)] rounded-surface',
         'bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,

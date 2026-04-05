@@ -79,7 +79,7 @@ export type LibraryPreviewPanelProps = {
 };
 
 export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({ title, children, className }) => (
-  <div className={clsx(libraryPanelSurfaceClass, 'rounded-[24px] p-4', className)}>
+  <div className={clsx(libraryPanelSurfaceClass, 'rounded-control p-4', className)}>
     <LibrarySurfaceAccent compact />
     <div className="relative z-[1]">
       <LibraryDetailLabel className="text-[11px]">{title}</LibraryDetailLabel>
@@ -100,7 +100,7 @@ export const LibraryCodeBlock: React.FC<LibraryCodeBlockProps> = ({
   languageLabel = 'tsx',
   className,
 }) => (
-  <div className={clsx(libraryPanelSurfaceClass, 'rounded-[24px]', className)}>
+  <div className={clsx(libraryPanelSurfaceClass, 'rounded-control', className)}>
     <LibrarySurfaceAccent compact />
     <div className="relative z-[1] overflow-hidden">
       <CodeBlock
@@ -132,7 +132,7 @@ export const LibraryDocsSection = React.forwardRef<HTMLElement, LibraryDocsSecti
     <section
       ref={ref}
       id={id}
-      className={clsx(libraryElevatedSurfaceClass, 'scroll-mt-28 rounded-[30px] p-6', className)}
+      className={clsx(libraryElevatedSurfaceClass, 'scroll-mt-28 rounded-control p-6', className)}
     >
       <LibrarySurfaceAccent />
       <div className="relative z-[1]">
@@ -175,7 +175,7 @@ export const LibraryShowcaseCard: React.FC<LibraryShowcaseCardProps> = ({
   children,
   className,
 }) => (
-  <article className={clsx(libraryElevatedSurfaceClass, 'rounded-[28px] p-5', className)}>
+  <article className={clsx(libraryElevatedSurfaceClass, 'rounded-control p-5', className)}>
     <LibrarySurfaceAccent />
     <div className="relative z-[1]">
       <div className="flex flex-wrap gap-3 border-b border-border-subtle/80 pb-4" style={{ alignItems: "flex-start", justifyContent: "space-between" }}>
@@ -218,12 +218,12 @@ export const LibraryPropsTable: React.FC<LibraryPropsTableProps> = ({
   emptyText = 'Props tablosu henuz tanimlanmadi.',
   className,
 }) => (
-  <div className={clsx(libraryElevatedSurfaceClass, 'rounded-[30px] p-5', className)}>
+  <div className={clsx(libraryElevatedSurfaceClass, 'rounded-control p-5', className)}>
     <LibrarySurfaceAccent />
     <div className="relative z-[1]">
       <LibraryDetailLabel>{title}</LibraryDetailLabel>
       {rows.length ? (
-        <div className="mt-4 overflow-hidden rounded-[26px] border border-border-subtle bg-surface-panel/95">
+        <div className="mt-4 overflow-hidden rounded-control border border-border-subtle bg-surface-panel/95">
         <div className="grid grid-cols-[1.05fr_1.15fr_0.8fr] gap-3 border-b border-border-subtle px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-text-secondary">
           <span>Prop</span>
           <span>Type</span>
@@ -278,14 +278,14 @@ export const LibraryUsageRecipesPanel: React.FC<LibraryUsageRecipesPanelProps> =
   emptyText = 'Usage recipe henuz tanimlanmadi.',
   className,
 }) => (
-  <div className={clsx(libraryElevatedSurfaceClass, 'rounded-[30px] p-5', className)}>
+  <div className={clsx(libraryElevatedSurfaceClass, 'rounded-control p-5', className)}>
     <LibrarySurfaceAccent />
     <div className="relative z-[1]">
       <LibraryDetailLabel>{title}</LibraryDetailLabel>
       {recipes.length ? (
         <div className="flex flex-col mt-4 gap-4">
         {recipes.map((recipe) => (
-          <div key={recipe.title} className={clsx(libraryPanelSurfaceClass, 'rounded-[24px] p-4')}>
+          <div key={recipe.title} className={clsx(libraryPanelSurfaceClass, 'rounded-control p-4')}>
             <LibrarySurfaceAccent compact />
             <div className="relative z-[1]">
               <div className="flex flex-wrap gap-3 border-b border-border-subtle/80 pb-3" style={{ alignItems: "flex-start", justifyContent: "space-between" }}>
@@ -323,7 +323,7 @@ export type LibraryMetricCardProps = {
 };
 
 export const LibraryMetricCard: React.FC<LibraryMetricCardProps> = ({ label, value, note, className }) => (
-  <div className={clsx(libraryPanelSurfaceClass, 'rounded-[22px] p-4', className)}>
+  <div className={clsx(libraryPanelSurfaceClass, 'rounded-control p-4', className)}>
     <LibrarySurfaceAccent compact />
     <div className="relative z-[1]">
       <LibraryDetailLabel>{label}</LibraryDetailLabel>
@@ -376,7 +376,7 @@ export const LibraryOutlinePanel: React.FC<LibraryOutlinePanelProps> = ({
   );
 
   return (
-    <section className={clsx(libraryElevatedSurfaceClass, 'rounded-[26px] p-4', className)}>
+    <section className={clsx(libraryElevatedSurfaceClass, 'rounded-control p-4', className)}>
       <LibrarySurfaceAccent compact />
       <div className="relative z-[1]">
         <LibraryDetailLabel>{title}</LibraryDetailLabel>
@@ -388,11 +388,11 @@ export const LibraryOutlinePanel: React.FC<LibraryOutlinePanelProps> = ({
         size="sm"
         appearance="ghost"
         labelVisibility="always"
-        className="mt-3 w-full rounded-[20px] bg-transparent p-0"
+        className="mt-3 w-full rounded-control bg-transparent p-0"
         classes={{
           root: 'border-transparent bg-transparent p-0 shadow-none',
           list: 'gap-1.5',
-          item: 'rounded-2xl px-3 py-2',
+          item: 'rounded-surface px-3 py-2',
           activeItem: 'bg-[var(--surface-card)] shadow-[0_14px_28px_-20px_var(--shadow-color)] ring-1 ring-border-subtle/20',
           label: 'text-sm',
         }}
@@ -418,13 +418,13 @@ export const LibraryStatsPanel: React.FC<LibraryStatsPanelProps> = ({
   items,
   className,
 }) => (
-  <section className={clsx(libraryElevatedSurfaceClass, 'rounded-[26px] p-4', className)}>
+  <section className={clsx(libraryElevatedSurfaceClass, 'rounded-control p-4', className)}>
     <LibrarySurfaceAccent compact />
     <div className="relative z-[1]">
       <LibraryDetailLabel>{title}</LibraryDetailLabel>
       <div className="mt-3 grid grid-cols-2 gap-3">
       {items.map((item) => (
-        <div key={item.label} className={clsx(libraryPanelSurfaceClass, 'rounded-[20px] p-3')}>
+        <div key={item.label} className={clsx(libraryPanelSurfaceClass, 'rounded-control p-3')}>
           <LibrarySurfaceAccent compact />
           <div className="relative z-[1]">
           <LibraryDetailLabel>{item.label}</LibraryDetailLabel>
@@ -453,13 +453,13 @@ export const LibraryMetadataPanel: React.FC<LibraryMetadataPanelProps> = ({
   items,
   className,
 }) => (
-  <section className={clsx(libraryElevatedSurfaceClass, 'rounded-[26px] p-4', className)}>
+  <section className={clsx(libraryElevatedSurfaceClass, 'rounded-control p-4', className)}>
     <LibrarySurfaceAccent compact />
     <div className="relative z-[1]">
       <LibraryDetailLabel>{title}</LibraryDetailLabel>
       <div className="flex flex-col mt-3 gap-3">
       {items.map((item) => (
-        <div key={item.label} className={clsx(libraryPanelSurfaceClass, 'rounded-[20px] p-3')}>
+        <div key={item.label} className={clsx(libraryPanelSurfaceClass, 'rounded-control p-3')}>
           <LibrarySurfaceAccent compact />
           <div className="relative z-[1]">
           <LibraryDetailLabel>{item.label}</LibraryDetailLabel>

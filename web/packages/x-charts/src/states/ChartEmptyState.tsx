@@ -37,9 +37,9 @@ export function ChartEmptyState({
         alignItems: "center",
         justifyContent: "center",
         gap: 8,
-        background: "var(--bg-muted, #f9fafb)",
+        background: "var(--surface-muted-bg, #f9fafb)",
         borderRadius: 8,
-        fontFamily: "var(--font-family-sans, Inter, system-ui, sans-serif)",
+        fontFamily: "var(--font-family-base, Inter, system-ui, sans-serif)",
       }}
       data-testid="chart-empty-state"
     >

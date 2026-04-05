@@ -625,7 +625,7 @@ function QuickGroupMenu<RowData>({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex h-8 items-center gap-1 rounded-md bg-surface-muted px-2.5 text-xs font-medium text-text-secondary hover:bg-surface-raised"
+        className="flex h-8 items-center gap-1 rounded-control bg-surface-muted px-2.5 text-xs font-medium text-text-secondary hover:bg-surface-raised"
         title="Hizli gruplama"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -635,7 +635,7 @@ function QuickGroupMenu<RowData>({
         Grupla
       </button>
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-border-subtle bg-surface-default py-1 shadow-lg">
+        <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-surface border border-border-subtle bg-surface-default py-1 shadow-elevation-overlay">
           <button
             type="button"
             onClick={clearGroups}

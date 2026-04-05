@@ -91,7 +91,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   return (
     <div
       className={clsx(
-        "rounded-2xl border overflow-hidden",
+        "rounded-surface border overflow-hidden",
         isDark
           ? "border-surface-default/10 bg-[var(--surface-code)] text-text-inverse"
           : "border-border-subtle bg-surface-panel text-text-primary",
@@ -119,7 +119,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
             type="button"
             onClick={handleCopy}
             className={clsx(
-              "flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-medium transition",
+              "flex items-center gap-1.5 rounded-control px-2 py-1 text-[11px] font-medium transition",
               isDark
                 ? "text-text-inverse/50 hover:text-text-inverse/80 hover:bg-surface-default/10"
                 : "text-text-secondary hover:text-text-primary hover:bg-surface-muted",

@@ -122,9 +122,9 @@ export interface SearchFilterListingProps extends AccessControlledProps {
    */
 
 const panelBase =
-  "relative overflow-hidden rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card))] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs transition-all duration-200";
+  "relative overflow-hidden rounded-control border border-border-subtle/80 bg-[var(--surface-card))] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs transition-all duration-motion-medium";
 
-const SKELETON_PULSE = "animate-pulse rounded-lg bg-surface-muted";
+const SKELETON_PULSE = "animate-pulse rounded-surface bg-surface-muted";
 
 /* ---- Sub-components ---- */
 
@@ -137,7 +137,7 @@ const FilterChips: React.FC<{
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-2 transition-all duration-200",
+        "flex flex-wrap items-center gap-2 transition-all duration-motion-medium",
         compact ? "px-3 py-2" : "px-5 py-3",
       )}
       role="status"
@@ -185,7 +185,7 @@ const SelectionBar: React.FC<{
   return (
     <div
       className={cn(
-        "flex items-center justify-between rounded-2xl border border-[color-mix(in_oklab,var(--selection-outline))_40%,transparent)] bg-[var(--selection-bg)] transition-all duration-200",
+        "flex items-center justify-between rounded-surface border border-[color-mix(in_oklab,var(--selection-outline))_40%,transparent)] bg-[var(--selection-bg)] transition-all duration-motion-medium",
         compact ? "px-3 py-2" : "px-5 py-3",
       )}
       role="status"
@@ -227,7 +227,7 @@ const SortDropdown: React.FC<{
           const key = e.target.value;
           if (key && onChange) onChange(key, active?.direction ?? "asc");
         }}
-        className="rounded-lg border border-border-subtle bg-transparent px-2 py-1 text-xs text-text-secondary outline-hidden focus:border-[var(--selection-outline))]"
+        className="rounded-surface border border-border-subtle bg-transparent px-2 py-1 text-xs text-text-secondary outline-hidden focus:border-[var(--selection-outline))]"
         aria-label="Siralama"
       >
         <option value="">Siralama</option>
@@ -239,7 +239,7 @@ const SortDropdown: React.FC<{
         <button
           type="button"
           onClick={() => onChange(active.key, active.direction === "asc" ? "desc" : "asc")}
-          className="inline-flex h-6 w-6 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-muted"
+          className="inline-flex h-6 w-6 items-center justify-center rounded-control text-text-secondary transition-colors hover:bg-surface-muted"
           aria-label={active.direction === "asc" ? "Azalan sirala" : "Artan sirala"}
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -378,7 +378,7 @@ export const SearchFilterListing = React.forwardRef<HTMLElement, SearchFilterLis
             <button
               type="button"
               onClick={onClearAllFilters}
-              className="mt-1 rounded-lg border border-border-subtle px-3 py-1.5 text-xs font-medium text-text-primary transition-colors hover:bg-surface-muted"
+              className="mt-1 rounded-surface border border-border-subtle px-3 py-1.5 text-xs font-medium text-text-primary transition-colors hover:bg-surface-muted"
             >
               Filtreleri temizle
             </button>
@@ -402,7 +402,7 @@ export const SearchFilterListing = React.forwardRef<HTMLElement, SearchFilterLis
         <button
           type="button"
           onClick={onReload}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-surface text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
           aria-label="Yeniden yukle"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">

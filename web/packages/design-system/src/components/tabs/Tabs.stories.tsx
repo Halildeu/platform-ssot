@@ -29,8 +29,8 @@ const temelSekmeler: TabItem[] = [
     label: 'Genel Bakis',
     content: (
       <div>
-        <h3 style={{ margin: '0 0 8px', fontSize: 16 }}>Genel Bakis</h3>
-        <p style={{ margin: 0, fontSize: 14, color: 'var(--text-secondary)' }}>
+        <h3 className="text-base" style={{ margin: '0 0 8px' }}>Genel Bakis</h3>
+        <p className="text-sm" style={{ margin: 0, color: 'var(--text-secondary)' }}>
           Sistemin genel durumu ve ozet istatistikleri bu sekmede goruntulenir.
         </p>
       </div>
@@ -41,8 +41,8 @@ const temelSekmeler: TabItem[] = [
     label: 'Kullanicilar',
     content: (
       <div>
-        <h3 style={{ margin: '0 0 8px', fontSize: 16 }}>Kullanicilar</h3>
-        <p style={{ margin: 0, fontSize: 14, color: 'var(--text-secondary)' }}>
+        <h3 className="text-base" style={{ margin: '0 0 8px' }}>Kullanicilar</h3>
+        <p className="text-sm" style={{ margin: 0, color: 'var(--text-secondary)' }}>
           Toplam 1.234 aktif kullanici bulunmaktadir. Son 30 gunde 89 yeni kayit yapildi.
         </p>
       </div>
@@ -53,8 +53,8 @@ const temelSekmeler: TabItem[] = [
     label: 'Raporlar',
     content: (
       <div>
-        <h3 style={{ margin: '0 0 8px', fontSize: 16 }}>Raporlar</h3>
-        <p style={{ margin: 0, fontSize: 14, color: 'var(--text-secondary)' }}>
+        <h3 className="text-base" style={{ margin: '0 0 8px' }}>Raporlar</h3>
+        <p className="text-sm" style={{ margin: 0, color: 'var(--text-secondary)' }}>
           Aylik performans raporlari ve analiz sonuclari burada listelenir.
         </p>
       </div>
@@ -65,8 +65,8 @@ const temelSekmeler: TabItem[] = [
     label: 'Ayarlar',
     content: (
       <div>
-        <h3 style={{ margin: '0 0 8px', fontSize: 16 }}>Ayarlar</h3>
-        <p style={{ margin: 0, fontSize: 14, color: 'var(--text-secondary)' }}>
+        <h3 className="text-base" style={{ margin: '0 0 8px' }}>Ayarlar</h3>
+        <p className="text-sm" style={{ margin: 0, color: 'var(--text-secondary)' }}>
           Sistem yapilandirmasi ve tercihler bu sekmeden yonetilir.
         </p>
       </div>
@@ -158,15 +158,15 @@ export const AllVariants: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       <div>
-        <div style={{ marginBottom: 8, fontSize: 12, fontWeight: 600 }}>Line</div>
+        <div className="text-xs font-semibold" style={{ marginBottom: 8 }}>Line</div>
         <Tabs items={temelSekmeler.slice(0, 3)} variant="line" />
       </div>
       <div>
-        <div style={{ marginBottom: 8, fontSize: 12, fontWeight: 600 }}>Enclosed</div>
+        <div className="text-xs font-semibold" style={{ marginBottom: 8 }}>Enclosed</div>
         <Tabs items={temelSekmeler.slice(0, 3)} variant="enclosed" />
       </div>
       <div>
-        <div style={{ marginBottom: 8, fontSize: 12, fontWeight: 600 }}>Pill</div>
+        <div className="text-xs font-semibold" style={{ marginBottom: 8 }}>Pill</div>
         <Tabs items={temelSekmeler.slice(0, 3)} variant="pill" />
       </div>
     </div>

@@ -85,13 +85,13 @@ export const AppSidebarFooterAction = React.forwardRef<
     const hideTooltip = useCallback(() => setTooltipPos(null), []);
 
     const sharedClasses = cn(
-      'group relative flex w-full items-center gap-2 rounded-xl py-2 text-sm cursor-pointer',
+      'group relative flex w-full items-center gap-2 rounded-surface py-2 text-sm cursor-pointer',
       'border border-border-subtle bg-surface-default',
-      'transition-all duration-200 outline-hidden',
+      'transition-all duration-motion-medium outline-hidden',
       'focus-visible:ring-2 focus-visible:ring-[var(--action-primary)]',
       isCollapsed ? 'justify-center px-2' : 'px-3',
       active
-        ? 'bg-surface-muted text-text-primary shadow-xs'
+        ? 'bg-surface-muted text-text-primary shadow-elevation-sm'
         : 'text-text-secondary hover:bg-surface-muted hover:text-text-primary',
       disabled && 'pointer-events-none opacity-40',
       className,
@@ -107,8 +107,8 @@ export const AppSidebarFooterAction = React.forwardRef<
             role="tooltip"
             style={{ position: 'fixed', top: tooltipPos.top, left: tooltipPos.left, transform: 'translateY(-50%)' }}
             className={cn(
-              'pointer-events-none z-[9999]',
-              'whitespace-nowrap rounded-md px-2 py-1 text-xs',
+              'pointer-events-none z-50',
+              'whitespace-nowrap rounded-control px-2 py-1 text-xs',
               'bg-[var(--text-primary)] text-[var(--surface-default)]',
             )}
           >

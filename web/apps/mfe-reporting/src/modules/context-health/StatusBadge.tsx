@@ -5,15 +5,15 @@ type StatusBadgeProps = {
 };
 
 const toneMap: Record<string, { bg: string; text: string; dot: string }> = {
-  OK: { bg: 'bg-emerald-50', text: 'text-emerald-700', dot: 'bg-emerald-500' },
-  READY: { bg: 'bg-emerald-50', text: 'text-emerald-700', dot: 'bg-emerald-500' },
-  PASS: { bg: 'bg-emerald-50', text: 'text-emerald-700', dot: 'bg-emerald-500' },
-  WARN: { bg: 'bg-amber-50', text: 'text-amber-700', dot: 'bg-amber-500' },
-  NOT_READY: { bg: 'bg-red-50', text: 'text-red-700', dot: 'bg-red-500' },
-  FAIL: { bg: 'bg-red-50', text: 'text-red-700', dot: 'bg-red-500' },
-  BLOCKED: { bg: 'bg-red-50', text: 'text-red-700', dot: 'bg-red-500' },
-  IDLE: { bg: 'bg-gray-50', text: 'text-gray-600', dot: 'bg-gray-400' },
-  NOT_CONFIGURED: { bg: 'bg-gray-50', text: 'text-gray-600', dot: 'bg-gray-400' },
+  OK: { bg: 'bg-status-success/5', text: 'text-status-success-text', dot: 'bg-status-success-text' },
+  READY: { bg: 'bg-status-success/5', text: 'text-status-success-text', dot: 'bg-status-success-text' },
+  PASS: { bg: 'bg-status-success/5', text: 'text-status-success-text', dot: 'bg-status-success-text' },
+  WARN: { bg: 'bg-status-warning/5', text: 'text-status-warning-text', dot: 'bg-status-warning-text' },
+  NOT_READY: { bg: 'bg-status-danger/5', text: 'text-status-danger-text', dot: 'bg-status-danger-text' },
+  FAIL: { bg: 'bg-status-danger/5', text: 'text-status-danger-text', dot: 'bg-status-danger-text' },
+  BLOCKED: { bg: 'bg-status-danger/5', text: 'text-status-danger-text', dot: 'bg-status-danger-text' },
+  IDLE: { bg: 'bg-surface-muted', text: 'text-text-secondary', dot: 'bg-text-subtle' },
+  NOT_CONFIGURED: { bg: 'bg-surface-muted', text: 'text-text-secondary', dot: 'bg-text-subtle' },
 };
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {

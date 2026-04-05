@@ -152,8 +152,8 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
           ref={menuRef}
           role="menu"
           className={cn(
-            "absolute z-[1500] overflow-hidden rounded-xl border border-border-subtle",
-            "bg-surface-default py-1 shadow-xl",
+            "absolute z-[1500] overflow-hidden rounded-surface border border-border-subtle",
+            "bg-surface-default py-1 shadow-elevation-overlay",
             "animate-in fade-in-0 zoom-in-95",
             placementMap[placement],
             className,

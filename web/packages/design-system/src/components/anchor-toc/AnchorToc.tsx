@@ -150,7 +150,7 @@ export const AnchorToc = React.forwardRef<HTMLElement, AnchorTocProps>(
         data-access-state={accessState.state}
         data-density={density}
         className={cn(
-          "rounded-[28px] border border-border-subtle bg-surface-default p-4 shadow-xs",
+          "rounded-control border border-border-subtle bg-surface-default p-4 shadow-elevation-sm",
           sticky && "lg:sticky lg:top-6",
           className,
         )}
@@ -181,11 +181,11 @@ export const AnchorToc = React.forwardRef<HTMLElement, AnchorTocProps>(
                   aria-disabled={disabled || undefined}
                   data-active={active ? "true" : "false"}
                   className={cn(
-                    "group flex min-w-0 items-center justify-between rounded-2xl border transition",
+                    "group flex min-w-0 items-center justify-between rounded-surface border transition",
                     focusRingClass("ring"),
                     densityClass[density],
                     active
-                      ? "border-[var(--accent-primary))] bg-[var(--accent-soft)] text-text-primary shadow-xs"
+                      ? "border-[var(--accent-primary))] bg-[var(--accent-soft)] text-text-primary shadow-elevation-sm"
                       : "border-transparent bg-transparent text-text-secondary hover:border-border-subtle hover:bg-surface-muted hover:text-text-primary",
                     disabled && "pointer-events-none opacity-55",
                   )}

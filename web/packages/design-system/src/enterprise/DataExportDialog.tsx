@@ -116,7 +116,7 @@ function RadioOption({
   return (
     <label
       className={cn(
-        'flex items-center gap-2 rounded-md border px-3 py-2 text-sm cursor-pointer transition-colors',
+        'flex items-center gap-2 rounded-control border px-3 py-2 text-sm cursor-pointer transition-colors',
         checked
           ? 'border-action-primary bg-state-info-bg'
           : 'border-border-default hover:bg-surface-muted',
@@ -226,7 +226,7 @@ export function DataExportDialog({
       <Backdrop onClick={onClose} />
       <div
         className={cn(
-          'fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-border-default bg-[var(--surface-primary)] shadow-2xl',
+          'fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-surface border border-border-default bg-[var(--surface-primary)] shadow-elevation-overlay',
           accessStyles(state),
           className,
         )}
@@ -241,7 +241,7 @@ export function DataExportDialog({
           <h2 className="text-base font-semibold text-text-primary">{t.title}</h2>
           <button
             type="button"
-            className="rounded-xs p-1 text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
+            className="rounded-control p-1 text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
             onClick={onClose}
             aria-label="Close"
           >
@@ -315,7 +315,7 @@ export function DataExportDialog({
 
           {/* Record count summary */}
           {countSummary && (
-            <div className="rounded-md bg-surface-muted px-3 py-2 text-center text-sm text-text-secondary">
+            <div className="rounded-control bg-surface-muted px-3 py-2 text-center text-sm text-text-secondary">
               {countSummary}
             </div>
           )}
@@ -325,14 +325,14 @@ export function DataExportDialog({
         <div className="flex items-center justify-end gap-3 border-t border-border-default px-5 py-3">
           <button
             type="button"
-            className="rounded-md border border-border-default bg-[var(--surface-primary)] px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-muted transition-colors"
+            className="rounded-control border border-border-default bg-[var(--surface-primary)] px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-muted transition-colors"
             onClick={onClose}
           >
             {t.cancelButton}
           </button>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-md bg-action-primary px-4 py-2 text-sm font-medium text-text-inverse hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 rounded-control bg-action-primary px-4 py-2 text-sm font-medium text-text-inverse hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isDisabled || exporting}
             onClick={handleExport}
           >

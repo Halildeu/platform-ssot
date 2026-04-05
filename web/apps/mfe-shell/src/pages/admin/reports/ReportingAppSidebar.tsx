@@ -467,9 +467,9 @@ const SubGroupAccordion: React.FC<{
                 className={`shrink-0 rounded px-1 py-px text-[9px] font-medium
                   ${
                     item.type === "dashboard"
-                      ? "bg-state-info-subtle text-state-info-text"
+                      ? "bg-status-info/10 text-state-info-text"
                       : item.type === "mixed"
-                        ? "bg-state-warning-subtle text-state-warning-text"
+                        ? "bg-status-warning/10 text-state-warning-text"
                         : "bg-surface-muted text-text-tertiary"
                   }
                 `}

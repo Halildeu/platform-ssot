@@ -309,7 +309,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
       >
         <div ref={rootRef} className={cn(fullWidth ? "relative w-full" : "relative")}>
           <div
-            className={cn(getFieldFrameClass(size, tone, fullWidth, className), "focus-within:ring-2 focus-within:ring-focus-outline")}
+            className={cn(getFieldFrameClass(size, tone, fullWidth, className), "focus-within:ring-2 focus-within:ring-focus-outline focus-visible:ring-2 focus-visible:ring-focus-outline")}
             data-field-tone={tone}
             data-size={size}
             data-field-type="autocomplete"
@@ -345,7 +345,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
           {showDropdown ? (
             <div
               ref={listboxRef}
-              className="absolute start-0 z-30 mt-2 w-full overflow-hidden rounded-2xl border border-border-subtle bg-surface-muted shadow-xl"
+              className="absolute start-0 z-30 mt-2 w-full overflow-hidden rounded-surface border border-border-subtle bg-surface-muted shadow-elevation-overlay"
               role="presentation"
             >
               <div
@@ -354,7 +354,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
                 className="max-h-72 overflow-y-auto p-2"
               >
                 {loading ? (
-                  <div className="rounded-xl px-3 py-2 text-sm text-text-secondary">
+                  <div className="rounded-surface px-3 py-2 text-sm text-text-secondary">
                     Loading...
                   </div>
                 ) : (
@@ -370,7 +370,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
                         onMouseDown={(e) => e.preventDefault()}
                         onClick={() => selectOption(option)}
                         className={cn(
-                          "cursor-pointer rounded-2xl border px-3 py-2 text-sm font-medium transition",
+                          "cursor-pointer rounded-surface border px-3 py-2 text-sm font-medium transition",
                           "text-text-primary",
                           isHighlighted
                             ? "border-action-primary-border bg-action-primary-soft"

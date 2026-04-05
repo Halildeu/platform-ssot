@@ -19,7 +19,7 @@ type Story = StoryObj<typeof Alert>;
 export const SeverityStack: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas px-6 py-8 text-text-primary">
-      <div className="mx-auto max-w-5xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto max-w-5xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Text as="div" className="text-lg font-semibold text-text-primary">
           Feedback ladder
         </Text>
@@ -60,7 +60,7 @@ export const BannerActions: Story = {
 
     return (
       <div className="min-h-screen bg-surface-canvas px-6 py-8 text-text-primary">
-        <div className="mx-auto max-w-6xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="mx-auto max-w-6xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <Text as="div" className="text-lg font-semibold text-text-primary">
             Banner workflow
           </Text>
@@ -103,7 +103,7 @@ export const BannerActions: Story = {
 export const AccessAndIconControl: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas px-6 py-8 text-text-primary">
-      <div className="mx-auto max-w-5xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto max-w-5xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Text as="div" className="text-lg font-semibold text-text-primary">
           Governed states
         </Text>

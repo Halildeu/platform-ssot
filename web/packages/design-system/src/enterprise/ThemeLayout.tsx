@@ -237,7 +237,7 @@ export const ThemeLayout = React.forwardRef<HTMLDivElement, ThemeLayoutProps>(({
     <div
       ref={ref}
       className={cn(
-        'bg-surface-default text-text-primary rounded-lg',
+        'bg-surface-default text-text-primary rounded-surface',
         themeStyle,
         accessStyles(accessState.state),
         className,

@@ -57,7 +57,7 @@ export const GallerySearchBar: React.FC<GallerySearchBarProps> = ({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className={cn(
-            "w-full rounded-xl border transition-colors duration-150",
+            "w-full rounded-surface border transition-colors duration-motion-fast",
             "h-9 ps-9 pe-9 text-sm",
             "bg-[var(--surface-canvas)] text-text-primary",
             "border-border-subtle",
@@ -75,7 +75,7 @@ export const GallerySearchBar: React.FC<GallerySearchBarProps> = ({
             onClick={handleClear}
             className={cn(
               "absolute end-2.5 top-1/2 -translate-y-1/2",
-              "rounded-xs p-0.5 text-text-secondary transition hover:text-text-primary",
+              "rounded-control p-0.5 text-text-secondary transition hover:text-text-primary",
             )}
             aria-label="Clear search"
           >

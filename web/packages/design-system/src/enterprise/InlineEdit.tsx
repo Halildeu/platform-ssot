@@ -189,7 +189,7 @@ export function InlineEdit({
     return (
       <span
         className={cn(
-          'group inline-flex items-center gap-1.5 rounded-xs px-1.5 py-0.5 transition-colors',
+          'group inline-flex items-center gap-1.5 rounded-control px-1.5 py-0.5 transition-colors',
           canEdit && 'cursor-pointer hover:bg-surface-muted',
           accessStyles(state),
           className,
@@ -227,7 +227,7 @@ export function InlineEdit({
             onKeyDown={handleKeyDown}
             disabled={saving}
             className={cn(
-              'rounded-xs border bg-[var(--surface-primary)] px-2 py-1 text-sm text-text-primary outline-hidden transition-colors',
+              'rounded-control border bg-[var(--surface-primary)] px-2 py-1 text-sm text-text-primary outline-hidden transition-colors',
               error ? 'border-state-danger-border focus:ring-1 focus:ring-state-danger-border' : 'border-border-default focus:border-action-primary focus:ring-1 focus:ring-accent-soft',
             )}
           >
@@ -250,7 +250,7 @@ export function InlineEdit({
             disabled={saving}
             placeholder={placeholder}
             className={cn(
-              'rounded-xs border bg-[var(--surface-primary)] px-2 py-1 text-sm text-text-primary outline-hidden transition-colors',
+              'rounded-control border bg-[var(--surface-primary)] px-2 py-1 text-sm text-text-primary outline-hidden transition-colors',
               error ? 'border-state-danger-border focus:ring-1 focus:ring-state-danger-border' : 'border-border-default focus:border-action-primary focus:ring-1 focus:ring-accent-soft',
             )}
           />
@@ -259,7 +259,7 @@ export function InlineEdit({
         {/* Save button */}
         <button
           type="button"
-          className="inline-flex items-center justify-center rounded-xs p-1 text-state-success-text hover:bg-state-success-bg transition-colors disabled:opacity-50"
+          className="inline-flex items-center justify-center rounded-control p-1 text-state-success-text hover:bg-state-success-bg transition-colors disabled:opacity-50"
           onClick={saveEdit}
           disabled={saving}
           aria-label="Save"
@@ -276,7 +276,7 @@ export function InlineEdit({
         {/* Cancel button */}
         <button
           type="button"
-          className="inline-flex items-center justify-center rounded-xs p-1 text-state-danger-text hover:bg-state-danger-bg transition-colors disabled:opacity-50"
+          className="inline-flex items-center justify-center rounded-control p-1 text-state-danger-text hover:bg-state-danger-bg transition-colors disabled:opacity-50"
           onClick={cancelEdit}
           disabled={saving}
           aria-label="Cancel"

@@ -91,7 +91,7 @@ export const SummaryStrip = React.forwardRef<HTMLDivElement, SummaryStripProps>(
           <article
             key={item.key}
             className={cn(
-              "relative rounded-lg border border-border-subtle bg-[var(--surface-card))] px-4 py-4",
+              "relative rounded-surface border border-border-subtle bg-[var(--surface-card))] px-4 py-4",
               hasToneBorder && "border-s-2",
               hasToneBorder && TONE_BORDER[tone],
             )}
@@ -105,7 +105,7 @@ export const SummaryStrip = React.forwardRef<HTMLDivElement, SummaryStripProps>(
 
             {/* Icon */}
             {item.icon && (
-              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-md bg-surface-muted text-text-secondary [&>svg]:h-4 [&>svg]:w-4">
+              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-control bg-surface-muted text-text-secondary [&>svg]:h-4 [&>svg]:w-4">
                 {item.icon}
               </div>
             )}

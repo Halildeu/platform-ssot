@@ -111,7 +111,7 @@ export const FunnelChart: React.FC<FunnelChartProps> = ({
     // Horizontal funnel
     return (
       <div
-        className={cn('border border-border-default rounded-lg bg-surface-default p-4', accessStyles(accessState.state), className)}
+        className={cn('border border-border-default rounded-surface bg-surface-default p-4', accessStyles(accessState.state), className)}
         data-component="funnel-chart"
         data-access-state={accessState.state}
         title={accessReason}
@@ -192,7 +192,7 @@ export const FunnelChart: React.FC<FunnelChartProps> = ({
   // Vertical funnel (default) - trapezoid shapes
   return (
     <div
-      className={cn('border border-border-default rounded-lg bg-surface-default p-4', accessStyles(accessState.state), className)}
+      className={cn('border border-border-default rounded-surface bg-surface-default p-4', accessStyles(accessState.state), className)}
       data-component="funnel-chart"
       data-access-state={accessState.state}
       title={accessReason}

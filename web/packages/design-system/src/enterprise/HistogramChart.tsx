@@ -287,7 +287,7 @@ export const HistogramChart: React.FC<HistogramChartProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-4',
+        'border border-[var(--border-default)] rounded-surface bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -335,7 +335,7 @@ export const HistogramChart: React.FC<HistogramChartProps> = ({
                 rx={1}
                 opacity={isHovered ? 1 : 0.75}
                 className={cn(
-                  'transition-opacity duration-100',
+                  'transition-opacity duration-motion-fast',
                   isClickable && 'cursor-pointer',
                 )}
                 onClick={() => handleBinClick(bin)}

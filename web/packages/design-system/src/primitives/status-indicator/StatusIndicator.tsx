@@ -112,3 +112,5 @@ export const StatusIndicator = forwardRef<HTMLSpanElement, StatusIndicatorProps>
     );
   },
 );
+
+StatusIndicator.displayName = 'StatusIndicator';

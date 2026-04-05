@@ -155,13 +155,13 @@ export const SpeedDial = forwardRef<HTMLDivElement, SpeedDialProps>(
           aria-expanded={isOpen}
           aria-haspopup="menu"
           className={cn(
-            'flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200',
+            'flex h-14 w-14 items-center justify-center rounded-full shadow-elevation-overlay transition-all duration-motion-medium',
             'bg-action-primary text-text-inverse hover:brightness-110 active:scale-95',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-offset-2',
+            'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-offset-2',
             isOpen && 'rotate-0',
           )}
         >
-          <span className={cn('transition-transform duration-200', isOpen && 'rotate-45')}>
+          <span className={cn('transition-transform duration-motion-medium', isOpen && 'rotate-45')}>
             {fabIcon}
           </span>
         </button>
@@ -178,10 +178,10 @@ export const SpeedDial = forwardRef<HTMLDivElement, SpeedDialProps>(
                   disabled={action.disabled}
                   aria-label={action.label}
                   className={cn(
-                    'flex h-10 w-10 items-center justify-center rounded-full shadow-md transition-all duration-150',
+                    'flex h-10 w-10 items-center justify-center rounded-full shadow-elevation-surface transition-all duration-motion-fast',
                     'bg-surface-panel text-text-primary border border-border-subtle',
-                    'hover:bg-surface-muted hover:shadow-lg active:scale-95',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary',
+                    'hover:bg-surface-muted hover:shadow-elevation-overlay active:scale-95',
+                    'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-action-primary',
                     action.disabled && 'pointer-events-none opacity-40',
                   )}
                   style={{ animationDelay: `${i * 30}ms` }}
@@ -191,9 +191,9 @@ export const SpeedDial = forwardRef<HTMLDivElement, SpeedDialProps>(
                 {/* Tooltip */}
                 <span
                   className={cn(
-                    'pointer-events-none absolute z-50 whitespace-nowrap rounded-md px-2 py-1 text-xs',
-                    'bg-text-primary text-surface-default shadow-md',
-                    'opacity-0 group-hover:opacity-100 transition-opacity duration-150',
+                    'pointer-events-none absolute z-50 whitespace-nowrap rounded-control px-2 py-1 text-xs',
+                    'bg-text-primary text-surface-default shadow-elevation-surface',
+                    'opacity-0 group-hover:opacity-100 transition-opacity duration-motion-fast',
                     direction === 'up' || direction === 'down' ? 'right-full mr-2' : 'bottom-full mb-2',
                   )}
                   role="tooltip"

@@ -102,10 +102,10 @@ function StepBox({
   return (
     <div
       className={cn(
-        'flex flex-col items-center gap-1 rounded-lg border-2 px-4 py-3 min-w-[120px] transition-shadow',
+        'flex flex-col items-center gap-1 rounded-surface border-2 px-4 py-3 min-w-[120px] transition-shadow',
         styles.border,
         styles.bg,
-        !disabled && onClick && 'cursor-pointer hover:shadow-md',
+        !disabled && onClick && 'cursor-pointer hover:shadow-elevation-surface',
       )}
       onClick={disabled ? undefined : onClick}
       role={onClick ? 'button' : undefined}
@@ -257,7 +257,7 @@ export function ValueStream({
   return (
     <div
       className={cn(
-        'rounded-lg border border-border-default bg-[var(--surface-primary)] p-4',
+        'rounded-surface border border-border-default bg-[var(--surface-primary)] p-4',
         accessStyles(state),
         className,
       )}

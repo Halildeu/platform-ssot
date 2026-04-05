@@ -142,7 +142,7 @@ const ReportWorkspaceCanvas = () => {
         )}
       >
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <section className="rounded-[24px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <section className="rounded-[24px] border border-border-subtle bg-surface-default p-5 shadow-xs">
             <Text as="div" className="text-sm font-semibold text-text-primary">
               Release queue
             </Text>
@@ -164,7 +164,7 @@ const ReportWorkspaceCanvas = () => {
             </div>
           </section>
 
-          <section className="rounded-[24px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <section className="rounded-[24px] border border-border-subtle bg-surface-default p-5 shadow-xs">
             <Text as="div" className="text-sm font-semibold text-text-primary">
               Migration handoff
             </Text>

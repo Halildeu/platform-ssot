@@ -261,7 +261,7 @@ export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerP
         ref={triggerRef}
         type="button"
         className={cn(
-          'flex items-center gap-2 rounded-md border px-3 py-2 text-sm',
+          'flex items-center gap-2 rounded-control border px-3 py-2 text-sm',
           'border-border-default bg-surface-default',
           'hover:border-[var(--interactive-primary)] focus:outline-hidden focus:ring-2 focus:ring-[color-mix(in_oklab,var(--interactive-primary)_30%,transparent)]',
           'transition-colors',
@@ -297,7 +297,7 @@ export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerP
       {open && (
         <div
           className={cn(
-            'absolute left-0 top-full z-50 mt-1 w-[340px] rounded-lg border shadow-lg',
+            'absolute left-0 top-full z-50 mt-1 w-[340px] rounded-surface border shadow-elevation-overlay',
             'border-border-default bg-surface-default',
             'animate-in fade-in slide-in-from-top-1',
           )}
@@ -315,7 +315,7 @@ export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerP
                   key={preset.key}
                   type="button"
                   className={cn(
-                    'rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
+                    'rounded-control px-2.5 py-1 text-xs font-medium transition-colors',
                     isActive
                       ? 'bg-[var(--interactive-primary)] text-text-inverse'
                       : 'bg-surface-muted text-text-secondary hover:bg-surface-muted/80',
@@ -345,7 +345,7 @@ export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerP
                   min={minDate ? toInputValue(minDate) : undefined}
                   max={customEnd || (maxDate ? toInputValue(maxDate) : undefined)}
                   className={cn(
-                    'w-full rounded-md border px-2 py-1.5 text-sm',
+                    'w-full rounded-control border px-2 py-1.5 text-sm',
                     'border-border-default bg-surface-default',
                     'focus:outline-hidden focus:ring-2 focus:ring-[color-mix(in_oklab,var(--interactive-primary)_30%,transparent)]',
                   )}
@@ -362,7 +362,7 @@ export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerP
                   min={customStart || (minDate ? toInputValue(minDate) : undefined)}
                   max={maxDate ? toInputValue(maxDate) : undefined}
                   className={cn(
-                    'w-full rounded-md border px-2 py-1.5 text-sm',
+                    'w-full rounded-control border px-2 py-1.5 text-sm',
                     'border-border-default bg-surface-default',
                     'focus:outline-hidden focus:ring-2 focus:ring-[color-mix(in_oklab,var(--interactive-primary)_30%,transparent)]',
                   )}
@@ -373,7 +373,7 @@ export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerP
             <button
               type="button"
               className={cn(
-                'mt-2 w-full rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+                'mt-2 w-full rounded-control px-3 py-1.5 text-sm font-medium transition-colors',
                 'bg-[var(--interactive-primary)] text-text-inverse',
                 'hover:opacity-90 focus:outline-hidden focus:ring-2 focus:ring-[color-mix(in_oklab,var(--interactive-primary)_30%,transparent)]',
                 'disabled:opacity-40 disabled:cursor-not-allowed',

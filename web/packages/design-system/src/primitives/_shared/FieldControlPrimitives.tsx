@@ -26,9 +26,9 @@ const fieldShellClass: Record<FieldTone, string> = {
 
 const fieldSurfaceClass: Record<FieldTone, string> = {
   default:
-    "bg-surface-default shadow-xs ring-1 ring-border-subtle/20 backdrop-blur-xs",
+    "bg-surface-default shadow-elevation-sm ring-1 ring-border-subtle/20 backdrop-blur-xs",
   invalid:
-    "bg-surface-default shadow-xs ring-1 ring-border-subtle/20 backdrop-blur-xs",
+    "bg-surface-default shadow-elevation-sm ring-1 ring-border-subtle/20 backdrop-blur-xs",
   readonly:
     "bg-surface-muted ring-1 ring-border-subtle/15",
   disabled:
@@ -36,9 +36,9 @@ const fieldSurfaceClass: Record<FieldTone, string> = {
 };
 
 const fieldSizeClass: Record<FieldSize, string> = {
-  sm: "min-h-10 rounded-xl px-3 py-2",
-  md: "min-h-11 rounded-2xl px-4 py-3",
-  lg: "min-h-12 rounded-2xl px-4 py-3.5",
+  sm: "min-h-10 rounded-surface px-3 py-2",
+  md: "min-h-11 rounded-surface px-4 py-3",
+  lg: "min-h-12 rounded-surface px-4 py-3.5",
 };
 
 const fieldDensityClass: Record<FieldDensity, string> = {
@@ -86,7 +86,7 @@ export const getFieldFrameClass = (
   density: FieldDensity = "comfortable",
 ) =>
   cn(
-    "group relative flex items-start overflow-hidden border transition duration-200",
+    "group relative flex items-start overflow-hidden border transition duration-motion-medium",
     fieldShellClass[tone],
     fieldSurfaceClass[tone],
     fieldSizeClass[size],

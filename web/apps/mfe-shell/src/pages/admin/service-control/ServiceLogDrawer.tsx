@@ -19,7 +19,7 @@ export function ServiceLogDrawer({ serviceName, onClose, fetchLogs }: Props) {
     try {
       const text = await fetchLogs(serviceName, tail);
       setLogs(text);
-    } catch (err) {
+    } catch (err: unknown) {
       setLogs(`Error fetching logs: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
@@ -85,7 +85,7 @@ export function ServiceLogDrawer({ serviceName, onClose, fetchLogs }: Props) {
         </div>
 
         {/* Log content */}
-        <div className="flex-1 overflow-auto bg-surface-muted-950 p-4">
+        <div className="flex-1 overflow-auto bg-surface-muted p-4">
           {loading && !logs ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="h-6 w-6 animate-spin text-text-disabled" />

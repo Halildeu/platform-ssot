@@ -16,7 +16,7 @@ interface FilterValueEditorProps {
 }
 
 const INPUT_CLASS =
-  'h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2.5 text-xs text-text-primary placeholder:text-text-subtle focus:border-action-primary focus:outline-none focus:ring-1 focus:ring-action-primary disabled:cursor-not-allowed disabled:opacity-60';
+  'h-8 w-full rounded-control border border-border-subtle bg-surface-default px-2.5 text-xs text-text-primary placeholder:text-text-subtle focus:border-action-primary focus:outline-hidden focus:ring-1 focus:ring-action-primary disabled:cursor-not-allowed disabled:opacity-60';
 
 export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
   filterType,
@@ -76,10 +76,10 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
       </div>
 
       {pasteMode && !disabled && (
-        <div className="flex flex-col gap-1 rounded-lg border border-dashed border-state-info-text/30 bg-state-info-bg p-2">
+        <div className="flex flex-col gap-1 rounded-surface border border-dashed border-state-info-text/30 bg-state-info-bg p-2">
           <span className="text-[10px] font-medium text-state-info-text">Toplu Yapıştır</span>
           <textarea
-            className="h-16 w-full resize-none rounded border border-border-subtle bg-surface-default px-2 py-1.5 text-xs text-text-primary placeholder:text-text-subtle focus:border-action-primary focus:outline-none"
+            className="h-16 w-full resize-none rounded border border-border-subtle bg-surface-default px-2 py-1.5 text-xs text-text-primary placeholder:text-text-subtle focus:border-action-primary focus:outline-hidden"
             placeholder={'Excel\'den kopyaladığınız değerleri yapıştırın...\nHer satır, virgül veya tab bir değer'}
             value={pasteText}
             onChange={(e) => setPasteText(e.target.value)}
@@ -128,7 +128,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
             {parsedValues.map((v, i) => (
               <span
                 key={`${v}-${i}`}
-                className="group inline-flex items-center gap-0.5 rounded-md border border-border-subtle bg-surface-default px-1.5 py-0.5 text-[10px] text-text-primary"
+                className="group inline-flex items-center gap-0.5 rounded-control border border-border-subtle bg-surface-default px-1.5 py-0.5 text-[10px] text-text-primary"
               >
                 {v}
                 {!disabled && (
@@ -307,7 +307,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
             </div>
           )}
 
-          <div className="max-h-32 overflow-auto rounded-md border border-border-subtle bg-surface-default p-1.5">
+          <div className="max-h-32 overflow-auto rounded-control border border-border-subtle bg-surface-default p-1.5">
             {setValues.length === 0 ? (
               <span className="text-[10px] text-text-subtle">Seçenek yok</span>
             ) : (
@@ -347,3 +347,5 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
       );
   }
 };
+
+FilterValueEditor.displayName = 'FilterValueEditor';

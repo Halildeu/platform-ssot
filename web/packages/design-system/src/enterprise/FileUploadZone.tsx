@@ -107,7 +107,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, canInteract, onRemove }) => {
   return (
     <div
       className={cn(
-        'flex items-center gap-3 px-3 py-2 rounded-md border transition-colors',
+        'flex items-center gap-3 px-3 py-2 rounded-control border transition-colors',
         file.status === 'error'
           ? 'border-[var(--state-error-border))] bg-[var(--state-error-bg)]'
           : 'border-[var(--border-subtle)] bg-[var(--surface-default)]',
@@ -132,7 +132,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, canInteract, onRemove }) => {
           <div className="mt-1.5">
             <div className="h-1 rounded-full bg-[var(--surface-muted)] overflow-hidden">
               <div
-                className="h-full rounded-full transition-all duration-300"
+                className="h-full rounded-full transition-all duration-motion-medium"
                 style={{
                   width: `${Math.min(100, file.progress)}%`,
                   backgroundColor: statusColor,
@@ -170,7 +170,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, canInteract, onRemove }) => {
         <button
           type="button"
           className={cn(
-            'shrink-0 w-6 h-6 inline-flex items-center justify-center rounded-md',
+            'shrink-0 w-6 h-6 inline-flex items-center justify-center rounded-control',
             'text-[var(--text-tertiary)] hover:text-[var(--state-error-text)] hover:bg-[var(--state-error-bg)]',
             'transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]',
           )}
@@ -317,7 +317,7 @@ export function FileUploadZone({
       {/* Drop zone area */}
       <div
         className={cn(
-          'relative border-2 border-dashed rounded-lg p-6 text-center transition-colors',
+          'relative border-2 border-dashed rounded-surface p-6 text-center transition-colors',
           'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]',
           isDragOver
             ? 'border-[var(--state-info-text)] bg-[var(--state-info-bg)]'

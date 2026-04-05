@@ -69,7 +69,7 @@ const densityClass: Record<ListDensity, string> = {
 };
 
 const listSurfaceClassName =
-  "relative overflow-hidden rounded-[28px] bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
+  "relative overflow-hidden rounded-control bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
 const toneClass: Record<ListTone, string> = {
   default:
@@ -161,7 +161,7 @@ export const List = React.forwardRef<HTMLElement, ListProps>(({
               ? Array.from({ length: 3 }).map((_, index) => (
                   <li
                     key={`loading-${index}`}
-                    className={`${toneClass.default} overflow-hidden rounded-[24px]`}
+                    className={`${toneClass.default} overflow-hidden rounded-control`}
                   >
                     <div className={densityClass[density]}>
                       <div className="flex items-start gap-3">
@@ -180,7 +180,7 @@ export const List = React.forwardRef<HTMLElement, ListProps>(({
                   const interactive = typeof onItemSelect === "function";
                   const blocked = shouldBlockInteraction(accessState.state, item.disabled);
                   const sharedClassName = [
-                    "w-full rounded-[24px] text-left transition duration-200",
+                    "w-full rounded-control text-left transition duration-motion-medium",
                     densityClass[density],
                     selected
                       ? "bg-[color-mix(in_oklab,var(--action-primary-soft)_60%,transparent)] shadow-[0_18px_34px_-28px_rgba(79,70,229,0.38)]"
@@ -237,7 +237,7 @@ export const List = React.forwardRef<HTMLElement, ListProps>(({
                   return (
                     <li
                       key={item.key}
-                      className={`${toneClass[itemTone]} overflow-hidden rounded-[24px]`}
+                      className={`${toneClass[itemTone]} overflow-hidden rounded-control`}
                       data-selected={selected ? "true" : "false"}
                     >
                       {interactive ? (

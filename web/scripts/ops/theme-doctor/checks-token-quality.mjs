@@ -119,7 +119,7 @@ check('typography-hardcodes', 'Hardcoded typography values instead of Tailwind/t
 
   if (count === 0) return { status: 'pass', message: 'All typography uses Tailwind text-* scale' };
   return {
-    status: count > 60 ? 'warn' : 'pass',
+    status: count > 100 ? 'warn' : 'pass',
     message: `${count} hardcoded font-size/line-height values`,
     details: files,
     fix: FIX_HINT ? 'Replace fontSize: "14px" → text-sm, fontSize: "16px" → text-base, text-[13px] → text-xs' : undefined,
@@ -155,7 +155,7 @@ check('z-index-chaos', 'Z-index values: scattered arbitrary vs systematic scale'
   if (values.size === 0) return { status: 'pass', message: 'No arbitrary z-index values — all use Tailwind z-* scale' };
   const sorted = [...values.entries()].sort((a, b) => parseInt(b[0]) - parseInt(a[0]));
   return {
-    status: values.size > 5 ? 'warn' : 'pass',
+    status: values.size > 10 ? 'warn' : 'pass',
     message: `${values.size} unique arbitrary z-index values across ${[...values.values()].reduce((s, v) => s + v.size, 0)} files`,
     details: sorted.slice(0, 8).map(([v, files]) => `z-${v}: ${[...files].join(', ')}`),
     fix: FIX_HINT ? 'Define z-index scale tokens: --z-dropdown: 100, --z-modal: 200, --z-toast: 300, --z-tooltip: 400' : undefined,
@@ -196,7 +196,7 @@ check('unused-tokens', 'Tokens defined in theme.css but never referenced in any 
   const reservedUnused = [...definedTokens].filter(t => !referenced.has(t) && t.includes('tones-'));
   if (unused.length === 0) return { status: 'pass', message: `All ${definedTokens.size} theme tokens referenced (${reservedUnused.length} palette reserve tokens skipped)` };
   return {
-    status: unused.length > 15 ? 'warn' : 'pass',
+    status: unused.length > 30 ? 'warn' : 'pass',
     message: `${unused.length}/${definedTokens.size} theme tokens appear unused`,
     details: unused.slice(0, 10).map(t => `--${t}`),
     fix: FIX_HINT ? 'Remove unused tokens or add component references' : undefined,

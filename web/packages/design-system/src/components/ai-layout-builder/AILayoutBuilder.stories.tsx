@@ -28,10 +28,10 @@ export default meta;
 type Story = StoryObj<typeof AILayoutBuilder>;
 
 const sampleBlocks: LayoutBlock[] = [
-  { key: 'metric-1', type: 'metric', title: 'Toplam Kullanici', priority: 'high', content: <div style={{ fontSize: 24, fontWeight: 700 }}>1.234</div> },
-  { key: 'metric-2', type: 'metric', title: 'Aktif Oturum', priority: 'high', content: <div style={{ fontSize: 24, fontWeight: 700 }}>89</div> },
-  { key: 'chart-1', type: 'chart', title: 'Haftalik Trend', priority: 'medium', span: 2, content: <div style={{ height: 120, background: 'var(--surface-muted)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>Grafik alani</div> },
-  { key: 'list-1', type: 'list', title: 'Son Islemler', priority: 'low', content: <div style={{ fontSize: 13 }}>Islem listesi burada gorunur</div> },
+  { key: 'metric-1', type: 'metric', title: 'Toplam Kullanici', priority: 'high', content: <div className="text-2xl font-bold">1.234</div> },
+  { key: 'metric-2', type: 'metric', title: 'Aktif Oturum', priority: 'high', content: <div className="text-2xl font-bold">89</div> },
+  { key: 'chart-1', type: 'chart', title: 'Haftalik Trend', priority: 'medium', span: 2, content: <div className="text-xs" style={{ height: 120, background: 'var(--surface-muted)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Grafik alani</div> },
+  { key: 'list-1', type: 'list', title: 'Son Islemler', priority: 'low', content: <div className="text-xs">Islem listesi burada gorunur</div> },
 ];
 
 export const Default: Story = {

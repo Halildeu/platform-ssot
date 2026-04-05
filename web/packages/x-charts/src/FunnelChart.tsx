@@ -229,7 +229,7 @@ export const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
               },
             },
             itemStyle: {
-              borderColor: "var(--bg-surface, #ffffff)",
+              borderColor: "var(--surface-default-bg, #ffffff)",
               borderWidth: 1,
             },
             cursor: onDataPointClick ? "pointer" : "default",

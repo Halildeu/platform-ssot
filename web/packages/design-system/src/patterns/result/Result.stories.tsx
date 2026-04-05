@@ -24,8 +24,8 @@ export const WithExtra: Story = {
   render: () => (
     <Result status="success" title="Islem Tamamlandi" extra={
       <div className="flex gap-2">
-        <button className="rounded-lg bg-action-primary px-4 py-2 text-sm text-white">Ana Sayfa</button>
-        <button className="rounded-lg border border-border-default px-4 py-2 text-sm">Detaylar</button>
+        <button className="rounded-surface bg-action-primary px-4 py-2 text-sm text-white">Ana Sayfa</button>
+        <button className="rounded-surface border border-border-default px-4 py-2 text-sm">Detaylar</button>
       </div>
     } />
   ),

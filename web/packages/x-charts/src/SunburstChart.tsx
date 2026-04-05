@@ -125,7 +125,7 @@ function autoLevels(maxDepth: number, radius: [string, string]): SunburstLevelCo
       r1: `${r1.toFixed(1)}%`,
       itemStyle: {
         borderWidth: 2,
-        borderColor: "var(--bg-surface, #ffffff)",
+        borderColor: "var(--surface-default-bg, #ffffff)",
       },
       label: {
         show: i < 3,
@@ -253,7 +253,7 @@ export const SunburstChart = React.forwardRef<HTMLDivElement, SunburstChartProps
               r1: lvl.r1,
               itemStyle: lvl.itemStyle ?? {
                 borderWidth: 2,
-                borderColor: "var(--bg-surface, #ffffff)",
+                borderColor: "var(--surface-default-bg, #ffffff)",
               },
               label: lvl.label ?? { show: true, fontSize: 11 },
             })),
@@ -274,7 +274,7 @@ export const SunburstChart = React.forwardRef<HTMLDivElement, SunburstChartProps
             },
             itemStyle: {
               borderWidth: 2,
-              borderColor: "var(--bg-surface, #ffffff)",
+              borderColor: "var(--surface-default-bg, #ffffff)",
             },
             cursor: onNodeClick ? "pointer" : "default",
           },

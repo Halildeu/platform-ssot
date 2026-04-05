@@ -146,7 +146,7 @@ export const DetailDrawer = React.forwardRef<HTMLDivElement, DetailDrawerProps>(
         title={accessReason}
         {...stateAttrs({ component: "detail-drawer", state: "open" })}
         className={cn(
-          "relative ml-auto flex flex-col w-full bg-surface-default shadow-2xl",
+          "relative ml-auto flex flex-col w-full bg-surface-default shadow-elevation-overlay",
           "animate-in slide-in-from-right",
           accessState.isDisabled && "pointer-events-none opacity-50",
           sizeMap[size],
@@ -174,7 +174,7 @@ export const DetailDrawer = React.forwardRef<HTMLDivElement, DetailDrawerProps>(
                 type="button"
                 onClick={onClose}
                 className={cn(
-                  "rounded-lg p-1.5 text-[var(--text-tertiary)]",
+                  "rounded-surface p-1.5 text-[var(--text-tertiary)]",
                   "hover:bg-[var(--surface-hover)] hover:text-text-primary",
                   focusRingClass("ring"),
                   "transition-colors",
