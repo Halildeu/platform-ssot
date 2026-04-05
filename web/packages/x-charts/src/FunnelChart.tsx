@@ -13,6 +13,8 @@ import React, { useMemo, useCallback } from "react";
 import { cn } from "@mfe/design-system";
 import { useEChartsRenderer } from "./renderers";
 import { buildDesignLabEChartsTheme } from "./theme/DesignLabEChartsTheme";
+import { formatCompact } from "./utils/formatters";
+import { sanitizeDataPoints } from "./utils/data-validation";
 import type { EChartsOption } from "./renderers/echarts-imports";
 
 /* ------------------------------------------------------------------ */
@@ -134,17 +136,21 @@ export const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
   ) {
     const height = SIZE_HEIGHT[size];
     const isEmpty = !data || data.length === 0;
+    const safeData = useMemo(
+      () => sanitizeDataPoints(data as never) as unknown as FunnelDataPoint[],
+      [data],
+    );
+    const fmt = valueFormatter ?? formatCompact;
 
     const theme = useMemo(() => buildDesignLabEChartsTheme(), []);
 
     const option = useMemo((): EChartsOption | null => {
       if (isEmpty) return null;
 
-      const fmt = valueFormatter ?? ((v: number) => String(v));
-      const conversionMap = showConversion ? buildConversionMap(data, sort) : null;
+      const conversionMap = showConversion ? buildConversionMap(safeData, sort) : null;
 
       /* -- Prepare series data with per-stage colors -- */
-      const seriesData = data.map((d, i) => ({
+      const seriesData = safeData.map((d, i) => ({
         name: d.name,
         value: d.value,
         itemStyle: {
@@ -239,9 +245,9 @@ export const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
         },
       } as EChartsOption;
     }, [
-      data, size, title, sort, gap, showLabels, labelPosition,
+      safeData, size, title, sort, gap, showLabels, labelPosition,
       showConversion, orientation, funnelAlign, showLegend,
-      valueFormatter, animate, onDataPointClick, isEmpty,
+      fmt, animate, onDataPointClick, isEmpty,
     ]);
 
     const handleClick = useCallback(

@@ -11,6 +11,7 @@ import React, { useMemo, useCallback } from "react";
 import { cn } from "@mfe/design-system";
 import { useEChartsRenderer } from "./renderers";
 import { buildDesignLabEChartsTheme } from "./theme/DesignLabEChartsTheme";
+import { formatCompact } from "./utils/formatters";
 import type { EChartsOption } from "./renderers/echarts-imports";
 
 /* ------------------------------------------------------------------ */
@@ -159,6 +160,7 @@ export const TreemapChart = React.forwardRef<HTMLDivElement, TreemapChartProps>(
   ) {
     const height = SIZE_HEIGHT[size];
     const isEmpty = !data || data.length === 0;
+    const fmt = valueFormatter ?? formatCompact;
 
     const theme = useMemo(() => buildDesignLabEChartsTheme(), []);
 
@@ -168,12 +170,10 @@ export const TreemapChart = React.forwardRef<HTMLDivElement, TreemapChartProps>(
       const maxDepth = getMaxDepth(data);
       const levels = buildLevels(maxDepth, colorSaturation);
 
-      const labelFormatter = valueFormatter
-        ? (params: { name: string; value: number }) => {
-            const formatted = valueFormatter(params.value);
-            return `${escapeHtml(params.name)}\n${escapeHtml(formatted)}`;
-          }
-        : "{b}";
+      const labelFormatter = (params: { name: string; value: number }) => {
+        const formatted = fmt(params.value);
+        return `${escapeHtml(params.name)}\n${escapeHtml(formatted)}`;
+      };
 
       return {
         animation: animate,
@@ -190,9 +190,7 @@ export const TreemapChart = React.forwardRef<HTMLDivElement, TreemapChartProps>(
           trigger: "item",
           confine: true,
           formatter: (params: { name: string; value: number }) => {
-            const val = valueFormatter
-              ? escapeHtml(valueFormatter(params.value))
-              : String(params.value ?? "");
+            const val = escapeHtml(fmt(params.value));
             return `<strong>${escapeHtml(params.name)}</strong><br/>${val}`;
           },
         },
@@ -259,7 +257,7 @@ export const TreemapChart = React.forwardRef<HTMLDivElement, TreemapChartProps>(
       } as EChartsOption;
     }, [
       data, title, showLegend, showBreadcrumb, leafDepth,
-      roam, colorSaturation, visibleMin, valueFormatter,
+      roam, colorSaturation, visibleMin, fmt,
       animate, isEmpty,
     ]);
 

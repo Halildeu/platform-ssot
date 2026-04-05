@@ -11,6 +11,7 @@ import React, { useMemo, useCallback } from "react";
 import { cn } from "@mfe/design-system";
 import { useEChartsRenderer } from "./renderers";
 import { buildDesignLabEChartsTheme } from "./theme/DesignLabEChartsTheme";
+import { formatCompact } from "./utils/formatters";
 import type { EChartsOption } from "./renderers/echarts-imports";
 
 /* ------------------------------------------------------------------ */
@@ -58,6 +59,8 @@ export interface RadarChartProps {
   title?: string;
   /** Animate on mount. @default true */
   animate?: boolean;
+  /** Custom value formatter for tooltip. */
+  valueFormatter?: (v: number) => string;
   /** Callback fired when a data point is clicked. */
   onDataPointClick?: (params: unknown) => void;
   /** Additional class name. */
@@ -98,6 +101,7 @@ export const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       showLegend = false,
       splitNumber = 5,
       title,
+      valueFormatter,
       animate = true,
       onDataPointClick,
       className,
@@ -107,6 +111,7 @@ export const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
   ) {
     const height = SIZE_HEIGHT[size];
     const isEmpty = !indicators || indicators.length === 0 || !series || series.length === 0;
+    const fmt = valueFormatter ?? formatCompact;
 
     const theme = useMemo(() => buildDesignLabEChartsTheme(), []);
 
@@ -153,6 +158,15 @@ export const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
         tooltip: {
           trigger: "item",
           confine: true,
+          formatter: (params: unknown) => {
+            const p = params as { name: string; value: number[] };
+            const header = `<b>${escapeHtml(p.name)}</b>`;
+            const lines = indicators.map((ind, i) => {
+              const val = p.value?.[i] ?? 0;
+              return `${escapeHtml(ind.name)}: ${fmt(val)}`;
+            });
+            return `${header}<br/>${lines.join("<br/>")}`;
+          },
         },
         legend: {
           show: showLegend || series.length > 1,
@@ -207,7 +221,7 @@ export const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       } as EChartsOption;
     }, [
       indicators, series, shape, showArea, showLabels, showLegend,
-      splitNumber, title, animate, isEmpty,
+      splitNumber, title, animate, isEmpty, fmt,
     ]);
 
     const handleClick = useCallback(

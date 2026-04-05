@@ -13,6 +13,7 @@ import React, { useMemo, useCallback } from "react";
 import { cn } from "@mfe/design-system";
 import { useEChartsRenderer } from "./renderers";
 import { buildDesignLabEChartsTheme } from "./theme/DesignLabEChartsTheme";
+import { formatCompact } from "./utils/formatters";
 import type { EChartsOption } from "./renderers/echarts-imports";
 
 /* ------------------------------------------------------------------ */
@@ -191,13 +192,13 @@ export const SunburstChart = React.forwardRef<HTMLDivElement, SunburstChartProps
   ) {
     const height = SIZE_HEIGHT[size];
     const isEmpty = !data || data.length === 0;
+    const fmt = valueFormatter ?? formatCompact;
 
     const theme = useMemo(() => buildDesignLabEChartsTheme(), []);
 
     const option = useMemo((): EChartsOption | null => {
       if (isEmpty) return null;
 
-      const fmt = valueFormatter ?? ((v: number) => String(v));
       const coloredData = colorizeTopLevel(data);
       const maxDepth = computeMaxDepth(coloredData);
       const levels = levelsProp ?? autoLevels(maxDepth, radius);
@@ -260,9 +261,7 @@ export const SunburstChart = React.forwardRef<HTMLDivElement, SunburstChartProps
               show: true,
               formatter: (params: { name: string; value: number }) => {
                 if (!params.name) return "";
-                return valueFormatter
-                  ? `${params.name}\n${fmt(params.value)}`
-                  : params.name;
+                return `${params.name}\n${fmt(params.value)}`;
               },
               fontSize: 11,
             },
@@ -291,7 +290,7 @@ export const SunburstChart = React.forwardRef<HTMLDivElement, SunburstChartProps
       } as EChartsOption;
     }, [
       data, size, title, levelsProp, sort, radius,
-      highlightPolicy, showLegend, valueFormatter,
+      highlightPolicy, showLegend, fmt,
       animate, onNodeClick, isEmpty,
     ]);
 

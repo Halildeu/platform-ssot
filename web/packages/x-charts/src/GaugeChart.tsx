@@ -11,6 +11,8 @@ import React, { useMemo, useCallback } from "react";
 import { cn } from "@mfe/design-system";
 import { useEChartsRenderer } from "./renderers";
 import { buildDesignLabEChartsTheme } from "./theme/DesignLabEChartsTheme";
+import { formatCompact } from "./utils/formatters";
+import { sanitizeNumber } from "./utils/data-validation";
 import type { EChartsOption } from "./renderers/echarts-imports";
 
 /* ------------------------------------------------------------------ */
@@ -130,6 +132,8 @@ export const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
   ) {
     const height = SIZE_HEIGHT[size];
     const isEmpty = value == null;
+    const safeValue = sanitizeNumber(value);
+    const fmt = valueFormatter ?? formatCompact;
 
     const theme = useMemo(() => buildDesignLabEChartsTheme(), []);
 
@@ -156,7 +160,7 @@ export const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
             startAngle,
             endAngle,
             splitNumber,
-            data: [{ value, name: title ?? "" }],
+            data: [{ value: safeValue, name: title ?? "" }],
             progress: {
               show: showProgress,
               width: 12,
@@ -190,15 +194,11 @@ export const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
               show: showAxisLabel,
               distance: 30,
               fontSize: 11,
-              formatter: valueFormatter
-                ? (v: number) => escapeHtml(valueFormatter(v))
-                : undefined,
+              formatter: (v: number) => escapeHtml(fmt(v)),
             },
             detail: {
               valueAnimation: animate,
-              formatter: valueFormatter
-                ? (v: number) => escapeHtml(valueFormatter(v))
-                : "{value}",
+              formatter: (v: number) => escapeHtml(fmt(v)),
               fontSize: Math.round(height * 0.08),
               fontWeight: 600,
               offsetCenter: [0, "40%"],
@@ -226,7 +226,7 @@ export const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
     }, [
       value, min, max, title, thresholds, startAngle, endAngle,
       showProgress, pointer, splitNumber, showAxisLabel,
-      valueFormatter, animate, height, isEmpty,
+      fmt, animate, height, isEmpty,
     ]);
 
     const { containerRef } = useEChartsRenderer({

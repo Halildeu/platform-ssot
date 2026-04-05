@@ -13,6 +13,7 @@ import React, { useMemo, useCallback } from "react";
 import { cn } from "@mfe/design-system";
 import { useEChartsRenderer } from "./renderers";
 import { buildDesignLabEChartsTheme } from "./theme/DesignLabEChartsTheme";
+import { formatCompact } from "./utils/formatters";
 import type { EChartsOption } from "./renderers/echarts-imports";
 
 /* ------------------------------------------------------------------ */
@@ -126,13 +127,12 @@ export const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
   ) {
     const height = SIZE_HEIGHT[size];
     const isEmpty = !nodes || nodes.length === 0 || !links || links.length === 0;
+    const fmt = valueFormatter ?? formatCompact;
 
     const theme = useMemo(() => buildDesignLabEChartsTheme(), []);
 
     const option = useMemo((): EChartsOption | null => {
       if (isEmpty) return null;
-
-      const fmt = valueFormatter ?? ((v: number) => String(v));
 
       /* -- Assign default colors to nodes without explicit color -- */
       const coloredNodes = nodes.map((n, i) => ({
@@ -235,7 +235,7 @@ export const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
     }, [
       nodes, links, size, title, orient, nodeWidth, nodeGap,
       draggable, focusNodeAdjacency, lineStyle, showLegend,
-      valueFormatter, animate, onNodeClick, isEmpty,
+      fmt, animate, onNodeClick, isEmpty,
     ]);
 
     const handleClick = useCallback(

@@ -13,6 +13,8 @@ import React, { useMemo, useCallback } from "react";
 import { cn } from "@mfe/design-system";
 import { useEChartsRenderer } from "./renderers";
 import { buildDesignLabEChartsTheme } from "./theme/DesignLabEChartsTheme";
+import { formatCompact } from "./utils/formatters";
+import { sanitizeDataPoints } from "./utils/data-validation";
 import type { EChartsOption } from "./renderers/echarts-imports";
 
 /* ------------------------------------------------------------------ */
@@ -117,6 +119,11 @@ export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartPro
     const height = SIZE_HEIGHT[size];
     const isEmpty = !data || data.length === 0;
     const isHorizontal = orientation === "horizontal";
+    const safeData = useMemo(
+      () => sanitizeDataPoints(data as never) as unknown as WaterfallDataPoint[],
+      [data],
+    );
+    const fmt = valueFormatter ?? formatCompact;
 
     const palette = useMemo(
       () => ({
@@ -132,8 +139,8 @@ export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartPro
     const option = useMemo((): EChartsOption | null => {
       if (isEmpty) return null;
 
-      const len = data.length;
-      const types = data.map((d, i) => resolveType(d, i, len));
+      const len = safeData.length;
+      const types = safeData.map((d, i) => resolveType(d, i, len));
 
       /* -- Running total & base offset calculation -- */
       const baseValues: number[] = [];
@@ -146,7 +153,7 @@ export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartPro
           baseValues.push(0);
           displayValues.push(runningTotal);
         } else {
-          const val = data[i].value;
+          const val = safeData[i].value;
           if (val >= 0) {
             baseValues.push(runningTotal);
             displayValues.push(val);
@@ -159,8 +166,7 @@ export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartPro
         }
       }
 
-      const labels = data.map((d) => d.label);
-      const fmt = valueFormatter ?? ((v: number) => String(v));
+      const labels = safeData.map((d) => d.label);
       const barColors = types.map((t) => palette[t]);
 
       /* -- Connector markLines between adjacent bars -- */
@@ -186,7 +192,7 @@ export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartPro
         type: "value" as const,
         axisLabel: {
           fontSize: 11,
-          formatter: valueFormatter ? (v: number) => valueFormatter(v) : undefined,
+          formatter: (v: number) => fmt(v),
         },
         splitLine: { show: true, lineStyle: { type: "dashed" as const } },
       };
@@ -220,7 +226,7 @@ export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartPro
               position: isHorizontal ? ("right" as const) : ("top" as const),
               formatter: (p: { dataIndex: number }) => {
                 const t = types[p.dataIndex];
-                const originalVal = data[p.dataIndex].value;
+                const originalVal = safeData[p.dataIndex].value;
                 if (t === "total") return fmt(finalRunningTotal);
                 return fmt(originalVal);
               },
@@ -264,7 +270,7 @@ export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartPro
             if (!visible) return "";
             const idx = visible.dataIndex;
             const t = types[idx];
-            const originalVal = data[idx].value;
+            const originalVal = safeData[idx].value;
             const prefix = t === "total" ? "Total: " : t === "increase" ? "+" : "";
             const displayVal = t === "total" ? finalRunningTotal : originalVal;
             return `<b>${escapeHtml(visible.name)}</b><br/>${prefix}${fmt(displayVal)}`;
@@ -299,8 +305,8 @@ export const WaterfallChart = React.forwardRef<HTMLDivElement, WaterfallChartPro
         },
       } as EChartsOption;
     }, [
-      data, size, title, palette, showConnector, showValues,
-      valueFormatter, orientation, showLegend, animate,
+      safeData, size, title, palette, showConnector, showValues,
+      fmt, orientation, showLegend, animate,
       onDataPointClick, isEmpty, isHorizontal,
     ]);
 

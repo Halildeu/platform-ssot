@@ -11,6 +11,8 @@ import React, { useMemo, useCallback } from "react";
 import { cn } from "@mfe/design-system";
 import { useEChartsRenderer } from "./renderers";
 import { buildDesignLabEChartsTheme } from "./theme/DesignLabEChartsTheme";
+import { formatCompact } from "./utils/formatters";
+import { sanitizeNumber } from "./utils/data-validation";
 import type { EChartsOption } from "./renderers/echarts-imports";
 
 /* ------------------------------------------------------------------ */
@@ -171,6 +173,7 @@ export const HeatmapChart = React.forwardRef<HTMLDivElement, HeatmapChartProps>(
   ) {
     const height = SIZE_HEIGHT[size];
     const isEmpty = !data || data.length === 0;
+    const fmt = valueFormatter ?? formatCompact;
 
     const theme = useMemo(() => buildDesignLabEChartsTheme(), []);
 
@@ -201,9 +204,7 @@ export const HeatmapChart = React.forwardRef<HTMLDivElement, HeatmapChartProps>(
             const [xi, yi, val] = params.data;
             const xLabel = xCats[xi] ?? String(xi);
             const yLabel = yCats[yi] ?? String(yi);
-            const display = valueFormatter
-              ? escapeHtml(valueFormatter(val))
-              : String(val);
+            const display = escapeHtml(fmt(sanitizeNumber(val)));
             return `${escapeHtml(xLabel)} / ${escapeHtml(yLabel)}<br/><strong>${display}</strong>`;
           },
         },
@@ -247,11 +248,8 @@ export const HeatmapChart = React.forwardRef<HTMLDivElement, HeatmapChartProps>(
             label: {
               show: showValues,
               fontSize: 10,
-              formatter: valueFormatter
-                ? (params: { value: [number, number, number] }) =>
-                    escapeHtml(valueFormatter(params.value[2]))
-                : (params: { value: [number, number, number] }) =>
-                    String(params.value[2]),
+              formatter: (params: { value: [number, number, number] }) =>
+                escapeHtml(fmt(sanitizeNumber(params.value[2]))),
             },
             emphasis: {
               itemStyle: {
@@ -275,7 +273,7 @@ export const HeatmapChart = React.forwardRef<HTMLDivElement, HeatmapChartProps>(
       } as EChartsOption;
     }, [
       data, xLabels, yLabels, title, minProp, maxProp,
-      colors, showValues, valueFormatter, cellSize,
+      colors, showValues, fmt, cellSize,
       showLegend, animate, isEmpty,
     ]);
 

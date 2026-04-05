@@ -134,6 +134,16 @@ export { registerEChartsLocale, getEChartsLocale, ECHARTS_LOCALE_MAP } from "./i
 export { createNumberFormatter, createDateFormatter } from "./i18n/formatters";
 export { isRTL, isRTLLocale, applyRTLTransforms } from "./i18n/rtl";
 
+/* Cross-cutting Utils (P3-E) */
+export {
+  formatCompact, formatNumber, formatCurrency, formatPercent, useChartFormatter,
+  sanitizeNumber, clampValue, sanitizeDataPoints, sanitizeSeries, sanitizeNumbers,
+  validateDataPoints, validateSeries,
+  DEFAULT_LOCALE, DEFAULT_TIMEZONE, DEFAULT_CURRENCY, DEFAULT_CURRENCY_SYMBOL,
+  getChartLocale, setChartLocale, useChartLocale,
+} from "./utils";
+export type { ChartFormatterOptions, ValidationResult, ChartLocaleConfig } from "./utils";
+
 /* Data Transforms (P3-C) */
 export { movingAverage, percentile, standardDeviation, linearRegression } from "./transforms/statistical";
 
