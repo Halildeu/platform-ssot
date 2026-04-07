@@ -2,554 +2,552 @@
   "$schema": "./figma-component-map.schema.json",
   "components": {
     "Accordion": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Accordion",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Accordion"
     },
     "ActivityFeed": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ActivityFeed",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ActivityFeed"
     },
     "AdaptiveForm": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-AdaptiveForm",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:AdaptiveForm"
     },
     "AgGridServer": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-AgGridServer",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:AgGridServer"
     },
     "AgingBuckets": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-AgingBuckets",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:AgingBuckets"
     },
     "AIActionAuditTimeline": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-AIActionAuditTimeline",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:AIActionAuditTimeline"
     },
     "AIGuidedAuthoring": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-AIGuidedAuthoring",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:AIGuidedAuthoring"
     },
     "AILayoutBuilder": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-AILayoutBuilder",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:AILayoutBuilder"
     },
     "Alert": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Alert",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Alert"
     },
     "AnchorToc": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-AnchorToc",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:AnchorToc"
     },
     "ApprovalCheckpoint": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ApprovalCheckpoint",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ApprovalCheckpoint"
     },
     "ApprovalReview": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ApprovalReview",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ApprovalReview"
     },
     "ApprovalWorkflow": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ApprovalWorkflow",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ApprovalWorkflow"
     },
     "AppSidebar": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-AppSidebar",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:AppSidebar"
     },
     "AreaChart": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-AreaChart",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:AreaChart"
     },
     "Autocomplete": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Autocomplete",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Autocomplete"
     },
     "Avatar": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Avatar",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Avatar"
     },
     "AvatarGroup": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-AvatarGroup",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:AvatarGroup"
     },
     "Badge": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Badge",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Badge"
     },
     "BoxPlot": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-BoxPlot",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:BoxPlot"
     },
     "Breadcrumb": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Breadcrumb",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Breadcrumb"
     },
     "BulletChart": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-BulletChart",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:BulletChart"
     },
     "Button": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Button",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Button"
     },
     "Calendar": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Calendar",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Calendar"
     },
     "Card": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Card",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Card"
     },
     "Carousel": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Carousel",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Carousel"
     },
     "Cascader": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Cascader",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Cascader"
     },
     "Checkbox": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Checkbox",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Checkbox"
     },
     "CitationPanel": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-CitationPanel",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:CitationPanel"
     },
     "ColorPicker": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ColorPicker",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ColorPicker"
     },
     "Combobox": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Combobox",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Combobox"
     },
     "CommandPalette": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-CommandPalette",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:CommandPalette"
     },
     "CommentThread": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-CommentThread",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:CommentThread"
     },
     "ComparisonTable": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ComparisonTable",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ComparisonTable"
     },
     "ConfidenceBadge": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ConfidenceBadge",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ConfidenceBadge"
     },
     "ContextMenu": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ContextMenu",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ContextMenu"
     },
     "ControlChart": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ControlChart",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ControlChart"
     },
     "DataExportDialog": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-DataExportDialog",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:DataExportDialog"
     },
     "DatePicker": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-DatePicker",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:DatePicker"
     },
     "DateRangePicker": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-DateRangePicker",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:DateRangePicker"
     },
     "DecisionMatrix": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-DecisionMatrix",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:DecisionMatrix"
     },
     "Descriptions": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Descriptions",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Descriptions"
     },
     "DetailDrawer": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-DetailDrawer",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:DetailDrawer"
     },
     "DetailSectionTabs": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-DetailSectionTabs",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:DetailSectionTabs"
     },
     "DetailSummary": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-DetailSummary",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:DetailSummary"
     },
     "Dialog": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Dialog",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Dialog"
     },
     "Divider": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Divider",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Divider"
     },
     "Drawer": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Drawer",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Drawer"
     },
     "Dropdown": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Dropdown",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Dropdown"
     },
     "EmptyErrorLoading": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-EmptyErrorLoading",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:EmptyErrorLoading"
     },
     "EmptyState": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-EmptyState",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:EmptyState"
     },
     "EmptyStateBuilder": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-EmptyStateBuilder",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:EmptyStateBuilder"
     },
     "EntitySummaryBlock": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-EntitySummaryBlock",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:EntitySummaryBlock"
     },
     "ErrorBoundary": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ErrorBoundary",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ErrorBoundary"
     },
     "ExecutiveKPIStrip": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ExecutiveKPIStrip",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ExecutiveKPIStrip"
     },
     "FileUploadZone": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-FileUploadZone",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:FileUploadZone"
     },
     "FilterBar": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-FilterBar",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:FilterBar"
     },
     "FilterPresets": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-FilterPresets",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:FilterPresets"
     },
     "FineKinney": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-FineKinney",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:FineKinney"
     },
     "FloatButton": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-FloatButton",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:FloatButton"
     },
     "FlowBuilder": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-FlowBuilder",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:FlowBuilder"
     },
     "FormDrawer": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-FormDrawer",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:FormDrawer"
     },
     "FormField": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-FormField",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:FormField"
     },
     "FunnelChart": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-FunnelChart",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:FunnelChart"
     },
     "GanttTimeline": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-GanttTimeline",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:GanttTimeline"
     },
     "GaugeChart": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-GaugeChart",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:GaugeChart"
     },
     "GovernanceBoard": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-GovernanceBoard",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:GovernanceBoard"
     },
     "HeatmapCalendar": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-HeatmapCalendar",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:HeatmapCalendar"
     },
     "HistogramChart": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-HistogramChart",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:HistogramChart"
     },
     "IconButton": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-IconButton",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:IconButton"
     },
     "InlineEdit": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-InlineEdit",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:InlineEdit"
     },
     "InputNumber": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-InputNumber",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:InputNumber"
     },
     "JsonViewer": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-JsonViewer",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:JsonViewer"
     },
     "LinkInline": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-LinkInline",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:LinkInline"
     },
     "List": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-List",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:List"
     },
     "MasterDetail": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-MasterDetail",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:MasterDetail"
     },
     "Mentions": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Mentions",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Mentions"
     },
     "MenuBar": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-MenuBar",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:MenuBar"
     },
     "MetricComparisonCard": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-MetricComparisonCard",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:MetricComparisonCard"
     },
     "MicroChart": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-MicroChart",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:MicroChart"
     },
     "Modal": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Modal",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Modal"
     },
     "NavigationRail": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-NavigationRail",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:NavigationRail"
     },
     "NotificationCenter": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-NotificationCenter",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:NotificationCenter"
     },
     "NotificationDrawer": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-NotificationDrawer",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:NotificationDrawer"
     },
     "OrgChart": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-OrgChart",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:OrgChart"
     },
     "PageHeader": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-PageHeader",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:PageHeader"
     },
     "PageLayout": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-PageLayout",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:PageLayout"
     },
     "Pagination": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Pagination",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Pagination"
     },
     "ParetoChart": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ParetoChart",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ParetoChart"
     },
     "PivotTable": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-PivotTable",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:PivotTable"
     },
     "Popover": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Popover",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Popover"
     },
     "ProcessFlow": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ProcessFlow",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ProcessFlow"
     },
     "PromptComposer": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-PromptComposer",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:PromptComposer"
     },
     "QRCode": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-QRCode",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:QRCode"
     },
     "RadarChart": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-RadarChart",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:RadarChart"
     },
     "Radio": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Radio",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Radio"
     },
     "Rating": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Rating",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Rating"
     },
     "RecommendationCard": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-RecommendationCard",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:RecommendationCard"
     },
     "ReportFilterPanel": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ReportFilterPanel",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ReportFilterPanel"
     },
     "RiskMatrix": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-RiskMatrix",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:RiskMatrix"
     },
     "SankeyDiagram": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-SankeyDiagram",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:SankeyDiagram"
     },
     "SearchFilterListing": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-SearchFilterListing",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:SearchFilterListing"
     },
     "SearchInput": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-SearchInput",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:SearchInput"
     },
     "Segmented": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Segmented",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Segmented"
     },
     "Select": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Select",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Select"
     },
     "Skeleton": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Skeleton",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Skeleton"
     },
     "Slider": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Slider",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Slider"
     },
     "SmartDashboard": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-SmartDashboard",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:SmartDashboard"
     },
     "Spinner": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Spinner",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Spinner"
     },
     "Stack": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Stack",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Stack"
     },
     "StatusTimeline": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-StatusTimeline",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:StatusTimeline"
     },
     "Steps": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Steps",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Steps"
     },
     "SummaryStrip": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-SummaryStrip",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:SummaryStrip"
     },
     "Switch": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Switch",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Switch"
     },
     "SWOTMatrix": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-SWOTMatrix",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:SWOTMatrix"
     },
     "TableSimple": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-TableSimple",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:TableSimple"
     },
     "Tabs": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Tabs",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Tabs"
     },
     "Tag": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Tag",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Tag"
     },
     "Text": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Text",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Text"
     },
     "TextInput": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-TextInput",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:TextInput"
     },
     "ThemeLayout": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ThemeLayout",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ThemeLayout"
     },
     "ThemePresetCompare": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ThemePresetCompare",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ThemePresetCompare"
     },
     "ThemePreviewCard": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ThemePreviewCard",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ThemePreviewCard"
     },
     "Timeline": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Timeline",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Timeline"
     },
     "TimePicker": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-TimePicker",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:TimePicker"
     },
     "Toast": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Toast",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Toast"
     },
     "Tooltip": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Tooltip",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Tooltip"
     },
     "TourCoachmarks": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-TourCoachmarks",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:TourCoachmarks"
     },
     "TrainingTracker": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-TrainingTracker",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:TrainingTracker"
     },
     "Transfer": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Transfer",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Transfer"
     },
     "Tree": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Tree",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Tree"
     },
     "TreemapChart": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-TreemapChart",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:TreemapChart"
     },
     "TreeTable": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-TreeTable",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:TreeTable"
     },
     "Upload": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Upload",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Upload"
     },
     "ValueStream": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-ValueStream",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:ValueStream"
     },
     "WaterfallChart": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-WaterfallChart",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:WaterfallChart"
     },
     "Watermark": {
-      "figmaUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system?node-id=pending-Watermark",
+      "figmaUrl": "pending",
       "figmaNodeId": "pending:Watermark"
     }
-  },
-  "figmaFileKey": "I4byg8PGq6PWLLDOpSsJnf",
-  "figmaFileUrl": "https://www.figma.com/design/I4byg8PGq6PWLLDOpSsJnf/@mfe-design-system"
+  }
 }
