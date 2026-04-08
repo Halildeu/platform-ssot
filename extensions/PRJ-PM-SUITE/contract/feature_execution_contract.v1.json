@@ -111,7 +111,10 @@
       "web/packages/design-system/*.json",
       "web/packages/design-system/*.md",
       "web/.storybook/**",
-      "web/packages/shared-types/**/*"
+      "web/packages/shared-types/**/*",
+      "web/.commitlintrc.cjs",
+      "web/.husky/*",
+      "web/.lighthouserc.json"
     ],
     "affected_modules": [
       "api-gateway",
