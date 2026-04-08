@@ -71,7 +71,7 @@ jobs:
         run: |
           cd web
           BASE_SHA="${{ github.event.pull_request.base.sha || 'HEAD~1' }}"
-          npx vitest run --changed "$BASE_SHA" --passWithNoTests
+          npx vitest run --changed "$BASE_SHA" --passWithNoTests --environment jsdom
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
