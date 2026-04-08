@@ -29,14 +29,8 @@ export BROWSERSLIST_IGNORE_OLD_DATA="${BROWSERSLIST_IGNORE_OLD_DATA:-1}"
 
 case "$MODE" in
   unit)
-    BASE_REF="${TEST_BASE_REF:-}"
-    if [[ -n "$BASE_REF" ]]; then
-      echo "[run_tests_web] vitest --changed $BASE_REF (incremental)"
-      npx vitest run --changed "$BASE_REF" --passWithNoTests --environment jsdom
-    else
-      echo "[run_tests_web] npm test (full)"
-      npm test
-    fi
+    echo "[run_tests_web] npm test"
+    npm test
     ;;
   pw)
     echo "[run_tests_web] npm run pw:ci"
