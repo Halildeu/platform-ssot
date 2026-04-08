@@ -60,7 +60,11 @@ export const ProtectedRoute = ({
       <Navigate
         to={fallbackPath}
         replace
-        state={{ from: location.pathname, reason: 'forbidden' }}
+        state={{
+          from: location.pathname,
+          reason: requiredModule ? 'module_denied' : 'forbidden',
+          requiredModule,
+        }}
       />
     );
   }
