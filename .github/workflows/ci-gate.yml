@@ -117,9 +117,7 @@ jobs:
           LINT_BASE_REF: ${{ github.event.pull_request.base.sha || 'origin/main' }}
         run: bash scripts/run_lint_web.sh
 
-      - name: Web unit tests (changed only)
-        env:
-          TEST_BASE_REF: ${{ github.event.pull_request.base.sha || '' }}
+      - name: Web unit tests
         run: bash scripts/run_tests_web.sh
 
       - name: Playwright smoke
