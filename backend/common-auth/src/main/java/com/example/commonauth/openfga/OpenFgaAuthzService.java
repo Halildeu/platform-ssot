@@ -6,6 +6,7 @@ import dev.openfga.sdk.api.client.model.ClientExpandRequest;
 import dev.openfga.sdk.api.client.model.ClientListObjectsRequest;
 import dev.openfga.sdk.api.client.model.ClientWriteRequest;
 import dev.openfga.sdk.api.client.model.ClientTupleKey;
+import dev.openfga.sdk.api.client.model.ClientTupleKeyWithoutCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -192,7 +193,7 @@ public class OpenFgaAuthzService {
     /**
      * Batch delete multiple tuples in a single API call.
      */
-    public void deleteTuples(List<ClientTupleKey> tuples) {
+    public void deleteTuples(List<ClientTupleKeyWithoutCondition> tuples) {
         if (!enabled || tuples == null || tuples.isEmpty()) {
             return;
         }
@@ -207,10 +208,20 @@ public class OpenFgaAuthzService {
     }
 
     /**
-     * Build a ClientTupleKey for use with batch operations.
+     * Build a ClientTupleKey for use with batch write operations.
      */
-    public static ClientTupleKey tupleKey(String userId, String relation, String objectType, String objectId) {
+    public static ClientTupleKey writeTupleKey(String userId, String relation, String objectType, String objectId) {
         return new ClientTupleKey()
+                .user("user:" + userId)
+                .relation(relation)
+                ._object(objectType + ":" + objectId);
+    }
+
+    /**
+     * Build a ClientTupleKeyWithoutCondition for use with batch delete operations.
+     */
+    public static ClientTupleKeyWithoutCondition deleteTupleKey(String userId, String relation, String objectType, String objectId) {
+        return new ClientTupleKeyWithoutCondition()
                 .user("user:" + userId)
                 .relation(relation)
                 ._object(objectType + ":" + objectId);
