@@ -7,7 +7,6 @@ import { PERMISSIONS } from "../../features/auth/lib/permissions.constants";
 import {
   isEthicRemoteEnabled,
   isSuggestionsRemoteEnabled,
-  resolveDefaultShellPath,
 } from "../shell-navigation";
 import { useShellCommonI18n } from "../i18n";
 import {
@@ -59,14 +58,7 @@ export const AppRouter: React.FC = () => {
   const suggestionsEnabled = isSuggestionsRemoteEnabled();
   const ethicEnabled = isEthicRemoteEnabled();
 
-  const defaultShellPath = useMemo(
-    () =>
-      resolveDefaultShellPath({
-        permitAllMode,
-        permissions: authState.user?.permissions ?? [],
-      }),
-    [authState.user?.permissions, permitAllMode],
-  );
+  const defaultShellPath = '/home';
 
   return (
     <Suspense fallback={<div>{t("shell.header.suspenseLoading")}</div>}>

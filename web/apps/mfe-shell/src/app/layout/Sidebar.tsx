@@ -17,7 +17,6 @@ import { useAppDispatch } from '../store/store.hooks';
 import { pushNotification, toggleOpen } from '../../features/notifications/model/notifications.slice';
 import { usePermissions } from '@mfe/auth';
 import { MODULE_KEYS } from '../../features/auth/lib/permissions.constants';
-import { resolveDefaultShellPath } from '../shell-navigation';
 
 const STORAGE_KEY = 'shell.sidebar.mode';
 const defaultReportingRoute = getSharedReport('users-overview').webRoute;
