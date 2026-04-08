@@ -172,6 +172,51 @@ public class OpenFgaAuthzService {
     }
 
     /**
+     * Batch write multiple tuples in a single API call.
+     * Significantly faster than individual writeTuple calls for role propagation.
+     */
+    public void writeTuples(List<ClientTupleKey> tuples) {
+        if (!enabled || tuples == null || tuples.isEmpty()) {
+            return;
+        }
+        try {
+            var request = new ClientWriteRequest().writes(tuples);
+            client.write(request).get();
+            log.info("OpenFGA batch write: {} tuples", tuples.size());
+        } catch (Exception e) {
+            log.error("OpenFGA batch writeTuples failed ({} tuples)", tuples.size(), e);
+            throw new RuntimeException("Failed to batch write authorization tuples", e);
+        }
+    }
+
+    /**
+     * Batch delete multiple tuples in a single API call.
+     */
+    public void deleteTuples(List<ClientTupleKey> tuples) {
+        if (!enabled || tuples == null || tuples.isEmpty()) {
+            return;
+        }
+        try {
+            var request = new ClientWriteRequest().deletes(tuples);
+            client.write(request).get();
+            log.info("OpenFGA batch delete: {} tuples", tuples.size());
+        } catch (Exception e) {
+            log.error("OpenFGA batch deleteTuples failed ({} tuples)", tuples.size(), e);
+            throw new RuntimeException("Failed to batch delete authorization tuples", e);
+        }
+    }
+
+    /**
+     * Build a ClientTupleKey for use with batch operations.
+     */
+    public static ClientTupleKey tupleKey(String userId, String relation, String objectType, String objectId) {
+        return new ClientTupleKey()
+                .user("user:" + userId)
+                .relation(relation)
+                ._object(objectType + ":" + objectId);
+    }
+
+    /**
      * Expand the relationship tree for an object and relation.
      * Returns the raw tree structure showing how access is derived.
      * Used for "explain why" features.
