@@ -112,30 +112,19 @@ jobs:
           pnpm -C web exec playwright install --with-deps chromium
           npm -C web run tokens:build -- --check
 
-      - name: Lint + Test + Smoke (parallel)
+      - name: Web lint (incremental)
+        env:
+          LINT_BASE_REF: ${{ github.event.pull_request.base.sha || 'origin/main' }}
+        run: bash scripts/run_lint_web.sh
+
+      - name: Web unit tests (changed only)
         env:
           TEST_BASE_REF: ${{ github.event.pull_request.base.sha || '' }}
-          LINT_BASE_REF: ${{ github.event.pull_request.base.sha || 'origin/main' }}
-        run: |
-          set -euo pipefail
+        run: bash scripts/run_tests_web.sh
 
-          # Run lint, unit tests, and smoke in parallel
-          bash scripts/run_lint_web.sh &
-          LINT_PID=$!
-
-          bash scripts/run_tests_web.sh 2>&1 | tee /tmp/test.log &
-          TEST_PID=$!
-
-          bash scripts/run_tests_web.sh pw-preauth 2>&1 | tee /tmp/smoke.log &
-          SMOKE_PID=$!
-
-          # Wait for all and collect exit codes
-          FAIL=0
-          wait $LINT_PID  || { echo "::warning::LINT FAILED"; FAIL=1; }
-          wait $TEST_PID  || { echo "::warning::TEST FAILED (see /tmp/test.log)"; FAIL=1; }
-          wait $SMOKE_PID || { echo "::warning::SMOKE FAILED (flaky test — non-blocking)"; }
-
-          exit $FAIL
+      - name: Playwright smoke
+        continue-on-error: true
+        run: bash scripts/run_tests_web.sh pw-preauth
 
   ci-gate-backend:
     runs-on: ubuntu-latest
