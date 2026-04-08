@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ToastProvider } from "@mfe/design-system";
 import { PermissionProvider } from "@mfe/auth";
+import type { AuthzMeResponse } from "@mfe/auth";
 import { store } from "../store/store";
 import { ThemeProvider } from "../theme/theme-context.provider";
 import { I18nProvider, i18n } from "../i18n";
@@ -29,7 +30,7 @@ const PermissionProviderWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
       httpGet={api.get}
       permitAll={permitAllMode}
       enabled={permissionFetchEnabled}
-      initialData={authzSnapshot as any}
+      initialData={authzSnapshot as AuthzMeResponse | null}
     >
       {children}
     </PermissionProvider>

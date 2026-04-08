@@ -112,14 +112,6 @@ export function PermissionProvider({
     }
   }, [httpGet, permitAll]);
 
-  // Sync initialData changes from parent (e.g. token refresh in AuthBootstrapper)
-  useEffect(() => {
-    if (initialData) {
-      setAuthz(initialData);
-      setInitialized(true);
-    }
-  }, [initialData]);
-
   useEffect(() => {
     if (!enabled) {
       setAuthz(null);
@@ -128,12 +120,15 @@ export function PermissionProvider({
       return undefined;
     }
 
-    // Skip initial fetch when pre-fetched data is provided
-    if (!initialData) {
+    // If parent provides pre-fetched data, use it instead of fetching
+    if (initialData) {
+      setAuthz(initialData);
+      setInitialized(true);
+    } else {
       loadAuthz();
     }
 
-    // Set up periodic refresh (for both initialData and fresh fetch cases)
+    // Periodic refresh keeps permissions fresh (60s default)
     if (!permitAll && cacheTtl > 0) {
       const interval = setInterval(loadAuthz, cacheTtl);
       return () => clearInterval(interval);
