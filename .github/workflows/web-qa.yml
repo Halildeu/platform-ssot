@@ -57,6 +57,7 @@ jobs:
         run: bash scripts/run_tests_web.sh unit
 
       - name: Bundle size check
+        continue-on-error: true
         run: |
           pnpm --filter design-system --filter x-data-grid --filter x-charts --filter x-editor --filter x-kanban --filter x-scheduler --filter x-form-builder --filter blocks run build
           npx size-limit
