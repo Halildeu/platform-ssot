@@ -37,8 +37,8 @@ fi
 echo "[run_lint_web] pnpm run lint:style"
 pnpm run lint:style
 
-echo "[run_lint_web] pnpm run lint:semantic"
-pnpm run lint:semantic
+echo "[run_lint_web] pnpm run lint:semantic (with cache)"
+pnpm run lint:semantic -- --cache --cache-location .eslintcache
 
 echo "[run_lint_web] pnpm run lint:tailwind"
 pnpm run lint:tailwind

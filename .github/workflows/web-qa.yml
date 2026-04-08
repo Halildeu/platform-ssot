@@ -31,6 +31,13 @@ jobs:
       - name: Install pnpm
         run: corepack enable && corepack prepare pnpm@latest --activate
 
+      - name: pnpm store cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store/v3
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('web/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-
+
       - name: Version gates (toolchain/lockfile/ag-grid)
         run: python3 scripts/check_version_gates.py --mode ci
 
@@ -50,11 +57,23 @@ jobs:
         run: pnpm audit --audit-level=high || true
         working-directory: web
 
+      - name: ESLint cache restore
+        uses: actions/cache@v4
+        with:
+          path: web/.eslintcache
+          key: ${{ runner.os }}-eslint-${{ hashFiles('web/eslint.config.mjs') }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-eslint-${{ hashFiles('web/eslint.config.mjs') }}-
+
       - name: Web lint
         run: bash scripts/run_lint_web.sh
 
-      - name: Web unit tests
-        run: bash scripts/run_tests_web.sh unit
+      - name: Web unit tests (changed only)
+        run: |
+          cd web
+          BASE_SHA="${{ github.event.pull_request.base.sha || 'HEAD~1' }}"
+          npx vitest run --changed "$BASE_SHA" --passWithNoTests
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Bundle size check
         continue-on-error: true

@@ -15,10 +15,12 @@ mkdir -p "${REPORT_DIR}"
 
 echo "[security][osv-scanner] Starting dependency vulnerability scan"
 
-# Install osv-scanner if not available
+# Install osv-scanner if not available (pre-built binary, ~3s)
 if ! command -v osv-scanner &>/dev/null; then
-  echo "[security][osv-scanner] Installing osv-scanner..."
-  go install github.com/google/osv-scanner/v2/cmd/osv-scanner@latest
+  echo "[security][osv-scanner] Installing osv-scanner (pre-built binary)..."
+  OSV_VERSION="2.0.2"
+  curl -sSfL "https://github.com/google/osv-scanner/releases/download/v${OSV_VERSION}/osv-scanner_linux_amd64" -o /usr/local/bin/osv-scanner
+  chmod +x /usr/local/bin/osv-scanner
 fi
 
 scan_exit=0
