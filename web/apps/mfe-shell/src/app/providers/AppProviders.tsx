@@ -20,7 +20,7 @@ import "../config/shell-services-wiring";
 import "../config/i18n-config";
 
 const PermissionProviderWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { token, initialized } = useAppSelector((state) => state.auth);
+  const { token, initialized, authzSnapshot } = useAppSelector((state) => state.auth);
   const permitAllMode = isPermitAllMode();
   const permissionFetchEnabled = permitAllMode || (initialized && Boolean(token));
 
@@ -29,6 +29,7 @@ const PermissionProviderWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
       httpGet={api.get}
       permitAll={permitAllMode}
       enabled={permissionFetchEnabled}
+      initialData={authzSnapshot as any}
     >
       {children}
     </PermissionProvider>

@@ -57,6 +57,8 @@ interface PermissionProviderProps {
   enabled?: boolean;
   /** Cache TTL in ms (default: 60000 = 1 min) */
   cacheTtl?: number;
+  /** Pre-fetched authz data — skips initial /me fetch when provided. */
+  initialData?: AuthzMeResponse | null;
 }
 
 export function PermissionProvider({
@@ -65,9 +67,10 @@ export function PermissionProvider({
   permitAll = false,
   enabled = true,
   cacheTtl = 60_000,
+  initialData,
 }: PermissionProviderProps) {
-  const [authz, setAuthz] = useState<AuthzMeResponse | null>(null);
-  const [initialized, setInitialized] = useState(false);
+  const [authz, setAuthz] = useState<AuthzMeResponse | null>(initialData ?? null);
+  const [initialized, setInitialized] = useState(!!initialData);
   const [loading, setLoading] = useState(false);
 
   const loadAuthz = useCallback(async () => {
@@ -109,6 +112,14 @@ export function PermissionProvider({
     }
   }, [httpGet, permitAll]);
 
+  // Sync initialData changes from parent (e.g. token refresh in AuthBootstrapper)
+  useEffect(() => {
+    if (initialData) {
+      setAuthz(initialData);
+      setInitialized(true);
+    }
+  }, [initialData]);
+
   useEffect(() => {
     if (!enabled) {
       setAuthz(null);
@@ -117,14 +128,18 @@ export function PermissionProvider({
       return undefined;
     }
 
-    loadAuthz();
+    // Skip initial fetch when pre-fetched data is provided
+    if (!initialData) {
+      loadAuthz();
+    }
 
+    // Set up periodic refresh (for both initialData and fresh fetch cases)
     if (!permitAll && cacheTtl > 0) {
       const interval = setInterval(loadAuthz, cacheTtl);
       return () => clearInterval(interval);
     }
     return undefined;
-  }, [loadAuthz, permitAll, enabled, cacheTtl]);
+  }, [loadAuthz, permitAll, enabled, cacheTtl, initialData]);
 
   const value = useMemo<PermissionContextValue>(() => ({
     authz,
