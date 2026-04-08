@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { usePermissions } from '@mfe/auth';
 import { useAuthorization } from '../../features/auth/model/use-authorization.model';
 import { isEditableElement } from './keyboard-utils';
 import { CHORD_MAP, CHORD_TIMEOUT_MS, type ChordEntry } from './chord-navigation.config';
