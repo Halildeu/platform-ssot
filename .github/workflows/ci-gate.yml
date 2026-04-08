@@ -91,6 +91,9 @@ jobs:
       - name: Install pnpm
         run: corepack enable && corepack prepare pnpm@latest --activate
       - name: Run web gate
+        env:
+          TEST_BASE_REF: ${{ github.event.pull_request.base.sha || 'HEAD~1' }}
+          LINT_BASE_REF: ${{ github.event.pull_request.base.sha || 'origin/main' }}
         run: |
           python3 scripts/check_version_gates.py --mode ci
           if command -v pnpm >/dev/null 2>&1; then pnpm -C web install --frozen-lockfile; else corepack pnpm -C web install --frozen-lockfile; fi
