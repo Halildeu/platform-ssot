@@ -1,0 +1,28 @@
+name: vault-diagnostic
+on: workflow_dispatch
+jobs:
+  diag:
+    runs-on: [self-hosted, linux, x64, stage-backend]
+    steps:
+      - name: Vault diagnostic
+        shell: bash
+        run: |
+          set -x
+          echo "=== Docker containers ==="
+          docker ps -a --filter "name=platform-vault" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+          
+          echo "=== Vault status ==="
+          docker exec platform-vault-1 vault status 2>&1 || true
+          
+          echo "=== Unseal keys directory ==="
+          ls -la /home/halil/platform/state/vault/ 2>/dev/null || echo "Directory not found"
+          ls -la /home/halil/platform/state/vault/vault-unseal-key-* 2>/dev/null || echo "No unseal key files"
+          
+          echo "=== Vault-unseal logs ==="
+          docker logs --tail 30 platform-vault-unseal-1 2>&1 || true
+          
+          echo "=== Vault logs ==="
+          docker logs --tail 30 platform-vault-1 2>&1 || true
+
+          echo "=== Vault config ==="
+          docker exec platform-vault-1 cat /vault/config/vault.hcl 2>&1 || true
