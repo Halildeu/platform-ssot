@@ -308,24 +308,23 @@ main() {
   compose_run "${compose_args[@]}" config --services >/dev/null
   compose_run "${compose_args[@]}" pull
 
-  # Remove stale containers whose config may have changed (prevents "name already in use" conflicts)
-  compose_run "${compose_args[@]}" down --remove-orphans --timeout 30 2>/dev/null || true
-
-  compose_run "${compose_args[@]}" up -d postgres-db openfga-migrate openfga discovery-server
+  # Force-recreate ensures config changes take effect without full down (avoids nginx upstream downtime)
+  # --remove-orphans cleans up containers from old compose configs
+  compose_run "${compose_args[@]}" up -d --force-recreate --remove-orphans postgres-db openfga-migrate openfga discovery-server
   wait_for_service_state postgres-db healthy 60
   wait_for_service_state openfga running 60
   wait_for_service_state discovery-server healthy 90
 
-  compose_run "${compose_args[@]}" up -d --no-deps permission-service
+  compose_run "${compose_args[@]}" up -d --force-recreate --no-deps permission-service
   wait_for_service_state permission-service healthy 90
 
-  compose_run "${compose_args[@]}" up -d --no-deps auth-service user-service variant-service core-data-service
+  compose_run "${compose_args[@]}" up -d --force-recreate --no-deps auth-service user-service variant-service core-data-service
   wait_for_service_state auth-service healthy 90
   wait_for_service_state user-service healthy 90
   wait_for_service_state variant-service healthy 90
   wait_for_service_state core-data-service healthy 90
 
-  compose_run "${compose_args[@]}" up -d --no-deps api-gateway
+  compose_run "${compose_args[@]}" up -d --force-recreate --no-deps api-gateway
   wait_for_service_state api-gateway healthy 90
 
   compose_run "${compose_args[@]}" ps
