@@ -456,7 +456,15 @@ public class AuthorizationControllerV1 {
 
         Map<String, String> moduleGrants = dto.getModules();
         if (moduleGrants == null || moduleGrants.isEmpty()) {
-            moduleGrants = deriveModuleGrants(dto.getPermissions(), dto.getRoles());
+            if (dto.isSuperAdmin()) {
+                // SuperAdmin gets MANAGE on all modules
+                moduleGrants = new LinkedHashMap<>();
+                for (String key : catalogService.getModuleKeys()) {
+                    moduleGrants.put(key, "MANAGE");
+                }
+            } else {
+                moduleGrants = deriveModuleGrants(dto.getPermissions(), dto.getRoles());
+            }
             dto.setModules(moduleGrants);
         }
 
