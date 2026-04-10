@@ -20,7 +20,7 @@ public class AuthzSyncVersion {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt = Instant.now();
 
-    protected AuthzSyncVersion() {}
+    public AuthzSyncVersion() {}
 
     public Integer getId() { return id; }
     public Long getVersion() { return version; }

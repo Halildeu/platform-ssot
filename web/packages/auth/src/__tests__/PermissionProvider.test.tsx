@@ -31,7 +31,11 @@ function createWrapper(httpGet: any, cacheTtl = 60_000) {
 
 describe('PermissionProvider version-based refresh', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
+    vi.useFakeTimers({ shouldAdvanceTime: false });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('stores authzVersion from /me response', async () => {
@@ -60,7 +64,7 @@ describe('PermissionProvider version-based refresh', () => {
     expect(httpGet).toHaveBeenCalledTimes(1);
 
     // Advance timer to trigger version poll
-    await act(async () => { vi.advanceTimersByTime(1100); });
+    await act(async () => { await vi.advanceTimersByTimeAsync(1100); });
 
     // Should have called /version but NOT /me again
     expect(httpGet).toHaveBeenCalledTimes(2);
@@ -80,7 +84,7 @@ describe('PermissionProvider version-based refresh', () => {
 
     await waitFor(() => expect(result.current.initialized).toBe(true));
 
-    await act(async () => { vi.advanceTimersByTime(1100); });
+    await act(async () => { await vi.advanceTimersByTimeAsync(1100); });
 
     // Should have: /me (initial) + /version (poll) + /me (refresh) = 3 calls
     await waitFor(() => expect(httpGet).toHaveBeenCalledTimes(3));
@@ -98,7 +102,7 @@ describe('PermissionProvider version-based refresh', () => {
 
     await waitFor(() => expect(result.current.initialized).toBe(true));
 
-    await act(async () => { vi.advanceTimersByTime(1100); });
+    await act(async () => { await vi.advanceTimersByTimeAsync(1100); });
 
     // fetchAuthzVersion returns -1 on error → triggers full /me
     await waitFor(() => expect(httpGet).toHaveBeenCalledTimes(3));

@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface AuthzSyncVersionRepository extends JpaRepository<AuthzSyncVersion, Integer> {
 
     @Modifying
-    @Query("UPDATE AuthzSyncVersion v SET v.version = v.version + 1, v.updatedAt = CURRENT_TIMESTAMP WHERE v.id = 1")
+    @Query(value = "UPDATE authz_sync_version SET version = version + 1, updated_at = NOW() WHERE id = 1", nativeQuery = true)
     int incrementVersion();
 }
