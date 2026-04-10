@@ -28,13 +28,16 @@ public class TupleSyncService {
     private final OpenFgaAuthzService authzService;
     private final RolePermissionRepository rolePermissionRepository;
     private final UserRoleAssignmentRepository assignmentRepository;
+    private final AuthzVersionService authzVersionService;
 
     public TupleSyncService(OpenFgaAuthzService authzService,
                             RolePermissionRepository rolePermissionRepository,
-                            UserRoleAssignmentRepository assignmentRepository) {
+                            UserRoleAssignmentRepository assignmentRepository,
+                            AuthzVersionService authzVersionService) {
         this.authzService = authzService;
         this.rolePermissionRepository = rolePermissionRepository;
         this.assignmentRepository = assignmentRepository;
+        this.authzVersionService = authzVersionService;
     }
 
     /**
@@ -42,6 +45,10 @@ public class TupleSyncService {
      * Applies deny-wins semantics: if any role DENYs a permission, the user is blocked.
      */
     public void syncFeatureTuplesForUser(String userId, List<RolePermission> allPermissions) {
+        syncFeatureTuplesForUser(userId, allPermissions, false);
+    }
+
+    public void syncFeatureTuplesForUser(String userId, List<RolePermission> allPermissions, boolean skipVersionIncrement) {
         Map<String, ResolvedGrant> effective = resolveEffectiveGrants(allPermissions);
 
         for (var entry : effective.entrySet()) {
@@ -66,6 +73,9 @@ public class TupleSyncService {
                 log.warn("OpenFGA tuple write failed for user:{} {}:{} — {}", userId, mapping.relation(), key, e.getMessage());
             }
         }
+        if (!skipVersionIncrement) {
+            authzVersionService.incrementVersion();
+        }
     }
 
     /**
@@ -73,6 +83,11 @@ public class TupleSyncService {
      */
     @Transactional(readOnly = true)
     public void refreshFeatureTuples(String userId) {
+        refreshFeatureTuples(userId, false);
+    }
+
+    @Transactional(readOnly = true)
+    public void refreshFeatureTuples(String userId, boolean skipVersionIncrement) {
         Long numericUserId = Long.parseLong(userId);
         List<UserRoleAssignment> assignments = assignmentRepository.findActiveAssignments(numericUserId);
         List<Long> roleIds = assignments.stream()
@@ -87,7 +102,7 @@ public class TupleSyncService {
 
         List<RolePermission> allPermissions = rolePermissionRepository.findByRoleIdIn(roleIds);
         deleteAllFeatureTuples(userId);
-        syncFeatureTuplesForUser(userId, allPermissions);
+        syncFeatureTuplesForUser(userId, allPermissions, skipVersionIncrement);
     }
 
     /**
@@ -104,11 +119,12 @@ public class TupleSyncService {
 
         for (Long numericUserId : userIds) {
             try {
-                refreshFeatureTuples(String.valueOf(numericUserId));
+                refreshFeatureTuples(String.valueOf(numericUserId), true);
             } catch (Exception e) {
                 log.error("Failed to refresh tuples for user:{} after role:{} change", numericUserId, roleId, e);
             }
         }
+        authzVersionService.incrementVersion();
     }
 
     /**
@@ -116,10 +132,18 @@ public class TupleSyncService {
      */
     public void syncScopeTuples(String userId, List<Long> companyIds, List<Long> projectIds,
                                 List<Long> warehouseIds, List<Long> branchIds) {
+        syncScopeTuples(userId, companyIds, projectIds, warehouseIds, branchIds, false);
+    }
+
+    public void syncScopeTuples(String userId, List<Long> companyIds, List<Long> projectIds,
+                                List<Long> warehouseIds, List<Long> branchIds, boolean skipVersionIncrement) {
         writeScopeTuples(userId, "viewer", "company", companyIds);
         writeScopeTuples(userId, "viewer", "project", projectIds);
         writeScopeTuples(userId, "operator", "warehouse", warehouseIds);
         writeScopeTuples(userId, "member", "branch", branchIds);
+        if (!skipVersionIncrement) {
+            authzVersionService.incrementVersion();
+        }
     }
 
     /**
