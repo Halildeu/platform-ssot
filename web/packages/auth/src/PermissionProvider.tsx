@@ -103,20 +103,24 @@ export function PermissionProvider({
     try {
       const data = await fetchAuthzMe(httpGet);
       setAuthz(data);
+      setInitialized(true);
     } catch (err) {
       console.error('[PermissionProvider] Failed to fetch authz:', err);
+      // Do NOT set initialized=true on failure — keep loading state so
+      // ProtectedRoute shows loading spinner instead of redirecting to unauthorized.
+      // The periodic refresh (60s) or initialData from AuthBootstrapper will recover.
       setAuthz(null);
     } finally {
       setLoading(false);
-      setInitialized(true);
     }
   }, [httpGet, permitAll]);
 
   useEffect(() => {
     if (!enabled) {
+      // Don't set initialized=true when disabled — ProtectedRoute should
+      // keep showing loading until auth init completes and enables us.
       setAuthz(null);
       setLoading(false);
-      setInitialized(true);
       return undefined;
     }
 
