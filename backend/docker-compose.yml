@@ -242,7 +242,7 @@ services:
       # start-dev modunda hostname kontrolü otomatik kapalı
       - KC_HTTP_ENABLED=true
       - KC_PROXY_HEADERS=${KC_PROXY_HEADERS:-xforwarded}
-      - KC_HOSTNAME=${KC_HOSTNAME:-https://ai.acik.com}
+      - KC_HOSTNAME=${KC_HOSTNAME:-http://localhost:8081}
       - KC_HOSTNAME_BACKCHANNEL_DYNAMIC=${KC_HOSTNAME_BACKCHANNEL_DYNAMIC:-true}
       - KC_HOSTNAME_DEBUG=true
     ports:
