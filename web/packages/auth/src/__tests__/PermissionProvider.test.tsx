@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import React from 'react';
@@ -63,7 +64,7 @@ describe('PermissionProvider version-based refresh', () => {
 
     // Should have called /version but NOT /me again
     expect(httpGet).toHaveBeenCalledTimes(2);
-    expect(httpGet).toHaveBeenLastCalledWith('/api/v1/authz/version');
+    expect(httpGet).toHaveBeenLastCalledWith('/v1/authz/version');
   });
 
   it('calls /me when version changes', async () => {

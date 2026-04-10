@@ -29,8 +29,9 @@ public class OpenFgaAuthzConfig {
     public ScopeContextCache scopeContextCache(
             @Value("${scope.cache.enabled:true}") boolean enabled,
             @Value("${scope.cache.ttl-seconds:30}") int ttlSeconds,
+            @Value("${scope.cache.ttl-jitter-seconds:3}") int jitterSeconds,
             @Value("${scope.cache.max-size:5000}") long maxSize) {
-        return new ScopeContextCache(java.time.Duration.ofSeconds(ttlSeconds), maxSize, enabled);
+        return new ScopeContextCache(java.time.Duration.ofSeconds(ttlSeconds), java.time.Duration.ofSeconds(jitterSeconds), maxSize, enabled);
     }
 
     @Bean
