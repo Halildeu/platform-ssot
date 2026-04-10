@@ -35,15 +35,8 @@ public class TupleSyncService {
     public TupleSyncService(OpenFgaAuthzService authzService,
                             RolePermissionRepository rolePermissionRepository,
                             UserRoleAssignmentRepository assignmentRepository,
-                            AuthzVersionService authzVersionService) {
-        this(authzService, rolePermissionRepository, assignmentRepository, authzVersionService, null);
-    }
-
-    public TupleSyncService(OpenFgaAuthzService authzService,
-                            RolePermissionRepository rolePermissionRepository,
-                            UserRoleAssignmentRepository assignmentRepository,
                             AuthzVersionService authzVersionService,
-                            ScopeContextCache scopeContextCache) {
+                            @org.springframework.lang.Nullable ScopeContextCache scopeContextCache) {
         this.authzService = authzService;
         this.rolePermissionRepository = rolePermissionRepository;
         this.assignmentRepository = assignmentRepository;
