@@ -38,7 +38,7 @@ export async function fetchAuthzVersion(
   httpGet: (url: string) => Promise<{ data: { authzVersion: number } }>
 ): Promise<number> {
   try {
-    const { data } = await httpGet('/api/v1/authz/version');
+    const { data } = await httpGet('/v1/authz/version');
     return data.authzVersion;
   } catch {
     return -1;

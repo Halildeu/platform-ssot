@@ -61,6 +61,7 @@ public class TupleSyncService {
 
     public void syncFeatureTuplesForUser(String userId, List<RolePermission> allPermissions, boolean skipVersionIncrement) {
         Map<String, ResolvedGrant> effective = resolveEffectiveGrants(allPermissions);
+        boolean anyWriteFailed = false;
 
         for (var entry : effective.entrySet()) {
             String compositeKey = entry.getKey();
@@ -81,12 +82,16 @@ public class TupleSyncService {
                     authzService.writeTuple(userId, "blocked", blockedObjectType, key);
                 }
             } catch (Exception e) {
+                anyWriteFailed = true;
                 log.warn("OpenFGA tuple write failed for user:{} {}:{} — {}", userId, mapping.relation(), key, e.getMessage());
             }
         }
-        if (!skipVersionIncrement) {
+        // P0 fail-closed: only bump version if ALL OpenFGA writes succeeded
+        if (!skipVersionIncrement && !anyWriteFailed) {
             authzVersionService.incrementVersion();
             if (scopeContextCache != null) scopeContextCache.evictUser(userId);
+        } else if (anyWriteFailed) {
+            log.warn("Skipping version bump for user:{} — OpenFGA writes had failures", userId);
         }
     }
 
@@ -150,13 +155,16 @@ public class TupleSyncService {
 
     public void syncScopeTuples(String userId, List<Long> companyIds, List<Long> projectIds,
                                 List<Long> warehouseIds, List<Long> branchIds, boolean skipVersionIncrement) {
-        writeScopeTuples(userId, "viewer", "company", companyIds);
-        writeScopeTuples(userId, "viewer", "project", projectIds);
-        writeScopeTuples(userId, "operator", "warehouse", warehouseIds);
-        writeScopeTuples(userId, "member", "branch", branchIds);
-        if (!skipVersionIncrement) {
+        boolean anyFailed = false;
+        anyFailed |= !writeScopeTuplesSafe(userId, "viewer", "company", companyIds);
+        anyFailed |= !writeScopeTuplesSafe(userId, "viewer", "project", projectIds);
+        anyFailed |= !writeScopeTuplesSafe(userId, "operator", "warehouse", warehouseIds);
+        anyFailed |= !writeScopeTuplesSafe(userId, "member", "branch", branchIds);
+        if (!skipVersionIncrement && !anyFailed) {
             authzVersionService.incrementVersion();
             if (scopeContextCache != null) scopeContextCache.evictUser(userId);
+        } else if (anyFailed) {
+            log.warn("Skipping version bump for user:{} — scope tuple writes had failures", userId);
         }
     }
 
@@ -191,17 +199,20 @@ public class TupleSyncService {
 
     // --- Private helpers ---
 
-    private void writeScopeTuples(String userId, String relation, String objectType, List<Long> ids) {
-        if (ids == null || ids.isEmpty()) return;
+    /** @return true if write succeeded, false on failure */
+    private boolean writeScopeTuplesSafe(String userId, String relation, String objectType, List<Long> ids) {
+        if (ids == null || ids.isEmpty()) return true;
         var tuples = ids.stream()
                 .map(id -> OpenFgaAuthzService.writeTupleKey(userId, relation, objectType, String.valueOf(id)))
                 .toList();
         try {
             authzService.writeTuples(tuples);
             log.debug("OpenFGA batch scope write: {} tuples for user:{} {}:{}", tuples.size(), userId, relation, objectType);
+            return true;
         } catch (Exception e) {
             log.warn("OpenFGA batch scope write failed for user:{} {}:{} ({} tuples) — {}",
                     userId, relation, objectType, tuples.size(), e.getMessage());
+            return false;
         }
     }
 
