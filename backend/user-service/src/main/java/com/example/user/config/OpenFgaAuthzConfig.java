@@ -56,10 +56,11 @@ public class OpenFgaAuthzConfig {
             OpenFgaAuthzService authzService,
             OpenFgaProperties props,
             AuthenticatedUserLookupService authenticatedUserLookupService,
-            ScopeContextCache scopeContextCache) {
+            ScopeContextCache scopeContextCache,
+            RemoteAuthzVersionProvider remoteAuthzVersionProvider) {
         var reg = new FilterRegistrationBean<>(
                 new ScopeContextFilter(authzService, props, authenticatedUserLookupService,
-                        scopeContextCache, remoteAuthzVersionProvider())
+                        scopeContextCache, remoteAuthzVersionProvider)
         );
         reg.addUrlPatterns("/api/*");
         reg.setOrder(Ordered.LOWEST_PRECEDENCE - 10);
