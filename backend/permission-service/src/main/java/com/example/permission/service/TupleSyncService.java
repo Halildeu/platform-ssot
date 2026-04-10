@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
  * Implements deny-wins semantics when combining permissions from multiple roles.
  */
 @Service
+@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(name = "erp.openfga.enabled", havingValue = "true", matchIfMissing = false)
 public class TupleSyncService {
 
     private static final Logger log = LoggerFactory.getLogger(TupleSyncService.class);
@@ -32,6 +33,7 @@ public class TupleSyncService {
     private final AuthzVersionService authzVersionService;
     private final ScopeContextCache scopeContextCache;
 
+    @org.springframework.beans.factory.annotation.Autowired
     public TupleSyncService(OpenFgaAuthzService authzService,
                             RolePermissionRepository rolePermissionRepository,
                             UserRoleAssignmentRepository assignmentRepository,
@@ -250,6 +252,7 @@ public class TupleSyncService {
             case MODULE -> List.of("can_manage", "can_view", "blocked");
             case ACTION -> List.of("allowed", "blocked");
             case REPORT -> List.of("can_view", "blocked");
+            case PAGE, FIELD -> List.of(); // deprecated — no OpenFGA tuples
         };
     }
 
@@ -271,6 +274,7 @@ public class TupleSyncService {
                 case DENY -> new TupleMapping("blocked", "report");
                 default -> null;
             };
+            case PAGE, FIELD -> null; // deprecated — skip
         };
     }
 

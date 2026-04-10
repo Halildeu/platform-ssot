@@ -252,9 +252,15 @@ check('hardcoded-colors', 'Hardcoded renk tespiti', () => {
 /* ------------------------------------------------------------------ */
 
 check('component-grades', 'Bileşen grade kontrolü (D/F = fail)', () => {
-  // Scorecard writes to reports/scorecard.json — run it first, then read
-  runSiblingScriptRaw('component-scorecard.mjs');
-  const components = readReportFile('reports/scorecard.json');
+  // Run scorecard in JSON mode and parse output directly
+  const raw = runSiblingScriptRaw('component-scorecard.mjs', '--json');
+  let components = null;
+  if (raw) {
+    try { components = JSON.parse(raw); } catch { /* fallback to file */ }
+  }
+  if (!components) {
+    components = readReportFile('reports/scorecard.json');
+  }
 
   if (!components || !Array.isArray(components)) {
     return { status: 'warn', message: 'component-scorecard çalıştırılamadı veya rapor okunamadı' };
@@ -408,6 +414,57 @@ check('test-quality', 'Test kalitesi (sığ test tespiti)', () => {
     message: `${fGradeLines.length} test dosyası F-grade, ${dGradeLines} D-grade`,
     details: fGradeLines.slice(0, 10).map(f => `F (${f.score}%): ${f.file}`),
     fix: 'Sığ testlere assertion, interaction, semantic query ekleyin',
+  };
+});
+
+/* ------------------------------------------------------------------ */
+/*  Check 9: theme-axis-hardcodes                                      */
+/* ------------------------------------------------------------------ */
+
+check('theme-axis-hardcodes', 'Theme axis hardcode tespiti (motion)', () => {
+  // NOTE: radius (rounded-*) and shadow (shadow-*) are NO LONGER hardcodes.
+  // They are now theme-axis aware via @theme inline token mapping:
+  //   --radius-lg: var(--radius-surface)  → responds to [data-radius]
+  //   --shadow-md: var(--elevation-surface) → responds to [data-elevation]
+  // Only motion duration-* remains as a real hardcode concern.
+
+  const SKIP_DIRS = new Set(['__tests__', '__visual__', 'node_modules', 'dist', '.stryker-cache']);
+  const SKIP_PATTERNS = [/\.test\./, /\.stories\./, /\.figma\./, /\.d\.ts$/];
+
+  const issues = { motion: [] };
+
+  const tsxFiles = findFiles(SRC, (name, full) => {
+    if (!name.endsWith('.tsx')) return false;
+    if (SKIP_PATTERNS.some(p => p.test(name))) return false;
+    return true;
+  }).filter(f => !f.split('/').some(seg => SKIP_DIRS.has(seg)));
+
+  for (const file of tsxFiles) {
+    const content = readSafe(file);
+    const rel = file.replace(DS_ROOT + '/', '');
+    const lines = content.split('\n');
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+
+      // Motion: hardcoded duration-NNN (should use duration-(--motion-duration-*))
+      if (/\bduration-(?:75|100|150|200|300|500|700|1000)\b/.test(line) && !line.includes('var(--motion') && !line.includes('--motion-duration')) {
+        issues.motion.push(`${rel}:${i + 1}`);
+      }
+    }
+  }
+
+  const total = issues.motion.length;
+
+  if (total === 0) {
+    return { status: 'pass', message: 'Theme axis hardcode bulunamadı' };
+  }
+
+  return {
+    status: 'warn',
+    message: `${total} motion hardcode bulundu (duration-* without --motion token)`,
+    details: issues.motion.slice(0, 8),
+    fix: 'Hardcoded duration-200 yerine duration-(--motion-duration-medium) kullanın',
   };
 });
 
