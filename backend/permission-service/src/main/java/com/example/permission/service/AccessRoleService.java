@@ -36,19 +36,22 @@ public class AccessRoleService {
     private final UserRoleAssignmentRepository assignmentRepository;
     private final AuditEventService auditEventService;
     private final OpenFgaAuthzService authzService;
+    private final AuthzVersionService authzVersionService;
 
     public AccessRoleService(RoleRepository roleRepository,
                              RolePermissionRepository rolePermissionRepository,
                              PermissionRepository permissionRepository,
                              UserRoleAssignmentRepository assignmentRepository,
                              AuditEventService auditEventService,
-                             OpenFgaAuthzService authzService) {
+                             OpenFgaAuthzService authzService,
+                             AuthzVersionService authzVersionService) {
         this.roleRepository = roleRepository;
         this.rolePermissionRepository = rolePermissionRepository;
         this.permissionRepository = permissionRepository;
         this.assignmentRepository = assignmentRepository;
         this.auditEventService = auditEventService;
         this.authzService = authzService;
+        this.authzVersionService = authzVersionService;
     }
 
     @Transactional(readOnly = true)
@@ -90,6 +93,7 @@ public class AccessRoleService {
                 )
         );
 
+        authzVersionService.incrementVersion();
         return PermissionDtoMapper.toRoleDto(toDto(saved));
     }
 
@@ -128,6 +132,7 @@ public class AccessRoleService {
                         null
                 )
         );
+        authzVersionService.incrementVersion();
     }
 
     @Transactional
@@ -165,6 +170,7 @@ public class AccessRoleService {
                 )
         );
 
+        authzVersionService.incrementVersion();
         AccessRoleDto accessRoleDto = toDto(saved);
         RoleDto dto = PermissionDtoMapper.toRoleDto(accessRoleDto);
         String auditId = auditEvent != null && auditEvent.getId() != null ? auditEvent.getId().toString() : null;
@@ -203,6 +209,7 @@ public class AccessRoleService {
                 )
         );
 
+        authzVersionService.incrementVersion();
         String auditId = audit != null && audit.getId() != null ? audit.getId().toString() : null;
         return new BulkPermissionsResponseDto(new ArrayList<>(updated), auditId);
     }
@@ -270,6 +277,7 @@ public class AccessRoleService {
                 )
         );
 
+        authzVersionService.incrementVersion();
         String auditId = audit != null && audit.getId() != null ? audit.getId().toString() : null;
         return new RolePermissionsUpdateResponseDto(true, auditId);
     }
