@@ -1,6 +1,7 @@
 package com.example.permission.service;
 
 import com.example.commonauth.openfga.OpenFgaAuthzService;
+import com.example.commonauth.scope.ScopeContextCache;
 import com.example.permission.model.GrantType;
 import com.example.permission.model.PermissionType;
 import com.example.permission.model.RolePermission;
@@ -29,15 +30,25 @@ public class TupleSyncService {
     private final RolePermissionRepository rolePermissionRepository;
     private final UserRoleAssignmentRepository assignmentRepository;
     private final AuthzVersionService authzVersionService;
+    private final ScopeContextCache scopeContextCache;
 
     public TupleSyncService(OpenFgaAuthzService authzService,
                             RolePermissionRepository rolePermissionRepository,
                             UserRoleAssignmentRepository assignmentRepository,
                             AuthzVersionService authzVersionService) {
+        this(authzService, rolePermissionRepository, assignmentRepository, authzVersionService, null);
+    }
+
+    public TupleSyncService(OpenFgaAuthzService authzService,
+                            RolePermissionRepository rolePermissionRepository,
+                            UserRoleAssignmentRepository assignmentRepository,
+                            AuthzVersionService authzVersionService,
+                            ScopeContextCache scopeContextCache) {
         this.authzService = authzService;
         this.rolePermissionRepository = rolePermissionRepository;
         this.assignmentRepository = assignmentRepository;
         this.authzVersionService = authzVersionService;
+        this.scopeContextCache = scopeContextCache;
     }
 
     /**
@@ -75,6 +86,7 @@ public class TupleSyncService {
         }
         if (!skipVersionIncrement) {
             authzVersionService.incrementVersion();
+            if (scopeContextCache != null) scopeContextCache.evictUser(userId);
         }
     }
 
@@ -125,6 +137,7 @@ public class TupleSyncService {
             }
         }
         authzVersionService.incrementVersion();
+        if (scopeContextCache != null) scopeContextCache.evictAll();
     }
 
     /**
@@ -143,6 +156,7 @@ public class TupleSyncService {
         writeScopeTuples(userId, "member", "branch", branchIds);
         if (!skipVersionIncrement) {
             authzVersionService.incrementVersion();
+            if (scopeContextCache != null) scopeContextCache.evictUser(userId);
         }
     }
 
