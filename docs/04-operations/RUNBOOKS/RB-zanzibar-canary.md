@@ -1,16 +1,20 @@
-# RB-zanzibar-canary – Zanzibar Canary Deployment Runbook
+# RUNBOOK – Zanzibar Canary Deployment
 
 ID: RB-zanzibar-canary
 Service: permission-service, core-data-service, openfga
 Status: Draft
 Owner: @halil
 
-## 1. AMAÇ
+-------------------------------------------------------------------------------
+1. AMAÇ
+-------------------------------------------------------------------------------
 
 Zanzibar authorization sisteminin staging'den production'a feature-flag ile
 kademeli gecisini yonetmek. Ref: CNS-20260411-001, Dalga 2 Plan.
 
-## 2. KAPSAM
+-------------------------------------------------------------------------------
+2. KAPSAM
+-------------------------------------------------------------------------------
 
 - Sorumlu: Platform Engineering (operasyon), @halil (owner).
 - Ortamlar: stage (canary), prod (rollout).
@@ -23,7 +27,9 @@ Pre-conditions:
 - [ ] doctor-zanzibar.sh PASS (pre-existing haric)
 - [ ] Restricted smoke user seeded (stage-keycloak-smoke-user seed-smoke-role)
 
-## 3. BAŞLATMA / DURDURMA
+-------------------------------------------------------------------------------
+3. BAŞLATMA / DURDURMA
+-------------------------------------------------------------------------------
 
 Stage 1 — Deploy (Flags OFF, Day 1):
 - Merge main branch to prod deploy.
@@ -45,7 +51,9 @@ Stage 3 — Full Rollout (Day 5-14):
 - Stage 2 stable 48h → keep flags ON.
 - No traffic splitting (not applicable for current architecture).
 
-## 4. GÖZLEMLEME / LOG / METRİKLER
+-------------------------------------------------------------------------------
+4. GÖZLEMLEME / LOG / METRİKLER
+-------------------------------------------------------------------------------
 
 Guardrails:
 
@@ -64,9 +72,11 @@ Loglar:
 
 Metrikler:
 - Prometheus: http://localhost:9090 (permission-service, core-data, openfga targets)
-- Grafana: authz-zanbibar alert rules (10 rule)
+- Grafana: authz-zanzibar alert rules (10 rule)
 
-## 5. ARIZA DURUMLARI VE ADIMLAR
+-------------------------------------------------------------------------------
+5. ARIZA DURUMLARI VE ADIMLAR
+-------------------------------------------------------------------------------
 
 - [ ] Ariza senaryosu 1 — OpenFGA down:
   - Given: OpenFGA container crashed veya network partition.
@@ -83,13 +93,17 @@ Metrikler:
     When: Version bump loop veya TTL cok kisa.
     Then: SCOPE_CACHE_TTL_SECONDS artir (30 → 60), cache size kontrol.
 
-## 6. ÖZET
+-------------------------------------------------------------------------------
+6. ÖZET
+-------------------------------------------------------------------------------
 
 - Canary 3 asamali: deploy (OFF) → canary (ON, admin+restricted) → rollout.
 - Rollback her asamada < 1 dk (flag OFF + restart).
 - Restricted user deny senaryosu canary'nin zorunlu parcasi.
 
-## 7. LİNKLER (İSTEĞE BAĞLI)
+-------------------------------------------------------------------------------
+7. LİNKLER (İSTEĞE BAĞLI)
+-------------------------------------------------------------------------------
 
 - Master plan: .claude/plans/zanzibar-master-plan.md (rev 6)
 - Decision registry: decisions/topics/zanzibar-openfga.v1.json
