@@ -14,3 +14,12 @@ export type {
   PermissionCatalog, ModuleCatalogItem, ActionCatalogItem, ReportCatalogItem,
 } from './types';
 export { useAuthorization } from './compat';
+
+// Zanzibar-Aware object-level authorization (PRJ-DESIGN-LAB-EVOLUTION Faz 4)
+export { ZanzibarGate } from './ZanzibarGate';
+export type { ZanzibarGateProps } from './ZanzibarGate';
+export { useZanzibarAccess } from './useZanzibarAccess';
+export { resolveZanzibarAccessProps } from './resolveZanzibarAccessProps';
+export type { ZanzibarAccessResult, ZanzibarAccessProps, UIAccessLevel } from './resolveZanzibarAccessProps';
+export { createZanzibarCache } from './zanzibar-cache';
+export type { ZanzibarCache, ZanzibarCacheConfig, ZanzibarCacheEntry } from './zanzibar-cache';
