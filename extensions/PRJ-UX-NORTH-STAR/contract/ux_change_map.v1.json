@@ -1,7 +1,7 @@
 {
   "version": "v1",
   "subject_id": "ux_katalogu",
-  "generated_at": "2026-04-11T07:00:00Z",
+  "generated_at": "2026-04-11T09:30:00Z",
   "entries": [
     {
       "path": "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
@@ -416,7 +416,102 @@
     {
       "path": "web/packages/auth/src/zanzibar-cache.ts",
       "ux_theme_id": "trust_privacy_security_ux",
-      "ux_subtheme_id": "session_and_step_up_authentication"
+      "ux_subtheme_id": "secure_session_step_up_authentication"
+    },
+    {
+      "path": "web/stories/Accordion.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/Alert.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/DataLiveDemoFoundations.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/DetailSectionTabs.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/GridSurfaceFoundations.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/InteractiveLiveDemoFoundations.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/LiveDemoFoundations.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/NavigationRail.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/PageLayoutReporting.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/Pagination.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/SectionTabs.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/Segmented.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/Select.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/StableSurfacePatterns.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/TablePagination.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/Tabs.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/ThemePresetFoundations.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/UiKitReleaseMatrix.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
+      "path": "web/stories/UtilityLiveDemoFoundations.stories.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
     }
   ]
 }
