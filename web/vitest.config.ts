@@ -20,12 +20,9 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text-summary', 'json-summary'],
-      thresholds: {
-        statements: 50,
-        branches: 40,
-        functions: 45,
-        lines: 50,
-      },
+      // Thresholds enforced per-project in workspace configs, not at root.
+      // Root --changed mode covers only touched files — global thresholds
+      // are misleading and cause false failures in CI.
     },
     exclude: [
       // Standard exclusions
