@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * Handles the multi-branch visibility logic for VariantVisibility entity.
  */
 @Component
+@ConditionalOnBean(jakarta.persistence.EntityManagerFactory.class)
 public class ScopeFilterInterceptor implements HandlerInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(ScopeFilterInterceptor.class);
