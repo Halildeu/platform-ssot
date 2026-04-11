@@ -127,10 +127,10 @@ describe('Avatar — shape proplari', () => {
     expect(span?.className).toContain('rounded-full');
   });
 
-  it('shape="square" rounded-lg class uygular', () => {
+  it('shape="square" rounded-surface class uygular', () => {
     const { container } = render(<Avatar shape="square" />);
     const span = container.querySelector('span');
-    expect(span?.className).toContain('rounded-lg');
+    expect(span?.className).toContain('rounded-surface');
   });
 });
 

@@ -112,10 +112,10 @@ describe('IconButton — rounded', () => {
     expect(button?.className).toContain('rounded-full');
   });
 
-  it('rounded=false durumunda rounded-lg class uygular', () => {
+  it('rounded=false durumunda rounded-surface class uygular', () => {
     const { container } = render(<IconButton icon={TestIcon} label="Test" />);
     const button = container.querySelector('button');
-    expect(button?.className).toContain('rounded-lg');
+    expect(button?.className).toContain('rounded-surface');
   });
 });
 

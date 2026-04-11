@@ -28,7 +28,7 @@
     ]
   },
   "delivery_scope": {
-    "affected_modules": [],
+    "affected_modules": ["design-system", "x-charts", "mfe-shell", "mfe-access", "mfe-reporting", "mfe-users", "auth"],
     "change_path_globs": [
       "backend/docker-compose.yml",
       "backend/*/src/main/resources/application-integration.yml",
@@ -37,8 +37,18 @@
       "backend/permission-service/**/*",
       "backend/core-data-service/**/*",
       "backend/openfga/**/*",
+      "backend/.env.prod.example",
       "web/packages/auth/**/*",
-      "web/apps/mfe-shell/src/pages/admin/design-lab/**/*"
+      "web/packages/design-system/**/*",
+      "web/packages/x-charts/**/*",
+      "web/apps/mfe-shell/**/*",
+      "web/apps/mfe-access/**/*",
+      "web/apps/mfe-reporting/**/*",
+      "web/apps/mfe-users/**/*",
+      "web/stories/*",
+      "web/stories/**/*",
+      "web/.storybook/*",
+      "web/.storybook/**/*"
     ],
     "repo_root": ".",
     "service_scopes": [
@@ -46,7 +56,7 @@
       "frontend"
     ]
   },
-  "feature_id": "integration-profile",
+  "feature_id": "design-lab-zanzibar-merge",
   "kind": "feature-execution-contract",
   "lane_plan": {
     "execution_sequence": [
@@ -180,14 +190,14 @@
     "source_type": "manual"
   },
   "status": "ACTIVE",
-  "summary": "Spring integration profile + docker-compose local defaults",
+  "summary": "Design Lab enterprise charts + theme token migration + Zanzibar auth integration",
   "technical_contract": {
     "api_version_prefix": "/api/v1",
     "baseline_profile_id": "erp-fullstack-java21-react18",
     "db_migration_required": false,
     "design_system_policy": "policies/policy_ui_design_system.v1.json"
   },
-  "title": "Integration profile for local auth testing",
+  "title": "Design Lab x-charts enterprise + Zanzibar merge",
   "ux_contract": {
     "artifacts": [
       {
@@ -199,10 +209,60 @@
         "path_glob": "web/packages/auth/src/*.tsx",
         "ux_theme_id": "trust_privacy_security_ux",
         "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/packages/design-system/**/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/packages/x-charts/**/*",
+        "ux_theme_id": "feedback_state_and_visibility",
+        "ux_subtheme_id": "loading_empty_error_success_patterns"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/**/*",
+        "ux_theme_id": "task_completion_architecture",
+        "ux_subtheme_id": "progressive_disclosure_by_complexity"
+      },
+      {
+        "path_glob": "web/apps/mfe-access/**/*",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/apps/mfe-reporting/**/*",
+        "ux_theme_id": "data_entry_validation_recovery",
+        "ux_subtheme_id": "inline_validation_before_submit"
+      },
+      {
+        "path_glob": "web/apps/mfe-users/**/*",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "sensitive_data_masking_and_redaction"
+      },
+      {
+        "path_glob": "web/stories/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "ux_pattern_registry_usage"
+      },
+      {
+        "path_glob": "web/stories/**/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "ux_pattern_registry_usage"
+      },
+      {
+        "path_glob": "web/.storybook/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "behavior_contracts_across_modules"
+      },
+      {
+        "path_glob": "web/.storybook/**/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "behavior_contracts_across_modules"
       }
     ],
     "mode": "REQUIRED",
-    "rationale": "Frontend auth SDK: useZanzibarAccess hook, ZanzibarGate component, batch check API — object-level Zanzibar permission gates."
+    "rationale": "Design Lab enterprise charts, theme token migration, Zanzibar permission gates — merged delivery."
   },
   "version": "v1"
 }

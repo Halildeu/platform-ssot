@@ -169,10 +169,10 @@ describe('Skeleton — edge cases', () => {
 /* ------------------------------------------------------------------ */
 
 describe('Skeleton — correct size/shape (deepening)', () => {
-  it('renders rectangle by default (rounded-lg, not rounded-full)', () => {
+  it('renders rectangle by default (rounded-surface, not rounded-full)', () => {
     const { container } = render(<Skeleton />);
     const div = container.firstElementChild;
-    expect(div?.className).toContain('rounded-lg');
+    expect(div?.className).toContain('rounded-surface');
     expect(div?.className).not.toContain('rounded-full');
   });
 

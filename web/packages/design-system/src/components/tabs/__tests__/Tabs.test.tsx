@@ -113,7 +113,7 @@ describe('Tabs — variant proplari', () => {
       <Tabs items={makeItems()} variant="enclosed" />,
     );
     const tablist = container.querySelector('[role="tablist"]');
-    expect(tablist?.className).toContain('rounded-xl');
+    expect(tablist?.className).toContain('rounded-surface');
   });
 
   it('variant="pill" dogru class uygular', () => {
