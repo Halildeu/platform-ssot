@@ -16,10 +16,10 @@ export interface AuthzTarget {
  * Keys match backend PermissionDataInitializer report group keys (reports.* prefix stripped).
  */
 export const REPORT_AUTHZ_TARGETS: Record<string, AuthzTarget> = {
-  HR_REPORTS: { objectType: 'report_group', objectId: 'hr_reports', label: 'HR Reports' },
-  FINANCE_REPORTS: { objectType: 'report_group', objectId: 'finance_reports', label: 'Finance Reports' },
-  SALES_REPORTS: { objectType: 'report_group', objectId: 'sales_reports', label: 'Sales Reports' },
-  ANALYTICS_REPORTS: { objectType: 'report_group', objectId: 'analytics_reports', label: 'Analytics Reports' },
+  HR_REPORTS: { objectType: 'report', objectId: 'hr_reports', label: 'HR Reports' },
+  FINANCE_REPORTS: { objectType: 'report', objectId: 'finance_reports', label: 'Finance Reports' },
+  SALES_REPORTS: { objectType: 'report', objectId: 'sales_reports', label: 'Sales Reports' },
+  ANALYTICS_REPORTS: { objectType: 'report', objectId: 'analytics_reports', label: 'Analytics Reports' },
 } as const;
 
 export type ReportGroupKey = keyof typeof REPORT_AUTHZ_TARGETS;

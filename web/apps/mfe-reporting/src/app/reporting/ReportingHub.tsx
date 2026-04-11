@@ -5,7 +5,7 @@ import {
   GalleryCard,
 } from '@mfe/design-system';
 import type { GalleryItem } from '@mfe/design-system';
-import { useBatchZanzibarAccess } from '@mfe/auth';
+import { ZanzibarGate } from '@mfe/auth';
 import { useCatalog, catalogTypeTone } from './useCatalog';
 import type { CatalogItem } from './useCatalog';
 
@@ -71,10 +71,6 @@ const ReportingHub: React.FC = () => {
   const { items, isLoading } = useCatalog();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // CNS-20260411-003 #7: batch-check all report IDs in one call instead of N ZanzibarGates
-  const reportIds = useMemo(() => items.map((item) => item.route), [items]);
-  const { isAllowed, loading: batchLoading } = useBatchZanzibarAccess('can_view', 'report', reportIds);
-
   /* -- Search -------------------------------------------------------- */
   const [inputValue, setInputValue] = useState('');
   const [query, setQuery] = useState('');
@@ -119,21 +115,26 @@ const ReportingHub: React.FC = () => {
   const renderCard = useCallback(
     (item: GalleryItem) => {
       const ci = item as CatalogItem;
-      if (!isAllowed(ci.route)) return null;
       return (
-        <GalleryCard
-          item={{
-            ...ci,
-            badge: {
-              label: ci.type === 'dashboard' ? 'Dashboard' : 'Grid',
-              tone: catalogTypeTone[ci.type] ?? 'default',
-            },
-          }}
-          onClick={() => handleItemClick(ci)}
-        />
+        <ZanzibarGate
+          relation="can_view"
+          objectType="report"
+          objectId={ci.route}
+        >
+          <GalleryCard
+            item={{
+              ...ci,
+              badge: {
+                label: ci.type === 'dashboard' ? 'Dashboard' : 'Grid',
+                tone: catalogTypeTone[ci.type] ?? 'default',
+              },
+            }}
+            onClick={() => handleItemClick(ci)}
+          />
+        </ZanzibarGate>
       );
     },
-    [handleItemClick, isAllowed],
+    [handleItemClick],
   );
 
   const summaryFormatter = useCallback(
@@ -147,7 +148,7 @@ const ReportingHub: React.FC = () => {
   );
 
   /* -- Loading ------------------------------------------------------- */
-  if ((isLoading || batchLoading) && items.length === 0) {
+  if (isLoading && items.length === 0) {
     return (
       <div className="flex flex-col items-center gap-6 px-6 pt-16">
         <div className="h-8 w-48 animate-pulse rounded-xl bg-surface-muted" />

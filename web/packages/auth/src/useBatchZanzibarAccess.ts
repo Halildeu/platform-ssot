@@ -81,6 +81,9 @@ export function useBatchZanzibarAccess(
     return { resolved: resolvedMap, needsServer: serverNeeded };
   }, [initialized, isSuperAdmin, hasModule, canViewReport, isActionAllowed, objectType, objectIds]);
 
+  // Stable key for needsServer — triggers effect when ID set changes (not just length)
+  const needsServerKey = useMemo(() => needsServer.join(','), [needsServer]);
+
   // Phase 2: Batch server check for unresolved items
   useEffect(() => {
     if (needsServer.length === 0 || !httpPost) {
@@ -97,9 +100,9 @@ export function useBatchZanzibarAccess(
       objectId,
     }));
 
-    checkPermissionBatch(httpPost, { checks })
-      .then((res) => {
-        if (!cancelled) setServerResults(res.results);
+    checkPermissionBatch(httpPost, checks)
+      .then((results) => {
+        if (!cancelled) setServerResults(results);
       })
       .catch(() => {
         if (!cancelled) {
@@ -119,7 +122,7 @@ export function useBatchZanzibarAccess(
       });
 
     return () => { cancelled = true; };
-  }, [needsServer.length, relation, objectType, httpPost]);
+  }, [needsServerKey, relation, objectType, httpPost]);
 
   // Phase 3: Merge coarse + server results
   const entries = useMemo(() => {
