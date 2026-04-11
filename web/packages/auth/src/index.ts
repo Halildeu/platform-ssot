@@ -7,6 +7,8 @@ export { useCheckPermission } from './useCheckPermission';
 export { useExplainPermission } from './useExplainPermission';
 export { ProtectedRoute, ProtectedSection } from './ProtectedRoute';
 export { useZanzibarAccess } from './useZanzibarAccess';
+export { useBatchZanzibarAccess } from './useBatchZanzibarAccess';
+export type { BatchAccessEntry, BatchZanzibarAccessResult } from './useBatchZanzibarAccess';
 export { ZanzibarGate } from './ZanzibarGate';
 export { fetchAuthzMe, fetchAuthzVersion, checkPermission, checkPermissionBatch } from './api';
 export { MODULES } from './types';
