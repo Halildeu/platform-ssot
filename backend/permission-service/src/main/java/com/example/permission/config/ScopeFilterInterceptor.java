@@ -4,6 +4,7 @@ import com.example.commonauth.scope.RlsScopeHelper;
 import com.example.commonauth.scope.ScopeContext;
 import com.example.commonauth.scope.ScopeContextHolder;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
@@ -14,19 +15,16 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
  * Enables Hibernate scope filters AND PostgreSQL RLS on every request.
- * Handles both companyScope (for Scope, UserRoleAssignment) and
- * userScope (for UserPermissionScope) filters.
+ * Handles both companyScope (for UserRoleAssignment), scopeCompanyFilter (for Scope),
+ * and userScope (for UserPermissionScope) filters.
  */
 @Component
 public class ScopeFilterInterceptor implements HandlerInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(ScopeFilterInterceptor.class);
 
-    private final EntityManager entityManager;
-
-    public ScopeFilterInterceptor(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -51,11 +49,14 @@ public class ScopeFilterInterceptor implements HandlerInterceptor {
         try {
             Session session = entityManager.unwrap(Session.class);
 
-            // companyScope filter (Scope, UserRoleAssignment entities)
+            // companyScope filter (UserRoleAssignment entity)
             if (!ctx.allowedCompanyIds().isEmpty()) {
                 session.enableFilter("companyScope")
                         .setParameterList("companyIds", ctx.allowedCompanyIds().stream().toList());
-                log.debug("Hibernate companyScope filter enabled: user={}, companies={}",
+                // scopeCompanyFilter (Scope entity — different name to avoid FilterDef conflict)
+                session.enableFilter("scopeCompanyFilter")
+                        .setParameterList("companyIds", ctx.allowedCompanyIds().stream().toList());
+                log.debug("Hibernate companyScope + scopeCompanyFilter enabled: user={}, companies={}",
                         ctx.userId(), ctx.allowedCompanyIds());
             }
 

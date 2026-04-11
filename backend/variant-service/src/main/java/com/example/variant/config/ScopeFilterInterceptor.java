@@ -4,6 +4,7 @@ import com.example.commonauth.scope.RlsScopeHelper;
 import com.example.commonauth.scope.ScopeContext;
 import com.example.commonauth.scope.ScopeContextHolder;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
@@ -21,11 +22,8 @@ public class ScopeFilterInterceptor implements HandlerInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(ScopeFilterInterceptor.class);
 
-    private final EntityManager entityManager;
-
-    public ScopeFilterInterceptor(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
