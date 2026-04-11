@@ -1213,7 +1213,7 @@
     {
       "id": "ROB-0131",
       "name": "smoke-zanzibar",
-      "kind": "ci-workflow",
+      "kind": "workflow",
       "path": ".github/workflows/smoke-zanzibar.yml",
       "default_mode": "observe",
       "allowed_modes": [
