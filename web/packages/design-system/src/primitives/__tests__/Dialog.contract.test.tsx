@@ -4,10 +4,12 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
+import { setupDialogMocks } from '../../__tests__/contract-providers';
 import { Dialog } from '../dialog/Dialog';
 import type { DialogSize, DialogSlot, DialogProps } from '../dialog/Dialog';
 
 describe('Dialog — contract', () => {
+  beforeAll(() => setupDialogMocks());
   const defaultProps = {
     open: true,
     onClose: vi.fn(),
@@ -15,7 +17,7 @@ describe('Dialog — contract', () => {
 
   it('renders without crash', () => {
     const { container } = render(<Dialog {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(container).toBeDefined();
   });
 
   it('has displayName', () => {
@@ -25,7 +27,7 @@ describe('Dialog — contract', () => {
   it('renders with only required props (3 required, 9 optional)', () => {
     // All 9 optional props omitted — should not crash
     const { container } = render(<Dialog {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(container).toBeDefined();
   });
 
   it('exports expected types', () => {

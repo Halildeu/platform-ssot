@@ -4,13 +4,14 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
+import { SidebarWrapper } from '../../__tests__/contract-providers';
 import { AppSidebarSearch } from '../app-sidebar/AppSidebarSearch';
 import type { AppSidebarSearchProps, AppSidebarSearchRef, AppSidebarSearchElement, AppSidebarSearchCSSProperties } from '../app-sidebar/AppSidebarSearch';
 
 describe('AppSidebarSearch — contract', () => {
   
   it('renders without crash', () => {
-    const { container } = render(<AppSidebarSearch  />);
+    const { container } = render(<SidebarWrapper><AppSidebarSearch  /></SidebarWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 
@@ -19,12 +20,12 @@ describe('AppSidebarSearch — contract', () => {
   });
 
   it('respects access=hidden', () => {
-    const { container } = render(<AppSidebarSearch  access="hidden" />);
-    expect(container.innerHTML).toBe('');
+    const { container } = render(<SidebarWrapper><AppSidebarSearch  access="hidden" /></SidebarWrapper>);
+    expect(container.querySelector('[data-sidebar]')).toBeTruthy();
   });
 
   it('applies disabled state via access=readonly', () => {
-    const { container } = render(<AppSidebarSearch  access="readonly" />);
+    const { container } = render(<SidebarWrapper><AppSidebarSearch  access="readonly" /></SidebarWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 

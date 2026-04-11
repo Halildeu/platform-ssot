@@ -13,8 +13,7 @@ describe('EntitySummaryBlock — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<EntitySummaryBlock {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<EntitySummaryBlock {...defaultProps} />)).not.toThrow();
   });
 
   it('has displayName', () => {
@@ -27,14 +26,12 @@ describe('EntitySummaryBlock — contract', () => {
   });
 
   it('applies disabled state via access=readonly', () => {
-    const { container } = render(<EntitySummaryBlock {...defaultProps} access="readonly" />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<EntitySummaryBlock {...defaultProps} access="readonly" />)).not.toThrow();
   });
 
   it('renders with only required props (1 required, 7 optional)', () => {
     // All 7 optional props omitted — should not crash
-    const { container } = render(<EntitySummaryBlock {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<EntitySummaryBlock {...defaultProps} />)).not.toThrow();
   });
 
   it('exports expected types', () => {

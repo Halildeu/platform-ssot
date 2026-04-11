@@ -4,6 +4,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
+import { FormWrapper } from '../../__tests__/contract-providers';
 import { ConnectedFormField } from '../ConnectedFormField';
 import type { ConnectedFormFieldProps, ConnectedFormFieldRef, ConnectedFormFieldElement, ConnectedFormFieldCSSProperties } from '../ConnectedFormField';
 
@@ -13,7 +14,7 @@ describe('ConnectedFormField — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<ConnectedFormField {...defaultProps} />);
+    const { container } = render(<FormWrapper><ConnectedFormField {...defaultProps} /></FormWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 
@@ -23,7 +24,7 @@ describe('ConnectedFormField — contract', () => {
 
   it('renders with only required props (2 required, 8 optional)', () => {
     // All 8 optional props omitted — should not crash
-    const { container } = render(<ConnectedFormField {...defaultProps} />);
+    const { container } = render(<FormWrapper><ConnectedFormField {...defaultProps} /></FormWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 

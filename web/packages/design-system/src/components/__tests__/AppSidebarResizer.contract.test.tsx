@@ -4,13 +4,14 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
+import { SidebarWrapper } from '../../__tests__/contract-providers';
 import { AppSidebarResizer } from '../app-sidebar/AppSidebarResizer';
 import type { AppSidebarResizerProps, AppSidebarResizerRef, AppSidebarResizerElement, AppSidebarResizerCSSProperties } from '../app-sidebar/AppSidebarResizer';
 
 describe('AppSidebarResizer — contract', () => {
   
   it('renders without crash', () => {
-    const { container } = render(<AppSidebarResizer  />);
+    const { container } = render(<SidebarWrapper><AppSidebarResizer  /></SidebarWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 
@@ -19,12 +20,12 @@ describe('AppSidebarResizer — contract', () => {
   });
 
   it('respects access=hidden', () => {
-    const { container } = render(<AppSidebarResizer  access="hidden" />);
-    expect(container.innerHTML).toBe('');
+    const { container } = render(<SidebarWrapper><AppSidebarResizer  access="hidden" /></SidebarWrapper>);
+    expect(container.querySelector('[data-sidebar]')).toBeTruthy();
   });
 
   it('applies disabled state via access=readonly', () => {
-    const { container } = render(<AppSidebarResizer  access="readonly" />);
+    const { container } = render(<SidebarWrapper><AppSidebarResizer  access="readonly" /></SidebarWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 

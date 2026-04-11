@@ -31,8 +31,12 @@
     "affected_modules": ["design-system", "x-charts", "mfe-shell", "mfe-access", "mfe-reporting", "mfe-users", "auth"],
     "change_path_globs": [
       "backend/docker-compose.yml",
+      "backend/docker-compose.prod.yml",
+      "backend/.env.example",
+      "backend/scripts/vault/**/*",
       "backend/*/src/main/resources/application-integration.yml",
       "backend/dev-integration.sh",
+      "deploy/**/*",
       "backend/common-auth/**/*",
       "backend/permission-service/**/*",
       "backend/core-data-service/**/*",

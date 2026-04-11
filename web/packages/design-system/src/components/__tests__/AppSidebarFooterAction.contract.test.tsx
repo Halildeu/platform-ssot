@@ -4,6 +4,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
+import { SidebarWrapper } from '../../__tests__/contract-providers';
 import { AppSidebarFooterAction } from '../app-sidebar/AppSidebarFooterAction';
 import type { AppSidebarFooterActionProps } from '../app-sidebar/AppSidebarFooterAction';
 
@@ -14,7 +15,7 @@ describe('AppSidebarFooterAction — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<AppSidebarFooterAction {...defaultProps} />);
+    const { container } = render(<SidebarWrapper><AppSidebarFooterAction {...defaultProps} /></SidebarWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 
@@ -24,7 +25,7 @@ describe('AppSidebarFooterAction — contract', () => {
 
   it('renders with only required props (2 required, 7 optional)', () => {
     // All 7 optional props omitted — should not crash
-    const { container } = render(<AppSidebarFooterAction {...defaultProps} />);
+    const { container } = render(<SidebarWrapper><AppSidebarFooterAction {...defaultProps} /></SidebarWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 

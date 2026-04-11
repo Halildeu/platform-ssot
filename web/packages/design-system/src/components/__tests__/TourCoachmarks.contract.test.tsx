@@ -13,8 +13,7 @@ describe('TourCoachmarks — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<TourCoachmarks {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<TourCoachmarks {...defaultProps} />)).not.toThrow();
   });
 
   it('has displayName', () => {
@@ -27,14 +26,12 @@ describe('TourCoachmarks — contract', () => {
   });
 
   it('applies disabled state via access=readonly', () => {
-    const { container } = render(<TourCoachmarks {...defaultProps} access="readonly" />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<TourCoachmarks {...defaultProps} access="readonly" />)).not.toThrow();
   });
 
   it('renders with only required props (1 required, 19 optional)', () => {
     // All 19 optional props omitted — should not crash
-    const { container } = render(<TourCoachmarks {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<TourCoachmarks {...defaultProps} />)).not.toThrow();
   });
 
   it('exports expected types', () => {

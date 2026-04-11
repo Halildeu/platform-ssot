@@ -4,6 +4,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
+import { FormWrapper } from '../../__tests__/contract-providers';
 import { ConnectedRadio } from '../connected/ConnectedRadio';
 import type { ConnectedRadioProps, ConnectedRadioRef, ConnectedRadioElement, ConnectedRadioCSSProperties } from '../connected/ConnectedRadio';
 
@@ -14,7 +15,7 @@ describe('ConnectedRadio — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<ConnectedRadio {...defaultProps} />);
+    const { container } = render(<FormWrapper><ConnectedRadio {...defaultProps} /></FormWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 
@@ -24,7 +25,7 @@ describe('ConnectedRadio — contract', () => {
 
   it('renders with only required props (2 required, 4 optional)', () => {
     // All 4 optional props omitted — should not crash
-    const { container } = render(<ConnectedRadio {...defaultProps} />);
+    const { container } = render(<FormWrapper><ConnectedRadio {...defaultProps} /></FormWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 

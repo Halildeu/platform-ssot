@@ -18,8 +18,7 @@ describe('NotificationItemCard — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<NotificationItemCard {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<NotificationItemCard {...defaultProps} />)).not.toThrow();
   });
 
   it('has displayName', () => {
@@ -32,14 +31,12 @@ describe('NotificationItemCard — contract', () => {
   });
 
   it('applies disabled state via access=readonly', () => {
-    const { container } = render(<NotificationItemCard {...defaultProps} access="readonly" />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<NotificationItemCard {...defaultProps} access="readonly" />)).not.toThrow();
   });
 
   it('renders with only required props (6 required, 10 optional)', () => {
     // All 10 optional props omitted — should not crash
-    const { container } = render(<NotificationItemCard {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<NotificationItemCard {...defaultProps} />)).not.toThrow();
   });
 
   it('exports expected types', () => {

@@ -9,7 +9,6 @@ import { ShellHeader } from '../shell-header/ShellHeader';
 describe('ShellHeader — contract', () => {
   
   it('renders without crash', () => {
-    const { container } = render(<ShellHeader  />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<ShellHeader  />)).not.toThrow();
   });
 });

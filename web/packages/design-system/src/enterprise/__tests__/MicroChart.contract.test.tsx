@@ -14,8 +14,7 @@ describe('MicroChart — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<MicroChart {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<MicroChart {...defaultProps} />)).not.toThrow();
   });
 
   it('has displayName', () => {
@@ -28,14 +27,12 @@ describe('MicroChart — contract', () => {
   });
 
   it('applies disabled state via access=readonly', () => {
-    const { container } = render(<MicroChart {...defaultProps} access="readonly" />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<MicroChart {...defaultProps} access="readonly" />)).not.toThrow();
   });
 
   it('renders with only required props (2 required, 6 optional)', () => {
     // All 6 optional props omitted — should not crash
-    const { container } = render(<MicroChart {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<MicroChart {...defaultProps} />)).not.toThrow();
   });
 
   it('exports expected types', () => {

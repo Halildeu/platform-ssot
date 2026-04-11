@@ -4,6 +4,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
+import { FormWrapper } from '../../__tests__/contract-providers';
 import { ConnectedCheckbox } from '../connected/ConnectedCheckbox';
 import type { ConnectedCheckboxProps, ConnectedCheckboxRef, ConnectedCheckboxElement, ConnectedCheckboxCSSProperties } from '../connected/ConnectedCheckbox';
 
@@ -13,7 +14,7 @@ describe('ConnectedCheckbox — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<ConnectedCheckbox {...defaultProps} />);
+    const { container } = render(<FormWrapper><ConnectedCheckbox {...defaultProps} /></FormWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 
@@ -23,7 +24,7 @@ describe('ConnectedCheckbox — contract', () => {
 
   it('renders with only required props (1 required, 5 optional)', () => {
     // All 5 optional props omitted — should not crash
-    const { container } = render(<ConnectedCheckbox {...defaultProps} />);
+    const { container } = render(<FormWrapper><ConnectedCheckbox {...defaultProps} /></FormWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 
