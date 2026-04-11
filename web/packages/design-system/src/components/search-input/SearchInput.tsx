@@ -139,7 +139,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             <button
               type="button"
               onClick={handleClear}
-              className="rounded-xs p-0.5 text-text-secondary transition hover:text-text-primary"
+              className="rounded-control p-0.5 text-text-secondary transition hover:text-text-primary"
               aria-label="Clear search"
             >
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none">
@@ -148,7 +148,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             </button>
           )}
           {!loading && !hasValue && shortcutHint && (
-            <kbd className="rounded-md border border-border-subtle bg-surface-default px-1.5 py-0.5 text-[10px] font-medium text-text-secondary">
+            <kbd className="rounded-control border border-border-subtle bg-surface-default px-1.5 py-0.5 text-[10px] font-medium text-text-secondary">
               {shortcutHint}
             </kbd>
           )}

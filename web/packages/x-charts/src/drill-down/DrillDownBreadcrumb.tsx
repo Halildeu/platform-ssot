@@ -40,7 +40,7 @@ export function DrillDownBreadcrumb({
           margin: 0,
           padding: 0,
           fontSize: 13,
-          fontFamily: "var(--font-family-sans, Inter, system-ui, sans-serif)",
+          fontFamily: "var(--font-family-base, Inter, system-ui, sans-serif)",
         }}
       >
         {items.map((item, i) => (

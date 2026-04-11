@@ -147,7 +147,7 @@ const SWOTChip: React.FC<SWOTChipProps> = ({ item, quadrant, canInteract, compac
       onClick={handleClick}
       onKeyDown={isClickable ? handleKeyDown : undefined}
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-md',
+        'inline-flex items-center gap-1.5 rounded-control',
         'bg-[var(--surface-default)] border border-[var(--border-subtle)]',
         'text-[var(--text-primary)]',
         'transition-colors duration-(--motion-duration-fast)',
@@ -309,7 +309,7 @@ export function SWOTMatrix({
           {QUADRANT_CONFIG.map((q) => (
             <span key={q.key} className="inline-flex items-center gap-1">
               <span
-                className="inline-block w-2.5 h-2.5 rounded-xs"
+                className="inline-block w-2.5 h-2.5 rounded-control"
                 style={{ backgroundColor: q.headerBg }}
                 aria-hidden="true"
               />
@@ -320,7 +320,7 @@ export function SWOTMatrix({
       )}
 
       {/* 2x2 Grid */}
-      <div className={cn('grid grid-cols-2 bg-[var(--border-default)] rounded-lg overflow-hidden', compact ? 'gap-px' : 'gap-0.5')}>
+      <div className={cn('grid grid-cols-2 bg-[var(--border-default)] rounded-surface overflow-hidden', compact ? 'gap-px' : 'gap-0.5')}>
         {QUADRANT_CONFIG.map((config, idx) => (
           <QuadrantPanel
             key={config.key}

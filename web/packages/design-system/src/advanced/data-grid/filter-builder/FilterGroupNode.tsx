@@ -62,6 +62,8 @@ const SortableGroupWrapper: React.FC<{
   return <div ref={setNodeRef} style={style}>{children}</div>;
 };
 
+SortableGroupWrapper.displayName = 'SortableGroupWrapper';
+
 export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
   group,
   columnDefs,
@@ -90,7 +92,7 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
   return (
     <div
       className={[
-        isRoot ? 'flex flex-col gap-0' : `overflow-hidden rounded-lg border ${colors.border} ${colors.bg}`,
+        isRoot ? 'flex flex-col gap-0' : `overflow-hidden rounded-surface border ${colors.border} ${colors.bg}`,
         isLocked && !isRoot ? 'opacity-80 ring-1 ring-state-warning-text/30' : '',
       ].join(' ')}
     >
@@ -98,7 +100,7 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
       <div
         className={[
           'flex flex-wrap items-center gap-1.5 px-3 py-2',
-          isRoot ? 'rounded-lg bg-surface-muted/60' : colors.headerBg,
+          isRoot ? 'rounded-surface bg-surface-muted/60' : colors.headerBg,
         ].join(' ')}
       >
         {/* DnD grip (non-root groups) */}
@@ -130,7 +132,7 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
           type="button"
           disabled={isLocked}
           onClick={() => onAddCondition(group.id)}
-          className="flex items-center gap-1 rounded-md bg-action-primary px-2.5 py-1 text-[11px] font-semibold text-text-inverse hover:bg-action-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex items-center gap-1 rounded-control bg-action-primary px-2.5 py-1 text-[11px] font-semibold text-text-inverse hover:bg-action-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Plus className="h-3 w-3" />
           Kural
@@ -142,7 +144,7 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
             type="button"
             disabled={isLocked}
             onClick={() => onAddGroup(group.id)}
-            className="flex items-center gap-1 rounded-md bg-action-primary/15 px-2.5 py-1 text-[11px] font-semibold text-action-primary hover:bg-action-primary/25 disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex items-center gap-1 rounded-control bg-action-primary/15 px-2.5 py-1 text-[11px] font-semibold text-action-primary hover:bg-action-primary/25 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <FolderPlus className="h-3 w-3" />
             Grup
@@ -196,7 +198,7 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
       <div className={`flex flex-col ${isRoot ? 'mt-2' : 'p-3'}`}>
         {/* Empty state */}
         {substantialChildren.length === 0 && (
-          <div className="flex items-center justify-center rounded-lg border-2 border-dashed border-border-subtle py-8 text-center">
+          <div className="flex items-center justify-center rounded-surface border-2 border-dashed border-border-subtle py-8 text-center">
             <div>
               <p className="text-sm text-text-subtle">Henüz kural eklenmedi</p>
               <p className="mt-1 text-[10px] text-text-subtle">Yukarıdaki &quot;Kural&quot; butonuna tıklayın</p>
@@ -290,3 +292,5 @@ export const FilterGroupNode: React.FC<FilterGroupNodeProps> = ({
     </div>
   );
 };
+
+FilterGroupNode.displayName = 'FilterGroupNode';

@@ -33,7 +33,7 @@ export const Controlled: Story = {
     return (
       <div>
         <Rating value={value} onValueChange={setValue} showValue />
-        <div style={{ marginTop: 8, fontSize: 13, color: 'var(--text-secondary)' }}>
+        <div className="text-xs" style={{ marginTop: 8, color: 'var(--text-secondary)' }}>
           Secilen deger: {value}
         </div>
       </div>
@@ -73,15 +73,15 @@ export const AllSizes: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ fontSize: 12, width: 60 }}>Kucuk:</span>
+        <span className="text-xs" style={{ width: 60 }}>Kucuk:</span>
         <Rating size="sm" defaultValue={3} />
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ fontSize: 12, width: 60 }}>Orta:</span>
+        <span className="text-xs" style={{ width: 60 }}>Orta:</span>
         <Rating size="md" defaultValue={3} />
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ fontSize: 12, width: 60 }}>Buyuk:</span>
+        <span className="text-xs" style={{ width: 60 }}>Buyuk:</span>
         <Rating size="lg" defaultValue={3} />
       </div>
     </div>
@@ -128,7 +128,7 @@ export const UrunDegerlendirmesi: Story = {
     const [rating, setRating] = useState(0);
     return (
       <div style={{ maxWidth: 360 }}>
-        <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 8 }}>
+        <div className="text-sm font-semibold" style={{ marginBottom: 8 }}>
           Bu urunu nasil degerlendirirsiniz?
         </div>
         <Rating
@@ -144,7 +144,7 @@ export const UrunDegerlendirmesi: Story = {
           }}
         />
         {rating > 0 && (
-          <div style={{ marginTop: 12, fontSize: 13, color: 'var(--text-secondary)' }}>
+          <div className="text-xs" style={{ marginTop: 12, color: 'var(--text-secondary)' }}>
             Degerlendirmeniz icin tesekkur ederiz!
           </div>
         )}

@@ -73,8 +73,8 @@ export function buildDesignLabEChartsDarkTheme(options?: DarkThemeOptions): Reco
   const textPrimary = getCSSVar('--text-primary', '#e5e7eb');
   const textSecondary = getCSSVar('--text-secondary', '#9ca3af');
   const textTertiary = getCSSVar('--text-tertiary', '#6b7280');
-  const bgSurface = getCSSVar('--bg-surface', '#1f2937');
-  const bgMuted = getCSSVar('--bg-muted', '#111827');
+  const bgSurface = getCSSVar('--surface-default-bg', '#1f2937');
+  const bgMuted = getCSSVar('--surface-muted-bg', '#111827');
   const borderDefault = getCSSVar('--border-default', '#374151');
   const _actionPrimary = getCSSVar('--action-primary', '#60a5fa');
 

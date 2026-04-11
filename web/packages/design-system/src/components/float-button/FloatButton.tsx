@@ -220,9 +220,9 @@ export const FloatButton = React.forwardRef<HTMLDivElement, FloatButtonProps>(
       "inline-flex items-center justify-center transition-all duration-(--motion-duration-medium)",
       "border border-transparent",
       "bg-[var(--float-button-bg)] text-[var(--float-button-text)]",
-      "shadow-lg hover:shadow-xl",
+      "shadow-elevation-overlay hover:shadow-elevation-overlay",
       focusRingClass("ring"),
-      shape === "circle" ? "rounded-full" : "rounded-lg",
+      shape === "circle" ? "rounded-full" : "rounded-surface",
       accessState.isDisabled && "opacity-50 cursor-not-allowed",
       !isInteractive && !accessState.isDisabled && "cursor-default",
       isInteractive && "cursor-pointer hover:bg-[var(--float-button-bg-hover)] active:scale-95",
@@ -288,7 +288,7 @@ export const FloatButton = React.forwardRef<HTMLDivElement, FloatButtonProps>(
                   buttonClasses,
                   "bg-[var(--float-button-item-bg)] text-[var(--float-button-item-text)]",
                   "hover:bg-[var(--float-button-item-bg-hover)]",
-                  "shadow-md",
+                  "shadow-elevation-surface",
                 )}
                 style={{
                   width: sizeConfig.button - 8,

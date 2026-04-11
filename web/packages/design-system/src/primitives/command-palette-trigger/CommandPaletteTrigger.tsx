@@ -71,7 +71,7 @@ export const CommandPaletteTrigger = forwardRef<
       title={shortcut ? `${placeholder} (${shortcut})` : placeholder}
       aria-label={placeholder}
       className={cn(
-        "flex w-full items-center gap-2 rounded-2xl border border-border-subtle bg-surface-default text-sm text-text-secondary shadow-xs transition",
+        "flex w-full items-center gap-2 rounded-surface border border-border-subtle bg-surface-default text-sm text-text-secondary shadow-elevation-sm transition",
         "hover:bg-surface-muted hover:text-text-primary",
         compact ? "justify-center px-2 py-2" : "px-3 py-2 text-left",
         className,
@@ -83,7 +83,7 @@ export const CommandPaletteTrigger = forwardRef<
         <>
           <span className="flex-1">{placeholder}</span>
           {shortcut && (
-            <kbd className="rounded-lg border border-border-subtle bg-surface-panel px-2 py-0.5 text-[10px] font-semibold text-text-subtle">
+            <kbd className="rounded-surface border border-border-subtle bg-surface-panel px-2 py-0.5 text-[10px] font-semibold text-text-subtle">
               {shortcut}
             </kbd>
           )}
@@ -92,3 +92,5 @@ export const CommandPaletteTrigger = forwardRef<
     </button>
   );
 });
+
+CommandPaletteTrigger.displayName = 'CommandPaletteTrigger';

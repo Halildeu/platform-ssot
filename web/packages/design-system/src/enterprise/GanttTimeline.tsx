@@ -265,7 +265,7 @@ export const GanttTimeline: React.FC<GanttTimelineProps> = ({
 
   return (
     <div
-      className={cn('border border-border-default rounded-lg overflow-hidden bg-surface-default', accessStyles(accessState.state), className)}
+      className={cn('border border-border-default rounded-surface overflow-hidden bg-surface-default', accessStyles(accessState.state), className)}
       data-component="gantt-timeline"
       data-access-state={accessState.state}
       title={accessReason}
@@ -394,10 +394,10 @@ export const GanttTimeline: React.FC<GanttTimelineProps> = ({
                   title={`${t.title} (${progress}%)`}
                 >
                   {/* Background */}
-                  <div className="absolute inset-0 rounded-xs opacity-30" style={{ backgroundColor: barColor }} />
+                  <div className="absolute inset-0 rounded-control opacity-30" style={{ backgroundColor: barColor }} />
                   {/* Progress fill */}
                   <div
-                    className="absolute inset-y-0 left-0 rounded-xs"
+                    className="absolute inset-y-0 left-0 rounded-control"
                     style={{ width: `${progress}%`, backgroundColor: barColor }}
                   />
                   {/* Label */}

@@ -127,7 +127,7 @@ const TREND_COLORS: Record<TrendDirection, string> = {
 };
 
 const _SKELETON_PULSE =
-  "animate-pulse rounded-lg bg-surface-muted";
+  "animate-pulse rounded-surface bg-surface-muted";
 
 const TIME_RANGE_OPTIONS = [
   { label: "Son 24 saat", value: "24h" },
@@ -224,7 +224,7 @@ const WidgetCard: React.FC<{
               type="button"
               onClick={() => onPin(widget.key, !widget.pinned)}
               className={cn(
-                "inline-flex h-6 w-6 items-center justify-center rounded-md transition-colors hover:bg-surface-muted",
+                "inline-flex h-6 w-6 items-center justify-center rounded-control transition-colors hover:bg-surface-muted",
                 widget.pinned
                   ? "text-[var(--action-primary-bg)]"
                   : "text-text-secondary",
@@ -248,7 +248,7 @@ const WidgetCard: React.FC<{
               type="button"
               onClick={() => onRefreshClick(widget.key)}
               disabled={isRefreshing}
-              className="inline-flex h-6 w-6 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-muted disabled:opacity-50"
+              className="inline-flex h-6 w-6 items-center justify-center rounded-control text-text-secondary transition-colors hover:bg-surface-muted disabled:opacity-50"
               aria-label={`${widget.title} yenile`}
             >
               <svg
@@ -356,7 +356,7 @@ export const SmartDashboard = React.forwardRef<HTMLElement, SmartDashboardProps>
       {/* Greeting banner */}
       {greeting && (
         <div
-          className="rounded-2xl bg-linear-to-r from-[var(--action-primary-bg)]/10 to-transparent px-5 py-4"
+          className="rounded-surface bg-linear-to-r from-[var(--action-primary-bg)]/10 to-transparent px-5 py-4"
           data-testid="greeting-banner"
         >
           <p className="text-lg font-semibold text-text-primary">
@@ -386,7 +386,7 @@ export const SmartDashboard = React.forwardRef<HTMLElement, SmartDashboardProps>
               <select
                 value={timeRange ?? ""}
                 onChange={(e) => onTimeRangeChange(e.target.value)}
-                className="rounded-lg border border-border-subtle bg-transparent px-2 py-1.5 text-xs text-text-secondary outline-hidden focus:border-selection-outline"
+                className="rounded-surface border border-border-subtle bg-transparent px-2 py-1.5 text-xs text-text-secondary outline-hidden focus:border-selection-outline"
                 aria-label="Zaman araligi"
               >
                 {TIME_RANGE_OPTIONS.map((opt) => (
@@ -401,7 +401,7 @@ export const SmartDashboard = React.forwardRef<HTMLElement, SmartDashboardProps>
               <button
                 type="button"
                 onClick={refreshAll}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-surface text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
                 aria-label="Tumunu yenile"
               >
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">

@@ -119,11 +119,11 @@ export const AllSizes: Story = {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
-          <div style={{ marginBottom: 8, fontSize: 12, fontWeight: 600 }}>Kucuk (sm)</div>
+          <div className="text-xs font-semibold" style={{ marginBottom: 8 }}>Kucuk (sm)</div>
           <Pagination total={100} current={smPage} onChange={setSmPage} size="sm" />
         </div>
         <div>
-          <div style={{ marginBottom: 8, fontSize: 12, fontWeight: 600 }}>Orta (md)</div>
+          <div className="text-xs font-semibold" style={{ marginBottom: 8 }}>Orta (md)</div>
           <Pagination total={100} current={mdPage} onChange={setMdPage} size="md" />
         </div>
       </div>

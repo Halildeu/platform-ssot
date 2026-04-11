@@ -28,7 +28,7 @@ const UtilityLiveDemoCanvas = () => {
   return (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6">
-        <section className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <section className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
             Utility live demo surface
           </Text>
@@ -38,7 +38,7 @@ const UtilityLiveDemoCanvas = () => {
         </section>
 
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-[0.96fr_1.04fr]">
-          <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
             <EntitySummaryBlock
               title="Design Lab release entity"
               subtitle="EntitySummaryBlock, owner, lifecycle ve rollout notlarini tek summary shell altinda toplar."
@@ -100,7 +100,7 @@ const UtilityLiveDemoCanvas = () => {
             />
           </section>
 
-          <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
             <div className="space-y-3">
               <Text as="div" className="text-sm font-semibold text-text-primary">
                 Navigation and actions

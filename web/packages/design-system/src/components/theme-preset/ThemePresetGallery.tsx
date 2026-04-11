@@ -165,7 +165,7 @@ function PresetCard({
     <button
       type="button"
       className={cn(
-        "group relative w-full rounded-[26px] border px-4 py-4 text-start transition",
+        "group relative w-full rounded-control border px-4 py-4 text-start transition",
         focusRing,
         selected
           ? "border-action-primary bg-[var(--action-primary-soft,var(--surface-muted))]"
@@ -208,7 +208,7 @@ function PresetCard({
       >
         {/* Scoped theme preview */}
         <div
-          className="rounded-[20px] border border-border-subtle bg-surface-muted p-3"
+          className="rounded-control border border-border-subtle bg-surface-muted p-3"
           {...(preset.themeAxes ? scoped.attrs : {})}
           style={preset.themeAxes ? scoped.style : undefined}
         >
@@ -227,7 +227,7 @@ function PresetCard({
           ).map(([label, value]) => (
             <div
               key={label}
-              className="rounded-2xl border border-border-subtle bg-surface-muted px-3 py-3"
+              className="rounded-surface border border-border-subtle bg-surface-muted px-3 py-3"
             >
               <Text
                 variant="secondary"
@@ -250,7 +250,7 @@ function PresetCard({
             <span
               role="button"
               tabIndex={-1}
-              className="rounded-full bg-surface-default px-2 py-1 text-[10px] font-medium shadow-xs hover:bg-surface-muted"
+              className="rounded-full bg-surface-default px-2 py-1 text-[10px] font-medium shadow-elevation-sm hover:bg-surface-muted"
               onClick={(e) => { e.stopPropagation(); onCopy(); }}
             >
               {localeText?.copyLabel ?? "Kopyala"}
@@ -260,7 +260,7 @@ function PresetCard({
             <span
               role="button"
               tabIndex={-1}
-              className="rounded-full bg-surface-default px-2 py-1 text-[10px] font-medium shadow-xs hover:bg-surface-muted"
+              className="rounded-full bg-surface-default px-2 py-1 text-[10px] font-medium shadow-elevation-sm hover:bg-surface-muted"
               onClick={(e) => { e.stopPropagation(); onExport(); }}
             >
               {localeText?.exportLabel ?? "CSS Aktar"}
@@ -447,7 +447,7 @@ export const ThemePresetGallery = React.forwardRef<HTMLElement, ThemePresetGalle
       <section
         ref={ref}
         className={cn(
-          "rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-xs",
+          "rounded-surface border border-border-subtle bg-surface-muted p-5 shadow-elevation-sm",
           className,
         )}
         data-access-state={accessState.state}
@@ -477,7 +477,7 @@ export const ThemePresetGallery = React.forwardRef<HTMLElement, ThemePresetGalle
           <div className="mt-4">
             <input
               type="search"
-              className="w-full rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-disabled focus:border-action-primary focus:outline-none"
+              className="w-full rounded-surface border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-disabled focus:border-action-primary focus:outline-hidden"
               placeholder={localeText?.searchPlaceholder ?? "Preset ara..."}
               value={searchQuery ?? internalSearch}
               onChange={(e) => {
@@ -524,7 +524,7 @@ export const ThemePresetGallery = React.forwardRef<HTMLElement, ThemePresetGalle
 
         {/* Grid */}
         {filteredPresets.length === 0 ? (
-          <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-default p-4">
+          <div className="mt-4 rounded-control border border-border-subtle bg-surface-default p-4">
             <Empty description={
               presets.length === 0
                 ? (localeText?.emptyMessage ?? "Theme preset bulunamadi.")

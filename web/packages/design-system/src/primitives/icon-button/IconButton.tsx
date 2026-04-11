@@ -40,7 +40,7 @@ export interface IconButtonProps
 
 const variantStyles: Record<IconButtonVariant, string> = {
   primary:
-    "bg-action-primary text-text-inverse hover:bg-accent-primary-hover shadow-xs",
+    "bg-action-primary text-text-inverse hover:bg-accent-primary-hover shadow-elevation-sm",
   secondary:
     "bg-surface-muted text-text-primary hover:bg-border-subtle",
   outline:
@@ -48,7 +48,7 @@ const variantStyles: Record<IconButtonVariant, string> = {
   ghost:
     "bg-transparent text-text-secondary hover:bg-surface-muted hover:text-text-primary",
   danger:
-    "bg-state-danger-text text-text-inverse hover:brightness-110 shadow-xs",
+    "bg-state-danger-text text-text-inverse hover:brightness-110 shadow-elevation-sm",
 };
 
 const sizeStyles: Record<IconButtonSize, string> = {
@@ -91,7 +91,7 @@ export const IconButton = forwardRef<HTMLElement, IconButtonProps>(
       focusRingClass("ring"),
       variantStyles[variant],
       sizeStyles[size],
-      rounded ? "rounded-full" : "rounded-lg",
+      rounded ? "rounded-full" : "rounded-surface",
       className,
     );
 

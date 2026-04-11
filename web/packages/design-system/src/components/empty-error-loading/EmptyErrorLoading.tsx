@@ -69,7 +69,7 @@ export const EmptyErrorLoading = React.forwardRef<HTMLElement, EmptyErrorLoading
   return (
     <section
       ref={ref}
-      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-xs ${className}`.trim()}
+      className={`rounded-surface border border-border-subtle bg-surface-muted p-5 shadow-elevation-sm ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="empty-error-loading"
       data-mode={mode}
@@ -85,7 +85,7 @@ export const EmptyErrorLoading = React.forwardRef<HTMLElement, EmptyErrorLoading
         {description}
       </Text>
 
-      <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-default p-4">
+      <div className="mt-4 rounded-control border border-border-subtle bg-surface-default p-4">
         {mode === "loading" ? (
           <div className="flex flex-col gap-4">
             <Spinner mode="block" label={loadingLabel} />

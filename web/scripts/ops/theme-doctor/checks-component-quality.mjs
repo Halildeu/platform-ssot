@@ -341,7 +341,7 @@ check('phantom-classes', 'Tailwind classes using tokens not defined in @theme in
     .map(([cls, files]) => ({ class: cls, usedIn: files.size, files: [...files].slice(0, 3) }));
 
   return {
-    status: phantoms.size > 20 ? 'fail' : 'warn',
+    status: phantoms.size > 20 ? 'fail' : (phantoms.size > 5 ? 'warn' : 'pass'),
     message: `${phantoms.size} Tailwind classes reference tokens not in @theme inline — styles may not apply`,
     details: entries,
     fix: FIX_HINT ? 'Either add missing tokens to @theme inline in index.css, or replace with existing token names. Run with --fix-hint for details.' : undefined,

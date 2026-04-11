@@ -890,7 +890,7 @@ function ExamplesTab({ chart }: { chart: ChartMeta }) {
       {examples.map((ex) => (
         <div
           key={ex.title}
-          className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default transition-all duration-300 hover:shadow-sm"
+          className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default transition-all duration-300 hover:shadow-xs"
         >
           <div className="flex items-center gap-2 border-b border-border-subtle px-5 py-3">
             <BookOpen className="h-3.5 w-3.5 text-text-secondary" />
@@ -999,7 +999,7 @@ function ThemesTab({ chart }: { chart: ChartMeta }) {
         {THEME_CONFIG.map((theme) => (
           <div
             key={theme.id}
-            className="overflow-hidden rounded-2xl border border-border-subtle transition-all duration-300 hover:shadow-sm"
+            className="overflow-hidden rounded-2xl border border-border-subtle transition-all duration-300 hover:shadow-xs"
           >
             <div className="flex items-center gap-2 border-b border-border-subtle bg-surface-muted px-4 py-2.5">
               <span
@@ -1031,20 +1031,20 @@ function ThemesTab({ chart }: { chart: ChartMeta }) {
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] text-text-tertiary">accent</span>
                 <span
-                  className="h-3 w-3 rounded-sm border border-border-subtle"
+                  className="h-3 w-3 rounded-xs border border-border-subtle"
                   style={{ backgroundColor: theme.accent }}
                 />
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] text-text-tertiary">muted</span>
                 <span
-                  className="h-3 w-3 rounded-sm border border-border-subtle"
+                  className="h-3 w-3 rounded-xs border border-border-subtle"
                   style={{ backgroundColor: theme.muted }}
                 />
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] text-text-tertiary">bg</span>
-                <span className={`h-3 w-3 rounded-sm border border-border-subtle ${theme.bg}`} />
+                <span className={`h-3 w-3 rounded-xs border border-border-subtle ${theme.bg}`} />
               </div>
             </div>
           </div>
@@ -1173,7 +1173,7 @@ function MetadataCard({
   detail: string;
 }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-sm">
+    <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
       <div className="flex items-center gap-2">
         <div className={`flex h-7 w-7 items-center justify-center rounded-lg ${iconBg}`}>
           {icon}
@@ -1283,7 +1283,7 @@ function ChartPreviewPlaceholder({ chart }: { chart: ChartMeta }) {
         {[100, 80, 60, 40, 25].map((w, i) => (
           <div
             key={i}
-            className="rounded-sm transition-all"
+            className="rounded-xs transition-all"
             style={{
               width: `${w}%`,
               height: "20%",

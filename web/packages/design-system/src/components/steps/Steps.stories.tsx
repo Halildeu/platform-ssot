@@ -124,15 +124,15 @@ export const AllSizes: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       <div>
-        <div style={{ marginBottom: 8, fontSize: 12, fontWeight: 600 }}>Kucuk</div>
+        <div className="text-xs font-semibold" style={{ marginBottom: 8 }}>Kucuk</div>
         <Steps items={temelAdimlar} current={1} size="sm" />
       </div>
       <div>
-        <div style={{ marginBottom: 8, fontSize: 12, fontWeight: 600 }}>Orta</div>
+        <div className="text-xs font-semibold" style={{ marginBottom: 8 }}>Orta</div>
         <Steps items={temelAdimlar} current={1} size="md" />
       </div>
       <div>
-        <div style={{ marginBottom: 8, fontSize: 12, fontWeight: 600 }}>Buyuk</div>
+        <div className="text-xs font-semibold" style={{ marginBottom: 8 }}>Buyuk</div>
         <Steps items={temelAdimlar} current={1} size="lg" />
       </div>
     </div>

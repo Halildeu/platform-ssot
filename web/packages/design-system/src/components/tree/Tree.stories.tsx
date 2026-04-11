@@ -177,14 +177,14 @@ export const ControlledExpansion: Story = {
           <button
             type="button"
             onClick={() => setExpandedKeys(['yonetim', 'bilgi-teknolojileri', 'frontend'])}
-            style={{ fontSize: 12, padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border-default)', cursor: 'pointer' }}
+            className="text-xs" style={{ padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border-default)', cursor: 'pointer' }}
           >
             Tumunu Ac
           </button>
           <button
             type="button"
             onClick={() => setExpandedKeys([])}
-            style={{ fontSize: 12, padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border-default)', cursor: 'pointer' }}
+            className="text-xs" style={{ padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border-default)', cursor: 'pointer' }}
           >
             Tumunu Kapat
           </button>

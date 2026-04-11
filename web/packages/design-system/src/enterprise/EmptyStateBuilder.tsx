@@ -226,7 +226,7 @@ export const EmptyStateBuilder = React.forwardRef<HTMLDivElement, EmptyStateBuil
           {primaryAction && (
             <button
               type="button"
-              className="rounded-md bg-action-primary px-4 py-2 text-sm font-medium text-text-inverse hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-control bg-action-primary px-4 py-2 text-sm font-medium text-text-inverse hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isDisabled}
               onClick={primaryAction.onClick}
             >
@@ -236,7 +236,7 @@ export const EmptyStateBuilder = React.forwardRef<HTMLDivElement, EmptyStateBuil
           {secondaryAction && (
             <button
               type="button"
-              className="rounded-md border border-border-default bg-[var(--surface-primary)] px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-control border border-border-default bg-[var(--surface-primary)] px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isDisabled}
               onClick={secondaryAction.onClick}
             >

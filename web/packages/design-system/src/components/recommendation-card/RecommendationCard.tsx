@@ -104,7 +104,7 @@ export const RecommendationCard = React.forwardRef<HTMLElement, RecommendationCa
   return (
     <article
       ref={ref}
-      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-xs ${className}`.trim()}
+      className={`rounded-surface border border-border-subtle bg-surface-muted p-5 shadow-elevation-sm ${className}`.trim()}
       data-access-state={accessState.state}
       data-tone={tone}
     >
@@ -139,7 +139,7 @@ export const RecommendationCard = React.forwardRef<HTMLElement, RecommendationCa
       </div>
 
       {rationale.length > 0 ? (
-        <div className="mt-4 rounded-2xl border border-border-subtle bg-surface-muted p-4">
+        <div className="mt-4 rounded-surface border border-border-subtle bg-surface-muted p-4">
           <Text variant="secondary" size="xs" weight="medium">Why this recommendation</Text>
           <ul className="flex flex-col mt-3 gap-2 text-sm text-text-secondary">
             {rationale.map((item) => (

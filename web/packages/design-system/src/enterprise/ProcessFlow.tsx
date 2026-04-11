@@ -412,7 +412,7 @@ export function ProcessFlow({
   return (
     <div
       ref={containerRef}
-      className={cn('relative overflow-auto rounded-lg border border-border-default bg-[var(--surface-primary)]', accessStyles(state), className)}
+      className={cn('relative overflow-auto rounded-surface border border-border-default bg-[var(--surface-primary)]', accessStyles(state), className)}
       data-access-state={state}
       role="figure"
       aria-label="Process flow diagram"
@@ -464,7 +464,7 @@ export function ProcessFlow({
       </svg>
 
       {scrollNeeded && (
-        <div className="absolute bottom-1 right-1 rounded-xs bg-surface-muted px-1.5 py-0.5 text-[10px] text-text-secondary opacity-70">
+        <div className="absolute bottom-1 right-1 rounded-control bg-surface-muted px-1.5 py-0.5 text-[10px] text-text-secondary opacity-70">
           scroll to explore
         </div>
       )}

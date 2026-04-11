@@ -1,4 +1,5 @@
 import React from "react";
+import { cn } from "../../utils/cn";
 import {
   resolveAccessState, _accessStyles,
   type AccessControlledProps,
@@ -135,7 +136,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
       fullWidth={fullWidth}
       data-access-state={accessState.state}
     >
-      <div className={getFieldFrameClass(size, tone, fullWidth, className)}>
+      <div className={cn(getFieldFrameClass(size, tone, fullWidth, className), "rounded-control border-border-default focus-within:ring-2 focus-within:ring-focus-outline focus-visible:ring-2 focus-visible:ring-focus-outline")}>
         <input
           {...props}
           ref={forwardedRef}

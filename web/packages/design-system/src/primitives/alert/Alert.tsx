@@ -103,7 +103,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
     }
 
     const mergedClassName = cn(
-      "flex gap-3 rounded-xl border p-4",
+      "flex gap-3 rounded-surface border p-4",
       variantStyles[variant],
       className,
     );
@@ -142,7 +142,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-md p-1 opacity-60 transition hover:opacity-100"
+            className="shrink-0 rounded-control p-1 opacity-60 transition hover:opacity-100"
             aria-label="Dismiss"
           >
             <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">

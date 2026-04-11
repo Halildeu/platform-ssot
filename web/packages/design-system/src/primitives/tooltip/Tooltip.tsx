@@ -127,9 +127,9 @@ export const Tooltip = React.forwardRef<HTMLSpanElement, TooltipProps>(({
       role="tooltip"
       {...stateAttrs({ state: visible ? "open" : "closed", component: "tooltip" })}
       className={cn(
-        "pointer-events-none absolute z-[1600] rounded-lg px-2.5 py-1.5",
+        "pointer-events-none absolute z-[1600] rounded-surface px-2.5 py-1.5",
         "bg-text-primary text-xs font-medium text-text-inverse",
-        "shadow-lg animate-in fade-in-0 zoom-in-95",
+        "shadow-elevation-overlay animate-in fade-in-0 zoom-in-95",
         placementStyles[placement],
       )}
     >

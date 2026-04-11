@@ -88,7 +88,7 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
   return (
     <div
       className={cn(
-        'border border-border-default rounded-lg bg-surface-default p-4',
+        'border border-border-default rounded-surface bg-surface-default p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -98,7 +98,7 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
     >
       {/* Stacked bar */}
       {showStackedBar && (
-        <div className="mb-4 flex h-6 w-full overflow-hidden rounded-md">
+        <div className="mb-4 flex h-6 w-full overflow-hidden rounded-control">
           {buckets.map((bucket, i) => {
             const pct = getPercentage(bucket.value);
             const tone = bucket.tone ?? defaultTone(i, buckets.length);

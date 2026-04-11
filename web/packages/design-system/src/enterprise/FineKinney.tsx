@@ -307,7 +307,7 @@ export const FineKinney: React.FC<FineKinneyProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] overflow-hidden',
+        'border border-[var(--border-default)] rounded-surface bg-[var(--surface-default)] overflow-hidden',
         accessStyles(accessState.state),
         className,
       )}
@@ -425,7 +425,7 @@ export const FineKinney: React.FC<FineKinneyProps> = ({
                   {/* Score */}
                   <td className={cn('text-center tabular-nums font-bold', fontSize, rowPadding)}>
                     <span
-                      className="inline-flex items-center justify-center rounded-md px-2 py-0.5 min-w-[3rem]"
+                      className="inline-flex items-center justify-center rounded-control px-2 py-0.5 min-w-[3rem]"
                       style={{ backgroundColor: cat.bg, color: cat.text }}
                     >
                       {score}

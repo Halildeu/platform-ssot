@@ -28,8 +28,8 @@
   --surface-table-soft-bg: oklch(98.46% 0.0017 247.84deg);
   --surface-table-normal-bg: oklch(96.7% 0.0029 264.54deg);
   --surface-table-strong-bg: oklch(92.76% 0.0058 264.53deg);
-  --overlay-intensity-min: 0;
-  --overlay-intensity-max: 60;
+  --overlay-intensity-min: 0; /* reserved: axis config */
+  --overlay-intensity-max: 60; /* reserved: axis config */
   --overlay-intensity-default: 10;
   --overlay-opacity-default: 10;
   --text-primary: oklch(21.01% 0.0318 264.66deg);
@@ -251,8 +251,8 @@
   --surface-table-soft-bg: oklch(98.46% 0.0017 247.84deg);
   --surface-table-normal-bg: oklch(96.7% 0.0029 264.54deg);
   --surface-table-strong-bg: oklch(92.76% 0.0058 264.53deg);
-  --overlay-intensity-min: 0;
-  --overlay-intensity-max: 60;
+  --overlay-intensity-min: 0; /* reserved: axis config */
+  --overlay-intensity-max: 60; /* reserved: axis config */
   --overlay-intensity-default: 10;
   --overlay-opacity-default: 10;
   --text-primary: oklch(21.01% 0.0318 264.66deg);
@@ -322,8 +322,8 @@
   --surface-table-soft-bg: oklch(20.77% 0.0398 265.75deg);
   --surface-table-normal-bg: oklch(12.96% 0.0274 261.69deg);
   --surface-table-strong-bg: oklch(14.91% 0.0264 259.08deg);
-  --overlay-intensity-min: 0;
-  --overlay-intensity-max: 60;
+  --overlay-intensity-min: 0; /* reserved: axis config */
+  --overlay-intensity-max: 60; /* reserved: axis config */
   --overlay-intensity-default: 10;
   --overlay-opacity-default: 10;
   --text-primary: oklch(92.88% 0.0126 255.51deg);
@@ -470,8 +470,8 @@
   --surface-table-soft-bg: oklch(17.76% 0 0deg);
   --surface-table-normal-bg: oklch(14.48% 0 0deg);
   --surface-table-strong-bg: oklch(0% 0 0deg);
-  --overlay-intensity-min: 0;
-  --overlay-intensity-max: 60;
+  --overlay-intensity-min: 0; /* reserved: axis config */
+  --overlay-intensity-max: 60; /* reserved: axis config */
   --overlay-intensity-default: 10;
   --overlay-opacity-default: 10;
   --text-primary: oklch(100% 0 0deg);
@@ -502,6 +502,7 @@
   --state-warning-bg: oklch(22.1% 0.0453 93.21deg);
   --state-warning-text: oklch(88.68% 0.1822 95.33deg);
   --state-warning-border: oklch(88.68% 0.1822 95.33deg);
+  --state-warning-bg-hover: oklch(85% 0.15 85deg);
   --state-danger-bg: oklch(18.91% 0.0776 29.23deg);
   --state-danger-text: oklch(62.8% 0.2577 29.23deg);
   --state-danger-border: oklch(62.8% 0.2577 29.23deg);
@@ -659,8 +660,8 @@
   --surface-table-soft-bg: oklch(98.46% 0.0017 247.84deg);
   --surface-table-normal-bg: oklch(96.7% 0.0029 264.54deg);
   --surface-table-strong-bg: oklch(92.76% 0.0058 264.53deg);
-  --overlay-intensity-min: 0;
-  --overlay-intensity-max: 60;
+  --overlay-intensity-min: 0; /* reserved: axis config */
+  --overlay-intensity-max: 60; /* reserved: axis config */
   --overlay-intensity-default: 10;
   --overlay-opacity-default: 10;
   --text-primary: oklch(21.01% 0.0318 264.66deg);
@@ -1087,8 +1088,8 @@
 
   /* Feedback aliases */
   --feedback-error: var(--state-danger-text);
-  --feedback-success: var(--state-success-text);
-  --feedback-warning: var(--state-warning-text);
+  /* UNUSED: --feedback-success: var(--state-success-text); */
+  /* UNUSED: --feedback-warning: var(--state-warning-text); */
   --feedback-info: var(--state-info-text);
 
   /* Legacy */
@@ -1221,8 +1222,8 @@
   --elevation-overlay: 0 4px 12px oklch(0% 0 0deg / 50%);
 
   /* ── Overlay ── */
-  --overlay-intensity-min: 0;
-  --overlay-intensity-max: 80;
+  --overlay-intensity-min: 0; /* reserved: axis config */
+  --overlay-intensity-max: 80; /* reserved: axis config */
   --overlay-intensity-default: 30;
   --overlay-opacity-default: 30;
 
@@ -1386,8 +1387,8 @@
 
   /* Legacy aliases → semantic refs (no hardcoded values) */
   --feedback-error: var(--state-danger-text);
-  --feedback-success: var(--state-success-text);
-  --feedback-warning: var(--state-warning-text);
+  /* UNUSED: --feedback-success: var(--state-success-text); */
+  /* UNUSED: --feedback-warning: var(--state-warning-text); */
   --feedback-info: var(--state-info-text);
   --danger-color: var(--state-danger-text);
   --success-color: var(--state-success-text);
@@ -1601,8 +1602,8 @@
     --elevation-overlay: 0 4px 12px oklch(0% 0 0deg / 50%);
 
     /* ── Overlay ── */
-    --overlay-intensity-min: 0;
-    --overlay-intensity-max: 80;
+    --overlay-intensity-min: 0; /* reserved: axis config */
+    --overlay-intensity-max: 80; /* reserved: axis config */
     --overlay-intensity-default: 30;
     --overlay-opacity-default: 30;
 
@@ -1636,8 +1637,8 @@
 
     /* Legacy aliases → semantic refs */
     --feedback-error: var(--state-danger-text);
-    --feedback-success: var(--state-success-text);
-    --feedback-warning: var(--state-warning-text);
+    /* UNUSED: --feedback-success: var(--state-success-text); */
+    /* UNUSED: --feedback-warning: var(--state-warning-text); */
     --feedback-info: var(--state-info-text);
     --danger-color: var(--state-danger-text);
     --success-color: var(--state-success-text);
@@ -1740,8 +1741,8 @@
 }
 
 html {
-  --overlay-intensity-min: 0;
-  --overlay-intensity-max: 60;
+  --overlay-intensity-min: 0; /* reserved: axis config */
+  --overlay-intensity-max: 60; /* reserved: axis config */
   --overlay-intensity-default: 10;
   --overlay-opacity-default: 10;
   --overlay-intensity: var(--overlay-intensity-default);

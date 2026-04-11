@@ -287,7 +287,7 @@ export const HistogramChart: React.FC<HistogramChartProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-4',
+        'border border-[var(--border-default)] rounded-surface bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
       )}

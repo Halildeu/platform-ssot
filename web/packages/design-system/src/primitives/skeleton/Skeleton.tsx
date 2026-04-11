@@ -47,7 +47,7 @@ export const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
       <div
         ref={ref}
         className={cn(
-          animated ? "animate-pulse rounded-lg bg-surface-muted" : "rounded-lg bg-surface-muted",
+          animated ? "animate-pulse rounded-surface bg-surface-muted" : "rounded-surface bg-surface-muted",
           circle && "rounded-full",
           className,
         )}
@@ -72,7 +72,7 @@ export const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
             <div
               key={i}
               className={cn(
-                animated ? "animate-pulse rounded-lg bg-surface-muted" : "rounded-lg bg-surface-muted",
+                animated ? "animate-pulse rounded-surface bg-surface-muted" : "rounded-surface bg-surface-muted",
                 className,
               )}
               style={{

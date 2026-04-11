@@ -180,7 +180,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(({
         aria-describedby={description ? descriptionId : undefined}
         tabIndex={-1}
         className={cn(
-          "relative flex flex-col bg-surface-default shadow-2xl",
+          "relative flex flex-col bg-surface-default shadow-elevation-overlay",
           placementPanelStyles[placement],
           placementAnimationStyles[placement],
           sizeStyles[size],
@@ -210,7 +210,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(({
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-lg p-1.5 text-text-secondary transition hover:bg-surface-muted hover:text-text-primary"
+            className="shrink-0 rounded-surface p-1.5 text-text-secondary transition hover:bg-surface-muted hover:text-text-primary"
             aria-label="Close"
           >
             <svg className="h-5 w-5" viewBox="0 0 20 20" fill="none">

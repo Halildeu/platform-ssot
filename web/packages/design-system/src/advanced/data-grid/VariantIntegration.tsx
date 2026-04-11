@@ -567,28 +567,28 @@ export const VariantIntegration = <RowData = unknown,>({
 
     if (v.id === activeId) {
       badges.push(
-        <span key="sel" className="rounded-xs bg-action-primary/15 px-1 py-0.5 text-[10px] font-medium text-action-primary">
+        <span key="sel" className="rounded-control bg-action-primary/15 px-1 py-0.5 text-[10px] font-medium text-action-primary">
           {m.selectedTagLabel ?? "Secili"}
         </span>,
       );
     }
     if (v.isUserDefault) {
       badges.push(
-        <span key="ud" className="rounded-xs bg-state-warning-bg px-1 py-0.5 text-[10px] font-medium text-state-warning-text">
+        <span key="ud" className="rounded-control bg-state-warning-bg px-1 py-0.5 text-[10px] font-medium text-state-warning-text">
           {m.personalDefaultTagLabel ?? "Varsayilan"}
         </span>,
       );
     }
     if (v.isGlobal && v.isGlobalDefault) {
       badges.push(
-        <span key="gd" className="rounded-xs bg-state-success-bg px-1 py-0.5 text-[10px] font-medium text-state-success-text">
+        <span key="gd" className="rounded-control bg-state-success-bg px-1 py-0.5 text-[10px] font-medium text-state-success-text">
           {m.globalPublicDefaultTagLabel ?? "G. Varsayilan"}
         </span>,
       );
     }
     if (v.isCompatible === false) {
       badges.push(
-        <span key="ic" className="rounded-xs bg-state-danger-bg px-1 py-0.5 text-[10px] font-medium text-state-danger-text">
+        <span key="ic" className="rounded-control bg-state-danger-bg px-1 py-0.5 text-[10px] font-medium text-state-danger-text">
           {m.incompatibleTagLabel ?? "Uyumsuz"}
         </span>,
       );
@@ -611,7 +611,7 @@ export const VariantIntegration = <RowData = unknown,>({
       <div
         key={v.id}
         className={cn(
-          "rounded-md border transition-colors",
+          "rounded-control border transition-colors",
           isActive
             ? "border-action-primary/30 bg-action-primary/5"
             : "border-transparent hover:bg-surface-muted",
@@ -640,7 +640,7 @@ export const VariantIntegration = <RowData = unknown,>({
                 onClick={(e) => e.stopPropagation()}
                 onKeyUp={(e) => e.stopPropagation()}
                 onInput={(e) => e.stopPropagation()}
-                className="h-5 w-full rounded-xs border border-border-default bg-surface-default px-1 text-xs outline-hidden"
+                className="h-5 w-full rounded-control border border-border-default bg-surface-default px-1 text-xs outline-hidden"
                 autoFocus
               />
             ) : (
@@ -655,7 +655,7 @@ export const VariantIntegration = <RowData = unknown,>({
           <button
             type="button"
             {...triggerProps}
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-xs text-text-disabled hover:text-text-primary"
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-control text-text-disabled hover:text-text-primary"
           >
             <ChevronIcon expanded={itemState.isExpanded} />
           </button>
@@ -671,7 +671,7 @@ export const VariantIntegration = <RowData = unknown,>({
               </span>
               <button
                 type="button"
-                className="rounded-xs bg-state-error-text px-2 py-0.5 text-[10px] font-medium text-text-inverse hover:brightness-110 disabled:opacity-50"
+                className="rounded-control bg-state-error-text px-2 py-0.5 text-[10px] font-medium text-text-inverse hover:brightness-110 disabled:opacity-50"
                 onClick={() => handleDelete(v.id)}
                 disabled={isBusy}
               >
@@ -679,7 +679,7 @@ export const VariantIntegration = <RowData = unknown,>({
               </button>
               <button
                 type="button"
-                className="rounded-xs bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary hover:bg-surface-raised"
+                className="rounded-control bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary hover:bg-surface-raised"
                 onClick={() => setConfirmDeleteId(null)}
               >
                 {m.cancelLabel ?? "Iptal"}
@@ -836,7 +836,7 @@ export const VariantIntegration = <RowData = unknown,>({
             else handleClear();
           }}
           disabled={loading || variants.length === 0}
-          className="h-8 min-w-[160px] rounded-md border border-border-default bg-surface-default px-2 text-sm text-text-primary"
+          className="h-8 min-w-[160px] rounded-control border border-border-default bg-surface-default px-2 text-sm text-text-primary"
           aria-label={m.variantLabel ?? "Grid variant"}
         >
           <option value="">{m.variantPlaceholder ?? "\u2014 Variant \u2014"}</option>
@@ -865,7 +865,7 @@ export const VariantIntegration = <RowData = unknown,>({
         {activeId && (
           <button
             type="button"
-            className="h-8 rounded-md bg-surface-muted px-2 text-xs font-medium text-text-secondary hover:bg-surface-raised"
+            className="h-8 rounded-control bg-surface-muted px-2 text-xs font-medium text-text-secondary hover:bg-surface-raised"
             onClick={() => handleSave(activeId)}
             disabled={pendingAction === `save-${activeId}`}
             title={m.saveTitle ?? "Save current state to variant"}
@@ -877,7 +877,7 @@ export const VariantIntegration = <RowData = unknown,>({
         <button
           ref={toggleRef}
           type="button"
-          className="h-8 rounded-md bg-surface-muted px-2 text-xs font-medium text-text-secondary hover:bg-surface-raised"
+          className="h-8 rounded-control bg-surface-muted px-2 text-xs font-medium text-text-secondary hover:bg-surface-raised"
           onClick={() => setShowManager(!showManager)}
           title={m.variantModalTitle ?? "Manage variants"}
           aria-label={m.variantModalTitle ?? "Varyantları yönet"}
@@ -890,7 +890,7 @@ export const VariantIntegration = <RowData = unknown,>({
       {showManager && typeof document !== "undefined" && createPortal(
         <div
           ref={managerRef}
-          className="fixed z-[9999] w-96 max-h-[70vh] overflow-y-auto rounded-lg border border-border-default bg-surface-default shadow-lg"
+          className="fixed z-[9999] w-96 max-h-[70vh] overflow-y-auto rounded-surface border border-border-default bg-surface-default shadow-elevation-overlay"
           data-component="variant-manager"
           onKeyDown={(e) => e.stopPropagation()}
           onKeyUp={(e) => e.stopPropagation()}
@@ -913,7 +913,7 @@ export const VariantIntegration = <RowData = unknown,>({
             </h3>
             <button
               type="button"
-              className="flex h-5 w-5 items-center justify-center rounded-xs text-text-disabled hover:text-text-primary"
+              className="flex h-5 w-5 items-center justify-center rounded-control text-text-disabled hover:text-text-primary"
               onClick={() => setShowManager(false)}
               title={m.closeVariantManagerLabel ?? "Kapat"}
             >
@@ -928,7 +928,7 @@ export const VariantIntegration = <RowData = unknown,>({
               value={newVariantName}
               onChange={(e) => setNewVariantName(e.target.value)}
               placeholder={m.variantNamePlaceholder ?? "Varyant adi"}
-              className="h-7 flex-1 rounded-xs border border-border-default bg-surface-default px-2 text-xs outline-hidden focus:border-action-primary"
+              className="h-7 flex-1 rounded-control border border-border-default bg-surface-default px-2 text-xs outline-hidden focus:border-action-primary"
               onKeyDown={(e) => {
                 e.stopPropagation();
                 if (e.key === "Enter") handleCreate();
@@ -938,7 +938,7 @@ export const VariantIntegration = <RowData = unknown,>({
             />
             <button
               type="button"
-              className="h-7 rounded-xs bg-action-primary px-3 text-xs font-medium text-text-inverse hover:brightness-110 disabled:opacity-50"
+              className="h-7 rounded-control bg-action-primary px-3 text-xs font-medium text-text-inverse hover:brightness-110 disabled:opacity-50"
               onClick={handleCreate}
               disabled={pendingAction === "create"}
             >
@@ -1013,7 +1013,7 @@ function ActionBtn({
     <button
       type="button"
       className={cn(
-        "rounded-xs px-1.5 py-0.5 text-[10px] font-medium transition-colors disabled:opacity-50",
+        "rounded-control px-1.5 py-0.5 text-[10px] font-medium transition-colors disabled:opacity-50",
         variant === "danger"
           ? "text-state-error-text hover:bg-state-danger-bg"
           : variant === "active"

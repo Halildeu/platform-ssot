@@ -125,8 +125,8 @@ export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(({
       {...stateAttrs({ state: open ? "open" : "closed", component: "dialog" })}
       {...slotProps?.root}
       className={cn(
-        "fixed inset-0 z-[1400] m-auto rounded-2xl border border-border-subtle",
-        "bg-surface-default p-0 shadow-xl",
+        "fixed inset-0 z-[1400] m-auto rounded-surface border border-border-subtle",
+        "bg-surface-default p-0 shadow-elevation-overlay",
         "backdrop:bg-surface-inverse/50 backdrop:backdrop-blur-xs",
         "open:animate-in open:fade-in-0 open:zoom-in-95",
         sizeStyles[size],
@@ -155,7 +155,7 @@ export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(({
               <button
                 type="button"
                 onClick={onClose}
-                className="shrink-0 rounded-lg p-1.5 text-text-secondary transition hover:bg-surface-muted hover:text-text-primary"
+                className="shrink-0 rounded-surface p-1.5 text-text-secondary transition hover:bg-surface-muted hover:text-text-primary"
                 aria-label="Close"
               >
                 <svg className="h-5 w-5" viewBox="0 0 20 20" fill="none">

@@ -457,7 +457,7 @@ export const NavigationRail = React.forwardRef<
       ref={ref}
       aria-label={ariaLabel}
       className={cn(
-        "navigation-rail-root relative inline-flex overflow-hidden rounded-[30px] p-2 before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[color-mix(in_oklab,var(--border-subtle)_40%,transparent)] before:to-transparent",
+        "navigation-rail-root relative inline-flex overflow-hidden rounded-control p-2 before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[color-mix(in_oklab,var(--border-subtle)_40%,transparent)] before:to-transparent",
         compact ? "w-20" : "w-64",
         rootClassByAppearance[appearance],
         classes?.root,
@@ -544,7 +544,7 @@ export const NavigationRail = React.forwardRef<
 
             const sharedProps = {
               className: cn(
-                `navigation-rail-item relative flex w-full items-center gap-3 rounded-[20px] border border-transparent text-left transition ${focusRingClass("ring")}`,
+                `navigation-rail-item relative flex w-full items-center gap-3 rounded-control border border-transparent text-left transition ${focusRingClass("ring")}`,
                 sizeClassNames[size],
                 compact ? "justify-center" : "justify-start",
                 selected

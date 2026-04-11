@@ -168,7 +168,7 @@ export const Tree = React.forwardRef<HTMLElement, TreeProps>(({
       <li key={node.key} className="flex flex-col gap-2">
         <div
           className={[
-            "rounded-[24px] border shadow-xs transition-colors",
+            "rounded-control border shadow-elevation-sm transition-colors",
             toneClass[tone],
             depth > 0 ? "ms-0" : "",
             selected ? "ring-2 ring-state-info-border/60" : "",
@@ -202,7 +202,7 @@ export const Tree = React.forwardRef<HTMLElement, TreeProps>(({
                 <button
                   type="button"
                   className={[
-                    "w-full rounded-2xl px-1 text-left transition-colors",
+                    "w-full rounded-surface px-1 text-left transition-colors",
                     blocked ? "cursor-not-allowed opacity-70" : onNodeSelect ? "hover:bg-surface-default/80 active:bg-surface-default" : "",
                   ]
                     .filter(Boolean)
@@ -283,11 +283,11 @@ export const Tree = React.forwardRef<HTMLElement, TreeProps>(({
         </Text>
       ) : null}
 
-      <div className="mt-4 rounded-[26px] border border-border-subtle bg-surface-muted p-4 shadow-xs">
+      <div className="mt-4 rounded-control border border-border-subtle bg-surface-muted p-4 shadow-elevation-sm">
         {loading ? (
           <div className="flex flex-col gap-3" data-testid="tree-loading-state">
             {Array.from({ length: 3 }).map((_, index) => (
-              <div key={`tree-loading-${index}`} className="rounded-[22px] border border-border-subtle bg-surface-default px-4 py-3.5">
+              <div key={`tree-loading-${index}`} className="rounded-control border border-border-subtle bg-surface-default px-4 py-3.5">
                 <div className="flex items-center gap-3">
                   <Skeleton circle height={32} className="shrink-0" />
                   <div className="flex flex-col min-w-0 flex-1 gap-2">

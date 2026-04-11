@@ -254,7 +254,7 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({
       ref={ref}
       {...slotProps?.root}
       className={cn(
-        "accordion-root flex flex-col rounded-[24px]",
+        "accordion-root flex flex-col rounded-control",
         bordered && !ghost && accordionPremiumSurfaceClassName,
         ghost && "bg-transparent",
         classes?.root,
@@ -383,7 +383,7 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({
                 className={cn(
                   "accordion-trigger flex w-full items-start gap-3 text-start font-semibold text-text-primary",
                   triggerPaddingClass,
-                  ghost && "rounded-[20px]",
+                  ghost && "rounded-control",
                   disableGutters && "px-0",
                   blocked && "opacity-60",
                   item.headerClassName,
@@ -406,7 +406,7 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({
                         id={headerId}
                         type="button"
                         className={cn(
-                          "accordion-icon-trigger mt-0.5 inline-flex shrink-0 items-center justify-center rounded-xl border border-border-subtle/70 bg-[var(--surface-card)] p-1.5 text-text-secondary shadow-[0_14px_28px_-22px_var(--shadow-color)] transition hover:-translate-y-px hover:border-border-default hover:bg-[var(--surface-hover)] hover:text-text-primary hover:shadow-[0_18px_32px_-20px_var(--shadow-color)]",
+                          "accordion-icon-trigger mt-0.5 inline-flex shrink-0 items-center justify-center rounded-surface border border-border-subtle/70 bg-[var(--surface-card)] p-1.5 text-text-secondary shadow-[0_14px_28px_-22px_var(--shadow-color)] transition hover:-translate-y-px hover:border-border-default hover:bg-[var(--surface-hover)] hover:text-text-primary hover:shadow-[0_18px_32px_-20px_var(--shadow-color)]",
                           focusRingClass("ring"),
                           blocked && "cursor-not-allowed",
                           classes?.iconButton,
@@ -432,7 +432,7 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({
                     id={headerId}
                     type="button"
                     className={cn(
-                      "flex w-full items-start gap-3 rounded-[18px] px-2 py-1 text-start transition hover:bg-[var(--surface-hover)] hover:shadow-[0_18px_34px_-28px_var(--shadow-color)]",
+                      "flex w-full items-start gap-3 rounded-control px-2 py-1 text-start transition hover:bg-[var(--surface-hover)] hover:shadow-[0_18px_34px_-28px_var(--shadow-color)]",
                       focusRingClass("ring"),
                       expanded &&
                         "bg-[var(--surface-hover)] shadow-[0_20px_40px_-30px_var(--shadow-color)]",

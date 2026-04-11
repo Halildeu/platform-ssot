@@ -136,7 +136,7 @@ export const TrainingTracker: React.FC<TrainingTrackerProps> = ({
   return (
     <div
       className={cn(
-        'border border-border-default rounded-lg bg-surface-default overflow-hidden',
+        'border border-border-default rounded-surface bg-surface-default overflow-hidden',
         accessStyles(accessState.state),
         className,
       )}

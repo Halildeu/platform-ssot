@@ -68,7 +68,7 @@ export const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(({
   >
     {icon && (
       <div className={cn(
-        "flex items-center justify-center rounded-2xl bg-surface-muted",
+        "flex items-center justify-center rounded-surface bg-surface-muted",
         compact ? "mb-3 h-10 w-10" : "mb-4 h-14 w-14",
         "[&>svg]:h-6 [&>svg]:w-6 text-text-secondary",
       )}>

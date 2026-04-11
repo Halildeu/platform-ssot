@@ -72,7 +72,7 @@ export function ChartDataTable({
           cursor: "pointer",
           border: "1px solid var(--border-default, #e5e7eb)",
           borderRadius: 4,
-          background: view === "table" ? "var(--bg-muted, #f3f4f6)" : "transparent",
+          background: view === "table" ? "var(--surface-muted-bg, #f3f4f6)" : "transparent",
           color: "var(--text-secondary, #6b7280)",
         }}
       >
@@ -88,7 +88,7 @@ export function ChartDataTable({
               width: "100%",
               borderCollapse: "collapse",
               fontSize: 13,
-              fontFamily: "var(--font-family-sans, Inter, system-ui, sans-serif)",
+              fontFamily: "var(--font-family-base, Inter, system-ui, sans-serif)",
             }}
           >
             {caption && <caption className="sr-only">{caption}</caption>}

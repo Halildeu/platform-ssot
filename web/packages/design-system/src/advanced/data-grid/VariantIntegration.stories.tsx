@@ -359,7 +359,7 @@ export const CompactInToolbar: Story = {
         <p className="mb-4 text-sm text-text-secondary">
           Toolbar içinde kompakt kullanım — grid toolbar'daki gibi.
         </p>
-        <div className="flex items-center gap-2 rounded-lg border border-border-default bg-surface-default p-2">
+        <div className="flex items-center gap-2 rounded-surface border border-border-default bg-surface-default p-2">
           <input className="h-8 w-48 rounded border border-border-subtle px-2 text-sm" placeholder="Tüm sütunlarda ara..." />
           <select className="h-8 rounded border border-border-subtle px-2 text-sm">
             <option>Quartz</option>

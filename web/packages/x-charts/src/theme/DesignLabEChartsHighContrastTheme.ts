@@ -77,7 +77,7 @@ export function buildDesignLabEChartsHighContrastTheme(
     fontFamily: fontFamilyOverride,
   } = options ?? {};
 
-  const fontFamily = fontFamilyOverride ?? getCSSVar('--font-family-sans', 'Inter, system-ui, sans-serif');
+  const fontFamily = fontFamilyOverride ?? getCSSVar('--font-family-base', 'Inter, system-ui, sans-serif');
 
   // High-contrast token pairs
   const textPrimary = dark ? '#ffffff' : '#000000';

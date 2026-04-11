@@ -150,7 +150,7 @@ export const QueryLab: React.FC<Props> = ({ schema = '', tables = [] }) => {
             ref={textareaRef}
             value={sql}
             onChange={(e) => setSql(e.target.value)}
-            className="w-full resize-none bg-transparent px-3 py-3 font-mono text-sm text-text-primary outline-none"
+            className="w-full resize-none bg-transparent px-3 py-3 font-mono text-sm text-text-primary outline-hidden"
             rows={6}
             placeholder="SELECT * FROM ..."
             spellCheck={false}

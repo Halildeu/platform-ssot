@@ -95,7 +95,7 @@ const formatPrimitive = (value: unknown) => {
 };
 
 const jsonViewerSurfaceClassName =
-  "relative overflow-auto rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card)] p-4 shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
+  "relative overflow-auto rounded-control border border-border-subtle/80 bg-[var(--surface-card)] p-4 shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
 /** Interactive collapsible JSON tree viewer with type badges and configurable expand depth. */
 export const JsonViewer = React.forwardRef<HTMLElement, JsonViewerProps>(({
@@ -165,7 +165,7 @@ export const JsonViewer = React.forwardRef<HTMLElement, JsonViewerProps>(({
 
     if (!expandable) {
       return (
-        <div key={path} className={`rounded-2xl border border-border-subtle bg-surface-muted/60 px-4 py-3 ${indentClass}`}>
+        <div key={path} className={`rounded-surface border border-border-subtle bg-surface-muted/60 px-4 py-3 ${indentClass}`}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="min-w-0">
               <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -174,7 +174,7 @@ export const JsonViewer = React.forwardRef<HTMLElement, JsonViewerProps>(({
             </div>
             {showTypes ? <Badge variant={typeInfo.tone}>{typeInfo.label}</Badge> : null}
           </div>
-          <code className={`mt-2 block overflow-x-auto rounded-xl border border-border-subtle/65 bg-[var(--surface-card)] px-3 py-2 text-xs shadow-[0_12px_24px_-24px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs ${primitiveClassName(nodeValue)}`}>
+          <code className={`mt-2 block overflow-x-auto rounded-surface border border-border-subtle/65 bg-[var(--surface-card)] px-3 py-2 text-xs shadow-[0_12px_24px_-24px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs ${primitiveClassName(nodeValue)}`}>
             {formatPrimitive(nodeValue)}
           </code>
         </div>
@@ -186,7 +186,7 @@ export const JsonViewer = React.forwardRef<HTMLElement, JsonViewerProps>(({
       : Object.entries(nodeValue);
 
     return (
-      <div key={path} className={`rounded-[24px] border border-border-subtle/75 bg-[var(--surface-card-alt)] p-4 shadow-[0_16px_30px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs ${indentClass}`}>
+      <div key={path} className={`rounded-control border border-border-subtle/75 bg-[var(--surface-card-alt)] p-4 shadow-[0_16px_30px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs ${indentClass}`}>
         <button
           type="button"
           className="flex w-full items-center justify-between gap-3 text-left transition duration-(--motion-duration-medium) hover:-translate-y-px"

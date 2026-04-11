@@ -45,6 +45,7 @@ import { register as checks_token_quality } from './theme-doctor/checks-token-qu
 import { register as checks_api_health } from './theme-doctor/checks-api-health.mjs';
 import { register as checks_token_gaps } from './theme-doctor/checks-token-gaps.mjs';
 import { register as checks_preview_coverage } from './theme-doctor/checks-preview-coverage.mjs';
+import { register as checks_axis_compliance } from './theme-doctor/checks-axis-compliance.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..', '..');
@@ -162,6 +163,7 @@ checks_token_quality(ctx);
 checks_api_health(ctx);
 checks_token_gaps(ctx);
 checks_preview_coverage(ctx);
+checks_axis_compliance(ctx);
 
 /* ------------------------------------------------------------------ */
 /*  Report                                                             */

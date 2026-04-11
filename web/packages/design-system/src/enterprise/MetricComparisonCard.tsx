@@ -227,7 +227,7 @@ export function MetricComparisonCard({
   return (
     <div
       className={cn(
-        'border border-border-default rounded-lg bg-surface-default overflow-hidden',
+        'border border-border-default rounded-surface bg-surface-default overflow-hidden',
         s.padding,
         accessStyles(accessState.state),
         className,

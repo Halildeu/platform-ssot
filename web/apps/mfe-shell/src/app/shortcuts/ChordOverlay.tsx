@@ -22,7 +22,7 @@ export const ChordOverlay: React.FC<ChordOverlayProps> = ({ isPending, chords })
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-6 z-[9999] flex justify-center">
       <Transition show={isPending} preset="slideUp">
-        <div className="pointer-events-auto overflow-hidden rounded-xl border border-border-subtle bg-surface-panel/95 shadow-lg backdrop-blur-sm">
+        <div className="pointer-events-auto overflow-hidden rounded-xl border border-border-subtle bg-surface-panel/95 shadow-lg backdrop-blur-xs">
           {/* Header hint */}
           <div className="flex items-center gap-2 px-4 pt-3 pb-2">
             <kbd className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border-subtle bg-surface-muted font-mono text-xs font-bold text-text-primary">

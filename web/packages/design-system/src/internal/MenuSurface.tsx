@@ -538,7 +538,7 @@ const MenuSurfaceList = <TItem extends MenuSurfaceItemBase<TItem>>({
                   collisionFlipped: submenuPosition?.flipped ?? false,
                   positioningMode: 'anchor',
                 }}
-                className="fixed z-50 min-w-[18rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md"
+                className="fixed z-50 min-w-[18rem] rounded-control border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md"
                 style={{
                   boxShadow: 'var(--elevation-overlay)',
                   left: submenuPosition?.left ?? 0,

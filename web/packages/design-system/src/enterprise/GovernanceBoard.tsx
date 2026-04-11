@@ -146,7 +146,7 @@ export const GovernanceBoard: React.FC<GovernanceBoardProps> = ({
   return (
     <div
       className={cn(
-        'border border-border-default rounded-lg bg-surface-default overflow-hidden',
+        'border border-border-default rounded-surface bg-surface-default overflow-hidden',
         accessStyles(accessState.state),
         className,
       )}
@@ -242,7 +242,7 @@ export const GovernanceBoard: React.FC<GovernanceBoardProps> = ({
                         </div>
 
                         {/* Severity indicator */}
-                        <span className={cn('inline-flex items-center rounded-xs px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide shrink-0', severityCfg.textColor)}>
+                        <span className={cn('inline-flex items-center rounded-control px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide shrink-0', severityCfg.textColor)}>
                           {severityCfg.label}
                         </span>
 

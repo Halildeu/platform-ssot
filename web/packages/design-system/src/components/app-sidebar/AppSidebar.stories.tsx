@@ -95,7 +95,7 @@ export const Default: Story = {
         <AppSidebar.NavItem icon={<SettingsIcon />} label="Settings" />
       </AppSidebar.Nav>
       <AppSidebar.Footer>
-        <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>v2.4.0</span>
+        <span className="text-[11px]" style={{ color: 'var(--text-secondary)' }}>v2.4.0</span>
       </AppSidebar.Footer>
     </AppSidebar>
   ),
@@ -201,24 +201,24 @@ export const NestedItems: Story = {
 /* ================================================================== */
 
 const StableBadge = () => (
-  <span style={{
-    fontSize: 10, padding: '1px 6px', borderRadius: 9999,
+  <span className="text-[10px]" style={{
+    padding: '1px 6px', borderRadius: 9999,
     background: 'var(--status-success-subtle))', color: 'var(--status-success))',
   }}>
     stable
   </span>
 );
 const BetaBadge = () => (
-  <span style={{
-    fontSize: 10, padding: '1px 6px', borderRadius: 9999,
+  <span className="text-[10px]" style={{
+    padding: '1px 6px', borderRadius: 9999,
     background: 'var(--status-warning-subtle)', color: 'var(--status-warning)',
   }}>
     beta
   </span>
 );
 const DeprecatedBadge = () => (
-  <span style={{
-    fontSize: 10, padding: '1px 6px', borderRadius: 9999,
+  <span className="text-[10px]" style={{
+    padding: '1px 6px', borderRadius: 9999,
     background: 'var(--status-error-subtle)', color: 'var(--status-error))',
   }}>
     deprecated
@@ -303,11 +303,11 @@ export const KitchenSink: Story = {
           title="Design Lab"
           subtitle="v2.4.0 — Enterprise"
           logo={
-            <span style={{
+            <span className="text-xs" style={{
               width: 28, height: 28, borderRadius: 6,
               background: 'var(--action-primary))', color: 'var(--surface-default)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 13, fontWeight: 700,
+              fontWeight: 700,
             }}>
               DL
             </span>
@@ -353,15 +353,15 @@ export const KitchenSink: Story = {
 
         <AppSidebar.Footer>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 8px' }}>
-            <span style={{
+            <span className="text-[10px]" style={{
               width: 24, height: 24, borderRadius: '50%',
               background: 'var(--action-primary))', color: 'var(--surface-default)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 10, fontWeight: 600,
+              fontWeight: 600,
             }}>
               HK
             </span>
-            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Halil K.</span>
+            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Halil K.</span>
           </div>
         </AppSidebar.Footer>
         <AppSidebar.Resizer />

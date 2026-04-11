@@ -125,7 +125,7 @@ export const AIGuidedAuthoring = React.forwardRef<HTMLElement, AIGuidedAuthoring
   return (
     <section
       ref={ref}
-      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-xs ${className}`.trim()}
+      className={`rounded-surface border border-border-subtle bg-surface-muted p-5 shadow-elevation-sm ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="ai-guided-authoring"
       title={accessReason}
@@ -143,7 +143,7 @@ export const AIGuidedAuthoring = React.forwardRef<HTMLElement, AIGuidedAuthoring
           </Text>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <div className="rounded-2xl border border-border-subtle bg-surface-default px-4 py-3">
+          <div className="rounded-surface border border-border-subtle bg-surface-default px-4 py-3">
             <Text
               variant="secondary"
               className="text-[11px] font-semibold uppercase tracking-[0.16em]"
@@ -197,7 +197,7 @@ export const AIGuidedAuthoring = React.forwardRef<HTMLElement, AIGuidedAuthoring
               />
             ))
           ) : (
-            <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+            <div className="rounded-control border border-border-subtle bg-surface-default p-4">
               <Text
                 variant="secondary"
                 className="block text-sm leading-6"

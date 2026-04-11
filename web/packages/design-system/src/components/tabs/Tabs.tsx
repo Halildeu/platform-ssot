@@ -67,7 +67,7 @@ type InternalVariant = "line" | "enclosed" | "pill";
 
 const variantBaseStyles: Record<InternalVariant, string> = {
   line: "border-b border-border-subtle",
-  enclosed: "bg-surface-muted rounded-xl p-1",
+  enclosed: "bg-surface-muted rounded-surface p-1",
   pill: "gap-1",
 };
 
@@ -77,11 +77,11 @@ const tabStyles: Record<InternalVariant, { active: string; inactive: string }> =
     inactive: "text-text-secondary hover:text-text-primary border-b-2 border-transparent",
   },
   enclosed: {
-    active: "bg-surface-default text-text-primary shadow-xs rounded-lg",
-    inactive: "text-text-secondary hover:text-text-primary rounded-lg",
+    active: "bg-surface-default text-text-primary shadow-elevation-sm rounded-surface",
+    inactive: "text-text-secondary hover:text-text-primary rounded-surface",
   },
   pill: {
-    active: "bg-action-primary text-text-inverse rounded-full shadow-xs",
+    active: "bg-action-primary text-text-inverse rounded-full shadow-elevation-sm",
     inactive: "text-text-secondary hover:bg-surface-muted rounded-full",
   },
 };
@@ -231,7 +231,7 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(({
                   role="button"
                   tabIndex={0}
                   aria-label="Close tab"
-                  className="ms-1 shrink-0 rounded-xs p-0.5 opacity-60 transition hover:opacity-100"
+                  className="ms-1 shrink-0 rounded-control p-0.5 opacity-60 transition hover:opacity-100"
                   onClick={(e) => {
                     e.stopPropagation();
                     onCloseTab(itemKey);
@@ -264,7 +264,7 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(({
           className={cn("mt-4", slotProps?.content?.className)}
         >
           {activeItem.description && (
-            <div className="mb-3 rounded-[20px] border border-border-subtle/70 bg-surface-default px-4 py-3 text-sm text-text-secondary shadow-xs">
+            <div className="mb-3 rounded-control border border-border-subtle/70 bg-surface-default px-4 py-3 text-sm text-text-secondary shadow-elevation-sm">
               {activeItem.description}
             </div>
           )}

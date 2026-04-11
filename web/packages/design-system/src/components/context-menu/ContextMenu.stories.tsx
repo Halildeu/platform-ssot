@@ -27,7 +27,7 @@ export const Default: Story = {
   args: {
     items: menuItems,
     children: (
-      <div style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center', fontSize: 14 }}>
+      <div className="text-sm" style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center' }}>
         Sag tikla
       </div>
     ),
@@ -49,7 +49,7 @@ export const WithLabels: Story = {
       { key: 'delete', label: 'Sil', danger: true },
     ],
     children: (
-      <div style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center', fontSize: 14 }}>
+      <div className="text-sm" style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center' }}>
         Sag tikla
       </div>
     ),
@@ -64,7 +64,7 @@ export const WithDisabledItems: Story = {
       { key: 'delete', label: 'Sil', disabled: true, danger: true },
     ],
     children: (
-      <div style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center', fontSize: 14 }}>
+      <div className="text-sm" style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center' }}>
         Sag tikla
       </div>
     ),
@@ -76,7 +76,7 @@ export const Disabled: Story = {
     items: menuItems,
     disabled: true,
     children: (
-      <div style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center', fontSize: 14, opacity: 0.5 }}>
+      <div className="text-sm" style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center', opacity: 0.5 }}>
         Devre disi
       </div>
     ),
@@ -87,7 +87,7 @@ export const WithShortcuts: Story = {
   args: {
     items: menuItems,
     children: (
-      <div style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center', fontSize: 14 }}>
+      <div className="text-sm" style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center' }}>
         Kisayol tuslu menu
       </div>
     ),
@@ -98,7 +98,7 @@ export const EmptyMenu: Story = {
   args: {
     items: [],
     children: (
-      <div style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center', fontSize: 14 }}>
+      <div className="text-sm" style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center' }}>
         Bos menu
       </div>
     ),

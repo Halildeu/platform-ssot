@@ -17,7 +17,7 @@ export default meta;
 type Story = StoryObj<typeof Grid>;
 
 const Box = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <div className={`rounded-lg border border-border-subtle bg-surface-muted px-3 py-2 text-center text-sm ${className ?? ''}`}>{children}</div>
+  <div className={`rounded-surface border border-border-subtle bg-surface-muted px-3 py-2 text-center text-sm ${className ?? ''}`}>{children}</div>
 );
 
 export const Default: Story = {

@@ -273,7 +273,7 @@ export const HeatmapCalendar: React.FC<HeatmapCalendarProps> = ({
   return (
     <div
       className={cn(
-        'inline-block border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-4',
+        'inline-block border border-[var(--border-default)] rounded-surface bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -369,7 +369,7 @@ export const HeatmapCalendar: React.FC<HeatmapCalendarProps> = ({
       {/* Tooltip (fixed, portal-free) */}
       {tooltip && (
         <div
-          className="fixed z-50 px-2 py-1 rounded-xs text-xs shadow-md pointer-events-none bg-[var(--surface-elevated)] text-[var(--text-on-elevated)]"
+          className="fixed z-50 px-2 py-1 rounded-control text-xs shadow-elevation-surface pointer-events-none bg-[var(--surface-elevated)] text-[var(--text-on-elevated)]"
           style={{
             left: tooltip.x,
             top: tooltip.y,
@@ -385,14 +385,14 @@ export const HeatmapCalendar: React.FC<HeatmapCalendarProps> = ({
       <div className="flex items-center gap-1.5 mt-3">
         <span className="text-[10px] text-[var(--text-tertiary)]">Less</span>
         <span
-          className="inline-block rounded-xs"
+          className="inline-block rounded-control"
           style={{ width: CELL_SIZE, height: CELL_SIZE, backgroundColor: emptyColor }}
           aria-hidden="true"
         />
         {colorScale.map((color, i) => (
           <span
             key={`legend-${i}`}
-            className="inline-block rounded-xs"
+            className="inline-block rounded-control"
             style={{ width: CELL_SIZE, height: CELL_SIZE, backgroundColor: color }}
             aria-hidden="true"
           />

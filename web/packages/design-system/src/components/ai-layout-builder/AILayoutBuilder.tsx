@@ -130,7 +130,7 @@ const densityPadding: Record<LayoutDensity, string> = {
 };
 
 const _SKELETON_PULSE =
-  "animate-pulse rounded-lg bg-surface-muted";
+  "animate-pulse rounded-surface bg-surface-muted";
 
 /* ---- Helpers ---- */
 
@@ -200,7 +200,7 @@ const BlockCard: React.FC<{
             <button
               type="button"
               onClick={() => onToggle?.(block.key, !collapsed)}
-              className="inline-flex h-6 w-6 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-muted"
+              className="inline-flex h-6 w-6 items-center justify-center rounded-control text-text-secondary transition-colors hover:bg-surface-muted"
               aria-expanded={!collapsed}
               aria-label={
                 collapsed

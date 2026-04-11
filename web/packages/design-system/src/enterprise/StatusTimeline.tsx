@@ -108,7 +108,7 @@ function EventDot({
   return (
     <span
       className={cn(
-        'inline-block shrink-0 rounded-full border-2 border-surface-default shadow-xs',
+        'inline-block shrink-0 rounded-full border-2 border-surface-default shadow-elevation-sm',
         active && 'ring-2 ring-offset-1',
       )}
       style={{
@@ -142,7 +142,7 @@ function ConnectorLine({
       {duration !== null && !compact && (
         <span
           className={cn(
-            'absolute whitespace-nowrap rounded-xs bg-surface-muted px-1 py-0.5 text-[10px] text-text-secondary',
+            'absolute whitespace-nowrap rounded-control bg-surface-muted px-1 py-0.5 text-[10px] text-text-secondary',
             isH ? '-top-4' : '-left-12',
           )}
         >
@@ -260,7 +260,7 @@ export function StatusTimeline({
   return (
     <div
       className={cn(
-        'rounded-lg border border-border-default bg-[var(--surface-primary)] p-4',
+        'rounded-surface border border-border-default bg-[var(--surface-primary)] p-4',
         accessStyles(state),
         className,
       )}

@@ -84,7 +84,7 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(({
             aria-expanded={showMore}
             onClick={() => setShowMore((v) => !v)}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium",
+              "inline-flex items-center gap-1.5 rounded-surface px-3 py-1.5 text-sm font-medium",
               "text-text-secondary hover:text-text-primary",
               "hover:bg-[var(--surface-hover)] transition-colors",
               focusRingClass("ring"),

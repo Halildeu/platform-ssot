@@ -108,7 +108,7 @@ function CategoryPieChart() {
               style={{
                 display: "flex", alignItems: "center", gap: 6, cursor: "pointer",
                 padding: "4px 8px", borderRadius: 4,
-                background: "var(--bg-muted, #f9fafb)",
+                background: "var(--surface-muted-bg, #f9fafb)",
               }}
             >
               <div style={{ width: 12, height: 12, borderRadius: "50%", background: colors[i] }} />
@@ -190,7 +190,7 @@ function DashboardControls() {
           key={id}
           type="button"
           onClick={() => loadBookmark(id)}
-          style={{ fontSize: 11, padding: "2px 8px", borderRadius: 4, cursor: "pointer", background: "var(--bg-muted)" }}
+          style={{ fontSize: 11, padding: "2px 8px", borderRadius: 4, cursor: "pointer", background: "var(--surface-muted-bg)" }}
         >
           {bm.name}
         </button>

@@ -61,11 +61,11 @@ const objectFitMap: Record<ImageObjectFit, string> = {
 };
 
 const roundedMap: Record<string, string> = {
-  true: 'rounded-lg',
-  sm: 'rounded-sm',
-  md: 'rounded-md',
-  lg: 'rounded-lg',
-  xl: 'rounded-xl',
+  true: 'rounded-surface',
+  sm: 'rounded-control',
+  md: 'rounded-control',
+  lg: 'rounded-surface',
+  xl: 'rounded-surface',
   full: 'rounded-full',
 };
 
@@ -105,7 +105,7 @@ const PreviewModal: React.FC<{
 
   return (
     <div
-      className="fixed inset-0 z-[1400] flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      className="fixed inset-0 z-[1400] flex items-center justify-center bg-black/80 backdrop-blur-xs"
       onClick={onClose}
       role="dialog"
       aria-modal="true"

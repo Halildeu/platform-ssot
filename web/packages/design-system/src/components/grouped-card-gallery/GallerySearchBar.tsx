@@ -75,7 +75,7 @@ export const GallerySearchBar: React.FC<GallerySearchBarProps> = ({
             onClick={handleClear}
             className={cn(
               "absolute end-2.5 top-1/2 -translate-y-1/2",
-              "rounded-xs p-0.5 text-text-secondary transition hover:text-text-primary",
+              "rounded-control p-0.5 text-text-secondary transition hover:text-text-primary",
             )}
             aria-label="Clear search"
           >

@@ -1,0 +1,47 @@
+/* ================================================================== */
+/*  AXIS TOKENS — TW4 utility generation via @theme inline             */
+/*                                                                     */
+/*  TW4 namespace mapping:                                             */
+/*    --radius-*                  → rounded-*                          */
+/*    --shadow-*                  → shadow-*                           */
+/*    --transition-duration-*     → duration-*                         */
+/*    --ease-*                    → ease-*                             */
+/*    --spacing-*                 → uses spacing scale                 */
+/*    --color-*                   → bg-*, text-*, border-*, etc.       */
+/* ================================================================== */
+
+@theme inline {
+  /* ── Radius axis ─────────────────────────────────────────────── */
+  /* rounded-control: buttons, inputs, chips                        */
+  /* rounded-surface: cards, panels, modals                         */
+  --radius-control: var(--radius-control);
+  --radius-surface: var(--radius-surface);
+
+  /* ── Elevation axis ──────────────────────────────────────────── */
+  /* shadow-elevation-surface: card/panel shadows                   */
+  /* shadow-elevation-overlay: dropdown/modal shadows               */
+  /* shadow-elevation-sm: subtle shadows                            */
+  --shadow-elevation-surface: var(--elevation-surface);
+  --shadow-elevation-overlay: var(--elevation-overlay);
+  --shadow-elevation-sm: var(--elevation-sm);
+
+  /* ── Motion axis ─────────────────────────────────────────────── */
+  /* duration-motion-fast: 100ms (hover, micro)                     */
+  /* duration-motion-medium: 200ms (transitions)                    */
+  /* duration-motion-slow: 300ms (page, modal)                      */
+  --transition-duration-motion-fast: var(--motion-duration-fast);
+  --transition-duration-motion-medium: var(--motion-duration-medium);
+  --transition-duration-motion-slow: var(--motion-duration-slow);
+  --ease-motion-standard: var(--motion-easing-standard);
+  --ease-motion-enter: var(--motion-easing-enter);
+  --ease-motion-exit: var(--motion-easing-exit);
+
+  /* ── Density axis ────────────────────────────────────────────── */
+  --spacing-density: var(--density-space);
+  --size-density-row: var(--density-row-height);
+
+  /* ── Missing tokens (theme-inline-completeness) ──────────────── */
+  --shadow-elevation: var(--elevation-sm);
+  --color-surface-inverse: var(--surface-inverse);
+  --color-action-primary-hover: var(--action-primary-hover);
+}

@@ -88,7 +88,7 @@ export const MasterDetail = React.forwardRef<HTMLDivElement, MasterDetailProps>(
                 type="button"
                 onClick={() => setCollapsed(true)}
                 className={cn(
-                  "ms-2 rounded-lg p-1 text-[var(--text-tertiary)]",
+                  "ms-2 rounded-surface p-1 text-[var(--text-tertiary)]",
                   "hover:bg-[var(--surface-hover)] hover:text-text-primary",
                   focusRingClass("ring"),
                 )}

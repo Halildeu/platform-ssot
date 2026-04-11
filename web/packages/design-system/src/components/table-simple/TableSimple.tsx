@@ -161,7 +161,7 @@ function TableSimpleInner<
         </Text>
       ) : null}
 
-      <div className="mt-4 overflow-hidden rounded-[26px] border border-border-subtle bg-surface-default shadow-xs">
+      <div className="mt-4 overflow-hidden rounded-control border border-border-subtle bg-surface-default shadow-elevation-sm">
         {showEmpty ? (
           <div className="p-5">
             <Empty description={resolvedEmptyFallbackDescription} />
@@ -172,7 +172,7 @@ function TableSimpleInner<
               <thead
                 className={
                   stickyHeader
-                    ? "sticky top-0 z-[1] bg-surface-muted/95 backdrop-blur-xs"
+                    ? "sticky top-0 z-10 bg-surface-muted/95 backdrop-blur-xs"
                     : "bg-surface-muted"
                 }
               >

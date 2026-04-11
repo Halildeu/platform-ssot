@@ -1,5 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
+import { cn } from '../../utils/cn';
 import { resolveAccessState, type AccessControlledProps } from '../../internal/access-controller';
 import { stateAttrs } from '../../internal/interaction-core';
 import { useOutsideClick } from '../../internal/overlay-engine';
@@ -812,8 +813,8 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
       ref={popupRef}
       className={[
         popupStrategy === 'portal'
-          ? 'overflow-hidden rounded-2xl border border-border-subtle bg-surface-muted shadow-xl'
-          : 'absolute z-30 w-full overflow-hidden rounded-2xl border border-border-subtle bg-surface-muted shadow-xl',
+          ? 'overflow-hidden rounded-surface border border-border-subtle bg-surface-muted shadow-elevation-overlay'
+          : 'absolute z-30 w-full overflow-hidden rounded-surface border border-border-subtle bg-surface-muted shadow-elevation-overlay',
         popupClassName ?? '',
         popupStrategy === 'inline' && popupAlign === 'end' ? 'end-0' : '',
         popupStrategy === 'inline' && popupAlign === 'start' ? 'start-0' : '',
@@ -836,9 +837,9 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
         className={['max-h-72 overflow-y-auto p-2', listboxClassName ?? ''].join(' ').trim()}
       >
         {loading ? (
-          <div className="rounded-xl px-3 py-2 text-sm text-text-secondary">{loadingText}</div>
+          <div className="rounded-surface px-3 py-2 text-sm text-text-secondary">{loadingText}</div>
         ) : filteredOptions.length === 0 ? (
-          <div className="rounded-xl px-3 py-2 text-sm text-text-secondary">{noOptionsText}</div>
+          <div className="rounded-surface px-3 py-2 text-sm text-text-secondary">{noOptionsText}</div>
         ) : (
           <div className="flex flex-col gap-2">
             {filteredGroups.map((group) => (
@@ -879,7 +880,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
                         }}
                         onMouseDown={(event) => event.preventDefault()}
                         onClick={() => selectOption(option)}
-                        className={`rounded-2xl border px-3 py-2 transition ${
+                        className={`rounded-surface border px-3 py-2 transition ${
                           isHighlighted
                             ? 'border-action-primary-border bg-action-primary-soft'
                             : 'border-transparent bg-surface-muted'
@@ -954,7 +955,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
     >
       <div ref={rootRef} className={fullWidth ? 'relative w-full' : 'relative'}>
         <div
-          className={getFieldFrameClass(size, tone, fullWidth, className)}
+          className={cn(getFieldFrameClass(size, tone, fullWidth, className), "focus-within:ring-2 focus-within:ring-focus-outline focus-visible:ring-2 focus-visible:ring-focus-outline")}
           {...stateAttrs({
             component: "combobox",
             state: isOpen ? "open" : "closed",

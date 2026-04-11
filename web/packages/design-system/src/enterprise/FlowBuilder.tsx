@@ -871,7 +871,7 @@ export function FlowBuilder({
     <div
       ref={containerRef}
       className={cn(
-        'relative flex overflow-hidden rounded-lg border border-border-default bg-[var(--surface-primary)]',
+        'relative flex overflow-hidden rounded-surface border border-border-default bg-[var(--surface-primary)]',
         accessStyles(state),
         className,
       )}
@@ -894,7 +894,7 @@ export function FlowBuilder({
             <button
               key={nt.type}
               type="button"
-              className="rounded-md border border-border-default bg-[var(--surface-primary)] px-2 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--surface-muted)] disabled:opacity-50"
+              className="rounded-control border border-border-default bg-[var(--surface-primary)] px-2 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--surface-muted)] disabled:opacity-50"
               onClick={() => addNode(nt.type)}
               disabled={!isInteractive}
               data-testid={`add-${nt.type}`}
@@ -908,7 +908,7 @@ export function FlowBuilder({
 
           <button
             type="button"
-            className="rounded-md border border-border-default px-2 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--surface-muted)]"
+            className="rounded-control border border-border-default px-2 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--surface-muted)]"
             onClick={zoomIn}
             aria-label="Zoom in"
             data-testid="zoom-in"
@@ -917,7 +917,7 @@ export function FlowBuilder({
           </button>
           <button
             type="button"
-            className="rounded-md border border-border-default px-2 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--surface-muted)]"
+            className="rounded-control border border-border-default px-2 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--surface-muted)]"
             onClick={zoomOut}
             aria-label="Zoom out"
             data-testid="zoom-out"
@@ -926,7 +926,7 @@ export function FlowBuilder({
           </button>
           <button
             type="button"
-            className="rounded-md border border-border-default px-2 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--surface-muted)]"
+            className="rounded-control border border-border-default px-2 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--surface-muted)]"
             onClick={zoomFit}
             aria-label="Zoom to fit"
             data-testid="zoom-fit"
@@ -938,7 +938,7 @@ export function FlowBuilder({
 
           <button
             type="button"
-            className="rounded-md border border-border-default px-2 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--surface-muted)] disabled:opacity-50"
+            className="rounded-control border border-border-default px-2 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--surface-muted)] disabled:opacity-50"
             onClick={undo}
             disabled={historyIndex <= 0}
             aria-label="Undo"
@@ -948,7 +948,7 @@ export function FlowBuilder({
           </button>
           <button
             type="button"
-            className="rounded-md border border-border-default px-2 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--surface-muted)] disabled:opacity-50"
+            className="rounded-control border border-border-default px-2 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--surface-muted)] disabled:opacity-50"
             onClick={redo}
             disabled={historyIndex >= history.length - 1}
             aria-label="Redo"
@@ -959,7 +959,7 @@ export function FlowBuilder({
 
           <button
             type="button"
-            className="rounded-md border border-border-default px-2 py-1 text-xs text-[var(--state-error-text)] hover:bg-[var(--surface-muted)] disabled:opacity-50"
+            className="rounded-control border border-border-default px-2 py-1 text-xs text-[var(--state-error-text)] hover:bg-[var(--surface-muted)] disabled:opacity-50"
             onClick={deleteSelected}
             disabled={!isInteractive || (!selectedNodeId && !selectedEdgeId)}
             aria-label="Delete selected"

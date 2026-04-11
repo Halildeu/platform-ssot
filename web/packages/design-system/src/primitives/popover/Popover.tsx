@@ -434,7 +434,7 @@ export const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({
         'button',
         {
           type: 'button',
-          className: 'inline-flex items-center justify-center rounded-md border border-border-subtle bg-surface-panel px-3 py-2 text-sm font-medium text-text-primary hover:bg-surface-muted focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50',
+          className: 'inline-flex items-center justify-center rounded-control border border-border-subtle bg-surface-panel px-3 py-2 text-sm font-medium text-text-primary hover:bg-surface-muted focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50',
           ...triggerProps,
           disabled: interactionState !== 'full',
           onClick: handleClickToggle,
@@ -491,7 +491,7 @@ export const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({
         }
         scheduleClose(false);
       }}
-      className={`${premiumOverlayPanelClassName} z-50 w-[min(22rem,calc(100vw-1.5rem))] rounded-[24px] p-4 ${
+      className={`${premiumOverlayPanelClassName} z-50 w-[min(22rem,calc(100vw-1.5rem))] rounded-control p-4 ${
         disablePortal ? `absolute ${resolveInlinePlacementClassName(resolvedSide, align)}` : 'fixed'
       } ${panelClassName}`.trim()}
       style={{
@@ -508,7 +508,7 @@ export const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({
         <span
           data-testid="popover-arrow"
           aria-hidden="true"
-          className={`absolute h-3 w-3 rotate-45 border border-border-subtle/80 bg-[var(--surface-card)] shadow-xs ${resolveOverlayArrowPositionClassName(resolvedSide, align)} ${arrowClassName}`.trim()}
+          className={`absolute h-3 w-3 rotate-45 border border-border-subtle/80 bg-[var(--surface-card)] shadow-elevation-sm ${resolveOverlayArrowPositionClassName(resolvedSide, align)} ${arrowClassName}`.trim()}
         />
       ) : null}
       {title ? (

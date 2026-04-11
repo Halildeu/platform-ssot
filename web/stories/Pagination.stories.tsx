@@ -19,7 +19,7 @@ type Story = StoryObj<typeof Pagination>;
 export const BuiltInControls: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto max-w-6xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto max-w-6xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Text as="div" className="text-lg font-semibold text-text-primary">
           Built-in size changer and quick jumper
         </Text>
@@ -48,7 +48,7 @@ export const BuiltInControls: Story = {
 export const RouterFirst: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto max-w-5xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto max-w-5xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Text as="div" className="text-lg font-semibold text-text-primary">
           Router-first page items
         </Text>
@@ -72,7 +72,7 @@ export const RouterFirst: Story = {
 export const UnknownTotalFooter: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto max-w-5xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto max-w-5xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Text as="div" className="text-lg font-semibold text-text-primary">
           Unknown total table footer
         </Text>

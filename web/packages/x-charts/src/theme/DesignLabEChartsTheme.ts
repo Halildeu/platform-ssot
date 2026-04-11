@@ -51,12 +51,12 @@ export function buildDesignLabEChartsTheme(options?: DesignLabThemeOptions): Rec
   } = options ?? {};
 
   // Read tokens
-  const fontFamily = fontFamilyOverride ?? getCSSVar('--font-family-sans', 'Inter, system-ui, sans-serif');
+  const fontFamily = fontFamilyOverride ?? getCSSVar('--font-family-base', 'Inter, system-ui, sans-serif');
   const textPrimary = getCSSVar('--text-primary', '#1a1a2e');
   const textSecondary = getCSSVar('--text-secondary', '#6b7280');
   const textTertiary = getCSSVar('--text-tertiary', '#9ca3af');
-  const bgSurface = getCSSVar('--bg-surface', '#ffffff');
-  const bgMuted = getCSSVar('--bg-muted', '#f9fafb');
+  const bgSurface = getCSSVar('--surface-default-bg', '#ffffff');
+  const bgMuted = getCSSVar('--surface-muted-bg', '#f9fafb');
   const borderDefault = getCSSVar('--border-default', '#e5e7eb');
   const actionPrimary = getCSSVar('--action-primary', '#3b82f6');
 

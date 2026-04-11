@@ -121,7 +121,7 @@ const LiveDemoCanvas = () => {
   return (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6">
-        <section className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <section className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <div className="flex flex-wrap items-center gap-3">
             <Avatar name="Platform UI" size="lg" />
             <div>
@@ -153,7 +153,7 @@ const LiveDemoCanvas = () => {
           />
 
           <div className="space-y-6">
-            <section id="authoring" className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+            <section id="authoring" className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
               <AIGuidedAuthoring
                 defaultPaletteOpen={false}
                 confidenceLevel="high"
@@ -221,7 +221,7 @@ const LiveDemoCanvas = () => {
                 onOpenCitation={() => undefined}
               />
 
-              <div id="command-palette" className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+              <div id="command-palette" className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
                 <div className="space-y-3">
                   <Text as="div" className="text-sm font-semibold text-text-primary">
                     Command palette overlay
@@ -283,7 +283,7 @@ export const ComboboxInlineField: Story = {
 
       return (
         <div className="min-h-screen bg-surface-canvas p-8 text-text-primary">
-          <div className="mx-auto max-w-2xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <div className="mx-auto max-w-2xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
             <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
               Inline combobox
             </Text>
@@ -391,7 +391,7 @@ export const ComboboxAsyncFreeSoloField: Story = {
 
       return (
         <div className="min-h-screen bg-surface-canvas p-8 text-text-primary">
-          <div className="mx-auto max-w-3xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <div className="mx-auto max-w-3xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
             <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
               Advanced combobox
             </Text>
@@ -460,7 +460,7 @@ export const ComboboxTagsField: Story = {
 
       return (
         <div className="min-h-screen bg-surface-canvas p-8 text-text-primary">
-          <div className="mx-auto max-w-3xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <div className="mx-auto max-w-3xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
             <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
               Tags combobox
             </Text>

@@ -42,7 +42,7 @@ export const WithSpan: Story = {
 
 export const WithDiv: Story = {
   render: () => (
-    <Slot className="bg-state-warning-bg p-2 rounded-xs">
+    <Slot className="bg-state-warning-bg p-2 rounded-control">
       <div>Div rendered through Slot composition</div>
     </Slot>
   ),

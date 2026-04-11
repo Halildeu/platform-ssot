@@ -59,7 +59,7 @@ const ThemePresetCanvas = () => {
   return (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6">
-        <div className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
             Theme release surface
           </Text>

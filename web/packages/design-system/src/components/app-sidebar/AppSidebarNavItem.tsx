@@ -93,8 +93,8 @@ export const AppSidebarNavItem = React.forwardRef<HTMLDivElement, AppSidebarNavI
           role="tooltip"
           style={{ position: 'fixed', top: tooltipPos.top, left: tooltipPos.left, transform: 'translateY(-50%)' }}
           className={cn(
-            'pointer-events-none z-[9999]',
-            'whitespace-nowrap rounded-md px-2 py-1 text-xs',
+            'pointer-events-none z-50',
+            'whitespace-nowrap rounded-control px-2 py-1 text-xs',
             'bg-[var(--text-primary)] text-[var(--surface-default)]',
           )}
         >

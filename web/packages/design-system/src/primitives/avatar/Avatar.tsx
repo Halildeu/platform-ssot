@@ -38,7 +38,7 @@ const sizeStyles: Record<AvatarSize, string> = {
 
 const shapeStyles: Record<AvatarShape, string> = {
   circle: "rounded-full",
-  square: "rounded-lg",
+  square: "rounded-surface",
 };
 
 /**

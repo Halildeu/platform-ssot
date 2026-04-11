@@ -157,7 +157,7 @@ export const SpeedDial = forwardRef<HTMLDivElement, SpeedDialProps>(
           className={cn(
             'flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-(--motion-duration-medium)',
             'bg-action-primary text-text-inverse hover:brightness-110 active:scale-95',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-offset-2',
+            'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-action-primary focus-visible:ring-offset-2',
             isOpen && 'rotate-0',
           )}
         >
@@ -180,8 +180,8 @@ export const SpeedDial = forwardRef<HTMLDivElement, SpeedDialProps>(
                   className={cn(
                     'flex h-10 w-10 items-center justify-center rounded-full shadow-md transition-all duration-(--motion-duration-fast)',
                     'bg-surface-panel text-text-primary border border-border-subtle',
-                    'hover:bg-surface-muted hover:shadow-lg active:scale-95',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary',
+                    'hover:bg-surface-muted hover:shadow-elevation-overlay active:scale-95',
+                    'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-action-primary',
                     action.disabled && 'pointer-events-none opacity-40',
                   )}
                   style={{ animationDelay: `${i * 30}ms` }}

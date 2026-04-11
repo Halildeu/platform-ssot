@@ -22,7 +22,7 @@ type Story = StoryObj<typeof NavigationRail>;
 export const Overview: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto flex max-w-5xl gap-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto flex max-w-5xl gap-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <NavigationRail
           ariaLabel="Workspace destinations"
           defaultValue="overview"
@@ -61,7 +61,7 @@ export const Overview: Story = {
 export const Compact: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto flex max-w-4xl gap-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto flex max-w-4xl gap-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <NavigationRail
           compact
           defaultValue="audit"
@@ -97,7 +97,7 @@ export const Compact: Story = {
 export const RouteAware: Story = {
   render: () => (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-      <div className="mx-auto flex max-w-5xl gap-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="mx-auto flex max-w-5xl gap-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <NavigationRail
           ariaLabel="Route aware destinations"
           currentPath="/audit"
@@ -166,7 +166,7 @@ export const PresetsAndAdapters: Story = {
 
     return (
       <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
-        <div className="mx-auto flex max-w-5xl gap-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="mx-auto flex max-w-5xl gap-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <NavigationRail
             ariaLabel="Preset destinations"
             items={routeItems}

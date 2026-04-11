@@ -36,8 +36,8 @@ export const WithUserInfo: Story = {
   render: () => (
     <AppSidebarFooter>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--action-primary)', color: 'var(--surface-default)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10 }}>HK</span>
-        <span style={{ fontSize: 12 }}>Halil K.</span>
+        <span className="text-[10px]" style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--action-primary)', color: 'var(--surface-default)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>HK</span>
+        <span className="text-xs">Halil K.</span>
       </div>
     </AppSidebarFooter>
   ),
@@ -46,7 +46,7 @@ export const WithUserInfo: Story = {
 export const WithActions: Story = {
   render: () => (
     <AppSidebarFooter>
-      <button type="button" style={{ fontSize: 12 }}>Logout</button>
+      <button type="button" className="text-xs">Logout</button>
     </AppSidebarFooter>
   ),
 };

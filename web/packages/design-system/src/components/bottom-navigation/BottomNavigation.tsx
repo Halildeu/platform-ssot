@@ -83,8 +83,8 @@ const BottomNavigationRoot = forwardRef<HTMLElement, BottomNavigationProps>(
           {...stateAttrs({ component: 'bottom-navigation' })}
           aria-label="Bottom navigation"
           className={cn(
-            'flex items-stretch border-t border-border-subtle bg-surface-panel shadow-[0_-1px_3px_rgba(0,0,0,0.08)]',
-            fixed && 'fixed inset-x-0 bottom-0 z-[1100]',
+            'flex items-stretch border-t border-border-subtle bg-surface-panel shadow-elevation-sm',
+            fixed && 'fixed inset-x-0 bottom-0 z-40',
             className,
           )}
           {...rest}

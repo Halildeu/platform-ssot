@@ -31,20 +31,20 @@ type Story = StoryObj<typeof SearchFilterListing>;
 
 const ornekSonuclar = [
   <div key="1" style={{ padding: '12px 0', borderBottom: '1px solid var(--border-subtle))' }}>
-    <div style={{ fontWeight: 600, fontSize: 14 }}>Yillik Denetim Raporu - 2024</div>
-    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>
+    <div className="text-sm font-semibold">Yillik Denetim Raporu - 2024</div>
+    <div className="text-xs" style={{ color: 'var(--text-secondary)', marginTop: 4 }}>
       Hazirlayan: Mehmet Kaya | Tarih: 15.01.2024 | Durum: Tamamlandi
     </div>
   </div>,
   <div key="2" style={{ padding: '12px 0', borderBottom: '1px solid var(--border-subtle))' }}>
-    <div style={{ fontWeight: 600, fontSize: 14 }}>Risk Degerlendirme Raporu - Q4</div>
-    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>
+    <div className="text-sm font-semibold">Risk Degerlendirme Raporu - Q4</div>
+    <div className="text-xs" style={{ color: 'var(--text-secondary)', marginTop: 4 }}>
       Hazirlayan: Ayse Demir | Tarih: 20.12.2023 | Durum: Inceleme Bekliyor
     </div>
   </div>,
   <div key="3" style={{ padding: '12px 0', borderBottom: '1px solid var(--border-subtle))' }}>
-    <div style={{ fontWeight: 600, fontSize: 14 }}>Uyum Kontrol Listesi - Aralik</div>
-    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>
+    <div className="text-sm font-semibold">Uyum Kontrol Listesi - Aralik</div>
+    <div className="text-xs" style={{ color: 'var(--text-secondary)', marginTop: 4 }}>
       Hazirlayan: Ali Yildiz | Tarih: 31.12.2023 | Durum: Devam Ediyor
     </div>
   </div>,

@@ -93,7 +93,7 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(
     const isDisabled = shouldBlockInteraction(access);
 
     const mergedClassName = cn(
-      "inline-flex items-center rounded-md border font-medium leading-none",
+      "inline-flex items-center rounded-control border font-medium leading-none",
       variantStyles[resolvedVariant],
       sizeStyles[size],
       isDisabled && "opacity-50 pointer-events-none",
@@ -120,7 +120,7 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(
               e.stopPropagation();
               onClose?.();
             }}
-            className="shrink-0 rounded-xs p-0.5 opacity-60 transition hover:opacity-100"
+            className="shrink-0 rounded-control p-0.5 opacity-60 transition hover:opacity-100"
             aria-label="Remove"
           >
             <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none">

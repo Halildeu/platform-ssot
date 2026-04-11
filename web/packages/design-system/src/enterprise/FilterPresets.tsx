@@ -119,7 +119,7 @@ function SavePopover({
   }, [name, onSave]);
 
   return (
-    <div className="absolute top-full left-0 z-20 mt-1 flex items-center gap-1.5 rounded-lg border border-border-default bg-[var(--surface-primary)] p-2 shadow-lg">
+    <div className="absolute top-full left-0 z-20 mt-1 flex items-center gap-1.5 rounded-surface border border-border-default bg-[var(--surface-primary)] p-2 shadow-elevation-overlay">
       <input
         ref={inputRef}
         type="text"
@@ -130,18 +130,18 @@ function SavePopover({
           if (e.key === 'Escape') onCancel();
         }}
         placeholder={localeText?.savePlaceholder ?? "Preset ad\u0131..."}
-        className="rounded-xs border border-border-default bg-[var(--surface-primary)] px-2 py-1 text-xs text-text-primary outline-hidden focus:border-action-primary w-36"
+        className="rounded-control border border-border-default bg-[var(--surface-primary)] px-2 py-1 text-xs text-text-primary outline-hidden focus:border-action-primary w-36"
       />
       <button
         type="button"
-        className="rounded-xs bg-action-primary px-2 py-1 text-xs font-medium text-text-inverse hover:opacity-90 transition-colors"
+        className="rounded-control bg-action-primary px-2 py-1 text-xs font-medium text-text-inverse hover:opacity-90 transition-colors"
         onClick={handleSubmit}
       >
         {localeText?.saveButton ?? 'Kaydet'}
       </button>
       <button
         type="button"
-        className="rounded-xs px-2 py-1 text-xs text-text-secondary hover:text-text-primary transition-colors"
+        className="rounded-control px-2 py-1 text-xs text-text-secondary hover:text-text-primary transition-colors"
         onClick={onCancel}
       >
         {localeText?.cancelButton ?? '\u0130ptal'}
@@ -166,21 +166,21 @@ function DeleteConfirmation({
   localeText?: FilterPresetsLocaleText;
 }) {
   return (
-    <div className="absolute top-full right-0 z-20 mt-1 rounded-lg border border-border-default bg-[var(--surface-primary)] p-3 shadow-lg min-w-[200px]">
+    <div className="absolute top-full right-0 z-20 mt-1 rounded-surface border border-border-default bg-[var(--surface-primary)] p-3 shadow-elevation-overlay min-w-[200px]">
       <p className="text-xs text-text-primary mb-2">
         {localeText?.deleteConfirm?.(presetName) ?? <><strong>&quot;{presetName}&quot;</strong> silinsin mi?</>}
       </p>
       <div className="flex items-center gap-2">
         <button
           type="button"
-          className="rounded-xs bg-state-danger-text px-2 py-1 text-xs font-medium text-text-inverse hover:opacity-90 transition-colors"
+          className="rounded-control bg-state-danger-text px-2 py-1 text-xs font-medium text-text-inverse hover:opacity-90 transition-colors"
           onClick={onConfirm}
         >
           {localeText?.deleteButton ?? 'Sil'}
         </button>
         <button
           type="button"
-          className="rounded-xs px-2 py-1 text-xs text-text-secondary hover:text-text-primary transition-colors"
+          className="rounded-control px-2 py-1 text-xs text-text-secondary hover:text-text-primary transition-colors"
           onClick={onCancel}
         >
           {localeText?.cancelButton ?? 'Vazge\u00e7'}

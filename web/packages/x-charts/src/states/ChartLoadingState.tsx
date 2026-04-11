@@ -30,7 +30,7 @@ export function ChartLoadingState({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "var(--bg-muted, #f9fafb)",
+        background: "var(--surface-muted-bg, #f9fafb)",
         borderRadius: 8,
         position: "relative",
         overflow: "hidden",
@@ -42,7 +42,7 @@ export function ChartLoadingState({
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(90deg, transparent 0%, var(--bg-surface, #ffffff) 50%, transparent 100%)",
+            "linear-gradient(90deg, transparent 0%, var(--surface-default-bg, #ffffff) 50%, transparent 100%)",
           animation: "chart-shimmer 1.5s ease-in-out infinite",
         }}
       />
@@ -51,7 +51,7 @@ export function ChartLoadingState({
           position: "relative",
           color: "var(--text-secondary, #6b7280)",
           fontSize: 13,
-          fontFamily: "var(--font-family-sans, Inter, system-ui, sans-serif)",
+          fontFamily: "var(--font-family-base, Inter, system-ui, sans-serif)",
         }}
       >
         {message}

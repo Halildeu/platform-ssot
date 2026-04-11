@@ -17,7 +17,7 @@ export default meta;
 type Story = StoryObj<typeof Container>;
 
 const Inner = () => (
-  <div className="rounded-lg border border-border-subtle bg-surface-muted px-4 py-8 text-center text-sm">Container content</div>
+  <div className="rounded-surface border border-border-subtle bg-surface-muted px-4 py-8 text-center text-sm">Container content</div>
 );
 
 export const Default: Story = {
@@ -31,7 +31,7 @@ export const AllSizes: Story = {
         <div key={size}>
           <p className="mb-1 text-xs text-text-secondary">maxWidth="{size}"</p>
           <Container maxWidth={size}>
-            <div className="rounded-lg border border-border-subtle bg-surface-muted px-4 py-3 text-center text-sm">{size}</div>
+            <div className="rounded-surface border border-border-subtle bg-surface-muted px-4 py-3 text-center text-sm">{size}</div>
           </Container>
         </div>
       ))}

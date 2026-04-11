@@ -25,7 +25,7 @@ interface FilterConditionRowProps {
 }
 
 const SELECT_CLASS =
-  'h-8 rounded-md border border-border-subtle bg-surface-default px-2 text-xs text-text-primary focus:border-action-primary focus:outline-none focus:ring-1 focus:ring-action-primary disabled:cursor-not-allowed disabled:opacity-60';
+  'h-8 rounded-control border border-border-subtle bg-surface-default px-2 text-xs text-text-primary focus:border-action-primary focus:outline-hidden focus:ring-1 focus:ring-action-primary disabled:cursor-not-allowed disabled:opacity-60';
 
 function detectFilterType(colDef?: ColDef): FilterType {
   if (!colDef) return 'text';
@@ -115,9 +115,9 @@ export const FilterConditionRow: React.FC<FilterConditionRowProps> = ({
       ref={setNodeRef}
       style={style}
       className={[
-        'flex items-start gap-1.5 rounded-lg px-2 py-2',
+        'flex items-start gap-1.5 rounded-surface px-2 py-2',
         isLocked ? 'bg-surface-muted/30 opacity-70 ring-1 ring-border-subtle' : 'bg-surface-muted/50',
-        isDragging ? 'shadow-lg' : '',
+        isDragging ? 'shadow-elevation-overlay' : '',
       ].join(' ')}
     >
       {/* DnD grip */}
@@ -239,3 +239,5 @@ export const FilterConditionRow: React.FC<FilterConditionRowProps> = ({
     </div>
   );
 };
+
+FilterConditionRow.displayName = 'FilterConditionRow';

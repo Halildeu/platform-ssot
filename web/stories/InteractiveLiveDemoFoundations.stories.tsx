@@ -97,7 +97,7 @@ const InteractiveLiveDemoCanvas = () => {
         />
 
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-[0.42fr_0.58fr]">
-          <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
             <List
               title="Interactive backlog"
               description="List, release cockpit icinde secilebilir recommendation setini tasir."
@@ -145,7 +145,7 @@ const InteractiveLiveDemoCanvas = () => {
             </div>
           </section>
 
-          <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
             <RecommendationCard
               title="RecommendationCard rollout insight"
               summary="Live demo backlog sifirlandiginda release cockpit coverage ve evidence tarafini ayni karta baglar."

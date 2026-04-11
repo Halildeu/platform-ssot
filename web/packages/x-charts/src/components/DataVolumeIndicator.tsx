@@ -41,11 +41,11 @@ export function DataVolumeIndicator({
         alignItems: "center",
         gap: 6,
         fontSize: 12,
-        fontFamily: "var(--font-family-sans, Inter, system-ui, sans-serif)",
+        fontFamily: "var(--font-family-base, Inter, system-ui, sans-serif)",
         color: "var(--text-secondary, #6b7280)",
         padding: "2px 8px",
         borderRadius: 4,
-        background: "var(--bg-muted, #f9fafb)",
+        background: "var(--surface-muted-bg, #f9fafb)",
       }}
       data-testid="data-volume-indicator"
     >

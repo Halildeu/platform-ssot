@@ -59,7 +59,7 @@ export const GalleryGroup: React.FC<GalleryGroupProps> = ({
         type="button"
         onClick={onToggle}
         className={cn(
-          "flex w-full items-center gap-2 rounded-xl px-3 py-2.5",
+          "flex w-full items-center gap-2 rounded-surface px-3 py-2.5",
           "bg-surface-muted border border-border-subtle/50",
           "text-start transition-colors duration-(--motion-duration-fast)",
           "hover:bg-surface-hover hover:border-border-subtle",
@@ -91,7 +91,7 @@ export const GalleryGroup: React.FC<GalleryGroupProps> = ({
         {/* Count badge */}
         <span
           className={cn(
-            "rounded-md px-1.5 py-0.5 text-[10px] font-medium",
+            "rounded-control px-1.5 py-0.5 text-[10px] font-medium",
             "bg-surface-muted text-text-secondary",
           )}
         >

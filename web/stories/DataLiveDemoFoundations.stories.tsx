@@ -94,7 +94,7 @@ const DataLiveDemoCanvas = () => {
   return (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6">
-        <section className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <section className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
             Data live demo surface
           </Text>
@@ -126,7 +126,7 @@ const DataLiveDemoCanvas = () => {
         />
 
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-[0.52fr_0.48fr]">
-          <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
             <TimePicker
               label="Publish slot"
               description="TimePicker release penceresini bu ayni story icinde acik eder."
@@ -164,7 +164,7 @@ const DataLiveDemoCanvas = () => {
             />
           </section>
 
-          <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <section className="space-y-6 rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-xs">
             <div className="flex flex-wrap items-center gap-3">
               <Tooltip text="Tooltip primitive'i inline aciklama katmani olarak burada gorunur.">
                 <Button variant="secondary" fullWidth={false}>Hover clue</Button>

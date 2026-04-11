@@ -57,7 +57,7 @@ const kindTone: Record<CitationKind, BadgeVariant> = {
 };
 
 const citationPanelSurfaceClassName =
-  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-surface-raised bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[color-mix(in_oklab,var(--border-subtle)_40%,transparent)] before:to-transparent";
+  "relative overflow-hidden rounded-control border border-border-subtle/80 bg-surface-raised bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[color-mix(in_oklab,var(--border-subtle)_40%,transparent)] before:to-transparent";
 
 /** Panel displaying a list of source citations with excerpt, kind badge, and selection support. */
 export const CitationPanel = React.forwardRef<HTMLElement, CitationPanelProps>(({
@@ -103,7 +103,7 @@ export const CitationPanel = React.forwardRef<HTMLElement, CitationPanelProps>((
       </Text>
 
       {items.length === 0 ? (
-        <div className="mt-4 rounded-[24px] border border-border-subtle/70 bg-[var(--surface-card)] p-4 shadow-[0_18px_32px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs">
+        <div className="mt-4 rounded-control border border-border-subtle/70 bg-[var(--surface-card)] p-4 shadow-[0_18px_32px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs">
           <Empty
             description={
               typeof emptyStateLabel === "string"
@@ -147,7 +147,7 @@ export const CitationPanel = React.forwardRef<HTMLElement, CitationPanelProps>((
                   </Text>
                 </div>
                 <div
-                  className={`rounded-[20px] border border-border-subtle/70 bg-[var(--surface-card)] px-4 py-3 shadow-[0_14px_28px_-24px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs ${compact ? "text-sm" : "text-sm leading-7"} text-text-primary`}
+                  className={`rounded-control border border-border-subtle/70 bg-[var(--surface-card)] px-4 py-3 shadow-[0_14px_28px_-24px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs ${compact ? "text-sm" : "text-sm leading-7"} text-text-primary`}
                 >
                   {item.excerpt}
                 </div>
@@ -172,7 +172,7 @@ export const CitationPanel = React.forwardRef<HTMLElement, CitationPanelProps>((
             ) : (
               <div
                 key={item.id}
-                className={`rounded-[26px] border px-4 py-4 ${selected ? "border-action-primary-border/70 bg-[var(--surface-card-alt)] shadow-[0_20px_36px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20" : "border-border-subtle/75 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]"}`}
+                className={`rounded-control border px-4 py-4 ${selected ? "border-action-primary-border/70 bg-[var(--surface-card-alt)] shadow-[0_20px_36px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20" : "border-border-subtle/75 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]"}`}
               >
                 {body}
               </div>

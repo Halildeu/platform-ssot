@@ -517,7 +517,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
         ref={forwardedRef}
         data-access-state={accessState.state}
         className={cn(
-          "inline-flex flex-wrap rounded-lg border border-border-default bg-[var(--surface-card)]",
+          "inline-flex flex-wrap rounded-surface border border-border-default bg-[var(--surface-card)]",
           accessState.isDisabled && "pointer-events-none opacity-50",
           accessState.isReadonly && "pointer-events-none",
           className,
@@ -544,7 +544,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                   type="button"
                   onClick={() => navigateMonth(-1)}
                   className={cn(
-                    "inline-flex items-center justify-center rounded-md transition-colors",
+                    "inline-flex items-center justify-center rounded-control transition-colors",
                     `hover:bg-[var(--surface-hover)] ${focusRingClass("ring")}`,
                     sizeConfig.cell,
                   )}
@@ -570,7 +570,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                   type="button"
                   onClick={() => navigateMonth(1)}
                   className={cn(
-                    "inline-flex items-center justify-center rounded-md transition-colors",
+                    "inline-flex items-center justify-center rounded-control transition-colors",
                     `hover:bg-[var(--surface-hover)] ${focusRingClass("ring")}`,
                     sizeConfig.cell,
                   )}
@@ -688,7 +688,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                               aria-current={isToday_ ? "date" : undefined}
                               aria-label={`${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`}
                               className={cn(
-                                "relative inline-flex flex-col items-center justify-center rounded-md transition-colors",
+                                "relative inline-flex flex-col items-center justify-center rounded-control transition-colors",
                                 `${focusRingClass("ring")} focus-visible:z-10`,
                                 sizeConfig.cell,
                                 // Outside month

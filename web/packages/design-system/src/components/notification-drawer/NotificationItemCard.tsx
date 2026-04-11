@@ -172,7 +172,7 @@ export const NotificationItemCard = React.forwardRef<HTMLDivElement, Notificatio
       data-read={item.read ? "true" : "false"}
       title={accessReason}
       className={cn(
-        "relative overflow-hidden rounded-[24px] border p-4 ring-1 ring-border-subtle/20 shadow-[0_26px_54px_-34px_var(--shadow-color)] backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent",
+        "relative overflow-hidden rounded-control border p-4 ring-1 ring-border-subtle/20 shadow-[0_26px_54px_-34px_var(--shadow-color)] backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent",
         resolvedPriority === "high"
           ? "border-state-warning-border/80 bg-[linear-gradient(180deg,var(--color-state-warning-bg),var(--color-state-warning-bg-subtle))] ring-state-warning-border/35"
           : "border-border-subtle/75 bg-[var(--surface-card)]",
@@ -191,7 +191,7 @@ export const NotificationItemCard = React.forwardRef<HTMLDivElement, Notificatio
               checked={selected}
               disabled={accessState.isReadonly || accessState.isDisabled}
               onChange={handleSelectedChange}
-              className="h-4 w-4 rounded-xs border border-border-strong disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-4 w-4 rounded-control border border-border-strong focus-visible:ring-2 focus-visible:ring-focus-outline focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
               style={{ accentColor: "var(--color-action-primary-bg)" }}
             />
           </div>

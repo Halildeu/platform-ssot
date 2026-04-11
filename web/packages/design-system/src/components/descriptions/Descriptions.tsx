@@ -131,7 +131,7 @@ export const Descriptions = React.forwardRef<HTMLDivElement, DescriptionsProps>(
         className={cn(
           "grid",
           bordered &&
-            "border border-border-subtle rounded-lg overflow-hidden",
+            "border border-border-subtle rounded-surface overflow-hidden",
         )}
         style={{
           gridTemplateColumns: `repeat(${columns}, 1fr)`,

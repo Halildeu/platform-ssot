@@ -145,7 +145,7 @@ export const FullscreenToggle = forwardRef<
       title={label}
       aria-label={label}
       className={cn(
-        "inline-flex items-center rounded-xl transition",
+        "inline-flex items-center rounded-surface transition",
         sizeStyles[size],
         variantStyles[variant],
         showLabel ? "px-3" : "justify-center px-2",
@@ -158,3 +158,5 @@ export const FullscreenToggle = forwardRef<
     </button>
   );
 });
+
+FullscreenToggle.displayName = 'FullscreenToggle';

@@ -32,7 +32,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  elevated: "bg-surface-default border border-border-subtle shadow-xs",
+  elevated: "bg-surface-default border border-border-subtle shadow-elevation-sm",
   outlined: "bg-transparent border border-border-default",
   filled: "bg-surface-muted border border-transparent",
   ghost: "bg-transparent border border-transparent",
@@ -85,7 +85,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       paddingStyles[padding],
       hoverable && [
         "cursor-pointer",
-        "hover:border-action-primary/30 hover:shadow-md",
+        "hover:border-action-primary/30 hover:shadow-elevation-surface",
         "active:scale-[0.99]",
       ],
       !asChild && Tag === "button" && "w-full text-start",

@@ -65,7 +65,7 @@ export function useServiceManager() {
       setServices(data.services);
       setLastRefresh(data.timestamp);
       setError(null);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to fetch services');
     } finally {
       setLoading(false);

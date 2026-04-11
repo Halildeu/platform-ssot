@@ -39,7 +39,7 @@ export const AppSidebarSearch = React.forwardRef<HTMLDivElement, AppSidebarSearc
         <button
           type="button"
           className={cn(
-            'group relative flex h-8 w-8 items-center justify-center rounded-md',
+            'group relative flex h-8 w-8 items-center justify-center rounded-control',
             'text-[var(--text-secondary)] hover:bg-[var(--surface-canvas)]',
             'transition-colors duration-(--motion-duration-medium) outline-hidden',
             'focus-visible:ring-2 focus-visible:ring-[var(--action-primary)]',
@@ -54,7 +54,7 @@ export const AppSidebarSearch = React.forwardRef<HTMLDivElement, AppSidebarSearc
             role="tooltip"
             className={cn(
               'pointer-events-none absolute left-full ml-2 z-50',
-              'whitespace-nowrap rounded-md px-2 py-1 text-xs',
+              'whitespace-nowrap rounded-control px-2 py-1 text-xs',
               'bg-[var(--text-primary)] text-[var(--surface-default)]',
               'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100',
               'transition-opacity duration-(--motion-duration-fast)',
@@ -80,7 +80,7 @@ export const AppSidebarSearch = React.forwardRef<HTMLDivElement, AppSidebarSearc
           onChange={(e) => onChange?.(e.target.value)}
           placeholder={placeholder}
           className={cn(
-            'h-8 w-full rounded-md border border-[var(--border-subtle)]',
+            'h-8 w-full rounded-control border border-[var(--border-subtle)]',
             'bg-[var(--surface-default)] pl-8 pr-8 text-sm',
             'text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]',
             'outline-hidden transition-colors duration-(--motion-duration-medium)',
