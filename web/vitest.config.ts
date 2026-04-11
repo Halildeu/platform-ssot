@@ -1,9 +1,19 @@
 import { defineConfig } from 'vitest/config';
+import path from 'path';
 
 // Root-level config: provides global exclude patterns for the workspace.
 // In Vitest workspace mode, this config is merged as the base for all projects.
 // All patterns here are relative to this file's directory (monorepo root).
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@mfe/design-system': path.resolve(__dirname, 'packages/design-system/src'),
+      '@mfe/i18n-dicts': path.resolve(__dirname, 'packages/i18n-dicts/src'),
+      '@mfe/shared-http': path.resolve(__dirname, 'packages/shared-http/src'),
+      '@mfe/auth': path.resolve(__dirname, 'packages/auth/src'),
+      '@platform/capabilities': path.resolve(__dirname, 'packages/platform-capabilities/src'),
+    },
+  },
   test: {
     globals: true,
     setupFiles: ['./vitest.setup.ts'],
