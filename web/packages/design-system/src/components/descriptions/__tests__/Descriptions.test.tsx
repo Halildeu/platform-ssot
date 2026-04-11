@@ -162,7 +162,7 @@ describe('Descriptions — bordered', () => {
     );
     const dl = container.querySelector('dl');
     expect(dl?.className).toContain('border');
-    expect(dl?.className).toContain('rounded-lg');
+    expect(dl?.className).toContain('rounded-surface');
   });
 
   it('bordered=false iken border class uygulanmaz', () => {
@@ -170,7 +170,7 @@ describe('Descriptions — bordered', () => {
       <Descriptions items={makeItems()} bordered={false} />,
     );
     const dl = container.querySelector('dl');
-    expect(dl?.className).not.toContain('rounded-lg');
+    expect(dl?.className).not.toContain('rounded-surface');
   });
 });
 

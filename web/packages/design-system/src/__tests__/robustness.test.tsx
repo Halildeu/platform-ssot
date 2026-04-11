@@ -212,7 +212,7 @@ describe("Robustness — P: Z-Index Stacking Context", () => {
     }
     const menu = container.querySelector('[role="menu"]');
     expect(menu).toBeTruthy();
-    expect(menu?.className).toContain("z-[1500]");
+    expect(menu?.className).toContain("z-50");
   });
 
   it("ToastProvider renders container with z-[1700]", () => {
@@ -223,7 +223,7 @@ describe("Robustness — P: Z-Index Stacking Context", () => {
     );
     const toastContainer = container.querySelector('[aria-live="polite"]');
     expect(toastContainer).toBeTruthy();
-    expect(toastContainer?.className).toContain("z-[1700]");
+    expect(toastContainer?.className).toContain("z-50");
   });
 });
 

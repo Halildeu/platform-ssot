@@ -126,10 +126,10 @@ describe("AvatarGroup - size & shape", () => {
     expect(item).toHaveClass("rounded-full");
   });
 
-  it("square shape ile rounded-lg sinifi uygular", () => {
+  it("square shape ile rounded-surface sinifi uygular", () => {
     render(<AvatarGroup items={makeItems(2)} shape="square" />);
     const item = screen.getAllByTestId("avatar-group-item")[0];
-    expect(item).toHaveClass("rounded-lg");
+    expect(item).toHaveClass("rounded-surface");
   });
 });
 

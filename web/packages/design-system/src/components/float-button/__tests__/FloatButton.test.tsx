@@ -112,9 +112,9 @@ describe("FloatButton - shape", () => {
     expect(screen.getByTestId("float-button-trigger")).toHaveClass("rounded-full");
   });
 
-  it("square shape ile rounded-lg sinifi olur", () => {
+  it("square shape ile rounded-surface sinifi olur", () => {
     render(<FloatButton shape="square" />);
-    expect(screen.getByTestId("float-button-trigger")).toHaveClass("rounded-lg");
+    expect(screen.getByTestId("float-button-trigger")).toHaveClass("rounded-surface");
   });
 });
 
