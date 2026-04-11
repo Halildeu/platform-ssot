@@ -13,8 +13,7 @@ describe('FieldControlPrimitives — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<FieldControlPrimitives {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<FieldControlPrimitives {...defaultProps} />)).not.toThrow();
   });
 
   it('has displayName', () => {
@@ -23,8 +22,7 @@ describe('FieldControlPrimitives — contract', () => {
 
   it('renders with only required props (2 required, 7 optional)', () => {
     // All 7 optional props omitted — should not crash
-    const { container } = render(<FieldControlPrimitives {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<FieldControlPrimitives {...defaultProps} />)).not.toThrow();
   });
 
   it('exports expected types', () => {

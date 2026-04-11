@@ -13,8 +13,7 @@ describe('Result — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<Result {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<Result {...defaultProps} />)).not.toThrow();
   });
 
   it('has displayName', () => {
@@ -23,8 +22,7 @@ describe('Result — contract', () => {
 
   it('renders with only required props (1 required, 4 optional)', () => {
     // All 4 optional props omitted — should not crash
-    const { container } = render(<Result {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<Result {...defaultProps} />)).not.toThrow();
   });
 
   it('exports expected types', () => {

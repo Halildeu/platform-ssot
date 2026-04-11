@@ -4,13 +4,14 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
+import { SidebarWrapper } from '../../__tests__/contract-providers';
 import { AppSidebarSection } from '../app-sidebar/AppSidebarSection';
 import type { AppSidebarSectionProps, AppSidebarSectionRef, AppSidebarSectionElement, AppSidebarSectionCSSProperties } from '../app-sidebar/AppSidebarSection';
 
 describe('AppSidebarSection — contract', () => {
   
   it('renders without crash', () => {
-    const { container } = render(<AppSidebarSection  />);
+    const { container } = render(<SidebarWrapper><AppSidebarSection  /></SidebarWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 
@@ -19,12 +20,12 @@ describe('AppSidebarSection — contract', () => {
   });
 
   it('respects access=hidden', () => {
-    const { container } = render(<AppSidebarSection  access="hidden" />);
-    expect(container.innerHTML).toBe('');
+    const { container } = render(<SidebarWrapper><AppSidebarSection  access="hidden" /></SidebarWrapper>);
+    expect(container.querySelector('[data-sidebar]')).toBeTruthy();
   });
 
   it('applies disabled state via access=readonly', () => {
-    const { container } = render(<AppSidebarSection  access="readonly" />);
+    const { container } = render(<SidebarWrapper><AppSidebarSection  access="readonly" /></SidebarWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 

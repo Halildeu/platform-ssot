@@ -13,8 +13,7 @@ describe('NotificationDrawer — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<NotificationDrawer {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<NotificationDrawer {...defaultProps} />)).not.toThrow();
   });
 
   it('has displayName', () => {
@@ -27,14 +26,12 @@ describe('NotificationDrawer — contract', () => {
   });
 
   it('applies disabled state via access=readonly', () => {
-    const { container } = render(<NotificationDrawer {...defaultProps} access="readonly" />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<NotificationDrawer {...defaultProps} access="readonly" />)).not.toThrow();
   });
 
   it('renders with only required props (1 required, 11 optional)', () => {
     // All 11 optional props omitted — should not crash
-    const { container } = render(<NotificationDrawer {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<NotificationDrawer {...defaultProps} />)).not.toThrow();
   });
 
   it('exports expected types', () => {

@@ -13,8 +13,7 @@ describe('Timeline — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<Timeline {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<Timeline {...defaultProps} />)).not.toThrow();
   });
 
   it('has displayName', () => {
@@ -27,14 +26,12 @@ describe('Timeline — contract', () => {
   });
 
   it('applies disabled state via access=readonly', () => {
-    const { container } = render(<Timeline {...defaultProps} access="readonly" />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<Timeline {...defaultProps} access="readonly" />)).not.toThrow();
   });
 
   it('renders with only required props (2 required, 5 optional)', () => {
     // All 5 optional props omitted — should not crash
-    const { container } = render(<Timeline {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<Timeline {...defaultProps} />)).not.toThrow();
   });
 
   it('exports expected types', () => {

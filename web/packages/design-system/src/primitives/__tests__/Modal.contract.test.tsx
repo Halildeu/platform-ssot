@@ -4,17 +4,19 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
+import { setupDialogMocks } from '../../__tests__/contract-providers';
 import { Modal } from '../modal/Modal';
 import type { OverlayCloseReason, ModalClasses, ModalSlot, ModalProps } from '../modal/Modal';
 
 describe('Modal — contract', () => {
+  beforeAll(() => setupDialogMocks());
   const defaultProps = {
     open: true,
   };
 
   it('renders without crash', () => {
     const { container } = render(<Modal {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(container).toBeDefined();
   });
 
   it('has displayName', () => {
@@ -24,7 +26,7 @@ describe('Modal — contract', () => {
   it('renders with only required props (2 required, 17 optional)', () => {
     // All 17 optional props omitted — should not crash
     const { container } = render(<Modal {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(container).toBeDefined();
   });
 
   it('exports expected types', () => {

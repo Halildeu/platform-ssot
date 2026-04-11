@@ -4,6 +4,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
+import { FormWrapper } from '../../__tests__/contract-providers';
 import { ConnectedTextarea } from '../connected/ConnectedTextarea';
 import type { ConnectedTextareaProps, ConnectedTextareaRef, ConnectedTextareaElement, ConnectedTextareaCSSProperties } from '../connected/ConnectedTextarea';
 
@@ -13,7 +14,7 @@ describe('ConnectedTextarea — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<ConnectedTextarea {...defaultProps} />);
+    const { container } = render(<FormWrapper><ConnectedTextarea {...defaultProps} /></FormWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 
@@ -23,7 +24,7 @@ describe('ConnectedTextarea — contract', () => {
 
   it('renders with only required props (1 required, 6 optional)', () => {
     // All 6 optional props omitted — should not crash
-    const { container } = render(<ConnectedTextarea {...defaultProps} />);
+    const { container } = render(<FormWrapper><ConnectedTextarea {...defaultProps} /></FormWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 

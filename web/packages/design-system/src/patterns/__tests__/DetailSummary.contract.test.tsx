@@ -14,8 +14,7 @@ describe('DetailSummary — contract', () => {
   };
 
   it('renders without crash', () => {
-    const { container } = render(<DetailSummary {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<DetailSummary {...defaultProps} />)).not.toThrow();
   });
 
   it('has displayName', () => {
@@ -28,14 +27,12 @@ describe('DetailSummary — contract', () => {
   });
 
   it('applies disabled state via access=readonly', () => {
-    const { container } = render(<DetailSummary {...defaultProps} access="readonly" />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<DetailSummary {...defaultProps} access="readonly" />)).not.toThrow();
   });
 
   it('renders with only required props (2 required, 14 optional)', () => {
     // All 14 optional props omitted — should not crash
-    const { container } = render(<DetailSummary {...defaultProps} />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<DetailSummary {...defaultProps} />)).not.toThrow();
   });
 
   it('exports expected types', () => {

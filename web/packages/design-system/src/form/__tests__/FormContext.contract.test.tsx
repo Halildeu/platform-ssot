@@ -4,13 +4,14 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import React from 'react';
+import { FormWrapper } from '../../__tests__/contract-providers';
 import { FormContext } from '../FormContext';
 import type { FormContextValue, FormContextProps, FormFieldName, FormValidationMode } from '../FormContext';
 
 describe('FormContext — contract', () => {
   
   it('renders without crash', () => {
-    const { container } = render(<FormContext  />);
+    const { container } = render(<FormWrapper><FormContext  /></FormWrapper>);
     expect(container.firstElementChild).toBeTruthy();
   });
 

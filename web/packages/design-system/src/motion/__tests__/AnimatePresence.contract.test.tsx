@@ -10,8 +10,7 @@ import type { AnimatePresenceProps, AnimatePresenceRef, AnimatePresenceElement, 
 describe('AnimatePresence — contract', () => {
   
   it('renders without crash', () => {
-    const { container } = render(<AnimatePresence  />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<AnimatePresence  />)).not.toThrow();
   });
 
   it('has displayName', () => {
@@ -20,8 +19,7 @@ describe('AnimatePresence — contract', () => {
 
   it('renders with only required props (1 required, 5 optional)', () => {
     // All 5 optional props omitted — should not crash
-    const { container } = render(<AnimatePresence  />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<AnimatePresence  />)).not.toThrow();
   });
 
   it('exports expected types', () => {

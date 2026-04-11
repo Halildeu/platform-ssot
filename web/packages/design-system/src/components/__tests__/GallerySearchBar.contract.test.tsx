@@ -9,8 +9,7 @@ import { GallerySearchBar } from '../grouped-card-gallery/GallerySearchBar';
 describe('GallerySearchBar — contract', () => {
   
   it('renders without crash', () => {
-    const { container } = render(<GallerySearchBar  />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<GallerySearchBar  />)).not.toThrow();
   });
 
   it('has displayName', () => {

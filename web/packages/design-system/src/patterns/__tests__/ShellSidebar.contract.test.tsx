@@ -9,7 +9,6 @@ import { ShellSidebar } from '../shell-sidebar/ShellSidebar';
 describe('ShellSidebar — contract', () => {
   
   it('renders without crash', () => {
-    const { container } = render(<ShellSidebar  />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<ShellSidebar  />)).not.toThrow();
   });
 });

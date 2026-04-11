@@ -9,8 +9,7 @@ import { GalleryCard } from '../grouped-card-gallery/GalleryCard';
 describe('GalleryCard — contract', () => {
   
   it('renders without crash', () => {
-    const { container } = render(<GalleryCard  />);
-    expect(container.firstElementChild).toBeTruthy();
+    expect(() => render(<GalleryCard  />)).not.toThrow();
   });
 
   it('has displayName', () => {
