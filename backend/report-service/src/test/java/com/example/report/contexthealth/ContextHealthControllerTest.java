@@ -4,6 +4,7 @@ import com.example.report.contexthealth.dto.ContextHealthGridMetaDto;
 import com.example.report.contexthealth.dto.ContextHealthGridMetaDto.ColumnDef;
 import com.example.report.dto.ChartResultDto;
 import com.example.report.dto.KpiResultDto;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -240,29 +241,31 @@ class ContextHealthControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    // ---- Service error propagation ----
+    // Service error propagation: Controller has no @ExceptionHandler,
+    // so Spring MVC wraps RuntimeException as ServletException.
+    // Verifying via assertThrows instead of status check.
 
     @Test
-    void getKpis_serviceThrows_returns500() throws Exception {
+    void getKpis_serviceThrows_propagatesException() {
         when(kpiService.computeKpis()).thenThrow(new RuntimeException("Service error"));
 
-        mockMvc.perform(get("/api/v1/context-health/kpis"))
-                .andExpect(status().is5xxServerError());
+        assertThrows(Exception.class, () ->
+                mockMvc.perform(get("/api/v1/context-health/kpis")));
     }
 
     @Test
-    void getCharts_serviceThrows_returns500() throws Exception {
+    void getCharts_serviceThrows_propagatesException() {
         when(chartService.computeCharts()).thenThrow(new RuntimeException("Service error"));
 
-        mockMvc.perform(get("/api/v1/context-health/charts"))
-                .andExpect(status().is5xxServerError());
+        assertThrows(Exception.class, () ->
+                mockMvc.perform(get("/api/v1/context-health/charts")));
     }
 
     @Test
-    void getGridData_serviceThrows_returns500() throws Exception {
+    void getGridData_serviceThrows_propagatesException() {
         when(gridService.getGridData("active-projects")).thenThrow(new RuntimeException("Service error"));
 
-        mockMvc.perform(get("/api/v1/context-health/grids/active-projects"))
-                .andExpect(status().is5xxServerError());
+        assertThrows(Exception.class, () ->
+                mockMvc.perform(get("/api/v1/context-health/grids/active-projects")));
     }
 }
