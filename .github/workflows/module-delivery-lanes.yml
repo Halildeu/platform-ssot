@@ -200,6 +200,12 @@ jobs:
     needs: [module-lane-contract]
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "21"
+          cache: "maven"
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
