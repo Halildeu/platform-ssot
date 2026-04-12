@@ -1,8 +1,8 @@
 package com.example.commonauth.openfga;
 
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +14,11 @@ import java.util.Set;
  * In non-local/non-dev environments, running without OpenFGA means
  * all authorization checks return true (fail-open), which is a security risk.
  *
- * Uses @PostConstruct instead of ApplicationRunner because common-auth
- * does not depend on spring-boot-starter (only spring-context).
+ * Uses InitializingBean because common-auth depends only on spring-context
+ * (no spring-boot-starter, no jakarta.annotation-api).
  */
 @Component
-public class OpenFgaStartupGuard {
+public class OpenFgaStartupGuard implements InitializingBean {
 
     private static final Logger log = LoggerFactory.getLogger(OpenFgaStartupGuard.class);
     private static final Set<String> DEV_PROFILES = Set.of("local", "dev", "test", "conntest");
@@ -31,8 +31,8 @@ public class OpenFgaStartupGuard {
         this.environment = environment;
     }
 
-    @PostConstruct
-    void checkOpenFgaConfiguration() {
+    @Override
+    public void afterPropertiesSet() {
         boolean isDevProfile = Arrays.stream(environment.getActiveProfiles())
                 .anyMatch(DEV_PROFILES::contains);
 
