@@ -69,7 +69,8 @@ public class ReportController {
         // Static reports from JSON registry
         List<ReportListItemDto> staticReports = registry.getAll().stream()
                 .filter(def -> accessEvaluator.evaluate(def, authz) == ReportAccessEvaluator.AccessResult.ALLOWED)
-                .map(def -> new ReportListItemDto(def.key(), def.title(), def.description(), def.category()))
+                .map(def -> new ReportListItemDto(def.key(), def.title(), def.description(), def.category(),
+                        def.access() != null ? def.access().reportGroup() : null))
                 .toList();
 
         // Custom reports from PostgreSQL — filtered by access_config reportGroup (CNS-006 R17)
@@ -81,7 +82,8 @@ public class ReportController {
                             (String) row.get("key"),
                             (String) row.get("title"),
                             (String) row.get("description"),
-                            (String) row.get("category")
+                            (String) row.get("category"),
+                            extractReportGroup(row)
                     ))
                     .toList();
         } catch (Exception e) {
@@ -289,6 +291,16 @@ public class ReportController {
         }
         // No reportGroup in access_config → allow if user has REPORT_VIEW (backwards compat)
         return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String extractReportGroup(Map<String, Object> row) {
+        Object accessConfigObj = row.get("accessConfig");
+        if (accessConfigObj instanceof Map<?, ?> accessConfig) {
+            Object group = accessConfig.get("reportGroup");
+            return group instanceof String s ? s : null;
+        }
+        return null;
     }
 
     private <T> T parseJson(String json, TypeReference<T> typeRef) {

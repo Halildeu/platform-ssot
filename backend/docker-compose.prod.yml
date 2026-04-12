@@ -56,7 +56,7 @@ services:
 
   openfga-migrate:
     <<: *runtime-defaults
-    image: openfga/openfga:latest
+    image: openfga/openfga:${OPENFGA_VERSION:-v1.11.2}
     restart: "no"
     command: migrate
     environment:
@@ -69,7 +69,7 @@ services:
 
   openfga:
     <<: *runtime-defaults
-    image: openfga/openfga:latest
+    image: openfga/openfga:${OPENFGA_VERSION:-v1.11.2}
     command: run
     ports:
       - "127.0.0.1:4000:8080"
