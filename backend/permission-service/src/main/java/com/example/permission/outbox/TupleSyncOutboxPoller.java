@@ -31,10 +31,12 @@ public class TupleSyncOutboxPoller {
         this.tupleSyncService = tupleSyncService;
     }
 
+    private static final int BATCH_SIZE = 50;
+
     @Scheduled(fixedDelayString = "${outbox.poll-interval-ms:30000}")
     @Transactional
     public void pollAndProcess() {
-        List<TupleSyncOutboxEntry> pending = outboxRepository.findPendingEntries();
+        List<TupleSyncOutboxEntry> pending = outboxRepository.findPendingForUpdate(BATCH_SIZE);
         if (pending.isEmpty()) {
             return;
         }
