@@ -265,7 +265,7 @@ services:
 
   vault:
     image: hashicorp/vault:1.21.4
-    container_name: backend-vault-1
+    container_name: platform-vault-1
     user: "0:0"
     cap_add:
       - IPC_LOCK
