@@ -1,9 +1,8 @@
 package com.example.commonauth.openfga;
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -14,9 +13,12 @@ import java.util.Set;
  * Startup guard: warns when OpenFGA is disabled in non-local profiles.
  * In non-local/non-dev environments, running without OpenFGA means
  * all authorization checks return true (fail-open), which is a security risk.
+ *
+ * Uses @PostConstruct instead of ApplicationRunner because common-auth
+ * does not depend on spring-boot-starter (only spring-context).
  */
 @Component
-public class OpenFgaStartupGuard implements ApplicationRunner {
+public class OpenFgaStartupGuard {
 
     private static final Logger log = LoggerFactory.getLogger(OpenFgaStartupGuard.class);
     private static final Set<String> DEV_PROFILES = Set.of("local", "dev", "test", "conntest");
@@ -29,8 +31,8 @@ public class OpenFgaStartupGuard implements ApplicationRunner {
         this.environment = environment;
     }
 
-    @Override
-    public void run(ApplicationArguments args) {
+    @PostConstruct
+    void checkOpenFgaConfiguration() {
         boolean isDevProfile = Arrays.stream(environment.getActiveProfiles())
                 .anyMatch(DEV_PROFILES::contains);
 
