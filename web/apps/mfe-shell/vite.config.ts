@@ -161,18 +161,20 @@ const singleton = (
   shareKey: string,
   versionKey: string = shareKey,
   fallback: string | boolean = false,
+  eager: boolean = false,
 ) => ({
   singleton: true,
   requiredVersion: deps[versionKey] ?? fallback,
+  ...(eager && { eager: true }),
 });
 const sharedCore = {
-  react: singleton('react'),
-  'react-dom': singleton('react-dom'),
-  'react-router': singleton('react-router'),
-  'react-router-dom': singleton('react-router-dom'),
-  '@reduxjs/toolkit': singleton('@reduxjs/toolkit'),
-  'react-redux': singleton('react-redux'),
-  '@tanstack/react-query': singleton('@tanstack/react-query'),
+  react: singleton('react', 'react', false, true),
+  'react-dom': singleton('react-dom', 'react-dom', false, true),
+  'react-router': singleton('react-router', 'react-router', false, true),
+  'react-router-dom': singleton('react-router-dom', 'react-router-dom', false, true),
+  '@reduxjs/toolkit': singleton('@reduxjs/toolkit', '@reduxjs/toolkit', false, true),
+  'react-redux': singleton('react-redux', 'react-redux', false, true),
+  '@tanstack/react-query': singleton('@tanstack/react-query', '@tanstack/react-query', false, true),
 };
 const sharedProdOnly = {
   clsx: singleton('clsx'),

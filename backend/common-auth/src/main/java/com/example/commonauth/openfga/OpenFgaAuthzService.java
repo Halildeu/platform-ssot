@@ -43,8 +43,10 @@ public class OpenFgaAuthzService {
         this.client = client;
         this.properties = properties;
         this.enabled = properties.isEnabled() && client != null;
+        int cacheTtlSeconds = properties.getCheckCacheTtlSeconds() > 0
+                ? properties.getCheckCacheTtlSeconds() : 10;
         this.checkCache = com.github.benmanes.caffeine.cache.Caffeine.newBuilder()
-                .expireAfterWrite(java.time.Duration.ofSeconds(10))
+                .expireAfterWrite(java.time.Duration.ofSeconds(cacheTtlSeconds))
                 .maximumSize(1000)
                 .build();
         this.circuitBreaker = new OpenFgaCircuitBreaker(); // 5 failures → 30s open
@@ -182,6 +184,7 @@ public class OpenFgaAuthzService {
             var request = new ClientWriteRequest().writes(List.of(tuple));
             client.write(request).get();
 
+            evictCheckCache(userId);
             log.info("OpenFGA tuple written: user:{} {} {}:{}", userId, relation, objectType, objectId);
         } catch (Exception e) {
             log.error("OpenFGA writeTuple failed: user:{} {} {}:{}",
@@ -208,6 +211,7 @@ public class OpenFgaAuthzService {
             var request = new ClientWriteRequest().deletes(List.of(tuple));
             client.write(request).get();
 
+            evictCheckCache(userId);
             log.info("OpenFGA tuple deleted: user:{} {} {}:{}", userId, relation, objectType, objectId);
         } catch (Exception e) {
             log.error("OpenFGA deleteTuple failed: user:{} {} {}:{}",
@@ -227,6 +231,13 @@ public class OpenFgaAuthzService {
         try {
             var request = new ClientWriteRequest().writes(tuples);
             client.write(request).get();
+            // Evict cache for all affected users
+            tuples.stream()
+                    .map(ClientTupleKey::getUser)
+                    .filter(u -> u != null && u.startsWith("user:"))
+                    .map(u -> u.substring(5))
+                    .distinct()
+                    .forEach(this::evictCheckCache);
             log.info("OpenFGA batch write: {} tuples", tuples.size());
         } catch (Exception e) {
             log.error("OpenFGA batch writeTuples failed ({} tuples)", tuples.size(), e);
@@ -244,6 +255,13 @@ public class OpenFgaAuthzService {
         try {
             var request = new ClientWriteRequest().deletes(tuples);
             client.write(request).get();
+            // Evict cache for all affected users
+            tuples.stream()
+                    .map(ClientTupleKeyWithoutCondition::getUser)
+                    .filter(u -> u != null && u.startsWith("user:"))
+                    .map(u -> u.substring(5))
+                    .distinct()
+                    .forEach(this::evictCheckCache);
             log.info("OpenFGA batch delete: {} tuples", tuples.size());
         } catch (Exception e) {
             log.error("OpenFGA batch deleteTuples failed ({} tuples)", tuples.size(), e);
@@ -391,6 +409,26 @@ public class OpenFgaAuthzService {
     }
 
     public record BatchCheckRequest(String relation, String objectType, String objectId) {}
+
+    /**
+     * Evict cached check results for a specific user.
+     * Called after tuple write/delete to ensure immediate permission propagation.
+     */
+    public void evictCheckCache(String userId) {
+        if (userId == null) return;
+        String prefix = userId + ":";
+        checkCache.asMap().keySet().removeIf(key -> key.startsWith(prefix));
+        log.debug("OpenFGA check cache evicted for user:{}", userId);
+    }
+
+    /**
+     * Evict all cached check results.
+     * Used when a broad permission change affects multiple users.
+     */
+    public void evictAllCheckCache() {
+        checkCache.invalidateAll();
+        log.debug("OpenFGA check cache fully invalidated");
+    }
 
     public boolean isEnabled() {
         return enabled;
