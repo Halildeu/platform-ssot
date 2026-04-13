@@ -1,4 +1,4 @@
-name: serban
+name: platform
 
 services:
   discovery-server:
@@ -362,6 +362,7 @@ services:
       - PERMISSION_DB_SCHEMA=${PERMISSION_DB_SCHEMA:-public}
       - EUREKA_SERVER_URL=${EUREKA_SERVER_URL:-http://discovery-server:8761/eureka}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=${EUREKA_SERVER_URL:-http://discovery-server:8761/eureka}
+      - SECURITY_LOCAL_DEV_USER_ID=${SECURITY_LOCAL_DEV_USER_ID:-local-dev}
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - SPRING_CLOUD_VAULT_ENABLED=false
@@ -419,6 +420,7 @@ services:
       - REPORT_MSSQL_USERNAME=${REPORT_MSSQL_USERNAME:-sa}
       - REPORT_MSSQL_PASSWORD=${REPORT_MSSQL_PASSWORD:-}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=${EUREKA_SERVER_URL:-http://discovery-server:8761/eureka}
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
       - SECURITY_JWT_JWK_SET_URI=http://keycloak:8080/realms/serban/protocol/openid-connect/certs
       - SECURITY_JWT_ISSUER=http://keycloak:8080/realms/serban
       - SECURITY_JWT_AUDIENCE=report-service,account,frontend
@@ -427,6 +429,8 @@ services:
       - REPORT_PG_HOST=postgres-db
       - REPORT_PG_PORT=5432
       - REPORT_PG_DB=${POSTGRES_DB:-users}
+      - REPORT_PG_USERNAME=${POSTGRES_USER:-postgres}
+      - REPORT_PG_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       # SQL Server baglantisi optional — erisim yoksa servis yine de baslar
       - SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT=-1
       # DB health indicator'u devre disi birak (SQL Server ulasılamaz oldugunda timeout yapar)
