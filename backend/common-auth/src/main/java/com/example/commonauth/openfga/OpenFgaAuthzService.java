@@ -36,6 +36,9 @@ public class OpenFgaAuthzService {
     // SK-2: Check result cache — reduces OpenFGA API calls for repeated checks
     private final com.github.benmanes.caffeine.cache.Cache<String, Boolean> checkCache;
 
+    // C1: Circuit breaker — prevents cascade when OpenFGA is down
+    private final OpenFgaCircuitBreaker circuitBreaker;
+
     public OpenFgaAuthzService(OpenFgaClient client, OpenFgaProperties properties) {
         this.client = client;
         this.properties = properties;
@@ -44,9 +47,15 @@ public class OpenFgaAuthzService {
                 .expireAfterWrite(java.time.Duration.ofSeconds(10))
                 .maximumSize(1000)
                 .build();
+        this.circuitBreaker = new OpenFgaCircuitBreaker(); // 5 failures → 30s open
         if (!enabled) {
             log.warn("OpenFGA is DISABLED — all checks return true, scopes from dev config");
         }
+    }
+
+    /** Expose circuit breaker state for health/monitoring endpoints. */
+    public OpenFgaCircuitBreaker getCircuitBreaker() {
+        return circuitBreaker;
     }
 
     /**
@@ -64,6 +73,12 @@ public class OpenFgaAuthzService {
             log.debug("OpenFGA check (cached): user:{} {} {}:{} → {}", userId, relation, objectType, objectId, cached);
             return cached;
         }
+        // C1: Circuit breaker guard — short-circuit when OpenFGA is down
+        if (!circuitBreaker.allowRequest()) {
+            log.warn("OpenFGA circuit OPEN — denying access: user:{} {} {}:{}",
+                    userId, relation, objectType, objectId);
+            return false;
+        }
         try {
             var request = new ClientCheckRequest()
                     .user("user:" + userId)
@@ -73,11 +88,13 @@ public class OpenFgaAuthzService {
             var response = client.check(request).get();
             boolean allowed = Boolean.TRUE.equals(response.getAllowed());
             checkCache.put(cacheKey, allowed);
+            circuitBreaker.recordSuccess();
 
             log.debug("OpenFGA check: user:{} {} {}:{} → {}",
                     userId, relation, objectType, objectId, allowed);
             return allowed;
         } catch (Exception e) {
+            circuitBreaker.recordFailure();
             log.error("OpenFGA check failed, denying access: user:{} {} {}:{}",
                     userId, relation, objectType, objectId, e);
             return false;
@@ -93,6 +110,11 @@ public class OpenFgaAuthzService {
         if (!enabled) {
             return devFallbackIds(objectType);
         }
+        if (!circuitBreaker.allowRequest()) {
+            log.warn("OpenFGA circuit OPEN — returning empty for listObjects: user:{} {} {}",
+                    userId, relation, objectType);
+            return Collections.emptyList();
+        }
         try {
             var request = new ClientListObjectsRequest()
                     .user("user:" + userId)
@@ -102,6 +124,7 @@ public class OpenFgaAuthzService {
             var response = client.listObjects(request).get();
             List<String> objects = response.getObjects();
             if (objects == null) {
+                circuitBreaker.recordSuccess();
                 return Collections.emptyList();
             }
 
@@ -110,9 +133,11 @@ public class OpenFgaAuthzService {
                     .map(o -> o.startsWith(prefix) ? o.substring(prefix.length()) : o)
                     .collect(Collectors.toList());
 
+            circuitBreaker.recordSuccess();
             log.debug("OpenFGA listObjects: user:{} {} {} → {}", userId, relation, objectType, ids);
             return ids;
         } catch (Exception e) {
+            circuitBreaker.recordFailure();
             log.error("OpenFGA listObjects failed: user:{} {} {}", userId, relation, objectType, e);
             return Collections.emptyList();
         }
