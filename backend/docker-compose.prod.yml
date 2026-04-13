@@ -1,4 +1,4 @@
-name: ${COMPOSE_PROJECT_NAME:-platform}
+name: platform
 
 x-runtime-defaults: &runtime-defaults
   restart: unless-stopped
