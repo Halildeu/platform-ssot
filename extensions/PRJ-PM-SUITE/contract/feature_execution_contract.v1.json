@@ -59,6 +59,7 @@
       "web/apps/mfe-shell/src/pages/admin/design-lab/**/*",
       "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
       "web/apps/mfe-shell/src/index.css",
+      "web/vitest.config.ts",
       "web/apps/mfe-access/**/*",
       "web/apps/mfe-users/**/*",
       "web/apps/mfe-reporting/**/*",
@@ -218,6 +219,11 @@
   "title": "Integration profile for local auth testing",
   "ux_contract": {
     "artifacts": [
+      {
+        "path_glob": "web/vitest.config.ts",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
       {
         "path_glob": "web/packages/auth/src/*.ts",
         "ux_theme_id": "trust_privacy_security_ux",
