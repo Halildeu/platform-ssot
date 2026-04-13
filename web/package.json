@@ -191,7 +191,7 @@
     "e2e:a11y": "playwright test e2e/accessibility/",
     "e2e:update": "playwright test --update-snapshots",
     "e2e:report": "playwright show-report",
-    "test:workspace": "vitest run --workspace vitest.workspace.ts",
+    "test:workspace": "vitest run",
     "test:browser": "vitest run --config packages/design-system/vitest.browser.config.ts",
     "test:visual": "vitest run --config packages/design-system/vitest.browser.config.ts --update",
     "dev:inspect": "vite --inspect",
