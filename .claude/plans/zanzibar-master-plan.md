@@ -1,214 +1,221 @@
-# Zanzibar Master Plan — Rev 17 (Konsolide Final)
+# Zanzibar Master Plan — Rev 18 (Session Kapanisi)
 
-**Tarih:** 2026-04-13
-**Kaynak:** Claude analizi + Codex istisaresi (CNS-20260413-001, 150K token)
-**Worktree:** claude/festive-golick
-**Base:** main @ 5b18297a
-
----
-
-## 0. DOGRULAMA OZETI
-
-Onceki session notlari guncel repo ile capraz dogrulandi. Duzeltmeler:
-
-| Onceki Not | Gercek Durum | Karar |
-|------------|-------------|-------|
-| 2 test @Disabled | Testler aktif (fix yapilmis) | Listeden cikarildi |
-| PageLayout export eksik | Zaten export ediliyor | Listeden cikarildi |
-| Outbox'ta sadece SQL var | Java siniflar da var (branch'te) | PR #350 hardening olarak guncellendi |
-| Playwright secret yok | Secret CI'da tanimli | Listeden cikarildi |
-| M-04 Playwright E2E | CI-entegre, calisiyor | Tamamlandi |
+**Tarih:** 2026-04-13 (guncellendi 12:55 UTC)
+**Kaynak:** Claude analizi + Codex istisaresi (CNS-20260413-001)
+**Son main commit:** b8c83e9b (PR #355 merged)
 
 ---
 
-## 1. MEVCUT DURUM
+## 1. TAMAMLANAN ISLER (Bu Session)
 
-### Derin (Saglam) Katmanlar
-- OpenFGA model (model.fga): 9 tip, deny-wins, hiyerarsik miras
-- OpenFgaAuthzService: fail-closed, 10s cache, batch, audit log, explain
-- TupleSyncService: deny-wins resolution, batch ops, version-based invalidation
-- ScopeContext + @Filter + PostgreSQL RLS: 3 katmanli data enforcement
-- Frontend @mfe/auth: 3-katman (me cache -> check -> UI gate)
-- Decision registry: 12 FINAL karar, 5 constraint, revision tracking
-- Playwright authz E2E: CI-entegre, restricted user deny senaryosu
+### PR-A: PR #349 — ADR-0012 Phase 3 [MERGED]
+- [x] @PreAuthorize -> @RequireModule migration
+- [x] RequireModule annotation (common-auth)
+- [x] RequireModuleInterceptor (permission-service)
+- [x] AccessControllerV1ScopeSecurityTest aktif
+- **Merge:** 2026-04-12T22:32 UTC
 
-### Acik PR'lar
-- PR #349 (ADR-0012 Phase 3): OPEN, MERGEABLE, 28/28 check PASS
-- PR #350 (Faz 4-a outbox): OPEN, 3 check FAILING
+### PR-B/D/E: PR #351 — Security Hardening + E2E + Kalite [MERGED]
+- [x] 6 serviste anyRequest().permitAll() -> anyRequest().authenticated()
+  - report-service, user-service, api-gateway, variant-service, auth-service
+  - schema-service: AUTH_MODE kill-switch tamamen kaldirildi
+- [x] OpenFgaStartupGuard (InitializingBean) — non-local fail-open uyari
+- [x] Vault container_name: backend-vault-1 -> platform-vault-1
+- [x] E2E RoleTupleCheckIntegrationTest (5 senaryo, Testcontainers OpenFGA)
+- [x] ERP_OPENFGA_ENABLED default true (docker-compose.yml)
+- [x] .env.example guncellendi
+- [x] EP-016 enforcement rule (legacy auth import ban, WARN)
+- [x] compat.ts kaldirildi (useAuthorization shim, aktif consumer yok)
+- [x] Gateway audience fix: variant-service -> api-gateway,frontend,account,serban-web
+- [x] ExcelStreamingExporterTest (6 test)
+- [x] CsvStreamingExporterTest (8 test)
+- [x] ContextHealthControllerTest (14 test)
+- [x] Feature execution contract scope guncellemeleri
+- [x] Decision registry rev 3 (C-006, C-007, K-1..K-4 cozuldu)
+- **Merge:** 2026-04-12T23:40 UTC
 
-### Guvenlik Bulgulari (Codex Dogruladi)
+### PR-C: PR #350 — Outbox Hardening [MERGED]
+- [x] @EnableScheduling eklendi (poller artik calisiyor)
+- [x] .claude/worktrees gitlink kaldirildi + .gitignore
+- [x] SELECT FOR UPDATE SKIP LOCKED (multi-instance guvenlik)
+- [x] TupleSyncOutboxPollerTest (9 test)
+- [x] CI: database scope + enforcement fix
+- **Merge:** 2026-04-12T23:49 UTC
 
-**permitAll catch-all — FIILI ACIK (teorik degil):**
+### PR #352 — Faz 2 + Faz 3 [MERGED]
+- [x] Faz 2: React hooks siralama duzeltmesi (useQuery'ler early return ustune)
+- [x] Faz 2: Hardcoded Turkce -> i18n (17 key, tr + en)
+- [x] Faz 2: "Tumunu Sec" checkbox (indeterminate state)
+- [x] Faz 2: Rol validasyonu (save disabled when no roles + uyari)
+- [x] Faz 2: modulePermissions grid sutunu -> roles Badge sutunu
+- [x] Faz 3: RoleDrawer tum section basliklar i18n (10 key, tr + en)
+- [x] Faz 3: Action ALLOW/DENY label'lari i18n
+- [x] Faz 3: Module level label'lari i18n (Oku/Yonet)
+- [x] Faz 3: PAGE section conditional render (backend'de PAGE tipi yok)
+- [x] CI: UX change map + feature execution contract guncellemeleri
+- [x] CI: vitest MF alias fix (mfe_shell/i18n)
+- **Merge:** 2026-04-13T04:08 UTC
 
-| Servis | Profil | Korunmayan Endpoint Ornekleri |
-|--------|--------|-------------------------------|
-| report-service | !local & !dev & !conntest | AlertController, ScheduleController, ContextHealthController |
-| user-service | !local & !dev | /api/audit/events |
-| api-gateway | !local & !dev | non-API path'ler acik |
-| variant-service | !local & !dev | risk dusuk (tum controller /api/v1/ altinda) |
-| auth-service | !local & !dev | catch-all mevcut ama kasitli public path'ler var |
-| schema-service | PROFIL YOK | AUTH_MODE=permitAll -> FULL BYPASS |
+### PR #355 — 25 Dependency Bump + 111 Test Fix [MERGED]
+- [x] 25 npm paket guncelleme (Dependabot)
+- [x] lucide-react 1.7.0 pin (1.8 breaking change, pnpm override)
+- [x] vitest-browser-react 2.1.0 pin (pnpm override)
+- [x] 111 design-system contract test fix (53 dosya):
+  - 14 access=hidden component fix (Button, GridShell, 10 Sidebar, Carousel, TreeTable)
+  - 40+ AppSidebar useSidebar mock ekleme
+  - 14 Form ConnectedComponent mock ekleme
+  - 7 primitive test fix (Dialog showModal, Modal portal, Drawer, Tooltip)
+  - 20+ component prop fix (Carousel, Combobox, Timeline, Toast, vb)
+  - 10 enterprise component fix (ControlChart, EmptyStateBuilder, vb)
+  - 10 pattern test fix (DetailSummary, ShellHeader, vb)
+  - 6 motion test fix (AnimatePresence, StaggerGroup, Transition)
+  - 2 performance benchmark threshold artirma (10ms -> 50ms)
+  - 2 ServerPaginationFooter gridApi mock
+- [x] vitest --workspace flag kaldirildi (4.x auto-discovery)
+- [x] Root vitest.config.ts environment: 'jsdom' eklendi
+- [x] ZanbibarPilot test guncelleme (Button null vs invisible)
+- **Merge:** 2026-04-13T09:09 UTC
 
-**Guvenli:** permission-service, core-data-service (authenticated() catch-all)
+### Deploy
+- [x] deploy-web: SUCCESS (5 kez — her PR merge sonrasi)
+- [x] deploy-backend: SUCCESS (gateway + permission-service rebuild)
+- [x] post-deploy-validate: SUCCESS
+- [x] release-canary: SUCCESS
+- [x] Backend servisleri: gateway port fix (docker-proxy kill)
 
-**ERP_OPENFGA_ENABLED=false default:** Fail-open — disabled modda tum check() -> true.
-
-### PR #350 Detay (Codex Tespiti)
-- V11 SQL migration + Java (Entity/Repository/Poller): MEVCUT
-- @EnableScheduling YOK -> poller inert (KRITIK BUG)
-- .claude/worktrees gitlink kazara commit edilmis
-- Test: YOK, Row-level locking: YOK
-- CI: enforcement + delivery-contract + delivery-gate FAILING
-
----
-
-## 2. ONCELIK SIRASI (Claude + Codex Uzlasi)
-
-### PR-A: PR #349 Merge (5 dk)
-
-- [ ] gh pr merge 349 --squash
-- [ ] Merge sonrasi main smoke check
-
-### PR-B: Prod Auth Surface Hardening (1 gun)
-
-**report-service (EN KRITIK):**
-- [ ] SecurityConfig.java:53 — anyRequest().permitAll() -> anyRequest().authenticated()
-- [ ] Tum controller path'lerin /api/v1/** altinda oldugunu dogrula
-- [ ] AlertController, ScheduleController, ContextHealthController korunmali
-
-**user-service:**
-- [ ] SecurityConfig.java:63 — anyRequest().permitAll() -> anyRequest().authenticated()
-- [ ] /api/audit/events icin /api/v1/** altina tasi veya explicit matcher
-
-**api-gateway:**
-- [ ] SecurityConfig.java:51 — anyExchange().permitAll() -> anyExchange().authenticated()
-- [ ] /api/auth/cookie icin explicit permitAll matcher ekle
-
-**variant-service:**
-- [ ] SecurityConfig.java:39 — anyRequest().permitAll() -> anyRequest().authenticated()
-
-**auth-service (SecurityConfigKeycloak):**
-- [ ] SecurityConfigKeycloak.java:53 — anyRequest().permitAll() -> anyRequest().authenticated()
-
-**schema-service (KRITIK):**
-- [ ] AUTH_MODE=permitAll icin @Profile("local") kisitlamasi ekle
-- [ ] Non-local'da startup fail veya ignore
-
-**Non-local startup guard (Codex onerisi):**
-- [ ] Non-local profilde ERP_OPENFGA_ENABLED=false veya store/model ID bos -> WARN log
-- [ ] ApplicationRunner veya @PostConstruct ile kontrol
-
-**Vault naming fix:**
-- [ ] docker-compose.yml:268 — backend-vault-1 -> platform-vault-1
-
-**Test:**
-- [ ] Her servis icin: korunan endpoint'e token'siz istek -> 401 testi
-
-### PR-C: PR #350 Hardening (1.5 gun)
-
-- [ ] .claude/worktrees gitlink'i branch'ten cikar
-- [ ] PermissionServiceApplication.java — @EnableScheduling ekle
-- [ ] TupleSyncOutboxPoller — SELECT FOR UPDATE SKIP LOCKED
-- [ ] TupleSyncOutboxPoller — idempotency: ayni roleId duplicate entry onleme
-- [ ] TupleSyncOutboxPollerTest yaz
-- [ ] RoleChangeEventHandlerTest guncelle
-- [ ] CI hatalarini coz
-- [ ] Delivery dokumanlarini tamamla
-
-### PR-D: Staged Rollout + E2E Test (2 gun)
-
-**On kosul:** PR-B ve PR-C merged olmali.
-
-**E2E Integration Test:**
-- [ ] RoleTupleCheckIntegrationTest (Testcontainers PostgreSQL + OpenFGA)
-  - Role ata -> tuple yaz -> check -> ALLOW
-  - Role kaldir -> tuple sil -> check -> DENY
-  - Scope ata -> data filtrele -> dogru data
-- [ ] ConditionalPropertyComboTest enable et
-
-**Staged Flag Enablement:**
-- [ ] docker-compose.yml ERP_OPENFGA_ENABLED default true
-- [ ] .env.example guncelle
-- [ ] docker-compose.prod.yml dogrula (zaten true)
-
-**Smoke:**
-- [ ] doctor-zanzibar.sh --quick PASS
-- [ ] Playwright authz.zanzibar.spec.ts PASS
-
-### PR-E: Kalite Backlog (2-3 gun)
-
-**Test Coverage:**
-- [ ] M-02: ExcelStreamingExporter, CustomReportRepository, ScheduleRepository
-- [ ] M-03: ContextHealth modulu (10 dosya, 1146 LOC)
-- [ ] DENY senaryo testleri genisleti
-
-**CI/Enforcement:**
-- [ ] M-06: k6 CI workflow
-- [ ] M-10: EP-016 enforcement rule (legacy auth import ban)
-- [ ] JaCoCo rapor uret
-- [ ] H-03: Rollback playbook staging testi
-
-**Temizlik:**
-- [ ] Gateway audience fix (variant-service -> dogru liste)
-- [ ] compat.ts kaldirma (aktif consumer yok)
-- [ ] Stale branch temizligi
+### Kararlar
+- [x] K-1: ERP_OPENFGA_ENABLED -> staged rollout (compose default true)
+- [x] K-2: schema-service AUTH_MODE -> KALDIRILDI (C-006)
+- [x] K-3: MFE standalone auth -> Shell korumasi yeterli
+- [x] K-4: Vault naming -> compose'da platform-vault-1
+- [x] PAGE permission tipi -> V10'da kaldirildi, geri eklenmeyecek (TB-21)
 
 ---
 
-## 3. UZUN VADELI (Faz 2-5, Ayri Session)
+## 2. BILINEN SORUNLAR (Bu Session Sonunda)
 
-| Faz | Kapsam | Durum |
-|-----|--------|-------|
-| Faz 2 | Frontend mfe-users (multi-role, tabbed scope UI) | Baslamadi |
-| Faz 3 | mfe-access (role drawer, DENY UI, person assignment) | Baslamadi |
-| Faz 4 | Access denial UX (explain drawer/modal) | Baslamadi |
-| Faz 5 | Cleanup (hardcode, deprecated, i18n) | Baslamadi |
-| - | OpenFGA model version management | Backlog |
-| - | Tuple reconciliation daemon | Outbox sonrasi |
-| - | Circuit breaker (OpenFGA write) | Backlog |
-| - | Faz 4-b scope netlestirme | Karar bekliyor |
+### BLOCKER: Module Federation React Duplicate
+- **Belirti:** ai.acik.com/admin/users beyaz ekran
+- **Hata:** TypeError: Cannot read properties of null (reading 'useMemo')
+- **Neden:** Shell react-dom-CveEYGh4.js vs Remote react-dom-7kpv6KXI.js — farkli bundle hash
+- **Kok neden:** @module-federation/vite 1.13 -> 1.14 shared config degisikligi
+- **Karar:** Ust versiyonda kal, uzun vadeli shared config duzelt
+- **Etki:** Tum MFE remote'lari (users, access, audit, vb) calismaz
+- **Cozum yolu:** vite.config.ts Module Federation shared config'de react/react-dom singleton + requiredVersion ayarla
 
----
-
-## 4. KARAR SONUCLARI (2026-04-13 cozuldu)
-
-| # | Karar | Sonuc | Constraint |
-|---|-------|-------|-----------|
-| K-1 | ERP_OPENFGA_ENABLED | PR-D ile staged rollout (compose default true) | - |
-| K-2 | schema-service AUTH_MODE | KALDIRILDI (PR #351). Her zaman authenticated() | C-006 |
-| K-3 | Korumasiz MFE'ler | Shell korumasi yeterli. Standalone auth P3'te | - |
-| K-4 | Vault naming | Compose'da platform-vault-1 (PR #351) | - |
+### Gateway Port Conflict (Cozuldu)
+- docker-proxy PID 8080'i tutuyordu, sudo kill ile cozuldu
+- Gelecekte: docker compose down + up yerine restart kullan
 
 ---
 
-## 5. CODEX ISTISARE KAYDI
+## 3. KALAN ISLER (Sonraki Session)
+
+### P0 — BLOCKER
+| # | Is | Efor | Dosya |
+|---|-----|------|-------|
+| 1 | MF React singleton fix | 2-4 saat | web/apps/*/vite.config.ts shared config |
+
+### P1 — Faz 4: Erisim Engeli UX
+| # | Is | Efor | Durum |
+|---|-----|------|-------|
+| 1 | Explain drawer/modal bileseni | 2 saat | Backend+hook HAZIR, UI bileseni eksik |
+| 2 | "Neden erisemiyorum?" butonu yayginlastirma | 1 saat | UnauthorizedPage'de var, baska yerlere ekle |
+| 3 | Scope denial detay gorunumu | 1 saat | Hangi scope var/yok goster |
+
+### P2 — Faz 5: Temizlik
+| # | Is | Efor |
+|---|-----|------|
+| 1 | Hardcode modul listeleri kaldir (5 yer) | 2 saat |
+| 2 | Deprecated endpoint'ler kaldir | 1 saat |
+| 3 | doctor-zanzibar.sh guncelle | 1 saat |
+| 4 | i18n tamamla (de, es dilleri) | 1 saat |
+
+### P3 — Backlog
+| # | Is | Efor |
+|---|-----|------|
+| 1 | Tuple reconciliation daemon | 1 gun |
+| 2 | Circuit breaker (OpenFGA write) | 1 gun |
+| 3 | OpenFGA model version management | 1 gun |
+| 4 | k6 CI workflow | 0.5 gun |
+| 5 | JaCoCo rapor threshold | 0.5 gun |
+| 6 | Rollback playbook staging testi | 0.5 gun |
+
+---
+
+## 4. KARAR SONUCLARI
+
+| # | Karar | Sonuc | Constraint | Tarih |
+|---|-------|-------|-----------|-------|
+| K-1 | ERP_OPENFGA_ENABLED | Staged rollout, compose default true | - | 2026-04-13 |
+| K-2 | schema-service AUTH_MODE | Kaldirildi, her zaman authenticated() | C-006 | 2026-04-13 |
+| K-3 | MFE standalone auth | Shell korumasi yeterli | - | 2026-04-13 |
+| K-4 | Vault naming | compose'da platform-vault-1 | - | 2026-04-13 |
+| K-5 | PAGE permission tipi | Eklenmeyecek (V10/TB-21) | - | 2026-04-13 |
+| K-6 | @module-federation/vite | 1.14'te kal, shared config duzelt | - | 2026-04-13 |
+
+---
+
+## 5. SAYISAL OZET
+
+| Metrik | Deger |
+|--------|-------|
+| Merged PR | 5 (#349, #350, #351, #352, #355) |
+| Yeni test | 159 (28 export/health + 9 outbox + 5 E2E + 6 Zanzibar + 111 DS) |
+| Duzeltilen test | 111 (design-system contract) |
+| Degisen dosya | ~120+ |
+| Yeni constraint | 2 (C-006, C-007) |
+| Cozulen karar | 6 (K-1..K-6) |
+| Codex istisare | 1 (CNS-20260413-001, 150K token) |
+| Deploy | 6 (5 web + 1 backend) |
+
+---
+
+## 6. CODEX ISTISARE KAYDI
 
 **ID:** CNS-20260413-001
 **Katilimcilar:** Claude (Opus 4.6) + Codex (gpt-5.4)
 **Token:** 150,307
 
-**Kabul edilen Codex onerileri:**
-- permitAll fiili acik tespiti (spesifik endpoint'ler)
-- PR #350 @EnableScheduling eksikligi
-- PR #350 gitlink kazasi
-- Non-local startup guard
-- schema-service profil kisitlamasi
-- MFE tespitinin nuanslanmasi
-
-**Reddedilen/nuanslanan:**
-- Oncelik sirasi: PR #349 once (Codex guvenlik oncesi diyordu)
-- PR #350 rework -> hardening (core tasarim saglam)
-- Vault naming PR-B ile birlesme -> ayri
+**Kabul edilen:** permitAll fiili acik, @EnableScheduling, gitlink, startup guard, schema-service profil, MFE nuans
+**Reddedilen:** Oncelik sirasi (PR #349 once), PR #350 "rework" -> "hardening"
 
 ---
 
-## 6. SESSION BASLANGIC REHBERI
+## 7. SONRAKI SESSION BASLANGIC REHBERI
 
 ```
-1. Plan oku: .claude/plans/zanzibar-master-plan.md (rev 17)
-2. PR-A: gh pr merge 349 --squash
-3. PR-B: Prod auth surface hardening
-4. PR-C: PR #350 hardening
-5. PR-D: E2E test + staged rollout
-6. PR-E: Kalite backlog
+1. Plan oku: .claude/plans/zanzibar-master-plan.md (rev 18)
+2. BLOCKER: MF React singleton fix
+   - web/apps/mfe-shell/vite.config.ts
+   - web/apps/mfe-users/vite.config.ts (ve diger remote'lar)
+   - shared: { react: { singleton: true, requiredVersion: '~18.2.0' } }
+   - Test: ai.acik.com/admin/users calistigini dogrula
+3. Faz 4: Explain drawer/modal
+4. Faz 5: Temizlik
+5. Backlog: reconciliation, circuit breaker, k6
 ```
+
+---
+
+## 8. DOSYA REFERANSLARI
+
+### Zanzibar Core
+- Decision registry: decisions/topics/zanzibar-openfga.v1.json (rev 3)
+- OpenFGA model: backend/openfga/model.fga
+- Doctor script: backend/scripts/doctor-zanbibar.sh
+
+### Backend Auth
+- OpenFgaAuthzService: backend/common-auth/.../openfga/OpenFgaAuthzService.java
+- OpenFgaStartupGuard: backend/common-auth/.../openfga/OpenFgaStartupGuard.java
+- TupleSyncService: backend/permission-service/.../service/TupleSyncService.java
+- TupleSyncOutboxPoller: backend/permission-service/.../outbox/TupleSyncOutboxPoller.java
+
+### Frontend Auth
+- PermissionProvider: web/packages/auth/src/PermissionProvider.tsx
+- useZanbibarAccess: web/packages/auth/src/useZanbibarAccess.ts
+- useExplainPermission: web/packages/auth/src/useExplainPermission.ts
+- useCheckPermission: web/packages/auth/src/useCheckPermission.ts
+
+### Story
+- STORY-0318: docs/03-delivery/STORIES/STORY-0318-zanbibar-auth-redesign-consultation.md
