@@ -339,11 +339,11 @@ services:
       openfga-migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: ["NONE"]
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/healthz || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 5
-      start_period: 5s
+      start_period: 10s
 
   permission-service:
     # profiles: ["legacy"]  # Re-enabled: roles CRUD still lives here, synced with OpenFGA
