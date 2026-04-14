@@ -1,17 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# errtrace: propagate ERR trap into functions, subshells, command substitutions.
+# Without this, a fail inside e.g. `foo=$(docker compose ...)` bypasses our trap.
+# Prior run #24400697471 hit this: trap installed, no output, silent exit 1.
+set -o errtrace
 
 # ERR trap: report the exact line + last command that failed.
 # Prior deploys fell through with a bare `exit 1` at job level, leaving the CI
 # log ambiguous (api-gateway container logs buffered over the fail signal).
 # Example output on fail:
 #   [deploy-backend.sh] FAILED at line 342: docker compose pull (exit=1)
+# GitHub Actions parses `::error` on STDOUT (not stderr) for annotations.
 # Set DEPLOY_TRACE=1 to additionally enable `set -x` trace mode.
 on_deploy_err() {
   local exit_code=$?
   local line_no=${1:-?}
   local last_cmd=${BASH_COMMAND:-unknown}
-  echo "::error title=deploy-backend::[deploy-backend.sh] FAILED at line ${line_no}: ${last_cmd} (exit=${exit_code})" >&2
+  # STDOUT for ::error annotation pickup; mirror to stderr for local runs.
+  echo "::error title=deploy-backend::[deploy-backend.sh] FAILED at line ${line_no}: ${last_cmd} (exit=${exit_code})"
+  echo "[deploy-backend.sh] FAILED at line ${line_no}: ${last_cmd} (exit=${exit_code})" >&2
   echo "[deploy-backend.sh] traceback: BASH_LINENO=(${BASH_LINENO[*]:-}) FUNCNAME=(${FUNCNAME[*]:-main})" >&2
   exit "${exit_code}"
 }
