@@ -266,6 +266,14 @@ wait_for_service_state() {
   local container_name
   local deadline
   local state=""
+  # Terminal-state tolerance window: some services (notably vault with auto-unseal)
+  # briefly report `unhealthy` between restart and unseal. Requiring 3 consecutive
+  # terminal-state polls before fail lets auto-recovery complete. Fixes the
+  # 2026-04-14 race where `wait_for_service_state vault` failed on first poll
+  # despite vault settling into `healthy` a few seconds later.
+  # See: .claude/plans/session-handoff-20260414-deploy.md Section 2.3
+  local terminal_streak=0
+  local terminal_streak_threshold=3
 
   container_name="$(container_name_for "${service}")"
   deadline=$((SECONDS + timeout_seconds))
@@ -280,14 +288,20 @@ wait_for_service_state() {
 
     case "${state}" in
       unhealthy|exited|dead)
-        echo "[error] ${service} reached terminal state: ${state}" >&2
-        docker logs --tail 200 "${container_name}" || true
-        return 1
+        terminal_streak=$((terminal_streak + 1))
+        echo "[wait] ${service} -> ${state} (streak ${terminal_streak}/${terminal_streak_threshold})"
+        if (( terminal_streak >= terminal_streak_threshold )); then
+          echo "[error] ${service} reached terminal state: ${state} (${terminal_streak} consecutive polls)" >&2
+          docker logs --tail 200 "${container_name}" || true
+          return 1
+        fi
         ;;
       "")
+        terminal_streak=0
         echo "[wait] ${service} -> missing"
         ;;
       *)
+        terminal_streak=0
         echo "[wait] ${service} -> ${state}"
         ;;
     esac
