@@ -78,7 +78,9 @@ compute_worktree_fingerprint() {
     _fp_root="$(git rev-parse --show-toplevel 2>/dev/null || echo "${ROOT_DIR}")"
     _fp_args+=(--staged-only)
   fi
-  python3 "${SCRIPT_DIR}/ops/compute_worktree_fingerprint.py" --repo-root "${_fp_root}" "${_fp_args[@]}"
+  # set -u + empty array expansion guard: "${arr[@]}" on empty arr with set -u
+  # raises "unbound variable". ${arr[@]+"${arr[@]}"} expands to nothing when empty.
+  python3 "${SCRIPT_DIR}/ops/compute_worktree_fingerprint.py" --repo-root "${_fp_root}" ${_fp_args[@]+"${_fp_args[@]}"}
 }
 
 node22_prefix() {
