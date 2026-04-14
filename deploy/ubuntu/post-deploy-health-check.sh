@@ -15,7 +15,10 @@ VAULT_RETRIES=12
 VAULT_SEALED="True"
 echo "[health-check] Checking Vault seal status (max ${VAULT_RETRIES} retries, 10s interval)..."
 for i in $(seq 1 $VAULT_RETRIES); do
-  VAULT_SEALED=$(docker exec platform-vault-1 vault status -format=json 2>/dev/null | python3 -c "import json,sys; print(json.load(sys.stdin).get('sealed','unknown'))" 2>/dev/null || echo "unknown")
+  # VAULT_ADDR=http://... required: vault CLI defaults to HTTPS but dev server is HTTP.
+  # Without this, status returns "unknown" for the full retry window and FAIL emits.
+  # Same bug as vault_preflight in deploy-backend.sh (fixed in PR #374).
+  VAULT_SEALED=$(docker exec -e VAULT_ADDR=http://127.0.0.1:8200 platform-vault-1 vault status -format=json 2>/dev/null | python3 -c "import json,sys; print(json.load(sys.stdin).get('sealed','unknown'))" 2>/dev/null || echo "unknown")
   if [[ "$VAULT_SEALED" == "False" ]]; then
     echo "  OK: vault unsealed (attempt $i)"
     break
@@ -45,7 +48,10 @@ if [[ "$VAULT_SEALED" == "False" ]]; then
 fi
 
 # ---- 3. Docker health status ----
-for svc in postgres-db vault keycloak openfga discovery-server permission-service auth-service user-service variant-service core-data-service report-service api-gateway web-nginx; do
+# NOTE: web-nginx is a standalone container (deploy/ubuntu/run-frontend-nginx-container.sh),
+# not part of docker-compose.yml. Its container name is "platform-web-nginx" (no "-1" suffix).
+# Health for it is a simple running-state check; compose-managed services use healthchecks.
+for svc in postgres-db vault keycloak openfga discovery-server permission-service auth-service user-service variant-service core-data-service report-service api-gateway; do
   container="platform-${svc}-1"
   status=$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}no-healthcheck{{end}}' "$container" 2>/dev/null || echo "missing")
   if [[ "$status" == "healthy" || "$status" == "no-healthcheck" ]]; then
@@ -55,6 +61,15 @@ for svc in postgres-db vault keycloak openfga discovery-server permission-servic
     FAILURES=$((FAILURES + 1))
   fi
 done
+
+# web-nginx: standalone container (no compose-managed -1 suffix)
+nginx_state=$(docker inspect --format '{{.State.Status}}' platform-web-nginx 2>/dev/null || echo "missing")
+if [[ "$nginx_state" == "running" ]]; then
+  echo "  OK: web-nginx (running, standalone)"
+else
+  echo "  FAIL: web-nginx ($nginx_state)"
+  FAILURES=$((FAILURES + 1))
+fi
 
 # ---- 4. OpenFGA health ----
 OPENFGA=$(curl -sf http://localhost:4000/healthz 2>/dev/null || echo '{"status":"FAIL"}')
