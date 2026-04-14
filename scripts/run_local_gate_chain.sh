@@ -69,14 +69,16 @@ sanitize_name() {
 
 compute_worktree_fingerprint() {
   # In worktree (light) mode, the guard (require_local_gate.sh --worktree-mode)
-  # computes a staged-only fingerprint. The chain writer MUST match that scheme
-  # so post-chain verification succeeds; otherwise writer (full) and reader
-  # (staged-only) diverge and every commit triggers a superfluous re-run.
-  local _fp_args=(--repo-root "${ROOT_DIR}")
+  # computes a staged-only fingerprint AGAINST THE WORKTREE ROOT. The chain
+  # writer MUST match BOTH (a) staged-only mode AND (b) repo-root, otherwise
+  # writer/reader diverge and every commit triggers a superfluous re-run.
+  local _fp_root="${ROOT_DIR}"
+  local _fp_args=()
   if [[ "${LOCAL_GATE_WORKTREE_MODE:-0}" == "1" ]] || [[ "${LIGHT_MODE}" == "1" ]]; then
+    _fp_root="$(git rev-parse --show-toplevel 2>/dev/null || echo "${ROOT_DIR}")"
     _fp_args+=(--staged-only)
   fi
-  python3 "${SCRIPT_DIR}/ops/compute_worktree_fingerprint.py" "${_fp_args[@]}"
+  python3 "${SCRIPT_DIR}/ops/compute_worktree_fingerprint.py" --repo-root "${_fp_root}" "${_fp_args[@]}"
 }
 
 node22_prefix() {
