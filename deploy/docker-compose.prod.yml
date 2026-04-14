@@ -661,10 +661,21 @@ networks:
     driver: bridge
 
 volumes:
+  # SSOT canonical volume definitions (must match backend/docker-compose.yml).
+  # 2026-04-14: staging↔prod volume name drift (vault-data vs vault_data, etc.)
+  # caused repeated fresh-volume incidents when deploy-backend.sh switched
+  # between composes. Explicit `name:` pins Docker-level volume name regardless
+  # of compose project name or file origin. See doctor-infra.sh Section K and
+  # RB-compose-volume-ssot.md for drift guard + migration.
   postgres_data:
-  keycloak_data:
-  loki_data:
-  tempo_data:
+    name: platform_postgres_data
   vault_data:
+    name: platform_vault_data
   vault_logs:
+    name: platform_vault_logs
   vault_snapshots:
+    name: platform_vault_snapshots
+  loki_data:
+    name: platform_loki_data
+  tempo_data:
+    name: platform_tempo_data
