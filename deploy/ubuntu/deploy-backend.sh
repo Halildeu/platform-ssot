@@ -530,10 +530,23 @@ main() {
   # Docker service names (keycloak, api-gateway) are ALWAYS correct.
   compose_run "${compose_args[@]}" up -d --no-recreate web-nginx service-manager vault-audit-init vault-snapshot loki promtail tempo prometheus grafana 2>/dev/null || true
 
-  # Kill any standalone nginx container from old frontend deploys
-  docker rm -f platform-web-nginx 2>/dev/null || true
+  # Standalone nginx handling — compose-aware:
+  # - Prod compose (deploy/docker-compose.prod.yml) manages web-nginx as a service.
+  #   In that case, kill any leftover standalone so compose can take over cleanly.
+  # - Staging compose (backend/docker-compose.yml) has NO web-nginx service; nginx
+  #   lives as a standalone container started by run-frontend-nginx-container.sh.
+  #   We MUST NOT remove it here (doing so leaves ai.acik.com dead until
+  #   post-deploy-health-check's auto-restart fallback fires). Root cause of the
+  #   2026-04-14 deploy incidents (PR #377/#378/#379).
+  if compose_run "${compose_args[@]}" config --services 2>/dev/null | grep -qx "web-nginx"; then
+    # Prod path: compose owns nginx → clear stale standalone so recreate is clean.
+    docker rm -f platform-web-nginx 2>/dev/null || true
+  fi
+  # Staging/local: do NOTHING to platform-web-nginx here.
 
-  # Remove orphan containers (old names, deleted services)
+  # Remove orphan containers (old names, deleted services).
+  # NOTE: --remove-orphans only touches orphans of THIS compose project. Standalone
+  # nginx (no compose label) is unaffected by this call.
   compose_run "${compose_args[@]}" up -d --remove-orphans 2>/dev/null || true
 
   compose_run "${compose_args[@]}" ps
