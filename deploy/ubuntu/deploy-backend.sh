@@ -33,7 +33,6 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 REPO_DIR="${REPO_DIR:-/home/halil/platform/repo}"
 BACKEND_DIR="${BACKEND_DIR:-${REPO_DIR}/backend}"
 ENV_FILE="${ENV_FILE:-/home/halil/platform/env/backend.env}"
-COMPOSE_FILE="${COMPOSE_FILE:-${BACKEND_DIR}/../deploy/docker-compose.prod.yml}"
 REPO_BRANCH="${REPO_BRANCH:-main}"
 PINNED_REPO_BRANCH="${REPO_BRANCH}"
 GIT_REMOTE_URL="${GIT_REMOTE_URL:-}"
@@ -47,6 +46,26 @@ BUILD_COMPOSE_FILE="${BUILD_COMPOSE_FILE:-${BACKEND_DIR}/docker-compose.yml}"
 DOCKER_PULL_POLICY="${DOCKER_PULL_POLICY:-always}"
 RENDER_ENV_BEFORE_DEPLOY="${RENDER_ENV_BEFORE_DEPLOY:-false}"
 DEPLOY_ENV="${DEPLOY_ENV:-stage}"
+
+# COMPOSE_FILE default is DEPLOY_ENV-aware.
+# Memory rule (feedback_infra_stability.md): "Staging'de ASLA prod compose kullanma
+# — GHCR image'ları yok, pull fail eder". Prior default (deploy/docker-compose.prod.yml)
+# violated this: on staging deploys, compose interpolation failed because prod compose
+# requires KC_DB_PASSWORD and other registry-oriented variables that staging env does
+# not provide. Confirmed in run #24400697471 (exit 1 without annotation).
+#
+# Enforcement: doctor-infra.sh Section I (I1-I5) already enforces this split at static
+# check time — script default was the missing runtime counterpart.
+if [[ -z "${COMPOSE_FILE:-}" ]]; then
+  case "${DEPLOY_ENV}" in
+    prod|production)
+      COMPOSE_FILE="${BACKEND_DIR}/../deploy/docker-compose.prod.yml"
+      ;;
+    stage|staging|dev|local|*)
+      COMPOSE_FILE="${BACKEND_DIR}/docker-compose.yml"
+      ;;
+  esac
+fi
 VAULT_ADDR="${VAULT_ADDR:-}"
 VAULT_APPROLE_ROLE_NAME="${VAULT_APPROLE_ROLE_NAME:-}"
 VAULT_APPROLE_ROLE_ID_FILE="${VAULT_APPROLE_ROLE_ID_FILE:-}"
