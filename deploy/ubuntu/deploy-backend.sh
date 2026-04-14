@@ -426,9 +426,12 @@ main() {
     docker compose -f "${BUILD_COMPOSE_FILE}" build 2>&1 | tail -5
 
     local img svc target tagged=0
-    for img in $(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^serban-'); do
+    # Compose project name is 'platform' (enforced by compose files + doctor-infra Section E).
+    # Previous 'serban-*' prefix was the old project name; images are now 'platform-*'.
+    # PR #370 fixed the same drift in .github/workflows/deploy-backend.yml; this fixes the script counterpart.
+    for img in $(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^platform-'); do
       svc="${img%%:*}"
-      svc="${svc#serban-}"
+      svc="${svc#platform-}"
       target="ghcr.io/${ghcr_owner}/platform-ssot-${svc}:${IMAGE_TAG}"
       docker tag "${img}" "${target}"
       tagged=$((tagged + 1))
@@ -436,9 +439,12 @@ main() {
     echo "[deploy] tagged ${tagged} images as ${IMAGE_TAG}"
 
     # Also tag as main-stable for rollback support
-    for img in $(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^serban-'); do
+    # Compose project name is 'platform' (enforced by compose files + doctor-infra Section E).
+    # Previous 'serban-*' prefix was the old project name; images are now 'platform-*'.
+    # PR #370 fixed the same drift in .github/workflows/deploy-backend.yml; this fixes the script counterpart.
+    for img in $(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^platform-'); do
       svc="${img%%:*}"
-      svc="${svc#serban-}"
+      svc="${svc#platform-}"
       docker tag "${img}" "ghcr.io/${ghcr_owner}/platform-ssot-${svc}:main-stable"
     done
 
