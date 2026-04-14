@@ -29,7 +29,11 @@ Pre-conditions:
 - [x] OpenFGA v1.11.2 pinned (was :latest)
 - [x] SK-2 latency PASS (11-15ms, target <15ms)
 - [x] Vault auto-unseal watcher active (PR #347)
-- [ ] Canary authz guardrail wiring complete (4/4 metrics)
+- [x] Canary authz guardrail wiring complete (4/4 metrics) — PR #365 (eaa3d7a1)
+  - authz_decisions_total (Counter, tags: allowed, reason) — OpenFgaAuthzService
+  - tuple_sync_outbox_failed_total (Counter) — TupleSyncOutboxPoller
+  - openfga_circuit_breaker_state (Gauge: 0=closed, 1=open, 2=half-open) — OpenFgaCircuitBreaker
+  - scope_cache_* (Gauge) — AuthzCacheMetricsConfig (pre-existing, re-verified)
 
 -------------------------------------------------------------------------------
 3. BAŞLATMA / DURDURMA

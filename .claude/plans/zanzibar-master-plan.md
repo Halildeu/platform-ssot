@@ -1,13 +1,32 @@
-# Zanzibar Master Plan — Rev 19 (Claude + Codex Uzlasi)
+# Zanzibar Master Plan — Rev 20 (Post-Dalga 0 Housekeeping)
 
 **Tarih:** 2026-04-14
-**Kaynak:** Rev 18 + CNS-20260414-001 (482K token, gpt-5.4) + CNS-20260414-002 (212K token, gpt-5.4) + Claude (Opus 4.6) degerlendirme
-**Base:** main @ e9fadc13
-**Uzlasi:** 5 BLOCKER + 1 FIX tespit edildi; Dalga 0 eklendi
+**Kaynak:** Rev 19 + CNS-20260414-003 (164K token, gpt-5.3-codex) + Claude (Opus 4.6) degerlendirme
+**Base:** main @ eaa3d7a1
+**Uzlasi:** Dalga 0 tamamlandi (PR #365); FAZ B post-canary'ye ertelendi
 
 ---
 
-## 0. REV 18 -> REV 19 DEGISIKLIK OZETI
+## 0. REV 19 -> REV 20 DEGISIKLIK OZETI
+
+Rev 19'da Dalga 0 (Canary Readiness) BLOCKER fix'leri planlandi. PR #365
+(commit eaa3d7a1) merged. 5/5 BLOCKER runtime dogrulandi. Codex Round 2
+(CNS-20260414-002) sirasinda 2 gizli bug daha yakalandi:
+- B2 path-aware 503 (ilk fix yetersizdi; tum hata path'lerinde 200+bos body dondurmeye devam ediyordu)
+- B4 outbox schema bug (Micrometer counter + DB schema migration eksikti)
+
+ADR-0013 yazildi (Permission-Service Hub Role, D-008 FINAL formalize).
+Decision registry rev 4: D-008, R-006, C-008 eklendi.
+
+FAZ A (bu rev) — housekeeping: Dalga 0 checkbox kapatma + §5 karar/sayim
+drift kapatma + canary runbook precondition hizalama. FAZ B (TB-11 PR6-prereq)
+Codex Q1 verdict'ine gore **post-canary** icin ertelendi: auth-service refactor
+zincirinin (login -> JWT -> downstream fallback -> audit) canary authz
+guardrail sinyalini kirletmemesi icin.
+
+---
+
+## 0.1 REV 18 -> REV 19 DEGISIKLIK OZETI (arsiv)
 
 Rev 18'de "Canary Rollout" ilk dalga idi. Codex istisaresi 6 bulgu ortaya cikardi;
 Claude degerlendirmesi ve Codex Round 2 dogrulamasiyla 5 tanesi BLOCKER olarak
@@ -75,50 +94,50 @@ kesinlesti. Dalga 0 (Canary Readiness) eklendi.
 
 ### DALGA 0: Canary Readiness (2-3 gun) — BLOCKER FIX
 
-**B1: /authz/check route duzeltmesi**
-- [ ] `/authz/check` ve `/batch-check` endpoint'lerini permission-service `AuthorizationControllerV1`'a tasi
-  - En dusuk maliyetli yol: core-data'daki mantigi permission-service'e kopyala (ayni OpenFgaAuthzService kullanilacak)
-  - core-data'daki duplicate endpoint'i `@Deprecated` isaretle veya sil
-- [ ] Gateway + Vite route'larinin tutarliligini dogrula
-- [ ] Frontend `api.ts` call path'lerini dogrula (degisiklik gerekmemeli)
-- Kanit: `AuthzExplainController.java:45,71`, `AuthorizationControllerV1.java`, `vite.config.ts:281`
+**B1: /authz/check route duzeltmesi** ✅ PR #365 merged
+- [x] `/authz/check` ve `/batch-check` endpoint'lerini permission-service `AuthorizationControllerV1`'a tasi
+  - Uygulanan: core-data'daki mantik permission-service'e tasindi (ayni OpenFgaAuthzService)
+  - core-data'daki duplicate endpoint kaldirildi
+- [x] Gateway + Vite route'larinin tutarliligini dogrula
+- [x] Frontend `api.ts` call path'lerini dogrula (degisiklik gerekmedi)
+- Kanit: `AuthorizationControllerV1.java`, `vite.config.ts`, PR #365 commit eaa3d7a1
 
-**B2: JWT fallback mitigasyonu**
-- [ ] `AuthorizationControllerV1.java` top-level catch: 200+bos body yerine 503 don
-  - Alternatif: fallback body'de `degraded: true` flag ekle, client'lar bunu kontrol etsin
-- [ ] variant-service `PermissionServiceAuthzClient`: bos response'u cache'leme (null don)
-- [ ] variant-service cache TTL'i 5dk -> hata durumunda 0 (veya skip cache)
-- Kanit: `AuthorizationControllerV1.java:150`, `VariantAuthorizationServiceImpl.java:23`, `AuthorizationContextCache.java:29`
+**B2: JWT fallback mitigasyonu** ✅ PR #365 merged (path-aware retrofit)
+- [x] `AuthorizationControllerV1.java` top-level catch: 200+bos body yerine 503 don (path-aware)
+  - Uygulanan: tum hata path'lerinde 503 (Codex Round 2 yetersiz ilk fix'i yakaladi)
+- [x] variant-service `PermissionServiceAuthzClient`: bos response'u cache'leme (null don)
+- [x] variant-service cache TTL'i 5dk -> hata durumunda 0 (skip cache)
+- Kanit: commit 611f0ecb (B2 path-aware + B4 outbox schema fix), PR #365
 
-**B3: Deny rate metrigi duzeltmesi**
-- [ ] `authz_decisions_total` Micrometer Counter ekle (tag: `allowed=true|false`, `reason=*`)
-  - Yer: `OpenFgaAuthzService.check()` ve `checkWithReason()` icinde
-- [ ] `zanzibar-guardrails.json` deny_rate sorgusunu guncelle: HTTP 403 -> `authz_decisions_total{allowed="false"}`
-- [ ] Grafana alert kuralini guncelle
-- Kanit: `zanzibar-guardrails.json:25`, `authz-zanzibar-rules.yml:88`
+**B3: Deny rate metrigi duzeltmesi** ✅ PR #365 merged
+- [x] `authz_decisions_total` Micrometer Counter ekle (tag: `allowed=true|false`, `reason=*`)
+  - Uygulanan: `OpenFgaAuthzService.check()` + `checkWithReason()` icinde
+- [x] `zanzibar-guardrails.json` deny_rate sorgusunu guncelle: `authz_decisions_total{allowed="false"}`
+- [x] Grafana alert kuralini guncelle
+- Kanit: `zanzibar-guardrails.json`, `authz-zanzibar-rules.yml`, PR #365
 
-**B4: Phantom alert'lere metric uretici ekle**
-- [ ] `tuple_sync_outbox_failed_total` Counter: `TupleSyncOutboxPoller` icerisinde FAILED entry islendiginde increment
-- [ ] `openfga_circuit_breaker_state` Gauge: `OpenFgaCircuitBreaker` state degistiginde guncelle (0=closed, 1=open, 2=half-open)
-- [ ] Mevcut `AuthzCacheMetricsConfig` pattern'ini kullan (MeterRegistry injection)
-- Kanit: `authz-zanzibar-rules.yml:217,246`, `AuthzCacheMetricsConfig.java:22`
+**B4: Phantom alert'lere metric uretici ekle** ✅ PR #365 merged (schema fix dahil)
+- [x] `tuple_sync_outbox_failed_total` Counter: `TupleSyncOutboxPoller` FAILED entry islendiginde increment
+- [x] `openfga_circuit_breaker_state` Gauge: CB state degistiginde guncelle (0=closed, 1=open, 2=half-open)
+- [x] `AuthzCacheMetricsConfig` pattern'ini kullan (MeterRegistry injection)
+- Ek: outbox DB schema migration fix (Codex Round 2'de yakalandi)
+- Kanit: `TupleSyncOutboxPoller.java`, `OpenFgaCircuitBreaker.java`, commit 611f0ecb
 
-**B5: Compose PERMISSION_SERVICE_BASE_URL**
-- [ ] `docker-compose.yml` variant-service env'ine `PERMISSION_SERVICE_BASE_URL: ${PERMISSION_SERVICE_BASE_URL:-http://permission-service}` ekle
-- [ ] `docker-compose.yml` core-data-service env'ine ayni satiri ekle
-- [ ] `RemoteAuthzVersionProvider` default port'u dogrula (127.0.0.1:8091 -> 8084 veya compose override yeterli)
-- Kanit: `docker-compose.yml:128,171`, `OpenFgaAuthzConfig.java:40`
+**B5: Compose PERMISSION_SERVICE_BASE_URL** ✅ PR #365 merged
+- [x] `docker-compose.yml` variant-service env'ine `PERMISSION_SERVICE_BASE_URL` eklendi
+- [x] `docker-compose.yml` core-data-service env'ine ayni satir eklendi
+- [x] `RemoteAuthzVersionProvider` default port'u dogrulandi (compose override yeterli)
+- Kanit: `docker-compose.yml`, PR #365
 
-**FIX: Runbook + alert text drift**
-- [ ] `RB-zanzibar-canary.md` Stage 1 metnini guncelle: compose default=true ile uyumla
-- [ ] Fail-closed aciklamasini duzelt: "check -> true" degil "check -> false (deny-all)"
-- [ ] Alert summary'de ayni duzeltme
-- Kanit: `RB-zanzibar-canary.md:38,88`, `OpenFgaAuthzService.java:79`
+**FIX: Runbook + alert text drift** ✅ PR #365 merged
+- [x] `RB-zanzibar-canary.md` Stage 1 metnini guncelle: compose default=true ile uyumlu
+- [x] Fail-closed aciklamasini duzelt: "check -> false (deny-all)"
+- [x] Alert summary'de ayni duzeltme
 
-**Dogrulama:**
-- [ ] `doctor-zanzibar.sh --quick` PASS
-- [ ] Tum servisler icin `mvn test` PASS
-- [ ] Frontend `npm test` PASS
+**Dogrulama:** ✅ Rev 20 housekeeping doctor re-run
+- [x] `doctor-zanzibar.sh --quick` PASS (50/50, 0 error, 1 warning — .env.local gitignore)
+- [x] Tum servisler icin `mvn test` PASS (PR #365 CI 32/32)
+- [x] Frontend `npm test` PASS (PR #365 CI)
 
 ---
 
@@ -232,14 +251,19 @@ DALGA 2    DALGA 3
 
 ## 5. KARAR DURUMU
 
-**7 FINAL karar:** Degisiklik yok (rev 3).
-**7 Constraint:** Degisiklik yok.
-**Yeni karar gerekli (Dalga 0'da):**
-- [ ] B1: /authz/check permission-service'e mi tasinacak, yoksa Vite+gateway core-data'ya mi yonlendirilecek?
-- [ ] B2: Fallback 503 mu donecek, yoksa `degraded:true` flag mi?
+**8 FINAL karar:** D-001..D-008 (registry rev 4). D-008 (2026-04-14) ADR-0013 ile formalize — Permission-Service Hub Role.
+**8 Constraint:** C-001..C-008 (registry rev 4). C-008 (2026-04-14): servisler check/listObjects icin OpenFgaAuthzService kullanir, permission-service'e HTTP cagrisi yapmaz.
+
+**Dalga 0'da alinan kararlar:**
+- [x] **B1 ALINDI (2026-04-14, PR #365):** `/authz/check` + `/batch-check` permission-service `AuthorizationControllerV1`'a tasindi; core-data'daki duplicate endpoint kaldirildi. Kanit: commit eaa3d7a1.
+- [x] **B2 ALINDI (2026-04-14, PR #365):** Path-aware 503 response uygulandi (tum hata path'lerinde); variant-service cache hatada skip ediyor. Kanit: commit 611f0ecb (Codex Round 2 ilk fix'in yetersizligini yakaladi).
 
 **Bekleyen karar (Dalga 4):**
 - [ ] Scope reconciliation stratejisi: scheduled + on-demand hibrit (Codex onerisi)
+
+**Post-canary karar (FAZ B / PR6-prereq, CNS-20260414-003 Q3):**
+- [ ] auth-service login response DTO `permissions: Set<String>` alani: breaking drop yerine `Set.of()` kompat (frontend `auth.slice.ts` + `LoginPopover.tsx` fallback icin).
+- [ ] TB-11 scope bolme: PR6a (auth-service only) -> PR6b (JWT claim + downstream) -> PR6c (report-service). Kanit: Codex Q4 + F3.
 
 ---
 
@@ -250,13 +274,14 @@ DALGA 2    DALGA 3
 | CNS-20260413-001 | 2026-04-13 | Claude + Codex | 150K | Rev 17 gap analysis |
 | CNS-20260414-001 | 2026-04-14 | Claude + Codex | 482K | Rev 18 dogrulama, 6 bulgu |
 | CNS-20260414-002 | 2026-04-14 | Claude + Codex | 212K | Round 2: bulgu dogrulama, uzlasi |
+| CNS-20260414-003 | 2026-04-14 | Claude + Codex (gpt-5.3) | 164K | Rev 20 housekeeping + FAZ B timing — APPROVE_WITH_CHANGES |
 
 ---
 
 ## 7. DOGRULAMA ARACLARI
 
-| Arac | Komut |
-|------|-------|
+| Arac | Komut / Yol |
+|------|-------------|
 | Doctor (quick) | `backend/scripts/doctor-zanzibar.sh --quick` |
 | Doctor (full) | `backend/scripts/doctor-zanzibar.sh` |
 | Canary guardrails | `backend/scripts/ci/canary/zanzibar-guardrails.json` |
@@ -265,23 +290,32 @@ DALGA 2    DALGA 3
 | Legacy envanter | `docs/04-operations/TB-11-legacy-permission-inventory.md` |
 | Canary runbook | `docs/04-operations/RUNBOOKS/RB-zanzibar-canary.md` |
 | k6 perf | `backend/scripts/perf/k6-zanzibar-check.js` |
+| ADR-0013 (Hub role) | `docs/02-architecture/services/ops/ADR/ADR-0013-permission-service-hub-role.md` |
+| Session handoff (Dalga 0) | `.claude/plans/session-handoff-20260414.md` |
+| Codex consultation (Rev 20) | `.autopilot-tmp/CNS-20260414-003-consultation.md` / `*-response.md` |
 
 ---
 
 ## 8. SESSION BASLANGIC REHBERI
 
 ```
-1. Plan oku: .claude/plans/zanzibar-master-plan.md (rev 19)
-2. Dalga 0: Canary Readiness (BLOCKER FIX)
-   a. B1: /authz/check -> permission-service'e tasi
-   b. B2: JWT fallback -> 503 veya degraded flag
-   c. B3: authz_decisions_total Micrometer counter
-   d. B4: outbox_failed + circuit_breaker metric
-   e. B5: compose PERMISSION_SERVICE_BASE_URL
-   f. FIX: runbook text
-   g. Dogrulama: doctor + mvn test + npm test
-3. Dalga 1: Canary rollout (3 asamali, RB-zanzibar-canary)
+1. Plan oku: .claude/plans/zanzibar-master-plan.md (rev 20)
+2. ✅ Dalga 0: Canary Readiness — TAMAMLANDI (PR #365, eaa3d7a1)
+   a. [x] B1: /authz/check -> permission-service'e tasindi
+   b. [x] B2: JWT fallback -> path-aware 503 + cache skip
+   c. [x] B3: authz_decisions_total Micrometer counter live
+   d. [x] B4: outbox_failed + circuit_breaker metric + schema fix
+   e. [x] B5: compose PERMISSION_SERVICE_BASE_URL eklendi
+   f. [x] FIX: runbook text + fail-closed aciklamasi
+   g. [x] Dogrulama: doctor 50/50 + mvn test + npm test PASS
+3. ▶ Dalga 1: Canary rollout (3 asamali, RB-zanzibar-canary) — SIRADAKI ADIM
+   - Manuel dispatch: `gh workflow run deploy-backend.yml`
+   - 48h monitor penceresinde auth-service donuk (FAZ B ertelendi)
 4. Dalga 2: Explain UX polish
-5. Dalga 3: Legacy temizlik (TB-11 PR6-prereq -> PR6 -> PR8)
-6. Dalga 4: Backlog (reconciliation, model versioning, k6 CI)
+5. Dalga 3: Legacy temizlik — FAZ B revize (CNS-20260414-003)
+   - PR6a: auth-service only (Set.of() kompat, post-canary)
+   - PR6b: JWT claim + downstream consumer cleanup
+   - PR6c: report-service legacy HTTP client
+   - PR6-skip: user-service rename only (F3)
+6. Dalga 4: Backlog (reconciliation, model versioning, k6 CI, doctor 51-52)
 ```
