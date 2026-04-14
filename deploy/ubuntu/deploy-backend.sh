@@ -470,8 +470,13 @@ main() {
   vault_preflight() {
     local vault_container
     vault_container="$(container_name_for vault)"
+    # Pass VAULT_ADDR explicitly: inside the container, vault CLI defaults to
+    # https://127.0.0.1:8200 but the dev server listens on HTTP. Without this,
+    # `vault status` fails with "http: server gave HTTP response to HTTPS client"
+    # and status_json is empty → preflight return 1 → silent deploy fail.
+    # Confirmed live on staging 2026-04-14 (run #24402781242 line 490).
     local status_json
-    status_json="$(docker exec "${vault_container}" vault status -format=json 2>/dev/null || true)"
+    status_json="$(docker exec -e VAULT_ADDR=http://127.0.0.1:8200 "${vault_container}" vault status -format=json 2>/dev/null || true)"
     if [[ -n "${status_json}" ]]; then
       local sealed
       sealed="$(printf '%s' "${status_json}" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("sealed","unknown"))' 2>/dev/null || echo "unknown")"
@@ -483,7 +488,7 @@ main() {
         return 1
       fi
     else
-      echo "[error] cannot reach Vault inside container" >&2
+      echo "[error] cannot reach Vault inside container (VAULT_ADDR=http://127.0.0.1:8200 passed; check vault container health)" >&2
       return 1
     fi
   }
