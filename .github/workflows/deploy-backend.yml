@@ -117,16 +117,19 @@ jobs:
             stable_tag="main-stable"
           fi
 
-          echo "::group::tag + push (serban-* -> ghcr.io/${ghcr_owner}/...)"
-          images="$(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^serban-' || true)"
+          echo "::group::tag + push (platform-* -> ghcr.io/${ghcr_owner}/...)"
+          # Compose project name is 'platform' (enforced by docker-compose.yml + doctor-infra.sh).
+          # Previous 'serban-*' prefix was legacy; deploy stopped finding images when project
+          # name was standardized on 2026-04-13. See: docs/OPERATIONS/CACHE-BOUNDARY-RULES.v1.md
+          images="$(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^platform-' || true)"
           if [ -z "${images}" ]; then
-            echo "::error title=deploy-backend::No serban-* images found; failing deploy-backend."
+            echo "::error title=deploy-backend::No platform-* images found; failing deploy-backend."
             exit 1
           fi
 
           while IFS= read -r img; do
             name="${img%%:*}"
-            svc="${name#serban-}"
+            svc="${name#platform-}"
             target="ghcr.io/${ghcr_owner}/platform-ssot-${svc}"
 
             docker tag "${img}" "${target}:sha-${short_sha}"
