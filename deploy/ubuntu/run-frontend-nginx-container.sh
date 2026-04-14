@@ -11,8 +11,14 @@ NGINX_HTTP_PORT="${NGINX_HTTP_PORT:-80}"
 NGINX_HTTPS_PORT="${NGINX_HTTPS_PORT:-443}"
 NGINX_SERVER_NAME="${NGINX_SERVER_NAME:-ai.acik.com}"
 NGINX_TLS_ENABLED="${NGINX_TLS_ENABLED:-true}"
-NGINX_TLS_CERT_PATH="${NGINX_TLS_CERT_PATH:-/home/halil/platform/state/vault/tls/tls.crt}"
-NGINX_TLS_KEY_PATH="${NGINX_TLS_KEY_PATH:-/home/halil/platform/state/vault/tls/tls.key}"
+# Default TLS paths point to the public cert directory for ${NGINX_SERVER_NAME}.
+# NOTE: Previously defaulted to /state/vault/tls (Vault's dev self-signed cert),
+# which caused NET::ERR_CERT_AUTHORITY_INVALID in production on 2026-04-14.
+# Root cause: nginx mount shared host path with Vault's dev TLS dir; on Vault
+# reinit the tls.crt/tls.key files were overwritten with a CN=vault self-signed
+# cert. Fix: pin to public cert directory + pre-flight guard below.
+NGINX_TLS_CERT_PATH="${NGINX_TLS_CERT_PATH:-/home/halil/platform/tls/ai.acik.com/fullchain.pem}"
+NGINX_TLS_KEY_PATH="${NGINX_TLS_KEY_PATH:-/home/halil/platform/tls/ai.acik.com/privkey.pem}"
 # Host network mode: use 127.0.0.1 with host-side ports (Docker DNS unavailable)
 NGINX_GATEWAY_UPSTREAM="${NGINX_GATEWAY_UPSTREAM:-http://127.0.0.1:8080}"
 # Default to host port (8081) since nginx runs --network host and can't resolve Docker DNS.
@@ -78,6 +84,59 @@ main() {
       if [[ ! -f "${NGINX_TLS_KEY_PATH}" ]]; then
         echo "[error] TLS key not found: ${NGINX_TLS_KEY_PATH}" >&2
         exit 1
+      fi
+
+      # Pre-flight cert guard — prevents 2026-04-14 regression (Vault dev cert mount)
+      # If openssl is available on the host, verify cert subject/SAN covers NGINX_SERVER_NAME
+      # and that the private key matches the cert. Skip with NGINX_SKIP_CERT_GUARD=true for
+      # legitimate wildcard/alternate-domain edge cases; never set this silently.
+      if [[ "${NGINX_SKIP_CERT_GUARD:-false}" != "true" ]] && command -v openssl >/dev/null 2>&1; then
+        local cert_subject cert_san server_base cn_match san_match key_md5 cert_md5
+        cert_subject="$(openssl x509 -in "${NGINX_TLS_CERT_PATH}" -noout -subject 2>/dev/null || true)"
+        cert_san="$(openssl x509 -in "${NGINX_TLS_CERT_PATH}" -noout -ext subjectAltName 2>/dev/null || true)"
+
+        # Guard 1: reject self-signed CN=vault (root cause of 2026-04-14 incident)
+        if printf '%s' "${cert_subject}" | grep -qE 'CN\s*=\s*vault$'; then
+          echo "[error] TLS certificate is Vault's self-signed dev cert (CN=vault)." >&2
+          echo "[error] This is the 2026-04-14 regression. Check NGINX_TLS_CERT_PATH:" >&2
+          echo "[error]   current = ${NGINX_TLS_CERT_PATH}" >&2
+          echo "[error]   expected = /home/halil/platform/tls/${NGINX_SERVER_NAME}/fullchain.pem" >&2
+          exit 1
+        fi
+
+        # Guard 2: cert CN or SAN must cover server_name (supports wildcards)
+        server_base="${NGINX_SERVER_NAME#*.}"
+        cn_match=0
+        san_match=0
+        if printf '%s' "${cert_subject}" | grep -qE "CN\s*=\s*(\*\.)?${server_base//./\\.}(\b|$|/)" ; then
+          cn_match=1
+        fi
+        if printf '%s' "${cert_subject}" | grep -qE "CN\s*=\s*${NGINX_SERVER_NAME//./\\.}(\b|$|/)" ; then
+          cn_match=1
+        fi
+        if printf '%s' "${cert_san}" | grep -qE "DNS:(\*\.)?${server_base//./\\.}(\b|,|$)" ; then
+          san_match=1
+        fi
+        if printf '%s' "${cert_san}" | grep -qE "DNS:${NGINX_SERVER_NAME//./\\.}(\b|,|$)" ; then
+          san_match=1
+        fi
+        if [[ "${cn_match}" -eq 0 && "${san_match}" -eq 0 ]]; then
+          echo "[error] TLS cert does not cover server_name=${NGINX_SERVER_NAME}" >&2
+          echo "[error]   cert subject: ${cert_subject}" >&2
+          echo "[error]   cert SAN    : ${cert_san}" >&2
+          echo "[error] Set NGINX_SKIP_CERT_GUARD=true to override (not recommended)." >&2
+          exit 1
+        fi
+
+        # Guard 3: private key must match cert (detects swapped/stale pair)
+        cert_md5="$(openssl x509 -noout -modulus -in "${NGINX_TLS_CERT_PATH}" 2>/dev/null | openssl md5 | awk '{print $NF}')"
+        key_md5="$(openssl rsa -noout -modulus -in "${NGINX_TLS_KEY_PATH}" 2>/dev/null | openssl md5 | awk '{print $NF}')"
+        if [[ -n "${cert_md5}" && -n "${key_md5}" && "${cert_md5}" != "${key_md5}" ]]; then
+          echo "[error] TLS cert/key modulus mismatch — wrong key for this cert." >&2
+          echo "[error]   cert path: ${NGINX_TLS_CERT_PATH}" >&2
+          echo "[error]   key  path: ${NGINX_TLS_KEY_PATH}" >&2
+          exit 1
+        fi
       fi
     fi
 
