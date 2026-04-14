@@ -93,6 +93,16 @@ public class AuthorizationControllerV1 {
     @GetMapping("/me")
     @Transactional(readOnly = true)
     public ResponseEntity<AuthzMeResponseDto> getMe(@AuthenticationPrincipal Jwt jwt) {
+        try {
+            return doGetMe(jwt);
+        } catch (RuntimeException ex) {
+            // B2 (Rev 19): All-paths 503 — covers dev branch + JWT branch
+            log.error("Authz /me beklenmeyen hata; 503 dönülüyor (B2: JWT fallback kaldırıldı). cause={}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
+        }
+    }
+
+    private ResponseEntity<AuthzMeResponseDto> doGetMe(Jwt jwt) {
         if (jwt == null) {
             // D-103: Local/dev profile fallback — return superAdmin response
             // when JWT is not available (SecurityConfigLocal permitAll mode)
@@ -113,10 +123,9 @@ public class AuthorizationControllerV1 {
             devDto.setAuthzVersion(authzVersionService != null ? authzVersionService.getCurrentVersion() : 0L);
             return ResponseEntity.ok(devDto);
         }
-        try {
-            AuthzMeResponseDto dto = new AuthzMeResponseDto();
-            var resolvedUser = resolveAuthenticatedUser(jwt);
-            dto.setUserId(resolvedUser.responseUserId());
+        AuthzMeResponseDto dto = new AuthzMeResponseDto();
+        var resolvedUser = resolveAuthenticatedUser(jwt);
+        dto.setUserId(resolvedUser.responseUserId());
 
             Long numericUserId = resolvedUser.numericUserId();
 
@@ -146,15 +155,7 @@ public class AuthorizationControllerV1 {
 
             applyFrontendCompatibilityFallback(dto, jwt);
             dto.setAuthzVersion(authzVersionService.getCurrentVersion());
-            return ResponseEntity.ok(dto);
-        } catch (RuntimeException ex) {
-            // B2 (Rev 19): Return 503 instead of 200+empty fallback body.
-            // Prevents variant-service from caching empty permissions for 5 minutes (sticky 403).
-            // Clients should retry or show degraded state, not treat empty body as success.
-            log.error("Authz /me beklenmeyen hata; 503 döndürülecek (B2: JWT fallback kaldırıldı). cause={}", ex.getMessage(), ex);
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                    .body(null);
-        }
+        return ResponseEntity.ok(dto);
     }
 
     // ---- Object-level authorization checks (B1: moved from core-data-service) ----
