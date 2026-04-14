@@ -533,6 +533,194 @@ print("[wt] closed: " + data["path"])
 PY
 }
 
+# ─── cmd: init ───────────────────────────────────────────────────────────────
+# Idempotent bootstrap: git hooks, reflog retention, gitignore entry, hooksPath
+# normalization across linked worktrees. Safe to re-run any time.
+cmd_init() {
+  local apply=1
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --dry-run) apply=0; shift;;
+      -h|--help) cat <<EOF
+wt init [--dry-run]
+
+Idempotent bootstrap of multi-agent worktree infrastructure:
+  1. Install canonical git hooks (scripts/setup_local_git_hooks.sh)
+  2. Normalize core.hooksPath across ALL linked worktrees (absolute path)
+  3. Set reflog retention: gc.reflogExpire=180.days,
+     gc.reflogExpireUnreachable=180.days
+  4. Ensure .worktree-registry.json is in .git/info/exclude
+  5. Print wt status
+EOF
+        return 0;;
+      *) die "unknown init flag: $1";;
+    esac
+  done
+
+  local hooks_dir="${CANONICAL_ROOT}/.githooks"
+  local exclude_file="${GIT_COMMON_DIR}/info/exclude"
+
+  # 1. Install hooks (canonical)
+  if [[ "${apply}" == "1" ]]; then
+    if [[ -f "${CANONICAL_ROOT}/scripts/setup_local_git_hooks.sh" ]]; then
+      info "installing git hooks (canonical)"
+      ROOT_DIR="${CANONICAL_ROOT}" bash "${CANONICAL_ROOT}/scripts/setup_local_git_hooks.sh" | sed 's/^/    /'
+    else
+      info "skip hook install: scripts/setup_local_git_hooks.sh not found"
+    fi
+  else
+    info "[dry-run] would install hooks via scripts/setup_local_git_hooks.sh"
+  fi
+
+  # 2. Normalize hooksPath across all worktrees (absolute path so linked
+  #    worktrees pick it up via config.worktree without relative-path confusion)
+  local wt_count=0
+  if [[ -d "${GIT_COMMON_DIR}/worktrees" ]]; then
+    for wt_dir in "${GIT_COMMON_DIR}"/worktrees/*/; do
+      [[ -d "${wt_dir}" ]] || continue
+      local wt_gitdir
+      wt_gitdir="$(cat "${wt_dir}gitdir" 2>/dev/null | xargs dirname 2>/dev/null || true)"
+      if [[ -n "${wt_gitdir}" && -d "${wt_gitdir}" ]]; then
+        if [[ "${apply}" == "1" ]]; then
+          git -C "${wt_gitdir}" config --worktree core.hooksPath "${hooks_dir}" 2>/dev/null || true
+        fi
+        wt_count=$((wt_count+1))
+      fi
+    done
+  fi
+  info "$([[ "${apply}" == "1" ]] && echo "normalized" || echo "[dry-run] would normalize") hooksPath on ${wt_count} linked worktree(s) → ${hooks_dir}"
+
+  # 3. Reflog retention (canonical config)
+  if [[ "${apply}" == "1" ]]; then
+    git -C "${CANONICAL_ROOT}" config gc.reflogExpire "180.days"
+    git -C "${CANONICAL_ROOT}" config gc.reflogExpireUnreachable "180.days"
+    info "reflog retention: 180.days (gc.reflogExpire + reflogExpireUnreachable)"
+  else
+    info "[dry-run] would set gc.reflogExpire=180.days"
+  fi
+
+  # 4. Gitignore/exclude for .worktree-registry.json (local, cross-worktree)
+  if ! grep -qxF '.worktree-registry.json' "${exclude_file}" 2>/dev/null; then
+    if [[ "${apply}" == "1" ]]; then
+      echo '.worktree-registry.json' >> "${exclude_file}"
+      info "added .worktree-registry.json to ${exclude_file}"
+    else
+      info "[dry-run] would append .worktree-registry.json to ${exclude_file}"
+    fi
+  else
+    info ".worktree-registry.json already excluded"
+  fi
+
+  echo
+  if [[ "${apply}" == "1" ]]; then
+    info "init complete — run 'wt status' to see state"
+  else
+    info "init dry-run — re-run without --dry-run to apply"
+  fi
+}
+
+# ─── cmd: gc ─────────────────────────────────────────────────────────────────
+# Prune old safety refs from refs/wt-snap/ namespace. Default: dry-run, >30 days.
+cmd_gc() {
+  local days=30 apply=0 keep_recent=3
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --apply) apply=1; shift;;
+      --days) days="$2"; shift 2;;
+      --keep-recent) keep_recent="$2"; shift 2;;
+      -h|--help) cat <<EOF
+wt gc [--apply] [--days N] [--keep-recent N]
+
+Prune old safety refs under refs/wt-snap/.
+
+Defaults:
+  --days 30        Delete refs older than 30 days (by timestamp in ref name).
+  --keep-recent 3  Always keep the 3 most recent refs per branch, regardless
+                   of age (insurance against deleting the only remaining ref).
+  (no --apply)     Dry-run: print what would be deleted. Pass --apply to act.
+EOF
+        return 0;;
+      *) die "unknown gc flag: $1";;
+    esac
+  done
+
+  python3 - "${CANONICAL_ROOT}" "${days}" "${keep_recent}" "${apply}" <<'PY'
+import json, re, subprocess, sys
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+canonical = Path(sys.argv[1])
+days_threshold = int(sys.argv[2])
+keep_recent = int(sys.argv[3])
+apply = sys.argv[4] == "1"
+
+now = datetime.now(timezone.utc).replace(microsecond=0)
+cutoff = now - timedelta(days=days_threshold)
+ts_re = re.compile(r"(\d{8}T\d{6}Z)$")
+
+def git(*args):
+    return subprocess.check_output(["git", "-C", str(canonical), *args], text=True).strip()
+
+raw = git("for-each-ref", "refs/wt-snap/", "--format=%(refname)\t%(objectname:short)")
+if not raw.strip():
+    print("[wt gc] no safety refs under refs/wt-snap/")
+    sys.exit(0)
+
+# Group by branch (path between refs/wt-snap/ and timestamp)
+by_branch = {}
+no_ts = []
+for line in raw.splitlines():
+    ref, short_sha = line.split("\t", 1)
+    m = ts_re.search(ref)
+    if not m:
+        no_ts.append((ref, short_sha))
+        continue
+    ts_str = m.group(1)
+    try:
+        ts = datetime.strptime(ts_str, "%Y%m%dT%H%M%SZ").replace(tzinfo=timezone.utc)
+    except Exception:
+        no_ts.append((ref, short_sha))
+        continue
+    # "branch" here is everything between refs/wt-snap/ and the trailing timestamp segment
+    prefix = ref[len("refs/wt-snap/"):]
+    # Drop the last path segment (which contains the timestamp)
+    branch_key = "/".join(prefix.split("/")[:-1]) or prefix
+    by_branch.setdefault(branch_key, []).append((ts, ref, short_sha))
+
+to_delete = []
+to_keep = []
+for branch, entries in sorted(by_branch.items()):
+    # Sort newest first, always keep top `keep_recent`
+    entries.sort(key=lambda e: e[0], reverse=True)
+    kept = entries[:keep_recent]
+    candidates = entries[keep_recent:]
+    for ts, ref, sha in candidates:
+        if ts < cutoff:
+            to_delete.append((branch, ts, ref, sha))
+        else:
+            kept.append((ts, ref, sha))
+    for ts, ref, sha in kept:
+        to_keep.append((branch, ts, ref, sha))
+
+print(f"[wt gc] cutoff: {cutoff.isoformat()} (>{days_threshold} days old)")
+print(f"[wt gc] keep_recent per branch: {keep_recent}")
+print(f"[wt gc] candidates for delete: {len(to_delete)}")
+print(f"[wt gc] preserved: {len(to_keep)}")
+if no_ts:
+    print(f"[wt gc] preserved (no parseable timestamp): {len(no_ts)}")
+
+for branch, ts, ref, sha in to_delete:
+    action = "DELETE" if apply else "would-delete"
+    print(f"  [{action}] {ref} ({sha}) {ts.isoformat()}")
+    if apply:
+        subprocess.run(["git", "-C", str(canonical), "update-ref", "-d", ref], check=True)
+
+if not apply and to_delete:
+    print()
+    print("[wt gc] dry-run — re-run with --apply to delete")
+PY
+}
+
 # ─── cmd: help ───────────────────────────────────────────────────────────────
 cmd_help() {
   cat <<EOF
@@ -542,11 +730,13 @@ USAGE
   wt <command> [args]
 
 COMMANDS
+  init             Idempotent bootstrap (hooks + reflog retention + exclude)
   new <name>       Create a new worktree from origin/main
   list             Show all worktrees (registry match)
   status [--json]  Rich status: dirty, unpushed, ahead/behind, risks
   sync             Rebase current worktree on origin/main + push
   close            Close current worktree (with safety ref)
+  gc               Prune old safety refs (dry-run by default)
   help             This text
 
 ENVIRONMENT
@@ -564,11 +754,13 @@ fi
 
 sub="$1"; shift
 case "${sub}" in
+  init)    cmd_init "$@";;
   new)     cmd_new "$@";;
   list)    cmd_list "$@";;
   status)  cmd_status "$@";;
   sync)    cmd_sync "$@";;
   close)   cmd_close "$@";;
+  gc)      cmd_gc "$@";;
   help|-h|--help) cmd_help;;
   *) echo "[wt] unknown command: ${sub}" >&2; cmd_help >&2; exit 2;;
 esac

@@ -79,6 +79,7 @@ Rules:
 ## 0d. Multi-Agent Git Koordinasyonu (MUST)
 
 Policy: `policies/policy_multi_agent_coordination.v1.json` (orchestrator SSOT)
+Rehber / runbook: `docs/OPERATIONS/MULTI-AGENT-WORKFLOW.v1.md` (günlük akış + 6 senaryo)
 
 ### 4 Temel Kural
 
