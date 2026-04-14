@@ -4,18 +4,20 @@ Date: 2026-04-11
 Status: FROZEN (Dalga 4 ön koşulu — bu envanterdeki itemler temizlenecek)
 Ref: CNS-20260411-003 Q4, zanzibar-master-plan.md rev 6
 
-## 1. PermissionServiceClient (3 servis, 10 referans)
+## 1. PermissionServiceClient (2 servis, 9 referans — Codex F3 sonrası güncel)
 
 | Servis | Dosya | Satır | Tür |
 |--------|-------|-------|-----|
-| auth-service | permission/PermissionServiceClient.java:30 | Class tanımı | KAYNAK |
+| auth-service | permission/PermissionServiceClient.java:30 | Class tanımı (HTTP → /authz/me migrated) | KAYNAK |
 | auth-service | service/AuthService.java:22,41,52 | Import + field + constructor | TÜKETİCİ |
 | auth-service | service/AuthServiceTest.java:7,51 | Test mock | TEST |
 | auth-service | service/AuthServiceSessionAuditTest.java:39,58 | Test mock | TEST |
-| user-service | permission/PermissionServiceClient.java:21 | Class tanımı (OpenFGA wrapper) | KAYNAK |
-| report-service | authz/PermissionServiceClient.java:24 | Class tanımı (WebClient) | KAYNAK |
+| ~~user-service~~ | ~~permission/PermissionServiceClient.java~~ | **SİLİNDİ (CNS-20260414-003 F3: dead code, 0 consumer)** | — |
+| report-service | authz/PermissionServiceClient.java:24 | Class tanımı (aktif WebClient, 3 controller tüketiyor) | KAYNAK |
 
-**Eylem:** PR6-prereq — auth-service PermissionServiceClient legacy endpoint migration
+**Eylem:**
+- PR6-prereq (post-canary, CNS-20260414-003 Q1): auth-service scope — `AuthService.java:83` çağrısı `Set.of()` kompat ile kısa devre + class stub (breaking drop yerine). Detay: JWT claim + downstream consumer temizliği PR6b'ye, report-service cleanup PR6c'ye ayrıldı.
+- ~~user-service~~: Codex F3'te doğrulandı — class tamamen dead code (Spring @Component register ediliyor ama hiçbir yerden inject edilmiyor, test yok). **SİLİNDİ — ayrı PR gerekmedi.**
 
 ## 2. PermissionCodes (1 kaynak, 37 tüketici referans)
 
@@ -86,23 +88,36 @@ Ref: CNS-20260411-003 Q4, zanzibar-master-plan.md rev 6
 
 ## ÖZET
 
+Durum 2026-04-14 (Codex F3 uygulamasından sonra):
+
 | Kategori | Kaynak | Tüketici | Test | Toplam |
 |----------|--------|----------|------|--------|
-| PermissionServiceClient | 3 | 3 | 4 | 10 |
+| PermissionServiceClient | 2 | 3 | 4 | 9 |
 | PermissionCodes | 1 | 27 | 13 | 41 |
 | /api/permissions | 1 | 1 | 0 | 2 |
 | useAuthorization | 3 | 2 | 2 | 7 |
 | Deprecated controllers | 2 | 0 | 0 | 2 |
 | Deprecated enums | 2 | 0 | 0 | 2 |
 | ConstantAuthzVersionProvider | 1 | 0 | 0 | 1 |
-| **TOPLAM** | **13** | **33** | **19** | **65** |
+| **TOPLAM** | **12** | **33** | **19** | **64** |
+
+Not: PR6-prereq (auth-service) uygulandıktan sonra beklenen sayım: Kaynak 1, Tüketici 2, Test 2, Toplam 5. Codex F2 projeksiyonu: `65→57` frozen tablo baz alınmıştı; güncel baz (user-service silindikten sonra) için hedef `64→57` olarak kalıyor.
 
 ## PR MAPPING
 
-| PR | Temizlenecek Kategoriler | Dosya Sayısı |
-|----|-------------------------|-------------|
-| PR5 | (bağımsız — propagateRoleChange) | 0 legacy |
-| PR6-prereq | PermissionServiceClient (auth-service) | ~6 dosya |
-| PR7 | useAuthorization (mfe-users) | ~5 dosya |
-| PR6 | PermissionCodes + deprecated controllers + enums + ConstantAuthzVersionProvider | ~20 dosya |
-| PR8 | (bağımsız — Grafana) | 0 legacy |
+Güncel (CNS-20260414-003 sonrası, FAZ B revize zinciri):
+
+| PR | Temizlenecek Kategoriler | Dosya Sayısı | Durum |
+|----|-------------------------|-------------|-------|
+| PR5 | (bağımsız — propagateRoleChange) | 0 legacy | Done |
+| — | user-service PermissionServiceClient (dead code F3) | 1 | **Done (this PR)** |
+| PR6a | auth-service PermissionServiceClient — `Set.of()` kompat | ~6 dosya | Post-canary |
+| PR6b | JWT `permissions` claim + downstream consumer (user/variant) | ~4 dosya | Post-canary |
+| PR6c | report-service PermissionServiceClient → OpenFgaAuthzService | ~4 dosya | Post-canary |
+| PR7 | useAuthorization (mfe-users) | ~5 dosya | Bağımsız |
+| PR6 | PermissionCodes + deprecated controllers + enums + ConstantAuthzVersionProvider | ~20 dosya | PR6a-c sonrası |
+| PR8 | (bağımsız — Grafana) | 0 legacy | Bağımsız |
+
+**Refs:**
+- CNS-20260414-003: scope bölme gerekçesi (Q4, F3)
+- Codex verdict: FAZ B post-canary (Q1) — canary 48h monitor penceresinde auth-service refactor sinyali kirletmez
