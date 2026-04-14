@@ -92,8 +92,8 @@ Not: Aşağıdaki başlıklar ve sıralama **zorunludur**.
 7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
-- Memory: `feedback_infra_stability.md` (güncel)
-- Deploy infra: `deploy/docker-compose.prod.yml`, `.github/workflows/deploy-backend.yml`
-- Vault fix: PR #377, RB-vault-dev-path-migration.md
-- Zanzibar canary: `.claude/plans/zanzibar-master-plan.md`
+- Deploy infra kaynakları: `deploy/docker-compose.prod.yml`, `.github/workflows/deploy-backend.yml`
+- Vault path migration: PR #377, `docs/04-operations/RUNBOOKS/RB-vault-dev-path-migration.md`
+- Zanzibar canary master plan: `.claude/plans/zanzibar-master-plan.md`
 - Decision registry: `decisions/topics/security-local-dev.v1.json`
+- User preference (2026-04-14): staging = prod-like (agent memory; repo dışı)
