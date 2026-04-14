@@ -63,12 +63,32 @@ for svc in postgres-db vault keycloak openfga discovery-server permission-servic
 done
 
 # web-nginx: standalone container (no compose-managed -1 suffix)
+# 2026-04-14: deploy'da nginx'in silinebildiği (orphan cleanup veya compose
+# 'down' side-effect) tespit edildi → /ai.acik.com down. Auto-restart ekli.
 nginx_state=$(docker inspect --format '{{.State.Status}}' platform-web-nginx 2>/dev/null || echo "missing")
 if [[ "$nginx_state" == "running" ]]; then
   echo "  OK: web-nginx (running, standalone)"
 else
-  echo "  FAIL: web-nginx ($nginx_state)"
-  FAILURES=$((FAILURES + 1))
+  echo "  WARN: web-nginx ($nginx_state) — auto-restart attempt"
+  nginx_script="/home/halil/platform/repo/deploy/ubuntu/run-frontend-nginx-container.sh"
+  if [[ -x "$nginx_script" ]]; then
+    if bash "$nginx_script" >/tmp/nginx-restore.log 2>&1; then
+      sleep 3
+      nginx_state=$(docker inspect --format '{{.State.Status}}' platform-web-nginx 2>/dev/null || echo "missing")
+      if [[ "$nginx_state" == "running" ]]; then
+        echo "  OK: web-nginx recovered after auto-restart"
+      else
+        echo "  FAIL: web-nginx auto-restart failed (state=$nginx_state, log: /tmp/nginx-restore.log)"
+        FAILURES=$((FAILURES + 1))
+      fi
+    else
+      echo "  FAIL: web-nginx restore script errored (log: /tmp/nginx-restore.log)"
+      FAILURES=$((FAILURES + 1))
+    fi
+  else
+    echo "  FAIL: web-nginx missing + restore script not found at $nginx_script"
+    FAILURES=$((FAILURES + 1))
+  fi
 fi
 
 # ---- 4. OpenFGA health ----
