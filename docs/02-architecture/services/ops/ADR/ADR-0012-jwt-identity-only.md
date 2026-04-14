@@ -43,7 +43,8 @@ Request → JWT'den userId cikart → OpenFGA check(userId, relation, object) �
 
 **Negative:**
 - Her request'te OpenFGA cagrisi (cache ile mitigate: 30-60s TTL)
-- Permission-service SPOF riski → circuit breaker + fallback
+- OpenFGA SPOF riski → circuit breaker + cached fallback (her servis `OpenFgaAuthzService` SDK ile direct; D-008/C-008)
+- Frontend hub hattı (permission-service:8090) için ayrı dayaniklilik: outbox + authzVersion caching
 - Migration doneminde eski/yeni sistemler paralel calisacak
 
 ## Migration Plan

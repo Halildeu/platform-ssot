@@ -1,8 +1,14 @@
-# TB-11: Permission-Service Legacy Reference Inventory (FROZEN)
+# TB-11: Legacy References TO Permission-Service — Inventory (FROZEN)
 
 Date: 2026-04-11
 Status: FROZEN (Dalga 4 ön koşulu — bu envanterdeki itemler temizlenecek)
 Ref: CNS-20260411-003 Q4, zanzibar-master-plan.md rev 6
+
+> **Kapsam netliği:** Bu envanter, **permission-service'e bağlı eski client'ları** (auth-service
+> `PermissionServiceClient`, `PermissionCodes` tüketicileri, legacy `/api/permissions` route) listeler.
+> Permission-service'in kendisi **KALDIRILMAZ** — OpenFGA Hub (D-003/D-008 FINAL, C-005 HARD CONSTRAINT).
+> Temizlenecek olan, servislerin permission-service'e yaptığı **HTTP check çağrıları**
+> (D-008/C-008 ile OpenFGA SDK'ya taşınır), permission-service'in kendisi değildir.
 
 ## 1. PermissionServiceClient (2 servis, 9 referans — Codex F3 sonrası güncel)
 

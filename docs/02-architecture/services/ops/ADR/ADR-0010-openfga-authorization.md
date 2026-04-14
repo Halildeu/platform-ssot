@@ -55,11 +55,12 @@ Sorunlar:
 
 ## D-003 DCP: TRANSFORMED (2026-04-11)
 
-Original D-002 "permission-service REMOVED" was changed to "TRANSFORMED":
+Original D-003 "permission-service REMOVED" label was aspirational and changed to "TRANSFORMED":
 - Permission-service IS the OpenFGA hub (TupleSyncService, AuthzVersionService, roles CRUD, /authz/me)
 - Docker Compose: service remains active (not legacy profile)
 - Gateway: /authz routes point TO permission-service
 - Ref: CNS-20260411-001 Codex consensus, PR #325
+- Note: D-002 governs Keycloak identity-only JWT (unrelated); permission-service transformation is D-003. See also ADR-0013 (D-008 formalization).
 
 ## Links
 
