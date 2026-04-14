@@ -17,10 +17,12 @@ ile çalıştığını görünür kılar.
 | `api-gateway` | `variant-service` | Spring Cloud Gateway route | `lb://variant-service` | kullanıcı JWT doğrulaması + forward | variants, themes, registry |
 | `api-gateway` | `core-data-service` | Spring Cloud Gateway route | `lb://core-data-service` | kullanıcı JWT doğrulaması + forward | `/api/v1/companies/**` |
 | `auth-service` | `user-service` | REST client | Eureka + load balancer | service token / internal auth | `WebClient` + ortak timeout |
-| `auth-service` | `permission-service` | REST client | Eureka + load balancer | service token / internal auth | `WebClient` + ortak timeout |
-| `user-service` | `permission-service` | REST client | Eureka + load balancer | service token / internal auth | `WebClient` + ortak timeout |
+| `auth-service` | `permission-service` | REST client (legacy, TB-11) | Eureka + load balancer | service token / internal auth | `WebClient` — PR6a ile sökülecek (C-008) |
+| `user-service` | `permission-service` | REST client (legacy, TB-11) | Eureka + load balancer | service token / internal auth | `WebClient` — PR6 ile sökülecek (C-008) |
 | `user-service` | `auth-service` | REST client | direct/service URL | service token minting | `/oauth2/token` çağrısı `WebClient` ile yapılır |
-| `variant-service` | `permission-service` | REST client | Eureka + load balancer | kullanıcı/scope authz doğrulama | şu an `WebClient` |
+| `variant-service` | `permission-service` | REST client (legacy, TB-11) | Eureka + load balancer | kullanıcı/scope authz doğrulama | `WebClient` — PR6 ile OpenFGA SDK'ya taşınacak (C-008) |
+| Tüm backend servisleri | `OpenFGA` (port 4000) | OpenFGA SDK | Hayır | `OpenFgaAuthzService` (common-auth) | **Canonical check/listObjects yolu** (D-008/C-008). permission-service'e HTTP **YOK**. |
+| `permission-service` | `OpenFGA` | OpenFGA SDK | Hayır | `OpenFgaAuthzService` + TupleSync | Tuple write/sync hub (D-003/D-008) |
 | Backend servisleri | `discovery-server` | Eureka client | Hayır | servis kaydı | runtime ayağa kalkış bağımlılığı |
 | Backend servisleri | `postgres-db` | JDBC | Hayır | DB credential | servis bazlı schema/table sahipliği |
 | Backend servisleri | Keycloak | JWKS / issuer validation | Hayır | kullanıcı JWT doğrulama | resource server katmanı |
@@ -31,6 +33,11 @@ ile çalıştığını görünür kılar.
 - Edge hattı net: frontend yalnız gateway ile konuşur.
 - Uygulama kodu düzeyinde servisler arası iç çağrı standardı `WebClient` olarak birleşti.
 - `user-service -> auth-service` token mint hattı mutlak URL ile, diğer iç çağrılar discovery/load-balanced akışla çalışır.
+- **permission-service TRANSFORMED (D-003/D-008 FINAL):** OpenFGA Hub rolünü üstlenir
+  (TupleSync + AuthzVersion + `/authz/me`/`/check`/`/explain` + rol CRUD). Kaldırılmaz (C-005).
+- **C-008 canonical yol:** Backend servisleri `check`/`listObjects` için `OpenFgaAuthzService`
+  (common-auth) kullanır — permission-service'e HTTP çağrısı YOK. Matriste "legacy, TB-11"
+  işaretli satırlar PR6a/6b/6c ile sökülecek.
 
 ## Sonuç
 
