@@ -71,7 +71,9 @@ if [[ "$nginx_state" == "running" ]]; then
 else
   echo "  WARN: web-nginx ($nginx_state) — auto-restart attempt"
   nginx_script="/home/halil/platform/repo/deploy/ubuntu/run-frontend-nginx-container.sh"
-  if [[ -x "$nginx_script" ]]; then
+  # -f (file exists) instead of -x: repo files may not have executable bit
+  # set after clone. We invoke via `bash "$script"` which doesn't need it.
+  if [[ -f "$nginx_script" ]]; then
     if bash "$nginx_script" >/tmp/nginx-restore.log 2>&1; then
       sleep 3
       nginx_state=$(docker inspect --format '{{.State.Status}}' platform-web-nginx 2>/dev/null || echo "missing")
