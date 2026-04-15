@@ -43,7 +43,13 @@ jobs:
           python3 scripts/check_no_hardcoded_theme_styles.py
 
       - name: Dependency audit
-        run: pnpm audit --audit-level=high
+        # pnpm audit legacy endpoint (registry.npmjs.org/-/npm/v1/security/audits)
+        # 2026-03'te retired → 410. Mevcut pnpm version bulk endpoint'i
+        # desteklemiyor → her PR web-lint kirmiziya dusuyor.
+        # Kalici cozum: pnpm 9+ upgrade. Bu PR scope'u disi; security gate
+        # OSV scan + gate-secrets + gate-policy ile saglaniyor.
+        # Follow-up: handoff 20260415-live-recovery §3.1 A.
+        run: pnpm audit --audit-level=high || true
         working-directory: web
 
       - uses: actions/cache@v4
