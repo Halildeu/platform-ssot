@@ -1,10 +1,55 @@
-# Zanzibar Master Plan — Rev 21 (Dalga 2 Done + Stage 1 Dry-Run + STORY-0319 Unlock)
+# Zanzibar Master Plan — Rev 22 (Dalga 2 Prod-ready + Dalga 3 PR6a/b/c + Synthetic Canary)
 
-**Tarih:** 2026-04-15
-**Kaynak:** Rev 20 + CNS-20260415-002 (158K token, gpt-5.x) + bugunku P0 incident recovery
-**Base:** main @ 5241b6e4 (PR #394 merged)
-**Uzlasi:** Dalga 2 ana UI tamam (PR #394); Dalga 1 Stage 1 dry-run ilan edildi;
-STORY-0319 Stage 2 icin kritik on kosul olarak netlestirildi; 3 P0 incident fix merged.
+**Tarih:** 2026-04-15 (aksam 20:15)
+**Kaynak:** Rev 21 + kullanici direktifi "her gun 48h baslamiyor — synthetic canary
+secimi" + gercekci zaman yonetimi
+**Base:** main @ 7b43b87a (PR #396 merged — Dalga 2 kalan)
+**Uzlasi:** Dalga 1 canary tanimi degisti (fiziksel 48h → synthetic validation).
+Dalga 2 prod-ready. Dalga 3 PR6a/b/c tamam (PR6c partial). STORY-0319
+Vault prod seal alt-story olarak ayrilacak.
+
+---
+
+## 0. REV 21 -> REV 22 DEGISIKLIK OZETI
+
+### Kullanici direktifi (2026-04-15 aksam)
+
+> "4 gun oncesi de 48 saat basladi dedin, dunde dedin, her gun 48 saat basliyor
+> neden anlamadim" — "staging'de kullanici yok ki sisteme giren".
+
+Dogru tespit: Master plan rev 20-21'deki "Dalga 1 Stage 2: 2-4 gun canary pencere",
+"Stage 3: 48h stabil" kriterleri **staging'de gercek trafik olmadigi icin anlamsiz**.
+Her gun "baslat" denebiliyor, asla tamamlaniyor cunku gercek trafik sinyali gelmiyor.
+
+### Dalga 1 Revize Tanim (FINAL)
+
+| Asama | Eski (rev 20-21) | Yeni (rev 22) |
+|-------|------------------|---------------|
+| Stage 1 | Compose default ON, container healthy | **Aynen** (dry-run 2026-04-15 ✅) |
+| Stage 2 | 2-4 gun fiziksel canary | **Synthetic canary**: k6 + restricted-probe ile ~30-60dk sinyal uretimi (deny rate, CB state, latency, outbox) |
+| Stage 3 | 48h stabil full rollout | **Audit checklist PASS**: doctor-zanzibar full + smoke workflow yesil + restricted probe PASS + STORY-0319 profile dogrulanir |
+
+"48h" kavrami fiziksel zaman yerine **doctrine: sinyal kalitesi + checklist**.
+Prod ortaminda gercek trafikle 48h yeniden anlamli olur; staging icin synthetic
+yeterli.
+
+### Bu Session'da Tamamlananlar (rev 21 → rev 22)
+
+| # | PR | Kapsam | Durum |
+|---|----|--------|-------|
+| 1 | #395 | master plan rev 21 + handoff day 2 | ✅ merged |
+| 2 | #396 | Dalga 2 kalan: ZanzibarGate disabled tooltip + Modal Vitest test | ✅ merged (7b43b87a) |
+| 3 | #397 | PR6a: auth-service permissions=Set.of() + admin fallback removed | ▶ open (rebase sonrasi CI) |
+| 4 | #398 | PR6b: JwtTokenProvider 'permissions' claim kaldirildi | ▶ open |
+| 5 | #399 | PR6c: report-service PermissionServiceClient @Deprecated (partial) | ▶ open |
+
+PR6c kisminda: consumer-side refactor (DashboardController/ReportController/
+ReportExportController icinde /authz/me → OpenFgaAuthzService.check() migration)
+ayri story olarak ertelendi — behavior-preserving regression gerektirir.
+
+---
+
+## 0.5. REV 20 -> REV 21 DEGISIKLIK OZETI (arsiv)
 
 ---
 
@@ -162,17 +207,26 @@ kesinlesti. Dalga 0 (Canary Readiness) eklendi.
 
 ---
 
-### DALGA 1: Canary Rollout (3-5 gun)
+### DALGA 1: Canary Rollout (Rev 22 synthetic)
 
-**On kosul:** Dalga 0 tamamlandi (✅). Stage 2+ icin STORY-0319 (staging prod-like profile) ZORUNLU.
+**On kosul:** Dalga 0 tamamlandi (✅). Stage 2+ icin gercek synthetic sinyali
+uretilmesi gerekli (staging'de kullanici yok → k6 + restricted-probe scheduled).
+STORY-0319 Stage 3 audit checklist item; Vault prod seal alt-story'e ayrilir.
 
-**Canary Asamalari (RB-zanzibar-canary runbook):**
+**Canary Asamalari (RB-zanzibar-canary runbook rev 22 update bekler):**
 
-| Asama | Gun | Durum | Bayraklar | Basari Kriteri |
-|-------|-----|-------|-----------|----------------|
-| Stage 1: Deploy (dry-run) | 2026-04-15 | ✅ **TAMAM** | Compose default (true) | 22 container healthy, zanzibar endpoints 200 |
-| Stage 2: Canary | STORY-0319 sonrasi | ⏸ Blocked | ON (admin + restricted) | p95 <50ms, error <0.5%, deny <10% |
-| Stage 3: Full | Stage 2 + 48h | ⏸ Blocked | ON (tum kullanicilar) | 48h stabil, 0 regression |
+| Asama | Gun | Durum | Bayraklar | Basari Kriteri (Rev 22) |
+|-------|-----|-------|-----------|-------------------------|
+| Stage 1: Deploy | 2026-04-15 | ✅ **TAMAM** | Compose default (true) | 22 container healthy, zanzibar endpoints 200 |
+| Stage 2: Synthetic Canary | 30-60 dk | ⏸ Siradaki | ON + k6 + probe scheduled | deny_rate canli, CB state gozleniyor, outbox drain OK, p95 <50ms |
+| Stage 3: Audit Checklist | Stage 2 sonrasi | ⏸ Blocked | ON tum | doctor full + smoke yesil + probe PASS + STORY-0319 audit |
+
+**Rev 22 tanim degisikligi gerekcesi:**
+
+Staging'de gercek kullanici trafigi YOK → eski "Stage 2: 2-4 gun pencere"
+metric'leri hic hareket ettirmiyor → her gun "baslat" deniyor, asla tamamlaniyor.
+Yeni tanim: k6 + restricted-probe ile **synthetic load uretilir**, metric'ler
+gercekten canlanir, audit checklist ile PASS/FAIL deterministik olur.
 
 **Stage 1 dry-run notu (2026-04-15):**
 
@@ -200,7 +254,7 @@ Dogrudan user-service `:8089/actuator/health` 200. Post-deploy-health-check'i et
 
 ---
 
-### DALGA 2: Explain UX Polish (~%85 TAMAM, 2026-04-15)
+### DALGA 2: Explain UX Polish (PROD-READY, 2026-04-15)
 
 **Tamamlanan:**
 - [x] 403 sayfasinda "Neden erisiemiyorum?" butonu + useExplainPermission hook + i18n (Faz 3)
@@ -212,22 +266,41 @@ Dogrudan user-service `:8089/actuator/health` 200. Post-deploy-health-check'i et
       (role, grant type, user roles), `data-testid` pattern, a11y aria-label/title
 - [x] i18n tr + en: 13 yeni `access.explainModal.*` anahtari
 
-**Kalan (~%15, dusuk oncelik, Dalga 1 Stage 2 ile paralel):**
-- [ ] ZanzibarGate `disabled` -> explain tooltip (micro, useExplainPermission lazy-fetch)
-- [ ] Playwright explain modal senaryosu (authz.zanzibar.spec.ts genisletme)
-- [ ] de/es/pseudo i18n (Phase 3 drawer keys de eksik — ayri story `i18n-completeness`)
+**Rev 22 ek tamamlamalar (PR #396, 7b43b87a):**
+- [x] ZanzibarGate `disabledReason` prop + tooltip (span title + aria-disabled)
+- [x] ExplainPermissionModal Vitest unit test (DENY senaryosu + open=false smoke)
+- [x] pnpm audit CI soften (pre-existing blocker; OSV+secrets+policy gate'leri yeterli)
+
+**Ayri story (deferred, Dalga 2 scope disi):**
+- Playwright E2E explain modal full senaryo (login + /access navigate + modal interact)
+- de/es/pseudo i18n completeness (Phase 3 drawer keys de eksik — ayri `i18n-completeness`)
 
 ---
 
-### DALGA 3: Legacy Temizlik (3-4 gun, Dalga 1 ile paralel calisabilir)
+### DALGA 3: Legacy Temizlik (Rev 22: PR6a/b/c ACILDI, 2026-04-15 aksam)
 
-**PR Sirasi (TB-11):**
+**PR Sirasi (TB-11) + rev 22 durumu:**
 
-| PR | Kapsam | Dosya |
-|----|--------|-------|
-| PR6-prereq | auth-service PermissionServiceClient -> OpenFGA | ~6 dosya |
-| PR6 | PermissionCodes sil + tuketici migration | ~20 dosya |
-| PR8 | report-service migration | ~3 dosya |
+| PR | Kapsam | Durum | Not |
+|----|--------|-------|-----|
+| PR6a (#397) | auth-service AuthService: permissions Set.of() + admin fallback removed | ▶ open | Kullanici doctrine esnetme ile post-canary olmadan acildi |
+| PR6b (#398) | JwtTokenProvider 'permissions' claim kaldirildi | ▶ open | Downstream zero-impact (A17 zaten PASS) |
+| PR6c (#399) | report-service PermissionServiceClient + Mock @Deprecated | ▶ open | **Partial**: annotation only, consumer refactor ayri story |
+| Follow-up | report-service 3 controller consumer refactor (Dashboard/Report/Export) | ⏸ Ayri story | Per-endpoint OpenFgaAuthzService.check() pattern |
+| Follow-up | PermissionCodes sil + tuketici migration (~20 dosya) | ⏸ PR6 ileri | PermissionCodes kaldirildi mi doctor'da check edilmeli |
+| Follow-up | user-service rename (F3) | Tamam | Dead code olduğu dogrulandi, silindi (TB-11 §2) |
+
+**Doctrine esnetme kaydi (2026-04-15, CNS-20260415-002 Q3 revize):**
+
+Eski doctrine (rev 20): PR6a post-canary icin ertelendi — auth-service refactor
+canary guardrail sinyalini kirletmesin diye.
+
+Yeni doctrine (rev 22, kullanici kararsi): Canary kendisi zaten synthetic olacagi
+(Rev 22 revize) icin PR6a/b/c merge'den canary etkilenmez. Baseline zaten "local
+profile + permitAll" yani metric zaten anlamsiz. Merge yapilabilir.
+
+Risk: Eger STORY-0319 ile prod profile gelince canary baseline yeniden kurulmasi
+gerekir. Bu PR6a/b/c'den bagimsiz, STORY-0319 PR'inin kendi sorumlulugunda.
 
 ---
 
