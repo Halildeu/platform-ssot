@@ -73,26 +73,26 @@ doğrulamak. Yeni image rollout'u + compose healthy check. 2026-04-15'te başar�
 kapatıldı (dry-run).
 
 ```bash
-# 1. Merge sonrası staging'de:
+# Step A — Merge sonrası staging'de
 ssh staging-sw
 cd /home/halil/platform/repo/backend
 docker compose pull
 docker compose up -d
 
-# 2. Stack sağlığı
+# Step B — Stack sağlığı
 docker ps --filter name=platform- --format '{{.Names}}\t{{.Status}}' | sort
 # Beklenen: 22 container, hepsi (healthy)
 
-# 3. Zanzibar feature flag doğrulaması
+# Step C — Zanzibar feature flag doğrulaması
 docker exec platform-permission-service-1 env | grep ERP_OPENFGA_ENABLED
 # Beklenen: ERP_OPENFGA_ENABLED=true
 
-# 4. Endpoint smoke
+# Step D — Endpoint smoke
 curl -sI https://ai.acik.com/
 curl -s https://ai.acik.com/api/v1/authz/version
 # Beklenen: 200 + {"authzVersion":N}
 
-# 5. Doctor
+# Step E — Doctor
 bash backend/scripts/doctor-zanzibar.sh --quick
 # Beklenen: PASS 61/0/N uyarı
 ```
@@ -162,7 +162,7 @@ export CANARY_PASSWORD='CanaryPass123!'
 
 **İki Sinyal Katmanı (CNS-004 uzlaşısı):**
 
-1. **Operasyonel guardrail** (Prometheus/Micrometer): persona-agnostic
+- **Operasyonel guardrail** (Prometheus/Micrometer): persona-agnostic
    - `authz_decisions_total >= 1000`
    - `authz_check_p95_ms < 50`
    - `authz_error_rate_pct < 0.5`
@@ -170,7 +170,7 @@ export CANARY_PASSWORD='CanaryPass123!'
    - `openfga_circuit_breaker_state == 0` (CLOSED)
    - `tuple_sync_outbox_pending_total < 50`, `oldest_age_s < 300`
    - `openfga_up == 1`
-2. **Fonksiyonel persona** (k6 custom tag'leri): persona intent doğrulaması
+- **Fonksiyonel persona** (k6 custom tag'leri): persona intent doğrulaması
    - `authz_persona_outcome{persona, phase, expected, actual, reason}` Counter
    - `authz_persona_mismatch: rate < 0.01` (expected ≠ actual = regresyon)
    - `authz_persona_latency` (persona+phase bazlı p95)
@@ -306,10 +306,10 @@ docker exec platform-openfga-1 wget -qO- http://localhost:8080/healthz
 ```
 
 **Adım:**
-1. OpenFGA container crashed ise `docker compose restart openfga`
-2. Fail-closed aktif (`check → false`) — servisler deny-all davranışı.
-3. 2dk içinde sağlıklı değilse: `ERP_OPENFGA_ENABLED=false` + restart → legacy path'e düş.
-4. Root cause (memory/DB connection/network partition) incele.
+- OpenFGA container crashed ise `docker compose restart openfga`
+- Fail-closed aktif (`check → false`) — servisler deny-all davranışı.
+- 2dk içinde sağlıklı değilse: `ERP_OPENFGA_ENABLED=false` + restart → legacy path'e düş.
+- Root cause (memory/DB connection/network partition) incele.
 
 ### 5.2 Yüksek Deny Rate (Aggregate)
 
@@ -339,8 +339,8 @@ docker logs platform-permission-service-1 --since 10m | grep -iE 'cache|version'
 ```
 
 **Adım:**
-1. Cache TTL düşükse: `SCOPE_CACHE_TTL_SECONDS=60` (default 30) + restart.
-2. Version bump loop varsa: TupleSyncOutboxPoller fail ediyor olabilir; outbox_failed metric'ine bak.
+- Cache TTL düşükse: `SCOPE_CACHE_TTL_SECONDS=60` (default 30) + restart.
+- Version bump loop varsa: TupleSyncOutboxPoller fail ediyor olabilir; outbox_failed metric'ine bak.
 
 ### 5.4 Outbox Backlog
 
@@ -353,8 +353,8 @@ ssh staging-sw "docker exec platform-postgres-db-1 psql -U postgres -d platform 
 ```
 
 **Adım:**
-1. Poller çalışıyor mu? `grep TupleSyncOutboxPoller` logda.
-2. `SELECT FOR UPDATE SKIP LOCKED` deadlock yok mu? Retry counter 5'i aşmış entry'leri manuel FAIL'e al veya silinmiş role referans ise remove.
+- Poller çalışıyor mu? `grep TupleSyncOutboxPoller` logda.
+- `SELECT FOR UPDATE SKIP LOCKED` deadlock yok mu? Retry counter 5'i aşmış entry'leri manuel FAIL'e al veya silinmiş role referans ise remove.
 
 ### 5.5 Persona Seed Sorunları (Synthetic Canary)
 
@@ -366,22 +366,22 @@ cat .cache/zanzibar-canary/<RUN_ID>/setup.log
 ```
 
 **Adım:**
-1. KC admin token başarısız → `KC_CANARY_CLIENT_SECRET` doğru mu, Keycloak realm `serban` açık mı?
-2. `POST /api/v1/authz/users/{id}/assignments` 500 → backend NPE? `fix(permission): granule-only role permissions (NPE guard)` PR #406 merged olmalı.
-3. Write-path version bump timeout → outbox poller gecikmesi, `SKIP_WRITE_VERIFY=1` ile devam edilebilir ama kanıt olarak handoff'ta belirtilmeli.
+- KC admin token başarısız → `KC_CANARY_CLIENT_SECRET` doğru mu, Keycloak realm `serban` açık mı?
+- `POST /api/v1/authz/users/{id}/assignments` 500 → backend NPE? `fix(permission): granule-only role permissions (NPE guard)` PR #406 merged olmalı.
+- Write-path version bump timeout → outbox poller gecikmesi, `SKIP_WRITE_VERIFY=1` ile devam edilebilir ama kanıt olarak handoff'ta belirtilmeli.
 
 ### 5.6 Canary-Load Client Eksik
 
 **Belirti:** Restricted probe fail; "client_not_found" veya "direct access grants not enabled".
 
 **Adım:**
-1. **Durable setup (Evidence PASS zorunlu):** `canary-load` client Keycloak realm
+- **Durable setup (Evidence PASS zorunlu):** `canary-load` client Keycloak realm
    export'una eklenmeli → `infra/keycloak/realm-serban.json` altında Terraform
    veya realm JSON ile deploy edilmeli. STORY-0319 scope'unda bu config durable
    olmalı — hızlı `kc_post` bootstrap sadece geçici.
-2. Realm'de `canary-load` client tanımlı + Direct Access Grants: Enabled + confidential (secret'li).
-3. Client secret'i Vault'ta (stage tier): `vault kv get secret/stage/keycloak/canary-load`.
-4. Fallback: geliştirme için `CLIENT_ID=frontend` + realm export'ta direct-grants enabled (yalnız dev, Evidence PASS için kabul edilmez).
+- Realm'de `canary-load` client tanımlı + Direct Access Grants: Enabled + confidential (secret'li).
+- Client secret'i Vault'ta (stage tier): `vault kv get secret/stage/keycloak/canary-load`.
+- Fallback: geliştirme için `CLIENT_ID=frontend` + realm export'ta direct-grants enabled (yalnız dev, Evidence PASS için kabul edilmez).
 
 ### 5.7 Rollback Prosedürü (Stage 2 / 3 detay)
 
@@ -413,9 +413,9 @@ docker compose up -d permission-service core-data-service user-service
 #### Baseline Yeniden Alma (Canary Sonrası)
 
 Rollback sonrası yeni baseline alırken:
-1. PR6a/b (Dalga 3) merged durumundaysa, auth bootstrap değişikliği baseline etkilemiş olabilir.
-2. `backend/scripts/perf/run-zanzibar-canary.sh` tekrar çalıştır → yeni `prom-cold.json`/`prom-warm.json` baseline.
-3. Değişiklikleri handoff'ta belgele.
+- PR6a/b (Dalga 3) merged durumundaysa, auth bootstrap değişikliği baseline etkilemiş olabilir.
+- `backend/scripts/perf/run-zanzibar-canary.sh` tekrar çalıştır → yeni `prom-cold.json`/`prom-warm.json` baseline.
+- Değişiklikleri handoff'ta belgele.
 
 -------------------------------------------------------------------------------
 6. ÖZET
