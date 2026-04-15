@@ -2,11 +2,12 @@ import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Autocomplete, Badge, Button, Checkbox, DetailDrawer, Select, Switch, TextInput } from '@mfe/design-system';
 import type { AutocompleteOption } from '@mfe/design-system';
-import { useZanzibarAccess } from '@mfe/auth';
+import { usePermissions, useZanzibarAccess } from '@mfe/auth';
 import type { AccessRole, AccessLevel } from '../../features/access-management/model/access.types';
 import { getPermissions } from '../../entities/permissions/api/permissions.api';
 import { api } from '@mfe/shared-http';
 import { pushToast } from '../../shared/notifications';
+import { ExplainPermissionModal } from '../explain-modal/ExplainPermissionModal';
 
 interface RoleDrawerProps {
   open: boolean;
@@ -54,6 +55,19 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   const queryClient = useQueryClient();
   const [createName, setCreateName] = React.useState('');
   const [createDesc, setCreateDesc] = React.useState('');
+
+  // Faz 4 Explain UX: target of the "Why?" button the user clicked.
+  // Null => modal closed. Set => modal opens and auto-fetches /v1/authz/explain.
+  const [explainTarget, setExplainTarget] = React.useState<{
+    type: 'MODULE' | 'ACTION' | 'REPORT';
+    key: string;
+    label: string;
+  } | null>(null);
+
+  // Current user for the explain call (admin debugging own permission set; STORY-0318 §6).
+  const { authz } = usePermissions();
+  const currentUserId =
+    (authz as { userId?: string | number } | null | undefined)?.userId ?? null;
 
   // Zanzibar object-level access check: can current user edit the ACCESS module?
   const { access: editAccess } = useZanzibarAccess('can_edit', 'module', 'ACCESS');
@@ -302,15 +316,27 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
           {(catalog?.modules ?? []).map(mod => (
             <div key={mod.key} className="flex items-center justify-between rounded-xl border border-border-subtle bg-surface-muted/50 px-4 py-3">
               <span className="text-sm font-medium text-text-primary">{mod.label}</span>
-              <select
-                className="rounded-lg border border-border-subtle bg-surface-default px-3 py-1.5 text-sm"
-                value={moduleGrants[mod.key] ?? 'NONE'}
-                onChange={e => setModule(mod.key, e.target.value)}
-              >
-                {LEVEL_OPTIONS.map(level => (
-                  <option key={level} value={level}>{level === 'NONE' ? '—' : level === 'VIEW' ? t('access.drawer.levelView') : t('access.drawer.levelManage')}</option>
-                ))}
-              </select>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setExplainTarget({ type: 'MODULE', key: mod.key, label: mod.label })}
+                  aria-label={t('access.explainModal.triggerAria', { label: mod.label })}
+                  title={t('access.explainModal.triggerTitle')}
+                  data-testid={`explain-trigger-module-${mod.key}`}
+                  className="flex h-6 w-6 items-center justify-center rounded-full border border-border-subtle text-xs text-text-subtle hover:bg-surface-default hover:text-text-primary"
+                >
+                  ?
+                </button>
+                <select
+                  className="rounded-lg border border-border-subtle bg-surface-default px-3 py-1.5 text-sm"
+                  value={moduleGrants[mod.key] ?? 'NONE'}
+                  onChange={e => setModule(mod.key, e.target.value)}
+                >
+                  {LEVEL_OPTIONS.map(level => (
+                    <option key={level} value={level}>{level === 'NONE' ? '—' : level === 'VIEW' ? t('access.drawer.levelView') : t('access.drawer.levelManage')}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           ))}
         </div>
@@ -331,6 +357,16 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
                   <span className="text-xs text-text-subtle">{action.module}</span>
                 </div>
                 <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setExplainTarget({ type: 'ACTION', key: action.key, label: action.label })}
+                    aria-label={t('access.explainModal.triggerAria', { label: action.label })}
+                    title={t('access.explainModal.triggerTitle')}
+                    data-testid={`explain-trigger-action-${action.key}`}
+                    className="flex h-6 w-6 items-center justify-center rounded-full border border-border-subtle text-xs text-text-subtle hover:bg-surface-default hover:text-text-primary"
+                  >
+                    ?
+                  </button>
                   <Checkbox label={t('access.drawer.allowLabel')} checked={isAllow} onChange={() => toggleAction(action.key, 'ALLOW')} size="sm" />
                   {action.deniable && (
                     <Checkbox
@@ -353,10 +389,22 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
         <h3 className="text-sm font-semibold uppercase tracking-wide text-text-subtle">{t('access.drawer.reportsTitle')}</h3>
         <div className="flex flex-col gap-2">
           {(catalog?.reports ?? []).map(report => (
-            <Checkbox key={report.key} label={report.label}
-              checked={!!reportGrants[report.key]}
-              onChange={() => toggleReport(report.key)} size="sm"
-              description={report.module} />
+            <div key={report.key} className="flex items-center justify-between rounded-xl border border-border-subtle bg-surface-muted/50 px-4 py-2">
+              <Checkbox label={report.label}
+                checked={!!reportGrants[report.key]}
+                onChange={() => toggleReport(report.key)} size="sm"
+                description={report.module} />
+              <button
+                type="button"
+                onClick={() => setExplainTarget({ type: 'REPORT', key: report.key, label: report.label })}
+                aria-label={t('access.explainModal.triggerAria', { label: report.label })}
+                title={t('access.explainModal.triggerTitle')}
+                data-testid={`explain-trigger-report-${report.key}`}
+                className="flex h-6 w-6 items-center justify-center rounded-full border border-border-subtle text-xs text-text-subtle hover:bg-surface-default hover:text-text-primary"
+              >
+                ?
+              </button>
+            </div>
           ))}
         </div>
 
@@ -436,6 +484,19 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
           </Button>
         </div>
       </div>
+
+      {/* Faz 4 Explain UX: per-permission "Why?" modal. Portal-based, auto-fetches on open. */}
+      {explainTarget && (
+        <ExplainPermissionModal
+          open={!!explainTarget}
+          onClose={() => setExplainTarget(null)}
+          userId={currentUserId != null ? String(currentUserId) : null}
+          permissionType={explainTarget.type}
+          permissionKey={explainTarget.key}
+          permissionLabel={explainTarget.label}
+          t={t}
+        />
+      )}
     </DetailDrawer>
   );
 };

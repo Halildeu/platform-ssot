@@ -201,6 +201,21 @@ const access = {
   'access.drawer.levelView': 'Oku',
   'access.drawer.levelManage': 'Yönet',
   'access.drawer.noEditPermission': 'Bu rolü düzenlemek için yetkiniz yok.',
+
+  // Faz 4 Explain UX: per-permission "Why?" modal
+  'access.explainModal.title': '"{label}" için erişim açıklaması',
+  'access.explainModal.loading': 'Kontrol ediliyor...',
+  'access.explainModal.errorTitle': 'Açıklama alınamadı',
+  'access.explainModal.close': 'Kapat',
+  'access.explainModal.permissionTypeLabel': 'İzin türü',
+  'access.explainModal.permissionKeyLabel': 'İzin anahtarı',
+  'access.explainModal.sourceRoleLabel': 'Kaynak rol',
+  'access.explainModal.grantTypeLabel': 'Tür',
+  'access.explainModal.userRolesLabel': 'Kullanıcının rolleri',
+  'access.explainModal.triggerAria': '{label} için neden butonu',
+  'access.explainModal.triggerTitle': 'Bu izin için neden?',
+  'access.explainModal.noUserTitle': 'Kullanıcı seçilmedi',
+  'access.explainModal.noUserDescription': 'Açıklama için önce bir kullanıcı bağlamı gerekli.',
 };
 
 export default access;
