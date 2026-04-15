@@ -329,6 +329,11 @@
       "ux_subtheme_id": "critical_path_minimization"
     },
     {
+      "path": "web/apps/mfe-shell/src/pages/home/HomePage.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
       "path": "web/apps/mfe-shell/src/pages/login/LoginPage.ui.tsx",
       "ux_theme_id": "trust_privacy_security_ux",
       "ux_subtheme_id": "secure_session_step_up_authentication"
