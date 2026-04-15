@@ -228,15 +228,6 @@ export default defineConfig(({ mode }) => {
           './services': './src/app/services/shell-services.ts',
           './i18n': './src/app/i18n/index.ts',
         },
-        /* shareStrategy: 'loaded-first'
-         * Default 'version-first' registers ALL remote entries at host startup
-         * via hostInit. In our setup this caused remote placeholders to register
-         * first for same-version packages (react/react-dom), winning the share
-         * scope → runtime React instance fragmentation → useMemo-null crash.
-         * 'loaded-first' prefers already-loaded shares and loads remotes on
-         * demand, so shell's React is the canonical provider.
-         * Ref: https://module-federation.io/configure/sharestrategy */
-        shareStrategy: 'loaded-first',
         /* Dev mode also needs core singleton sharing.
          * Without this, remotes load their own React runtime and routes white-screen with invalid hook calls. */
         shared: {
