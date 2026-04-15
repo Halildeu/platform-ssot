@@ -215,18 +215,32 @@ STORY-0319 Stage 3 audit checklist item; Vault prod seal alt-story'e ayrilir.
 
 **Canary Asamalari (RB-zanzibar-canary runbook rev 22 update bekler):**
 
-| Asama | Gun | Durum | Bayraklar | Basari Kriteri (Rev 22) |
-|-------|-----|-------|-----------|-------------------------|
+| Asama | Gun | Durum | Bayraklar | Basari Kriteri (Rev 22, CNS-003 uzlasisi) |
+|-------|-----|-------|-----------|-------------------------------------------|
 | Stage 1: Deploy | 2026-04-15 | ✅ **TAMAM** | Compose default (true) | 22 container healthy, zanzibar endpoints 200 |
-| Stage 2: Synthetic Canary | 30-60 dk | ⏸ Siradaki | ON + k6 + probe scheduled | deny_rate canli, CB state gozleniyor, outbox drain OK, p95 <50ms |
-| Stage 3: Audit Checklist | Stage 2 sonrasi | ⏸ Blocked | ON tum | doctor full + smoke yesil + probe PASS + STORY-0319 audit |
+| Stage 2: Synthetic Canary | 30-60 dk | ⏸ Siradaki | ON + k6 persona matrix + probe scheduled | **5 persona** (super-admin/read-only/restricted/multi-role+DENY/scope-less), **read+write path**, **authz metric ZORUNLU** (opsiyonel degil), `authz_decisions_total` >= 1000, `deny_rate` gercek deger, CB state CLOSED tum servislerde, outbox pending/failed drain, **cold+warm cache 2 faz ayri raporlanir** |
+| Stage 3: **Synthetic Canary Evidence PASS** | Stage 2 sonrasi | ⏸ Blocked | ON tum | Statik doktor DEGIL — uretilmis metric + drift kaniti: doctor full + smoke yesil + 5 persona probe PASS + authz metric esikleri + outbox drift guard + CB closed + cold/warm raporlar + STORY-0319 audit |
 
-**Rev 22 tanim degisikligi gerekcesi:**
+**Rev 22 tanim degisikligi gerekcesi (CNS-003 uzlasisi):**
 
 Staging'de gercek kullanici trafigi YOK → eski "Stage 2: 2-4 gun pencere"
 metric'leri hic hareket ettirmiyor → her gun "baslat" deniyor, asla tamamlaniyor.
-Yeni tanim: k6 + restricted-probe ile **synthetic load uretilir**, metric'ler
-gercekten canlanir, audit checklist ile PASS/FAIL deterministik olur.
+Yeni tanim: k6 persona matrix + restricted-probe ile **synthetic load uretilir**,
+metric'ler gercekten canlanir, **Evidence PASS** (uretilmis artefact) ile
+PASS/FAIL deterministik olur.
+
+**Onemli not (Codex):** Synthetic canary gercek prod trafigini TAM simule etmez.
+Eksik kalan: gercek kullanici dagilimi, multi-role+DENY cakismalari, scope
+cardinality, cache eviction, tuple write churn, Keycloak token/session variant,
+p99/p999 tail latency. Bu nedenle prod'a cikis icin ileride prod-trafigi bazli
+canary story'si (post-STORY-0319) gerekecek.
+
+**On kosul altyapi kusurlari (bu session'da tespit edildi, PR-ready degil):**
+- `backend/scripts/ci/canary/zanzibar-guardrails.json` parse edilmiyor
+  (`allowed="false"` escape eksik) — fix gerekli
+- `backend/scripts/ci/canary/guardrail-check.mjs` authz metric'lerini OPSIYONEL
+  tutuyor; canary modunda ZORUNLU yapilmali
+- `k6-zanzibar-check.js` persona matrix + cold/warm + write-path gerektirir
 
 **Stage 1 dry-run notu (2026-04-15):**
 
@@ -254,7 +268,12 @@ Dogrudan user-service `:8089/actuator/health` 200. Post-deploy-health-check'i et
 
 ---
 
-### DALGA 2: Explain UX Polish (PROD-READY, 2026-04-15)
+### DALGA 2: Explain UX Polish (PROD-CANDIDATE / E2E pending, 2026-04-15)
+
+**Statu (CNS-003 uzlasisi):** Implementation complete, merge-ready. **"Prod-ready"
+degil** — Playwright E2E (gercek login + /access navigate + modal interact +
+i18n/pseudo layout dogrulamasi) release gate'inin blocker'i. STORY-0319 sonrasi
+gercek backend'de E2E smoke zorunlu.
 
 **Tamamlanan:**
 - [x] 403 sayfasinda "Neden erisiemiyorum?" butonu + useExplainPermission hook + i18n (Faz 3)
@@ -277,30 +296,37 @@ Dogrudan user-service `:8089/actuator/health` 200. Post-deploy-health-check'i et
 
 ---
 
-### DALGA 3: Legacy Temizlik (Rev 22: PR6a/b/c ACILDI, 2026-04-15 aksam)
+### DALGA 3: Legacy Temizlik (Rev 22: PR6a/b merge + PR6c-0 prep, 2026-04-15 aksam)
 
-**PR Sirasi (TB-11) + rev 22 durumu:**
+**PR Sirasi (TB-11) + rev 22 durumu (CNS-003 uzlasisi):**
 
 | PR | Kapsam | Durum | Not |
 |----|--------|-------|-----|
-| PR6a (#397) | auth-service AuthService: permissions Set.of() + admin fallback removed | ▶ open | Kullanici doctrine esnetme ile post-canary olmadan acildi |
+| PR6a (#397) | auth-service AuthService: permissions Set.of() + admin fallback removed | ▶ open | CNS-003 Codex onay: synthetic canary oncesi merge; baseline yeni paket uzerinde alinir |
 | PR6b (#398) | JwtTokenProvider 'permissions' claim kaldirildi | ▶ open | Downstream zero-impact (A17 zaten PASS) |
-| PR6c (#399) | report-service PermissionServiceClient + Mock @Deprecated | ▶ open | **Partial**: annotation only, consumer refactor ayri story |
-| Follow-up | report-service 3 controller consumer refactor (Dashboard/Report/Export) | ⏸ Ayri story | Per-endpoint OpenFgaAuthzService.check() pattern |
-| Follow-up | PermissionCodes sil + tuketici migration (~20 dosya) | ⏸ PR6 ileri | PermissionCodes kaldirildi mi doctor'da check edilmeli |
-| Follow-up | user-service rename (F3) | Tamam | Dead code olduğu dogrulandi, silindi (TB-11 §2) |
+| **PR6c-0 (#399)** | report-service PermissionServiceClient + Mock `@Deprecated` annotation + test/doctor warning + follow-up story linki | ▶ open | **"prep complete"**, Dalga 3 "complete" DEGIL |
+| **PR6c-1** (ayri story) | report-service 3 controller (Dashboard/Report/Export) `/authz/me` HTTP → `OpenFgaAuthzService.check()` migration + regression test | ⏸ **Blocking Dalga 3 complete** | Consumer refactor zorunlu (C-008); `/authz/me` hot path'ten kalkmadan Dalga 3 done olamaz |
+| Follow-up | PermissionCodes sil + tuketici migration (~20 dosya) | ⏸ PR6 ileri | Doctor drift check eklenmeli |
+| Follow-up | user-service rename (F3) | Tamam | Dead code silindi (TB-11 §2) |
 
-**Doctrine esnetme kaydi (2026-04-15, CNS-20260415-002 Q3 revize):**
+**Doctrine esnetme kaydi (2026-04-15, CNS-20260415-003 uzlasisi):**
 
-Eski doctrine (rev 20): PR6a post-canary icin ertelendi — auth-service refactor
-canary guardrail sinyalini kirletmesin diye.
+Eski doctrine (rev 20): PR6a post-canary icin ertelendi.
 
-Yeni doctrine (rev 22, kullanici kararsi): Canary kendisi zaten synthetic olacagi
-(Rev 22 revize) icin PR6a/b/c merge'den canary etkilenmez. Baseline zaten "local
-profile + permitAll" yani metric zaten anlamsiz. Merge yapilabilir.
+Yeni doctrine (rev 22): **Eski 48h fiziksel canary sinyal uretmedigi icin** PR6a/b
+merge edilebilir. Ancak "canary etkilenmez" iddiasi DUSURULDU — PR6a/b auth bootstrap
+degistirdigi icin synthetic canary baseline'i bu paket uzerinde yeniden alinir.
 
-Risk: Eger STORY-0319 ile prod profile gelince canary baseline yeniden kurulmasi
-gerekir. Bu PR6a/b/c'den bagimsiz, STORY-0319 PR'inin kendi sorumlulugunda.
+**Dogru sira (CNS-003 Codex uzlasisi):**
+1. PR6a (#397) merge
+2. PR6b (#398) merge
+3. PR6c-0 (#399) merge — **@Deprecated annotation only**
+4. Synthetic canary calistirilir — **yeni baseline** (PR6a/b uzerinde)
+5. PR6c-1 ayri story: consumer refactor + regression test
+6. Dalga 3 "complete" PR6c-1 sonrasi ilan edilir
+
+Gerekce kullanici baskisi DEGIL; eski 48h tabanli canary sinyal uretmedigi icin
+PR6a/b'yi bekletmek teknik faydaya donusmuyordu.
 
 ---
 
@@ -314,6 +340,19 @@ gerekir. Bu PR6a/b/c'den bagimsiz, STORY-0319 PR'inin kendi sorumlulugunda.
 | 4 | Circuit breaker for writes | DUSUK |
 | 5 | EP-016 enforcement rule (legacy auth import ban) | DUSUK |
 | 6 | JaCoCo coverage | DUSUK |
+
+**Rev 22 Yeni Backlog (CNS-003 Codex onerisi, uzlasi sonrasi):**
+
+| # | Is | Oncelik | Scope |
+|---|-----|---------|-------|
+| 7 | **zanzibar-guardrails.json parse fix** | YUKSEK | `allowed="false"` escape + PromQL dogru kactis; `guardrail-check.mjs` tuketilebilir yap |
+| 8 | **guardrail-check.mjs authz metric ZORUNLU** | YUKSEK | Zanzibar canary modunda authz metric'leri opsiyonel yerine zorunlu |
+| 9 | **k6-zanzibar-check.js persona matrix** | YUKSEK | 5 persona + cold/warm cache 2 faz + write-path tuple sync + restricted probe entegrasyonu |
+| 10 | **STORY-0319 scope dar + Vault KMS ayri story** | YUKSEK | STORY-0319 ad "staging prod-like application profile"; "Vault KMS auto-unseal excluded" acceptance'ta |
+| 11 | **PR6c-1 report-service consumer refactor** | YUKSEK (Dalga 3 blocker) | 3 controller `/authz/me` HTTP → `OpenFgaAuthzService.check()` + regression test |
+| 12 | **Playwright E2E explain modal + ZanzibarGate tooltip** | ORTA (Dalga 2 release gate) | STORY-0319 sonrasi: gercek login + /access nav + modal interact + i18n/pseudo dogrulama |
+| 13 | **Vault prod seal KMS story** | ORTA (Dalga 1 Stage 3 icin) | KMS auto-unseal + IAM + break-glass + runbook (STORY-0319'dan ayri) |
+| 14 | **de/es/pseudo i18n completeness** | DUSUK | Phase 3 + Phase 4 keys eksik tum dillerde; ayri `i18n-completeness` story |
 
 **Scope Reconciliation Stratejisi (Codex onerisi, karar bekliyor):**
 - Hibrit: saatlik incremental + gece full sweep + incident icin manuel tetikleme
