@@ -4,97 +4,32 @@
   "generated_at": "2026-04-11T07:00:00Z",
   "entries": [
     {
-      "path": "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
-      "ux_theme_id": "task_completion_architecture",
-      "ux_subtheme_id": "critical_path_minimization"
-    },
-    {
-      "path": "web/apps/mfe-shell/src/widgets/app-shell/ui/Sidebar.ui.tsx",
-      "ux_theme_id": "navigation_information_scent",
-      "ux_subtheme_id": "orientation_and_wayfinding"
-    },
-    {
-      "path": "web/packages/ui-kit/src/layout/PageLayout/PageLayout.tsx",
+      "path": "backend/scripts/ci/security/run-dependency-scan.sh",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/apps/mfe-audit/src/app/components/AuditEventFeed.tsx",
-      "ux_theme_id": "navigation_information_scent",
-      "ux_subtheme_id": "orientation_and_wayfinding"
-    },
-    {
-      "path": "web/packages/auth/src/PermissionProvider.tsx",
+      "path": "scripts/check_security_remediation_contract.py",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/packages/auth/src/ProtectedRoute.tsx",
-      "ux_theme_id": "task_completion_architecture",
-      "ux_subtheme_id": "critical_path_minimization"
-    },
-    {
-      "path": "web/packages/auth/src/ZanzibarGate.tsx",
-      "ux_theme_id": "trust_privacy_security_ux",
-      "ux_subtheme_id": "least_privilege_interaction_design"
-    },
-    {
-      "path": "web/packages/auth/src/useZanzibarAccess.ts",
-      "ux_theme_id": "trust_privacy_security_ux",
-      "ux_subtheme_id": "least_privilege_interaction_design"
-    },
-    {
-      "path": "web/packages/auth/src/api.ts",
+      "path": "scripts/run_lint_web.sh",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/packages/auth/src/index.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/packages/auth/src/types.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/packages/auth/src/useHasPermission.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/packages/shared-http/src/index.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/apps/mfe-shell/src/app/config/http-config.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/packages/platform-capabilities/src/index.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/apps/mfe-shell/src/app/providers/AppProviders.tsx",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/apps/mfe-shell/src/app/providers/AuthBootstrapper.tsx",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/packages/auth/src/compat.ts",
+      "path": "web/.commitlintrc.cjs",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
       "path": "web/.gitignore",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/.husky/commit-msg",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
@@ -109,24 +44,59 @@
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/apps/mfe-shell/src/app/config/shell-services-wiring.ts",
+      "path": "web/apps/mfe-access/src/widgets/role-drawer/RoleDrawer.ui.tsx",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "least_privilege_interaction_design"
+    },
+    {
+      "path": "web/apps/mfe-access/vite.config.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/apps/mfe-shell/vite-plugins/service-health-api.ts",
+      "path": "web/apps/mfe-audit/src/app/bootstrap.tsx",
       "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/apps/mfe-suggestions/src/App.tsx",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
+      "ux_subtheme_id": "behavior_contracts_across_modules"
     },
     {
       "path": "web/apps/mfe-audit/src/app/components/AuditApp.tsx",
       "ux_theme_id": "navigation_information_scent",
       "ux_subtheme_id": "orientation_and_wayfinding"
+    },
+    {
+      "path": "web/apps/mfe-audit/src/app/components/AuditEventFeed.tsx",
+      "ux_theme_id": "navigation_information_scent",
+      "ux_subtheme_id": "orientation_and_wayfinding"
+    },
+    {
+      "path": "web/apps/mfe-audit/src/app/hooks/useWindowSearch.ts",
+      "ux_theme_id": "navigation_information_scent",
+      "ux_subtheme_id": "deep_link_and_shareable_state"
+    },
+    {
+      "path": "web/apps/mfe-audit/src/app/services/audit-api.ts",
+      "ux_theme_id": "performance_resilience_experience",
+      "ux_subtheme_id": "retry_idempotency_and_duplicate_prevention"
+    },
+    {
+      "path": "web/apps/mfe-audit/vite.config.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-ethic/vite.config.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-reporting/src/app/bootstrap.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "behavior_contracts_across_modules"
+    },
+    {
+      "path": "web/apps/mfe-reporting/vite.config.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
       "path": "web/apps/mfe-schema-explorer/index.html",
@@ -144,27 +114,7 @@
       "ux_subtheme_id": "input_error_prevention_patterns"
     },
     {
-      "path": "web/apps/mfe-schema-explorer/src/main.tsx",
-      "ux_theme_id": "data_entry_validation_recovery",
-      "ux_subtheme_id": "input_error_prevention_patterns"
-    },
-    {
-      "path": "web/apps/mfe-schema-explorer/src/hooks/useSchemaData.ts",
-      "ux_theme_id": "data_entry_validation_recovery",
-      "ux_subtheme_id": "input_error_prevention_patterns"
-    },
-    {
       "path": "web/apps/mfe-schema-explorer/src/components/AiChat.tsx",
-      "ux_theme_id": "ai_assisted_decision_experience",
-      "ux_subtheme_id": "contextual_recommendation_cards"
-    },
-    {
-      "path": "web/apps/mfe-schema-explorer/src/components/AutoDescriptions.tsx",
-      "ux_theme_id": "ai_assisted_decision_experience",
-      "ux_subtheme_id": "contextual_recommendation_cards"
-    },
-    {
-      "path": "web/apps/mfe-schema-explorer/src/components/QuerySuggestions.tsx",
       "ux_theme_id": "ai_assisted_decision_experience",
       "ux_subtheme_id": "contextual_recommendation_cards"
     },
@@ -172,6 +122,11 @@
       "path": "web/apps/mfe-schema-explorer/src/components/Annotations.tsx",
       "ux_theme_id": "data_entry_validation_recovery",
       "ux_subtheme_id": "inline_validation_before_submit"
+    },
+    {
+      "path": "web/apps/mfe-schema-explorer/src/components/AutoDescriptions.tsx",
+      "ux_theme_id": "ai_assisted_decision_experience",
+      "ux_subtheme_id": "contextual_recommendation_cards"
     },
     {
       "path": "web/apps/mfe-schema-explorer/src/components/ColumnLineage.tsx",
@@ -219,6 +174,11 @@
       "ux_subtheme_id": "deterministic_state_model"
     },
     {
+      "path": "web/apps/mfe-schema-explorer/src/components/QuerySuggestions.tsx",
+      "ux_theme_id": "ai_assisted_decision_experience",
+      "ux_subtheme_id": "contextual_recommendation_cards"
+    },
+    {
       "path": "web/apps/mfe-schema-explorer/src/components/SchemaGraph.tsx",
       "ux_theme_id": "navigation_information_scent",
       "ux_subtheme_id": "orientation_and_wayfinding"
@@ -239,12 +199,67 @@
       "ux_subtheme_id": "critical_path_minimization"
     },
     {
+      "path": "web/apps/mfe-schema-explorer/src/hooks/useSchemaData.ts",
+      "ux_theme_id": "data_entry_validation_recovery",
+      "ux_subtheme_id": "input_error_prevention_patterns"
+    },
+    {
+      "path": "web/apps/mfe-schema-explorer/src/main.tsx",
+      "ux_theme_id": "data_entry_validation_recovery",
+      "ux_subtheme_id": "input_error_prevention_patterns"
+    },
+    {
+      "path": "web/apps/mfe-schema-explorer/src/vite-env.d.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-schema-explorer/vite.config.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/app/auth/keycloakClient.ts",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "secure_session_step_up_authentication"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/app/config/http-config.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
       "path": "web/apps/mfe-shell/src/app/config/query-config.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
+      "path": "web/apps/mfe-shell/src/app/config/shell-services-wiring.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
       "path": "web/apps/mfe-shell/src/app/createLazyRemoteModule.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/app/guards/ProtectedRoute.tsx",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "least_privilege_interaction_design"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/app/layout/header/header-navigation.config.ts",
+      "ux_theme_id": "navigation_information_scent",
+      "ux_subtheme_id": "orientation_and_wayfinding"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/app/providers/AppProviders.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/app/providers/AuthBootstrapper.tsx",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
@@ -264,89 +279,9 @@
       "ux_subtheme_id": "domain_based_information_architecture"
     },
     {
-      "path": "web/apps/mfe-shell/src/features/auth/model/use-authorization.model.ts",
-      "ux_theme_id": "trust_privacy_security_ux",
-      "ux_subtheme_id": "least_privilege_interaction_design"
-    },
-    {
-      "path": "web/apps/mfe-shell/src/features/auth/model/auth.slice.ts",
-      "ux_theme_id": "trust_privacy_security_ux",
-      "ux_subtheme_id": "least_privilege_interaction_design"
-    },
-    {
-      "path": "web/apps/mfe-shell/src/features/auth/lib/permissions.constants.ts",
-      "ux_theme_id": "trust_privacy_security_ux",
-      "ux_subtheme_id": "least_privilege_interaction_design"
-    },
-    {
-      "path": "web/apps/mfe-shell/src/app/guards/ProtectedRoute.tsx",
-      "ux_theme_id": "trust_privacy_security_ux",
-      "ux_subtheme_id": "least_privilege_interaction_design"
-    },
-    {
       "path": "web/apps/mfe-shell/src/app/shell-navigation.ts",
       "ux_theme_id": "navigation_information_scent",
       "ux_subtheme_id": "orientation_and_wayfinding"
-    },
-    {
-      "path": "web/apps/mfe-shell/src/app/auth/keycloakClient.ts",
-      "ux_theme_id": "trust_privacy_security_ux",
-      "ux_subtheme_id": "secure_session_step_up_authentication"
-    },
-    {
-      "path": "web/apps/mfe-shell/src/pages/login/LoginPage.ui.tsx",
-      "ux_theme_id": "trust_privacy_security_ux",
-      "ux_subtheme_id": "secure_session_step_up_authentication"
-    },
-    {
-      "path": "web/apps/mfe-shell/src/types/mfe-schema-explorer.d.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/packages/design-system/src/index.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/apps/mfe-audit/src/app/bootstrap.tsx",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "behavior_contracts_across_modules"
-    },
-    {
-      "path": "web/apps/mfe-audit/src/app/hooks/useWindowSearch.ts",
-      "ux_theme_id": "navigation_information_scent",
-      "ux_subtheme_id": "deep_link_and_shareable_state"
-    },
-    {
-      "path": "web/apps/mfe-audit/src/app/services/audit-api.ts",
-      "ux_theme_id": "performance_resilience_experience",
-      "ux_subtheme_id": "retry_idempotency_and_duplicate_prevention"
-    },
-    {
-      "path": "web/apps/mfe-reporting/src/app/bootstrap.tsx",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "behavior_contracts_across_modules"
-    },
-    {
-      "path": "web/packages/design-system/src/components/timeline/Timeline.tsx",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "ux_pattern_registry_usage"
-    },
-    {
-      "path": "web/apps/mfe-schema-explorer/src/vite-env.d.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/packages/shared-types/src/index.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/packages/shared-types/src/schema.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
       "path": "web/apps/mfe-shell/src/app/shortcuts/ChordOverlay.tsx",
@@ -374,59 +309,64 @@
       "ux_subtheme_id": "critical_path_minimization"
     },
     {
+      "path": "web/apps/mfe-shell/src/features/auth/lib/permissions.constants.ts",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "least_privilege_interaction_design"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/features/auth/model/auth.slice.ts",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "least_privilege_interaction_design"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/features/auth/model/use-authorization.model.ts",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "least_privilege_interaction_design"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+      "ux_theme_id": "task_completion_architecture",
+      "ux_subtheme_id": "critical_path_minimization"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/pages/login/LoginPage.ui.tsx",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "secure_session_step_up_authentication"
+    },
+    {
       "path": "web/apps/mfe-shell/src/pages/unauthorized/UnauthorizedPage.ui.tsx",
       "ux_theme_id": "feedback_state_and_visibility",
       "ux_subtheme_id": "loading_empty_error_success_patterns"
     },
     {
-      "path": "web/packages/auth/src/useCheckPermission.ts",
+      "path": "web/apps/mfe-shell/src/types/mfe-schema-explorer.d.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/packages/auth/src/useExplainPermission.ts",
+      "path": "web/apps/mfe-shell/src/widgets/app-shell/ui/Sidebar.ui.tsx",
+      "ux_theme_id": "navigation_information_scent",
+      "ux_subtheme_id": "orientation_and_wayfinding"
+    },
+    {
+      "path": "web/apps/mfe-shell/vite-plugins/service-health-api.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/.commitlintrc.cjs",
+      "path": "web/apps/mfe-shell/vite.config.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/.husky/commit-msg",
+      "path": "web/apps/mfe-suggestions/src/App.tsx",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "scripts/check_security_remediation_contract.py",
+      "path": "web/apps/mfe-suggestions/vite.config.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "scripts/run_lint_web.sh",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "backend/scripts/ci/security/run-dependency-scan.sh",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/packages/auth/src/zanzibar-cache.ts",
-      "ux_theme_id": "trust_privacy_security_ux",
-      "ux_subtheme_id": "secure_session_step_up_authentication"
-    },
-    {
-      "path": "web/packages/auth/src/authzTargetRegistry.ts",
-      "ux_theme_id": "trust_privacy_security_ux",
-      "ux_subtheme_id": "secure_session_step_up_authentication"
-    },
-    {
-      "path": "web/packages/auth/src/useBatchZanzibarAccess.ts",
-      "ux_theme_id": "trust_privacy_security_ux",
-      "ux_subtheme_id": "secure_session_step_up_authentication"
     },
     {
       "path": "web/apps/mfe-users/src/widgets/user-management/ui/UserDetailDrawer.ui.tsx",
@@ -439,34 +379,79 @@
       "ux_subtheme_id": "least_privilege_interaction_design"
     },
     {
-      "path": "web/packages/i18n-dicts/src/locales/en/users.ts",
+      "path": "web/apps/mfe-users/vite.config.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/packages/i18n-dicts/src/locales/tr/users.ts",
+      "path": "web/packages/auth/src/PermissionProvider.tsx",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/apps/mfe-access/src/widgets/role-drawer/RoleDrawer.ui.tsx",
+      "path": "web/packages/auth/src/ProtectedRoute.tsx",
+      "ux_theme_id": "task_completion_architecture",
+      "ux_subtheme_id": "critical_path_minimization"
+    },
+    {
+      "path": "web/packages/auth/src/ZanzibarGate.tsx",
       "ux_theme_id": "trust_privacy_security_ux",
       "ux_subtheme_id": "least_privilege_interaction_design"
     },
     {
-      "path": "web/packages/i18n-dicts/src/locales/en/access.ts",
+      "path": "web/packages/auth/src/api.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/packages/i18n-dicts/src/locales/tr/access.ts",
+      "path": "web/packages/auth/src/authzTargetRegistry.ts",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "secure_session_step_up_authentication"
+    },
+    {
+      "path": "web/packages/auth/src/compat.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/vitest.config.ts",
+      "path": "web/packages/auth/src/index.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/auth/src/types.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/auth/src/useBatchZanzibarAccess.ts",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "secure_session_step_up_authentication"
+    },
+    {
+      "path": "web/packages/auth/src/useCheckPermission.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/auth/src/useExplainPermission.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/auth/src/useHasPermission.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/auth/src/useZanzibarAccess.ts",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "least_privilege_interaction_design"
+    },
+    {
+      "path": "web/packages/auth/src/zanzibar-cache.ts",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "secure_session_step_up_authentication"
     },
     {
       "path": "web/packages/design-system/src/advanced/data-grid/GridShell.tsx",
@@ -529,12 +514,67 @@
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
+      "path": "web/packages/design-system/src/components/timeline/Timeline.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "ux_pattern_registry_usage"
+    },
+    {
       "path": "web/packages/design-system/src/components/tree-table/TreeTable.tsx",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
+      "path": "web/packages/design-system/src/index.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
       "path": "web/packages/design-system/src/primitives/button/Button.tsx",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/i18n-dicts/src/locales/en/access.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/i18n-dicts/src/locales/en/users.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/i18n-dicts/src/locales/tr/access.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/i18n-dicts/src/locales/tr/users.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/platform-capabilities/src/index.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/shared-http/src/index.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/shared-types/src/index.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/shared-types/src/schema.ts",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/packages/ui-kit/src/layout/PageLayout/PageLayout.tsx",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
     },
@@ -549,34 +589,9 @@
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
-      "path": "web/apps/mfe-access/vite.config.ts",
+      "path": "web/vitest.config.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/apps/mfe-audit/vite.config.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/apps/mfe-reporting/vite.config.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/apps/mfe-shell/vite.config.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/apps/mfe-users/vite.config.ts",
-      "ux_theme_id": "consistency_and_pattern_governance",
-      "ux_subtheme_id": "single_component_source_of_truth"
-    },
-    {
-      "path": "web/apps/mfe-shell/src/app/layout/header/header-navigation.config.ts",
-      "ux_theme_id": "navigation_information_scent",
-      "ux_subtheme_id": "orientation_and_wayfinding"
     }
   ]
 }
