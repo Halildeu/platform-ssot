@@ -7,7 +7,7 @@ import type { AccessRole, AccessLevel } from '../../features/access-management/m
 import { getPermissions } from '../../entities/permissions/api/permissions.api';
 import { api } from '@mfe/shared-http';
 import { pushToast } from '../../shared/notifications';
-import { ExplainPermissionModal } from '../explain-modal';
+import { ExplainPermissionModal } from '../explain-modal/ExplainPermissionModal';
 
 interface RoleDrawerProps {
   open: boolean;
