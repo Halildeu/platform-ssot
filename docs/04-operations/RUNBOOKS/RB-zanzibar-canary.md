@@ -383,11 +383,9 @@ cat .cache/zanzibar-canary/<RUN_ID>/setup.log
 3. Client secret'i Vault'ta (stage tier): `vault kv get secret/stage/keycloak/canary-load`.
 4. Fallback: geliştirme için `CLIENT_ID=frontend` + realm export'ta direct-grants enabled (yalnız dev, Evidence PASS için kabul edilmez).
 
--------------------------------------------------------------------------------
-6. ROLLBACK PROSEDÜRÜ (Stage 2 / 3)
--------------------------------------------------------------------------------
+### 5.7 Rollback Prosedürü (Stage 2 / 3 detay)
 
-### Hızlı Rollback (< 1 dk)
+#### Hızlı Rollback (< 1 dk)
 
 ```bash
 ssh staging-sw
@@ -400,7 +398,7 @@ curl -s https://ai.acik.com/api/v1/authz/version
 # legacy path /api/permissions üzerinden yetki verir.
 ```
 
-### Önceki Image'e Dön (Deploy-Level Rollback)
+#### Önceki Image'e Dön (Deploy-Level Rollback)
 
 ```bash
 ssh staging-sw
@@ -412,7 +410,7 @@ sed -i "s/^PERMISSION_SERVICE_TAG=.*/PERMISSION_SERVICE_TAG=sha-PREVIOUS/" .env
 docker compose up -d permission-service core-data-service user-service
 ```
 
-### Baseline Yeniden Alma (Canary Sonrası)
+#### Baseline Yeniden Alma (Canary Sonrası)
 
 Rollback sonrası yeni baseline alırken:
 1. PR6a/b (Dalga 3) merged durumundaysa, auth bootstrap değişikliği baseline etkilemiş olabilir.
@@ -420,7 +418,7 @@ Rollback sonrası yeni baseline alırken:
 3. Değişiklikleri handoff'ta belgele.
 
 -------------------------------------------------------------------------------
-7. ÖZET
+6. ÖZET
 -------------------------------------------------------------------------------
 
 - **3 Stage:** Deploy (Stage 1 ✅) → Synthetic Canary (Stage 2, STORY-0319 bekliyor) → Evidence PASS (Stage 3).
@@ -431,7 +429,7 @@ Rollback sonrası yeni baseline alırken:
 - **Synthetic ≠ prod traffic** — prod'a geçiş için ayrı story gerekli.
 
 -------------------------------------------------------------------------------
-8. LİNKLER
+7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
 - **Master plan:** `.claude/plans/zanzibar-master-plan.md` (Rev 22)
