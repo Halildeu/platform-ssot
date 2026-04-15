@@ -66,8 +66,9 @@ test('ExplainPermissionModal DENIED_BY_ROLE reason render eder', () => {
   expect(screen.getByText('DENIED_BY_ROLE')).toBeTruthy();
   // Grant type badge
   expect(screen.getByText('DENY')).toBeTruthy();
-  // Source role name in detail table
-  expect(screen.getByText('Satın Alma Müdürü')).toBeTruthy();
+  // Source role name render ediliyor (hem details tablosunda hem userRoles listesinde
+  // — Badge olarak; getAllByText ikisini de yakalar, length >= 1 kontrolu yeterli).
+  expect(screen.getAllByText('Satın Alma Müdürü').length).toBeGreaterThanOrEqual(1);
   // Permission key echoed back
   expect(screen.getByText('DELETE_PO')).toBeTruthy();
 });
