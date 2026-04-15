@@ -1,13 +1,34 @@
-# Zanzibar Master Plan — Rev 20 (Post-Dalga 0 Housekeeping)
+# Zanzibar Master Plan — Rev 21 (Dalga 2 Done + Stage 1 Dry-Run + STORY-0319 Unlock)
 
-**Tarih:** 2026-04-14
-**Kaynak:** Rev 19 + CNS-20260414-003 (164K token, gpt-5.3-codex) + Claude (Opus 4.6) degerlendirme
-**Base:** main @ eaa3d7a1
-**Uzlasi:** Dalga 0 tamamlandi (PR #365); FAZ B post-canary'ye ertelendi
+**Tarih:** 2026-04-15
+**Kaynak:** Rev 20 + CNS-20260415-002 (158K token, gpt-5.x) + bugunku P0 incident recovery
+**Base:** main @ 5241b6e4 (PR #394 merged)
+**Uzlasi:** Dalga 2 ana UI tamam (PR #394); Dalga 1 Stage 1 dry-run ilan edildi;
+STORY-0319 Stage 2 icin kritik on kosul olarak netlestirildi; 3 P0 incident fix merged.
 
 ---
 
-## 0. REV 19 -> REV 20 DEGISIKLIK OZETI
+## 0. REV 20 -> REV 21 DEGISIKLIK OZETI
+
+Bugun (2026-04-15) uc P0 incident ve Dalga 2 ana UI is paketi tamamlandi:
+
+| # | Olay | PR | Sonuc |
+|---|------|----|----|
+| 1 | Smoke-zanzibar workflow canli stack'i siliyordu (`compose down --volumes` ayni `platform` project) | #392 (`5cbbe21e`) | 3 katman defense-in-depth: izole COMPOSE_PROJECT_NAME + workflow_run disable + doctor A21/A22 drift guard |
+| 2 | `03/04/05-rls-phase1-*.sql` fresh-boot safe degildi (PR #381 sadece `02`'yi duzeltmis) | #393 (`674beb0c`) | 4 tablo icin DO $$ + IF EXISTS guard (user_permission_scope, scopes, companies, variant_visibility) |
+| 3 | Vault data volume silinmisti (smoke cleanup dunku), fresh init gerekti | Operasyonel | 1-of-1 shamir re-init + unseal sidecar restart + manual re-unseal (compose up seal'a dusurmustu) |
+| 4 | Dalga 2 Explain UX UI ana modal | #394 (`5241b6e4`) | ExplainPermissionModal + RoleDrawer 3 permission tipinde "?" butonu + i18n tr+en 13 key |
+
+Canli dogrulama: `/api/v1/authz/version` 200, `/api/v1/authz/explain` 200, `/realms/serban` 200,
+22 container healthy, AccessApp.ui bundle'da `explainModal` + `ExplainPermission` string'leri mevcut.
+
+Dalga 1 Stage 1 **dry-run** olarak isaretlendi: stack deploy + endpoint'ler 200 kriteri karsilandi,
+ama gercek canary sinyali (deny rate + JWT validation) STORY-0319 (staging prod-like profile)
+tamamlanana kadar ANLAMSIZ. Stage 2 (2-4 gun gercek canary) STORY-0319 sonrasi acilir.
+
+---
+
+## 0a. REV 19 -> REV 20 DEGISIKLIK OZETI (arsiv)
 
 Rev 19'da Dalga 0 (Canary Readiness) BLOCKER fix'leri planlandi. PR #365
 (commit eaa3d7a1) merged. 5/5 BLOCKER runtime dogrulandi. Codex Round 2
@@ -63,7 +84,7 @@ kesinlesti. Dalga 0 (Canary Readiness) eklendi.
 | Guvenlik (7/7 servis authenticated() catch-all) | Hardened |
 | Hardening (MF singleton, CORS, CB, rate-limit, Grafana alerts) | Prod-ready |
 | E2E Test (Playwright authz, doctor-zanzibar.sh 47 check) | CI-entegre |
-| Explain UX (403 sayfasinda "Neden?" butonu + useExplainPermission + i18n) | Kismi |
+| Explain UX (403 sayfasi + per-permission RoleDrawer modal + 13 i18n key) | Prod-ready (PR #394) |
 | k6 (zanzibar-check.js, SK-2/SK-11 esikleri) | Tamamlandi |
 | ERP_OPENFGA_ENABLED default=true (compose + .env.example) | Tamamlandi |
 | Grafana alert kurallari (authz-zanzibar-rules.yml) | Tamamlandi |
@@ -143,15 +164,27 @@ kesinlesti. Dalga 0 (Canary Readiness) eklendi.
 
 ### DALGA 1: Canary Rollout (3-5 gun)
 
-**On kosul:** Dalga 0 tamamlandi.
+**On kosul:** Dalga 0 tamamlandi (✅). Stage 2+ icin STORY-0319 (staging prod-like profile) ZORUNLU.
 
 **Canary Asamalari (RB-zanzibar-canary runbook):**
 
-| Asama | Gun | Bayraklar | Basari Kriteri |
-|-------|-----|-----------|----------------|
-| Stage 1: Deploy | Gun 1 | Compose default (true) | Tum container'lar healthy |
-| Stage 2: Canary | Gun 2-4 | ON (admin + restricted) | p95 <50ms, error <0.5%, deny <10% |
-| Stage 3: Full | Gun 5+ | ON (tum kullanicilar) | 48h stabil, 0 regression |
+| Asama | Gun | Durum | Bayraklar | Basari Kriteri |
+|-------|-----|-------|-----------|----------------|
+| Stage 1: Deploy (dry-run) | 2026-04-15 | ✅ **TAMAM** | Compose default (true) | 22 container healthy, zanzibar endpoints 200 |
+| Stage 2: Canary | STORY-0319 sonrasi | ⏸ Blocked | ON (admin + restricted) | p95 <50ms, error <0.5%, deny <10% |
+| Stage 3: Full | Stage 2 + 48h | ⏸ Blocked | ON (tum kullanicilar) | 48h stabil, 0 regression |
+
+**Stage 1 dry-run notu (2026-04-15):**
+
+Stack 22 container healthy, `/api/v1/authz/version` 200, `/api/v1/authz/explain` 200,
+`/realms/serban` 200. Deploy altyapisi dogrulandi.
+
+ANCAK: Staging `SPRING_PROFILES_ACTIVE=local,docker` profilde calisiyor → `SecurityConfigLocal permitAll`
+aktif → JWT dogrulamasi yok → `POST /authz/check` token'siz 200 dondu → **deny rate metric'i anlamsiz**
+(CNS-20260415-002 verdict). Stage 2'de canary guardrail sinyali gercek deger icin STORY-0319 gerekli.
+
+Bilinen minor: `/api/v1/users/actuator/health` gateway uzerinden 500 (local profile actuator secured).
+Dogrudan user-service `:8089/actuator/health` 200. Post-deploy-health-check'i etkilerse ayri fix.
 
 **Ek guardrail'ler (Codex onerisi):**
 - [ ] `/authz/me` latency + error rate
@@ -167,17 +200,22 @@ kesinlesti. Dalga 0 (Canary Readiness) eklendi.
 
 ---
 
-### DALGA 2: Explain UX Polish (2-3 gun, Dalga 1 sonrasi)
+### DALGA 2: Explain UX Polish (~%85 TAMAM, 2026-04-15)
 
-**Mevcut (zaten tamamlanan):**
-- 403 sayfasinda "Neden erisiemiyorum?" butonu + useExplainPermission hook + i18n (15 anahtar)
-- Backend `/v1/authz/explain` (permission-service + core-data)
+**Tamamlanan:**
+- [x] 403 sayfasinda "Neden erisiemiyorum?" butonu + useExplainPermission hook + i18n (Faz 3)
+- [x] Backend `/v1/authz/explain` (permission-service + core-data)
+- [x] `/authz/explain` route sahipligini birlestir (Dalga 0 B1 ile tek canonical: permission-service)
+- [x] **ExplainPermissionModal + RoleDrawer inline "?" butonu (PR #394, 5241b6e4)**:
+      3 permission tipi (module/action/report), auto-fetch on open, 5 reason badge
+      (ALLOWED/NO_ROLE/DENIED_BY_ROLE/NO_SCOPE/NO_PERMISSION), detay tablosu
+      (role, grant type, user roles), `data-testid` pattern, a11y aria-label/title
+- [x] i18n tr + en: 13 yeni `access.explainModal.*` anahtari
 
-**Kalan is (Dalga 0 B1 sonrasi netlesecek):**
-- [ ] `/authz/explain` route sahipligini birlestir (iki servis -> tek canonical)
-- [ ] ExplainDrawer bileseni (mfe-access) — opsiyonel, 403 sayfasi zaten calisiyor
-- [ ] ZanzibarGate `disabled` -> explain tooltip
-- [ ] Playwright test
+**Kalan (~%15, dusuk oncelik, Dalga 1 Stage 2 ile paralel):**
+- [ ] ZanzibarGate `disabled` -> explain tooltip (micro, useExplainPermission lazy-fetch)
+- [ ] Playwright explain modal senaryosu (authz.zanzibar.spec.ts genisletme)
+- [ ] de/es/pseudo i18n (Phase 3 drawer keys de eksik — ayri story `i18n-completeness`)
 
 ---
 
@@ -258,6 +296,18 @@ DALGA 2    DALGA 3
 - [x] **B1 ALINDI (2026-04-14, PR #365):** `/authz/check` + `/batch-check` permission-service `AuthorizationControllerV1`'a tasindi; core-data'daki duplicate endpoint kaldirildi. Kanit: commit eaa3d7a1.
 - [x] **B2 ALINDI (2026-04-14, PR #365):** Path-aware 503 response uygulandi (tum hata path'lerinde); variant-service cache hatada skip ediyor. Kanit: commit 611f0ecb (Codex Round 2 ilk fix'in yetersizligini yakaladi).
 
+**2026-04-15 alinan kararlar (Rev 21):**
+- [x] **Smoke izolasyonu (PR #392, CNS-20260415-002 Q1):** Zanzibar Smoke Test workflow'u
+      canli `platform` project ile ayni compose'da `down --volumes` yapiyordu, canli stack
+      siliniyordu. Fix: izole `COMPOSE_PROJECT_NAME=platform-smoke-${RUN_ID}` + auto-trigger
+      disable + doctor A21/A22 drift guard. Re-enable kriterleri RB-smoke-isolation.md.
+- [x] **RLS fresh-boot (PR #393):** 03/04/05-rls-phase1-*.sql'de PR #381 pattern'i (DO $$ +
+      IF EXISTS) uygulandi. 4 tablo fresh volume'da psql exit 3 vermeyecek sekilde idempotent.
+- [x] **Dalga 2 ana UI (PR #394):** ExplainPermissionModal + RoleDrawer entegrasyonu; Faz 4
+      eksigi kapatildi. Canli dogrulama: bundle'da `explainModal` string'i mevcut, endpoint 200.
+- [x] **Stage 1 dry-run ilan (CNS-20260415-002 Q4 onerisi, hibrit path):** Deploy altyapi
+      healthy + zanzibar endpoints 200 dogrulandi; gercek canary Stage 2 STORY-0319 sonrasi.
+
 **Bekleyen karar (Dalga 4):**
 - [ ] Scope reconciliation stratejisi: scheduled + on-demand hibrit (Codex onerisi)
 
@@ -275,6 +325,7 @@ DALGA 2    DALGA 3
 | CNS-20260414-001 | 2026-04-14 | Claude + Codex | 482K | Rev 18 dogrulama, 6 bulgu |
 | CNS-20260414-002 | 2026-04-14 | Claude + Codex | 212K | Round 2: bulgu dogrulama, uzlasi |
 | CNS-20260414-003 | 2026-04-14 | Claude + Codex (gpt-5.3) | 164K | Rev 20 housekeeping + FAZ B timing — APPROVE_WITH_CHANGES |
+| CNS-20260415-002 | 2026-04-15 | Claude + Codex | 158K | Canli 502 tani + Yon 2 timing — APPROVE_WITH_CHANGES (smoke cleanup root cause; "(b)+containment" yolu; PR6a post-canary enforced; Yon 2 lokal baslat + canli validation ayri lane) |
 
 ---
 
@@ -299,23 +350,34 @@ DALGA 2    DALGA 3
 ## 8. SESSION BASLANGIC REHBERI
 
 ```
-1. Plan oku: .claude/plans/zanzibar-master-plan.md (rev 20)
-2. ✅ Dalga 0: Canary Readiness — TAMAMLANDI (PR #365, eaa3d7a1)
-   a. [x] B1: /authz/check -> permission-service'e tasindi
-   b. [x] B2: JWT fallback -> path-aware 503 + cache skip
-   c. [x] B3: authz_decisions_total Micrometer counter live
-   d. [x] B4: outbox_failed + circuit_breaker metric + schema fix
-   e. [x] B5: compose PERMISSION_SERVICE_BASE_URL eklendi
-   f. [x] FIX: runbook text + fail-closed aciklamasi
-   g. [x] Dogrulama: doctor 50/50 + mvn test + npm test PASS
-3. ▶ Dalga 1: Canary rollout (3 asamali, RB-zanzibar-canary) — SIRADAKI ADIM
-   - Manuel dispatch: `gh workflow run deploy-backend.yml`
-   - 48h monitor penceresinde auth-service donuk (FAZ B ertelendi)
-4. Dalga 2: Explain UX polish
-5. Dalga 3: Legacy temizlik — FAZ B revize (CNS-20260414-003)
-   - PR6a: auth-service only (Set.of() kompat, post-canary)
-   - PR6b: JWT claim + downstream consumer cleanup
+1. Plan oku: .claude/plans/zanzibar-master-plan.md (rev 21)
+2. Handoff oku: .claude/plans/session-handoff-20260415-zanzibar-recovery-day2.md
+3. ✅ Dalga 0: Canary Readiness — TAMAMLANDI (PR #365, eaa3d7a1, 2026-04-14)
+4. ✅ Dalga 2: Explain UX polish — %85 TAMAM (PR #394, 5241b6e4, 2026-04-15)
+   - Kalan: ZanzibarGate tooltip + Playwright spec (dusuk oncelik, paralel)
+5. ✅ Dalga 1 Stage 1 (dry-run): deploy altyapi + endpoints healthy
+6. ▶ **SIRADAKI ADIM: STORY-0319** (staging prod-like profile)
+   - Dosya: docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md
+   - Kritik on kosul: Dalga 1 Stage 2'nin gercek canary sinyali uretebilmesi icin
+   - Risk: high. Vault prod seal stratejisi ayri story olabilir.
+   - Gate: doctor-infra.sh profile drift check + acceptance 6 kriteri PASS
+7. ▶ Dalga 1 Stage 2 (STORY-0319 sonrasi): Canary 2-4 gun monitor
+   - gh workflow run deploy-backend.yml
+   - Restricted probe PASS, deny rate gercek deger, JWT validation aktif
+8. ▶ Dalga 1 Stage 3: Full rollout 48h stabil
+9. Dalga 3: Legacy temizlik (post-canary)
+   - PR6a: auth-service only (Set.of() kompat)
+   - PR6b: JWT claim + downstream
    - PR6c: report-service legacy HTTP client
-   - PR6-skip: user-service rename only (F3)
+
+**Bugun yasananlar (2026-04-15):**
+- 08:50 smoke workflow canli stack'i silmisti (dun kalinti)
+- 14:06 PR #392 smoke containment merged
+- 14:20 PR #393 RLS fresh-boot merged
+- 15:35 Vault fresh init + unseal (manual intervention)
+- 15:44 docker compose up -d (22 container)
+- 15:47 PR #394 Explain UX merged
+- 15:50 Deploy-web success, canli bundle 12:50:35
+- 15:52 Canli dogrulama PASS
 6. Dalga 4: Backlog (reconciliation, model versioning, k6 CI, doctor 51-52)
 ```
