@@ -7,17 +7,27 @@ import { readFileSync } from 'node:fs';
 
 const pkg = JSON.parse(readFileSync(path.resolve(__dirname, 'package.json'), 'utf8'));
 const deps = pkg.dependencies as Record<string, string>;
-const singleton = (name: string, fallback: string | boolean = false) => ({
+const singleton = (
+  shareKey: string,
+  versionKey: string = shareKey,
+  fallback: string | boolean = false,
+  extra: Record<string, boolean | string> = {},
+) => ({
   singleton: true,
   strictVersion: true,
-  import: false,
-  requiredVersion: deps[name] ?? fallback,
+  requiredVersion: deps[versionKey] ?? fallback,
+  ...extra,
 });
+
+const HOST_ONLY_STUB_VERSION = '0.0.0';
+const hostOnly = (shareKey: string, versionKey: string = shareKey, fallback: string | boolean = false) =>
+  singleton(shareKey, versionKey, fallback, { import: false, version: HOST_ONLY_STUB_VERSION });
+
 const sharedCore = {
-  react: singleton('react'),
-  'react-dom': singleton('react-dom'),
-  'react-router': singleton('react-router'),
-  'react-router-dom': singleton('react-router-dom'),
+  react: hostOnly('react'),
+  'react-dom': hostOnly('react-dom'),
+  'react-router': hostOnly('react-router'),
+  'react-router-dom': hostOnly('react-router-dom'),
   '@tanstack/react-query': singleton('@tanstack/react-query'),
 };
 const sharedProdOnly = {};
