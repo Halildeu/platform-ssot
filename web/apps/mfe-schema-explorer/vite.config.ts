@@ -9,6 +9,7 @@ const pkg = JSON.parse(readFileSync(path.resolve(__dirname, 'package.json'), 'ut
 const deps = pkg.dependencies as Record<string, string>;
 const singleton = (name: string, fallback: string | boolean = false) => ({
   singleton: true,
+  eager: true,
   requiredVersion: deps[name] ?? fallback,
 });
 const sharedCore = {
