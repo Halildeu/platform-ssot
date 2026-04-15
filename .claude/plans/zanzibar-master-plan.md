@@ -1,16 +1,107 @@
-# Zanzibar Master Plan — Rev 22 (Dalga 2 Prod-ready + Dalga 3 PR6a/b/c + Synthetic Canary)
+# Zanzibar Master Plan — Rev 23 (Synthetic Canary Altyapisi TAMAM, STORY-0319 P0)
 
-**Tarih:** 2026-04-15 (aksam 20:15)
-**Kaynak:** Rev 21 + kullanici direktifi "her gun 48h baslamiyor — synthetic canary
-secimi" + gercekci zaman yonetimi
-**Base:** main @ 7b43b87a (PR #396 merged — Dalga 2 kalan)
-**Uzlasi:** Dalga 1 canary tanimi degisti (fiziksel 48h → synthetic validation).
-Dalga 2 prod-ready. Dalga 3 PR6a/b/c tamam (PR6c partial). STORY-0319
-Vault prod seal alt-story olarak ayrilacak.
+**Tarih:** 2026-04-16 (gece)
+**Kaynak:** Rev 22 + bu session CNS-20260416-001/002 (Codex 5 tur ping-pong review)
+**Base:** main @ 377b3539 (PR #408 merged — PR-2 polish operational guardrail full)
+**Uzlasi:** Dalga 1 Stage 2 altyapisi %100 hazir (PR #406 MVP + #408 polish). Codex
+BLOCK→BLOCK→APPROVE_WITH_CHANGES 2 iterasyonla 11 gotcha fix'lendi. STORY-0319
+(staging prod-like profile) P0 sira bekliyor; gercek synthetic canary run sonrasinda
+Dalga 1 kapanir. Dalga 3 complete (PR6c-1) ve Dalga 2 release gate (Playwright E2E)
+STORY-0319 sonrasi seri.
 
 ---
 
-## 0. REV 21 -> REV 22 DEGISIKLIK OZETI
+## 0. REV 22 -> REV 23 DEGISIKLIK OZETI
+
+### Bu Session'da Tamamlananlar (2026-04-16 gece)
+
+| # | PR | SHA | Kapsam | Durum |
+|---|----|-----|--------|-------|
+| 1 | #406 | `c541fb50` | **PR-1 MVP**: Zanzibar persona matrix runner + `zanzibar-canary-setup.mjs` + `run-zanzibar-canary.sh` + `guardrail-check.mjs` CB + phase flag + `pull-grafana-metrics.mjs` authz_decisions/CB metric + `tuples-seed.json` daraltma + **granule-only role NPE guard** (`PermissionService.syncTuplesToOpenFga` + `hasPermission`) | ✅ merged |
+| 2 | #408 | `377b3539` | **PR-2 Polish**: Wrapper cold+warm iki ayri metrics pull + iki ayri guardrail-check (B5 fix) + guardrail-check v2 ops enforcement + `--require-v2-ops` flag (B6 fix) + collector phase flag + 5 yeni optional metric (authz_me_p95, outbox_*, openfga_up) + guardrails.json v1→v2 (11 threshold + 11 PromQL) + probe canary-load dedicated client + runbook full rewrite (8 bolum) | ✅ merged |
+
+**Zincir kuralla izlendi:** CI → Merge → Deploy → Canli — iki PR da canli dogrulandi
+(ai.acik.com 200, authz/version 200, permission-service healthy, null-safe fix runtime).
+
+### Codex Istisare (CNS-20260416-001/002, thread `019d92b5`, 5 tur, ~800K token)
+
+| Tur | Kapsam | Verdict | Bulgular |
+|-----|--------|---------|----------|
+| 1 | PR-1 MVP | 🔴 BLOCK | B1 permissionCode lookup NPE + B2 local permitAll mismatch fırtınası + M1 timeout + M2 VU + M3 estimate JSON |
+| 2 | PR-1 fix turu | 🔴 BLOCK | B3 granule-only RolePermission.permission NULL → `syncTuplesToOpenFga` NPE + B4 guardrail payload uyumsuzlugu + Q3 restore PUT return check + Q5 handleSummary dynamic path |
+| 3 | PR-1 onay | 🟢 APPROVE_WITH_CHANGES | hasPermission null guard + metric query ornekleri |
+| 4 | PR-2 polish | 🔴 BLOCK | B5 Wrapper I/O stdout redirect broken (JSON parse kirik) + B6 v2 ops metric silent skip = Evidence PASS misconfig riski |
+| 5 | PR-2 onay | 🟢 APPROVE_WITH_CHANGES | `--require-v2-ops` flag + step label cleanup |
+
+**Toplam 11 gotcha fix:** B1/B2/B3/B4/B5/B6 + M1/M2/M3 + Q3/Q5. Tum fix'ler
+iki PR'a bolunmus sekilde merged.
+
+### Yeni Memory Kurallari (3 adet, 2026-04-16 direktifleri)
+
+1. **`feedback_codex_review_on_completion.md`** — Her tamamlanan is paketi Codex MCP
+   review zorunlu; BLOCK verdict → fix + ikinci tur; APPROVE olmadan commit/push yok.
+2. **`feedback_codex_pending_parallel_work.md`** — Codex MCP beklerken bagimsiz
+   islere paralel devam (local gate, docs, memory); Codex verdict'e bagimli isler
+   (commit/push/PR) beklenir.
+3. **`feedback_codex_mcp_default.md`** (pekistirildi) — Varsayilan davranis
+   interaktif ping-pong; iterate modu sadece kullanici "kendi aranizda cozun" derse.
+
+### Dalga 1 Stage 2 Altyapi — TAMAM (Operasyonel Stage 2 Protokolu)
+
+> **Not (CNS-20260416-002 Codex tur 6):** Asagida tanimlanan 10-step wrapper ve iki
+> sinyal katmani **doctrine degil, current Stage 2 operational protocol + evidence
+> collection flow**. Doctrine `Rev 22 synthetic canary` olarak kalir (fiziksel 48h
+> yerine 30-60dk k6+probe + Evidence PASS). Bu bolum uygulama detaydir; yarin script
+> gelisirse doctrine degismeden protokol revize edilebilir.
+
+PR #406 + #408 merged sonrasi operasyonel + fonksiyonel iki sinyal katmani tam
+donanimli hale geldi:
+
+**Operasyonel guardrail (Prometheus/Micrometer):**
+- `authz_decisions_total >= 1000` (NO_SIGNAL guard, 30-35dk window)
+- `authz_check_p95_ms < 50`, `authz_error_rate_pct < 0.5`
+- `authz_cache_miss_rate_pct_warm < 50` (cold'da soften)
+- `openfga_circuit_breaker_state == 0` (CLOSED)
+- `tuple_sync_outbox_pending_total < 50`, `oldest_age_s < 300`, `failed_total` artis yok
+- `authz_me_p95_ms < 100`
+- `openfga_up == 1`
+
+**Fonksiyonel persona (k6 custom tag'leri):**
+- `authz_persona_outcome{persona, phase, expected, actual, reason}` Counter
+- `authz_persona_mismatch: rate < 0.01` (persona intent doğrulaması)
+- `authz_persona_latency` (persona + phase bazli p95)
+
+**10-step orchestration wrapper (`run-zanzibar-canary.sh`):**
+setup → probe pre → [ESTIMATE_ONLY exit] → k6 cold → metrics pull cold →
+k6 warm → metrics pull warm → probe post → guardrail cold → guardrail warm.
+Her iki guardrail PASS iff exit 0.
+
+### Rev 22 Backlog Kapatmalari (PR #408 ile)
+
+| # | Madde | Durum Rev 23 |
+|---|-------|--------------|
+| 7 | zanzibar-guardrails.json parse fix | ✅ PR #401 escape + PR #408 v2 library genislet |
+| 8 | guardrail-check.mjs authz metric ZORUNLU | ✅ PR #401 flag + PR #408 v2 ops enforcement |
+| 9 | pull-grafana-metrics.mjs query_range | ⏸ PARTIAL — phase flag + ek metric eklendi; gercek query_range ertelendi PR-3 (Codex "instant scalar + window template yeterli") |
+| 11 | k6 persona matrix MVP | ✅ PR #406 + PR #408 polish |
+| 10 | STORY-0319 scope dar + Vault KMS ayri | ⏸ P0 siradaki |
+| 12 | Playwright E2E explain modal | ⏸ STORY-0319 sonrasi |
+| 13 | Vault prod seal KMS story | ⏸ Dalga 1 Stage 3 blocker, ayri gun |
+| 14 | de/es/pseudo i18n completeness | ⏸ dusuk oncelik |
+
+### Yeni PR-3 Backlog (Codex CNS-20260416-002 tespiti)
+
+- `zanzibar-guardrails.json` **config loader** — guardrail-check.mjs hardcoded
+  threshold'larla calisiyor. JSON suan PromQL library + Grafana alert kaynak.
+  Config loader + consistency test drift riskini kapatir.
+- `pull-grafana-metrics.mjs` **query_range + phase window** — saf cold/warm
+  metric ayrimi icin (su an instant scalar window template yeterli ama prod icin idealsiz).
+- `run-zanzibar-canary.sh` **retry/backoff** — write-path verify jitter
+  toleransi (fail sonrasi exponential retry, 120s uzmasi).
+
+---
+
+## 0.5. REV 21 -> REV 22 DEGISIKLIK OZETI (arsiv)
 
 ### Kullanici direktifi (2026-04-15 aksam)
 
@@ -420,12 +511,33 @@ DALGA 2    DALGA 3
 - [x] **Stage 1 dry-run ilan (CNS-20260415-002 Q4 onerisi, hibrit path):** Deploy altyapi
       healthy + zanzibar endpoints 200 dogrulandi; gercek canary Stage 2 STORY-0319 sonrasi.
 
+**2026-04-16 alinan kararlar (Rev 23):**
+- [x] **Dalga 1 Stage 2 altyapi — PR-1 MVP (PR #406, CNS-20260416-001 tur 1-3):** 5 persona
+      matrix k6 runner + idempotent seed script (tek-shot `/authz/users/{id}/assignments`
+      kullanir, permissionCode'suz) + orchestration wrapper + guardrail CB + phase flag.
+      **Backend fix**: `PermissionService.syncTuplesToOpenFga` + `hasPermission` granule-only
+      role NPE guard (legacy permission entity null tolere edilir). Kanit: commit c541fb50.
+- [x] **Dalga 1 Stage 2 altyapi — PR-2 Polish (PR #408, CNS-20260416-002 tur 4-5):**
+      10-step wrapper (cold+warm iki ayri metrics pull + iki ayri guardrail-check),
+      v2 ops metric enforcement (`authz_me_p95`, outbox_*, openfga_up) `--require-v2-ops`
+      flag ile Evidence PASS strict, `zanzibar-guardrails.json` v1→v2 (11 threshold + 11
+      PromQL library), probe `canary-load` dedicated client, runbook full rewrite.
+      Kanit: commit 377b3539.
+- [x] **Interactive Codex MCP doctrine (2026-04-16 direktif):** Her tamamlanan is
+      paketi Codex review zorunlu; ping-pong default; APPROVE olmadan commit/push yok.
+      Memory: `feedback_codex_review_on_completion.md`, `feedback_codex_pending_parallel_work.md`.
+- [x] **Scope reconciliation stratejisi ertelendi:** Dalga 4 backlog; mevcut
+      TupleSyncOutboxPoller + deny-wins TupleSyncService yeterli synthetic canary icin.
+
 **Bekleyen karar (Dalga 4):**
-- [ ] Scope reconciliation stratejisi: scheduled + on-demand hibrit (Codex onerisi)
+- [ ] Scope reconciliation stratejisi: scheduled + on-demand hibrit (Codex onerisi, Rev 22 backlog #1)
+- [ ] `zanzibar-guardrails.json` config loader + consistency test (PR-3 backlog, Rev 23)
+- [ ] `pull-grafana-metrics.mjs` query_range + phase window (PR-3 backlog, Rev 23 — Codex "instant scalar + window template yeterli" dedi, ertelendi)
 
 **Post-canary karar (FAZ B / PR6-prereq, CNS-20260414-003 Q3):**
-- [ ] auth-service login response DTO `permissions: Set<String>` alani: breaking drop yerine `Set.of()` kompat (frontend `auth.slice.ts` + `LoginPopover.tsx` fallback icin).
-- [ ] TB-11 scope bolme: PR6a (auth-service only) -> PR6b (JWT claim + downstream) -> PR6c (report-service). Kanit: Codex Q4 + F3.
+- [x] auth-service login response DTO `permissions: Set<String>` alani — `Set.of()` kompat UYGULANDI (PR #397/398 merged).
+- [x] TB-11 scope bolme: PR6a (auth-service only) -> PR6b (JWT claim + downstream) -> PR6c-0 (report-service @Deprecated prep) UYGULANDI.
+- [ ] **PR6c-1** (Dalga 3 complete blocker): report-service Dashboard/Report/Export controller `/authz/me` HTTP → `OpenFgaAuthzService.check()` behavior-preserving refactor + regression test. Ayri story, STORY-0319 sonrasi.
 
 ---
 
@@ -438,6 +550,10 @@ DALGA 2    DALGA 3
 | CNS-20260414-002 | 2026-04-14 | Claude + Codex | 212K | Round 2: bulgu dogrulama, uzlasi |
 | CNS-20260414-003 | 2026-04-14 | Claude + Codex (gpt-5.3) | 164K | Rev 20 housekeeping + FAZ B timing — APPROVE_WITH_CHANGES |
 | CNS-20260415-002 | 2026-04-15 | Claude + Codex | 158K | Canli 502 tani + Yon 2 timing — APPROVE_WITH_CHANGES (smoke cleanup root cause; "(b)+containment" yolu; PR6a post-canary enforced; Yon 2 lokal baslat + canli validation ayri lane) |
+| CNS-20260415-003 | 2026-04-15 | Claude + Codex | 158K | Master plan rev 22 synthetic canary doctrine + Dalga 3 esnetme — APPROVE_WITH_CHANGES (5/5 madde uzlasi) |
+| CNS-20260415-004 | 2026-04-15 | Claude + Codex | 191K | k6 persona matrix tasarim — APPROVE_WITH_CHANGES (5 persona tablosu + 3 altyapi fix PR #402/403/404) |
+| CNS-20260416-001 | 2026-04-16 | Claude + Codex | ~500K (3 tur) | PR-1 MVP review — BLOCK → BLOCK → APPROVE_WITH_CHANGES. Bulgular: B1 permissionCode NPE, B2 local permitAll mismatch, B3 granule-only NPE, B4 guardrail payload, M1/M2/M3, Q3/Q5. 9 fix uygulandi (PR #406). Thread `019d92b5`. |
+| CNS-20260416-002 | 2026-04-16 | Claude + Codex | ~300K (2 tur) | PR-2 Polish review — BLOCK → APPROVE_WITH_CHANGES. Bulgular: B5 wrapper I/O broken, B6 v2 ops metric silent skip. 2 fix uygulandi (PR #408). Thread `019d92b5` (ayni thread devam). |
 
 ---
 
@@ -459,37 +575,94 @@ DALGA 2    DALGA 3
 
 ---
 
-## 8. SESSION BASLANGIC REHBERI
+## 8. SESSION BASLANGIC REHBERI (Rev 23, 2026-04-17 sabah)
 
 ```
-1. Plan oku: .claude/plans/zanzibar-master-plan.md (rev 21)
-2. Handoff oku: .claude/plans/session-handoff-20260415-zanzibar-recovery-day2.md
-3. ✅ Dalga 0: Canary Readiness — TAMAMLANDI (PR #365, eaa3d7a1, 2026-04-14)
-4. ✅ Dalga 2: Explain UX polish — %85 TAMAM (PR #394, 5241b6e4, 2026-04-15)
-   - Kalan: ZanzibarGate tooltip + Playwright spec (dusuk oncelik, paralel)
-5. ✅ Dalga 1 Stage 1 (dry-run): deploy altyapi + endpoints healthy
-6. ▶ **SIRADAKI ADIM: STORY-0319** (staging prod-like profile)
+1. Plan oku: .claude/plans/zanzibar-master-plan.md (Rev 23)
+2. Son handoff oku: .claude/plans/session-handoff-20260416-*.md
+3. ✅ Dalga 0: Canary Readiness — PR #365
+4. ✅ Dalga 2: Explain UX — PR #394, #396 (prod-candidate, E2E pending)
+5. ✅ Dalga 3 prep: PR #397/398/399 (PR6a/b + PR6c-0)
+6. ✅ Dalga 1 Stage 1: deploy dry-run
+7. ✅ **Dalga 1 Stage 2 altyapi: PR #406 (MVP) + PR #408 (polish) — 2026-04-16**
+
+▶ **P0 SIRADAKI ADIM: STORY-0319** (staging prod-like profile)
    - Dosya: docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md
-   - Kritik on kosul: Dalga 1 Stage 2'nin gercek canary sinyali uretebilmesi icin
-   - Risk: high. Vault prod seal stratejisi ayri story olabilir.
-   - Gate: doctor-infra.sh profile drift check + acceptance 6 kriteri PASS
-7. ▶ Dalga 1 Stage 2 (STORY-0319 sonrasi): Canary 2-4 gun monitor
-   - gh workflow run deploy-backend.yml
-   - Restricted probe PASS, deny rate gercek deger, JWT validation aktif
-8. ▶ Dalga 1 Stage 3: Full rollout 48h stabil
-9. Dalga 3: Legacy temizlik (post-canary)
-   - PR6a: auth-service only (Set.of() kompat)
-   - PR6b: JWT claim + downstream
-   - PR6c: report-service legacy HTTP client
+   - Risk: HIGH. Fresh mind + monitoring ile yap (gece YAPILMAZ).
+   - Kapsam: 7 servis SPRING_PROFILES_ACTIVE=prod,docker + GHCR image pull
+     credentials + Keycloak issuer hostname + nginx WEB_GATEWAY_UPSTREAM
+     DEPLOY_ENV-aware + doctor-infra.sh profile drift check + canary-load
+     Keycloak client realm export'a ekle (PR-2 runbook §5.6 prereq).
+   - **Vault prod seal KMS AYRI STORY** (backlog #13, Dalga 1 Stage 3 icin).
+   - Gate: 8 kriter PASS (STORY-0319 acceptance).
 
-**Bugun yasananlar (2026-04-15):**
-- 08:50 smoke workflow canli stack'i silmisti (dun kalinti)
-- 14:06 PR #392 smoke containment merged
-- 14:20 PR #393 RLS fresh-boot merged
-- 15:35 Vault fresh init + unseal (manual intervention)
-- 15:44 docker compose up -d (22 container)
-- 15:47 PR #394 Explain UX merged
-- 15:50 Deploy-web success, canli bundle 12:50:35
-- 15:52 Canli dogrulama PASS
-6. Dalga 4: Backlog (reconciliation, model versioning, k6 CI, doctor 51-52)
+▶ P1 Dalga 1 Stage 2 synthetic canary RUN (STORY-0319 sonrasi):
+   - bash backend/scripts/perf/run-zanzibar-canary.sh
+   - 10-step: setup → probe pre → k6 cold → metrics cold → k6 warm →
+     metrics warm → probe post → guardrail cold → guardrail warm
+   - Output: .cache/reports/zanzibar-canary/<RUN_ID>/
+   - Evidence PASS iff cold+warm guardrail 0 violation
+
+▶ P2 Dalga 1 Stage 3 Evidence PASS:
+   - Audit checklist (RB-zanzibar-canary.md §3.3):
+     doctor-full + smoke-yeşil + 5 persona probe + authz_decisions>=1000 +
+     CB CLOSED + outbox drift guard + cold/warm raporlar + STORY-0319 audit
+
+▶ P3 Dalga 3 complete — PR6c-1 (Dalga 3 blocker):
+   - report-service Dashboard/Report/Export controller
+     `/authz/me` HTTP → `OpenFgaAuthzService.check()` behavior-preserving
+   - Regression test + mvn test + deploy-backend dogrulama
+
+▶ P4 Dalga 2 release gate — Playwright E2E explain modal:
+   - STORY-0319 sonrasi (auth-enabled staging gerekli)
+   - Gercek login + /access navigate + modal interact + i18n/pseudo
+
+▶ Dalga 4 Backlog (onceligi siraya gore):
+   - Scope reconciliation (scheduled + on-demand hibrit, Codex tasarim bekliyor)
+   - Vault KMS prod seal story (Stage 3 blocker)
+   - zanzibar-guardrails.json config loader (Rev 23 PR-3)
+   - pull-grafana-metrics query_range + phase window (Rev 23 PR-3)
+   - OpenFGA model version management
+   - k6 CI workflow (regression gate)
+   - de/es/pseudo i18n completeness
+
+**Bu session (2026-04-16 gece) yasananlar:**
+- 22:00 session basladi, Rev 22 baglam alindi
+- 22:30 PR-1 planlama + keşif + worktree
+- 23:30 PR-1 MVP commit (Codex tur 1 → tur 2 → tur 3)
+- 00:00 PR #406 merged (c541fb50), deploy success, canli 200
+- 00:30 PR-2 polish worktree + Codex tur 4 → tur 5
+- 01:00 PR #408 acildi, 3 docs fix (section heading + numbering + strictness)
+- 01:30 PR #408 rebase + merged (377b3539), deploy success
+- 01:45 Master plan Rev 23 guncellemesi (bu commit)
 ```
+
+### Kanonik Referanslar (Rev 23 onboarding icin)
+
+- **Master plan:** `.claude/plans/zanzibar-master-plan.md` (Rev 23, bu dosya)
+- **Son handoff:** `.claude/plans/session-handoff-20260416-*.md`
+- **Decision registry:** `decisions/topics/zanzibar-openfga.v1.json` (D-001..D-008 FINAL, C-001..C-008)
+- **ADR-0013:** `docs/02-architecture/services/ops/ADR/ADR-0013-permission-service-hub-role.md`
+- **TB-11:** `docs/04-operations/TB-11-legacy-permission-inventory.md`
+- **Canary runbook:** `docs/04-operations/RUNBOOKS/RB-zanzibar-canary.md` (8 bolum, Rev 22 synthetic canary + 5 persona + cold/warm + 6 ariza senaryosu)
+- **Guardrail thresholds + PromQL library:** `backend/scripts/ci/canary/zanzibar-guardrails.json` (v2, 11 threshold + 11 query)
+- **Orchestration wrapper:** `backend/scripts/perf/run-zanzibar-canary.sh` (10-step)
+- **k6 persona script:** `backend/scripts/perf/k6-zanzibar-check.js`
+- **Setup script:** `backend/scripts/ci/canary/zanzibar-canary-setup.mjs`
+- **Guardrail checker:** `backend/scripts/ci/canary/guardrail-check.mjs` (v2 ops metric enforcement, --require-v2-ops flag)
+- **Metric collector:** `backend/scripts/ci/canary/pull-grafana-metrics.mjs` (phase flag, 5 optional v2 metric)
+- **Restricted probe:** `backend/scripts/ci/canary/zanzibar-restricted-probe.sh` (canary-load client)
+- **Doctor:** `backend/scripts/doctor-zanzibar.sh` (`--quick` 61 check)
+- **Memory kurallari:** `~/.claude/projects/-Users-halilkocoglu-Documents-dev/memory/`
+  - `feedback_codex_mcp_default.md` (MCP ping-pong default)
+  - `feedback_codex_review_on_completion.md` (review zorunlu)
+  - `feedback_codex_pending_parallel_work.md` (paralel is)
+  - `feedback_compose_management.md`, `feedback_infra_stability.md`, vb.
+- **Evidence lokasyonu:** `.cache/reports/zanzibar-canary/<RUN_ID>/` — cold-k6-summary.json, warm-k6-summary.json, prom-cold.json, prom-warm.json, guardrail-cold.log, guardrail-warm.log, setup.log, probe-pre.log, probe-post.log
+
+### Onemli Uyarilar
+
+- **Local smoke ≠ Evidence PASS:** `LOCAL_PERMIT_ALL=1 ESTIMATE_ONLY=1` modu **pre-evidence/calibration** kanitidir. Stage 3 Evidence PASS icin STORY-0319 sonrasi auth-enabled staging'de gercek run gerekli.
+- **STORY-0319 fresh mind gerektirir:** 7 servis + GHCR + Vault + nginx + doctor degisikligi. Gece YAPILMAZ. Pazartesi sabah monitoring aktif olarak yapilmali. Rollback plani hazir olmali.
+- **Vault KMS = AYRI STORY (#13):** STORY-0319 scope'unda degildir. Prod seal stratejisi (KMS auto-unseal + IAM + break-glass) ayri gun.
+- **PR-3 backlog gerekcesi:** `zanzibar-guardrails.json` config loader eksikligi drift riski yaratir (guardrail-check hardcoded); `pull-grafana-metrics query_range` saf cold/warm metric ayrimi icin gereklidir (instant scalar + window template su an yeterli ama prod icin idealsiz). Bu maddeler Stage 2 runnable'i bozmuyor, ertelendi.
