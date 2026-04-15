@@ -63,7 +63,7 @@ iki faz + restricted probe ile deterministik **Evidence PASS** üretilir.
 | 4 — Backlog | 14 madde | master-plan Rev 22 §4 |
 
 -------------------------------------------------------------------------------
-3. BAŞLATMA / DURDURMA (3 Stage)
+3. BAŞLATMA / DURDURMA
 -------------------------------------------------------------------------------
 
 ### 3.1 Stage 1 — Deploy (Flags ON, verify health)
