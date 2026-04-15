@@ -429,13 +429,25 @@ jobs:
             "${repo_dir}/deploy/ubuntu/rollback-frontend.sh" \
             "${repo_dir}/deploy/ubuntu/run-frontend-nginx-container.sh"
 
+          # Stage-specific upstream defaults override repo vars.WEB_*.
+          # Repo vars are prod-oriented (gateway 8082, keycloak 8080) but staging runs
+          # the backend/docker-compose.yml stack where:
+          #   - api-gateway: host port 8080 (container 8080:8080)
+          #   - keycloak:    host port 8081 (container maps 8080→8081 on host)
+          # Without these overrides, every stage deploy produced:
+          #   /api/* → 502 (nginx → 127.0.0.1:8082 where nothing listens)
+          #   /realms/* → 404 (nginx → 127.0.0.1:8080 served by gateway, not keycloak)
+          # Repo vars kept unchanged so prod deploy path in deploy-backend-host keeps working.
+          STAGE_GATEWAY_UPSTREAM="http://127.0.0.1:8080"
+          STAGE_KEYCLOAK_UPSTREAM="http://127.0.0.1:8081"
+
           PUBLIC_ORIGIN="${WEB_PUBLIC_ORIGIN}" \
           AUTH_MODE="${WEB_AUTH_MODE:-keycloak}" \
           KEYCLOAK_PUBLIC_URL="${WEB_KEYCLOAK_PUBLIC_URL:-${WEB_PUBLIC_ORIGIN}}" \
           KEYCLOAK_REALM="${WEB_KEYCLOAK_REALM:-serban}" \
           KEYCLOAK_CLIENT_ID="${WEB_KEYCLOAK_CLIENT_ID:-frontend}" \
-          NGINX_GATEWAY_UPSTREAM="${WEB_GATEWAY_UPSTREAM:-http://127.0.0.1:8080}" \
-          NGINX_KEYCLOAK_UPSTREAM="${WEB_KEYCLOAK_UPSTREAM:-http://127.0.0.1:8080}" \
+          NGINX_GATEWAY_UPSTREAM="${STAGE_GATEWAY_UPSTREAM}" \
+          NGINX_KEYCLOAK_UPSTREAM="${STAGE_KEYCLOAK_UPSTREAM}" \
           NGINX_SERVER_NAME="${WEB_EDGE_SERVER_NAME:-_}" \
           NGINX_TLS_ENABLED="${WEB_TLS_ENABLED:-false}" \
           NGINX_TLS_CERT_PATH="${WEB_TLS_CERT_PATH:-}" \
