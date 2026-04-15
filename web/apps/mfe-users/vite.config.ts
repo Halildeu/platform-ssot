@@ -72,6 +72,7 @@ const singleton = (
 ) => ({
   singleton: true,
   strictVersion: true,
+  import: false,
   requiredVersion: deps[versionKey] ?? fallback,
   ...extra,
 });

@@ -31,6 +31,7 @@ const deps = pkg.dependencies as Record<string, string>;
 const singleton = (name: string, fallback: string | boolean = false) => ({
   singleton: true,
   strictVersion: true,
+  import: false,
   requiredVersion: deps[name] ?? fallback,
 });
 const sharedCore = {
