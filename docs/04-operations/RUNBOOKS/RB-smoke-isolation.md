@@ -110,7 +110,7 @@ hook içinde, `doctor-zanzibar.sh` (full) CI'da çalışır.
   izolasyon katmanını güçlendir.
 
 -------------------------------------------------------------------------------
-4. İZLEME
+4. GÖZLEMLEME / LOG / METRİKLER
 -------------------------------------------------------------------------------
 
 4.1 PR-ölçekli doğrulama
@@ -137,7 +137,7 @@ hook içinde, `doctor-zanzibar.sh` (full) CI'da çalışır.
 - Full doctor run PASS (A21 + A22).
 
 -------------------------------------------------------------------------------
-5. SORUN GİDERME
+5. ARIZA DURUMLARI VE ADIMLAR
 -------------------------------------------------------------------------------
 
 5.1 Smoke run'ı manuel dispatch ile başladı ama izole project'te çalışmıyor
@@ -177,7 +177,19 @@ Re-enable PR'ı içerikleri:
 - Runbook Status `Active` → `Archived` olur, incident referansı korunur.
 
 -------------------------------------------------------------------------------
-6. REFERANSLAR
+6. ÖZET
+-------------------------------------------------------------------------------
+
+Zanzibar Smoke Test workflow'unun `workflow_run` auto-trigger'ı ve aynı
+`platform` compose project'inde çalıştırılması 2026-04-15'te canlı stack'i
+yok etti (17 servis + volume'lar). Fix 3 katman defense-in-depth:
+(1) script içinde izole `COMPOSE_PROJECT_NAME='platform-smoke-*'`,
+(2) workflow auto-trigger geçici disabled (manuel dispatch + nightly
+schedule kaldı), (3) doctor A21 + A22 drift guard check'leri. Containment
+phase sonrası `workflow_run` geri açma kriterleri §5'te tanımlı.
+
+-------------------------------------------------------------------------------
+7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
 - Incident: 2026-04-15 canlı 502 + 17 servis kayıp.
