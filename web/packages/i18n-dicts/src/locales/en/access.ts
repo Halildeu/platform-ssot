@@ -201,6 +201,21 @@ const access = {
   'access.drawer.levelView': 'View',
   'access.drawer.levelManage': 'Manage',
   'access.drawer.noEditPermission': 'You do not have permission to edit this role.',
+
+  // Phase 4 Explain UX: per-permission "Why?" modal
+  'access.explainModal.title': 'Access explanation for "{label}"',
+  'access.explainModal.loading': 'Checking...',
+  'access.explainModal.errorTitle': 'Could not fetch explanation',
+  'access.explainModal.close': 'Close',
+  'access.explainModal.permissionTypeLabel': 'Permission type',
+  'access.explainModal.permissionKeyLabel': 'Permission key',
+  'access.explainModal.sourceRoleLabel': 'Source role',
+  'access.explainModal.grantTypeLabel': 'Grant type',
+  'access.explainModal.userRolesLabel': 'User roles',
+  'access.explainModal.triggerAria': 'Why button for {label}',
+  'access.explainModal.triggerTitle': 'Why this permission?',
+  'access.explainModal.noUserTitle': 'No user selected',
+  'access.explainModal.noUserDescription': 'A user context is required to fetch an explanation.',
 };
 
 export default access;
