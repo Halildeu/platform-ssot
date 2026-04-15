@@ -10,14 +10,16 @@ const deps = pkg.dependencies as Record<string, string>;
 const singleton = (name: string, fallback: string | boolean = false) => ({
   singleton: true,
   strictVersion: true,
-  import: false,
   requiredVersion: deps[name] ?? fallback,
 });
+
+const hostOnly = (shareKey: string, versionKey: string = shareKey, fallback: string | boolean = false) =>
+  singleton(shareKey, versionKey, fallback, { import: false });
 const sharedCore = {
-  react: singleton('react'),
-  'react-dom': singleton('react-dom'),
-  'react-router': singleton('react-router'),
-  'react-router-dom': singleton('react-router-dom'),
+  react: hostOnly('react'),
+  'react-dom': hostOnly('react-dom'),
+  'react-router': hostOnly('react-router'),
+  'react-router-dom': hostOnly('react-router-dom'),
   '@tanstack/react-query': singleton('@tanstack/react-query'),
 };
 const sharedProdOnly = {};
