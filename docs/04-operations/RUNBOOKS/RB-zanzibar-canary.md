@@ -47,17 +47,28 @@ Stage 1 — Deploy (Flags ON by default, verify health, Day 1):
 - Run: smoke-zanzibar.yml workflow (manual dispatch).
 - Rollback: Standard rollback (previous image tag).
 
-Stage 2 — Canary (Flags ON, Admin + Restricted, Day 2-4):
-- Set ERP_OPENFGA_ENABLED=true for permission-service + core-data-service.
-- Set SCOPE_CACHE_ENABLED=true, AUTHZ_VERSION_ENABLED=true.
-- Restart: docker compose restart permission-service core-data-service
-- Monitor 48h (guardrails below).
-- Run restricted probe: zanzibar-restricted-probe.sh (superAdmin=false, THEME denied, ACCESS granted).
-- Rollback: ERP_OPENFGA_ENABLED=false + restart (< 1 min).
+Stage 2 — Synthetic Canary (Rev 22, CNS-20260415-003/004 uzlaşısı):
+- **Tanım değişikliği (Rev 22):** Eski "48h fiziksel canary" staging'de gerçek kullanıcı trafiği olmadığı için metric üretemiyor → synthetic load ile deterministik Evidence PASS.
+- **Runner:** `bash backend/scripts/perf/run-zanzibar-canary.sh`
+- **Guardrail metric query env'leri (auth-enabled run için ZORUNLU, CNS-20260416-001):**
+  - `CANARY_PROM_URL`, `CANARY_AUTHZ_CHECK_QUERY`, `CANARY_AUTHZ_DENY_QUERY`, `CANARY_AUTHZ_ERROR_QUERY`, `CANARY_AUTHZ_CACHE_MISS_QUERY`
+  - `CANARY_AUTHZ_DECISIONS_QUERY='sum(increase(authz_decisions_total[35m]))'` (NO_SIGNAL guard, >= 1000)
+  - `CANARY_OPENFGA_CB_QUERY='max(openfga_circuit_breaker_state)'` (0=CLOSED)
+  - Local smoke: `SKIP_METRICS=1` ile guardrail skip
+- **Akış:** setup (idempotent seed + write-path version verify) → probe pre → k6 cold (~30dk) → k6 warm (version bump YOK) → probe post → Prometheus metrics pull → guardrail-check.
+- **5 persona matrix:** super-admin / read-only / restricted / multi-role+DENY / scope-less. Yük profili: ~160 decisions/min toplam → 30dk'da 4800+ (NO_SIGNAL guard `authz_decisions_total >= 1000` karşılanır).
+- **İki sinyal katmanı:**
+  - Operasyonel: Prometheus — `authz_decisions_total`, p95, error rate, warm cache miss, `openfga_circuit_breaker_state=0` (CLOSED).
+  - Fonksiyonel: k6 custom — `authz_persona_mismatch: rate<0.01` (persona intent ile gerçekleşen farkı).
+- **Intentional deny bandı %4-5** (aggregate guardrail persona intent ile kirlenmesin).
+- **Cold+warm iki ayrı run:** cold'da cache miss threshold soften (log-only), warm'da < 50% zorunlu.
+- **Local smoke (STORY-0319 öncesi):** `LOCAL_PERMIT_ALL=1 ESTIMATE_ONLY=1 bash .../run-zanzibar-canary.sh` → OpenFGA disabled permitAll'da smoke + decision floor projeksiyonu.
+- **Rollback:** `ERP_OPENFGA_ENABLED=false` + restart (< 1 dk).
 
-Stage 3 — Full Rollout (Day 5-14):
-- Stage 2 stable 48h → keep flags ON.
-- No traffic splitting (not applicable for current architecture).
+Stage 3 — Synthetic Canary Evidence PASS (Rev 22):
+- **Eski:** "48h stable full rollout" (staging sinyal üretmediği için anlamsız).
+- **Yeni kriter:** Audit checklist PASS — doctor-zanzibar full + smoke workflow yeşil + 5 persona probe PASS + `authz_decisions_total >= 1000` + CB CLOSED + outbox pending/failed drift guard + cold/warm raporlar + STORY-0319 profile doğrulandı.
+- **Prod-trafiği canary:** Post-STORY-0319 ayrı story (synthetic gerçek prod pattern'ini tam simule etmez).
 
 -------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER
