@@ -4,6 +4,22 @@
 # Exit: 0 = all PASS, 1 = any FAIL
 set -euo pipefail
 
+# ── Smoke isolation (P0 fix 2026-04-15 incident) ─────────────────
+# Canli 'platform' compose project ile namespace cakismasi YASAK.
+# Cleanup trap (satir 52-58) 'platform' project'ine vurunca canli
+# stack'i sildi (incident 2026-04-15 08:50). Smoke her zaman izole
+# 'platform-smoke-*' project'inde calisir. Fail-closed drift guard
+# altta COMPOSE_PROJECT_NAME'in override edilmesini engeller.
+# Dokuman: docs/04-operations/RUNBOOKS/RB-smoke-isolation.md
+export COMPOSE_PROJECT_NAME="platform-smoke-${GITHUB_RUN_ID:-$$}"
+
+if [[ ! "$COMPOSE_PROJECT_NAME" == platform-smoke-* ]]; then
+  echo "::error::SMOKE ISOLATION VIOLATION: COMPOSE_PROJECT_NAME='$COMPOSE_PROJECT_NAME' (beklenen: platform-smoke-*)" >&2
+  echo "::error::Bu script ASLA canli 'platform' project'inde calistirilmamali." >&2
+  exit 1
+fi
+echo ">> Smoke isolation: COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME"
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 COMPOSE_FILE="$REPO_ROOT/backend/docker-compose.yml"

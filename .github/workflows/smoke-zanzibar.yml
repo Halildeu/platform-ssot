@@ -1,21 +1,28 @@
 name: Zanzibar Smoke Test
 
+# workflow_run auto-trigger GECICI DISABLED (2026-04-15 P0 incident):
+# Smoke cleanup trap canli 'platform' stack'i sildi (17 servis kayip).
+# Containment phase'de sadece manuel dispatch + nightly schedule.
+# Katman 1: scripts/docker-smoke-test.sh COMPOSE_PROJECT_NAME izolasyonu
+# Katman 2: bu workflow auto-trigger kapali (gradual rollout)
+# Katman 3: backend/scripts/doctor-zanzibar.sh A21 + A22 drift guard
+# Re-enable kriterleri: docs/04-operations/RUNBOOKS/RB-smoke-isolation.md
 on:
-  workflow_run:
-    workflows: [deploy-backend]
-    types: [completed]
-    branches: [main]
   workflow_dispatch:
     inputs:
       timeout:
         description: 'Smoke test timeout (seconds)'
         default: '120'
+  schedule:
+    # Nightly @ 02:30 UTC — smoke fail canli stack'i silmez cunku
+    # docker-smoke-test.sh izole COMPOSE_PROJECT_NAME'de calisir.
+    - cron: '30 2 * * *'
 
 jobs:
   smoke-zanzibar:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
+      github.event_name == 'schedule'
     runs-on: [self-hosted, stage-backend]
     timeout-minutes: 10
     steps:
