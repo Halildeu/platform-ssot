@@ -16,6 +16,14 @@ interface ZanzibarGateProps {
   loadingFallback?: React.ReactNode;
   /** HTTP POST function for server checks */
   httpPost?: (url: string, body: any) => Promise<{ data: any }>;
+  /**
+   * Faz 4 Explain UX: reason shown as tooltip when access is 'disabled'.
+   * Consumer typically passes a short i18n string like
+   * `t('access.drawer.noEditPermission')` or a dynamic explain result.
+   * When provided, children are wrapped in a `<span>` with `title` +
+   * `aria-disabled="true"` so assistive tech + hover tooltip both show reason.
+   */
+  disabledReason?: string;
 }
 
 /**
@@ -26,6 +34,12 @@ interface ZanzibarGateProps {
  *   <ZanzibarGate relation="can_view" objectType="report" objectId="HR_REPORTS">
  *     <ReportDashboard />
  *   </ZanzibarGate>
+ *
+ * Disabled + tooltip (Faz 4):
+ *   <ZanzibarGate relation="can_edit" objectType="module" objectId="ACCESS"
+ *     disabledReason={t('access.drawer.noEditPermission')}>
+ *     <Button>Save</Button>
+ *   </ZanzibarGate>
  */
 export function ZanzibarGate({
   relation,
@@ -35,11 +49,28 @@ export function ZanzibarGate({
   fallback = null,
   loadingFallback = null,
   httpPost,
+  disabledReason,
 }: ZanzibarGateProps) {
   const { access, loading } = useZanzibarAccess(relation, objectType, objectId, httpPost);
 
   if (loading) return <>{loadingFallback}</>;
   if (access === 'hidden') return <>{fallback}</>;
+
+  // Faz 4 Explain UX: disabled state renders children wrapped with tooltip + aria.
+  // Children remain visible (consumer decides how to visually disable via access prop).
+  if (access === 'disabled' && disabledReason) {
+    return (
+      <span
+        title={disabledReason}
+        aria-disabled="true"
+        data-zanzibar-disabled="true"
+        data-testid="zanzibar-gate-disabled"
+        style={{ display: 'inline-block' }}
+      >
+        {children}
+      </span>
+    );
+  }
 
   return <>{children}</>;
 }
