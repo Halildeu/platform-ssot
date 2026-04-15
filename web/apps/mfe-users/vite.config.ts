@@ -71,6 +71,7 @@ const singleton = (
   extra: Record<string, boolean | string> = {},
 ) => ({
   singleton: true,
+  eager: true,
   requiredVersion: deps[versionKey] ?? fallback,
   ...extra,
 });
