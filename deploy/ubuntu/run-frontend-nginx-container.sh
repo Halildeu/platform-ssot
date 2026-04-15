@@ -184,6 +184,30 @@ server {
   root /usr/share/nginx/html;
   index index.html;
 
+  # 2026-04-15: entry files MUST NOT be cached. Each build produces hashed
+  # asset filenames referenced from index.html and remoteEntry.js. A stale
+  # cached entry references assets that 404 after redeploy; browsers then
+  # serve cached copies of dead hashes. Incident log: cache-locked MFE
+  # runtime blocked live updates for hours. Hash-based assets below keep
+  # their 1h immutable cache — only entry files are no-store.
+  location = / {
+    try_files /index.html =404;
+    add_header Cache-Control "no-store, must-revalidate" always;
+    add_header Pragma "no-cache" always;
+  }
+  location = /index.html {
+    add_header Cache-Control "no-store, must-revalidate" always;
+    add_header Pragma "no-cache" always;
+  }
+  location = /remoteEntry.js {
+    try_files \$uri =404;
+    add_header Cache-Control "no-store, must-revalidate" always;
+  }
+  location ~ ^/remotes/[^/]+/remoteEntry\.js$ {
+    try_files \$uri =404;
+    add_header Cache-Control "no-store, must-revalidate" always;
+  }
+
   # Block Keycloak admin console (not /admin/reports, /admin/users etc.)
   location /admin/master/ {
     return 403;
@@ -213,6 +237,17 @@ server {
   }
 
   resolver 127.0.0.11 valid=10s;
+
+  # Cockpit dashboard widgets call /cockpit-api on staging; the control-plane
+  # orchestrator (port 8790) is not deployed here. Return a graceful JSON 503
+  # so frontend code can render "offline" state instead of crashing on
+  # "Unexpected token <" (HTML SPA fallback). Widgets were removed from the
+  # public HomePage on 2026-04-15 but this proxy remains as safety net.
+  location /cockpit-api/ {
+    default_type application/json;
+    add_header Cache-Control "no-store" always;
+    return 503 "{\"status\":\"offline\",\"error\":\"Cockpit API not available in this environment\"}";
+  }
 
   location /api/services/ {
     proxy_http_version 1.1;
