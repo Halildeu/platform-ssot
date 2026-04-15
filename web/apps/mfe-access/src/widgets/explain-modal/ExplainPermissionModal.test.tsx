@@ -1,8 +1,23 @@
 // @vitest-environment jsdom
-import { test, expect, vi } from 'vitest';
+import { test, expect, vi, beforeAll } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { ExplainPermissionModal } from './ExplainPermissionModal';
+
+// jsdom'da HTMLDialogElement.showModal/close desteklenmez.
+// Design-system Modal bu API'ye bagli; test'ler icin polyfill gerekli.
+beforeAll(() => {
+  if (!HTMLDialogElement.prototype.showModal) {
+    HTMLDialogElement.prototype.showModal = function () {
+      this.open = true;
+    };
+  }
+  if (!HTMLDialogElement.prototype.close) {
+    HTMLDialogElement.prototype.close = function () {
+      this.open = false;
+    };
+  }
+});
 
 // Hook mock — STORY-0318 §6 DENY senaryosu
 vi.mock('@mfe/auth', () => ({
