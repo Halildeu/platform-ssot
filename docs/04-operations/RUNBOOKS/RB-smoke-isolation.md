@@ -161,13 +161,13 @@ hook içinde, `doctor-zanzibar.sh` (full) CI'da çalışır.
 Aşağıdaki şartların HEPSİ sağlandığında `workflow_run: [deploy-backend]`
 auto-trigger geri açılabilir:
 
-1. 3 kez ardışık manuel dispatch smoke PASS (farklı SHA'larda).
-2. 1 hafta nightly schedule smoke failure'ı canlı stack'i etkilememiş
-   (stage host'ta `platform` stack uptime continuous).
-3. `doctor-zanzibar.sh` full A21 + A22 PASS (regression olmamış).
-4. Stage deploy + smoke bağımsız test (farklı deploy run'larında).
-5. Smoke isolation stratejisine uygun idempotent run testi (aynı
-   run_id ikinci çağrı namespace collision yapmamalı).
+- (a) 3 kez ardışık manuel dispatch smoke PASS (farklı SHA'larda).
+- (b) 1 hafta nightly schedule smoke failure'ı canlı stack'i etkilememiş
+  (stage host'ta `platform` stack uptime continuous).
+- (c) `doctor-zanzibar.sh` full A21 + A22 PASS (regression olmamış).
+- (d) Stage deploy + smoke bağımsız test (farklı deploy run'larında).
+- (e) Smoke isolation stratejisine uygun idempotent run testi (aynı
+  run_id ikinci çağrı namespace collision yapmamalı).
 
 Re-enable PR'ı içerikleri:
 
