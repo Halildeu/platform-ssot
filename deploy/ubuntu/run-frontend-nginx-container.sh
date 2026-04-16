@@ -20,7 +20,19 @@ NGINX_TLS_ENABLED="${NGINX_TLS_ENABLED:-true}"
 NGINX_TLS_CERT_PATH="${NGINX_TLS_CERT_PATH:-/home/halil/platform/tls/ai.acik.com/fullchain.pem}"
 NGINX_TLS_KEY_PATH="${NGINX_TLS_KEY_PATH:-/home/halil/platform/tls/ai.acik.com/privkey.pem}"
 # Host network mode: use 127.0.0.1 with host-side ports (Docker DNS unavailable)
-NGINX_GATEWAY_UPSTREAM="${NGINX_GATEWAY_UPSTREAM:-http://127.0.0.1:8080}"
+# STORY-0319: DEPLOY_ENV-aware gateway upstream port.
+#   - staging: api-gateway host port 8080 (backend/docker-compose.yml default)
+#   - prod:    api-gateway host port 8082 (deploy/docker-compose.prod.yml API_GATEWAY_PORT)
+# Memory ref: feedback_infra_stability.md "nginx gateway upstream DEPLOY_ENV-aware gerekli"
+# PR #372 COMPOSE_FILE DEPLOY_ENV-aware pattern'ini nginx'e genişletir.
+case "${DEPLOY_ENV:-staging}" in
+  prod|production)
+    NGINX_GATEWAY_UPSTREAM="${NGINX_GATEWAY_UPSTREAM:-http://127.0.0.1:8082}"
+    ;;
+  *)
+    NGINX_GATEWAY_UPSTREAM="${NGINX_GATEWAY_UPSTREAM:-http://127.0.0.1:8080}"
+    ;;
+esac
 # Default to host port (8081) since nginx runs --network host and can't resolve Docker DNS.
 # Keycloak container maps 8080→8081 on host.
 NGINX_KEYCLOAK_UPSTREAM="${NGINX_KEYCLOAK_UPSTREAM:-http://127.0.0.1:8081}"
