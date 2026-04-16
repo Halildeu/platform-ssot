@@ -29,7 +29,17 @@ yaratıyor:
 - `SECURITY_JWT_ISSUER(S)` `ai.acik.com`'u içermiyorsa → prod token'lar 401.
 
 -------------------------------------------------------------------------------
-2. TESPİT — doctor-infra.sh
+2. KAPSAM
+-------------------------------------------------------------------------------
+
+- **Sorumlu:** Platform Engineering (deploy ops), @halil (owner).
+- **Ortamlar:** stage (öncelikli), prod (adopte edilecek).
+- **Servisler:** report-service (asıl hedef), diğer backend servisler (spring profile çapraz kontrol).
+- **Tetikleyici:** Her `deploy-backend` workflow çalışması sonrası manuel doctor run. İleride otomatik post-deploy entegrasyon planlı (bölüm 5).
+- **Başarı kriteri:** `doctor-infra.sh` exit 0 (L1-L8 PASS).
+
+-------------------------------------------------------------------------------
+3. TESPİT — doctor-infra.sh
 -------------------------------------------------------------------------------
 
 `backend/scripts/doctor-infra.sh` L-section'ı artık drift'i yakalıyor
@@ -57,7 +67,7 @@ bash /home/halil/platform/repo/backend/scripts/doctor-infra.sh --quick
 Exit 0 → drift yok. Exit 1 → drift var, müdahale gerekli.
 
 -------------------------------------------------------------------------------
-3. DÜZELTME — Canonical env sync
+4. DÜZELTME — Canonical env sync
 -------------------------------------------------------------------------------
 
 Drift tespit edilirse canonical env'i repo `.env` ile hizala:
@@ -91,7 +101,7 @@ bash /home/halil/platform/repo/backend/scripts/doctor-infra.sh
 ```
 
 -------------------------------------------------------------------------------
-4. DEPLOY ZİNCİRİNE ENTEGRASYON (gelecek iş)
+5. DEPLOY ZİNCİRİNE ENTEGRASYON (gelecek iş)
 -------------------------------------------------------------------------------
 
 **Şu an:** `doctor-infra.sh` manuel çalıştırılıyor. Post-deploy health check
@@ -108,7 +118,7 @@ template'inden üret (`backend.env.template` + envsubst). Drift imkânsız hale
 gelir ama template maintenance ek iş.
 
 -------------------------------------------------------------------------------
-5. KÖKEN
+6. KÖKEN
 -------------------------------------------------------------------------------
 
 - **PR #422** (a5a4f389) report-service direct OpenFGA SDK migration. Deploy
@@ -122,7 +132,7 @@ gelir ama template maintenance ek iş.
 - **PR #424** (bu PR): doctor-infra.sh L3-L8 drift guard + runbook.
 
 -------------------------------------------------------------------------------
-6. LİNKLER
+7. LİNKLER
 -------------------------------------------------------------------------------
 
 - Codex thread: `019d9688-233c-7c50-85f0-73ee5d106753` (CNS-20260416-003)
