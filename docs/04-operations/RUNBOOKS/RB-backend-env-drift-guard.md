@@ -83,28 +83,28 @@ Drift tespit edilirse canonical env'i repo `.env` ile hizala:
 ```bash
 ssh staging-sw
 
-# 1. Backup al
+# Step A — Backup al
 cp /home/halil/platform/env/backend.env \
    /home/halil/platform/env/backend.env.bak-$(date +%Y%m%d-%H%M%S)
 
-# 2. Eksik entry'leri ekle (repo .env'den kopyala)
+# Step B — Eksik entry'leri ekle (repo .env'den kopyala)
 grep -E "^(USER_SERVICE_PROFILES|AUTH_SERVICE_PROFILES|VARIANT_SERVICE_PROFILES|CORE_DATA_SERVICE_PROFILES|API_GATEWAY_PROFILES|PERMISSION_SERVICE_PROFILES|REPORT_SERVICE_PROFILES|ERP_OPENFGA_ENABLED|ERP_OPENFGA_STORE_ID|ERP_OPENFGA_MODEL_ID|SECURITY_JWT_ISSUER|SECURITY_JWT_ISSUERS)=" \
     /home/halil/platform/repo/backend/.env \
     >> /home/halil/platform/env/backend.env
 
-# 3. Container'ları env'den yeniden başlat
+# Step C — Container'ları env'den yeniden başlat
 cd /home/halil/platform/repo/backend
 docker compose up -d --force-recreate
 
-# 4. Vault unseal (recreate sonrası sealed gelir)
+# Step D — Vault unseal (recreate sonrası sealed gelir)
 UNSEAL=$(cat /home/halil/platform/state/vault-dev/vault-unseal-key)
 docker exec -e VAULT_ADDR=http://127.0.0.1:8200 platform-vault-1 \
     vault operator unseal "$UNSEAL"
 
-# 5. Dependent servisleri tekrar başlat (Vault healthy olduktan sonra)
+# Step E — Dependent servisleri tekrar başlat (Vault healthy olduktan sonra)
 docker compose up -d auth-service user-service permission-service api-gateway
 
-# 6. Doğrula
+# Step F — Doğrula
 bash /home/halil/platform/repo/backend/scripts/doctor-infra.sh
 ```
 
