@@ -39,8 +39,14 @@ yaratıyor:
 - **Başarı kriteri:** `doctor-infra.sh` exit 0 (L1-L8 PASS).
 
 -------------------------------------------------------------------------------
-3. TESPİT — doctor-infra.sh
+3. BAŞLATMA / DURDURMA
 -------------------------------------------------------------------------------
+
+Drift guard ayrı bir servis değil — `doctor-infra.sh` L-section olarak mevcut.
+Her deploy sonrası manuel çalıştırılır; ileride otomatik post-deploy trigger
+planlı (bkz. §5).
+
+### Tespit — doctor-infra.sh L3-L8
 
 `backend/scripts/doctor-infra.sh` L-section'ı artık drift'i yakalıyor
 (PR #424):
@@ -67,8 +73,10 @@ bash /home/halil/platform/repo/backend/scripts/doctor-infra.sh --quick
 Exit 0 → drift yok. Exit 1 → drift var, müdahale gerekli.
 
 -------------------------------------------------------------------------------
-4. DÜZELTME — Canonical env sync
+4. GÖZLEMLEME / LOG / METRİKLER
 -------------------------------------------------------------------------------
+
+### Canonical env sync (drift düzeltme)
 
 Drift tespit edilirse canonical env'i repo `.env` ile hizala:
 
@@ -101,8 +109,10 @@ bash /home/halil/platform/repo/backend/scripts/doctor-infra.sh
 ```
 
 -------------------------------------------------------------------------------
-5. DEPLOY ZİNCİRİNE ENTEGRASYON (gelecek iş)
+5. ARIZA DURUMLARI VE ADIMLAR
 -------------------------------------------------------------------------------
+
+### Deploy zincirine entegrasyon (gelecek iş)
 
 **Şu an:** `doctor-infra.sh` manuel çalıştırılıyor. Post-deploy health check
 (`deploy/ubuntu/post-deploy-health-check.sh`) yalnız container sağlığı kontrolü
@@ -118,8 +128,15 @@ template'inden üret (`backend.env.template` + envsubst). Drift imkânsız hale
 gelir ama template maintenance ek iş.
 
 -------------------------------------------------------------------------------
-6. KÖKEN
+6. ÖZET
 -------------------------------------------------------------------------------
+
+- `/home/halil/platform/env/backend.env` (canonical) ile repo `backend/.env`
+  arasında drift sessiz deny üretir.
+- `doctor-infra.sh` L3-L8 bu drift'i fail-closed yakalar.
+- Canlı sync prosedürü §4, deploy-chain entegrasyon planı §5.
+
+### Köken
 
 - **PR #422** (a5a4f389) report-service direct OpenFGA SDK migration. Deploy
   sonrası container'larda ERP_OPENFGA env yoktu → resolver disabled mode →
@@ -132,7 +149,7 @@ gelir ama template maintenance ek iş.
 - **PR #424** (bu PR): doctor-infra.sh L3-L8 drift guard + runbook.
 
 -------------------------------------------------------------------------------
-7. LİNKLER
+7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
 - Codex thread: `019d9688-233c-7c50-85f0-73ee5d106753` (CNS-20260416-003)
