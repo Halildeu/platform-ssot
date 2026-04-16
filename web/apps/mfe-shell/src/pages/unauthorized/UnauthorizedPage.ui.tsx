@@ -102,7 +102,10 @@ const UnauthorizedPage: React.FC = () => {
 
         {/* Explain result from server */}
         {explainResult && (
-          <div className="mb-4 rounded-xl border border-border-subtle bg-surface-muted p-4 text-sm">
+          <div
+            className="mb-4 rounded-xl border border-border-subtle bg-surface-muted p-4 text-sm"
+            data-testid="unauthorized-explain-reason"
+          >
             <div className="flex items-center gap-2 mb-2">
               <span className="font-semibold text-text-primary">Sunucu açıklaması:</span>
               <Badge variant={EXPLAIN_REASON_LABELS[explainResult.reason]?.variant ?? 'error'} size="sm">

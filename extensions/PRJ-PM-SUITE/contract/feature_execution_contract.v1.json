@@ -68,6 +68,7 @@
       "web/apps/mfe-shell/src/pages/admin/design-lab/**/*",
       "web/apps/mfe-shell/src/pages/home/*",
       "web/apps/mfe-shell/src/pages/home/*/*",
+      "web/apps/mfe-shell/src/pages/unauthorized/**",
       "web/apps/mfe-shell/vite.config.ts",
       "web/apps/mfe-users/**/*",
       "web/packages/auth/**/*",
@@ -152,7 +153,7 @@
         "web/apps/mfe-shell/src/app/auth/**/*",
         "web/apps/mfe-shell/src/app/providers/**",
         "web/apps/mfe-shell/src/features/auth/**/*",
-        "web/apps/mfe-shell/src/pages/unauthorized/**/*",
+        "web/apps/mfe-shell/src/pages/unauthorized/**",
         "web/apps/mfe-shell/src/widgets/app-shell/**/*",
         "web/apps/mfe-audit/src/**/*",
         "web/packages/shared-http/**/*",
@@ -334,6 +335,11 @@
       },
       {
         "path_glob": "web/apps/mfe-shell/src/features/auth/**/*",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/pages/unauthorized/**",
         "ux_theme_id": "trust_privacy_security_ux",
         "ux_subtheme_id": "least_privilege_interaction_design"
       },

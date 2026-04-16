@@ -18,7 +18,11 @@ export function useExplainPermission({ httpPost }: UseExplainPermissionOptions) 
     setLoading(true);
     setError(null);
     try {
-      const res = await httpPost('/api/v1/authz/explain', { userId, permissionType, permissionKey });
+      // Path '/v1/authz/explain' — @mfe/shared-http `api` baseURL varsayılanı zaten '/api'.
+      // Daha önce '/api/v1/...' yazılmıştı; shared-http baseURL ile birleşince
+      // `/api/api/v1/authz/explain` üretip 404 veriyordu. AuthBootstrapper.tsx:31
+      // (`/v1/authz/me`) canonical pattern'dir.
+      const res = await httpPost('/v1/authz/explain', { userId, permissionType, permissionKey });
       const data = res.data as ExplainResponse;
       setResult(data);
       return data;
