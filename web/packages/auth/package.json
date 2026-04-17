@@ -6,7 +6,8 @@
     "test": "vitest"
   },
   "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0"
+    "react": "^18.0.0 || ^19.0.0",
+    "@mfe/design-system": "*"
   },
   "dependencies": {
     "@mfe/shared-http": "*"

@@ -5,6 +5,8 @@ export { PermissionProvider, usePermissions } from './PermissionProvider';
 export { useHasModule, useIsSuperAdmin } from './useHasPermission';
 export { useCheckPermission } from './useCheckPermission';
 export { useExplainPermission } from './useExplainPermission';
+export { ExplainPermissionModal } from './ExplainPermissionModal';
+export type { ExplainPermissionModalProps } from './ExplainPermissionModal';
 export { ProtectedRoute, ProtectedSection } from './ProtectedRoute';
 export { useZanzibarAccess } from './useZanzibarAccess';
 export { useBatchZanzibarAccess } from './useBatchZanzibarAccess';
@@ -16,7 +18,7 @@ export { REPORT_AUTHZ_TARGETS, getReportAuthzTarget } from './authzTargetRegistr
 export type { AuthzTarget, ReportGroupKey } from './authzTargetRegistry';
 export type {
   AuthzMeResponse, CheckRequest, CheckResponse, ModuleKey,
-  AccessLevel, GrantResult, ScopeAssignment, ExplainResponse,
+  AccessLevel, GrantResult, ScopeAssignment, ExplainResponse, ExplainScopeType,
   PermissionCatalog, ModuleCatalogItem, ActionCatalogItem, ReportCatalogItem,
   CheckReason, BatchCheckRequest, BatchCheckItem, BatchCheckResponse,
   ZanzibarAccessLevel,

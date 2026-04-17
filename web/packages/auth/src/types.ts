@@ -71,6 +71,9 @@ export interface BatchCheckResponse {
 /** Design-system compatible access level for Zanzibar object-level checks. */
 export type ZanzibarAccessLevel = 'full' | 'readonly' | 'disabled' | 'hidden';
 
+/** Scope kind accepted by explain + UI pickers. Backend stores canonical upper-case keys. */
+export type ExplainScopeType = 'COMPANY' | 'PROJECT' | 'WAREHOUSE' | 'BRANCH';
+
 /** Explain response from /v1/authz/explain. */
 export interface ExplainResponse {
   allowed: boolean;
@@ -80,6 +83,9 @@ export interface ExplainResponse {
     grantType: string | null;
     permissionType: string;
     permissionKey: string;
+    /** P1.9: populated only when NO_SCOPE — echoes the requested scope. */
+    scopeType?: string | null;
+    scopeRefId?: number | null;
   };
   userRoles: string[];
   userScopes: Record<string, number[]>;

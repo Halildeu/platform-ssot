@@ -217,6 +217,22 @@ const access = {
   'access.explainModal.triggerTitle': 'Why this permission?',
   'access.explainModal.noUserTitle': 'No user selected',
   'access.explainModal.noUserDescription': 'A user context is required to fetch an explanation.',
+
+  // P1.9 NO_SCOPE scope picker
+  'access.explainModal.scopeSectionTitle': 'Scope check (optional)',
+  'access.explainModal.scopeHelp': 'To verify access against a specific company / project / warehouse / branch, pick a scope type and enter its ID.',
+  'access.explainModal.scopeTypeLabel': 'Scope type',
+  'access.explainModal.scopeTypePlaceholder': 'Select scope type',
+  'access.explainModal.scopeRefIdLabel': 'Scope ID',
+  'access.explainModal.scopeRefIdPlaceholder': 'e.g. 35',
+  'access.explainModal.scopeCheckButton': 'Check scope',
+  'access.explainModal.scopeClearButton': 'Clear',
+  'access.explainModal.scopeRefIdInvalid': 'Scope ID must be numeric.',
+  'access.explainModal.scopeTypeCOMPANY': 'Company',
+  'access.explainModal.scopeTypePROJECT': 'Project',
+  'access.explainModal.scopeTypeWAREHOUSE': 'Warehouse',
+  'access.explainModal.scopeTypeBRANCH': 'Branch',
+  'access.explainModal.scopeDeniedLabel': 'Denied scope',
 };
 
 export default access;

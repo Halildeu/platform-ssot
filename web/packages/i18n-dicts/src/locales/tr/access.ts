@@ -217,6 +217,22 @@ const access = {
   'access.explainModal.triggerTitle': 'Bu izin için neden?',
   'access.explainModal.noUserTitle': 'Kullanıcı seçilmedi',
   'access.explainModal.noUserDescription': 'Açıklama için önce bir kullanıcı bağlamı gerekli.',
+
+  // P1.9 NO_SCOPE scope picker
+  'access.explainModal.scopeSectionTitle': 'Kapsam kontrolü (opsiyonel)',
+  'access.explainModal.scopeHelp': 'Belirli bir şirket/proje/depo/şube için erişimi doğrulamak isterseniz kapsam türü ve ID girin.',
+  'access.explainModal.scopeTypeLabel': 'Kapsam türü',
+  'access.explainModal.scopeTypePlaceholder': 'Kapsam türü seçin',
+  'access.explainModal.scopeRefIdLabel': 'Kapsam ID',
+  'access.explainModal.scopeRefIdPlaceholder': 'Örn. 35',
+  'access.explainModal.scopeCheckButton': 'Kapsamı Kontrol Et',
+  'access.explainModal.scopeClearButton': 'Temizle',
+  'access.explainModal.scopeRefIdInvalid': 'Kapsam ID sayısal olmalıdır.',
+  'access.explainModal.scopeTypeCOMPANY': 'Şirket',
+  'access.explainModal.scopeTypePROJECT': 'Proje',
+  'access.explainModal.scopeTypeWAREHOUSE': 'Depo',
+  'access.explainModal.scopeTypeBRANCH': 'Şube',
+  'access.explainModal.scopeDeniedLabel': 'Reddedilen kapsam',
 };
 
 export default access;

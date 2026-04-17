@@ -1,8 +1,7 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Alert, Badge, Button } from '@mfe/design-system';
-import { usePermissions, useExplainPermission } from '@mfe/auth';
-import type { ExplainResponse } from '@mfe/auth';
+import { Alert, Button } from '@mfe/design-system';
+import { usePermissions, ExplainPermissionModal } from '@mfe/auth';
 import { api } from '@mfe/shared-http';
 import { useShellCommonI18n } from '../../app/i18n';
 
@@ -21,30 +20,22 @@ const REASON_MESSAGES: Record<string, { title: string; description: string }> = 
   },
 };
 
-const EXPLAIN_REASON_LABELS: Record<ExplainResponse['reason'], { label: string; variant: 'success' | 'error' | 'warning' }> = {
-  ALLOWED: { label: 'Erişim izni verilmiş.', variant: 'success' },
-  NO_ROLE: { label: 'Kullanıcıya hiç rol atanmamış.', variant: 'error' },
-  DENIED_BY_ROLE: { label: 'Roldeki DENY kuralı erişimi engelliyor.', variant: 'error' },
-  NO_SCOPE: { label: 'Kullanıcının bu kapsam (scope) için izni yok.', variant: 'warning' },
-  NO_PERMISSION: { label: 'Bu izin hiçbir rolde tanımlanmamış.', variant: 'error' },
-};
-
 const UnauthorizedPage: React.FC = () => {
   const location = useLocation();
   const { t } = useShellCommonI18n();
   const { authz } = usePermissions();
-  // Stable httpPost reference — prevents useExplainPermission's `explain`
-  // callback from being recreated every render. The current `handleExplain`
-  // button path is not subject to the ExplainPermissionModal loop (explain is
-  // not in an effect dep here), but normalizing the pattern guards against
-  // future consumers who add effects and mirrors the fix applied to
-  // mfe-access/ExplainPermissionModal.
+  // Stable httpPost reference — ExplainPermissionModal's auto-fetch effect
+  // depends on this callback; an inline arrow would re-create the identity
+  // every render and re-fire the fetch in a loop (P1.1 root cause).
   const httpPost = React.useCallback(
     (url: string, body: unknown) => api.post(url, body),
     [],
   );
-  const { explain, result: explainResult, loading: explainLoading, error: explainError } =
-    useExplainPermission({ httpPost });
+
+  // P1.9 / AC-0320 Senaryo 4: "Neden erişemiyorum?" opens the shared
+  // ExplainPermissionModal — the modal's own scope picker exposes the
+  // `scopeType/scopeRefId` path so the user can surface NO_SCOPE reasons.
+  const [explainModalOpen, setExplainModalOpen] = React.useState(false);
 
   const state = location.state as {
     from?: string;
@@ -62,15 +53,9 @@ const UnauthorizedPage: React.FC = () => {
 
   const reasonInfo = reason ? REASON_MESSAGES[reason] : null;
 
-  const handleExplain = async () => {
-    if (!userId) return;
-    const permType = requiredPermission ? 'ACTION' : 'MODULE';
-    const permKey = requiredPermission ?? requiredModule ?? '';
-    if (!permKey) return;
-    await explain(userId, permType, permKey);
-  };
-
   const canExplain = !!userId && !!(requiredModule || requiredPermission);
+  const modalPermType: 'MODULE' | 'ACTION' | 'REPORT' = requiredPermission ? 'ACTION' : 'MODULE';
+  const modalPermKey = requiredPermission ?? requiredModule ?? '';
 
   return (
     <div className="mt-16 flex justify-center px-4">
@@ -109,45 +94,13 @@ const UnauthorizedPage: React.FC = () => {
           </div>
         )}
 
-        {/* Explain result from server */}
-        {explainResult && (
-          <div
-            className="mb-4 rounded-xl border border-border-subtle bg-surface-muted p-4 text-sm"
-            data-testid="unauthorized-explain-reason"
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <span className="font-semibold text-text-primary">Sunucu açıklaması:</span>
-              <Badge variant={EXPLAIN_REASON_LABELS[explainResult.reason]?.variant ?? 'error'} size="sm">
-                {explainResult.reason}
-              </Badge>
-            </div>
-            <p className="text-text-secondary mb-2">
-              {EXPLAIN_REASON_LABELS[explainResult.reason]?.label ?? explainResult.reason}
-            </p>
-            {explainResult.details?.roleName && (
-              <div className="flex justify-between">
-                <span className="text-text-subtle">Kaynak rol:</span>
-                <span className="font-medium text-text-primary">{explainResult.details.roleName}</span>
-              </div>
-            )}
-            {explainResult.userRoles?.length > 0 && (
-              <div className="flex justify-between mt-1">
-                <span className="text-text-subtle">Roller:</span>
-                <span className="font-medium text-text-primary">{explainResult.userRoles.join(', ')}</span>
-              </div>
-            )}
-          </div>
-        )}
-
-        {explainError && (
-          <Alert variant="error" title="Explain hatası" className="mb-4">
-            {explainError}
-          </Alert>
-        )}
-
         <div className="flex flex-wrap gap-2">
-          {canExplain && !explainResult && (
-            <Button variant="secondary" onClick={handleExplain} loading={explainLoading}>
+          {canExplain && (
+            <Button
+              variant="secondary"
+              onClick={() => setExplainModalOpen(true)}
+              data-testid="unauthorized-explain-open"
+            >
               Neden erişemiyorum?
             </Button>
           )}
@@ -159,6 +112,22 @@ const UnauthorizedPage: React.FC = () => {
           </Button>
         </div>
       </div>
+
+      {/* P1.9 / AC-0320 Senaryo 4: shared ExplainPermissionModal — includes
+          the scope picker that forwards scopeType/scopeRefId to the backend
+          and renders reason=NO_SCOPE + denied-scope badge. */}
+      {canExplain && userId && modalPermKey && (
+        <ExplainPermissionModal
+          open={explainModalOpen}
+          onClose={() => setExplainModalOpen(false)}
+          userId={userId}
+          permissionType={modalPermType}
+          permissionKey={modalPermKey}
+          permissionLabel={modalPermKey}
+          httpPost={httpPost}
+          t={t}
+        />
+      )}
     </div>
   );
 };
