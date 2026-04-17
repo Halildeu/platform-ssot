@@ -114,6 +114,12 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   const [selectedUser, setSelectedUser] = React.useState<AutocompleteOption | null>(null);
   const [userSearchOptions, setUserSearchOptions] = React.useState<AutocompleteOption[]>([]);
   const [userSearchLoading, setUserSearchLoading] = React.useState(false);
+  // Raw input text for the user search Autocomplete, kept separate from
+  // `selectedUser` so that typing does not clear the input every keystroke
+  // (the component is controlled and matched=null keystrokes would otherwise
+  // reset the displayed value). Cleared only after a successful add or a
+  // duplicate-check rejection (P1.7 Codex verdict).
+  const [userSearchValue, setUserSearchValue] = React.useState('');
 
   // Init from role granules (fetch full 5-type permission list)
   const roleGranulesQuery = useQuery({
@@ -158,8 +164,12 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   }, [role, roleGranulesQuery.data]);
 
   // --- User search handler ---
+  // Threshold 3 (P1.7 user feedback): 2-char queries return too many matches in
+  // staging, degrading autocomplete UX. Autocomplete component already debounces
+  // onSearch by 250ms (design-system/Autocomplete.tsx:188), so no extra debounce
+  // here. Queries shorter than 3 chars clear the dropdown.
   const handleUserSearch = React.useCallback(async (query: string) => {
-    if (query.length < 2) { setUserSearchOptions([]); return; }
+    if (query.length < 3) { setUserSearchOptions([]); return; }
     setUserSearchLoading(true);
     try {
       const res = await api.get('/v1/users', { params: { search: query, pageSize: 10 } });
@@ -216,6 +226,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
       queryClient.invalidateQueries({ queryKey: ['role-members', role?.id] });
       setSelectedUser(null);
       setUserSearchOptions([]);
+      setUserSearchValue('');
       pushToast('success', t('access.notifications.memberAddSuccess'));
     },
     onError: (err: Error) => {
@@ -481,27 +492,40 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
           ))}
           {members.length === 0 && <p className="text-xs text-text-subtle">Henüz atanmış kişi yok.</p>}
 
-          {/* Kişi ekle */}
+          {/* Kişi ekle — P1.7: auto-add on selection, no button.
+              Autocomplete.onChange fires on BOTH typing and explicit selection
+              (design-system/Autocomplete.tsx:219). `userSearchValue` holds the
+              raw input text (every keystroke); `selectedUser` is set only when
+              a matched option comes through (explicit dropdown pick). Auto-add
+              fires only for matched picks, with duplicate + pending guards. */}
           <div className="flex items-center gap-2 mt-2">
             <Autocomplete
               placeholder={t('access.drawer.userSearchPlaceholder')}
               options={userSearchOptions}
               onSearch={handleUserSearch}
-              loading={userSearchLoading}
-              value={selectedUser?.value ?? ''}
+              loading={userSearchLoading || addMemberMutation.isPending}
+              value={userSearchValue}
               onChange={(val) => {
+                setUserSearchValue(val);
                 const matched = userSearchOptions.find(o => o.value === val);
                 setSelectedUser(matched ?? null);
+                if (!matched) return;                          // typing in progress
+                if (addMemberMutation.isPending) return;        // previous add still running
+                const userId = Number(matched.value);
+                if (members.some(m => m.userId === userId)) {
+                  pushToast(
+                    'warning',
+                    t('access.notifications.memberAlreadyExists', { userName: matched.label }),
+                  );
+                  setSelectedUser(null);
+                  setUserSearchValue('');
+                  return;
+                }
+                addMemberMutation.mutate(userId);
               }}
               allowCustomValue={false}
               fullWidth
             />
-            <Button size="sm" onClick={() => {
-                if (selectedUser) addMemberMutation.mutate(Number(selectedUser.value));
-              }}
-              loading={addMemberMutation.isPending} disabled={!selectedUser}>
-              + {t('access.drawer.userSearchLabel')}
-            </Button>
           </div>
         </div>
 

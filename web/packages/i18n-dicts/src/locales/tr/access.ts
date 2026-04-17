@@ -171,6 +171,7 @@ const access = {
   'access.notifications.permissionSaveError': 'Yetkiler kaydedilemedi.',
   'access.notifications.memberAddSuccess': 'Kullanıcı role eklendi.',
   'access.notifications.memberAddError': 'Kullanıcı eklenemedi.',
+  'access.notifications.memberAlreadyExists': '{{userName}} bu role zaten ekli.',
   'access.notifications.memberRemoveSuccess': 'Kullanıcı rolden kaldırıldı.',
   'access.notifications.memberRemoveError': 'Kullanıcı kaldırılamadı.',
   'access.notifications.memberRemoveConfirm': '"{userName}" kullanıcısını bu rolden kaldırmak istediğinize emin misiniz?',

@@ -171,6 +171,7 @@ const access = {
   'access.notifications.permissionSaveError': 'Failed to save permissions.',
   'access.notifications.memberAddSuccess': 'User added to role.',
   'access.notifications.memberAddError': 'Failed to add user.',
+  'access.notifications.memberAlreadyExists': '{{userName}} is already assigned to this role.',
   'access.notifications.memberRemoveSuccess': 'User removed from role.',
   'access.notifications.memberRemoveError': 'Failed to remove user.',
   'access.notifications.memberRemoveConfirm': 'Are you sure you want to remove "{userName}" from this role?',
