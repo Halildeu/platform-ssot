@@ -75,6 +75,42 @@ json_get() {
   python3 -c 'import json, sys; payload = json.load(sys.stdin); print(payload.get("data", {}).get("data", {}).get(sys.argv[1], ""), end="")' "$key"
 }
 
+## STORY-0319 / PR #2 — Profile default mapping.
+## Compose default D-105 + C-103 gereği `local,docker` korunur; canonical env
+## template'i `{SERVICE}_PROFILES=prod,docker` ile override eder. Vault KV'de
+## bu key'ler eksikse (ilk rollout) bu helper DEPLOY_ENV'e göre fallback
+## default üretir. Bilinmeyen env değeri → fail-closed (exit 1) — sessiz
+## yanlış profile yazımını engeller.
+profile_default_for_env() {
+  local env_name="$1"
+  case "${env_name}" in
+    stage|staging|prod|production)
+      printf 'prod,docker'
+      ;;
+    dev|local)
+      printf 'local,docker'
+      ;;
+    *)
+      echo "[error] profile_default_for_env: unknown DEPLOY_ENV='${env_name}' (expected: stage|staging|prod|production|dev|local)" >&2
+      exit 1
+      ;;
+  esac
+}
+
+## Vault KV payload'unda key boşsa, profile_default_for_env() fallback'i ile
+## default yazar. Normal write_kv atlıyordu (value boşsa skip) — bu wrapper
+## {SERVICE}_PROFILES için default injection sağlıyor.
+write_kv_profile_or_default() {
+  local file="$1"
+  local key="$2"
+  local value="$3"
+
+  if [[ -z "${value}" ]]; then
+    value="$(profile_default_for_env "${DEPLOY_ENV}")"
+  fi
+  write_kv "${file}" "${key}" "${value}"
+}
+
 derive_public_issuer() {
   local issuer="$1"
   local web_origin="$2"
@@ -224,6 +260,20 @@ main() {
     SCHEMA_MSSQL_PASSWORD
     SCHEMA_DEFAULT_SCHEMA
   )
+  # STORY-0319 / PR #2 — per-service profile key'leri canonical env'e yazılır.
+  # Vault KV payload'unda yoksa DEPLOY_ENV'e göre default uygulanır
+  # (stage/prod → prod,docker; dev/local → local,docker). Ordered_keys'ten ayrı
+  # liste: write_kv_profile_or_default ile özel akışla yazılıyor (boş değer
+  # atlanmak yerine default'a düşsün).
+  local profile_keys=(
+    USER_SERVICE_PROFILES
+    AUTH_SERVICE_PROFILES
+    VARIANT_SERVICE_PROFILES
+    CORE_DATA_SERVICE_PROFILES
+    API_GATEWAY_PROFILES
+    PERMISSION_SERVICE_PROFILES
+    REPORT_SERVICE_PROFILES
+  )
   local key
   local value
   local keycloak_issuer_uri
@@ -291,6 +341,13 @@ main() {
     if [[ -n "${value}" ]]; then
       write_kv "${tmp_file}" "${key}" "${value}"
     fi
+  done
+
+  # STORY-0319 — per-service profile override'ları
+  # Vault KV payload'undan öncelikli; yoksa DEPLOY_ENV fallback default.
+  for key in "${profile_keys[@]}"; do
+    value="$(printf '%s' "${payload}" | json_get "${key}")"
+    write_kv_profile_or_default "${tmp_file}" "${key}" "${value}"
   done
 
   keycloak_issuer_uri="$(printf '%s' "${payload}" | json_get "KEYCLOAK_ISSUER_URI")"

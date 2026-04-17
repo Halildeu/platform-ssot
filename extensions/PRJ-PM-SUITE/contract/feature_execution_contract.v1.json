@@ -7,12 +7,14 @@
       "docs/OPERATIONS/MANAGED-REPO-CONTEXT-CONSUMPTION.v1.md",
       "tenant/TENANT-DEFAULT/context.v1.md",
       "tenant/TENANT-DEFAULT/decision-bundle.v1.json",
+      "docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/ACCEPTANCE/AC-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/TEST-PLANS/TP-0319-staging-prod-profile-migration.md",
+      "docs/04-operations/RUNBOOKS/RB-staging-prod-profile.md",
+      "docs/03-delivery/STORIES/STORY-0320-zanzibar-prod-cutover-prep.md",
       "docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md",
       "docs/03-delivery/INTERFACE-CONTRACTS/INTERFACE-CONTRACT-cross-plane-auth-session-audit-foundation.md",
       "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
-      "docs/03-delivery/STORIES/STORY-0320-zanzibar-prod-cutover-prep.md",
-      "docs/03-delivery/ACCEPTANCE/AC-0320-zanzibar-prod-cutover-prep.md",
-      "docs/03-delivery/TEST-PLANS/TP-0320-zanzibar-prod-cutover-prep.md",
       "docs/04-operations/RUNBOOKS/RB-vault-kms-autounseal.md"
     ],
     "context_refs": [
@@ -25,7 +27,7 @@
   },
   "definition_of_done": {
     "acceptance_criteria": [
-      "docs/03-delivery/ACCEPTANCE/AC-0320-zanzibar-prod-cutover-prep.md"
+      "docs/03-delivery/ACCEPTANCE/AC-0319-staging-prod-profile-migration.md"
     ],
     "evidence_paths": [
       ".cache/reports/feature_execution_contract_check.v1.json"
@@ -34,64 +36,24 @@
   "delivery_scope": {
     "affected_modules": [],
     "change_path_globs": [
-      "backend/*/Dockerfile",
-      "backend/*/pom.xml",
-      "backend/*/src/main/resources/application-integration.yml",
-      "backend/*/src/main/resources/application-k8s.yml",
-      "backend/*/src/main/resources/application.properties",
       "backend/.env.example",
-      "backend/api-gateway/**/*",
-      "backend/auth-service/**/*",
-      "backend/auth-service/src/main/java/**/*",
-      "backend/auth-service/src/main/resources/application.properties",
-      "backend/common-auth/**/*",
-      "backend/core-data-service/**/*",
-      "backend/dev-integration.sh",
-      "backend/devops/postgres/*",
-      "backend/devops/vault/vault-seal-*.hcl",
-      "backend/devops/vault/vault.hcl",
+      "backend/.env.prod.example",
+      "backend/auth-service/src/main/resources/*",
       "backend/docker-compose.prod.yml",
       "backend/docker-compose.yml",
-      "backend/openfga/**/*",
-      "backend/permission-service/**/*",
-      "backend/report-service/src/main/java/**/*",
-      "backend/report-service/src/main/resources/*",
-      "backend/report-service/src/main/resources/reports/**/*",
-      "backend/report-service/src/test/java/**/*",
-      "backend/schema-service/**/*",
-      "backend/scripts/*",
-      "backend/scripts/ci/canary/*.mjs",
+      "backend/permission-service/src/main/resources/*",
+      "backend/scripts/doctor-infra.sh",
       "backend/scripts/vault/*",
-      "backend/user-service/src/main/java/**/*",
-      "backend/user-service/src/main/resources/application-local.properties",
-      "backend/user-service/src/main/resources/application.properties",
-      "backend/variant-service/src/main/java/**/*",
-      "backend/variant-service/src/main/resources/application-local.properties",
       "deploy/ubuntu/*",
-      "web/apps/*/vite.config.ts",
-      "web/apps/mfe-access/**/*",
-      "web/apps/mfe-access/src/widgets/explain-modal/**/*",
-      "web/apps/mfe-reporting/**/*",
-      "web/apps/mfe-shell/src/app/layout/**/*",
-      "web/apps/mfe-shell/src/features/auth/**/*",
-      "web/apps/mfe-shell/src/index.css",
-      "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
-      "web/apps/mfe-shell/src/pages/admin/design-lab/**/*",
-      "web/apps/mfe-shell/src/pages/home/*",
-      "web/apps/mfe-shell/src/pages/home/*/*",
-      "web/apps/mfe-shell/src/pages/unauthorized/**",
-      "web/apps/mfe-shell/vite.config.ts",
-      "web/apps/mfe-users/**/*",
-      "web/packages/auth/**/*",
-      "web/packages/auth/src/useExplainPermission.ts",
-      "web/packages/design-system/**/*",
-      "web/packages/i18n-dicts/**/*",
-      "web/packages/platform-capabilities/**/*",
-      "web/packages/shared-types/**/*",
-      "web/packages/x-charts/**/*",
-      "web/scripts/*",
-      "web/stories/**/*",
-      "web/vitest.config.ts"
+      ".github/workflows/deploy-backend.yml",
+      ".github/workflows/deploy-web.yml",
+      "docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/ACCEPTANCE/AC-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/TEST-PLANS/TP-0319-staging-prod-profile-migration.md",
+      "docs/04-operations/RUNBOOKS/RB-staging-prod-profile.md",
+      "docs/04-operations/RUNBOOKS/RB-ubuntu-backend-github-vault-deploy.md",
+      "docs/04-operations/RUNBOOKS/RB-vault-dev-path-migration.md",
+      "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json"
     ],
     "repo_root": ".",
     "service_scopes": [
@@ -101,7 +63,7 @@
       "frontend"
     ]
   },
-  "feature_id": "zanzibar-prod-cutover-prep",
+  "feature_id": "staging-prod-profile-migration",
   "kind": "feature-execution-contract",
   "lane_plan": {
     "execution_sequence": [
@@ -233,22 +195,26 @@
   "source_context": {
     "source_type": "story",
     "source_refs": [
+      "docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/ACCEPTANCE/AC-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/TEST-PLANS/TP-0319-staging-prod-profile-migration.md",
+      "docs/04-operations/RUNBOOKS/RB-staging-prod-profile.md",
       "docs/03-delivery/STORIES/STORY-0320-zanzibar-prod-cutover-prep.md",
       "docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md",
       ".claude/plans/zanzibar-master-plan.md"
     ],
-    "business_goal": "Zanzibar prod cutover readiness — remove Shamir sidecar compliance risk, replace manual Hybrid B canary seed with canonical service-token path, ship NO_SCOPE reason UX",
-    "requested_outcome": "Three PRs under umbrella STORY-0320 merge green with Vault KMS templates, canonical auth-service mint + user-service JWT converter, and useExplainPermission scope extension; CI enforcement-check + module-delivery-gate satisfied."
+    "business_goal": "Staging'i prod-like profile'a geçirmek — canary sinyal anlamlılığı + prod cutover risk azaltma. 7 backend servis staging'de prod,docker profile'ında çalışır, canonical env render contract {SERVICE}_PROFILES taşır, nginx+gateway upstream DEPLOY_ENV-aware, doctor-infra post-deploy CI guard ile fail-closed drift protection.",
+    "requested_outcome": "4 PR (docs+truth align / render contract / Vault+GHCR / post-deploy guard) ile STORY-0319 acceptance kriteri karşılanır; Dalga 1 Stage 2 synthetic canary run prereq açılır; STORY-0320 umbrella closure (3/3 P1.x merged) izlenebilirlik kanalı korunur."
   },
   "status": "ACTIVE",
-  "summary": "Umbrella work for P1 backlog's last three stories before prod cutover: Vault KMS auto-unseal (P1.10), canonical service-token path (P1.8), and NO_SCOPE UI modal refactor (P1.9).",
+  "summary": "STORY-0319 staging prod-profile migration — 4 PR iskeleti (docs + render contract + Vault AppRole + post-deploy CI guard). Umbrella STORY-0320 closed (2026-04-17, 3/3 merged), izlenebilirlik source_refs üzerinden korunur. Compose default D-105 + C-103 gereği `local,docker` değişmez — hardening canonical env + render contract + runtime doctor-infra guard üzerinden.",
   "technical_contract": {
     "api_version_prefix": "/api/v1",
     "baseline_profile_id": "erp-fullstack-java21-react18",
     "db_migration_required": false,
     "design_system_policy": "policies/policy_ui_design_system.v1.json"
   },
-  "title": "Zanzibar Prod Cutover Prep (P1.8 + P1.9 + P1.10)",
+  "title": "Staging Prod-Profile Migration (STORY-0319, PR #1-4)",
   "ux_contract": {
     "artifacts": [
       {
