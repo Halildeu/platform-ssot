@@ -49,9 +49,16 @@ export const ExplainPermissionModal: React.FC<ExplainPermissionModalProps> = ({
   permissionLabel,
   t,
 }) => {
-  const { explain, result, loading, error } = useExplainPermission({
-    httpPost: (url, body) => api.post(url, body),
-  });
+  // Stable httpPost reference — inline arrow would produce a new reference on
+  // every render, which propagates through useExplainPermission's `useCallback`
+  // dependency into a new `explain` identity on every render, causing the
+  // auto-fetch effect below to re-fire in a loop (loading never resolves →
+  // explain-modal-loading stays visible → Playwright `toBeHidden` timeout).
+  const httpPost = React.useCallback(
+    (url: string, body: unknown) => api.post(url, body),
+    [],
+  );
+  const { explain, result, loading, error } = useExplainPermission({ httpPost });
 
   // Auto-fetch on open. Re-fetch when target changes while open.
   React.useEffect(() => {

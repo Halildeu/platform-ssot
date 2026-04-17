@@ -346,13 +346,16 @@ test.describe('Zanzibar Explain Modal — thin release gate', () => {
     const modalBody = page.locator('[data-testid="explain-modal-body"]');
     await expect(modalBody).toBeVisible({ timeout: 15_000 });
 
-    // Loading bitsin
-    await expect(page.locator('[data-testid="explain-modal-loading"]')).toBeHidden({
-      timeout: 15_000,
-    });
-
-    // Reason badge → ALLOWED (backend 5/5 evidence'deki ALLOWED path)
+    // Wait for the terminal state (reason badge visible) instead of asserting
+    // that the transient loading spinner is hidden. The modal renders
+    // explain-modal-reason only after the fetch resolves (see
+    // ExplainPermissionModal.tsx:98 — `{result && !loading && !error && (...)}`),
+    // so reason visibility implies loading has ended without racing the
+    // spinner frame. Previously we asserted toBeHidden on
+    // explain-modal-loading, which was fragile because a stale httpPost
+    // reference could keep the fetch looping (P1.1 root cause, now fixed).
     const reasonBadge = page.locator('[data-testid="explain-modal-reason"]');
+    await expect(reasonBadge).toBeVisible({ timeout: 15_000 });
     await expect(reasonBadge).toContainText('ALLOWED', { timeout: 10_000 });
 
     // userRoles badge kümesi → CANARY_READ_ONLY (persona hotfix sonrası 1205 bu role)
