@@ -33,9 +33,18 @@ const UnauthorizedPage: React.FC = () => {
   const location = useLocation();
   const { t } = useShellCommonI18n();
   const { authz } = usePermissions();
-  const { explain, result: explainResult, loading: explainLoading, error: explainError } = useExplainPermission({
-    httpPost: (url, body) => api.post(url, body),
-  });
+  // Stable httpPost reference — prevents useExplainPermission's `explain`
+  // callback from being recreated every render. The current `handleExplain`
+  // button path is not subject to the ExplainPermissionModal loop (explain is
+  // not in an effect dep here), but normalizing the pattern guards against
+  // future consumers who add effects and mirrors the fix applied to
+  // mfe-access/ExplainPermissionModal.
+  const httpPost = React.useCallback(
+    (url: string, body: unknown) => api.post(url, body),
+    [],
+  );
+  const { explain, result: explainResult, loading: explainLoading, error: explainError } =
+    useExplainPermission({ httpPost });
 
   const state = location.state as {
     from?: string;
