@@ -185,18 +185,31 @@ maybe_render_env() {
 bootstrap_vault_credentials_from_env_file() {
   local file_vault_token=""
   local file_vault_addr=""
+  local render_flag
 
   if [[ ! -f "${ENV_FILE}" ]]; then
     return 0
   fi
 
-  if [[ -z "${VAULT_TOKEN:-}" ]]; then
-    file_vault_token="$(read_env_value VAULT_TOKEN)"
-    if [[ -n "${file_vault_token}" ]]; then
-      VAULT_TOKEN="${file_vault_token}"
-      export VAULT_TOKEN
-      echo "[deploy] bootstrapped VAULT_TOKEN from existing env file."
+  # STORY-0319 PR #3c — AppRole precedence guard.
+  # RENDER_ENV_BEFORE_DEPLOY=true iken canonical env'den VAULT_TOKEN
+  # bootstrap edilmez — render-backend-env.sh AppRole path'ini kullansın.
+  # Aksi halde eski env dosyasındaki stale token yeni render'ı token-path'e
+  # düşürür ve AppRole-first sözleşmesi fiilen gerçekleşmez (Codex turn N
+  # bulgusu).
+  render_flag="$(printf '%s' "${RENDER_ENV_BEFORE_DEPLOY:-false}" | tr '[:upper:]' '[:lower:]')"
+
+  if [[ "${render_flag}" != "true" && "${render_flag}" != "1" && "${render_flag}" != "yes" ]]; then
+    if [[ -z "${VAULT_TOKEN:-}" ]]; then
+      file_vault_token="$(read_env_value VAULT_TOKEN)"
+      if [[ -n "${file_vault_token}" ]]; then
+        VAULT_TOKEN="${file_vault_token}"
+        export VAULT_TOKEN
+        echo "[deploy] bootstrapped VAULT_TOKEN from existing env file (render disabled)."
+      fi
     fi
+  else
+    echo "[deploy] RENDER_ENV_BEFORE_DEPLOY=true → skipping VAULT_TOKEN bootstrap (AppRole precedence)."
   fi
 
   if [[ -z "${VAULT_ADDR:-}" ]]; then
@@ -468,8 +481,34 @@ main() {
     docker image prune -f --filter "until=24h" >/dev/null 2>&1 || true
   else
     # ── Remote pull mode (default) ──
-    echo "[deploy] REMOTE PULL mode — pulling images from GHCR"
-    compose_run "${compose_args[@]}" pull "${backend_services[@]}" || true
+    # STORY-0319 PR #3c — GHCR retag strategy.
+    # Compose `build:` tabanlı olduğu için `compose pull` GHCR image'larını
+    # alsa bile `up -d` yine local build üretir (platform-{svc}:latest yoksa).
+    # Fix: doğrudan `docker pull` + her servis için retag to local compose
+    # name. Böylece `up -d` build'i by-pass eder ve runtime GHCR digest'leri
+    # içerir. Eksik image durumunda fail-close (exit 1) — stale image riski
+    # engellenir. IMAGE_TAG strict (`:?`) — sessiz `main-stable` fallback yok.
+    echo "[deploy] REMOTE PULL mode — pulling images from GHCR + retag to compose local names"
+    local ghcr_owner
+    ghcr_owner="$(printf '%s' "${GHCR_OWNER:-halildeu}" | tr '[:upper:]' '[:lower:]')"
+    local src tgt svc retagged=0 image_tag="${IMAGE_TAG:?IMAGE_TAG required for remote-pull mode}"
+
+    for svc in "${backend_services[@]}"; do
+      src="ghcr.io/${ghcr_owner}/platform-ssot-${svc}:${image_tag}"
+      tgt="platform-${svc}:latest"
+      if ! docker pull "${src}"; then
+        echo "[error] docker pull ${src} failed — deploy aborted (no silent fallback)" >&2
+        exit 1
+      fi
+      docker tag "${src}" "${tgt}"
+      retagged=$((retagged + 1))
+    done
+    echo "[deploy] retagged ${retagged}/${#backend_services[@]} GHCR images -> platform-*:latest"
+
+    # Clean dangling old images after retag
+    docker image prune -f --filter "until=24h" >/dev/null 2>&1 || true
+
+    export DOCKER_PULL_POLICY="never"
   fi
 
   # Ensure infrastructure is up (no recreate — prevents Vault seal, Keycloak cold-start).

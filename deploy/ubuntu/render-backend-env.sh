@@ -179,7 +179,14 @@ main() {
     REPO_BRANCH
     GHCR_OWNER
     VAULT_URI
-    VAULT_TOKEN
+    VAULT_ROLE_ID
+    VAULT_SECRET_ID
+    VAULT_AUTH_METHOD
+    VAULT_SECRET_PREFIX
+    VAULT_FAIL_FAST
+    SPRING_CLOUD_VAULT_ENABLED
+    SPRING_CLOUD_VAULT_KV_ENABLED
+    SPRING_CLOUD_VAULT_FAIL_FAST
     KEYCLOAK_ISSUER_URI
     KEYCLOAK_JWKS_URI
     AUTH_VERIFICATION_BASE_URL
@@ -194,6 +201,11 @@ main() {
     CORE_DATA_DB_USERNAME
     CORE_DATA_DB_PASSWORD
   )
+  # STORY-0319 PR #3c — AppRole-first Vault auth migration.
+  # VAULT_TOKEN canonical env'e yazılmaz (deploy-backend.sh:185
+  # bootstrap_vault_credentials_from_env_file token path'e düşüyordu —
+  # AppRole precedence'ı by-pass ediyordu). Bunun yerine AppRole material
+  # (role_id + secret_id) ve SPRING_CLOUD_VAULT_* feature flag'leri yazılır.
   local ordered_keys=(
     GIT_REMOTE_URL
     REPO_BRANCH
@@ -207,8 +219,14 @@ main() {
     API_GATEWAY_PORT
     VAULT_URI
     VAULT_SCHEME
-    VAULT_TOKEN
+    VAULT_AUTH_METHOD
+    VAULT_ROLE_ID
+    VAULT_SECRET_ID
+    VAULT_SECRET_PREFIX
     VAULT_FAIL_FAST
+    SPRING_CLOUD_VAULT_ENABLED
+    SPRING_CLOUD_VAULT_KV_ENABLED
+    SPRING_CLOUD_VAULT_FAIL_FAST
     KEYCLOAK_ISSUER_URI
     KEYCLOAK_JWKS_URI
     KEYCLOAK_PUBLIC_ISSUER_URI
