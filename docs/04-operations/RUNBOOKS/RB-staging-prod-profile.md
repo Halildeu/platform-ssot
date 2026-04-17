@@ -2,7 +2,7 @@
 
 ID: RB-staging-prod-profile  
 Service: backend-stack (7 Spring Boot services)  
-Status: Draft  
+Status: Rehearsed (2026-04-18; PR #3f deploy 24590348212 canlı kanıt — profile=prod,docker runtime, GHCR digest aktif, 8 container healthy, /authz/me superAdmin=True authzVersion=8; AppRole setup pending operational)
 Owner: @team/platform
 
 -------------------------------------------------------------------------------

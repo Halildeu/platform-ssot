@@ -171,6 +171,12 @@ jobs:
         env:
           WEB_PUBLIC_ORIGIN: ${{ vars.WEB_PUBLIC_ORIGIN }}
           WEB_GATEWAY_UPSTREAM: ${{ vars.WEB_GATEWAY_UPSTREAM }}
+          # STORY-0319 PR #4: WEB_KEYCLOAK_UPSTREAM env'e eklendi (Codex turn N
+          # bulgusu). Önceden ssh command'e geçiyordu ama job env'de yoktu →
+          # `${WEB_KEYCLOAK_UPSTREAM:-}` her zaman boş → script fallback `:-`
+          # devreye giriyordu. Explicit override path'i şimdi prod'da da
+          # çalışıyor.
+          WEB_KEYCLOAK_UPSTREAM: ${{ vars.WEB_KEYCLOAK_UPSTREAM }}
           WEB_EDGE_SERVER_NAME: ${{ vars.WEB_EDGE_SERVER_NAME }}
           WEB_TLS_ENABLED: ${{ vars.WEB_TLS_ENABLED }}
           WEB_TLS_CERT_PATH: ${{ vars.WEB_TLS_CERT_PATH }}
@@ -233,26 +239,45 @@ jobs:
           )
 
           echo "::notice title=deploy-web::Deploying Ubuntu Nginx frontend to ${WEB_DEPLOY_SSH_HOST}."
+          # STORY-0319 PR #4: prod SSH path DEPLOY_ENV-aware symmetry.
+          # Önceki pattern quoted heredoc içinde `WEB_*` referanslarını
+          # kullanıyordu, ama bu değerler ssh command'e explicit geçmediği
+          # için remote shell'de tanımsız → script hep `:-` fallback'e
+          # düşüyordu (Codex turn N bulgusu). Artık WEB_* env'leri ssh
+          # command'e explicit + heredoc içinde remote'da referanslanır;
+          # script `run-frontend-nginx-container.sh` DEPLOY_ENV=prod iken
+          # 8082 default + WEB_GATEWAY_UPSTREAM override pattern'i çalışır.
           ssh "${ssh_opts[@]}" "${WEB_DEPLOY_SSH_USER}@${WEB_DEPLOY_SSH_HOST}" \
+            DEPLOY_ENV="prod" \
             PUBLIC_ORIGIN="${WEB_PUBLIC_ORIGIN}" \
             REMOTE_REPO_DIR="${remote_repo_dir}" \
             REMOTE_RELEASES_DIR="${remote_releases_dir}" \
             REMOTE_CURRENT_LINK="${remote_current_link}" \
             REPO_BRANCH="${WEB_DEPLOY_REMOTE_BRANCH}" \
+            NGINX_GATEWAY_UPSTREAM="${WEB_GATEWAY_UPSTREAM:-}" \
+            NGINX_KEYCLOAK_UPSTREAM="${WEB_KEYCLOAK_UPSTREAM:-}" \
+            NGINX_SERVER_NAME="${WEB_EDGE_SERVER_NAME:-_}" \
+            NGINX_TLS_ENABLED="${WEB_TLS_ENABLED:-false}" \
+            NGINX_TLS_CERT_PATH="${WEB_TLS_CERT_PATH:-}" \
+            NGINX_TLS_KEY_PATH="${WEB_TLS_KEY_PATH:-}" \
+            NGINX_HTTP_PORT="${WEB_HTTP_PORT:-80}" \
+            NGINX_HTTPS_PORT="${WEB_HTTPS_PORT:-443}" \
             'bash -se' <<'EOF'
           set -euo pipefail
 
           cd "${REMOTE_REPO_DIR}" 2>/dev/null || true
           chmod +x deploy/ubuntu/deploy-frontend.sh deploy/ubuntu/rollback-frontend.sh deploy/ubuntu/run-frontend-nginx-container.sh 2>/dev/null || true
 
+          DEPLOY_ENV="${DEPLOY_ENV}" \
           PUBLIC_ORIGIN="${PUBLIC_ORIGIN}" \
-          NGINX_GATEWAY_UPSTREAM="${WEB_GATEWAY_UPSTREAM:-http://127.0.0.1:8080}" \
-          NGINX_SERVER_NAME="${WEB_EDGE_SERVER_NAME:-_}" \
-          NGINX_TLS_ENABLED="${WEB_TLS_ENABLED:-false}" \
-          NGINX_TLS_CERT_PATH="${WEB_TLS_CERT_PATH:-}" \
-          NGINX_TLS_KEY_PATH="${WEB_TLS_KEY_PATH:-}" \
-          NGINX_HTTP_PORT="${WEB_HTTP_PORT:-80}" \
-          NGINX_HTTPS_PORT="${WEB_HTTPS_PORT:-443}" \
+          NGINX_GATEWAY_UPSTREAM="${NGINX_GATEWAY_UPSTREAM}" \
+          NGINX_KEYCLOAK_UPSTREAM="${NGINX_KEYCLOAK_UPSTREAM}" \
+          NGINX_SERVER_NAME="${NGINX_SERVER_NAME}" \
+          NGINX_TLS_ENABLED="${NGINX_TLS_ENABLED}" \
+          NGINX_TLS_CERT_PATH="${NGINX_TLS_CERT_PATH}" \
+          NGINX_TLS_KEY_PATH="${NGINX_TLS_KEY_PATH}" \
+          NGINX_HTTP_PORT="${NGINX_HTTP_PORT}" \
+          NGINX_HTTPS_PORT="${NGINX_HTTPS_PORT}" \
           REPO_DIR="${REMOTE_REPO_DIR}" \
           WEB_RELEASES_DIR="${REMOTE_RELEASES_DIR}" \
           WEB_CURRENT_LINK="${REMOTE_CURRENT_LINK}" \
@@ -429,25 +454,24 @@ jobs:
             "${repo_dir}/deploy/ubuntu/rollback-frontend.sh" \
             "${repo_dir}/deploy/ubuntu/run-frontend-nginx-container.sh"
 
-          # Stage-specific upstream defaults override repo vars.WEB_*.
-          # Repo vars are prod-oriented (gateway 8082, keycloak 8080) but staging runs
-          # the backend/docker-compose.yml stack where:
-          #   - api-gateway: host port 8080 (container 8080:8080)
-          #   - keycloak:    host port 8081 (container maps 8080→8081 on host)
-          # Without these overrides, every stage deploy produced:
-          #   /api/* → 502 (nginx → 127.0.0.1:8082 where nothing listens)
-          #   /realms/* → 404 (nginx → 127.0.0.1:8080 served by gateway, not keycloak)
-          # Repo vars kept unchanged so prod deploy path in deploy-backend-host keeps working.
-          STAGE_GATEWAY_UPSTREAM="http://127.0.0.1:8080"
-          STAGE_KEYCLOAK_UPSTREAM="http://127.0.0.1:8081"
+          # STORY-0319 PR #4: stage self-hosted path DEPLOY_ENV-aware symmetry.
+          # Önceki pattern hardcoded STAGE_GATEWAY_UPSTREAM="http://127.0.0.1:8080"
+          # override kullanıyordu — workflow-level hardcoded, asimetrik
+          # (prod SSH path vars.WEB_GATEWAY_UPSTREAM, stage hardcoded).
+          # Artık tek kaynak: `run-frontend-nginx-container.sh` DEPLOY_ENV
+          # case/esac fallback (stage→8080, prod→8082). Workflow sadece
+          # DEPLOY_ENV=stage + WEB_GATEWAY_UPSTREAM explicit override geçer;
+          # boşsa script fallback devreye girer.
+          DEPLOY_ENV="stage"
 
           PUBLIC_ORIGIN="${WEB_PUBLIC_ORIGIN}" \
+          DEPLOY_ENV="${DEPLOY_ENV}" \
           AUTH_MODE="${WEB_AUTH_MODE:-keycloak}" \
           KEYCLOAK_PUBLIC_URL="${WEB_KEYCLOAK_PUBLIC_URL:-${WEB_PUBLIC_ORIGIN}}" \
           KEYCLOAK_REALM="${WEB_KEYCLOAK_REALM:-serban}" \
           KEYCLOAK_CLIENT_ID="${WEB_KEYCLOAK_CLIENT_ID:-frontend}" \
-          NGINX_GATEWAY_UPSTREAM="${STAGE_GATEWAY_UPSTREAM}" \
-          NGINX_KEYCLOAK_UPSTREAM="${STAGE_KEYCLOAK_UPSTREAM}" \
+          NGINX_GATEWAY_UPSTREAM="${WEB_GATEWAY_UPSTREAM:-}" \
+          NGINX_KEYCLOAK_UPSTREAM="${WEB_KEYCLOAK_UPSTREAM:-}" \
           NGINX_SERVER_NAME="${WEB_EDGE_SERVER_NAME:-_}" \
           NGINX_TLS_ENABLED="${WEB_TLS_ENABLED:-false}" \
           NGINX_TLS_CERT_PATH="${WEB_TLS_CERT_PATH:-}" \
