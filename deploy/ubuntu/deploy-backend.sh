@@ -475,7 +475,15 @@ main() {
   # Ensure infrastructure is up (no recreate — prevents Vault seal, Keycloak cold-start).
   # Only starts containers if not already running.
   compose_run "${compose_args[@]}" up -d --no-recreate postgres-db openfga-migrate openfga vault keycloak
-  compose_run "${compose_args[@]}" up -d --no-recreate vault-unseal vault-audit-init vault-snapshot 2>/dev/null || true
+  # P1.10: KMS auto-unseal mode skips the vault-unseal Shamir sidecar (Vault
+  # self-unseals via the cloud KMS seal stanza). VAULT_SEAL_MODE=shamir (or
+  # unset) keeps the legacy sidecar loop for local/staging.
+  if [[ "${VAULT_SEAL_MODE:-shamir}" != "shamir" ]]; then
+    echo "[deploy] VAULT_SEAL_MODE=${VAULT_SEAL_MODE} — skipping vault-unseal sidecar (KMS auto-unseal)"
+    compose_run "${compose_args[@]}" up -d --no-recreate vault-audit-init vault-snapshot 2>/dev/null || true
+  else
+    compose_run "${compose_args[@]}" up -d --no-recreate vault-unseal vault-audit-init vault-snapshot 2>/dev/null || true
+  fi
   wait_for_service_state postgres-db healthy 60
   wait_for_service_state vault healthy 120
   wait_for_service_state openfga running 60
@@ -496,9 +504,16 @@ main() {
       sealed="$(printf '%s' "${status_json}" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("sealed","unknown"))' 2>/dev/null || echo "unknown")"
       echo "[deploy] vault preflight: sealed=${sealed}"
       if [[ "${sealed}" == "true" ]]; then
-        echo "[error] Vault is still sealed after health wait. Unseal keys may be missing." >&2
-        echo "[deploy] vault-unseal logs:" >&2
-        docker logs --tail 20 "$(container_name_for vault-unseal)" 2>&1 || true
+        echo "[error] Vault is still sealed after health wait." >&2
+        if [[ "${VAULT_SEAL_MODE:-shamir}" != "shamir" ]]; then
+          echo "[error] KMS auto-unseal (VAULT_SEAL_MODE=${VAULT_SEAL_MODE}) did not unseal — check cloud KMS credentials, key access, network egress." >&2
+          echo "[deploy] vault logs (KMS mode):" >&2
+          docker logs --tail 40 "$(container_name_for vault)" 2>&1 || true
+        else
+          echo "[error] Shamir unseal keys may be missing." >&2
+          echo "[deploy] vault-unseal logs:" >&2
+          docker logs --tail 20 "$(container_name_for vault-unseal)" 2>&1 || true
+        fi
         return 1
       fi
     else

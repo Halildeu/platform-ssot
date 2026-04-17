@@ -452,7 +452,19 @@ services:
     image: hashicorp/vault:${VAULT_VERSION:-1.21.4}
     cap_add:
       - IPC_LOCK
-    command: vault server -config=/vault/config/vault.hcl
+    # Vault merges every .hcl file in the -config directory. Base vault.hcl
+    # stays unchanged; the active seal file is mounted alongside it via
+    # VAULT_SEAL_FILE (P1.10). Default `vault-seal-disabled.hcl` is a no-op
+    # placeholder → Shamir seal (staging keeps its vault-unseal sidecar loop).
+    # Prod auto-unseal: set VAULT_SEAL_FILE env to one of
+    #   ./devops/vault/vault-seal-awskms.hcl
+    #   ./devops/vault/vault-seal-gcpckms.hcl
+    #   ./devops/vault/vault-seal-azurekeyvault.hcl
+    #   ./devops/vault/vault-seal-transit.hcl
+    # plus the provider-specific env vars (see RB-vault.md). Set VAULT_SEAL_MODE
+    # to a non-shamir value in the backend deploy env so deploy-backend.sh
+    # skips the unseal sidecar.
+    command: vault server -config=/vault/config/
     ports:
       - "127.0.0.1:8200:8200"
       - "127.0.0.1:8201:8201"
@@ -465,6 +477,7 @@ services:
       - vault_data:/vault/file
       - vault_logs:/vault/logs
       - ./devops/vault/vault.hcl:/vault/config/vault.hcl:ro
+      - ${VAULT_SEAL_FILE:-./devops/vault/vault-seal-disabled.hcl}:/vault/config/active-seal.hcl:ro
     mem_limit: 384m
     healthcheck:
       test: ["CMD", "vault", "status"]
