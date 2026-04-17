@@ -83,6 +83,44 @@ const clickFirst = async (page: Page, selectors: string[]) => {
   throw new Error(`Beklenen buton bulunamadı: ${selectors.join(', ')}`);
 };
 
+const decodeJwtClaims = (token: string): Record<string, unknown> | null => {
+  try {
+    const parts = token.split('.');
+    if (parts.length < 2) return null;
+    const normalized = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const pad = (4 - (normalized.length % 4)) % 4;
+    const decoded = Buffer.from(normalized + '='.repeat(pad), 'base64').toString('utf8');
+    return JSON.parse(decoded) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Browser login helper — Codex CNS thread 019d97c7 Tur 8 persona drift fix.
+ *
+ * Önceki versiyon sadece `clearCookies` yapıyordu. Ama shell auth slice
+ * `localStorage.token`'dan hydrate oluyor (auth.slice.ts:94) ve LoginPage
+ * `initialized && token` ise Keycloak formuna HİÇ gitmeden redirect ediyor
+ * (LoginPage.ui.tsx:94). Önceki test'ten kalan admin@example.com token'ı
+ * canary senaryosunu bozuyordu.
+ *
+ * Fix:
+ *  1. localStorage + sessionStorage'dan auth key'lerini sil
+ *  2. `/login` sayfasına git, shell store hydrate olsun
+ *  3. Login butonuna tıkla → Keycloak redirect (SSO cookie clearCookies ile zaten silindi)
+ *  4. KC form login → token localStorage'a düşsün
+ *  5. Token decode + email claim assert (persona drift guard)
+ */
+const AUTH_STORAGE_KEYS = [
+  'token',
+  'user',
+  'tokenExpiresAt',
+  'shell_auth_state',
+  'serban.shell.authState',
+  'shell-auth-sync',
+];
+
 const performBrowserLogin = async (
   page: Page,
   root: string,
@@ -91,6 +129,18 @@ const performBrowserLogin = async (
   redirectPath: string,
 ) => {
   await page.context().clearCookies();
+  // Persona drift guard: storage reset (cookie silme tek başına yetmiyor;
+  // LoginPage initialized+token varsa Keycloak'a gitmiyor).
+  await page.addInitScript((keys: string[]) => {
+    try {
+      keys.forEach((k) => {
+        window.localStorage.removeItem(k);
+        window.sessionStorage.removeItem(k);
+      });
+    } catch {
+      // ignore
+    }
+  }, AUTH_STORAGE_KEYS);
   await page.goto(
     `${root}/login?redirect=${encodeURIComponent(redirectPath)}`,
     { waitUntil: 'domcontentloaded' },
@@ -158,6 +208,47 @@ const performBrowserLogin = async (
         )}`,
       );
     });
+
+  // Codex Tur 8 persona drift guard: browser token claim'i beklenen email ile
+  // eşleşmeli, aksi halde test önceki persona ile devam ediyor demektir.
+  const browserToken = await page.evaluate(() => window.localStorage.getItem('token') ?? '');
+  const claims = decodeJwtClaims(browserToken);
+  const tokenEmail = String(
+    claims?.email ?? claims?.preferred_username ?? claims?.sub ?? '',
+  ).trim().toLowerCase();
+  const expectedEmail = email.trim().toLowerCase();
+  if (!tokenEmail.includes(expectedEmail.split('@')[0])) {
+    throw new Error(
+      `Persona drift: beklenen email='${expectedEmail}' ama token'da email='${tokenEmail}'. ` +
+        'performBrowserLogin localStorage/SSO temizliği yetersiz.',
+    );
+  }
+  console.log(`[authz-smoke] persona OK token.email=${tokenEmail} azp=${claims?.azp}`);
+
+  // Runtime gateway base URL logla (VITE_GATEWAY_URL override'ı varsa görelim).
+  const gatewayUrl = await page.evaluate(() => {
+    const env = ((window as any).__env__ ?? (window as any).__ENV__ ?? {}) as Record<string, string>;
+    return env.VITE_GATEWAY_URL ?? '';
+  });
+  console.log(`[authz-smoke] gateway_url=${gatewayUrl || '(default same-origin /api)'}`);
+};
+
+const installExplainRequestTracer = (page: Page, label: string) => {
+  page.on('request', (req) => {
+    const url = req.url();
+    if (url.includes('/authz/explain')) {
+      console.log(`[authz-smoke/${label}] REQ ${req.method()} ${url}`);
+    }
+  });
+  page.on('response', async (res) => {
+    const url = res.url();
+    if (url.includes('/authz/explain')) {
+      const body = await res.text().catch(() => '(body unavailable)');
+      console.log(
+        `[authz-smoke/${label}] RES ${res.status()} ${url} body=${body.slice(0, 200)}`,
+      );
+    }
+  });
 };
 
 const assertOidcReachable = async (root: string) => {
@@ -202,6 +293,7 @@ test.describe('Zanzibar Explain Modal — thin release gate', () => {
   }) => {
     test.setTimeout(120_000);
     const root = baseURL ?? process.env.PLAYWRIGHT_BASE_URL ?? '';
+    installExplainRequestTracer(page, 'ALLOWED');
 
     await performBrowserLogin(page, root, READ_ONLY_EMAIL, CANARY_PASSWORD, '/access/roles');
 
@@ -257,6 +349,7 @@ test.describe('Zanzibar Explain Modal — thin release gate', () => {
   }) => {
     test.setTimeout(120_000);
     const root = baseURL ?? process.env.PLAYWRIGHT_BASE_URL ?? '';
+    installExplainRequestTracer(page, 'DENIED');
 
     await performBrowserLogin(page, root, RESTRICTED_EMAIL, CANARY_PASSWORD, '/admin/themes');
 
