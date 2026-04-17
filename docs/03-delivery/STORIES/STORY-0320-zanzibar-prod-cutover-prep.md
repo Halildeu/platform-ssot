@@ -2,7 +2,7 @@
 
 ID: STORY-0320-zanzibar-prod-cutover-prep
 Epic: EPIC-infra-canary-readiness
-Status: Planned
+Status: In Progress
 Owner: @halil
 Risk_Level: high
 Upstream: `.claude/plans/zanzibar-master-plan.md` (Rev 24), P1 backlog (post-TAM KAPANIŞ)
