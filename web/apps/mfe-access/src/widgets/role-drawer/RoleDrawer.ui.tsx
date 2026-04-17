@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Autocomplete, Badge, Button, Checkbox, DetailDrawer, Select, Switch, TextInput } from '@mfe/design-system';
+import { Alert, Autocomplete, Badge, Button, Checkbox, DetailDrawer, Select, Switch, TextInput } from '@mfe/design-system';
 import type { AutocompleteOption } from '@mfe/design-system';
 import { usePermissions, useZanzibarAccess } from '@mfe/auth';
 import type { AccessRole, AccessLevel } from '../../features/access-management/model/access.types';
@@ -73,16 +73,22 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   const { access: editAccess } = useZanzibarAccess('can_edit', 'module', 'ACCESS');
 
   // --- Catalog query ---
+  // Codex CNS thread 019d9a28 Tur 14-15: persisted role için fallback YASAK.
+  // Eski davranış: catalog fetch pending iken `buildFallbackCatalog(role)` render
+  // edilir → fallback'in moduleKey'i `label.toUpperCase()` (örn. "RAPORLAMA")
+  // geldiği için explain-trigger setExplainTarget({key: mod.key="RAPORLAMA",...})
+  // ile yanlış key kilitlenir. Race'i kapatmak için:
+  //   1) queryFn persisted role'de fallback dönmesin, backend response döner.
+  //   2) Render'da `catalog = catalogQuery.data` sadece (fallback yok).
+  //   3) Catalog henüz yüklenmediyse module/action/report bölümleri ve explain
+  //      butonları render edilmesin (loading UI).
   const catalogQuery = useQuery({
     queryKey: ['permission-catalog'],
     queryFn: async () => {
-      if (!isPersistedRoleId(role?.id)) {
-        return buildFallbackCatalog(role);
-      }
       const res = await api.get('/v1/authz/catalog');
       return res.data as Catalog;
     },
-    enabled: open && mode === 'view',
+    enabled: open && mode === 'view' && isPersistedRoleId(role?.id),
     staleTime: 120_000,
   });
 
@@ -262,8 +268,39 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
 
   if (!role) return null;
 
-  const catalog = catalogQuery.data ?? buildFallbackCatalog(role);
+  // Codex Tur 15 verdict: persisted role → backend catalog zorunlu, fallback yok.
+  // non-persisted (new role create) akışında fallback `role.policies` kullanılabilir.
+  const persistedRole = isPersistedRoleId(role?.id);
+  const catalog = persistedRole
+    ? (catalogQuery.data ?? null)
+    : buildFallbackCatalog(role);
   const members = membersQuery.data ?? [];
+
+  // Persisted role + catalog henüz yüklenmedi (veya hata): loading/error state
+  // — module/explain listesi render edilmesin, yanlış key kilitlenmesin.
+  if (persistedRole && !catalog) {
+    return (
+      <DetailDrawer
+        open={open}
+        onClose={onClose}
+        title={role.name}
+        subtitle={role.description || t('access.drawer.noDescription')}
+        size="lg"
+      >
+        <div className="flex flex-col gap-3 py-6">
+          {catalogQuery.isError ? (
+            <Alert variant="error" title={t('access.drawer.catalogErrorTitle') || 'Katalog yüklenemedi'}>
+              {String(catalogQuery.error ?? 'Unknown error')}
+            </Alert>
+          ) : (
+            <div className="text-sm text-text-subtle" data-testid="role-drawer-catalog-loading">
+              {t('access.drawer.catalogLoading') || 'Yetki katalogu yükleniyor…'}
+            </div>
+          )}
+        </div>
+      </DetailDrawer>
+    );
+  }
 
   // --- Helpers ---
   const setModule = (key: string, level: string) => {
