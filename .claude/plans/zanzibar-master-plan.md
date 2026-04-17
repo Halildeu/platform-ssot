@@ -1,3 +1,22 @@
+# Zanzibar Master Plan — Rev 24 (Dalga 2 DONE + P1 Track A 4/7, P1.8–P1.10 kaldı)
+
+> **Rev 24 güncellemesi (2026-04-17 EOD):** Dalga 2 release gate canlıda kapalı
+> (PR #428–#436, handoff #437). Bu gün ek P1 backlog cleanup: **7 PR merged**
+> (#438 P1.4 prod CORS env + #439 P1.3 outbox `{h-schema}` + #440 P1.2 canonical
+> MODULE + #441 admin super admin kalıcı seed + #442 P1.1 re-fetch loop
+> + #443 P1.5 OPTIONS preflight + #444 P1.7 RoleDrawer auto-add) + P1.6
+> workaround (canary-admin KC NPE, P2 defer). **Track A durumu: 4/7 DONE**
+> (kalan P1.8/P1.9/P1.10 ≈ 14–20h, her biri dedike session).
+>
+> **Aktif handoff:** `.claude/plans/session-handoff-20260417-p1-track-a.md`
+> **Canlı kanıt:** ai.acik.com stabil, `/authz/me` admin@example.com `superAdmin=true`
+> `allowedModules=9/9`, cross-origin preflight HTTP 200 + ACAO, outbox sync_version 8.
+>
+> Rev 24 **yeni normatif karar yok**; Rev 23 doctrine korunur. Bu revision bir
+> status delta + roadmap ilerleme kaydı. Asıl Rev 22 → 23 içeriği aşağıda korundu.
+
+---
+
 # Zanzibar Master Plan — Rev 23 (Synthetic Canary Altyapisi TAMAM, STORY-0319 P0)
 
 **Tarih:** 2026-04-16 (gece)
