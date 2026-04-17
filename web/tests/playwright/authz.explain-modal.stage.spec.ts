@@ -231,6 +231,18 @@ const performBrowserLogin = async (
     return env.VITE_GATEWAY_URL ?? '';
   });
   console.log(`[authz-smoke] gateway_url=${gatewayUrl || '(default same-origin /api)'}`);
+
+  // PR D2 (post Codex Tur 11): authz.userId hydration guard.
+  // PR E (#433) `@mfe/auth` MF singleton deploy edildi — shell PermissionProvider
+  // state remote mfe-access'te de ulaşılır. Ancak `/authz/me` fetch timing önemli:
+  // drawer açılmadan önce shell store'da userId set olmalı; aksi halde
+  // ExplainPermissionModal "Kullanıcı seçilmedi" alert'i açar.
+  await page
+    .waitForResponse(
+      (resp) => resp.url().includes('/api/v1/authz/me') && resp.status() === 200,
+      { timeout: 30_000 },
+    )
+    .catch(() => console.log('[authz-smoke] /authz/me 200 response beklemedi timeout (zaten hydrate olmuş olabilir)'));
 };
 
 const installExplainRequestTracer = (page: Page, label: string) => {
@@ -300,26 +312,34 @@ test.describe('Zanzibar Explain Modal — thin release gate', () => {
     await expect(page).toHaveURL(/\/access\/roles/, { timeout: 30_000 });
     await expect(page.locator('.ag-root').first()).toBeVisible({ timeout: 30_000 });
 
-    // Codex Tur 2 K1: quickFilter ile rolü izole et (stabilite kazancı)
+    // Persona hotfix (Codex Tur 4): canary-read-only (1205) artık CANARY_READ_ONLY
+    // rolüne atanmış (granule MODULE:ACCESS+REPORT VIEW). REPORT_VIEWER 0 member.
+    // PR D2 update: REPORT_VIEWER → CANARY_READ_ONLY + label-agnostic locator.
     const quickFilter = page.getByRole('textbox', {
       name: /Rol adı veya açıklama|Role name or description|Quick filter|Hızlı filtre/i,
     });
     await quickFilter.waitFor({ state: 'visible', timeout: 15_000 });
-    await quickFilter.fill('REPORT_VIEWER');
+    await quickFilter.fill('CANARY_READ_ONLY');
 
     const nameCell = page
       .locator('.ag-cell[col-id="name"]')
-      .filter({ hasText: /REPORT_VIEWER/i })
+      .filter({ hasText: /CANARY_READ_ONLY/i })
       .first();
     await nameCell.waitFor({ state: 'visible', timeout: 15_000 });
     await nameCell.scrollIntoViewIfNeeded();
     await nameCell.dblclick();
 
-    // DetailDrawer → role="dialog" + aria-label=title (REPORT_VIEWER)
-    const drawer = page.getByRole('dialog', { name: /^REPORT_VIEWER$/i });
+    // DetailDrawer → role="dialog" + aria-label=title (CANARY_READ_ONLY)
+    const drawer = page.getByRole('dialog', { name: /^CANARY_READ_ONLY$/i });
     await expect(drawer).toBeVisible({ timeout: 15_000 });
 
-    const explainTrigger = drawer.locator('[data-testid="explain-trigger-module-REPORT"]');
+    // Product bug (ayrı P1): testid'ler i18n-bağımlı staging'de `RAPORLAMA` (TR label
+    // UPPERCASE) üretiliyor, `REPORT` değil. Codex Tur 2 K1 + Tur 11 verdict: label-
+    // agnostic getByRole('button', { name: ... }) + Raporlama regex. CANARY_READ_ONLY
+    // rolü 2 modül granule'lü (ACCESS+REPORT) → aria-label spesifik REPORT butonu.
+    const explainTrigger = drawer.getByRole('button', {
+      name: /Raporlama için neden butonu|Reporting.*why|Report.*explain/i,
+    });
     await expect(explainTrigger).toBeVisible({ timeout: 15_000 });
     await explainTrigger.click();
 
@@ -335,12 +355,12 @@ test.describe('Zanzibar Explain Modal — thin release gate', () => {
     const reasonBadge = page.locator('[data-testid="explain-modal-reason"]');
     await expect(reasonBadge).toContainText('ALLOWED', { timeout: 10_000 });
 
-    // userRoles badge kümesi → REPORT_VIEWER (Codex Tur 2 ek assertion)
+    // userRoles badge kümesi → CANARY_READ_ONLY (persona hotfix sonrası 1205 bu role)
     const userRoles = page.locator('[data-testid="explain-modal-user-roles"]');
-    await expect(userRoles).toContainText('REPORT_VIEWER');
+    await expect(userRoles).toContainText('CANARY_READ_ONLY');
 
-    // details.roleName → REPORT_VIEWER (Codex Tur 1 §7 ek assertion, modal body içinde render)
-    await expect(modalBody).toContainText('REPORT_VIEWER');
+    // details.roleName → CANARY_READ_ONLY (Codex Tur 1 §7 ek assertion)
+    await expect(modalBody).toContainText('CANARY_READ_ONLY');
   });
 
   test('DENIED: canary-restricted /admin/themes → /unauthorized + requiredModule=THEME + NO_PERMISSION', async ({
