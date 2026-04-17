@@ -1,3 +1,22 @@
+# Zanzibar Master Plan — Rev 25 (Track A 6/7, P1.9 kaldı, umbrella STORY-0320 açık)
+
+> **Rev 25 güncellemesi (2026-04-17 EOD, continued):** Rev 24 sonrası 3 ek PR
+> merged: **#446 P1.10 Vault KMS auto-unseal** (4 provider template +
+> RB-vault-kms-autounseal runbook + compose/deploy wiring) + **#447 P1.8
+> canonical service-token path** (auth-service mint allowlist + user-service
+> non-local SecurityConfig internal chain + canary setup canonical mint flow).
+> **Umbrella STORY-0320** açıldı: P1.10/P1.8/P1.9 üçlüsü tek feature_id
+> (`zanzibar-prod-cutover-prep`) altında, contract retarget edildi. P1.6
+> **canary-admin + admin1@example.com** login fail aynı KC auth flow deep issue
+> (P2 defer, `feedback_canary_admin_kc_login_deferred.md` update).
+> **Track A: 6/7 DONE**, kalan P1.9 NO_SCOPE UI modal sonraki session.
+>
+> Rev 25 yeni normatif karar yok; umbrella pattern örnek (tek story + tek
+> contract retarget → 3 PR unblock) gelecek multi-PR backend değişiklikleri
+> için referans. **Aktif handoff:** `session-handoff-20260417-p1-track-a-final.md`.
+
+---
+
 # Zanzibar Master Plan — Rev 24 (Dalga 2 DONE + P1 Track A 4/7, P1.8–P1.10 kaldı)
 
 > **Rev 24 güncellemesi (2026-04-17 EOD):** Dalga 2 release gate canlıda kapalı
