@@ -41,7 +41,7 @@ dev-path (staging), GHCR registry.
 - `backend/.env.prod.example` — canonical env template
 - `deploy/ubuntu/render-backend-env.sh` — canonical env render script (host-side AppRole; `VAULT_ADDR`+`VAULT_TOKEN` zorunlu)
 - `deploy/ubuntu/deploy-backend.sh` — staging deploy entry point
-- `.github/workflows/deploy-backend.yml` — CI deploy workflow (şu an sadece `env` input; `build_local`+`docker_pull_policy` PR #3'te eklenecek)
+- `.github/workflows/deploy-backend.yml` — CI deploy workflow (inputs: `env`, `render_env_before_deploy`, `build_local`, `docker_pull_policy`; PR #3a-c sonrası default'lar staging rehearsal için flip edildi)
 - `backend/scripts/doctor-infra.sh` — L1-L8 profile drift guard
 - `backend/{auth,permission}-service/src/main/resources/application-prod.yml`
   — prod profile Spring Cloud Vault actuator + KV wiring (report-service'te bu bağ şu an yok; scope'a dahil değil)
@@ -98,24 +98,15 @@ ssh staging-sw '
 # Beklenen: hepsi prod,docker
 ```
 
-### Vault actuator smoke — FUTURE STATE (PR #3 sonrası)
+### Vault actuator smoke — auth + permission
 
-> **Not (2026-04-17):** Mevcut staging modeli Vault secret fetch'i **host-side
-> AppRole + `render-backend-env.sh` canonical env materialization** üzerinden
-> yapıyor (RB-ubuntu-backend-github-vault-deploy §3). Container içi Spring
-> Cloud Vault client auth-service ve permission-service `application-prod.yml`
-> tarafında tanımlı olsa da staging compose `SPRING_CLOUD_VAULT_ENABLED=false`
-> hardcoded (`backend/docker-compose.yml:99, 452`). Bu compose default
-> D-105 + C-103 gereği değişmez. Aşağıdaki smoke yol haritası PR #3 sonrası
-> geçerli olur — o PR container override'ını ve actuator wiring'i ekler.
->
-> PR #3 öncesi bu bölüm **non-executable** — manual canonical env append
-> yolu repo gerçekliğiyle çalışmıyor, kullanmayın.
-
-PR #3 sonrası hedef akış (executable olur):
+PR #3b + PR #3c sonrası container-side Spring Cloud Vault client aktif;
+actuator health indicator staging host-local smoke ile doğrulanır
+(host firewall/network policy'e bağlı "internal" semantiği — port binding
+`8088:8088` + `8090:8084` tüm interface'lere açık, hardening follow-up'a
+taşındı):
 
 ```bash
-# Container içi actuator vault health (auth + permission)
 ssh staging-sw '
   curl -fsS http://localhost:8088/actuator/health/vault | jq .status
   curl -fsS http://localhost:8090/actuator/health/vault | jq .status
@@ -126,31 +117,30 @@ ssh staging-sw '
 report-service bu turda kapsam dışı; secret fetch host-side render üzerinden
 devam eder (değişiklik yok).
 
-### GHCR pull staging deploy — FUTURE STATE (PR #3 sonrası)
+### GHCR pull staging deploy
 
-> **Not (2026-04-17):** `.github/workflows/deploy-backend.yml:10-17` şu an
-> sadece `env` input'unu tanımlıyor. `build_local` ve `docker_pull_policy`
-> workflow input'ları **PR #3'te eklenecek**. Aşağıdaki `gh workflow run`
-> çağrısı bu inputs eklendikten sonra geçerli olur.
->
-> PR #3 öncesi staging deploy `BUILD_LOCAL=true` + `DOCKER_PULL_POLICY=never`
-> default'larıyla çalışıyor (local build + GHCR'ye push, stage host pull
-> etmiyor — bkz. `deploy-backend.yml:344` current state).
-
-PR #3 sonrası hedef akış (executable olur):
+PR #3c sonrası staging default `BUILD_LOCAL=false` + `DOCKER_PULL_POLICY=always`.
+`deploy-backend.sh` remote-pull mode'da doğrudan `docker pull ghcr.io/...`
+yapar + her servis için `platform-{svc}:latest` retag. Eksik image → exit 1
+(sessiz stale image fallback yok).
 
 ```bash
-# Workflow dispatch (inputs eklendikten sonra)
+# Workflow dispatch (default path — operatör override gerekmez)
+gh workflow run deploy-backend.yml -f env=stage
+
+# Post-deploy assertion (GHCR digest ground truth)
+ssh staging-sw '
+  docker image inspect platform-auth-service:latest \
+    --format "{{json .RepoDigests}}"
+'
+# Beklenen: ["ghcr.io/halildeu/platform-ssot-auth-service@sha256:..."]
+
+# Emergency rollback (GHCR rate-limit / auth fail durumunda):
 gh workflow run deploy-backend.yml \
   -f env=stage \
-  -f build_local=false \
-  -f docker_pull_policy=always
-
-# Post-deploy assertion
-ssh staging-sw '
-  docker images --filter=reference=ghcr.io/halildeu/platform-ssot-*
-'
-# Beklenen: 7 image, GHCR digest'leriyle (sha256:...)
+  -f build_local=true \
+  -f docker_pull_policy=never \
+  -f render_env_before_deploy=false
 ```
 
 ### Post-deploy doctor-infra (PR #4 sonrası — otomatik)
@@ -179,41 +169,28 @@ ssh staging-sw '
 '
 ```
 
-### GHCR pull rollback — FUTURE STATE (PR #3 sonrası)
+### GHCR pull rollback
 
-> **Not:** `build_local` workflow input'u PR #3'te eklenecek. Bu rollback
-> path'i o PR merge olana kadar manual staging host intervention gerektirir
-> (aşağıdaki fallback).
-
-PR #3 öncesi emergency fallback (staging host manual):
-
-```bash
-# Runner'a SSH + manual docker build + compose up
-ssh staging-sw '
-  cd /home/halil/platform/repo/backend && \
-  BUILD_LOCAL=true \
-  bash /home/halil/platform/repo/deploy/ubuntu/deploy-backend.sh
-'
-```
-
-PR #3 sonrası hedef rollback (executable olur):
+Normal akış: `BUILD_LOCAL=false` + `DOCKER_PULL_POLICY=always` (PR #3c
+stage default). Emergency rollback için workflow_dispatch override:
 
 ```bash
 gh workflow run deploy-backend.yml \
   -f env=stage \
-  -f build_local=true  # emergency override
+  -f build_local=true \
+  -f docker_pull_policy=never
 ```
 
-**Uyarı:** `build_local=true` kullanımı sadece emergency. Normal akış
-`build_local=false`. Kullanım sonrası GHCR credential rotation runbook
-adımı çalıştırılmalı (`GHCR_TOKEN` yenileme + workflow secret update).
+**Uyarı:** `build_local=true` sadece emergency (GHCR rate-limit / auth
+fail / digest gecikmesi). Kullanım sonrası GHCR credential rotation
+runbook adımı çalıştırılmalı (`GHCR_TOKEN` yenileme + workflow secret
+update). `build_local=true` ile deploy olan staging build digest'leri
+post-deploy doctor-infra smoke ile validate edilmeli.
 
-### Vault actuator rollback — FUTURE STATE (PR #3 sonrası)
+### Vault actuator rollback
 
-> **Not:** §3.3 Vault actuator smoke PR #3 sonrası geçerli. Bu rollback
-> path'i de PR #3 sonrası anlamlı olur.
-
-PR #3 sonrası hedef akış:
+PR #3b container-side Vault client aktif + PR #3c AppRole-first.
+Vault kısa süre erişilemez + boot loop durumunda:
 
 ```bash
 # Canonical env'de Spring Cloud Vault geçici disable
@@ -252,7 +229,7 @@ ssh staging-sw 'cd /home/halil/platform/repo/backend && bash scripts/doctor-infr
 # Beklenen: L1-L8 hepsi PASS
 ```
 
-### Vault actuator health (auth + permission) — FUTURE STATE (PR #3 sonrası)
+### Vault actuator health (auth + permission)
 
 ```bash
 ssh staging-sw '
@@ -262,19 +239,23 @@ ssh staging-sw '
 # Beklenen: "UP" her ikisi için
 ```
 
-PR #3 öncesi: actuator/vault endpoint yok; Vault secret fetch host-side
-render AppRole akışı ile yapılır, runtime log'da Spring Cloud Vault kaydı
-olmaz (D-105 + C-103 compose default gereği).
+PR #3b container-side Vault client aktivasyonu + PR #3c AppRole-first
+migration ile endpoint hazır; staging host-local smoke path (port
+binding `8088:8088` + `8090:8084` tüm interface'lere açık, hardening
+follow-up'ta).
 
-### GHCR pull log — FUTURE STATE (PR #3 sonrası)
+### GHCR pull log
 
 ```bash
-gh run view <RUN_ID> --log | grep -E "pull|image" | head -20
-# Beklenen: "docker pull ghcr.io/halildeu/platform-ssot-*" SUCCESS
+gh run view <RUN_ID> --log | grep -E "docker pull|retagged" | head -20
+# Beklenen: "docker pull ghcr.io/halildeu/platform-ssot-*" +
+#           "[deploy] retagged N/7 GHCR images -> platform-*:latest"
 ```
 
-PR #3 öncesi staging deploy `BUILD_LOCAL=true` ile çalışır — GHCR pull
-log satırı oluşmaz (push log oluşur).
+PR #3c sonrası staging default remote-pull: `docker pull` + retag to
+`platform-{svc}:latest` + `docker compose up` build by-pass. Image
+digest doğrulama: `docker image inspect platform-auth-service:latest
+--format '{{json .RepoDigests}}'`.
 
 ### Prometheus (Dalga 1 Stage 2 prereq'i için)
 
@@ -292,16 +273,19 @@ Bu runbook sadece profile migration kapsamı. Canary metric gözlemi
 default `local,docker` devreye girdi → `SecurityConfigLocal permitAll` aktif.
 **Çözüm:** §3.2 render contract rehearsal + doctor-infra L1 check.
 
-### Boot log "Unable to connect to Vault" — PR #3 SONRASI
+### Boot log "Unable to connect to Vault"
 
-**Semptom:** auth-service/permission-service boot fail Vault connection error.
-**Kök neden:** PR #3 Spring Cloud Vault override aktifleştirdikten sonra
+**Semptom:** auth-service/permission-service boot fail Vault connection error;
+actuator /health/vault `DOWN` veya endpoint cevap vermiyor.
+**Kök neden:** Spring Cloud Vault override aktif (PR #3b/c sonrası) ama
 Vault sealed veya AppRole material eksik (container'a `VAULT_ROLE_ID` /
-`VAULT_SECRET_ID` inmiyor).
-**Çözüm:** `vault status` + container env kontrolü; sealed ise §4.3
-rollback + unseal recovery (RB-vault-dev-path-migration §5).
-**PR #3 öncesi:** Bu senaryo geçerli değil — Vault client container içinde
-aktif değil, secret fetch host-side AppRole render akışıyla yapılıyor.
+`VAULT_SECRET_ID` inmiyor; canonical env'e render yazılmamış).
+**Çözüm:**
+- `vault status` + container env kontrolü (`docker exec ... printenv VAULT_*`).
+- Sealed ise §4.3 rollback + unseal recovery (RB-vault-dev-path-migration §5).
+- AppRole material eksik → Vault KV `secret/stage/backend-deploy/config`
+  içinde `VAULT_ROLE_ID` + `VAULT_SECRET_ID` yazılı mı kontrol et
+  (check-backend-deploy-stage.sh ile).
 
 ### GHCR pull HTTP 401 / rate-limit
 
@@ -375,7 +359,8 @@ Acceptance checklist:
 - [ ] `/authz/check` token'sız 401/403 (L2 PASS)
 - [ ] Canonical env `ERP_OPENFGA_*` + `SECURITY_JWT_ISSUER(S)` non-blank (L3-L8 PASS)
 - [ ] Vault actuator smoke UP — auth (8088) + permission (8090)
-  `/actuator/health/vault` (PR #3 sonrası; report-service scope dışı)
+  `/actuator/health/vault` (PR #3b/c sonrası; report-service scope dışı;
+  host-local smoke — port binding 127.0.0.1 hardening ayrı follow-up)
 - [ ] GHCR pull staging deploy SUCCESS (BUILD_LOCAL=false)
 - [ ] nginx stage/prod upstream symmetry (workflow cleanup done)
 - [ ] Post-deploy CI guard 5+ ardışık SUCCESS (`post-doctor-infra` job)
