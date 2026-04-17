@@ -69,6 +69,14 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   const currentUserId =
     (authz as { userId?: string | number } | null | undefined)?.userId ?? null;
 
+  // Stable httpPost reference — ExplainPermissionModal (now from @mfe/auth)
+  // takes httpPost as a prop. Inline arrow would recreate explain() identity
+  // every render and re-fire the auto-fetch effect (P1.1 loop root cause).
+  const explainHttpPost = React.useCallback(
+    (url: string, body: unknown) => api.post(url, body),
+    [],
+  );
+
   // Zanzibar object-level access check: can current user edit the ACCESS module?
   const { access: editAccess } = useZanzibarAccess('can_edit', 'module', 'ACCESS');
 
@@ -555,6 +563,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
           permissionType={explainTarget.type}
           permissionKey={explainTarget.key}
           permissionLabel={explainTarget.label}
+          httpPost={explainHttpPost}
           t={t}
         />
       )}

@@ -388,12 +388,157 @@ test.describe('Zanzibar Explain Modal — thin release gate', () => {
     await expect(page.getByText(/Gerekli modül|Required module/i)).toBeVisible();
     await expect(page.locator('body')).toContainText('THEME');
 
-    const explainButton = page.getByRole('button', { name: /Neden erişemiyorum|Why can't I access/i });
-    await expect(explainButton).toBeVisible({ timeout: 10_000 });
-    await explainButton.click();
+    // P1.9: "Neden erişemiyorum?" butonu artık ExplainPermissionModal açıyor
+    // (inline explain panel kaldırıldı — AC-0320 Senaryo 4 modal-only path).
+    const openModalBtn = page.locator('[data-testid="unauthorized-explain-open"]');
+    await expect(openModalBtn).toBeVisible({ timeout: 10_000 });
+    await openModalBtn.click();
 
-    const reasonBox = page.locator('[data-testid="unauthorized-explain-reason"]');
-    await expect(reasonBox).toBeVisible({ timeout: 15_000 });
-    await expect(reasonBox).toContainText('NO_PERMISSION', { timeout: 10_000 });
+    const modalBody = page.locator('[data-testid="explain-modal-body"]');
+    await expect(modalBody).toBeVisible({ timeout: 15_000 });
+    const reasonBadge = page.locator('[data-testid="explain-modal-reason"]');
+    await expect(reasonBadge).toBeVisible({ timeout: 15_000 });
+    await expect(reasonBadge).toContainText('NO_PERMISSION', { timeout: 10_000 });
+  });
+
+  /**
+   * Senaryo 4 (P1.9 / AC-0320): `/unauthorized` page NO_SCOPE flow
+   *
+   * AC-0320 Senaryo 4: Kullanıcı module erişimi olan ama scope'u olmayan bir
+   * sayfaya (örn. `/admin/purchase-orders` project scope bağlı) yönlendirilir.
+   * canary-restricted persona'nın THEME modülü yok — redirect `/unauthorized`
+   * olur; burada "Neden erişemiyorum?" butonu `ExplainPermissionModal` açar ve
+   * scope picker NO_SCOPE reason'ı döndürür.
+   *
+   * AC path'i doğrudan simüle etmek için canary-restricted persona'nın
+   * module erişimi olmayan bir route'tan `/unauthorized` tetiklenir
+   * (existing Senaryo 2 ile aynı persona + /admin/themes path). Senaryo 2
+   * inline explain butonunu test eder; bu senaryo ise yeni modal akışını
+   * doğrular: modal açılır + scope picker COMPANY:9999 → NO_SCOPE.
+   */
+  test('NO_SCOPE (UnauthorizedPage): "Neden erişemiyorum?" modal + scope picker COMPANY:9999 → reason=NO_SCOPE', async ({
+    page,
+    baseURL,
+  }) => {
+    test.setTimeout(120_000);
+    const root = baseURL ?? process.env.PLAYWRIGHT_BASE_URL ?? '';
+    installExplainRequestTracer(page, 'NO_SCOPE_UNAUTHORIZED');
+
+    await performBrowserLogin(page, root, RESTRICTED_EMAIL, CANARY_PASSWORD, '/admin/themes');
+
+    await expect(page).toHaveURL(/\/unauthorized/, { timeout: 30_000 });
+    await expect(
+      page.getByRole('heading', { name: /Erişim Yetkiniz Bulunmuyor|You do not have access/i }),
+    ).toBeVisible();
+
+    const openModalBtn = page.locator('[data-testid="unauthorized-explain-open"]');
+    await expect(openModalBtn).toBeVisible({ timeout: 10_000 });
+    await openModalBtn.click();
+
+    const modalBody = page.locator('[data-testid="explain-modal-body"]');
+    await expect(modalBody).toBeVisible({ timeout: 15_000 });
+
+    // Initial auto-fetch reason — canary-restricted persona'da THEME module
+    // hiç izinli değil → NO_PERMISSION reason (scope değil).
+    const reasonBadge = page.locator('[data-testid="explain-modal-reason"]');
+    await expect(reasonBadge).toBeVisible({ timeout: 15_000 });
+    await expect(reasonBadge).toContainText('NO_PERMISSION', { timeout: 10_000 });
+
+    // Scope picker — COMPANY:9999 forward et
+    const scopePicker = page.locator('[data-testid="explain-modal-scope-picker"]');
+    await expect(scopePicker).toBeVisible();
+    const scopeType = page.locator('[data-testid="explain-modal-scope-type"]');
+    const scopeRefId = page.locator('[data-testid="explain-modal-scope-refid"]');
+    const scopeCheck = page.locator('[data-testid="explain-modal-scope-check"]');
+
+    await scopeType.selectOption('COMPANY');
+    await scopeRefId.fill('9999');
+    await scopeCheck.click();
+
+    // Re-fetch ile reason NO_SCOPE olmalı — backend `scopeType/scopeRefId`
+    // userScopes'ta değilken NO_SCOPE kısa devrede kalır (permission checks'i
+    // öncesinde). Modal denied-scope satırı "COMPANY:9999" render eder.
+    await expect(reasonBadge).toContainText('NO_SCOPE', { timeout: 15_000 });
+    const deniedScope = page.locator('[data-testid="explain-modal-denied-scope"]');
+    await expect(deniedScope).toBeVisible({ timeout: 10_000 });
+    await expect(deniedScope).toHaveText('COMPANY:9999');
+  });
+
+  /**
+   * Senaryo 3 (P1.9): NO_SCOPE via scope picker
+   *
+   * canary-read-only persona RoleDrawer'da REPORT modülü için explain modal'ı
+   * açar, scope picker'dan COMPANY + canary persona'nın scope set'inde olmayan
+   * büyük bir refId (9999) seçer, "Kapsamı Kontrol Et" butonuna basar, backend
+   * `reason=NO_SCOPE` + `details.scopeType=COMPANY` + `details.scopeRefId=9999`
+   * döndürür, modal denied-scope satırında "COMPANY:9999" render eder.
+   */
+  test('NO_SCOPE: scope picker ile canary-read-only olmayan COMPANY scope için reason=NO_SCOPE', async ({
+    page,
+    baseURL,
+  }) => {
+    test.setTimeout(120_000);
+    const root = baseURL ?? process.env.PLAYWRIGHT_BASE_URL ?? '';
+    installExplainRequestTracer(page, 'NO_SCOPE');
+
+    await performBrowserLogin(page, root, READ_ONLY_EMAIL, CANARY_PASSWORD, '/access/roles');
+
+    await expect(page).toHaveURL(/\/access\/roles/, { timeout: 30_000 });
+    await expect(page.locator('.ag-root').first()).toBeVisible({ timeout: 30_000 });
+
+    const quickFilter = page.getByRole('textbox', {
+      name: /Rol adı veya açıklama|Role name or description|Quick filter|Hızlı filtre/i,
+    });
+    await quickFilter.waitFor({ state: 'visible', timeout: 15_000 });
+    await quickFilter.fill('CANARY_READ_ONLY');
+
+    const nameCell = page
+      .locator('.ag-cell[col-id="name"]')
+      .filter({ hasText: /CANARY_READ_ONLY/i })
+      .first();
+    await nameCell.waitFor({ state: 'visible', timeout: 15_000 });
+    await nameCell.scrollIntoViewIfNeeded();
+    await nameCell.dblclick();
+
+    const drawer = page.getByRole('dialog', { name: /^CANARY_READ_ONLY$/i });
+    await expect(drawer).toBeVisible({ timeout: 15_000 });
+
+    const explainTrigger = drawer.getByRole('button', {
+      name: /Raporlama için neden butonu|Reporting.*why|Report.*explain/i,
+    });
+    await expect(explainTrigger).toBeVisible({ timeout: 15_000 });
+    await explainTrigger.click();
+
+    const modalBody = page.locator('[data-testid="explain-modal-body"]');
+    await expect(modalBody).toBeVisible({ timeout: 15_000 });
+
+    // Initial auto-fetch ALLOWED reason alır (CANARY_READ_ONLY REPORT view izinli).
+    const reasonBadge = page.locator('[data-testid="explain-modal-reason"]');
+    await expect(reasonBadge).toBeVisible({ timeout: 15_000 });
+    await expect(reasonBadge).toContainText('ALLOWED', { timeout: 10_000 });
+
+    // Scope picker UI mevcut olmalı (P1.9).
+    const scopePicker = page.locator('[data-testid="explain-modal-scope-picker"]');
+    await expect(scopePicker).toBeVisible();
+
+    const scopeType = page.locator('[data-testid="explain-modal-scope-type"]');
+    const scopeRefId = page.locator('[data-testid="explain-modal-scope-refid"]');
+    const scopeCheck = page.locator('[data-testid="explain-modal-scope-check"]');
+
+    await scopeType.selectOption('COMPANY');
+    await scopeRefId.fill('9999');
+    await scopeCheck.click();
+
+    // Re-fetch ile reason NO_SCOPE olmalı.
+    await expect(reasonBadge).toContainText('NO_SCOPE', { timeout: 15_000 });
+
+    // Denied scope satırı modal'da görünür olmalı: "COMPANY:9999".
+    const deniedScope = page.locator('[data-testid="explain-modal-denied-scope"]');
+    await expect(deniedScope).toBeVisible({ timeout: 10_000 });
+    await expect(deniedScope).toHaveText('COMPANY:9999');
+
+    // permissionType ve permissionKey orijinal değerde kalmalı (backend slot fix).
+    await expect(modalBody).toContainText('MODULE');
+    await expect(modalBody).toContainText('REPORT');
   });
 });

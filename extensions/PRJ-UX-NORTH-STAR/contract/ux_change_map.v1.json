@@ -449,6 +449,11 @@
       "ux_subtheme_id": "single_component_source_of_truth"
     },
     {
+      "path": "web/packages/auth/src/ExplainPermissionModal.tsx",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "least_privilege_interaction_design"
+    },
+    {
       "path": "web/packages/auth/src/useHasPermission.ts",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
