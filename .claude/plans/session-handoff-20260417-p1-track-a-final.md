@@ -1,3 +1,54 @@
+# Session Handoff — 2026-04-17 P1 Track A Final (**7/7 DONE** — Track A complete)
+
+> **Update 2026-04-17 akşam:** P1.9 NO_SCOPE UI modal refactor tamamlandı
+> (**PR #449 merged**, commit `c03ca62c`). Umbrella STORY-0320 3/3 alt iş
+> paketi merged. Track A **%100 complete**, canlı doğrulama PASS.
+>
+> ### P1.9 sonuç özeti
+>
+> **Backend:**
+> - `ExplainDetails` record'una `scopeType/scopeRefId` alanları (nullable)
+> - Yeni `deniedNoScope` helper — eski kod NO_SCOPE response'da scope bilgisini
+>   permType/permKey slotlarına yazan bug düzeltildi
+> - `NumberFormatException` guard malformed scopeRefId → HTTP 400
+> - 4 yeni unit test (ExplainNoScope nested, 12/12 total PASS)
+>
+> **Frontend:**
+> - `ExplainPermissionModal` @mfe/auth shared pakete taşındı (design-system peer dep)
+> - mfe-access `/widgets/explain-modal/ExplainPermissionModal.tsx` re-export
+> - mfe-shell `UnauthorizedPage` "Neden erişemiyorum?" modal-only akışa dönüştürüldü
+>   (inline explain kart kaldırıldı, UX temizliği)
+> - `useExplainPermission` signature: `scopeType?/scopeRefId?` params
+> - Hook için doğrudan unit test (6 test, TP-0320 hook coverage) +
+>   modal vitest (5 test via @mfe/auth re-export), toplam 11/11 PASS
+> - Playwright 2 yeni senaryo: Senaryo 3 (RoleDrawer path) + Senaryo 4
+>   (UnauthorizedPage path, AC-0320 acceptance compliance)
+> - i18n TR/EN 14 yeni `access.explainModal.scope*` key
+>
+> ### Codex review
+> Thread `019d9c32` — Turn 1 BLOCK (UnauthorizedPage modal eksik + hook unit test
+> yok) → 4 fix (shared modal, modal-only UX, hook unit test, Senaryo 4) → Turn 2
+> APPROVE.
+>
+> ### Canlı doğrulama
+> - `/authz/explain` NO_SCOPE response slotları doğru (permType=MODULE korunmuş,
+>   scopeType/scopeRefId ayrı alanda)
+> - Malformed scopeRefId → HTTP 400 + "scopeRefId must be numeric"
+> - `/authz/me` admin@example.com superAdmin=True authzVersion=8 allowedModules=9/9
+>
+> ### UX catalog update
+> `extensions/PRJ-UX-NORTH-STAR/contract/ux_change_map.v1.json` — yeni path
+> `web/packages/auth/src/ExplainPermissionModal.tsx` theme `trust_privacy_security_ux`
+> + subtheme `least_privilege_interaction_design` mapping eklendi (CI enforcement
+> fix ikinci commit `f1e2b500`).
+>
+> ### Flaky test
+> `web-test` job'unda `perf-benchmark.test.tsx > Calendar renders under 15ms average`
+> CI runner yavaşlığı nedeniyle 1732ms ölçüldü → flaky fail. Rerun → PASS. Bizim
+> değişiklikle alakasız.
+
+---
+
 # Session Handoff — 2026-04-17 P1 Track A Final (6/7 DONE, P1.9 kaldı)
 
 **Zincir handoff'ları:**
