@@ -277,6 +277,12 @@ jobs:
       - linux
       - x64
       - stage-backend
+    # STORY-0319 PR #3f: `deploy-backend` job (GHCR build+push) tamamlanmadan
+    # bu job'ın `docker pull ghcr.io/...` istemesi race condition yaratıyordu
+    # (PR #3e deploy log: "docker pull ... failed — deploy aborted").
+    # `needs` ile sıralı çalışmayı zorla — stage-host yalnızca GHCR push
+    # PASS olunca çalışır.
+    needs: deploy-backend
     if: ${{ (github.event.inputs.env || 'stage') == 'stage' }}
     environment: stage
     env:
