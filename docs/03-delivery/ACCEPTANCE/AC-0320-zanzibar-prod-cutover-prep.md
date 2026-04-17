@@ -5,6 +5,13 @@ Story: STORY-0320-zanzibar-prod-cutover-prep
 Status: Planned  
 Owner: @halil
 
+> **Not (2026-04-17 docs drift-fix):** Implementation 3/3 PR merged
+> (#446 P1.10 + #447 P1.8 + #449 P1.9). **Senaryo 2 (prod KMS path),
+> Senaryo 5 (recovery key escrow drill), Senaryo 6 (break-glass KMS failure)
+> manuel operatör rehearsal bekliyor** — master plan Rev 27 Open Item OI-04
+> altında izleniyor. Bu top-level Status alanı yeni semantik öneri değil,
+> sadece okuyucuya mevcut açık çerçeveyi işaret eder.
+
 -------------------------------------------------------------------------------
 ## 1. AMAÇ
 -------------------------------------------------------------------------------

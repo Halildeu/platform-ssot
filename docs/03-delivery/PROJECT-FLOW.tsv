@@ -67,4 +67,4 @@ STORY-0313	0313	NC: Intake & Evidence (MVP)	NC-MVP	—	SPEC-0015	✓ (AC-0313)	�
 STORY-0314	0314	NC: CAPA Workflow (MVP)	NC-MVP	—	SPEC-0015	✓ (AC-0314)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1
 STORY-0315	0315	Fleet: Operations Management (MVP)	FLEET-MVP	✓ (ADR-0001)	SPEC-0016	✓ (AC-0315)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1
 STORY-0319	0319	Staging Prod-Profile Migration	EPIC-infra-canary-readiness	—	—	✓ (AC-0319)	🟦 Design	2026-04-17	@halil	M1	M1	M1	L0	L1
-STORY-0320	0320	Zanzibar Prod Cutover Prep (P1.8 + P1.9 + P1.10)	EPIC-infra-canary-readiness	—	—	✓ (AC-0320)	🟦 Design	2026-04-17	@halil	M1	M1	M1	L0	L1
+STORY-0320	0320	Zanzibar Prod Cutover Prep (P1.8 + P1.9 + P1.10)	EPIC-infra-canary-readiness	—	—	✓ (AC-0320)	🔄 In Progress	2026-04-17	@halil	M1	M1	M1	L0	L1
