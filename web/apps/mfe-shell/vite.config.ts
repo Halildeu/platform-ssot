@@ -186,6 +186,13 @@ const sharedProdOnly = {
   '@mfe/design-system': { singleton: true, requiredVersion: false as const },
   '@mfe/shared-http': { singleton: true, requiredVersion: false as const },
   '@mfe/i18n-dicts': { singleton: true, requiredVersion: false as const },
+  // PR E (Codex CNS thread 019d99ba Tur 11): `@mfe/auth` MF singleton.
+  // Shell AuthBootstrapper `/v1/authz/me` çekip PermissionProvider'a set ediyor;
+  // ama remote (mfe-access) kendi @mfe/auth bundle instance'ı ile default context
+  // kullanıyordu → `usePermissions().authz` null → RoleDrawer currentUserId null →
+  // ExplainPermissionModal "Kullanıcı seçilmedi" alert. Singleton ile host+remote
+  // aynı provider instance'ını paylaşır.
+  '@mfe/auth': { singleton: true, requiredVersion: false as const },
 };
 // NOTE: SINGLE_DOMAIN_BUILD env var is still consumed by build-single-domain.mjs
 // for output directory layout, but the shared config is now unified for all modes.

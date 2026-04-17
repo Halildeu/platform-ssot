@@ -59,6 +59,12 @@ const sharedProdOnly = {
   'ag-grid-enterprise': singleton('ag-grid-enterprise'),
   '@mfe/design-system': { singleton: true, requiredVersion: false as const },
   '@mfe/shared-http': { singleton: true, requiredVersion: false as const },
+  // PR E (Codex CNS thread 019d99ba Tur 11): `@mfe/auth` MF singleton.
+  // hostOnly pattern kullanılmıyor çünkü mfe-access kendi auth bundle'ını da
+  // import edebilir (hostOnly'de remote kendi instance'ı yok). Shell+remote aynı
+  // PermissionProvider context instance'ını paylaşır → `usePermissions().authz`
+  // remote'da da populate olur.
+  '@mfe/auth': { singleton: true, requiredVersion: false as const },
 };
 
 const isTest = !!process.env['VITEST'];
