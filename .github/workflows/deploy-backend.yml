@@ -13,6 +13,29 @@ on:
         description: "Deployment environment (informational)"
         required: true
         default: "stage"
+      # STORY-0319 PR #3a: stage deploy orchestration inputs.
+      # Push event'te input'lar boş — stage step-level fallback default'u
+      # mevcut davranışı korur. workflow_dispatch operatöre rehearsal/rollback
+      # override yolu açar. Prod SSH path bu input'lara bakmaz (stage-specific).
+      render_env_before_deploy:
+        description: "Stage only — render canonical backend.env before deploy (requires Vault AppRole; default preserved as 'false' until PR #3b/#3c rehearsal complete)"
+        required: false
+        type: boolean
+        default: false
+      build_local:
+        description: "Stage only — build service images locally (default true; PR #3c GHCR retag path enables 'false')"
+        required: false
+        type: boolean
+        default: true
+      docker_pull_policy:
+        description: "Stage only — docker compose pull policy (default 'never'; PR #3c GHCR retag path enables 'always')"
+        required: false
+        type: choice
+        options:
+          - never
+          - missing
+          - always
+        default: "never"
 
 permissions:
   contents: read
@@ -295,11 +318,17 @@ jobs:
             exit 1
           fi
 
+      # STORY-0319 PR #3a: VAULT secret'ları artık step-level bağlı.
+      # Önceden `deploy-stage-host` job env'i `VAULT_ADDR`/`VAULT_TOKEN` set
+      # etmiyordu — `env.VAULT_ADDR` referansı boş okunuyordu (Codex turn 1
+      # bulgusu). Stage environment scope ile secrets bu step'te doğru
+      # çözülür. Deploy step'te VAULT_TOKEN paylaşılmaz ki AppRole render
+      # precedence korunsun (deploy-backend.sh:150 token path'i by-pass etmez).
       - name: Refresh stage backend AppRole materials
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         env:
-          VAULT_ADDR_SECRET: ${{ env.VAULT_ADDR }}
-          VAULT_TOKEN_SECRET: ${{ env.VAULT_TOKEN }}
+          VAULT_ADDR_SECRET: ${{ secrets.VAULT_ADDR }}
+          VAULT_TOKEN_SECRET: ${{ secrets.VAULT_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
@@ -316,6 +345,32 @@ jobs:
           VAULT_TOKEN="${VAULT_TOKEN_SECRET}" \
           bash backend/scripts/vault/materialize-backend-deploy-approle.sh
 
+      # STORY-0319 PR #3a: pre-deploy backend.env snapshot.
+      # render-backend-env.sh atomic yazıyor ama "payload tam ama semantik
+      # yanlış" senaryosunda graceful-degradation korumuyor. Backup, RENDER
+      # hatalarında elle restore imkânı sağlar. Backup lifecycle 7 gün —
+      # operatör gerekirse cron ile rotate eder.
+      - name: Snapshot stage backend.env before deploy
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        env:
+          BACKEND_DEPLOY_REMOTE_ENV_FILE: ${{ secrets.BACKEND_DEPLOY_REMOTE_ENV_FILE }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
+          if [ ! -f "${remote_env_file}" ]; then
+            echo "::notice title=deploy-backend::backend.env missing at ${remote_env_file}; skipping snapshot."
+            exit 0
+          fi
+          snapshot_dir="$(dirname "${remote_env_file}")/backup"
+          mkdir -p "${snapshot_dir}"
+          snapshot_file="${snapshot_dir}/backend.env.$(date -u +%Y%m%dT%H%M%SZ).bak"
+          cp -a "${remote_env_file}" "${snapshot_file}"
+          chmod 600 "${snapshot_file}"
+          echo "::notice title=deploy-backend::snapshot saved to ${snapshot_file}"
+          # 7 gün sonrası backup'ları temizle (operasyonel housekeeping)
+          find "${snapshot_dir}" -name 'backend.env.*.bak' -mtime +7 -delete 2>/dev/null || true
+
       - name: Deploy on stage host (self-hosted)
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         env:
@@ -323,6 +378,14 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           BACKEND_DEPLOY_REMOTE_ENV_FILE: ${{ secrets.BACKEND_DEPLOY_REMOTE_ENV_FILE }}
           BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES: ${{ secrets.BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES }}
+          # VAULT_ADDR paylaşılır (deploy script render_backend_env çağrısı
+          # için gerekli); VAULT_TOKEN KASITLI OLARAK EKLENMEMİŞTİR —
+          # AppRole render precedence (deploy-backend.sh:150) korunsun diye.
+          VAULT_ADDR_SECRET: ${{ secrets.VAULT_ADDR }}
+          # STORY-0319 PR #3a: workflow_dispatch input override path'leri
+          RENDER_ENV_BEFORE_DEPLOY_INPUT: ${{ github.event.inputs.render_env_before_deploy }}
+          BUILD_LOCAL_INPUT: ${{ github.event.inputs.build_local }}
+          DOCKER_PULL_POLICY_INPUT: ${{ github.event.inputs.docker_pull_policy }}
         shell: bash
         run: |
           set -euo pipefail
@@ -332,12 +395,19 @@ jobs:
           remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
           remote_profiles="${BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES:-}"
           repo_dir="${GITHUB_WORKSPACE}"
-          vault_addr="${VAULT_ADDR:-http://127.0.0.1:8200}"
+          vault_addr="${VAULT_ADDR_SECRET:-http://127.0.0.1:8200}"
 
           if [ ! -f "${remote_env_file}" ]; then
             echo "::error title=deploy-backend::backend env file missing: ${remote_env_file}"
             exit 1
           fi
+
+          # workflow_dispatch input fallback — push event'te input boş → mevcut
+          # davranış (false / true / never) korunur. PR #3b/#3c rehearsal
+          # sonrası flip edilir.
+          render_env="${RENDER_ENV_BEFORE_DEPLOY_INPUT:-false}"
+          build_local="${BUILD_LOCAL_INPUT:-true}"
+          pull_policy="${DOCKER_PULL_POLICY_INPUT:-never}"
 
           chmod +x deploy/ubuntu/deploy-backend.sh deploy/ubuntu/rollback-backend.sh
 
@@ -345,14 +415,14 @@ jobs:
           REPO_DIR="${repo_dir}" \
           COMPOSE_PROFILES="${remote_profiles}" \
           REPO_BRANCH="${GITHUB_REF_NAME}" \
-          RENDER_ENV_BEFORE_DEPLOY="false" \
+          RENDER_ENV_BEFORE_DEPLOY="${render_env}" \
           DEPLOY_ENV="stage" \
           VAULT_ADDR="${vault_addr}" \
           GHCR_USERNAME="${GITHUB_ACTOR}" \
           GHCR_TOKEN="${GITHUB_TOKEN}" \
           TARGET_IMAGE_TAG="sha-${short_sha}" \
-          BUILD_LOCAL="true" \
-          DOCKER_PULL_POLICY="never" \
+          BUILD_LOCAL="${build_local}" \
+          DOCKER_PULL_POLICY="${pull_policy}" \
           deploy/ubuntu/deploy-backend.sh
 
       - name: Collect stage backend diagnostics on failure
@@ -367,7 +437,12 @@ jobs:
           remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
           remote_repo_dir="${GITHUB_WORKSPACE}"
           remote_profiles="${BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES:-}"
-          compose_file="${remote_repo_dir}/deploy/docker-compose.prod.yml"
+          # STORY-0319 PR #3a: deploy-stage-host job yalnız stage path'i için
+          # çalışıyor (if: github.event.inputs.env=='stage'), dolayısıyla
+          # diagnostics doğrudan backend/docker-compose.yml'e bakmalı.
+          # Eski kod docker-compose.prod.yml okuyordu ve stage debug
+          # yanıltıcı oluyordu.
+          compose_file="${remote_repo_dir}/backend/docker-compose.yml"
 
           compose_flags=()
           if [ -n "${remote_profiles}" ]; then
