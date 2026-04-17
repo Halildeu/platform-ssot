@@ -141,9 +141,13 @@ export default defineConfig(({ mode }) => {
   build: {
     target: 'esnext',
     outDir: 'dist',
-    rolldownOptions: {
-      external: [/^mfe_shell\//],
-    },
+    // NOTE: `rolldownOptions.external: [/^mfe_shell\//]` intentionally removed.
+    // @module-federation/vite zaten shell expose'larını ("mfe_shell/*") federation
+    // rewrite üzerinden handle ediyor. External regex browser'a çıplak
+    // `mfe_shell/i18n` specifier'ı sızdırıp runtime'da
+    // "Failed to resolve module specifier" hatası üretiyordu (Codex CNS thread
+    // 019d97c7 Tur 7 kök neden). Release gate Playwright E2E staging'de bu bug'ı
+    // yakaladı (mfe-access boot fail).
   },
 
   test: {
