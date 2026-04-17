@@ -18,10 +18,10 @@ on:
       # mevcut davranışı korur. workflow_dispatch operatöre rehearsal/rollback
       # override yolu açar. Prod SSH path bu input'lara bakmaz (stage-specific).
       render_env_before_deploy:
-        description: "Stage only — render canonical backend.env before deploy (AppRole via Vault). Default 'true' post-PR #3c."
+        description: "Stage only — render canonical backend.env before deploy. Default 'false' (token-path); AppRole setup tamamlanınca 'true'."
         required: false
         type: boolean
-        default: true
+        default: false
       build_local:
         description: "Stage only — build service images locally. Default 'false' post-PR #3c (GHCR retag path)."
         required: false
@@ -428,13 +428,14 @@ jobs:
             exit 1
           fi
 
-          # STORY-0319 PR #3c — stage default'ları flip edildi.
-          # Push event'te input boş → canonical env render (AppRole) +
-          # GHCR retag (BUILD_LOCAL=false + DOCKER_PULL_POLICY=always).
-          # Emergency rollback için operatör `gh workflow run -f build_local=true
-          # -f docker_pull_policy=never -f render_env_before_deploy=false` ile
-          # override yapabilir.
-          render_env="${RENDER_ENV_BEFORE_DEPLOY_INPUT:-true}"
+          # STORY-0319 PR #3c flip + PR #3e rollback:
+          # - GHCR retag path aktif (build_local=false, pull=always).
+          # - Render flip ertelendi: Vault'ta AppRole auth method kurulu
+          #   değil (PR #3d soft-fail guard); `RENDER_ENV_BEFORE_DEPLOY=true`
+          #   + VAULT_TOKEN workflow'da paylaşılmıyor → deploy script
+          #   AppRole render path'ine düşüyor → fail. AppRole setup
+          #   tamamlanınca bu default `true` yapılır.
+          render_env="${RENDER_ENV_BEFORE_DEPLOY_INPUT:-false}"
           build_local="${BUILD_LOCAL_INPUT:-false}"
           pull_policy="${DOCKER_PULL_POLICY_INPUT:-always}"
 
