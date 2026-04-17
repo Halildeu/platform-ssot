@@ -86,7 +86,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
     queryKey: ['roles-list'],
     queryFn: async () => {
       try {
-        const res = await api.get('/api/v1/roles');
+        const res = await api.get('/v1/roles');
         const data = res.data as any;
         const items = data?.items ?? data?.content ?? data ?? [];
         return (Array.isArray(items) ? items : []).map((r: any) => ({ id: r.id, name: r.name })) as RoleOption[];
@@ -101,7 +101,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
     queryKey: ['user-roles', user?.id],
     queryFn: async () => {
       try {
-        const res = await api.get(`/api/v1/authz/users/${user!.id}/roles`);
+        const res = await api.get(`/v1/authz/users/${user!.id}/roles`);
         return (res.data as any[]).map((r: any) => r.roleId as number);
       } catch {
         const fallbackRoleId = FALLBACK_ROLE_ID_BY_NAME[String(user?.role ?? '').trim().toUpperCase()];
@@ -116,7 +116,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
     queryKey: ['scope-companies'],
     queryFn: async () => {
       try {
-        const res = await api.get('/api/v1/companies');
+        const res = await api.get('/v1/companies');
         const data = res.data as any;
         const items = data?.items ?? data?.content ?? data ?? [];
         return (Array.isArray(items) ? items : []).map((c: any) => ({ id: c.id, name: c.name })) as ScopeEntity[];
@@ -129,7 +129,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
     queryKey: ['scope-projects'],
     queryFn: async () => {
       try {
-        const res = await api.get('/api/v1/projects');
+        const res = await api.get('/v1/projects');
         const data = res.data as any;
         const items = data?.items ?? data?.content ?? data ?? [];
         return (Array.isArray(items) ? items : []).map((p: any) => ({ id: p.id, name: p.name })) as ScopeEntity[];
@@ -142,7 +142,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
     queryKey: ['scope-warehouses'],
     queryFn: async () => {
       try {
-        const res = await api.get('/api/v1/warehouses');
+        const res = await api.get('/v1/warehouses');
         const data = res.data as any;
         const items = data?.items ?? data?.content ?? data ?? [];
         return (Array.isArray(items) ? items : []).map((w: any) => ({ id: w.id, name: w.name })) as ScopeEntity[];
@@ -155,7 +155,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
     queryKey: ['scope-branches'],
     queryFn: async () => {
       try {
-        const res = await api.get('/api/v1/branches');
+        const res = await api.get('/v1/branches');
         const data = res.data as any;
         const items = data?.items ?? data?.content ?? data ?? [];
         return (Array.isArray(items) ? items : []).map((b: any) => ({ id: b.id, name: b.name })) as ScopeEntity[];
@@ -170,7 +170,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
     queryKey: ['user-scopes', user?.id],
     queryFn: async () => {
       try {
-        const res = await api.get(`/api/v1/roles/users/${user!.id}/scopes`);
+        const res = await api.get(`/v1/roles/users/${user!.id}/scopes`);
         const data = res.data as any;
         return {
           companyIds: (data?.companyIds ?? []) as number[],
@@ -207,7 +207,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
   // --- Mutations ---
   const assignMutation = useMutation({
     mutationFn: async () => {
-      await api.post(`/api/v1/authz/users/${user!.id}/assignments`, {
+      await api.post(`/v1/authz/users/${user!.id}/assignments`, {
         roleIds: selectedRoleIds,
         scopes: {
           companyIds: selectedCompanyIds,

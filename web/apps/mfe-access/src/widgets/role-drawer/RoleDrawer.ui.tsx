@@ -79,7 +79,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
       if (!isPersistedRoleId(role?.id)) {
         return buildFallbackCatalog(role);
       }
-      const res = await api.get('/api/v1/authz/catalog');
+      const res = await api.get('/v1/authz/catalog');
       return res.data as Catalog;
     },
     enabled: open && mode === 'view',
@@ -93,7 +93,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
       if (!isPersistedRoleId(role?.id)) {
         return [] as RoleMember[];
       }
-      const res = await api.get(`/api/v1/roles/${role!.id}/members`);
+      const res = await api.get(`/v1/roles/${role!.id}/members`);
       return res.data as RoleMember[];
     },
     enabled: open && mode === 'view' && !!role,
@@ -114,7 +114,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
     queryKey: ['role-granules', role?.id],
     queryFn: async () => {
       if (!isPersistedRoleId(role?.id)) return null;
-      const res = await api.get(`/api/v1/roles/${role!.id}`);
+      const res = await api.get(`/v1/roles/${role!.id}`);
       const data = res.data as any;
       return (data?.policies ?? data?.permissions ?? []) as Granule[];
     },
@@ -156,7 +156,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
     if (query.length < 2) { setUserSearchOptions([]); return; }
     setUserSearchLoading(true);
     try {
-      const res = await api.get('/api/v1/users', { params: { search: query, pageSize: 10 } });
+      const res = await api.get('/v1/users', { params: { search: query, pageSize: 10 } });
       const items = res.data?.items ?? res.data?.content ?? [];
       setUserSearchOptions(
         items.map((u: { id: string | number; fullName?: string; name?: string; email?: string }) => ({
@@ -188,7 +188,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
       for (const [key, grant] of Object.entries(pageGrants)) {
         granules.push({ type: 'page', key, grant });
       }
-      await api.put(`/api/v1/roles/${role!.id}/granules`, { permissions: granules });
+      await api.put(`/v1/roles/${role!.id}/granules`, { permissions: granules });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles'] });
@@ -204,7 +204,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   const addMemberMutation = useMutation({
     mutationFn: async (userId: number) => {
       if (!isPersistedRoleId(role?.id)) return;
-      await api.post(`/api/v1/roles/${role!.id}/members`, { userIds: [userId] });
+      await api.post(`/v1/roles/${role!.id}/members`, { userIds: [userId] });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['role-members', role?.id] });
@@ -221,7 +221,7 @@ const RoleDrawer: React.FC<RoleDrawerProps> = ({
   const removeMemberMutation = useMutation({
     mutationFn: async (userId: number) => {
       if (!isPersistedRoleId(role?.id)) return;
-      await api.delete(`/api/v1/roles/${role!.id}/members/${userId}`);
+      await api.delete(`/v1/roles/${role!.id}/members/${userId}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['role-members', role?.id] });
