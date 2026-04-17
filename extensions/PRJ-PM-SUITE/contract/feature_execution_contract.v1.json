@@ -9,7 +9,11 @@
       "tenant/TENANT-DEFAULT/decision-bundle.v1.json",
       "docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md",
       "docs/03-delivery/INTERFACE-CONTRACTS/INTERFACE-CONTRACT-cross-plane-auth-session-audit-foundation.md",
-      "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json"
+      "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
+      "docs/03-delivery/STORIES/STORY-0320-zanzibar-prod-cutover-prep.md",
+      "docs/03-delivery/ACCEPTANCE/AC-0320-zanzibar-prod-cutover-prep.md",
+      "docs/03-delivery/TEST-PLANS/TP-0320-zanzibar-prod-cutover-prep.md",
+      "docs/04-operations/RUNBOOKS/RB-vault-kms-autounseal.md"
     ],
     "context_refs": [
       "tenant/TENANT-DEFAULT/context.v1.md",
@@ -21,7 +25,7 @@
   },
   "definition_of_done": {
     "acceptance_criteria": [
-      "Spring integration profile + docker-compose local defaults"
+      "docs/03-delivery/ACCEPTANCE/AC-0320-zanzibar-prod-cutover-prep.md"
     ],
     "evidence_paths": [
       ".cache/reports/feature_execution_contract_check.v1.json"
@@ -30,18 +34,22 @@
   "delivery_scope": {
     "affected_modules": [],
     "change_path_globs": [
-      "backend/*/pom.xml",
       "backend/*/Dockerfile",
-      "backend/*/src/main/resources/application.properties",
-      "backend/*/src/main/resources/application-k8s.yml",
+      "backend/*/pom.xml",
       "backend/*/src/main/resources/application-integration.yml",
+      "backend/*/src/main/resources/application-k8s.yml",
+      "backend/*/src/main/resources/application.properties",
       "backend/.env.example",
       "backend/api-gateway/**/*",
       "backend/auth-service/**/*",
+      "backend/auth-service/src/main/java/**/*",
+      "backend/auth-service/src/main/resources/application.properties",
       "backend/common-auth/**/*",
       "backend/core-data-service/**/*",
       "backend/dev-integration.sh",
       "backend/devops/postgres/*",
+      "backend/devops/vault/vault-seal-*.hcl",
+      "backend/devops/vault/vault.hcl",
       "backend/docker-compose.prod.yml",
       "backend/docker-compose.yml",
       "backend/openfga/**/*",
@@ -52,14 +60,17 @@
       "backend/report-service/src/test/java/**/*",
       "backend/schema-service/**/*",
       "backend/scripts/*",
+      "backend/scripts/ci/canary/*.mjs",
       "backend/scripts/vault/*",
       "backend/user-service/src/main/java/**/*",
       "backend/user-service/src/main/resources/application-local.properties",
+      "backend/user-service/src/main/resources/application.properties",
       "backend/variant-service/src/main/java/**/*",
       "backend/variant-service/src/main/resources/application-local.properties",
       "deploy/ubuntu/*",
       "web/apps/*/vite.config.ts",
       "web/apps/mfe-access/**/*",
+      "web/apps/mfe-access/src/widgets/explain-modal/**/*",
       "web/apps/mfe-reporting/**/*",
       "web/apps/mfe-shell/src/app/layout/**/*",
       "web/apps/mfe-shell/src/features/auth/**/*",
@@ -72,6 +83,7 @@
       "web/apps/mfe-shell/vite.config.ts",
       "web/apps/mfe-users/**/*",
       "web/packages/auth/**/*",
+      "web/packages/auth/src/useExplainPermission.ts",
       "web/packages/design-system/**/*",
       "web/packages/i18n-dicts/**/*",
       "web/packages/platform-capabilities/**/*",
@@ -89,7 +101,7 @@
       "frontend"
     ]
   },
-  "feature_id": "integration-profile",
+  "feature_id": "zanzibar-prod-cutover-prep",
   "kind": "feature-execution-contract",
   "lane_plan": {
     "execution_sequence": [
@@ -135,7 +147,11 @@
         "docs/OPERATIONS/MANAGED-REPO-CONTEXT-CONSUMPTION.v1.md",
         "docs/OPERATIONS/MULTI-PLANE-EXECUTION-MODEL.v1.md",
         "tenant/TENANT-DEFAULT/**/*",
-        "extensions/PRJ-PM-SUITE/contract/**/*"
+        "extensions/PRJ-PM-SUITE/contract/**/*",
+        "docs/03-delivery/STORIES/STORY-0320-zanzibar-prod-cutover-prep.md",
+        "docs/03-delivery/ACCEPTANCE/AC-0320-zanzibar-prod-cutover-prep.md",
+        "docs/03-delivery/TEST-PLANS/TP-0320-zanzibar-prod-cutover-prep.md",
+        "docs/04-operations/RUNBOOKS/RB-vault-kms-autounseal.md"
       ],
       "mobile": [
         "mobile/App.tsx",
@@ -215,22 +231,24 @@
     ]
   },
   "source_context": {
-    "business_goal": "Prod-like local auth testing",
-    "requested_outcome": "docker,integration profili ile JWT zorunlu local test",
+    "source_type": "story",
     "source_refs": [
-      "manual:unspecified"
+      "docs/03-delivery/STORIES/STORY-0320-zanzibar-prod-cutover-prep.md",
+      "docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md",
+      ".claude/plans/zanzibar-master-plan.md"
     ],
-    "source_type": "manual"
+    "business_goal": "Zanzibar prod cutover readiness — remove Shamir sidecar compliance risk, replace manual Hybrid B canary seed with canonical service-token path, ship NO_SCOPE reason UX",
+    "requested_outcome": "Three PRs under umbrella STORY-0320 merge green with Vault KMS templates, canonical auth-service mint + user-service JWT converter, and useExplainPermission scope extension; CI enforcement-check + module-delivery-gate satisfied."
   },
   "status": "ACTIVE",
-  "summary": "Spring integration profile + docker-compose local defaults",
+  "summary": "Umbrella work for P1 backlog's last three stories before prod cutover: Vault KMS auto-unseal (P1.10), canonical service-token path (P1.8), and NO_SCOPE UI modal refactor (P1.9).",
   "technical_contract": {
     "api_version_prefix": "/api/v1",
     "baseline_profile_id": "erp-fullstack-java21-react18",
     "db_migration_required": false,
     "design_system_policy": "policies/policy_ui_design_system.v1.json"
   },
-  "title": "Integration profile for local auth testing",
+  "title": "Zanzibar Prod Cutover Prep (P1.8 + P1.9 + P1.10)",
   "ux_contract": {
     "artifacts": [
       {
