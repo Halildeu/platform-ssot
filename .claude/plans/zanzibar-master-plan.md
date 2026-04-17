@@ -1,3 +1,84 @@
+# Zanzibar Master Plan — Rev 27 (Track A CLOSED, Open Items Index v27 açıldı)
+
+> **Rev 27 güncellemesi (2026-04-17 gece):** Rev 26 sonrası plan gövdesi
+> revizyon arkeolojisine dönüşmüştü — kalan işler Rev 22 Dalga 4 + Rev 23 PR-3 +
+> Rev 25/26 update'lerde parçalı halde. Rev 27 bu dağınıklığı 4 bölümde
+> konsolide eder: §1 Gate Taxonomy + §2 Open Items Index (ayrı dosya linkli) +
+> §3 Supersede Markers + §4 Track A Closure. Uzlaşı: Codex MCP thread
+> `019d9cc5-7d57-78f3-b126-cce0f3d1d657` (4 tur REVISE→REVISE→PARTIAL→AGREE,
+> ready_for_impl: true).
+>
+> **STORY-0320 status drift kapatıldı** (ayrı atomic PR — bkz. Rev 27 PR A):
+> Status Planned → In Progress, PROJECT-FLOW 🟦 Design → 🔄 In Progress,
+> AC-0320 üst notta Senaryo 2/5/6 manuel rehearsal referansı. Top-level
+> AC/TP Status alanlarına dokunulmadı (yeni status semantiği icat edilmedi).
+>
+> Rev 27 **yeni normatif karar yok**; working-index + supersede + closure
+> marker konsolidasyonu. Master plan authority katmanı değildir —
+> `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md` per canonical delivery dokümanları
+> (`PROJECT-FLOW.md`, `STORIES/**`, `ACCEPTANCE/**`, `TEST-PLANS/**`,
+> `RUNBOOKS/**`) authoritative kalır.
+
+---
+
+## §1 — Gate Taxonomy (5 gate)
+
+| Gate | Tanım |
+|------|-------|
+| `stage-2-runnable` | Synthetic canary wrapper teknik olarak koşabilir (altyapı + config valid) |
+| `stage-2-execution` | Canlı synthetic canary run fiilen icra edildi (k6+probe+metrics) |
+| `stage-3-evidence` | Evidence PASS audit checklist geçti |
+| `prod-cutover-gate` | Prod deploy öncesi zorunlu manuel operasyonel rehearsal (KMS + IAM + escrow + break-glass) |
+| `non-blocking` | Tespit edildi, ana path'i bloklamıyor (operasyonel drift veya design follow-up) |
+
+---
+
+## §2 — Open Items Index
+
+**Ayrı dosya:** [`.claude/plans/zanzibar-open-items.v27.md`](./zanzibar-open-items.v27.md) — 14 açık + 2 parking = 16 item. Working index (authority DEĞİL; canonical delivery ayrı).
+
+**Kritik path:** OI-01 STORY-0319 4-PR → OI-02 Stage 2 canlı run → OI-03 Stage 3 Evidence PASS → OI-04 prod cutover gate (KMS rehearsal + IAM + escrow + break-glass).
+
+**Non-blocking paralel:** OI-05..OI-14 herhangi bir sırayla ilerletilebilir.
+
+**Parking:** PK-01 (P1.6 canary-admin KC login deep debug), PK-02 (/users/actuator/health gateway 500 — master plan kapsamı dışı, ayrı ops-story).
+
+---
+
+## §3 — Supersede Markers (tarihsel doğruluk)
+
+**Current referans DEĞİLDİR:**
+
+1. **`.claude/plans/session-handoff-20260416-zanzibar-dalga1-done.md:36`**
+   - "Dalga 1 Stage 2+3 PASS" iddiası **%96 persona mismatch** kanıtıyla çelişir.
+   - Rev 22 doctrine değişikliği ile (fiziksel 48h → synthetic canary + Evidence PASS) Stage 2/3 altyapı hazır; **canlı run yapılmadı**.
+
+2. **Master plan Rev 22-25 gövdesinde "Dalga 2 release gate açık" ifadeleri**
+   - Rev 26'da Dalga 2 **TAM KAPANIŞ** ilan edildi (PR #437 handoff).
+   - "Playwright stage spec pending" hayalet referans — spec dosyası
+     `web/tests/playwright/authz.explain-modal.stage.spec.ts` zaten mevcut.
+   - Post-profile (STORY-0319 sonrası) rerun gerekirse STORY-0319 AC içinde takip edilir, ayrı açık item değildir.
+
+3. **Master plan Rev 22-24 gövdesinde "PR6c-1 pending" / "Dalga 3 partial" ifadeleri**
+   - Rev 26'da Dalga 3 **COMPLETE** (PR #422 merged).
+   - PR6c-1 consumer refactor + compose drift guard (PR #423/424) tamamlandı.
+
+**Active handoff:** `.claude/plans/session-handoff-20260417-p1-track-a-final.md` (Track A closure + umbrella STORY-0320).
+
+---
+
+## §4 — Track A Closure (merged vs closed ayrımı)
+
+Track A: **CLOSED** (7/7 PR merged, P1.6 P2 defer).
+
+Umbrella STORY-0320: **implementation merged** (PR #446 P1.10 + PR #447 P1.8 + PR #449 P1.9). **Story CLOSED DEĞİL** — AC-0320 Senaryo 2 (prod KMS path), Senaryo 5 (recovery key escrow drill), Senaryo 6 (break-glass KMS failure) manuel operatör adımları açık. Status: `In Progress` (drift-fix PR ile hizalandı).
+
+**Next focus:** OI-01 → OI-02 → OI-03 → OI-04 (prod cutover gate).
+
+**Canlı durum (2026-04-17 EOD+):** ai.acik.com stabil, `authzVersion=8`, admin@example.com `superAdmin=true allowedModules=9/9`, 22/23 container healthy, cross-origin preflight HTTP 200.
+
+---
+
 # Zanzibar Master Plan — Rev 26 (Track A 7/7 DONE, umbrella STORY-0320 TAMAMLANDI)
 
 > **Rev 26 güncellemesi (2026-04-17 akşam):** Rev 25 sonrası son kalan P1.9 NO_SCOPE
