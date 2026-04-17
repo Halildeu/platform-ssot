@@ -308,7 +308,9 @@ services:
       SECURITY_JWT_JWK_SET_URI: ${KEYCLOAK_JWKS_URI}
       SECURITY_JWT_ISSUERS: ${KEYCLOAK_PUBLIC_ISSUER_URI:-${KEYCLOAK_ISSUER_URI}},${KEYCLOAK_ISSUER_URI}
       SECURITY_JWT_JWK_SET_URIS: ${KEYCLOAK_JWKS_URI}
-      SECURITY_JWT_AUDIENCE: user-service,permission-service,variant-service,core-data-service
+      # PR F (Codex CNS thread 019d99ba Tur 12): prod compose aynı drift (staging'le aynı).
+      # Browser PKCE `frontend` token için audience fallback gerekiyor; env-driven yap.
+      SECURITY_JWT_AUDIENCE: ${SECURITY_JWT_AUDIENCE:-user-service,permission-service,variant-service,core-data-service}
       VAULT_URI: ${VAULT_URI:-}
       VAULT_SCHEME: ${VAULT_SCHEME:-https}
       VAULT_TOKEN: ${VAULT_TOKEN:-}
