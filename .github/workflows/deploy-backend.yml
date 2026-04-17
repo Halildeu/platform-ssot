@@ -318,12 +318,14 @@ jobs:
             exit 1
           fi
 
-      # STORY-0319 PR #3a: VAULT secret'ları artık step-level bağlı.
-      # Önceden `deploy-stage-host` job env'i `VAULT_ADDR`/`VAULT_TOKEN` set
-      # etmiyordu — `env.VAULT_ADDR` referansı boş okunuyordu (Codex turn 1
-      # bulgusu). Stage environment scope ile secrets bu step'te doğru
-      # çözülür. Deploy step'te VAULT_TOKEN paylaşılmaz ki AppRole render
-      # precedence korunsun (deploy-backend.sh:150 token path'i by-pass etmez).
+      # STORY-0319 PR #3a: VAULT secret'ları step-level bağlı.
+      # PR #3d (soft-fail guard): staging'de AppRole auth method henüz
+      # enable edilmemiş (sadece token/ auth mount mevcut; canonical env'deki
+      # ROLE_ID/SECRET_ID stale UUID). `materialize-backend-deploy-approle.sh`
+      # auth/approle/role/backend-deploy-stage 404 alır → step fail → deploy
+      # pipeline bloke. Guard: 404/403 durumunda notice + exit 0, token-path
+      # deploy yoluna düşer. AppRole kalıcı setup ayrı follow-up
+      # (PR #3e veya ops runbook).
       - name: Refresh stage backend AppRole materials
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         env:
@@ -340,10 +342,34 @@ jobs:
             exit 0
           fi
 
-          ENV=stage \
-          VAULT_ADDR="${vault_addr}" \
-          VAULT_TOKEN="${VAULT_TOKEN_SECRET}" \
-          bash backend/scripts/vault/materialize-backend-deploy-approle.sh
+          # Preflight: AppRole role endpoint erişilebilir mi?
+          probe_status="$(curl -sS -o /dev/null -w '%{http_code}' \
+            -H "X-Vault-Token: ${VAULT_TOKEN_SECRET}" \
+            "${vault_addr%/}/v1/auth/approle/role/backend-deploy-stage/role-id" \
+            || echo "000")"
+
+          case "${probe_status}" in
+            200)
+              # AppRole configured + token yetkili → normal rotation
+              ENV=stage \
+              VAULT_ADDR="${vault_addr}" \
+              VAULT_TOKEN="${VAULT_TOKEN_SECRET}" \
+              bash backend/scripts/vault/materialize-backend-deploy-approle.sh
+              ;;
+            403|404)
+              # STORY-0319 PR #3d soft-fail: Vault'ta AppRole henüz setup
+              # edilmemiş veya token yetkisiz. Deploy token-path ile geçsin;
+              # canonical env existing VAULT_TOKEN kullanılır. AppRole setup
+              # ayrı follow-up — runbook RB-staging-prod-profile §5.x.
+              echo "::notice title=deploy-backend::AppRole endpoint responded ${probe_status} (role not configured or token unauthorized); skipping rotation. Canonical env token path active."
+              exit 0
+              ;;
+            *)
+              # Ağ / Vault unreachable → fail-close
+              echo "::error title=deploy-backend::Vault unreachable at ${vault_addr} (probe_status=${probe_status}); aborting." >&2
+              exit 1
+              ;;
+          esac
 
       # STORY-0319 PR #3a: pre-deploy backend.env snapshot.
       # render-backend-env.sh atomic yazıyor ama "payload tam ama semantik
