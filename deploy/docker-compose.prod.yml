@@ -316,6 +316,7 @@ services:
       VAULT_TOKEN: ${VAULT_TOKEN:-}
       VAULT_FAIL_FAST: "false"
       SECURITY_AUTH_ALLOWED_CLIENT_IDS: ${SECURITY_AUTH_ALLOWED_CLIENT_IDS:-frontend,admin-cli,serban-web,account}
+      GATEWAY_CORS_ALLOWED_ORIGINS: ${GATEWAY_CORS_ALLOWED_ORIGINS:-https://ai.acik.com}
     depends_on:
       discovery-server:
         condition: service_healthy
