@@ -461,6 +461,23 @@ jobs:
           DOCKER_PULL_POLICY="${pull_policy}" \
           deploy/ubuntu/deploy-backend.sh
 
+      # STORY-0319 PR #4: Post-deploy doctor-infra guard.
+      # Full A-L check (doctor-infra.sh usage'ına göre L-only mod yok).
+      # FAIL path'leri (L1 profile local, L2 authz 200 unauth, L3-L8 env drift
+      # container-runtime blank) step RED → deploy workflow RED.
+      # WARN path'leri (container missing, 000/unexpected HTTP) step GREEN —
+      # "fail-closed ideal" değil, "deterministic drift sensor".
+      - name: Post-deploy doctor-infra guard
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "${GITHUB_WORKSPACE}"
+          chmod +x backend/scripts/doctor-infra.sh
+          echo "::group::doctor-infra.sh (A-L check, full)"
+          bash backend/scripts/doctor-infra.sh
+          echo "::endgroup::"
+
       - name: Collect stage backend diagnostics on failure
         if: ${{ failure() && env.DEPLOY_ENABLED == 'true' }}
         env:
