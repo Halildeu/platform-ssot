@@ -1,3 +1,47 @@
+# Zanzibar Master Plan — Rev 26 (Track A 7/7 DONE, umbrella STORY-0320 TAMAMLANDI)
+
+> **Rev 26 güncellemesi (2026-04-17 akşam):** Rev 25 sonrası son kalan P1.9 NO_SCOPE
+> UI modal refactor tamamlandı (**PR #449 merged**, commit `c03ca62c`). Umbrella
+> STORY-0320 3/3 alt iş paketi merged:
+>
+> - PR #446 P1.10 Vault KMS
+> - PR #447 P1.8 canonical service-token
+> - **PR #449 P1.9 NO_SCOPE UI modal + /unauthorized scope picker**
+>
+> Backend: `ExplainResponseDto.ExplainDetails` record'una `scopeType/scopeRefId`
+> alanları eklendi; önceki NO_SCOPE response permType/permKey slotlarını scope
+> bilgisiyle ezen bug `deniedNoScope` helper + controller path ile düzeltildi.
+> `NumberFormatException` guard malformed scopeRefId → HTTP 400.
+>
+> Frontend: `ExplainPermissionModal` mfe-access'ten **@mfe/auth** shared pakete
+> taşındı (design-system peer dep); mfe-shell `UnauthorizedPage` "Neden
+> erişemiyorum?" butonu modal-only akışa çekildi (AC-0320 Senaryo 4 compliance).
+> `useExplainPermission` signature scopeType/scopeRefId params aldı; hook için
+> doğrudan unit test (6 test) + mevcut modal testleri @mfe/auth re-export üzerinden
+> çalışır. Playwright stage spec 4 senaryo: ALLOWED, DENIED_BY_ROLE, NO_SCOPE
+> (RoleDrawer path), NO_SCOPE (/unauthorized path).
+>
+> Codex review thread `019d9c32`: Turn 1 BLOCK (UnauthorizedPage modal eksik +
+> hook unit test yok) → Turn 2 APPROVE (4 fix uygulandı, shared modal + modal-
+> only UX + hook unit test + Senaryo 4). UX temizliği: inline "Kısa açıklama"
+> buton kaldırıldı.
+>
+> Canlı doğrulama (ai.acik.com post-deploy): `/authz/explain` NO_SCOPE response
+> slotları doğru (`permType=MODULE, permKey=PURCHASE, scopeType=COMPANY,
+> scopeRefId=9999`); malformed scopeRefId 400 + "scopeRefId must be numeric".
+> `/authz/me` admin@example.com superAdmin=True authzVersion=8 allowedModules=9/9.
+>
+> **Track A durumu: 7/7 DONE %100 complete**. Kalan backlog: Dalga 1 Stage 2
+> synthetic canary run (STORY-0319 gerekiyor), PR6c-1 (Dalga 3 complete),
+> Dalga 2 release gate Playwright stage run, Dalga 4 backlog.
+>
+> Rev 26 yeni normatif karar yok; shared modal pattern (`@mfe/auth`'a UI widget
+> eklenmesi) consumer MFE'lerin aynı authz UX'ini duplicate etmeden kullanması
+> için referans. Aktif handoff: `session-handoff-20260417-p1-track-a-final.md`
+> (bu dosya P1.9 eklemesiyle extend edildi — ek handoff dosyası açılmadı).
+
+---
+
 # Zanzibar Master Plan — Rev 25 (Track A 6/7, P1.9 kaldı, umbrella STORY-0320 açık)
 
 > **Rev 25 güncellemesi (2026-04-17 EOD, continued):** Rev 24 sonrası 3 ek PR
