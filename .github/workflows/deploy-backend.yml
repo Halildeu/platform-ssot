@@ -18,10 +18,10 @@ on:
       # mevcut davranışı korur. workflow_dispatch operatöre rehearsal/rollback
       # override yolu açar. Prod SSH path bu input'lara bakmaz (stage-specific).
       render_env_before_deploy:
-        description: "Stage only — render canonical backend.env before deploy. Default 'false' (token-path); AppRole setup tamamlanınca 'true'."
+        description: "Stage only — render canonical backend.env from Vault before deploy. Default 'true' post-OI-02 Option B closure (2026-04-18). Set 'false' for emergency rollback (skip render, use existing canonical env)."
         required: false
         type: boolean
-        default: false
+        default: true
       build_local:
         description: "Stage only — build service images locally. Default 'false' post-PR #3c (GHCR retag path)."
         required: false
@@ -436,12 +436,14 @@ jobs:
 
           # STORY-0319 PR #3c flip + PR #3e rollback:
           # - GHCR retag path aktif (build_local=false, pull=always).
-          # - Render flip ertelendi: Vault'ta AppRole auth method kurulu
-          #   değil (PR #3d soft-fail guard); `RENDER_ENV_BEFORE_DEPLOY=true`
-          #   + VAULT_TOKEN workflow'da paylaşılmıyor → deploy script
-          #   AppRole render path'ine düşüyor → fail. AppRole setup
-          #   tamamlanınca bu default `true` yapılır.
-          render_env="${RENDER_ENV_BEFORE_DEPLOY_INPUT:-false}"
+          # - Render flip YAPILDI (2026-04-18 OI-02 Option B closure sonrası):
+          #   AppRole auth method enabled + policy jwt/auth-service + db/* dahil
+          #   + auth-service/permission-service Spring Cloud Vault client UP.
+          #   `RENDER_ENV_BEFORE_DEPLOY=true` default → her deploy Vault KV'dan
+          #   canonical env re-generate eder. Stale env + manuel drift riski
+          #   ortadan kalkar. Emergency rollback: workflow_dispatch ile `false`
+          #   opt-out (mevcut canonical env korunur, render skip).
+          render_env="${RENDER_ENV_BEFORE_DEPLOY_INPUT:-true}"
           build_local="${BUILD_LOCAL_INPUT:-false}"
           pull_policy="${DOCKER_PULL_POLICY_INPUT:-always}"
 

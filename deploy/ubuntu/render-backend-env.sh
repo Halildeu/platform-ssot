@@ -309,14 +309,13 @@ main() {
 
   payload="$(kv_get_json_optional "${config_path}" "${mount}")"
   if [[ -z "${payload}" ]]; then
-    echo "[render] WARNING: main config path ${mount}/${config_path} not found in Vault" >&2
-    if [[ -f "${OUTPUT_FILE}" ]]; then
-      echo "[render] keeping existing ${OUTPUT_FILE} (Vault path missing)" >&2
-      return 0
-    else
-      echo "[error] main config path missing and no existing env file" >&2
-      exit 1
-    fi
+    # 2026-04-18 Drift #2 fail-closed (Codex review REVISE): prior behavior
+    # kept existing canonical env when Vault path missing → stale env +
+    # silent drift. Now hard-fail regardless of existing file. Emergency
+    # rollback via `workflow_dispatch render_env_before_deploy=false`.
+    echo "[error] main config path ${mount}/${config_path} not found in Vault (fail-closed)" >&2
+    echo "[error] rollback: gh workflow run deploy-backend.yml -f env=stage -f render_env_before_deploy=false" >&2
+    exit 1
   fi
 
   # Per-service DB/JWT paths are optional — if missing, per-service DB env vars
@@ -335,14 +334,15 @@ main() {
   done
 
   if [[ "${#missing[@]}" -gt 0 ]]; then
-    echo "[render] WARNING: missing keys at ${mount}/${config_path}: ${missing[*]}" >&2
-    if [[ -f "${OUTPUT_FILE}" ]]; then
-      echo "[render] Vault config incomplete — keeping existing ${OUTPUT_FILE} (graceful degradation)" >&2
-      return 0
-    else
-      echo "[error] Vault config incomplete and no existing env file to fall back to" >&2
-      exit 1
-    fi
+    # 2026-04-18 Drift #2 fail-closed (Codex review REVISE): prior graceful
+    # degradation kept stale env when Vault KV incomplete → silent drift
+    # (e.g. missing SECURITY_JWT_ISSUER could route tokens to wrong issuer).
+    # Now hard-fail on missing required keys. Emergency rollback via
+    # `workflow_dispatch render_env_before_deploy=false`.
+    echo "[error] Vault config incomplete at ${mount}/${config_path}: missing ${missing[*]} (fail-closed)" >&2
+    echo "[error] fix: backend/scripts/vault/write-backend-deploy-stage.sh with missing keys" >&2
+    echo "[error] rollback: gh workflow run deploy-backend.yml -f env=stage -f render_env_before_deploy=false" >&2
+    exit 1
   fi
 
   dir="$(dirname "${OUTPUT_FILE}")"
