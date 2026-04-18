@@ -298,11 +298,21 @@ rollback ile kesintiyi minimize et.
 ### nginx /api/* 502
 
 **Semptom:** Frontend /api/* 502 döner; curl direct gateway 200.
-**Kök neden:** nginx `WEB_GATEWAY_UPSTREAM` prod default (8082) staging'de
-override edilmedi.
-**Çözüm:** `deploy/ubuntu/run-frontend-nginx-container.sh` DEPLOY_ENV
-fallback'i çalışıyor mu kontrol et (DEPLOY_ENV=stage → 8080). PR #4
-workflow cleanup sonrası bu asimetri kapanır.
+**Kök neden:** nginx upstream port stage compose binding'den sapıyor.
+Yaygın kaynak: GitHub env (stage) `WEB_GATEWAY_UPSTREAM` değeri 8082 set
+edilmiş ama stage compose hardcoded 8080:8080 bind ediyor (2026-04-18
+incident). `run-frontend-nginx-container.sh` script fallback `DEPLOY_ENV=stage
+→ 8080` çalışsa bile GH env override eder (`${VAR:-fallback}` VAR set iken
+dokunmaz).
+**Çözüm (sıralı adımlar):**
+- Step A — `gh api repos/:owner/:repo/environments/stage/variables/WEB_GATEWAY_UPSTREAM`
+  ile mevcut değeri kontrol et.
+- Step B — 8080 olmalı: `gh api ... -X PATCH -f name=WEB_GATEWAY_UPSTREAM -f value=http://127.0.0.1:8080`.
+- Step C — `gh workflow run deploy-web.yml --ref main` ile nginx config regenerate.
+- Step D — `ssh staging-sw "grep proxy_pass /home/halil/platform/web/nginx/default.conf"`
+  ile doğrula.
+- Step E — Smoke: `curl -o /dev/null -w '%{http_code}' https://ai.acik.com/api/v1/authz/version -k`
+  → 401 (anon, başarılı route) beklenir, 502 değil.
 
 ### Post-deploy doctor-infra FAIL
 
