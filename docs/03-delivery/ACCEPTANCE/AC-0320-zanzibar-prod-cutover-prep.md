@@ -70,19 +70,34 @@ Owner: @halil
     döner, `reason=NO_SCOPE`, modal badge ve açıklama `NO_SCOPE` göstergesi.
 
 - [ ] Senaryo 5 — P1.10 Recovery key escrow drill:  
-  - Given: Prod Vault fresh init tamamlandı, 5 recovery key generate edildi.  
-    When: Operatör ikinci lokasyona (ör. 1Password vault + printed safe)
-    recovery key'leri escrow eder.  
-    Then: `vault operator generate-root` flow recovery keys ile root token
-    üretebilir (threshold=3 kullanıcı erişiminde); runbook §5.3 adımları
-    başarıyla uygulanır.
+  - Given: Prod Vault fresh init (KMS seal mode) tamamlandı;
+    **5 recovery share** generate edildi, **threshold 3** (KMS seal altında
+    unseal share fiilen kullanılmaz, recovery share `generate-root` akışı
+    için aktiftir — `-key-shares=1 -key-threshold=1 -recovery-shares=5
+    -recovery-threshold=3`).  
+    When: Operatör iki escrow lokasyonuna dağıtır (ör. 1Password Team
+    Platform vault + fiziksel printed safe); split pattern 3 share @
+    1Password, 2 share @ fiziksel safe.  
+    Then: `vault operator generate-root -init` + 3 holder'ın recovery
+    key sequential girişi + `-decode` OTP ile yeni root token üretilir;
+    root token critical op (policy read, audit list) + revoke-self ile
+    sonlandırılır; audit kaydı `docs/04-operations/DRILLS/vault-drill-YYYY-QN.md`.
+    Quarterly cadence zorunlu.
 
 - [ ] Senaryo 6 — P1.10 Break-glass KMS access failure:  
-  - Given: Prod Vault KMS seal aktif, operatör KMS IAM revoke simülasyonu
-    yapar (staging rehearsal).  
+  - Given: Prod Vault KMS seal aktif (tek-seal tasarım); operatör KMS
+    IAM revoke simülasyonu yapar (staging rehearsal — role-based prod
+    ile simetrik olması için `detach-role-policy` tercih edilir).  
     When: Vault container restart edilir.  
-    Then: `sealed=true` kalır; runbook §5.1 kontrol listesi KMS erişimini
-    restore etme prosedürünü gösterir; IAM restore sonrası sonraki restart
+    Then: `sealed=true` kalır. **KRİTİK:** Recovery keys KMS seal altında
+    "manual unseal" için geçerli DEĞİLDİR (recovery share sadece
+    `generate-root` akışı için); primary recovery path IAM/key restore'dur.
+    Runbook §5.1 ilk 45 dakika decision tree: incident ack (0-5 dk) →
+    severity + restore path seçimi (5-15 dk) → IAM restore + key re-enable
+    (15-30 dk) → post-restore smoke (30-45 dk) → fresh-init contingency
+    (45+ dk, eski seal erişilemez durumunda). Decision authority: Platform
+    Eng Lead (incident commander) + Security Lead (IAM/policy rollback
+    şahidi). Communication template runbook §5.1'de.
     self-unseal olur.
 
 -------------------------------------------------------------------------------
