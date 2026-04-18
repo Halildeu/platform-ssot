@@ -57,6 +57,59 @@ Cloud KMS auto-unseal:
 3. BAŞLATMA / DURDURMA
 -------------------------------------------------------------------------------
 
+### Provider Rehearsal Matrix (AWS önerilen — ilk rehearsal)
+
+Prod cutover öncesi staging rehearsal için aday provider karşılaştırması
+(Codex Thread B analizi, 2026-04-18):
+
+| Provider | Ön-yapılandırma | Rotation | Süre | Rehearsal Maliyeti | Notlar |
+|---|---|---|:-:|---|---|
+| **AWS KMS** (önerilen) | CMK `alias/vault-unseal-prod`, IAM role `vault-unseal-stage`, policy `kms:Encrypt/Decrypt/DescribeKey` | `enable-key-rotation` 180-365 gün | 45-60 dk | `~$1/key/month` + req fee `$0.03/10k` (free tier 20k/month) | FIPS 140-2 L3, IAM model en anlaşılır, key deletion 7-30 gün recover window |
+| GCP KMS | Key ring `vault-unseal`, key `vault-unseal-prod`, SA `vault-unseal@erp-platform-prod`, role `cloudkms.cryptoKeyEncrypterDecrypter` | 90 gün auto | 45-60 dk | `$0.06/key-version/month` + op fee `$0.03/10k` | FIPS 140-2 L3, workload identity (GKE), key destroy 24h scheduled |
+| Azure Key Vault | Vault `erp-prod-kv`, key `vault-unseal-prod`, MI/SP + `Key Vault Crypto User` | Policy `Rotate P18M + Notify P30D + Expiry P2Y` | 50-70 dk | Standard tier + scheduled rotation ek ücret | FIPS 140-2 L2, soft-delete + purge-protection ZORUNLU |
+| Transit (Vault) | Ayrı bağımsız Vault + transit engine + periodic orphan token | Transit key rotate + token renewal runbook | 60-90 dk | Public KMS fee yok; 2. Vault control-plane maliyeti | **Recursive failure riski** — ancak gerçek bağımsız control-plane varsa düşün |
+
+**Tavsiye:**
+- **İlk rehearsal: AWS KMS.** Prod platform seçimi AWS ise birincil tercih.
+- Prod platform kararı açık ise önce compute platform (k8s cluster
+  provider), sonra native KMS.
+- Transit sadece gerçek bağımsız ikinci Vault control-plane varsa;
+  aksi halde break-glass'i sadeleştirmez, karmaşıklaştırır.
+
+### Ortak Dry-Run Checklist (her provider için)
+
+- Step A — Provider key + identity binding + rotation policy (aynı oturumda aktif)
+- Step B — `VAULT_SEAL_MODE`, `VAULT_SEAL_FILE`, provider env'leri set et
+- Step C — Fresh init — **5 recovery share / threshold 3** (key shares 1/1,
+  KMS seal altında unseal share fiilen kullanılmaz):
+   ```bash
+   docker exec platform-vault-1 vault operator init \
+     -recovery-shares=5 -recovery-threshold=3 \
+     -key-shares=1 -key-threshold=1
+   ```
+- Step D — Restart × 3 dry-run, her adımda:
+   ```bash
+   docker restart platform-vault-1 && sleep 20
+   docker exec platform-vault-1 vault status -format=json \
+     | jq '{sealed, seal_type, recovery_seal_type}'
+   # Beklenen: {"sealed": false, "seal_type": "awskms", "recovery_seal_type": "shamir"}
+   ```
+- Step E — CLI JSON alan isimleri build'e göre değişirse fallback:
+   ```bash
+   docker exec platform-vault-1 vault status  # table output
+   curl -s http://127.0.0.1:8200/v1/sys/seal-status | jq
+   ```
+- Step F — Fail durumunda provider-specific log + `kms describe-key` ile
+  root-cause sınıflandır; rehearsal'ı PASS yazma.
+
+### Evidence paths
+
+- Kalıcı doküman: `docs/04-operations/DRILLS/vault-kms-rehearsal-<provider>-YYYYMMDD.md`
+- Geçici makina kanıtı: `.cache/reports/vault-kms-rehearsal/<provider>/status.json`
+- Format: `environment`, `provider`, `key_id`, `identity_principal`,
+  `restart_1/2/3_outputs`, `seal_status_evidence`, `operator`,
+  `started_at`, `completed_at`, `verdict`
+
 ### AWS KMS
 
 **Ön hazırlık:**
@@ -288,11 +341,60 @@ docker logs platform-vault-1 | grep -iE "unseal|seal|kms|transit" | grep -v DEBU
 5. ARIZA DURUMLARI VE ADIMLAR
 -------------------------------------------------------------------------------
 
-### KMS Erişim Hatası (Vault Sealed)
+### KMS Erişim Hatası (Vault Sealed) — Break-Glass Decision Tree
 
 **Belirti:** Vault restart sonrası `vault status` → `sealed=true`. KMS unavailable (IAM revoke / key disabled / network egress block).
 
-**Kontrol listesi:**
+> ⚠️ **KRİTİK:** Recovery keys KMS seal altında **manual unseal için geçerli DEĞİLDİR** (recovery share sadece `generate-root` akışı için). Primary recovery path IAM/key restore'dur.
+
+**İlk 45 dakika decision tree (Codex Thread B tasarımı):**
+
+| Dakika | Faz | Aksiyon | Authority |
+|---|---|---|---|
+| 0-5 | Incident ack | On-call acknowledge, `vault_core_unsealed == 0` alert doğrulama, `vault status` evidence | On-call |
+| 5-15 | Severity + path seçimi | Prod sealed + secret-fetch etkileniyorsa SEV-1; staging rehearsal SEV-3. Primary restore path: IAM/key | Platform Eng Lead (commander) |
+| 15-30 | IAM/key restore + restart | `attach-role-policy` / `enable-key` / network egress unblock + `docker restart platform-vault-1` + seal-status doğrulama | Security Lead (IAM rollback şahidi) |
+| 30-45 | Post-restore smoke | `{sealed: false, seal_type: <provider>}` + secret fetch services sağlık check + stakeholder update | Platform Eng Lead |
+| 45+ | Fresh-init contingency | Eski seal erişilemez durumunda (key destroyed, irrecoverable): war room aç, fresh-init + secret re-inject. **"Migration" değil — cross-provider migration eski seal erişilebilirken çalışır.** | Platform + Security + Mgmt approval |
+
+**Ortak imza gereken işler:**
+- Recovery share çıkarma (quarterly escrow drill dışında)
+- Root token generation
+- Destructive KMS action rollback
+- Fresh-init contingency
+
+**Communication template:**
+
+```text
+Subject: [SEV-1] Vault sealed after KMS access failure - <env> - <YYYY-MM-DD HH:MM UTC>
+
+Impact:
+Vault sealed since <time>. Secret-backed services may fail startup or secret refresh.
+
+Current status:
+Primary restore path in progress: IAM/key access restoration.
+Manual unseal is not available in KMS seal mode.
+Next update in 15 minutes.
+
+Owner:
+Platform Eng Lead: <name>
+Security Lead: <name>
+```
+
+```text
+Status page:
+We are investigating degraded secret-management availability affecting backend
+service startup and secret access. Next update in 15 minutes.
+```
+
+**Audit trail:**
+- Kalıcı: `docs/04-operations/DRILLS/vault-breakglass-kms-YYYYMMDD.md`
+- Alarm kanıtı: `.cache/reports/vault-breakglass/alert.json`
+- Format: `detected_at`, `ack_at`, `severity`, `provider`, `principal_revoked`,
+  `restart_time`, `sealed_observed`, `restore_action`, `restore_completed_at`,
+  `stakeholder_updates_sent`, `postmortem_required`
+
+**Kontrol listesi (§3.1 restore aksiyonları sıra):**
 - Cloud KMS servisini doğrula (console veya CLI ile key describe)
 - IAM rolü hâlâ attached mi? (EC2 instance metadata / GKE workload identity)
 - Network egress: Vault container KMS endpoint'e ulaşabiliyor mu?
@@ -346,6 +448,85 @@ docker exec -it platform-vault-1 vault operator generate-root -nonce=<N>
 ```
 
 Yeni token ile admin AppRole / userpass kur + yeni token'ı revoke et.
+
+### Recovery Key Escrow Drill (Quarterly — ZORUNLU)
+
+**Amaç:** AC-0320 Senaryo 5 operasyonel kanıtı. Root-token regeneration
+akışının quarterly kontrollü drill'i.
+
+**Ön-koşullar:**
+- Prod veya prod-benzeri fresh-init Vault instance
+- 1Password `Team Platform` vault iki kişilik erişim
+- Fiziksel offsite safe erişimi
+- En az 3 recovery key holder aynı pencere içinde hazır
+
+> ⚠️ Bu drill KMS seal altında **"unseal" değil**, **`generate-root via recovery keys`** drill'idir. Tek-seal tasarımında recovery keys manuel unseal yapamaz.
+
+**Checklist:**
+
+- **Adım A — Fresh init (KMS modunda):**
+  ```bash
+  docker exec -e VAULT_ADDR=http://127.0.0.1:8200 -it platform-vault-1 \
+    vault operator init -recovery-shares=5 -recovery-threshold=3 \
+    -key-shares=1 -key-threshold=1
+  ```
+  Beklenen: `Recovery Key 1..5` ve `Initial Root Token`.
+  Fail path: `Vault is already initialized` — drill ayrı scratch instance'ta.
+
+- **Adım B — Escrow split:**
+  - `Key 1-3` → 1Password Team Platform
+  - `Key 4-5` → print + sealed envelope + offsite safe
+  - 1Password erişim modeli tek kişide ise drill FAIL (policy gap).
+
+- **Adım C — `generate-root -init`:**
+  ```bash
+  docker exec -e VAULT_ADDR=http://127.0.0.1:8200 -it platform-vault-1 \
+    vault operator generate-root -init
+  ```
+  Beklenen: `Nonce`, `OTP`, `Started=true`, `Progress=0/3`.
+  Fail path: eski attempt varsa `vault operator generate-root -cancel`.
+
+- **Adım D — 3 holder sequential key girişi (TTY prompt, shell history riski):**
+  ```bash
+  docker exec -e VAULT_ADDR=http://127.0.0.1:8200 -it platform-vault-1 \
+    vault operator generate-root -nonce=<NONCE>
+  ```
+  Her holder kendi key'ini TTY prompt'a girsin (positional arg DEĞİL).
+  Beklenen: Progress 1/3, 2/3, 3/3 + `Complete=true` + `Encoded Token`.
+
+- **Adım E — Decode:**
+  ```bash
+  docker exec -e VAULT_ADDR=http://127.0.0.1:8200 -it platform-vault-1 \
+    vault operator generate-root -decode=<ENCODED_TOKEN> -otp=<OTP>
+  ```
+  Beklenen: `hvs.` prefix'li yeni root token.
+
+- **Adım F — Critical op + self-revoke:**
+  ```bash
+  export VAULT_TOKEN=<NEW_ROOT_TOKEN>
+  vault policy read default
+  vault audit list
+  vault token revoke -self
+  ```
+  Revoke unutulursa drill PASS sayılmamalı ("open exposure" kaydı).
+
+- **Adım G — Quarterly cadence kayıt:**
+  - `docs/04-operations/DRILLS/vault-drill-YYYY-QN.md`
+  - Fields: `date`, `env`, `seal provider`, `attendees`, `holders_present`,
+    `nonce_last6`, `otp_recorded=yes/no`, `encoded_token_generated=yes/no`,
+    `critical_ops_tested`, `revoke_self_at`, `outcome`, `followups`
+  - Çeyrek atlanırsa sonraki change window öncesi bloklayıcı risk.
+
+**Operatör-zaman:** Hazırlık 15-20 dk + icra 15-20 dk + evidence 10-15 dk = **40-55 dk total**.
+
+**Risk matrisi:**
+
+| Risk | Olasılık | Etki | Azaltma |
+|---|---|---|---|
+| Recovery key shell history / recording ile sızar | Orta | Çok yüksek | TTY prompt only, recording kapalı, clipboard retention kapalı |
+| 1Password erişimi tek kişi | Orta | Yüksek | Access review + drill öncesi witness |
+| Fiziksel safe kopyaları güncel değil | Düşük | Çok yüksek | Her init/rekey sonrası sealed envelope re-issuance + checksum |
+| Root token revoke unutulur | Orta | Yüksek | Checklist PASS şartı olarak `revoke-self` zorunlu |
 
 ### Periodic Transit Token Expired (Sadece Transit Seal)
 
