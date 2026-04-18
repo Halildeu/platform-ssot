@@ -33,6 +33,29 @@ case "${DEPLOY_ENV:-staging}" in
     NGINX_GATEWAY_UPSTREAM="${NGINX_GATEWAY_UPSTREAM:-http://127.0.0.1:8080}"
     ;;
 esac
+
+# 2026-04-18 incident guard (Codex review PR #464 CRITICAL): GH env override
+# silent drift riskini yorum-bazlı guardrail kapatmadı. Explicit port assertion.
+# Stage compose (backend/docker-compose.yml) api-gateway HOST port 8080:8080
+# hardcoded; DEPLOY_ENV=stage|staging ile gelen upstream MUTLAKA 8080 olmalı.
+# Prod (deploy/docker-compose.prod.yml) API_GATEWAY_PORT=8082 honor eder.
+# Mismatch = nginx proxy_pass sessiz 502 (Connection refused).
+_upstream_port="$(printf '%s' "${NGINX_GATEWAY_UPSTREAM}" | grep -oE ':[0-9]+' | head -1 | tr -d ':')"
+case "${DEPLOY_ENV:-staging}" in
+  prod|production)
+    _expected_port="8082"
+    ;;
+  *)
+    _expected_port="8080"
+    ;;
+esac
+if [[ -n "${_upstream_port}" && "${_upstream_port}" != "${_expected_port}" ]]; then
+  echo "[error] DEPLOY_ENV=${DEPLOY_ENV:-staging} için NGINX_GATEWAY_UPSTREAM port mismatch: got=${_upstream_port} expected=${_expected_port}" >&2
+  echo "[error] Stage compose api-gateway 8080:8080 hardcoded; 8082 override drift sınıfı (2026-04-18 incident)." >&2
+  echo "[error] Fix: gh api repos/:owner/:repo/environments/stage/variables/WEB_GATEWAY_UPSTREAM -X PATCH -f value=http://127.0.0.1:8080" >&2
+  exit 1
+fi
+unset _upstream_port _expected_port
 # Default to host port (8081) since nginx runs --network host and can't resolve Docker DNS.
 # Keycloak container maps 8080→8081 on host.
 NGINX_KEYCLOAK_UPSTREAM="${NGINX_KEYCLOAK_UPSTREAM:-http://127.0.0.1:8081}"

@@ -239,7 +239,8 @@ Bu akış şu anda çekirdek remote setini paketler:
 Canlı / secure-context için ek GitHub environment var'ları:
 
 - `WEB_PUBLIC_ORIGIN=https://ai.acik.com`
-- `WEB_GATEWAY_UPSTREAM=http://127.0.0.1:8082`
+- `WEB_GATEWAY_UPSTREAM=http://127.0.0.1:8080` (stage — api-gateway host port 8080:8080)
+  - **DİKKAT:** Prod path `WEB_GATEWAY_UPSTREAM=http://127.0.0.1:8082` olur (deploy/docker-compose.prod.yml `${API_GATEWAY_PORT:-8082}`). Stage canonical env'inden prod template kopyalanırken **mutlaka 8080'e sabitle** — aksi halde nginx regenerate edildiğinde upstream silent 502 üretir (2026-04-18 incident). `run-frontend-nginx-container.sh` artık DEPLOY_ENV bazlı fail-closed port assertion içeriyor.
 - `WEB_KEYCLOAK_PUBLIC_URL=https://ai.acik.com`
 - `WEB_EDGE_SERVER_NAME=ai.acik.com`
 - `WEB_TLS_ENABLED=true`
