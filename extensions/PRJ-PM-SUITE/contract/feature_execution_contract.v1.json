@@ -36,19 +36,20 @@
   "delivery_scope": {
     "affected_modules": [],
     "change_path_globs": [
+      ".github/workflows/deploy-backend.yml",
+      ".github/workflows/deploy-web.yml",
       "backend/.env.example",
       "backend/.env.prod.example",
       "backend/auth-service/src/main/resources/*",
       "backend/docker-compose.prod.yml",
       "backend/docker-compose.yml",
+      "backend/openfga/init.sh",
       "backend/permission-service/src/main/resources/*",
       "backend/scripts/doctor-infra.sh",
       "backend/scripts/vault/*",
       "deploy/ubuntu/*",
-      ".github/workflows/deploy-backend.yml",
-      ".github/workflows/deploy-web.yml",
-      "docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md",
       "docs/03-delivery/ACCEPTANCE/AC-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md",
       "docs/03-delivery/TEST-PLANS/TP-0319-staging-prod-profile-migration.md",
       "docs/04-operations/RUNBOOKS/RB-staging-prod-profile.md",
       "docs/04-operations/RUNBOOKS/RB-ubuntu-backend-github-vault-deploy.md",
@@ -203,11 +204,11 @@
       "docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md",
       ".claude/plans/zanzibar-master-plan.md"
     ],
-    "business_goal": "Staging'i prod-like profile'a geçirmek — canary sinyal anlamlılığı + prod cutover risk azaltma. 7 backend servis staging'de prod,docker profile'ında çalışır, canonical env render contract {SERVICE}_PROFILES taşır, nginx+gateway upstream DEPLOY_ENV-aware, doctor-infra post-deploy CI guard ile fail-closed drift protection.",
-    "requested_outcome": "4 PR (docs+truth align / render contract / Vault+GHCR / post-deploy guard) ile STORY-0319 acceptance kriteri karşılanır; Dalga 1 Stage 2 synthetic canary run prereq açılır; STORY-0320 umbrella closure (3/3 P1.x merged) izlenebilirlik kanalı korunur."
+    "business_goal": "Staging'i prod-like profile'a ge\u00e7irmek \u2014 canary sinyal anlaml\u0131l\u0131\u011f\u0131 + prod cutover risk azaltma. 7 backend servis staging'de prod,docker profile'\u0131nda \u00e7al\u0131\u015f\u0131r, canonical env render contract {SERVICE}_PROFILES ta\u015f\u0131r, nginx+gateway upstream DEPLOY_ENV-aware, doctor-infra post-deploy CI guard ile fail-closed drift protection.",
+    "requested_outcome": "4 PR (docs+truth align / render contract / Vault+GHCR / post-deploy guard) ile STORY-0319 acceptance kriteri kar\u015f\u0131lan\u0131r; Dalga 1 Stage 2 synthetic canary run prereq a\u00e7\u0131l\u0131r; STORY-0320 umbrella closure (3/3 P1.x merged) izlenebilirlik kanal\u0131 korunur."
   },
   "status": "ACTIVE",
-  "summary": "STORY-0319 staging prod-profile migration — 4 PR iskeleti (docs + render contract + Vault AppRole + post-deploy CI guard). Umbrella STORY-0320 closed (2026-04-17, 3/3 merged), izlenebilirlik source_refs üzerinden korunur. Compose default D-105 + C-103 gereği `local,docker` değişmez — hardening canonical env + render contract + runtime doctor-infra guard üzerinden.",
+  "summary": "STORY-0319 staging prod-profile migration \u2014 4 PR iskeleti (docs + render contract + Vault AppRole + post-deploy CI guard). Umbrella STORY-0320 closed (2026-04-17, 3/3 merged), izlenebilirlik source_refs \u00fczerinden korunur. Compose default D-105 + C-103 gere\u011fi `local,docker` de\u011fi\u015fmez \u2014 hardening canonical env + render contract + runtime doctor-infra guard \u00fczerinden.",
   "technical_contract": {
     "api_version_prefix": "/api/v1",
     "baseline_profile_id": "erp-fullstack-java21-react18",
@@ -334,7 +335,7 @@
       }
     ],
     "mode": "REQUIRED",
-    "rationale": "Frontend auth SDK: useZanzibarAccess hook, ZanzibarGate component, batch check API — object-level Zanzibar permission gates."
+    "rationale": "Frontend auth SDK: useZanzibarAccess hook, ZanzibarGate component, batch check API \u2014 object-level Zanzibar permission gates."
   },
   "version": "v1"
 }

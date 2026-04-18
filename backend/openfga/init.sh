@@ -113,6 +113,13 @@ else
 fi
 
 # 5. Write seed tuples
+# NOTE: Tuple seed write is intentionally NOT idempotent (Codex PR #469 review).
+# Tuples-seed.json is declarative; OpenFGA rejects exact duplicate (user, relation,
+# object) triples with 4xx. `curl -sf` propagates that as script exit, which is the
+# correct drift signal when re-running init.sh against an already-seeded store —
+# the operator should either use `fga tuple write` (which short-circuits duplicates)
+# or clear the store first. Store/model reuse above is the safe re-entry path;
+# seed tuples remain seed-once semantics by design.
 echo "Writing seed tuples..."
 FGA_API_URL="$OPENFGA_URL" FGA_STORE_ID="$STORE_ID" \
   fga tuple write --file "$SCRIPT_DIR/tuples-seed.json" 2>/dev/null || \
