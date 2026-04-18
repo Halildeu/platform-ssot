@@ -411,28 +411,47 @@ main() {
     return 0
   }
 
+  # 2026-04-18 DB schema dual-read (Codex Thread 5 finding #2):
+  # Existing staging Vault KV schemas drifted historically. Some paths use
+  # the canonical `{url, user, password}` triple; others use Spring-style
+  # `{spring.datasource.url, spring.datasource.username, spring.datasource.password}`
+  # (seeded before the contract was standardized). Render now tries canonical
+  # key first, falls back to spring.datasource.* alias — no operator action
+  # required to unblock, but drift is visible in KV. write-secrets-stage.sh
+  # remains canonical `{url, user, password}`; operators writing fresh paths
+  # use that contract.
+  kv_dual_read() {
+    local payload="$1" canonical_key="$2" spring_alias="$3"
+    local v
+    v="$(kv_get_value "${payload}" "${canonical_key}")"
+    if [[ -z "${v}" ]]; then
+      v="$(kv_get_value "${payload}" "${spring_alias}")"
+    fi
+    printf '%s' "${v}"
+  }
+
   if [[ -n "${auth_db_payload}" ]]; then
-    write_kv_if_present "${tmp_file}" AUTH_SERVICE_DB_URL "$(kv_get_value "${auth_db_payload}" url)"
-    write_kv_if_present "${tmp_file}" AUTH_SERVICE_DB_USERNAME "$(kv_get_value "${auth_db_payload}" user)"
-    write_kv_if_present "${tmp_file}" AUTH_SERVICE_DB_PASSWORD "$(kv_get_value "${auth_db_payload}" password)"
+    write_kv_if_present "${tmp_file}" AUTH_SERVICE_DB_URL      "$(kv_dual_read "${auth_db_payload}" url      spring.datasource.url)"
+    write_kv_if_present "${tmp_file}" AUTH_SERVICE_DB_USERNAME "$(kv_dual_read "${auth_db_payload}" user     spring.datasource.username)"
+    write_kv_if_present "${tmp_file}" AUTH_SERVICE_DB_PASSWORD "$(kv_dual_read "${auth_db_payload}" password spring.datasource.password)"
   fi
 
   if [[ -n "${user_db_payload}" ]]; then
-    write_kv_if_present "${tmp_file}" USER_SERVICE_DB_URL "$(kv_get_value "${user_db_payload}" url)"
-    write_kv_if_present "${tmp_file}" USER_SERVICE_DB_USERNAME "$(kv_get_value "${user_db_payload}" user)"
-    write_kv_if_present "${tmp_file}" USER_SERVICE_DB_PASSWORD "$(kv_get_value "${user_db_payload}" password)"
+    write_kv_if_present "${tmp_file}" USER_SERVICE_DB_URL      "$(kv_dual_read "${user_db_payload}" url      spring.datasource.url)"
+    write_kv_if_present "${tmp_file}" USER_SERVICE_DB_USERNAME "$(kv_dual_read "${user_db_payload}" user     spring.datasource.username)"
+    write_kv_if_present "${tmp_file}" USER_SERVICE_DB_PASSWORD "$(kv_dual_read "${user_db_payload}" password spring.datasource.password)"
   fi
 
   if [[ -n "${permission_db_payload}" ]]; then
-    write_kv_if_present "${tmp_file}" PERMISSION_SERVICE_DB_URL "$(kv_get_value "${permission_db_payload}" url)"
-    write_kv_if_present "${tmp_file}" PERMISSION_SERVICE_DB_USERNAME "$(kv_get_value "${permission_db_payload}" user)"
-    write_kv_if_present "${tmp_file}" PERMISSION_SERVICE_DB_PASSWORD "$(kv_get_value "${permission_db_payload}" password)"
+    write_kv_if_present "${tmp_file}" PERMISSION_SERVICE_DB_URL      "$(kv_dual_read "${permission_db_payload}" url      spring.datasource.url)"
+    write_kv_if_present "${tmp_file}" PERMISSION_SERVICE_DB_USERNAME "$(kv_dual_read "${permission_db_payload}" user     spring.datasource.username)"
+    write_kv_if_present "${tmp_file}" PERMISSION_SERVICE_DB_PASSWORD "$(kv_dual_read "${permission_db_payload}" password spring.datasource.password)"
   fi
 
   if [[ -n "${variant_db_payload}" ]]; then
-    write_kv_if_present "${tmp_file}" VARIANT_SERVICE_DB_URL "$(kv_get_value "${variant_db_payload}" url)"
-    write_kv_if_present "${tmp_file}" VARIANT_SERVICE_DB_USERNAME "$(kv_get_value "${variant_db_payload}" user)"
-    write_kv_if_present "${tmp_file}" VARIANT_SERVICE_DB_PASSWORD "$(kv_get_value "${variant_db_payload}" password)"
+    write_kv_if_present "${tmp_file}" VARIANT_SERVICE_DB_URL      "$(kv_dual_read "${variant_db_payload}" url      spring.datasource.url)"
+    write_kv_if_present "${tmp_file}" VARIANT_SERVICE_DB_USERNAME "$(kv_dual_read "${variant_db_payload}" user     spring.datasource.username)"
+    write_kv_if_present "${tmp_file}" VARIANT_SERVICE_DB_PASSWORD "$(kv_dual_read "${variant_db_payload}" password spring.datasource.password)"
   fi
 
   if [[ -n "${auth_jwt_payload}" ]]; then
