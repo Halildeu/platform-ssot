@@ -215,6 +215,18 @@ main() {
     SECURITY_JWT_ISSUERS
     AUTHZ_USER_TABLE
   )
+  # 2026-04-18 OI-03 canary fix: SECURITY_JWT_SECONDARY_AUDIENCE aligned with
+  # permission-service primary contract (application.properties:22 +
+  # docker-compose.yml fallback). canary-load KC client issues aud=account
+  # without an audience mapper; Bug B Layer 4 (previous session) manually
+  # patched canonical env but got dropped when RENDER_ENV_BEFORE_DEPLOY=true
+  # re-rendered from Vault KV. Render now writes the canonical 4-audience
+  # default when Vault KV value is empty — operators can still override.
+  # Default intentionally mirrors primary `security.jwt.audience` default
+  # (permission-service,frontend,account,serban-web) to avoid diverging the
+  # secondary allowlist from the primary one. Not in required_keys so deploy
+  # remains safe when Vault KV hasn't been repopulated yet.
+  local security_jwt_secondary_audience_default="permission-service,frontend,account,serban-web"
   # STORY-0319 PR #3c — AppRole-first Vault auth migration.
   # VAULT_TOKEN canonical env'e yazılmaz (deploy-backend.sh:185
   # bootstrap_vault_credentials_from_env_file token path'e düşüyordu —
@@ -386,6 +398,19 @@ main() {
     value="$(printf '%s' "${payload}" | json_get "${key}")"
     write_kv_profile_or_default "${tmp_file}" "${key}" "${value}"
   done
+
+  # 2026-04-18 OI-03 canary fix — SECURITY_JWT_SECONDARY_AUDIENCE.
+  # Vault KV value has priority; empty → canonical 4-audience default aligned
+  # with primary contract. The permission-service auth chain routes tokens
+  # via FallbackJwtDecoder (secondary issuer) + AudienceValidator (reads
+  # security.jwt.secondary.audience). canary-load KC client emits
+  # aud=account; this allowlist must accept it alongside frontend/serban-web.
+  value="$(printf '%s' "${payload}" | json_get "SECURITY_JWT_SECONDARY_AUDIENCE")"
+  if [[ -z "${value}" ]]; then
+    value="${security_jwt_secondary_audience_default}"
+    echo "[render] SECURITY_JWT_SECONDARY_AUDIENCE not in Vault KV — writing canonical 8-audience default" >&2
+  fi
+  write_kv "${tmp_file}" "SECURITY_JWT_SECONDARY_AUDIENCE" "${value}"
 
   keycloak_issuer_uri="$(printf '%s' "${payload}" | json_get "KEYCLOAK_ISSUER_URI")"
   keycloak_public_issuer_uri="$(printf '%s' "${payload}" | json_get "KEYCLOAK_PUBLIC_ISSUER_URI")"
