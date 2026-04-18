@@ -132,6 +132,12 @@ main() {
     # NOTE: report-service reads ISSUER (not ISSUERS); both must be canonical.
     SECURITY_JWT_ISSUER
     SECURITY_JWT_ISSUERS
+    # 2026-04-18 OI-03 canary JWT audience allowlist: canary-load mints tokens
+    # with aud=account + 7 service audiences. Without SECURITY_JWT_SECONDARY_AUDIENCE
+    # in Vault KV, render drops the key on every RENDER_ENV_BEFORE_DEPLOY=true
+    # deploy → /authz/me 401 on persona context. Drift guard enforces the
+    # canonical path so manual edits to backend.env aren't silently overwritten.
+    SECURITY_JWT_SECONDARY_AUDIENCE
     SECURITY_AUTH_ALLOWED_CLIENT_IDS
   )
   local github_base_required=(

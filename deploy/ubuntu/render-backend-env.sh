@@ -213,6 +213,12 @@ main() {
     ERP_OPENFGA_MODEL_ID
     SECURITY_JWT_ISSUER
     SECURITY_JWT_ISSUERS
+    # 2026-04-18 OI-03 canary JWT audience allowlist (handoff line 93-94):
+    # canary-load mints tokens with aud=account + 7 service audiences. Without
+    # SECURITY_JWT_SECONDARY_AUDIENCE in Vault KV render chain, every deploy
+    # with RENDER_ENV_BEFORE_DEPLOY=true drops the key → /authz/me 401 on
+    # persona context load. Manual canonical env edits are silently overwritten.
+    SECURITY_JWT_SECONDARY_AUDIENCE
     AUTHZ_USER_TABLE
   )
   # STORY-0319 PR #3c — AppRole-first Vault auth migration.
@@ -277,6 +283,7 @@ main() {
     SECURITY_JWT_ISSUER
     SECURITY_JWT_ISSUERS
     SECURITY_JWT_AUDIENCE
+    SECURITY_JWT_SECONDARY_AUDIENCE
     CORE_DATA_DB_URL
     CORE_DATA_DB_USERNAME
     CORE_DATA_DB_PASSWORD
