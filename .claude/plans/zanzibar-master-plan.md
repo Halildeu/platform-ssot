@@ -1,3 +1,35 @@
+# Zanzibar Master Plan — Rev 28 (OI-01 CLOSED, Thread A/B planları çıktı)
+
+> **Rev 28 güncellemesi (2026-04-18):** OI-01 STORY-0319 4-PR iskeletinin tamamı
+> merged (PR #451/452/455/456/457/458/459/460/461). 9 PR + 3 operasyonel step
+> (canonical env rotation + GH secret update + PR #3d soft-fail guard) ile
+> staging prod-like runtime tam aktif. Canlı kanıt: profile=prod,docker, GHCR
+> digest, 8 container healthy, /authz/me authzVersion=8.
+>
+> **Codex paralel plan threadleri (2026-04-18):**
+> - Thread A (019d9dd3) — AppRole kalıcı setup draft: RB-vault-approle-setup-stage.md
+>   + seed-stage-approle.sh + canary pre-flight checklist (§3.1.A/B)
+> - Thread B (019d9ddd) — OI-04 prod cutover yol haritası: provider matrix
+>   (AWS/GCP/Azure/Transit), escrow drill quarterly cadence, break-glass
+>   decision tree (Platform Eng + Security Lead authority), Senaryo 6 "manual
+>   unseal" yanıltıcı dil tespiti (KMS seal altında recovery keys generate-root
+>   için, unseal değil)
+>
+> **Strateji revizyonu (kullanıcı direktifi 2026-04-18):** Codex = planlama/
+> yol haritası/tespit; Claude = implementasyon + kontrol. Çakışmama: dosya
+> bazlı bölünme + her Codex output sonrası `git fetch origin main` rebase.
+> Feedback memory: `feedback_codex_plan_implementer_split.md`.
+>
+> **Kritik tespit (Thread A diagnostic):** Staging Vault'ta `auth/approle/`
+> HİÇ enable edilmemiş. Canonical env VAULT_ROLE_ID + VAULT_SECRET_ID sahte
+> UUID. PR #3d soft-fail guard deploy'u unblock etti; kalıcı AppRole setup
+> PR #5 kapsamında.
+>
+> Rev 28 yeni normatif karar yok; Thread A/B planları implementer (PR #5 + #6)
+> tarafından uygulanacak.
+
+---
+
 # Zanzibar Master Plan — Rev 27 (Track A CLOSED, Open Items Index v27 açıldı)
 
 > **Rev 27 güncellemesi (2026-04-17 gece):** Rev 26 sonrası plan gövdesi
