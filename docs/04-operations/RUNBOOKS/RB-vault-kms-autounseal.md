@@ -76,6 +76,38 @@ Prod cutover öncesi staging rehearsal için aday provider karşılaştırması
 - Transit sadece gerçek bağımsız ikinci Vault control-plane varsa;
   aksi halde break-glass'i sadeleştirmez, karmaşıklaştırır.
 
+### Tek-host staging-sw reframe (2026-04-18, Codex verdict)
+
+User direktifi "external cloud (AWS/GCP/Azure) yasak, tek host staging-sw"
+altında OI-04'ün pratik prod-grade rehearsal yapması **mümkün değil**:
+
+- **Seçenek A (Same-Vault self-referential transit)**: Teknik olarak
+  imkansız — sealed Vault kendi `transit/` mount'una erişip decrypt
+  yapamaz (chicken-and-egg bootstrap problemi). HashiCorp dokümantasyonu
+  bu pattern'i desteklemez.
+- **Seçenek B (2nd Vault container same-host)**: Config wiring ve auto-unseal
+  akışı için sinyal üretir ama aynı host, aynı kernel, aynı disk, aynı
+  Docker network = aynı failure domain. Prod-grade KMS dayanıklılığı
+  kanıtlamaz; "same-host wiring drill" diye etiketlenirse dürüst,
+  "KMS rehearsal" diye sunulursa security theater.
+- **Seçenek C (honest reframing, bu runbook yolu)**: Staging-sw'da Shamir
+  pattern korunur. Transit cutover **prod cutover öncesi explicit prereq
+  olan ayrı iş paketi** olur. Bu prereq:
+  - **Independent host** (ayrı failure domain — başka VM/zone/region) VEYA
+  - **User-approved cloud KMS provider** (AWS/GCP/Azure — user açık izni + IAM/role bind).
+  - Transit veya cloud KMS path seçildikten sonra gerçek rehearsal §3
+    Ortak Dry-Run Checklist Step A-F'ye göre yürütülür.
+
+**OI-04 staging-sw-only kapsamı:**
+- Dokümantasyon ve runbook parity (bu §).
+- `RB-vault-approle-setup-stage.md` runbook'u AppRole kalıcı setup için.
+- Recovery key escrow drill §5.5 — simulated (prod Vault fresh init yok,
+  kavramsal akış doğrulaması).
+- Break-glass decision tree §5.1 — simulated (IAM restore dry-run yok).
+- **Gerçek KMS rehearsal ve escrow drill icra yok** — prod cutover
+  gate'inde ayrı story açılacak (independent host veya cloud KMS user
+  onayı sonrası).
+
 ### Ortak Dry-Run Checklist (her provider için)
 
 - Step A — Provider key + identity binding + rotation policy (aynı oturumda aktif)
