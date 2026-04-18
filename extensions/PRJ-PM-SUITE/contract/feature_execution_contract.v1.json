@@ -47,6 +47,7 @@
       "backend/permission-service/src/main/resources/*",
       "backend/scripts/doctor-infra.sh",
       "backend/scripts/vault/*",
+      "backend/scripts/verify-service-jwt-env.sh",
       "deploy/ubuntu/*",
       "docs/03-delivery/ACCEPTANCE/AC-0319-staging-prod-profile-migration.md",
       "docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md",
