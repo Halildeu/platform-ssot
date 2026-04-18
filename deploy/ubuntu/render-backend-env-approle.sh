@@ -55,6 +55,51 @@ revoke_token() {
     -X POST "${VAULT_ADDR%/}/v1/auth/token/revoke-self" || true
 }
 
+preflight_state_files() {
+  # 2026-04-18 Codex Thread 5 finding #4: state file contract hardening.
+  # Previously state file missing or TTL-expired secret-id produced a late,
+  # opaque failure (curl exit 22 on AppRole login, no hint that files were
+  # stale or wrong path). This preflight checks:
+  #
+  # A. File existence (explicit error, not python3 traceback)
+  # B. File non-empty
+  # C. File age — warn if older than 25 days (secret-id TTL default 768h=32d)
+  #    so operator has time to re-seed before login fails
+  #
+  # No auto-rotate here — rotation requires Vault root/service token which
+  # this wrapper doesn't have. Operator must run seed-stage-approle.sh or
+  # materialize-backend-deploy-approle.sh. But we make the signal early and
+  # loud so they can act before the canary/deploy window.
+  local role_file="$1" secret_file="$2"
+  local now_ts file_ts age_days warn_threshold=25 fail=0
+
+  for f in "$role_file" "$secret_file"; do
+    if [[ ! -f "$f" ]]; then
+      echo "[error] AppRole state file missing: $f" >&2
+      echo "  → Operator: run seed-stage-approle.sh or materialize-backend-deploy-approle.sh" >&2
+      fail=1
+    elif [[ ! -s "$f" ]]; then
+      echo "[error] AppRole state file empty: $f" >&2
+      fail=1
+    fi
+  done
+
+  if (( fail > 0 )); then
+    exit 1
+  fi
+
+  # Age check (warn only — don't block deploy)
+  now_ts="$(date +%s)"
+  for f in "$role_file" "$secret_file"; do
+    file_ts="$(stat -c %Y "$f" 2>/dev/null || stat -f %m "$f" 2>/dev/null || echo "$now_ts")"
+    age_days=$(( (now_ts - file_ts) / 86400 ))
+    if (( age_days >= warn_threshold )); then
+      echo "[warn] AppRole state file aged ${age_days}d (>${warn_threshold}d threshold): $f" >&2
+      echo "  → Secret-id TTL default 768h (32d); re-seed recommended before expiry." >&2
+    fi
+  done
+}
+
 main() {
   require_cmd curl
   require_cmd python3
@@ -65,6 +110,8 @@ main() {
   local login_url
   local payload
   local login_response
+
+  preflight_state_files "${VAULT_APPROLE_ROLE_ID_FILE}" "${VAULT_APPROLE_SECRET_ID_FILE}"
 
   role_id="$(read_trimmed_file "${VAULT_APPROLE_ROLE_ID_FILE}")"
   secret_id="$(read_trimmed_file "${VAULT_APPROLE_SECRET_ID_FILE}")"
@@ -83,11 +130,19 @@ PY
   login_response="$(curl -sSf \
     -H 'Content-Type: application/json' \
     -X POST "${login_url}" \
-    -d "${payload}")"
+    -d "${payload}" 2>&1)" || {
+    curl_exit=$?
+    echo "[error] AppRole login failed (curl exit=${curl_exit})." >&2
+    echo "  → Verify state files match current Vault AppRole role/secret-id." >&2
+    echo "  → role_id prefix: ${role_id:0:12}..." >&2
+    echo "  → Re-seed: bash backend/scripts/vault/seed-stage-approle.sh (requires VAULT_TOKEN root)" >&2
+    exit 1
+  }
 
   APPROLE_CLIENT_TOKEN="$(printf '%s' "${login_response}" | json_get client_token)"
   if [[ -z "${APPROLE_CLIENT_TOKEN}" ]]; then
     echo "[error] approle login returned empty client_token." >&2
+    echo "  → Response body snippet: ${login_response:0:200}" >&2
     exit 1
   fi
 
