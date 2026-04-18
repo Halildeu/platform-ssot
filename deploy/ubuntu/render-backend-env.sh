@@ -380,9 +380,16 @@ main() {
 
   # Per-service DB credentials — only written when the dedicated Vault path exists.
   # When paths are missing, services use the shared POSTGRES_USER/PASSWORD from main config.
+  # 2026-04-18 Drift #2 rehearsal fix (Codex thread 019da008): previous `&&`
+  # short-circuit returned 1 when val was empty, which under `set -euo pipefail`
+  # killed the script SILENTLY — no error message, no mv, no finalization. The
+  # "empty = skip" contract must explicitly return 0 to survive errexit.
   write_kv_if_present() {
     local file="$1" key="$2" val="$3"
-    [[ -n "${val}" ]] && write_kv "${file}" "${key}" "${val}"
+    if [[ -n "${val}" ]]; then
+      write_kv "${file}" "${key}" "${val}"
+    fi
+    return 0
   }
 
   if [[ -n "${auth_db_payload}" ]]; then
