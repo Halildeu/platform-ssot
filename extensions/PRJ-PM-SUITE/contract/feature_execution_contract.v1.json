@@ -53,6 +53,8 @@
       "backend/scripts/perf/run-zanzibar-canary.sh",
       "backend/scripts/vault/*",
       "backend/scripts/verify-service-jwt-env.sh",
+      "backend/user-service/src/main/java/com/example/user/config/*",
+      "backend/user-service/src/main/java/com/example/user/service/*",
       "deploy/ubuntu/*",
       "docs/03-delivery/ACCEPTANCE/AC-0319-staging-prod-profile-migration.md",
       "docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md",
