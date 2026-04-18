@@ -200,6 +200,20 @@ main() {
     CORE_DATA_DB_URL
     CORE_DATA_DB_USERNAME
     CORE_DATA_DB_PASSWORD
+    # 2026-04-18 Rehearsal #4 post-deploy doctor-infra L4/L5/L8 FAIL resolution
+    # (Codex thread 019da02f REVISE): these 5 keys were missing from the
+    # required_keys/ordered_keys/write payload chain, causing silent render
+    # drift. ERP_OPENFGA_* are the compose-level naming (service config), not
+    # duplicates of OPENFGA_* (those remain for legacy tooling + canary setup).
+    # SECURITY_JWT_ISSUER must be public URL — report-service reads ISSUER (not
+    # ISSUERS) and rejects tokens minted by browser with the public issuer
+    # unless this value matches. AUTHZ_USER_TABLE is explicit to avoid drift
+    # on compose default.
+    ERP_OPENFGA_STORE_ID
+    ERP_OPENFGA_MODEL_ID
+    SECURITY_JWT_ISSUER
+    SECURITY_JWT_ISSUERS
+    AUTHZ_USER_TABLE
   )
   # STORY-0319 PR #3c — AppRole-first Vault auth migration.
   # VAULT_TOKEN canonical env'e yazılmaz (deploy-backend.sh:185
@@ -252,11 +266,16 @@ main() {
     OPENFGA_MODEL_ID
     OPENFGA_LOG_LEVEL
     ERP_OPENFGA_ENABLED
+    ERP_OPENFGA_STORE_ID
+    ERP_OPENFGA_MODEL_ID
     SCOPE_CACHE_ENABLED
     SCOPE_CACHE_TTL_SECONDS
     SCOPE_CACHE_TTL_JITTER
     SCOPE_CACHE_MAX_SIZE
     AUTHZ_VERSION_ENABLED
+    AUTHZ_USER_TABLE
+    SECURITY_JWT_ISSUER
+    SECURITY_JWT_ISSUERS
     SECURITY_JWT_AUDIENCE
     CORE_DATA_DB_URL
     CORE_DATA_DB_USERNAME
