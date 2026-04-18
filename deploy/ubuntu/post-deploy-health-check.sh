@@ -102,9 +102,43 @@ else
   FAILURES=$((FAILURES + 1))
 fi
 
+# ---- 5. BACKEND_HEALTH_URLS edge-path validation (2026-04-18 Codex Thread 5 #5) ----
+# Post-deploy-validate workflow job uses BACKEND_HEALTH_URLS GH secret to probe
+# public paths. If that secret drifts (e.g. stale 8082 port after stage compose
+# change), container health can be green but edge path broken — false green.
+# This step mirrors the workflow probe so host-side script catches drift too.
+if [[ -n "${BACKEND_HEALTH_URLS:-}" ]]; then
+  echo "[health-check] Validating BACKEND_HEALTH_URLS edge paths..."
+  IFS=',' read -r -a health_urls <<< "${BACKEND_HEALTH_URLS}"
+  for u in "${health_urls[@]}"; do
+    u="$(echo "$u" | xargs)"
+    [[ -n "$u" ]] || continue
+    if url_status="$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 --connect-timeout 3 "$u" 2>/dev/null)"; then
+      case "$url_status" in
+        200|204|301|302|401|403)
+          # 200/204 healthy; 3xx redirect to login = healthy; 401/403 = auth gate = healthy
+          echo "  OK: $u → $url_status"
+          ;;
+        *)
+          echo "  FAIL: $u → $url_status (unexpected)"
+          FAILURES=$((FAILURES + 1))
+          ;;
+      esac
+    else
+      curl_exit=$?
+      echo "  FAIL: $u unreachable (curl exit=$curl_exit)"
+      FAILURES=$((FAILURES + 1))
+    fi
+  done
+else
+  # BACKEND_HEALTH_URLS unset is expected for local dev. On stage it should
+  # be set by the deploy workflow env. Emit a hint rather than fail.
+  echo "[health-check] NOTE: BACKEND_HEALTH_URLS unset — edge-path probe skipped (local dev?)"
+fi
+
 echo ""
 if [[ $FAILURES -gt 0 ]]; then
-  echo "[health-check] FAIL: $FAILURES service(s) unhealthy"
+  echo "[health-check] FAIL: $FAILURES check(s) unhealthy"
   exit 1
 fi
-echo "[health-check] PASS: all services healthy"
+echo "[health-check] PASS: all checks healthy"
