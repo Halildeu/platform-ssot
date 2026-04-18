@@ -686,8 +686,11 @@ if docker ps --format '{{.Names}}' 2>/dev/null | grep -q "^${GATEWAY_CONTAINER}$
             sub(/^(=|~\*|~|\^~)[[:space:]]+/, "", line)
             # Grab URI up to "{" or whitespace
             sub(/[[:space:]]*\{.*/, "", line)
-            # Normalize trailing slash: "/api" and "/api/" are equivalent here
+            # Normalize trailing slash + regex anchor: /api, /api/, ^/api, ^/api/
+            # (regex modifiers ~ and ~* allow ^ anchor which is not a URI literal
+            # but a PCRE metacharacter; stripping it normalizes to canonical path)
             gsub(/\/$/, "", line)
+            gsub(/^\^/, "", line)
             if (line == "/api") { match_block = 1 }
           }
           match_block && /proxy_pass[[:space:]]+http/ { print; match_block = 0 }
