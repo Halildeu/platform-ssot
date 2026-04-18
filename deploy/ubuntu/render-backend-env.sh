@@ -227,6 +227,17 @@ main() {
   # secondary allowlist from the primary one. Not in required_keys so deploy
   # remains safe when Vault KV hasn't been repopulated yet.
   local security_jwt_secondary_audience_default="permission-service,frontend,account,serban-web"
+  # 2026-04-18 OI-03 browser login fix: KC_HOSTNAME (KC 26 hostname v2) controls
+  # the frontchannel URL Keycloak emits for login/logout redirects. Previously
+  # unset in Vault KV → render script dropped it silently → backend compose
+  # fallback to `http://localhost:8081` → browser redirect after login POST
+  # became ERR_CONNECTION_REFUSED (localhost not reachable from user's Mac).
+  # Render now writes the public URL default when Vault KV value is empty;
+  # operators override by setting KC_HOSTNAME in Vault KV. Not in required_keys
+  # so deploys remain safe during Vault KV rollout window (Codex 019da26d).
+  local kc_hostname_default="https://ai.acik.com"
+  local kc_proxy_headers_default="xforwarded"
+  local kc_hostname_backchannel_dynamic_default="true"
   # STORY-0319 PR #3c — AppRole-first Vault auth migration.
   # VAULT_TOKEN canonical env'e yazılmaz (deploy-backend.sh:185
   # bootstrap_vault_credentials_from_env_file token path'e düşüyordu —
@@ -408,9 +419,34 @@ main() {
   value="$(printf '%s' "${payload}" | json_get "SECURITY_JWT_SECONDARY_AUDIENCE")"
   if [[ -z "${value}" ]]; then
     value="${security_jwt_secondary_audience_default}"
-    echo "[render] SECURITY_JWT_SECONDARY_AUDIENCE not in Vault KV — writing canonical 8-audience default" >&2
+    echo "[render] SECURITY_JWT_SECONDARY_AUDIENCE not in Vault KV — writing canonical 4-audience default" >&2
   fi
   write_kv "${tmp_file}" "SECURITY_JWT_SECONDARY_AUDIENCE" "${value}"
+
+  # 2026-04-18 OI-03 browser login fix — KC_HOSTNAME / proxy trio.
+  # Vault KV values have priority; empty → canonical stage defaults. KC 26
+  # hostname v2 uses KC_HOSTNAME for all frontchannel URL emission. Without
+  # the public URL here, Keycloak falls back to compose default
+  # `http://localhost:8081`, which breaks login redirect from the public
+  # hostname (browser follows KC's emitted URL → ERR_CONNECTION_REFUSED).
+  value="$(printf '%s' "${payload}" | json_get "KC_HOSTNAME")"
+  if [[ -z "${value}" ]]; then
+    value="${kc_hostname_default}"
+    echo "[render] KC_HOSTNAME not in Vault KV — writing canonical stage default (${kc_hostname_default})" >&2
+  fi
+  write_kv "${tmp_file}" "KC_HOSTNAME" "${value}"
+
+  value="$(printf '%s' "${payload}" | json_get "KC_PROXY_HEADERS")"
+  if [[ -z "${value}" ]]; then
+    value="${kc_proxy_headers_default}"
+  fi
+  write_kv "${tmp_file}" "KC_PROXY_HEADERS" "${value}"
+
+  value="$(printf '%s' "${payload}" | json_get "KC_HOSTNAME_BACKCHANNEL_DYNAMIC")"
+  if [[ -z "${value}" ]]; then
+    value="${kc_hostname_backchannel_dynamic_default}"
+  fi
+  write_kv "${tmp_file}" "KC_HOSTNAME_BACKCHANNEL_DYNAMIC" "${value}"
 
   keycloak_issuer_uri="$(printf '%s' "${payload}" | json_get "KEYCLOAK_ISSUER_URI")"
   keycloak_public_issuer_uri="$(printf '%s' "${payload}" | json_get "KEYCLOAK_PUBLIC_ISSUER_URI")"
