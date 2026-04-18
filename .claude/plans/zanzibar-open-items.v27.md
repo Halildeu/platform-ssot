@@ -28,10 +28,10 @@ Bu dosya master plan Rev 27'in konsolide open-items snapshot'ı.
 
 | ID | İş | Gate | Home | Owner | Bağımlılık |
 |----|-----|------|------|-------|-----------|
-| OI-01 | STORY-0319 4-PR completion (staging prod-like profile) | `stage-2-runnable` | `docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md` | @halil | [PR #451](https://github.com/Halildeu/platform-ssot/pull/451) merged + [PR #452](https://github.com/Halildeu/platform-ssot/pull/452) merged; PR #3/4 + PR #4/4 kaldı |
-| OI-02 | Dalga 1 Stage 2 synthetic canary **canlı run** | `stage-2-execution` | `docs/04-operations/RUNBOOKS/RB-zanzibar-canary.md` + `backend/scripts/perf/run-zanzibar-canary.sh` | @halil | OI-01 |
+| ~~OI-01~~ | ~~STORY-0319 4-PR completion (staging prod-like profile)~~ | ~~`stage-2-runnable`~~ | ~~STORY-0319~~ | ~~@halil~~ | **CLOSED 2026-04-18** — 9 PR (#451/452/455/456/457/458/459/460/461) merged + 3 ops step (canonical env + GH secret + AppRole soft-fail guard). Canlı kanıt: profile=prod,docker runtime, GHCR digest aktif, 8 container healthy, /authz/me authzVersion=8. |
+| OI-02 | Dalga 1 Stage 2 synthetic canary **canlı run** | `stage-2-execution` | `docs/04-operations/RUNBOOKS/RB-zanzibar-canary.md` + `backend/scripts/perf/run-zanzibar-canary.sh` | @halil | OI-01 ✅ + **AppRole setup (PR #5)** + pre-flight §3.1.A checklist PASS (Thread A draft hazır) |
 | OI-03 | Dalga 1 Stage 3 Evidence PASS audit | `stage-3-evidence` | `RB-zanzibar-canary.md` §3.3 | @halil | OI-02 |
-| OI-04 | Cloud KMS staging rehearsal + IAM + recovery-key escrow + AppRole rotation + KMS loss path | `prod-cutover-gate` | `docs/03-delivery/ACCEPTANCE/AC-0320-zanzibar-prod-cutover-prep.md` Senaryo 2/5/6 + `docs/03-delivery/TEST-PLANS/TP-0320-zanzibar-prod-cutover-prep.md` §4 + `docs/04-operations/RUNBOOKS/RB-vault-kms-autounseal.md` §8 | @halil | OI-03 |
+| OI-04 | Cloud KMS staging rehearsal + IAM + recovery-key escrow + AppRole rotation + KMS loss path | `prod-cutover-gate` | `docs/03-delivery/ACCEPTANCE/AC-0320-zanzibar-prod-cutover-prep.md` Senaryo 2/5/6 + `docs/03-delivery/TEST-PLANS/TP-0320-zanzibar-prod-cutover-prep.md` §4 + `docs/04-operations/RUNBOOKS/RB-vault-kms-autounseal.md` §8 | @halil | OI-03. **Thread B plan hazır (2026-04-18):** provider matrix (AWS önerilen), escrow quarterly cadence, break-glass decision tree + communication template. Kritik dil düzeltmesi: "5-of-3 unseal" → recovery share / threshold; Senaryo 6 "manual unseal" yanıltıcı. PR #6 implementer. |
 | OI-05 | Scope reconciliation (scheduled + on-demand hybrid) | `non-blocking` | ADR (yeni, açılacak) | @halil | Codex tasarım bekliyor |
 | OI-06 | OpenFGA model version management | `non-blocking` | ADR (yeni, açılacak) | @halil | — |
 | OI-07 | k6 CI workflow regression gate | `non-blocking` | `.github/workflows/*` | @halil | OI-02 baseline |
@@ -97,4 +97,10 @@ OI-11, OI-12, OI-13, OI-14
 - Item scope değişikliği: Home kolonu güncellenir + commit mesajında açıklanır.
 - State drift tespit edilirse: master plan gövdesi + bu index eş zamanlı güncellenir.
 
-**Son güncelleme:** 2026-04-17, Rev 27 açılışı.
+**Son güncelleme:** 2026-04-18, Rev 28 — OI-01 CLOSED, OI-02 AppRole setup prereq'i Thread A (PR #5), OI-04 Thread B planı PR #6 kapsamında.
+
+### AppRole setup (yeni tespit 2026-04-17 gece)
+Staging Vault'ta `auth/approle/` hiç enable edilmemiş. PR #5 (Thread A draft):
+- `docs/04-operations/RUNBOOKS/RB-vault-approle-setup-stage.md`
+- `backend/scripts/vault/seed-stage-approle.sh` (policy + role + KV + canonical env + verify)
+- `docs/04-operations/RUNBOOKS/RB-zanzibar-canary.md` §3.1.A pre-flight + §3.1.B helper
