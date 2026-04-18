@@ -30,12 +30,35 @@ setup'ı belgeler.
 **Vault auth mount:** `auth/approle`
 **KV mount:** `secret` (KV v2)
 
-**Etkilenen path'ler:**
-- `secret/data/stage/backend-deploy/config`
-- `secret/data/stage/db/*`
-- `auth/approle/role/backend-deploy-stage/*`
+**Etkilenen path'ler (scope split — 2026-04-18 OI-02 post-mortem):**
+
+AppRole `backend-deploy-stage` **iki farklı consumer** tarafından kullanılır:
+host-side deploy render ve container-side runtime Vault client. Policy her
+iki scope'u da kapsar.
+
+**Host render scope (deploy-time):**
+- `secret/data/stage/backend-deploy/config` — deploy config (GIT_REMOTE_URL, GHCR_OWNER, vs.)
+
+**Runtime Vault consumer scope (auth-service + permission-service Spring Cloud Vault):**
+- `secret/data/stage/jwt/auth-service` — JWT signing keys (auth-service)
+- `secret/data/stage/db/auth-service` — auth DB creds
+- `secret/data/stage/db/user-service` — user DB creds
+- `secret/data/stage/db/permission-service` — permission DB creds
+- `secret/data/stage/db/variant-service` — variant DB creds
+- `secret/metadata/stage/db/*` — list capability
+- `secret/metadata/stage/jwt/*` — list capability
+
+**AppRole role paths:**
+- `auth/approle/role/backend-deploy-stage/role-id` (read)
+- `auth/approle/role/backend-deploy-stage/secret-id` (update)
+
+**Host filesystem:**
 - `/home/halil/platform/env/backend.env`
 - `/home/halil/platform/state/vault/approle/backend-deploy-stage.{role-id,secret-id}`
+
+**Policy source of truth:** `backend/infra/vault/policies/backend-deploy-runtime.hcl`
+(PR #13 seed script refactor ile canonical). Seed heredoc eliminated to
+prevent 2026-04-18 drift class recurrence.
 
 **İlgili entry point'ler:**
 - `backend/scripts/vault/seed-stage-approle.sh` (yeni — bu runbook ile birlikte commit)
@@ -253,6 +276,44 @@ Bu runbook metric wiring eklemez. Vault sealed/unsealed state için
 **Kök neden:** `vault auth enable approle` çalışmadı veya başka path'e yazıldı.
 **Çözüm:** `vault auth list` ile doğrula; yoksa `vault auth enable approle`
 veya seed script'i tekrar çalıştır (idempotent).
+
+### Runtime Vault consumer 403 (auth-service/permission-service)
+
+**Semptom:** Container boot sırasında `org.springframework.vault.VaultException: Status 403 Forbidden [secret/data/stage/jwt/auth-service]`.
+**Kök neden (2026-04-18 incident):** AppRole policy deploy-scope'ta (sadece
+`backend-deploy/config` + `db/*`) kalmış, runtime path (`jwt/auth-service`)
+dahil değil. Stale policy heredoc'tan kaynaklanıyor.
+**Çözüm:**
+- Policy source-of-truth PR #13 ile `backend/infra/vault/policies/backend-deploy-runtime.hcl`
+  olarak kurulu; runtime path'ler dahil. Seed script re-run:
+  ```bash
+  ssh staging-sw '
+    cd /home/halil/platform/repo
+    export VAULT_ADDR="http://127.0.0.1:8200"
+    export VAULT_TOKEN="$(cat /home/halil/platform/state/vault-dev/vault-root-token)"
+    export ENV=stage
+    bash backend/scripts/vault/seed-stage-approle.sh
+  '
+  ```
+- Policy HCL'de `jwt/auth-service` read var mı doğrula:
+  ```bash
+  docker exec -e VAULT_ADDR=http://127.0.0.1:8200 -e VAULT_TOKEN=... platform-vault-1 \
+    vault policy read backend-deploy-stage | grep jwt
+  ```
+- AppRole login dry-run + jwt/auth-service kv read test (§3 Verify Step E benzeri)
+
+### Runtime auth-service ephemeral RSA key (silent)
+
+**Semptom:** Restart sonrası daha önce minted service token'lar 401.
+**Kök neden (2026-04-18 incident):** PR #15 öncesi stage `backend/docker-compose.yml`
+env var ismi `SERVICE_JWT_PRIVATE_KEY` idi ama `auth-service` application.properties
+`AUTH_SERVICE_JWT_PRIVATE_KEY` okuyor. İsim uyuşmazlığı nedeniyle env IGNORE
+ediliyor → boş değer → ephemeral RSA key generation.
+**Çözüm (post PR #15):**
+- `backend/docker-compose.yml` user + auth service env key `AUTH_SERVICE_JWT_*`
+- `application-docker.properties` blank override kaldırıldı, env-aware fallback chain geri geldi
+- Canonical env `/home/halil/platform/env/backend.env` `AUTH_SERVICE_JWT_PRIVATE_KEY` + `AUTH_SERVICE_JWT_PUBLIC_KEY` set
+- Veya Spring Cloud Vault enabled + `secret/stage/jwt/auth-service` KV populated
 
 ### Secret-id expired
 
