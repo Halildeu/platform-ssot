@@ -46,6 +46,7 @@
       "backend/openfga/init.sh",
       "backend/permission-service/src/main/resources/*",
       "backend/scripts/doctor-infra.sh",
+      "backend/scripts/perf/run-zanzibar-canary.sh",
       "backend/scripts/vault/*",
       "backend/scripts/verify-service-jwt-env.sh",
       "deploy/ubuntu/*",
