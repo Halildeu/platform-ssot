@@ -100,15 +100,140 @@ bash backend/scripts/doctor-zanzibar.sh --quick
 **Rollback:** Önceki image tag'ine dön (`docker compose up -d --force-recreate` +
 eski GHCR tag). ~1 dk.
 
+### 3.1.A Pre-flight Checklist — Stage 2 Gate (ZORUNLU)
+
+STORY-0319 PR #5 (AppRole setup) sonrası canlı run öncesi tek sefer
+PASS olmalı. Herhangi bir FAIL canary run'ı bloklar.
+
+```
+[ ] Staging compose healthy — en az 22 platform-* container, unhealthy yok
+    docker ps --filter name=platform- --format '{{.Names}}\t{{.Status}}' | wc -l
+
+[ ] doctor-infra.sh A-L PASS (FAIL 0)
+    bash backend/scripts/doctor-infra.sh
+    Beklenen:
+      L1 tüm 7 servis için SPRING_PROFILES_ACTIVE=prod,docker (local yok)
+      L2 /authz/check token'sız → 401 veya 403
+      L3-L8 ERP_OPENFGA_* + SECURITY_JWT_ISSUER(S) + PERMISSION_SERVICE_BASE_URL
+           + AUTHZ_USER_TABLE non-blank
+
+[ ] AppRole setup PASS (RB-vault-approle-setup-stage.md §6 checklist)
+    vault read auth/approle/role/backend-deploy-stage/role-id
+    Beklenen: 200 (role-id döner)
+
+[ ] Canonical env AppRole-first
+    grep -E '^(SPRING_CLOUD_VAULT_ENABLED|VAULT_AUTH_METHOD)=' /home/halil/platform/env/backend.env
+    Beklenen:
+      SPRING_CLOUD_VAULT_ENABLED=true
+      VAULT_AUTH_METHOD=APPROLE
+
+[ ] Auth + permission container actuator Vault health UP (PR #3b wiring)
+    curl -fsS http://localhost:8088/actuator/health/vault | jq -r .status
+    curl -fsS http://localhost:8090/actuator/health/vault | jq -r .status
+    Beklenen: "UP" her ikisi için
+
+[ ] OpenFGA store + model erişilebilir (staging re-init ID'leri)
+    curl -fsS http://localhost:4000/stores/${OPENFGA_STORE_ID:-01KPBM48614TZ2F3ZR5AKVXC7B} >/dev/null
+    curl -fsS http://localhost:4000/stores/${OPENFGA_STORE_ID}/authorization-models/${OPENFGA_MODEL_ID:-01KPBM488WJK8P7XHK751MDNGG} >/dev/null
+
+[ ] canary-load KC client ulaşılabilir
+    curl -fsS -X POST http://localhost:8081/realms/serban/protocol/openid-connect/token \
+      -d grant_type=client_credentials \
+      -d client_id=canary-load \
+      -d client_secret=canary-load-secret-2026 >/dev/null
+
+[ ] 5 persona seed hazır (super_admin, read_only, restricted, multi_role_deny, scope_less)
+    mkdir -p .cache/reports/zanzibar-canary/${RUN_ID:?set RUN_ID}
+    node backend/scripts/ci/canary/zanzibar-canary-setup.mjs \
+      --output .cache/reports/zanzibar-canary/${RUN_ID}/persona-tokens.json
+    jq -e '.tokens.super_admin and .tokens.read_only and .tokens.restricted and .tokens.multi_role_deny and .tokens.scope_less' \
+      .cache/reports/zanzibar-canary/${RUN_ID}/persona-tokens.json
+
+[ ] k6 binary + Prometheus endpoint erişilebilir
+    command -v k6
+    curl -fsS ${CANARY_PROM_URL:-http://localhost:9090/api/v1/status/config} >/dev/null
+
+[ ] Evidence artifact dizini mevcut
+    test -d .cache/reports/zanzibar-canary/${RUN_ID}
+```
+
+**Not — Repo script uyumu:**
+- `zanzibar-canary-setup.mjs` `--output <path>` argument destekler (line 26,
+  71). AC/TP-0320'de geçen `--use-hybrid-b=false` flag **repo script'inde
+  implement edilmemiş**; canonical path (Hybrid B kaldırıldı) zaten default
+  davranış. Operator bu farkı evidence'a not düşmeli.
+- `CANARY_PROM_URL` env değişkeni repo'da implicit default yok; operator
+  Prometheus endpoint'i explicit set etmeli (staging'de
+  `http://localhost:9090/api/v1/status/config` sağlıklı response verir).
+
+### 3.1.B Pre-flight Helper (opsiyonel, tek komut)
+
+Operatör tüm checklist'i tek komutla doğrulamak isterse:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+RUN_ID="${RUN_ID:-$(date +%Y%m%d-%H%M%S)}"
+export RUN_ID
+VAULT_ADDR="${VAULT_ADDR:-http://127.0.0.1:8200}"
+VAULT_TOKEN="${VAULT_TOKEN:?root token required}"
+OPENFGA_STORE_ID="${OPENFGA_STORE_ID:-01KPBM48614TZ2F3ZR5AKVXC7B}"
+OPENFGA_MODEL_ID="${OPENFGA_MODEL_ID:-01KPBM488WJK8P7XHK751MDNGG}"
+CANARY_PROM_URL="${CANARY_PROM_URL:-http://localhost:9090/api/v1/status/config}"
+
+# Step A — Compose healthy
+test "$(docker ps --filter name=platform- --format '{{.Names}}' | wc -l)" -ge 22
+
+# Step B — doctor-infra PASS
+bash backend/scripts/doctor-infra.sh
+
+# Step C — AppRole PASS
+test "$(curl -sS -o /dev/null -w '%{http_code}' \
+  -H "X-Vault-Token: ${VAULT_TOKEN}" \
+  "${VAULT_ADDR%/}/v1/auth/approle/role/backend-deploy-stage/role-id")" = "200"
+
+# Step D — Canonical env AppRole-first
+grep -q '^SPRING_CLOUD_VAULT_ENABLED=true$' /home/halil/platform/env/backend.env
+grep -q '^VAULT_AUTH_METHOD=APPROLE$' /home/halil/platform/env/backend.env
+
+# Step E — Actuator Vault health UP
+test "$(curl -fsS http://localhost:8088/actuator/health/vault | jq -r .status)" = "UP"
+test "$(curl -fsS http://localhost:8090/actuator/health/vault | jq -r .status)" = "UP"
+
+# Step F — OpenFGA store + model
+curl -fsS "http://localhost:4000/stores/${OPENFGA_STORE_ID}" >/dev/null
+curl -fsS "http://localhost:4000/stores/${OPENFGA_STORE_ID}/authorization-models/${OPENFGA_MODEL_ID}" >/dev/null
+
+# Step G — canary-load KC
+curl -fsS -X POST 'http://localhost:8081/realms/serban/protocol/openid-connect/token' \
+  -d grant_type=client_credentials \
+  -d client_id=canary-load \
+  -d client_secret=canary-load-secret-2026 >/dev/null
+
+# Step H — Persona seed
+mkdir -p ".cache/reports/zanzibar-canary/${RUN_ID}"
+node backend/scripts/ci/canary/zanzibar-canary-setup.mjs \
+  --output ".cache/reports/zanzibar-canary/${RUN_ID}/persona-tokens.json" >/dev/null
+jq -e '.tokens.super_admin and .tokens.read_only and .tokens.restricted and .tokens.multi_role_deny and .tokens.scope_less' \
+  ".cache/reports/zanzibar-canary/${RUN_ID}/persona-tokens.json" >/dev/null
+
+# Step I — k6 + Prom
+command -v k6
+curl -fsS "${CANARY_PROM_URL}" >/dev/null
+
+echo "[preflight] PASS RUN_ID=${RUN_ID}"
+```
+
 ### 3.2 Stage 2 — Synthetic Canary (k6 persona matrix + cold/warm)
 
 **Amaç:** Auth-enabled ortamda 5 persona üzerinden synthetic load üretip
 operasyonel (Prometheus) + fonksiyonel (k6 custom) iki sinyal katmanında
 Evidence PASS almak.
 
-**Ön koşul:** STORY-0319 (staging prod-like profile) tamamlanmış olmalı — aksi
-takdirde `SecurityConfigLocal permitAll` aktif, deny_rate = 0, canary sinyal
-üretmez.
+**Ön koşul:** §3.1.A Pre-flight Checklist PASS (AppRole setup + profile
+migration + actuator health + persona seed + evidence dizin). Aksi halde
+deny_rate = 0 veya persona mismatch, canary sinyal anlamsız.
 
 **Runner:**
 ```bash
