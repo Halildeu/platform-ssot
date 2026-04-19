@@ -10,6 +10,20 @@ type EnvRecord = Record<string, string | undefined>;
 type SharedHttpRequestConfig = AxiosRequestConfig & {
   __suppressGlobalForbiddenToast?: boolean;
   __suppressGlobalProfileMissingToast?: boolean;
+  /**
+   * 2026-04-19 (QLTY-PROACTIVE-02): opt-out of Authorization header injection
+   * for public endpoints (e.g. /v1/theme-registry). Prevents stale/wrong-aud
+   * token races during app bootstrap where AuthBootstrapper hasn't yet run but
+   * a persisted token still lives in localStorage. Set `{ __skipAuth: true }`
+   * on the request config — Authorization header will NOT be added.
+   *
+   * Rationale: Spring Security `permitAll()` STILL invokes the JWT filter when
+   * a Bearer header is present, so strict single-aud validators (e.g. variant-
+   * service) reject stale/wrong-aud tokens and the request fails with 401 even
+   * though the endpoint is declared public. Sending the request anonymously
+   * sidesteps the filter.
+   */
+  __skipAuth?: boolean;
 };
 
 const getEnvValue = (key: string): string | undefined => {
@@ -259,6 +273,7 @@ const installInterceptors = (client: AxiosInstance) => {
     trackPendingRequest(config);
     const headers = ensureHeaders(config);
     const token = tokenResolver();
+    const skipAuth = (config as SharedHttpRequestConfig).__skipAuth === true;
     if (process.env.NODE_ENV !== 'production') {
       try {
         const base = config.baseURL ?? resolveGatewayBaseUrl();
@@ -267,13 +282,13 @@ const installInterceptors = (client: AxiosInstance) => {
         console.debug(
           `[AUTH DEBUG] url=${trimTrailingSlash(base)}${prefix}${path} method=${config.method ?? 'get'} hasToken=${Boolean(
             token,
-          )}`,
+          )} skipAuth=${skipAuth}`,
         );
       } catch {
         console.debug('[AUTH DEBUG] url=<unknown> method=<unknown> hasToken', Boolean(token));
       }
     }
-    if (token && !headers.Authorization && !isPermitAllMode()) {
+    if (token && !headers.Authorization && !isPermitAllMode() && !skipAuth) {
       headers.Authorization = `Bearer ${token}`;
     }
     const traceId = traceResolver();

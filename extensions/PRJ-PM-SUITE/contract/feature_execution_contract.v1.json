@@ -68,7 +68,10 @@
       "docs/04-operations/RUNBOOKS/RB-staging-prod-profile.md",
       "docs/04-operations/RUNBOOKS/RB-ubuntu-backend-github-vault-deploy.md",
       "docs/04-operations/RUNBOOKS/RB-vault-dev-path-migration.md",
-      "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json"
+      "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
+      "web/apps/mfe-shell/src/app/layout/**/*",
+      "web/apps/mfe-shell/src/app/theme/**/*",
+      "web/packages/shared-http/src/*"
     ],
     "repo_root": ".",
     "service_scopes": [
