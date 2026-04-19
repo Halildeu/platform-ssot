@@ -1,0 +1,107 @@
+name: staging-error-sweep
+
+# 2026-04-19 QLTY-PROACTIVE-04 Lane A MVP.
+# Proactive scan of backend container logs on the stage self-hosted runner.
+# No SSH key needed — runner is on the box with docker CLI access.
+#
+# Triggers:
+#   - cron every 30min (low-traffic staging; 15m = noise, 60m = late)
+#   - workflow_run after deploy-backend / deploy-web success (immediate post-deploy)
+#   - workflow_dispatch for manual triage
+
+on:
+  schedule:
+    # Every 30 minutes. UTC.
+    - cron: '*/30 * * * *'
+  workflow_run:
+    workflows: ["deploy-backend", "deploy-web"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      window_minutes:
+        description: "How far back to scan docker logs"
+        required: false
+        default: "30"
+        type: string
+      warn_threshold:
+        description: "Per-service error count to trigger WARN"
+        required: false
+        default: "3"
+        type: string
+      fail_threshold:
+        description: "Per-service error count to trigger FAIL"
+        required: false
+        default: "10"
+        type: string
+      services:
+        description: "Comma-separated override of services to scan"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: staging-error-sweep
+  cancel-in-progress: false
+
+jobs:
+  sweep:
+    runs-on:
+      - self-hosted
+      - linux
+      - x64
+      - stage-backend
+    environment: stage
+    # Skip workflow_run on failed deploys (no point sweeping a busted box).
+    if: >-
+      github.event_name != 'workflow_run'
+      || github.event.workflow_run.conclusion == 'success'
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Run log sweep
+        id: sweep
+        shell: bash
+        env:
+          WINDOW_MINUTES: ${{ inputs.window_minutes || '30' }}
+          WARN_THRESHOLD: ${{ inputs.warn_threshold || '3' }}
+          FAIL_THRESHOLD: ${{ inputs.fail_threshold || '10' }}
+          SERVICES: ${{ inputs.services || '' }}
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          chmod +x backend/scripts/ops/staging-error-sweep.sh
+          # Capture exit code but do not abort the workflow here — later step
+          # decides if warn/fail means comment or fail the run.
+          rc=0
+          backend/scripts/ops/staging-error-sweep.sh || rc=$?
+          echo "sweep_rc=${rc}" >> "${GITHUB_OUTPUT}"
+          exit 0
+
+      - name: Upload sweep report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-error-sweep-${{ github.run_id }}
+          path: .cache/reports/staging-error-sweep-*.json
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Verdict gate
+        if: always()
+        shell: bash
+        env:
+          RC: ${{ steps.sweep.outputs.sweep_rc }}
+        run: |
+          set -euo pipefail
+          case "${RC:-0}" in
+            0) echo "::notice title=staging-error-sweep::PASS"; exit 0 ;;
+            1) echo "::warning title=staging-error-sweep::WARN — service errors in window (see artifact)"; exit 0 ;;
+            2) echo "::error title=staging-error-sweep::FAIL — service errors exceed fail_threshold (see artifact)"; exit 1 ;;
+            *) echo "::error title=staging-error-sweep::sweep script exited rc=${RC}"; exit 1 ;;
+          esac
