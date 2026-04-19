@@ -53,6 +53,7 @@
       "backend/permission-service/src/main/resources/*",
       "backend/permission-service/src/test/java/com/example/permission/service/*",
       "backend/api-gateway/src/main/java/com/example/apigateway/security/*",
+      "backend/api-gateway/src/main/resources/*",
       "backend/variant-service/src/main/java/com/example/variant/security/*",
       "backend/scripts/ci/canary/zanzibar-canary-setup.mjs",
       "backend/scripts/doctor-infra.sh",
