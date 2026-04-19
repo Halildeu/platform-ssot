@@ -59,6 +59,7 @@
       "backend/scripts/doctor-infra.sh",
       "backend/scripts/ops/*",
       "backend/scripts/perf/run-zanzibar-canary.sh",
+      "web/scripts/ops/*",
       "backend/scripts/vault/*",
       ".github/workflows/staging-error-sweep.yml",
       "backend/scripts/verify-service-jwt-env.sh",
