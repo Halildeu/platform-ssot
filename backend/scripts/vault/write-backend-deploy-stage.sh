@@ -4,8 +4,9 @@ set -euo pipefail
 ENV_NAME="${ENV:-stage}"
 VAULT_ADDR="${VAULT_ADDR:?VAULT_ADDR required}"
 VAULT_TOKEN="${VAULT_TOKEN:?VAULT_TOKEN required}"
+VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-secret}"
 
-echo "[vault] target=${VAULT_ADDR} env=${ENV_NAME}"
+echo "[vault] target=${VAULT_ADDR} env=${ENV_NAME} mount=${VAULT_KV_MOUNT}"
 
 build_json() {
   python3 - "$@" <<'PY'
@@ -26,13 +27,15 @@ PY
 kv_put() {
   local path="$1"
   local json="$2"
+  local mount="${VAULT_KV_MOUNT#/}"
+  mount="${mount%/}"
 
   curl -sSf \
     -H "X-Vault-Token: ${VAULT_TOKEN}" \
     -H 'Content-Type: application/json' \
-    -X POST "${VAULT_ADDR}/v1/secret/data/${ENV_NAME}/${path}" \
+    -X POST "${VAULT_ADDR%/}/v1/${mount}/data/${ENV_NAME}/${path}" \
     -d "{\"data\": ${json} }" >/dev/null
-  echo "[vault] wrote secret/${ENV_NAME}/${path}"
+  echo "[vault] wrote ${mount}/${ENV_NAME}/${path}"
 }
 
 backend_deploy_payload="$(build_json \
@@ -58,6 +61,9 @@ backend_deploy_payload="$(build_json \
   SPRING_CLOUD_VAULT_FAIL_FAST "${SPRING_CLOUD_VAULT_FAIL_FAST:-true}" \
   KEYCLOAK_ISSUER_URI "${KEYCLOAK_ISSUER_URI:-}" \
   KEYCLOAK_JWKS_URI "${KEYCLOAK_JWKS_URI:-}" \
+  KC_HOSTNAME "${KC_HOSTNAME:-}" \
+  KC_PROXY_HEADERS "${KC_PROXY_HEADERS:-}" \
+  KC_HOSTNAME_BACKCHANNEL_DYNAMIC "${KC_HOSTNAME_BACKCHANNEL_DYNAMIC:-}" \
   WEB_ORIGIN "${WEB_ORIGIN:-}" \
   AUTH_VERIFICATION_BASE_URL "${AUTH_VERIFICATION_BASE_URL:-}" \
   AUTH_RESET_BASE_URL "${AUTH_RESET_BASE_URL:-}" \
@@ -76,12 +82,18 @@ backend_deploy_payload="$(build_json \
   OPENFGA_MODEL_ID "${OPENFGA_MODEL_ID:-}" \
   OPENFGA_LOG_LEVEL "${OPENFGA_LOG_LEVEL:-}" \
   ERP_OPENFGA_ENABLED "${ERP_OPENFGA_ENABLED:-}" \
+  ERP_OPENFGA_STORE_ID "${ERP_OPENFGA_STORE_ID:-}" \
+  ERP_OPENFGA_MODEL_ID "${ERP_OPENFGA_MODEL_ID:-}" \
   SCOPE_CACHE_ENABLED "${SCOPE_CACHE_ENABLED:-}" \
   SCOPE_CACHE_TTL_SECONDS "${SCOPE_CACHE_TTL_SECONDS:-}" \
   SCOPE_CACHE_TTL_JITTER "${SCOPE_CACHE_TTL_JITTER:-}" \
   SCOPE_CACHE_MAX_SIZE "${SCOPE_CACHE_MAX_SIZE:-}" \
   AUTHZ_VERSION_ENABLED "${AUTHZ_VERSION_ENABLED:-}" \
+  AUTHZ_USER_TABLE "${AUTHZ_USER_TABLE:-}" \
+  SECURITY_JWT_ISSUER "${SECURITY_JWT_ISSUER:-}" \
+  SECURITY_JWT_ISSUERS "${SECURITY_JWT_ISSUERS:-}" \
   SECURITY_JWT_AUDIENCE "${SECURITY_JWT_AUDIENCE:-}" \
+  SECURITY_JWT_SECONDARY_AUDIENCE "${SECURITY_JWT_SECONDARY_AUDIENCE:-}" \
   CORE_DATA_DB_URL "${CORE_DATA_DB_URL:-}" \
   CORE_DATA_DB_USERNAME "${CORE_DATA_DB_USERNAME:-}" \
   CORE_DATA_DB_PASSWORD "${CORE_DATA_DB_PASSWORD:-}" \

@@ -128,6 +128,16 @@ services:
       AUTH_DB_PASSWORD: ${AUTH_DB_PASSWORD:-postgres}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      # 2026-04-18 OI-03 canary setup drift (P1.8 service token mint contract):
+      # auth-service ServiceTokenController reads security.service-clients.user-service
+      # which maps to SERVICE_CLIENT_USER_SERVICE_SECRET. Canonical env had this key
+      # since PR #447 but compose env chain never wired it → container registered
+      # no clients → /oauth2/token always 401 invalid_client. Blocks canary setup
+      # (zanzibar-canary-setup.mjs uses this path for user-service provisioning).
+      SERVICE_CLIENT_USER_SERVICE_SECRET: ${SERVICE_CLIENT_USER_SERVICE_SECRET:-}
+      # Permission-service internal API key — same wiring class, also required
+      # by mint audience flow.
+      PERMISSION_SERVICE_INTERNAL_API_KEY: ${PERMISSION_SERVICE_INTERNAL_API_KEY:-}
       LOG_SECURITY_LEVEL: ${LOG_SECURITY_LEVEL:-DEBUG}
     depends_on:
       discovery-server:
@@ -496,13 +506,25 @@ services:
       - SECURITY_JWT_ISSUER=${SECURITY_JWT_ISSUER:-http://keycloak:8080/realms/serban}
       # Audience doğrulaması; token üretimindeki aud ile eşleşmeli
       - SECURITY_JWT_AUDIENCE=${SECURITY_JWT_AUDIENCE:-permission-service}
+      # 2026-04-18 OI-03 Bug B (Codex thread 019da137): canary-restricted
+      # valid KC token ile /api/v1/authz/me 401. Root cause: permission-service
+      # AudienceValidator uses SECURITY_AUTH_ALLOWED_CLIENT_IDS as azp fallback
+      # when aud doesn't match (PR #426 CNS-20260416-003). Canonical env has
+      # this key but container env chain didn't propagate it → canary-load
+      # client tokens rejected at aud-validator fallback.
+      - SECURITY_AUTH_ALLOWED_CLIENT_IDS=${SECURITY_AUTH_ALLOWED_CLIENT_IDS:-frontend,admin-cli,serban-web,account,canary-load}
       # Ek issuer listesi Keycloak serban realm'i işaret eder
       - SECURITY_JWT_JWK_SET_URIS=http://keycloak:8080/realms/serban/protocol/openid-connect/certs
       - SECURITY_JWT_ISSUERS=${SECURITY_JWT_ISSUERS:-http://keycloak:8080/realms/serban,http://localhost:8081/realms/serban}
-      # Secondary issuer: frontend tokens come from localhost:8081
-      - SECURITY_JWT_SECONDARY_JWK_SET_URI=http://keycloak:8080/realms/serban/protocol/openid-connect/certs
-      - SECURITY_JWT_SECONDARY_ISSUER=http://localhost:8081/realms/serban
-      - SECURITY_JWT_SECONDARY_AUDIENCE=permission-service
+      # Secondary issuer: frontend tokens come from localhost:8081.
+      # 2026-04-18 OI-03 Bug B deepest layer: SECONDARY_AUDIENCE was hardcoded
+      # `permission-service` → canonical env override ignored → canary-load
+      # client tokens (aud=account) rejected by secondary decoder. Now supports
+      # canonical env multi-audience list via substitution pattern (same as
+      # primary AUDIENCE above).
+      - SECURITY_JWT_SECONDARY_JWK_SET_URI=${SECURITY_JWT_SECONDARY_JWK_SET_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}
+      - SECURITY_JWT_SECONDARY_ISSUER=${SECURITY_JWT_SECONDARY_ISSUER:-http://localhost:8081/realms/serban}
+      - SECURITY_JWT_SECONDARY_AUDIENCE=${SECURITY_JWT_SECONDARY_AUDIENCE:-permission-service}
       - ERP_OPENFGA_ENABLED=${ERP_OPENFGA_ENABLED:-true}
       - ERP_OPENFGA_API_URL=${ERP_OPENFGA_API_URL:-http://openfga:8080}
       - ERP_OPENFGA_STORE_ID=${ERP_OPENFGA_STORE_ID:-}
@@ -596,11 +618,16 @@ services:
       - microservice-network
     environment:
       - SERVER_PORT=8096
-      - SCHEMA_MSSQL_HOST=${REPORT_MSSQL_HOST:-host.docker.internal}
-      - SCHEMA_MSSQL_PORT=${REPORT_MSSQL_PORT:-1433}
-      - SCHEMA_MSSQL_DB=${REPORT_MSSQL_DB:-workcube_mikrolink}
-      - SCHEMA_MSSQL_USERNAME=${REPORT_MSSQL_USERNAME:-sa}
-      - SCHEMA_MSSQL_PASSWORD=${REPORT_MSSQL_PASSWORD:-}
+      # 2026-04-18 Codex Thread 5 #3: schema-service was reading REPORT_MSSQL_*
+      # env vars as fallback — wrong contract. SCHEMA_MSSQL_* is the canonical
+      # schema-service contract (prod compose, canonical env, write script).
+      # Compose default falls back to sibling REPORT_MSSQL_* only if SCHEMA_*
+      # explicitly missing — and now warns loudly via compose env ordering.
+      - SCHEMA_MSSQL_HOST=${SCHEMA_MSSQL_HOST:-${REPORT_MSSQL_HOST:-host.docker.internal}}
+      - SCHEMA_MSSQL_PORT=${SCHEMA_MSSQL_PORT:-${REPORT_MSSQL_PORT:-1433}}
+      - SCHEMA_MSSQL_DB=${SCHEMA_MSSQL_DB:-${REPORT_MSSQL_DB:-workcube_mikrolink}}
+      - SCHEMA_MSSQL_USERNAME=${SCHEMA_MSSQL_USERNAME:-${REPORT_MSSQL_USERNAME:-sa}}
+      - SCHEMA_MSSQL_PASSWORD=${SCHEMA_MSSQL_PASSWORD:-${REPORT_MSSQL_PASSWORD:-}}
       - SCHEMA_DEFAULT_SCHEMA=${SCHEMA_DEFAULT_SCHEMA:-workcube_mikrolink}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=${EUREKA_SERVER_URL:-http://discovery-server:8761/eureka}
       - SECURITY_JWT_JWK_SET_URI=http://keycloak:8080/realms/serban/protocol/openid-connect/certs

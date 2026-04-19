@@ -225,6 +225,18 @@ public class OpenFgaAuthzService {
             evictCheckCache(userId);
             log.info("OpenFGA tuple written: user:{} {} {}:{}", userId, relation, objectType, objectId);
         } catch (Exception e) {
+            if (isIdempotentWriteError(e)) {
+                // 2026-04-18 OI-03 idempotency (Codex 019da431): OpenFGA SDK throws
+                // validation_error when a tuple to write already exists. Under our
+                // "refresh = delete-all + write-all" propagation model the tuple
+                // likely IS already in the desired state, so swallow instead of
+                // failing. Still evict cache to be safe. DEBUG-level to avoid
+                // log spam during batch fallback loops (iter-2 REVISE).
+                evictCheckCache(userId);
+                log.debug("OpenFGA tuple already exists (idempotent write): user:{} {} {}:{}",
+                        userId, relation, objectType, objectId);
+                return;
+            }
             log.error("OpenFGA writeTuple failed: user:{} {} {}:{}",
                     userId, relation, objectType, objectId, e);
             throw new RuntimeException("Failed to write authorization tuple", e);
@@ -252,6 +264,15 @@ public class OpenFgaAuthzService {
             evictCheckCache(userId);
             log.info("OpenFGA tuple deleted: user:{} {} {}:{}", userId, relation, objectType, objectId);
         } catch (Exception e) {
+            if (isIdempotentDeleteError(e)) {
+                // 2026-04-18 OI-03 idempotency (Codex 019da431): SDK throws on
+                // delete of non-existent tuple; treat as idempotent no-op (caller
+                // intended: "ensure this tuple is absent"). DEBUG-level to avoid
+                // log spam during batch fallback loops (iter-2 REVISE).
+                log.debug("OpenFGA tuple already absent (idempotent delete): user:{} {} {}:{}",
+                        userId, relation, objectType, objectId);
+                return;
+            }
             log.error("OpenFGA deleteTuple failed: user:{} {} {}:{}",
                     userId, relation, objectType, objectId, e);
             throw new RuntimeException("Failed to delete authorization tuple", e);
@@ -278,6 +299,38 @@ public class OpenFgaAuthzService {
                     .forEach(this::evictCheckCache);
             log.info("OpenFGA batch write: {} tuples", tuples.size());
         } catch (Exception e) {
+            if (isIdempotentWriteError(e)) {
+                // 2026-04-18 OI-03 idempotency (Codex 019da431 iter-2 REVISE):
+                // batch failed because at least one tuple already exists. Fall
+                // back to per-tuple writes so valid new tuples still get
+                // applied; collect non-idempotent failures and rethrow at the
+                // end so callers (TupleSyncService.syncFeatureTuplesForUser)
+                // correctly skip the version bump on partial failure.
+                log.info("OpenFGA batch write hit idempotency constraint ({} tuples) — falling back to per-tuple", tuples.size());
+                List<Throwable> nonIdempotentFailures = new java.util.ArrayList<>();
+                for (ClientTupleKey t : tuples) {
+                    String user = t.getUser();
+                    String userId = user != null && user.startsWith("user:") ? user.substring(5) : user;
+                    String rel = t.getRelation();
+                    String obj = t.getObject();
+                    String[] objParts = obj != null ? obj.split(":", 2) : new String[]{"", ""};
+                    if (userId == null || rel == null || objParts.length < 2) continue;
+                    try {
+                        writeTuple(userId, rel, objParts[0], objParts[1]);
+                    } catch (Exception per) {
+                        nonIdempotentFailures.add(per);
+                        log.warn("OpenFGA per-tuple write after batch fallback failed: {} {} {} — {}",
+                                userId, rel, obj, per.getMessage());
+                    }
+                }
+                if (!nonIdempotentFailures.isEmpty()) {
+                    throw new RuntimeException(
+                            "Batch write fallback hit " + nonIdempotentFailures.size()
+                                    + " non-idempotent failures",
+                            nonIdempotentFailures.get(0));
+                }
+                return;
+            }
             log.error("OpenFGA batch writeTuples failed ({} tuples)", tuples.size(), e);
             throw new RuntimeException("Failed to batch write authorization tuples", e);
         }
@@ -302,9 +355,73 @@ public class OpenFgaAuthzService {
                     .forEach(this::evictCheckCache);
             log.info("OpenFGA batch delete: {} tuples", tuples.size());
         } catch (Exception e) {
+            if (isIdempotentDeleteError(e)) {
+                // 2026-04-18 OI-03 idempotency (Codex 019da431 iter-2 REVISE):
+                // batch failed because at least one tuple does not exist. Fall
+                // back to per-tuple deletes so existing tuples still get
+                // removed; collect non-idempotent failures and rethrow so
+                // callers can skip version bump on partial failure.
+                log.info("OpenFGA batch delete hit idempotency constraint ({} tuples) — falling back to per-tuple", tuples.size());
+                List<Throwable> nonIdempotentFailures = new java.util.ArrayList<>();
+                for (ClientTupleKeyWithoutCondition t : tuples) {
+                    String user = t.getUser();
+                    String userId = user != null && user.startsWith("user:") ? user.substring(5) : user;
+                    String rel = t.getRelation();
+                    String obj = t.getObject();
+                    String[] objParts = obj != null ? obj.split(":", 2) : new String[]{"", ""};
+                    if (userId == null || rel == null || objParts.length < 2) continue;
+                    try {
+                        deleteTuple(userId, rel, objParts[0], objParts[1]);
+                    } catch (Exception per) {
+                        nonIdempotentFailures.add(per);
+                        log.warn("OpenFGA per-tuple delete after batch fallback failed: {} {} {} — {}",
+                                userId, rel, obj, per.getMessage());
+                    }
+                }
+                if (!nonIdempotentFailures.isEmpty()) {
+                    throw new RuntimeException(
+                            "Batch delete fallback hit " + nonIdempotentFailures.size()
+                                    + " non-idempotent failures",
+                            nonIdempotentFailures.get(0));
+                }
+                return;
+            }
             log.error("OpenFGA batch deleteTuples failed ({} tuples)", tuples.size(), e);
             throw new RuntimeException("Failed to batch delete authorization tuples", e);
         }
+    }
+
+    /**
+     * Detects OpenFGA validation_error for writing a tuple that already exists.
+     * OpenFGA message: "cannot write a tuple which already exists: user: ... relation: ... object: ...".
+     * Used to treat duplicate writes as idempotent no-ops in our
+     * "refresh = delete-all + write-all" propagation model.
+     */
+    static boolean isIdempotentWriteError(Throwable e) {
+        return matchesIdempotencyMessage(e, "cannot write a tuple which already exists");
+    }
+
+    /**
+     * Detects OpenFGA validation_error for deleting a tuple that does not exist.
+     * OpenFGA message: "cannot delete a tuple which does not exist: user: ... relation: ... object: ...".
+     * Used to treat missing-tuple deletes as idempotent no-ops.
+     */
+    static boolean isIdempotentDeleteError(Throwable e) {
+        return matchesIdempotencyMessage(e, "cannot delete a tuple which does not exist");
+    }
+
+    private static boolean matchesIdempotencyMessage(Throwable e, String needle) {
+        Throwable t = e;
+        int depth = 0;
+        while (t != null && depth < 10) {
+            String msg = t.getMessage();
+            if (msg != null && msg.contains(needle)) {
+                return true;
+            }
+            t = t.getCause();
+            depth++;
+        }
+        return false;
     }
 
     /**
@@ -374,6 +491,16 @@ public class OpenFgaAuthzService {
      */
     public record CheckResult(boolean allowed, String reason) {}
 
+    /**
+     * 2026-04-18 OI-03 Bug 2 (Codex 019da431 Option A): object types that
+     * define a `blocked` relation in the OpenFGA model. Probing `blocked`
+     * on scope types (company / organization / project / warehouse / branch)
+     * triggers HTTP 400 "relation 'X#blocked' not found" because those types
+     * don't carry a blocked relation — scope denial semantics is NO_SCOPE,
+     * not deny-wins. Scope deny-wins is out of scope for this service.
+     */
+    private static final Set<String> BLOCKED_SUPPORTED_TYPES = Set.of("module", "action", "report");
+
     public CheckResult checkWithReason(String userId, String relation, String objectType, String objectId) {
         if (!enabled) {
             return new CheckResult(true, "granted");
@@ -383,9 +510,16 @@ public class OpenFgaAuthzService {
             String reason;
             if (allowed) {
                 reason = "granted";
-            } else {
+            } else if (BLOCKED_SUPPORTED_TYPES.contains(objectType)) {
+                // Feature-level deny-wins: probe the explicit `blocked` relation
+                // defined on module/action/report types.
                 boolean isBlocked = check(userId, "blocked", objectType, objectId);
                 reason = isBlocked ? "blocked" : "no_relation";
+            } else {
+                // Scope types (company/organization/project/warehouse/branch)
+                // have no `blocked` relation in the model; denied means the
+                // user simply lacks any positive scope relation.
+                reason = "no_relation";
             }
             // SK-5: Per-decision audit log — every authorization decision recorded
             log.info("authz.decision user={} relation={} object={}:{} allowed={} reason={}",

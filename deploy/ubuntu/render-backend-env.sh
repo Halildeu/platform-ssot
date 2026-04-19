@@ -200,7 +200,44 @@ main() {
     CORE_DATA_DB_URL
     CORE_DATA_DB_USERNAME
     CORE_DATA_DB_PASSWORD
+    # 2026-04-18 Rehearsal #4 post-deploy doctor-infra L4/L5/L8 FAIL resolution
+    # (Codex thread 019da02f REVISE): these 5 keys were missing from the
+    # required_keys/ordered_keys/write payload chain, causing silent render
+    # drift. ERP_OPENFGA_* are the compose-level naming (service config), not
+    # duplicates of OPENFGA_* (those remain for legacy tooling + canary setup).
+    # SECURITY_JWT_ISSUER must be public URL — report-service reads ISSUER (not
+    # ISSUERS) and rejects tokens minted by browser with the public issuer
+    # unless this value matches. AUTHZ_USER_TABLE is explicit to avoid drift
+    # on compose default.
+    ERP_OPENFGA_STORE_ID
+    ERP_OPENFGA_MODEL_ID
+    SECURITY_JWT_ISSUER
+    SECURITY_JWT_ISSUERS
+    AUTHZ_USER_TABLE
   )
+  # 2026-04-18 OI-03 canary fix: SECURITY_JWT_SECONDARY_AUDIENCE aligned with
+  # permission-service primary contract (application.properties:22 +
+  # docker-compose.yml fallback). canary-load KC client issues aud=account
+  # without an audience mapper; Bug B Layer 4 (previous session) manually
+  # patched canonical env but got dropped when RENDER_ENV_BEFORE_DEPLOY=true
+  # re-rendered from Vault KV. Render now writes the canonical 4-audience
+  # default when Vault KV value is empty — operators can still override.
+  # Default intentionally mirrors primary `security.jwt.audience` default
+  # (permission-service,frontend,account,serban-web) to avoid diverging the
+  # secondary allowlist from the primary one. Not in required_keys so deploy
+  # remains safe when Vault KV hasn't been repopulated yet.
+  local security_jwt_secondary_audience_default="permission-service,frontend,account,serban-web"
+  # 2026-04-18 OI-03 browser login fix: KC_HOSTNAME (KC 26 hostname v2) controls
+  # the frontchannel URL Keycloak emits for login/logout redirects. Previously
+  # unset in Vault KV → render script dropped it silently → backend compose
+  # fallback to `http://localhost:8081` → browser redirect after login POST
+  # became ERR_CONNECTION_REFUSED (localhost not reachable from user's Mac).
+  # Render now writes the public URL default when Vault KV value is empty;
+  # operators override by setting KC_HOSTNAME in Vault KV. Not in required_keys
+  # so deploys remain safe during Vault KV rollout window (Codex 019da26d).
+  local kc_hostname_default="https://ai.acik.com"
+  local kc_proxy_headers_default="xforwarded"
+  local kc_hostname_backchannel_dynamic_default="true"
   # STORY-0319 PR #3c — AppRole-first Vault auth migration.
   # VAULT_TOKEN canonical env'e yazılmaz (deploy-backend.sh:185
   # bootstrap_vault_credentials_from_env_file token path'e düşüyordu —
@@ -252,11 +289,16 @@ main() {
     OPENFGA_MODEL_ID
     OPENFGA_LOG_LEVEL
     ERP_OPENFGA_ENABLED
+    ERP_OPENFGA_STORE_ID
+    ERP_OPENFGA_MODEL_ID
     SCOPE_CACHE_ENABLED
     SCOPE_CACHE_TTL_SECONDS
     SCOPE_CACHE_TTL_JITTER
     SCOPE_CACHE_MAX_SIZE
     AUTHZ_VERSION_ENABLED
+    AUTHZ_USER_TABLE
+    SECURITY_JWT_ISSUER
+    SECURITY_JWT_ISSUERS
     SECURITY_JWT_AUDIENCE
     CORE_DATA_DB_URL
     CORE_DATA_DB_USERNAME
@@ -368,6 +410,44 @@ main() {
     write_kv_profile_or_default "${tmp_file}" "${key}" "${value}"
   done
 
+  # 2026-04-18 OI-03 canary fix — SECURITY_JWT_SECONDARY_AUDIENCE.
+  # Vault KV value has priority; empty → canonical 4-audience default aligned
+  # with primary contract. The permission-service auth chain routes tokens
+  # via FallbackJwtDecoder (secondary issuer) + AudienceValidator (reads
+  # security.jwt.secondary.audience). canary-load KC client emits
+  # aud=account; this allowlist must accept it alongside frontend/serban-web.
+  value="$(printf '%s' "${payload}" | json_get "SECURITY_JWT_SECONDARY_AUDIENCE")"
+  if [[ -z "${value}" ]]; then
+    value="${security_jwt_secondary_audience_default}"
+    echo "[render] SECURITY_JWT_SECONDARY_AUDIENCE not in Vault KV — writing canonical 4-audience default" >&2
+  fi
+  write_kv "${tmp_file}" "SECURITY_JWT_SECONDARY_AUDIENCE" "${value}"
+
+  # 2026-04-18 OI-03 browser login fix — KC_HOSTNAME / proxy trio.
+  # Vault KV values have priority; empty → canonical stage defaults. KC 26
+  # hostname v2 uses KC_HOSTNAME for all frontchannel URL emission. Without
+  # the public URL here, Keycloak falls back to compose default
+  # `http://localhost:8081`, which breaks login redirect from the public
+  # hostname (browser follows KC's emitted URL → ERR_CONNECTION_REFUSED).
+  value="$(printf '%s' "${payload}" | json_get "KC_HOSTNAME")"
+  if [[ -z "${value}" ]]; then
+    value="${kc_hostname_default}"
+    echo "[render] KC_HOSTNAME not in Vault KV — writing canonical stage default (${kc_hostname_default})" >&2
+  fi
+  write_kv "${tmp_file}" "KC_HOSTNAME" "${value}"
+
+  value="$(printf '%s' "${payload}" | json_get "KC_PROXY_HEADERS")"
+  if [[ -z "${value}" ]]; then
+    value="${kc_proxy_headers_default}"
+  fi
+  write_kv "${tmp_file}" "KC_PROXY_HEADERS" "${value}"
+
+  value="$(printf '%s' "${payload}" | json_get "KC_HOSTNAME_BACKCHANNEL_DYNAMIC")"
+  if [[ -z "${value}" ]]; then
+    value="${kc_hostname_backchannel_dynamic_default}"
+  fi
+  write_kv "${tmp_file}" "KC_HOSTNAME_BACKCHANNEL_DYNAMIC" "${value}"
+
   keycloak_issuer_uri="$(printf '%s' "${payload}" | json_get "KEYCLOAK_ISSUER_URI")"
   keycloak_public_issuer_uri="$(printf '%s' "${payload}" | json_get "KEYCLOAK_PUBLIC_ISSUER_URI")"
   web_origin="$(printf '%s' "${payload}" | json_get "WEB_ORIGIN")"
@@ -380,33 +460,59 @@ main() {
 
   # Per-service DB credentials — only written when the dedicated Vault path exists.
   # When paths are missing, services use the shared POSTGRES_USER/PASSWORD from main config.
+  # 2026-04-18 Drift #2 rehearsal fix (Codex thread 019da008): previous `&&`
+  # short-circuit returned 1 when val was empty, which under `set -euo pipefail`
+  # killed the script SILENTLY — no error message, no mv, no finalization. The
+  # "empty = skip" contract must explicitly return 0 to survive errexit.
   write_kv_if_present() {
     local file="$1" key="$2" val="$3"
-    [[ -n "${val}" ]] && write_kv "${file}" "${key}" "${val}"
+    if [[ -n "${val}" ]]; then
+      write_kv "${file}" "${key}" "${val}"
+    fi
+    return 0
+  }
+
+  # 2026-04-18 DB schema dual-read (Codex Thread 5 finding #2):
+  # Existing staging Vault KV schemas drifted historically. Some paths use
+  # the canonical `{url, user, password}` triple; others use Spring-style
+  # `{spring.datasource.url, spring.datasource.username, spring.datasource.password}`
+  # (seeded before the contract was standardized). Render now tries canonical
+  # key first, falls back to spring.datasource.* alias — no operator action
+  # required to unblock, but drift is visible in KV. write-secrets-stage.sh
+  # remains canonical `{url, user, password}`; operators writing fresh paths
+  # use that contract.
+  kv_dual_read() {
+    local payload="$1" canonical_key="$2" spring_alias="$3"
+    local v
+    v="$(kv_get_value "${payload}" "${canonical_key}")"
+    if [[ -z "${v}" ]]; then
+      v="$(kv_get_value "${payload}" "${spring_alias}")"
+    fi
+    printf '%s' "${v}"
   }
 
   if [[ -n "${auth_db_payload}" ]]; then
-    write_kv_if_present "${tmp_file}" AUTH_SERVICE_DB_URL "$(kv_get_value "${auth_db_payload}" url)"
-    write_kv_if_present "${tmp_file}" AUTH_SERVICE_DB_USERNAME "$(kv_get_value "${auth_db_payload}" user)"
-    write_kv_if_present "${tmp_file}" AUTH_SERVICE_DB_PASSWORD "$(kv_get_value "${auth_db_payload}" password)"
+    write_kv_if_present "${tmp_file}" AUTH_SERVICE_DB_URL      "$(kv_dual_read "${auth_db_payload}" url      spring.datasource.url)"
+    write_kv_if_present "${tmp_file}" AUTH_SERVICE_DB_USERNAME "$(kv_dual_read "${auth_db_payload}" user     spring.datasource.username)"
+    write_kv_if_present "${tmp_file}" AUTH_SERVICE_DB_PASSWORD "$(kv_dual_read "${auth_db_payload}" password spring.datasource.password)"
   fi
 
   if [[ -n "${user_db_payload}" ]]; then
-    write_kv_if_present "${tmp_file}" USER_SERVICE_DB_URL "$(kv_get_value "${user_db_payload}" url)"
-    write_kv_if_present "${tmp_file}" USER_SERVICE_DB_USERNAME "$(kv_get_value "${user_db_payload}" user)"
-    write_kv_if_present "${tmp_file}" USER_SERVICE_DB_PASSWORD "$(kv_get_value "${user_db_payload}" password)"
+    write_kv_if_present "${tmp_file}" USER_SERVICE_DB_URL      "$(kv_dual_read "${user_db_payload}" url      spring.datasource.url)"
+    write_kv_if_present "${tmp_file}" USER_SERVICE_DB_USERNAME "$(kv_dual_read "${user_db_payload}" user     spring.datasource.username)"
+    write_kv_if_present "${tmp_file}" USER_SERVICE_DB_PASSWORD "$(kv_dual_read "${user_db_payload}" password spring.datasource.password)"
   fi
 
   if [[ -n "${permission_db_payload}" ]]; then
-    write_kv_if_present "${tmp_file}" PERMISSION_SERVICE_DB_URL "$(kv_get_value "${permission_db_payload}" url)"
-    write_kv_if_present "${tmp_file}" PERMISSION_SERVICE_DB_USERNAME "$(kv_get_value "${permission_db_payload}" user)"
-    write_kv_if_present "${tmp_file}" PERMISSION_SERVICE_DB_PASSWORD "$(kv_get_value "${permission_db_payload}" password)"
+    write_kv_if_present "${tmp_file}" PERMISSION_SERVICE_DB_URL      "$(kv_dual_read "${permission_db_payload}" url      spring.datasource.url)"
+    write_kv_if_present "${tmp_file}" PERMISSION_SERVICE_DB_USERNAME "$(kv_dual_read "${permission_db_payload}" user     spring.datasource.username)"
+    write_kv_if_present "${tmp_file}" PERMISSION_SERVICE_DB_PASSWORD "$(kv_dual_read "${permission_db_payload}" password spring.datasource.password)"
   fi
 
   if [[ -n "${variant_db_payload}" ]]; then
-    write_kv_if_present "${tmp_file}" VARIANT_SERVICE_DB_URL "$(kv_get_value "${variant_db_payload}" url)"
-    write_kv_if_present "${tmp_file}" VARIANT_SERVICE_DB_USERNAME "$(kv_get_value "${variant_db_payload}" user)"
-    write_kv_if_present "${tmp_file}" VARIANT_SERVICE_DB_PASSWORD "$(kv_get_value "${variant_db_payload}" password)"
+    write_kv_if_present "${tmp_file}" VARIANT_SERVICE_DB_URL      "$(kv_dual_read "${variant_db_payload}" url      spring.datasource.url)"
+    write_kv_if_present "${tmp_file}" VARIANT_SERVICE_DB_USERNAME "$(kv_dual_read "${variant_db_payload}" user     spring.datasource.username)"
+    write_kv_if_present "${tmp_file}" VARIANT_SERVICE_DB_PASSWORD "$(kv_dual_read "${variant_db_payload}" password spring.datasource.password)"
   fi
 
   if [[ -n "${auth_jwt_payload}" ]]; then

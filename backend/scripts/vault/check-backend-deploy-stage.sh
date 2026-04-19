@@ -108,8 +108,18 @@ main() {
     OPENFGA_STORE_ID
     OPENFGA_MODEL_ID
     ERP_OPENFGA_ENABLED
+    # 2026-04-18 Rehearsal #4 post-deploy L4/L5 FAIL resolution: ERP_OPENFGA_*
+    # are the service-level compose contract (report-service, core-data-service
+    # read these in application.yml); OPENFGA_* above are for canary/init
+    # tooling. Both canonical, duplicates acceptable (Codex thread 019da02f).
+    ERP_OPENFGA_STORE_ID
+    ERP_OPENFGA_MODEL_ID
     SCOPE_CACHE_ENABLED
     AUTHZ_VERSION_ENABLED
+    # 2026-04-18 Rehearsal #4 post-deploy L7 prevention + fullfill: AUTHZ_USER_TABLE
+    # compose fallback works (user_service.users) but drift guard requires
+    # explicit canonical-env value — default dependency treated as risk.
+    AUTHZ_USER_TABLE
     CORE_DATA_DB_URL
     CORE_DATA_DB_USERNAME
     CORE_DATA_DB_PASSWORD
@@ -119,8 +129,15 @@ main() {
     # (https://ai.acik.com/realms/serban) ile gelir, compose default silent
     # 401/500 üretir. Canonical env'de explicit issuer override + audience
     # allowlist zorunlu (doğrulandı: #426 PR Codex CNS-20260416-003).
+    # NOTE: report-service reads ISSUER (not ISSUERS); both must be canonical.
     SECURITY_JWT_ISSUER
     SECURITY_JWT_ISSUERS
+    # SECURITY_JWT_SECONDARY_AUDIENCE + KC_HOSTNAME trio are intentionally NOT
+    # required here — render-backend-env.sh (deploy/ubuntu) injects canonical
+    # stage defaults when Vault KV values are empty (OI-03 canary + browser
+    # login fix). Operators MAY push custom values via
+    # write-backend-deploy-stage.sh; when unset the render layer still
+    # produces working audience allowlist + public KC hostname.
     SECURITY_AUTH_ALLOWED_CLIENT_IDS
   )
   local github_base_required=(
