@@ -636,7 +636,14 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
 
     const fetchRegistry = async () => {
       try {
-        const response = await api.get<ThemeRegistryEntry[]>('/v1/theme-registry');
+        // QLTY-PROACTIVE-02 (2026-04-19): theme-registry is a public contract
+        // (CSS var metadata, not sensitive). Calling anonymously avoids the
+        // bootstrap race where a stale/wrong-aud token in localStorage causes
+        // a 401 because Spring's permitAll() still invokes the JWT filter when
+        // a Bearer header is present.
+        const response = await api.get<ThemeRegistryEntry[]>('/v1/theme-registry', {
+          __skipAuth: true,
+        } as never);
         if (cancelled) return;
         const next: Record<string, string[]> = {};
         (response.data ?? []).forEach((entry) => {

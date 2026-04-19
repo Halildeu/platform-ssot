@@ -259,8 +259,13 @@ export const ThemeRuntimePanelButton: React.FC = () => {
       setThemeRegistryLoading(true);
       setThemeRegistryError(null);
       try {
+        // QLTY-PROACTIVE-02 (2026-04-19): anonymous call — see theme-context.provider.tsx
+        // fetchRegistry() comment for full rationale. Public endpoint, avoids
+        // bootstrap-race 401s caused by stale/wrong-aud persisted tokens.
         const response =
-          await api.get<ThemeRegistryEntry[]>("/v1/theme-registry");
+          await api.get<ThemeRegistryEntry[]>("/v1/theme-registry", {
+            __skipAuth: true,
+          } as never);
         if (cancelled) return;
         setThemeRegistry(response.data ?? []);
       } catch {
