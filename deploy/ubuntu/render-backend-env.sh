@@ -237,6 +237,14 @@ main() {
   # so deploys remain safe during Vault KV rollout window (Codex 019da26d).
   local kc_hostname_default="https://ai.acik.com"
   local kc_proxy_headers_default="xforwarded"
+  # 2026-04-19 Zanzibar-25 follow-up: EUREKA_SERVER_URL compose default drift.
+  # docker-compose.yml auth-service (line 125) + variant-service (line 186)
+  # had `EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}` WITHOUT default — canonical
+  # env missing key → blank env var → service couldn't discover Eureka →
+  # variant-service register failed → gateway lb://VARIANT-SERVICE 503 on
+  # /api/v1/theme-registry, /api/v1/me/theme/resolved. Ops fix: added to
+  # canonical env; this render drift-guard keeps it through re-renders.
+  local eureka_server_url_default="http://discovery-server:8761/eureka"
   local kc_hostname_backchannel_dynamic_default="true"
   # STORY-0319 PR #3c — AppRole-first Vault auth migration.
   # VAULT_TOKEN canonical env'e yazılmaz (deploy-backend.sh:185
@@ -447,6 +455,17 @@ main() {
     value="${kc_hostname_backchannel_dynamic_default}"
   fi
   write_kv "${tmp_file}" "KC_HOSTNAME_BACKCHANNEL_DYNAMIC" "${value}"
+
+  # 2026-04-19 — EUREKA_SERVER_URL drift-guard (compose dual-mode period).
+  # Vault KV value has priority; empty → canonical compose default (internal
+  # discovery-server DNS). Note: k8s profile explicitly disables eureka via
+  # application-k8s.yml; this default is only for compose stack runtime.
+  value="$(printf '%s' "${payload}" | json_get "EUREKA_SERVER_URL")"
+  if [[ -z "${value}" ]]; then
+    value="${eureka_server_url_default}"
+    echo "[render] EUREKA_SERVER_URL not in Vault KV — writing canonical compose default" >&2
+  fi
+  write_kv "${tmp_file}" "EUREKA_SERVER_URL" "${value}"
 
   keycloak_issuer_uri="$(printf '%s' "${payload}" | json_get "KEYCLOAK_ISSUER_URI")"
   keycloak_public_issuer_uri="$(printf '%s' "${payload}" | json_get "KEYCLOAK_PUBLIC_ISSUER_URI")"
