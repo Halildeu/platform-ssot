@@ -69,8 +69,8 @@
       "docs/04-operations/RUNBOOKS/RB-ubuntu-backend-github-vault-deploy.md",
       "docs/04-operations/RUNBOOKS/RB-vault-dev-path-migration.md",
       "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
-      "web/apps/mfe-shell/src/app/layout/**/*",
-      "web/apps/mfe-shell/src/app/theme/**/*",
+      "web/apps/mfe-shell/src/app/layout/*",
+      "web/apps/mfe-shell/src/app/theme/*",
       "web/packages/shared-http/src/*"
     ],
     "repo_root": ".",
@@ -349,10 +349,25 @@
         "path_glob": "web/apps/mfe-shell/src/pages/home/*.tsx",
         "ux_theme_id": "consistency_and_pattern_governance",
         "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/layout/*.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/theme/*.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/packages/shared-http/src/*.ts",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
       }
     ],
     "mode": "REQUIRED",
-    "rationale": "Frontend auth SDK: useZanzibarAccess hook, ZanzibarGate component, batch check API \u2014 object-level Zanzibar permission gates."
+    "rationale": "Frontend auth SDK: useZanzibarAccess hook, ZanzibarGate component, batch check API \u2014 object-level Zanzibar permission gates. Also covers: theme-registry public endpoint anonymous-call fix (QLTY-PROACTIVE-02) via shared-http __skipAuth flag + theme-context.provider + ThemeRuntimePanelButton consumers."
   },
   "version": "v1"
 }
