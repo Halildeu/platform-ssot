@@ -153,6 +153,8 @@ PY
   VAULT_ADDR="${VAULT_ADDR}" \
   VAULT_TOKEN="${APPROLE_CLIENT_TOKEN}" \
   OUTPUT_FILE="${OUTPUT_FILE:-/home/halil/platform/env/backend.env}" \
+  AUDIT_BACKEND_URI="${AUDIT_BACKEND_URI:-}" \
+  STAGING_SWEEPER_CLIENT_SECRET="${STAGING_SWEEPER_CLIENT_SECRET:-}" \
   "${SCRIPT_DIR}/render-backend-env.sh"
 }
 

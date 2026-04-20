@@ -539,6 +539,21 @@ main() {
     write_kv_if_present "${tmp_file}" AUTH_SERVICE_JWT_PUBLIC_KEY "$(kv_get_value "${auth_jwt_payload}" publicKey)"
   fi
 
+  # 2026-04-20 QLTY-PROACTIVE-06 Faz 1/2 — audit consolidation env vars.
+  # Passed via deploy-backend GH workflow (env:) to this script. Previously
+  # manual additions to canonical env were wiped on every deploy ("staging
+  # canonical env drift" class — see feedback_staging_canonical_env_drift).
+  #
+  # AUDIT_BACKEND_URI            governs gateway routes[5] owner
+  #                              (lb://USER-SERVICE legacy vs. lb://PERMISSION-SERVICE
+  #                              consolidation target). Faz 4 removes flag entirely.
+  # STAGING_SWEEPER_CLIENT_SECRET confidential client secret for staging-sweeper
+  #                              KC client (provisioned via kc-provision-staging-
+  #                              sweeper.sh). Used by compare endpoint integration
+  #                              tests + Lane B crawler.
+  write_kv_if_present "${tmp_file}" AUDIT_BACKEND_URI "${AUDIT_BACKEND_URI:-}"
+  write_kv_if_present "${tmp_file}" STAGING_SWEEPER_CLIENT_SECRET "${STAGING_SWEEPER_CLIENT_SECRET:-}"
+
   mv "${tmp_file}" "${OUTPUT_FILE}"
   chmod 600 "${OUTPUT_FILE}"
 

@@ -418,6 +418,16 @@ jobs:
           RENDER_ENV_BEFORE_DEPLOY_INPUT: ${{ github.event.inputs.render_env_before_deploy }}
           BUILD_LOCAL_INPUT: ${{ github.event.inputs.build_local }}
           DOCKER_PULL_POLICY_INPUT: ${{ github.event.inputs.docker_pull_policy }}
+          # 2026-04-20 QLTY-PROACTIVE-06 Faz 1/2 — audit consolidation env.
+          # render-backend-env.sh picks these up (write_kv_if_present) and
+          # persists them to canonical backend.env across deploys. Previously
+          # manual additions were wiped on every deploy (canonical env drift).
+          # AUDIT_BACKEND_URI: stage default = consolidation target.
+          #                    Override via vars if operator needs rollback.
+          # STAGING_SWEEPER_CLIENT_SECRET: confidential secret from staging-
+          #                    sweeper KC client (kc-provision-staging-sweeper.sh).
+          AUDIT_BACKEND_URI: ${{ vars.AUDIT_BACKEND_URI || 'lb://PERMISSION-SERVICE' }}
+          STAGING_SWEEPER_CLIENT_SECRET: ${{ secrets.STAGING_SWEEPER_CLIENT_SECRET }}
         shell: bash
         run: |
           set -euo pipefail
