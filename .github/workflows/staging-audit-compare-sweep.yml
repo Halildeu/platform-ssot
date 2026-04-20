@@ -59,7 +59,10 @@ jobs:
         id: compare
         shell: bash
         env:
-          ADMIN_PASS: ${{ secrets.PW_REAL_USER_PASSWORD }}
+          # 2026-04-20 post-deploy fix: PW_REAL_USER_PASSWORD is user3@example.com
+          # (used by stage-keycloak-smoke-user); audit compare needs admin@example.com
+          # which has AUDIT.manager. STAGING_ADMIN_PASS is a separate dedicated secret.
+          ADMIN_PASS: ${{ secrets.STAGING_ADMIN_PASS }}
           SWEEPER_CLIENT_SECRET: ${{ secrets.STAGING_SWEEPER_CLIENT_SECRET }}
           PAGE: ${{ inputs.page || '1' }}
           PAGE_SIZE: ${{ inputs.page_size || '50' }}
