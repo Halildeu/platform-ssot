@@ -1,0 +1,96 @@
+name: staging-audit-compare-sweep
+
+# 2026-04-20 QLTY-PROACTIVE-06 Faz 2 monitoring lane.
+# Daily parity-evidence poll against /api/audit/events/compare so the operator
+# can accumulate multi-day verdict history before promoting Faz 4 (dead-code
+# cleanup) or Faz 5 (user_audit_events table drop).
+#
+# Verdict meaning (see backend/permission-service/.../AuditCompareService):
+#   clean                        totals match, no id or field drift
+#   id-drift                     totals match but id sets differ
+#   count-drift                  totals diverge
+#   field-drift                  same ids, different field values
+#   user-service-unreachable     HTTP call failed
+#   endpoint-error               /compare returned non-200
+#
+# Exit codes:
+#   0 (workflow success + clean) → green
+#   1 (drift, soft) → yellow (comment + artifact)
+#   2 (hard error) → red (fail workflow)
+
+on:
+  schedule:
+    - cron: '0 4 * * *'   # daily at 04:00 UTC
+  workflow_dispatch:
+    inputs:
+      page:
+        description: "Page number (1-based)"
+        required: false
+        default: "1"
+        type: string
+      page_size:
+        description: "Page size"
+        required: false
+        default: "50"
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: staging-audit-compare-sweep
+  cancel-in-progress: false
+
+jobs:
+  compare:
+    runs-on:
+      - self-hosted
+      - linux
+      - x64
+      - stage-backend
+    environment: stage
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Run audit-compare sweep
+        id: compare
+        shell: bash
+        env:
+          ADMIN_PASS: ${{ secrets.PW_REAL_USER_PASSWORD }}
+          SWEEPER_CLIENT_SECRET: ${{ secrets.STAGING_SWEEPER_CLIENT_SECRET }}
+          PAGE: ${{ inputs.page || '1' }}
+          PAGE_SIZE: ${{ inputs.page_size || '50' }}
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          chmod +x backend/scripts/ops/staging-audit-compare-sweep.sh
+          rc=0
+          backend/scripts/ops/staging-audit-compare-sweep.sh || rc=$?
+          echo "compare_rc=${rc}" >> "${GITHUB_OUTPUT}"
+          exit 0
+
+      - name: Upload compare report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-audit-compare-sweep-${{ github.run_id }}
+          path: .cache/reports/audit-compare-sweep-*.json
+          retention-days: 90
+          if-no-files-found: ignore
+
+      - name: Verdict gate
+        if: always()
+        shell: bash
+        env:
+          RC: ${{ steps.compare.outputs.compare_rc }}
+        run: |
+          set -euo pipefail
+          case "${RC:-0}" in
+            0) echo "::notice title=audit-compare-sweep::verdict=clean"; exit 0 ;;
+            1) echo "::warning title=audit-compare-sweep::parity drift — see artifact"; exit 0 ;;
+            2) echo "::error title=audit-compare-sweep::hard failure (unreachable or endpoint-error)"; exit 1 ;;
+            *) echo "::error title=audit-compare-sweep::script exited rc=${RC}"; exit 1 ;;
+          esac
