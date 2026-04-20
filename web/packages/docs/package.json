@@ -11,7 +11,7 @@
   "dependencies": {
     "@astrojs/starlight": "0.38.3",
     "@pagefind/default-ui": "^1.5.2",
-    "astro": "6.1.5",
+    "astro": "6.1.8",
     "sharp": "^0.34.5"
   }
 }
