@@ -78,7 +78,8 @@
       "web/apps/mfe-shell/src/app/theme/*",
       "web/packages/shared-http/src/*",
       "web/Dockerfile",
-      ".github/workflows/frontend-image.yml"
+      ".github/workflows/frontend-image.yml",
+      "web/.dockerignore"
     ],
     "repo_root": ".",
     "service_scopes": [
@@ -379,6 +380,11 @@
       },
       {
         "path_glob": "web/Dockerfile",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/.dockerignore",
         "ux_theme_id": "trust_privacy_security_ux",
         "ux_subtheme_id": "least_privilege_interaction_design"
       }

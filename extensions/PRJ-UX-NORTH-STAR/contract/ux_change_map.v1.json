@@ -627,6 +627,11 @@
       "path": "web/Dockerfile",
       "ux_theme_id": "consistency_and_pattern_governance",
       "ux_subtheme_id": "single_component_source_of_truth"
+    },
+    {
+      "path": "web/.dockerignore",
+      "ux_theme_id": "consistency_and_pattern_governance",
+      "ux_subtheme_id": "single_component_source_of_truth"
     }
   ]
 }
