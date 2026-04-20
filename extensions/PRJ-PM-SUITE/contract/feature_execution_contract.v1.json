@@ -62,6 +62,7 @@
       "backend/scripts/perf/run-zanzibar-canary.sh",
       "web/scripts/ops/*",
       "backend/scripts/vault/*",
+      ".github/workflows/staging-audit-compare-sweep.yml",
       ".github/workflows/staging-error-sweep.yml",
       "backend/scripts/verify-service-jwt-env.sh",
       "backend/user-service/src/main/java/com/example/user/config/*",
