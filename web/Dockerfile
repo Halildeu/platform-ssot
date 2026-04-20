@@ -4,6 +4,7 @@
 # GHCR target: ghcr.io/halildeu/platform-ssot-frontend:sha-<short>
 #
 # 2026-04-20: ADR-0002 K8s migration Faz B kapanış (testai/ai UI artifact)
+# Build context: ./web (workflow frontend-image.yml)
 
 # Stage 1: Builder
 FROM node:22-alpine AS builder
@@ -11,21 +12,21 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 # pnpm via corepack (npm-compatible, lock file deterministic)
-RUN corepack enable && corepack prepare pnpm@9 --activate
+RUN corepack enable && corepack prepare pnpm@10 --activate
 
-# Manifest first (cache layer)
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml* ./
-COPY apps ./apps
-COPY packages ./packages
-COPY design-tokens ./design-tokens
-COPY tsconfig*.json ./
-COPY vite.config.* webpack.config.* ./
+# Workspace manifests first (cache layer)
+# pnpm-workspace.yaml ile monorepo; install cache için kök manifest + lock
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml* .npmrc* ./
 
-# Workspace dependencies install (frozen lockfile = reproducible)
+# Tüm kaynak (scripts, apps, packages, design-tokens, tsconfig, configs)
+# .dockerignore node_modules + dist + cache exclude eder
+COPY . .
+
+# Workspace install (frozen lockfile = reproducible, tüm workspace packages dahil)
 RUN pnpm install --frozen-lockfile --prod=false
 
-# Build (tüm MFE: shell + remotes)
-# Output: dist/ubuntu-single-domain (single-domain Module Federation layout)
+# Build (scripts/deploy/build-single-domain.mjs → dist/ubuntu-single-domain)
+# Single-domain Module Federation layout (tek host nginx arkasında shell+remotes)
 RUN pnpm run build:ubuntu:single-domain
 
 # Stage 2: Runtime (nginx serve)
@@ -85,4 +86,3 @@ EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
   CMD wget -q -O- http://localhost/healthz | grep -q 'ok' || exit 1
-
