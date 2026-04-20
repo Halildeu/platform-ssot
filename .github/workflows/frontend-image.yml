@@ -53,8 +53,8 @@ jobs:
       - name: Build + push (sha + main-stable)
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: web/Dockerfile
+          context: ./web       # web/ altında apps+packages+design-tokens var
+          file: ./web/Dockerfile
           push: true
           tags: |
             ${{ steps.meta.outputs.image }}
