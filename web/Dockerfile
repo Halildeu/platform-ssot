@@ -1,13 +1,37 @@
 # Frontend MFE — K8s deployment Docker image
 # Multi-stage build: pnpm install + build + nginx serve
 # Used by platform-k8s-gitops kustomize/base/apps/frontend/deployment.yaml
-# GHCR target: ghcr.io/halildeu/platform-ssot-frontend:sha-<short>
+# GHCR target (2 env): ghcr.io/halildeu/platform-ssot-frontend-{prod,testai}:sha-<short>
 #
-# 2026-04-20: ADR-0002 K8s migration Faz B kapanış (testai/ai UI artifact)
+# 2026-04-20: ADR-0002 Faz E env-per-build (host nginx sub_filter hack kaldır).
 # Build context: ./web (workflow frontend-image.yml)
+#
+# Build args (default: prod):
+#   --build-arg VITE_KEYCLOAK_URL=https://ai.acik.com
+#   --build-arg VITE_KEYCLOAK_REALM=serban
+#   --build-arg VITE_FRONTEND_PUBLIC_ORIGIN=https://ai.acik.com
+# Test build:
+#   --build-arg VITE_KEYCLOAK_URL=https://testai.acik.com
+#   --build-arg VITE_KEYCLOAK_REALM=platform-test
+#   --build-arg VITE_FRONTEND_PUBLIC_ORIGIN=https://testai.acik.com
 
 # Stage 1: Builder
 FROM node:22-alpine AS builder
+
+# Build-time env (webpack DefinePlugin inline; runtime'da process.env[key] bulur)
+ARG VITE_KEYCLOAK_URL=https://ai.acik.com
+ARG VITE_KEYCLOAK_REALM=serban
+ARG VITE_KEYCLOAK_CLIENT_ID=frontend
+ARG VITE_FRONTEND_PUBLIC_ORIGIN=https://ai.acik.com
+ARG VITE_GATEWAY_URL=https://ai.acik.com
+ARG VITE_AUTH_MODE=keycloak
+
+ENV VITE_KEYCLOAK_URL=${VITE_KEYCLOAK_URL} \
+    VITE_KEYCLOAK_REALM=${VITE_KEYCLOAK_REALM} \
+    VITE_KEYCLOAK_CLIENT_ID=${VITE_KEYCLOAK_CLIENT_ID} \
+    VITE_FRONTEND_PUBLIC_ORIGIN=${VITE_FRONTEND_PUBLIC_ORIGIN} \
+    VITE_GATEWAY_URL=${VITE_GATEWAY_URL} \
+    VITE_AUTH_MODE=${VITE_AUTH_MODE}
 
 WORKDIR /app
 
@@ -26,7 +50,7 @@ COPY . .
 RUN pnpm install --frozen-lockfile --prod=false
 
 # Build (scripts/deploy/build-single-domain.mjs → dist/ubuntu-single-domain)
-# Single-domain Module Federation layout (tek host nginx arkasında shell+remotes)
+# Build-time VITE_* env vars webpack DefinePlugin inline eder bundle'a
 RUN pnpm run build:ubuntu:single-domain
 
 # Stage 2: Runtime (nginx serve)

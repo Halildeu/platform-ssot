@@ -1,8 +1,8 @@
 name: frontend-image
 
-# 2026-04-20: ADR-0002 Faz B kapanış — Frontend MFE Docker image GHCR push
-# K8s testai/ai için pod image. Mevcut deploy-web.yml host nginx volume mount
-# pattern'i compose için kalır; bu workflow K8s deployment için image üretir.
+# 2026-04-20: ADR-0002 Faz E env-per-build (sub_filter hack yerine)
+# Matrix build: prod + testai ayrı image (Dockerfile ARG + GHCR tag suffix)
+# K8s overlays/{prod,test}/kustomization.yaml → image newName suffix'e göre
 
 on:
   push:
@@ -23,9 +23,21 @@ concurrency:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
-    env:
-      IMAGE_NAME: platform-ssot-frontend
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - env: prod
+            suffix: ""
+            keycloak_url: "https://ai.acik.com"
+            keycloak_realm: "serban"
+            public_origin: "https://ai.acik.com"
+          - env: testai
+            suffix: "-testai"
+            keycloak_url: "https://testai.acik.com"
+            keycloak_realm: "platform-test"
+            public_origin: "https://testai.acik.com"
     steps:
       - uses: actions/checkout@v6
         with:
@@ -36,9 +48,11 @@ jobs:
         run: |
           owner_lower="$(printf '%s' "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')"
           short_sha="${GITHUB_SHA:0:7}"
+          image_name="platform-ssot-frontend${{ matrix.suffix }}"
           echo "owner=${owner_lower}" >> "$GITHUB_OUTPUT"
+          echo "image_name=${image_name}" >> "$GITHUB_OUTPUT"
           echo "tag=sha-${short_sha}" >> "$GITHUB_OUTPUT"
-          echo "image=ghcr.io/${owner_lower}/${IMAGE_NAME}:sha-${short_sha}" >> "$GITHUB_OUTPUT"
+          echo "image=ghcr.io/${owner_lower}/${image_name}:sha-${short_sha}" >> "$GITHUB_OUTPUT"
 
       - name: GHCR login
         uses: docker/login-action@v3
@@ -50,29 +64,35 @@ jobs:
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build + push (sha + main-stable)
+      - name: Build + push (${{ matrix.env }})
         uses: docker/build-push-action@v6
         with:
-          context: ./web       # web/ altında apps+packages+design-tokens var
+          context: ./web
           file: ./web/Dockerfile
           push: true
+          build-args: |
+            VITE_KEYCLOAK_URL=${{ matrix.keycloak_url }}
+            VITE_KEYCLOAK_REALM=${{ matrix.keycloak_realm }}
+            VITE_FRONTEND_PUBLIC_ORIGIN=${{ matrix.public_origin }}
+            VITE_GATEWAY_URL=${{ matrix.public_origin }}
           tags: |
             ${{ steps.meta.outputs.image }}
-            ghcr.io/${{ steps.meta.outputs.owner }}/${{ env.IMAGE_NAME }}:main-stable
-          cache-from: type=gha,scope=frontend-image
-          cache-to: type=gha,mode=max,scope=frontend-image
+            ghcr.io/${{ steps.meta.outputs.owner }}/${{ steps.meta.outputs.image_name }}:main-stable
+          cache-from: type=gha,scope=frontend-${{ matrix.env }}
+          cache-to: type=gha,mode=max,scope=frontend-${{ matrix.env }}
           provenance: false
 
       - name: Summary
         run: |
-          echo "## Frontend MFE GHCR push" >> "$GITHUB_STEP_SUMMARY"
+          echo "## Frontend MFE GHCR push — ${{ matrix.env }}" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "- Image: \`${{ steps.meta.outputs.image }}\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Tag (moving): \`main-stable\` (D30 dikkat — K8s overlay sha pin önerilir)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- VITE_KEYCLOAK_URL: \`${{ matrix.keycloak_url }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- VITE_KEYCLOAK_REALM: \`${{ matrix.keycloak_realm }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "**K8s overlay bump (platform-k8s-gitops repo):**" >> "$GITHUB_STEP_SUMMARY"
           echo '```yaml' >> "$GITHUB_STEP_SUMMARY"
           echo "  - name: frontend" >> "$GITHUB_STEP_SUMMARY"
-          echo "    newName: ghcr.io/${{ steps.meta.outputs.owner }}/${{ env.IMAGE_NAME }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "    newName: ghcr.io/${{ steps.meta.outputs.owner }}/${{ steps.meta.outputs.image_name }}" >> "$GITHUB_STEP_SUMMARY"
           echo "    newTag: ${{ steps.meta.outputs.tag }}" >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
