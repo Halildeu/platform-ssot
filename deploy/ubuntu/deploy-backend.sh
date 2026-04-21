@@ -368,6 +368,7 @@ wait_for_container_state() {
   local timeout_seconds="${3:-90}"
   local deadline
   local state=""
+  local health_state=""
   # Terminal-state tolerance window: some services (notably vault with auto-unseal)
   # briefly report `unhealthy` between restart and unseal. Requiring 3 consecutive
   # terminal-state polls before fail lets auto-recovery complete. Fixes the
@@ -380,7 +381,13 @@ wait_for_container_state() {
   deadline=$((SECONDS + timeout_seconds))
 
   while (( SECONDS < deadline )); do
-    state="$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "${container_name}" 2>/dev/null || true)"
+    state="$(docker inspect -f '{{.State.Status}}' "${container_name}" 2>/dev/null || true)"
+    health_state="$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "${container_name}" 2>/dev/null || true)"
+    if [[ "${expected}" == "running" ]]; then
+      state="${state}"
+    else
+      state="${health_state}"
+    fi
 
     if [[ "${state}" == "${expected}" ]]; then
       echo "[wait] ${container_name} -> ${state}"
