@@ -486,6 +486,71 @@ main() {
   }
   validate_and_fix_vault_uri
 
+  rewrite_postgres_jdbc_host() {
+    local jdbc_url="$1"
+    local canonical_pg_host="$2"
+
+    if [[ "${jdbc_url}" =~ ^(jdbc:postgresql://)([^/:]+)(:.*)$ ]]; then
+      printf '%s%s%s' "${BASH_REMATCH[1]}" "${canonical_pg_host}" "${BASH_REMATCH[3]}"
+      return 0
+    fi
+
+    printf '%s' "${jdbc_url}"
+  }
+
+  validate_and_fix_postgres_targets() {
+    local canonical_pg_host="postgres-db"
+    local env_name
+    local key
+    local current_value
+    local updated_value
+    local jdbc_keys=(
+      AUTH_SERVICE_DB_URL
+      AUTH_DB_URL
+      USER_SERVICE_DB_URL
+      USER_DB_URL
+      VARIANT_SERVICE_DB_URL
+      VARIANT_DB_URL
+      CORE_DATA_DB_URL
+      PERMISSION_SERVICE_DB_URL
+      PERMISSION_DB_URL
+      REPORT_DB_URL
+    )
+
+    env_name="$(printf '%s' "${DEPLOY_ENV}" | tr '[:upper:]' '[:lower:]')"
+    if [[ "${external_stage_stateful}" == "true" ]]; then
+      canonical_pg_host="platform-pg-test"
+    elif [[ "${env_name}" == "prod" || "${env_name}" == "production" ]] && docker inspect platform-pg-prod >/dev/null 2>&1; then
+      canonical_pg_host="platform-pg-prod"
+    fi
+
+    for key in "${jdbc_keys[@]}"; do
+      current_value="$(read_env_value "${key}")"
+      [[ -n "${current_value}" ]] || continue
+
+      updated_value="$(rewrite_postgres_jdbc_host "${current_value}" "${canonical_pg_host}")"
+      if [[ "${updated_value}" == "${current_value}" ]]; then
+        continue
+      fi
+
+      echo "[deploy] WARNING: non-canonical ${key} detected: ${current_value}" >&2
+      echo "[deploy] overriding with canonical: ${updated_value}" >&2
+      upsert_env_value "${key}" "${updated_value}"
+      printf -v "${key}" '%s' "${updated_value}"
+      export "${key}"
+    done
+
+    current_value="$(read_env_value REPORT_PG_HOST)"
+    if [[ -n "${current_value}" && "${current_value}" != "${canonical_pg_host}" ]]; then
+      echo "[deploy] WARNING: non-canonical REPORT_PG_HOST detected: ${current_value}" >&2
+      echo "[deploy] overriding with canonical: ${canonical_pg_host}" >&2
+    fi
+    upsert_env_value REPORT_PG_HOST "${canonical_pg_host}"
+    export REPORT_PG_HOST="${canonical_pg_host}"
+    echo "[deploy] REPORT_PG_HOST=${canonical_pg_host}"
+  }
+  validate_and_fix_postgres_targets
+
   REPO_BRANCH="${PINNED_REPO_BRANCH}"
   sync_repo
   mkdir -p "${STATE_DIR}"
