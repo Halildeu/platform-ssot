@@ -64,3 +64,11 @@ web/.eslintcache
 
 # Multi-agent worktree coordination registry (runtime state, shared across worktrees via canonical root).
 .worktree-registry.json
+
+# Local CI/tool artifact output dir (2026-04-20): workflows write coverage, FEC, and
+# observability reports here during dev/CI runs. Never committed to main — regenerable.
+# Previously these 5 files ended up as untracked noise in worktrees:
+#   - coverage_visibility.v1.{json,md}
+#   - feature_execution_contract_ci.v1.json
+#   - observability_coverage_matrix.v1.{json,md}
+reports/
