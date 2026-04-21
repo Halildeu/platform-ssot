@@ -11,6 +11,7 @@ POLICY_DIR="${REPO_ROOT}/backend/infra/vault/policies"
 
 RUNTIME_POLICY_TEMPLATE="${RUNTIME_POLICY_TEMPLATE:-${POLICY_DIR}/backend-deploy-runtime.hcl}"
 ROTATION_POLICY_TEMPLATE="${ROTATION_POLICY_TEMPLATE:-${POLICY_DIR}/backend-deploy-rotation.hcl}"
+VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-secret}"
 
 RUNTIME_POLICY_NAME="${RUNTIME_POLICY_NAME:-backend-deploy-runtime-${ENV_NAME}}"
 ROTATION_POLICY_NAME="${ROTATION_POLICY_NAME:-backend-deploy-rotation-${ENV_NAME}}"
@@ -27,13 +28,20 @@ require_cmd() {
 render_policy() {
   local template_path="$1"
   local out_path="$2"
+  local kv_mount
+
+  kv_mount="${VAULT_KV_MOUNT#/}"
+  kv_mount="${kv_mount%/}"
 
   if [[ ! -f "${template_path}" ]]; then
     echo "[error] policy template missing: ${template_path}" >&2
     exit 1
   fi
 
-  sed "s/{{env}}/${ENV_NAME}/g" "${template_path}" > "${out_path}"
+  sed \
+    -e "s|{{env}}|${ENV_NAME}|g" \
+    -e "s|{{kv_mount}}|${kv_mount}|g" \
+    "${template_path}" > "${out_path}"
 }
 
 ensure_approle_enabled() {
