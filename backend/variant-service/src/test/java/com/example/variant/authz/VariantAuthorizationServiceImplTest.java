@@ -67,6 +67,34 @@ class VariantAuthorizationServiceImplTest {
         assertThat(ctx.isAdmin()).isTrue();
     }
 
+    @Test
+    void fallsBackToAuthzMeUserIdAndRolesWhenJwtCarriesOnlyIdentityClaims() {
+        CountingStubClient client = new CountingStubClient();
+        AuthzMeResponse response = new AuthzMeResponse();
+        response.setUserId("2");
+        response.setRoles(List.of("ADMIN"));
+        response.setPermissions(List.of("VARIANTS_READ", "MANAGE_GLOBAL_VARIANTS"));
+        client.setResponse(response);
+
+        VariantAuthorizationServiceImpl service = new VariantAuthorizationServiceImpl(client, Duration.ofSeconds(1));
+
+        Jwt jwt = Jwt.withTokenValue("t")
+                .header("alg", "RS256")
+                .subject("4d844c0f-2c3e-4fc0-b4f2-4ed72d7ee316")
+                .claim("email", "testuser@testai.acik.com")
+                .issuedAt(Instant.now())
+                .expiresAt(Instant.now().plusSeconds(60))
+                .build();
+
+        AuthorizationContext ctx = service.buildContext(jwt);
+
+        assertThat(ctx.getUserId()).isEqualTo(2L);
+        assertThat(ctx.getEmail()).isEqualTo("testuser@testai.acik.com");
+        assertThat(ctx.getRoles()).contains("ADMIN");
+        assertThat(ctx.isAdmin()).isTrue();
+        assertThat(ctx.getPermissions()).contains("VARIANTS_READ", "MANAGE_GLOBAL_VARIANTS");
+    }
+
     private AuthzMeResponse buildAuthzMeResponse() {
         AuthzMeResponse response = new AuthzMeResponse();
         response.setUserId("42");
