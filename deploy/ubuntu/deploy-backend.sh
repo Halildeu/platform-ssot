@@ -308,6 +308,20 @@ bridge_external_stage_stateful() {
   done
 }
 
+stage_uses_external_stateful() {
+  local stage_like
+
+  stage_like="$(printf '%s' "${DEPLOY_ENV}" | tr '[:upper:]' '[:lower:]')"
+  case "${stage_like}" in
+    stage|staging) ;;
+    *) return 1 ;;
+  esac
+
+  docker inspect platform-pg-test >/dev/null 2>&1 || return 1
+  docker inspect platform-vault-test >/dev/null 2>&1 || return 1
+  docker inspect platform-kc-test >/dev/null 2>&1 || return 1
+}
+
 preflight_stage_external_contract() {
   local stage_like
   local current_pg_db
@@ -348,11 +362,10 @@ container_name_for() {
   printf 'platform-%s-1' "$1"
 }
 
-wait_for_service_state() {
-  local service="$1"
+wait_for_container_state() {
+  local container_name="$1"
   local expected="$2"
   local timeout_seconds="${3:-90}"
-  local container_name
   local deadline
   local state=""
   # Terminal-state tolerance window: some services (notably vault with auto-unseal)
@@ -364,43 +377,50 @@ wait_for_service_state() {
   local terminal_streak=0
   local terminal_streak_threshold=3
 
-  container_name="$(container_name_for "${service}")"
   deadline=$((SECONDS + timeout_seconds))
 
   while (( SECONDS < deadline )); do
     state="$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "${container_name}" 2>/dev/null || true)"
 
     if [[ "${state}" == "${expected}" ]]; then
-      echo "[wait] ${service} -> ${state}"
+      echo "[wait] ${container_name} -> ${state}"
       return 0
     fi
 
     case "${state}" in
       unhealthy|exited|dead)
         terminal_streak=$((terminal_streak + 1))
-        echo "[wait] ${service} -> ${state} (streak ${terminal_streak}/${terminal_streak_threshold})"
+        echo "[wait] ${container_name} -> ${state} (streak ${terminal_streak}/${terminal_streak_threshold})"
         if (( terminal_streak >= terminal_streak_threshold )); then
-          echo "[error] ${service} reached terminal state: ${state} (${terminal_streak} consecutive polls)" >&2
+          echo "[error] ${container_name} reached terminal state: ${state} (${terminal_streak} consecutive polls)" >&2
           docker logs --tail 200 "${container_name}" || true
           return 1
         fi
         ;;
       "")
         terminal_streak=0
-        echo "[wait] ${service} -> missing"
+        echo "[wait] ${container_name} -> missing"
         ;;
       *)
         terminal_streak=0
-        echo "[wait] ${service} -> ${state}"
+        echo "[wait] ${container_name} -> ${state}"
         ;;
     esac
 
     sleep 2
   done
 
-  echo "[error] timeout waiting for ${service} to become ${expected}; last_state=${state}" >&2
+  echo "[error] timeout waiting for ${container_name} to become ${expected}; last_state=${state}" >&2
   docker logs --tail 200 "${container_name}" || true
   return 1
+}
+
+wait_for_service_state() {
+  local service="$1"
+  local expected="$2"
+  local timeout_seconds="${3:-90}"
+
+  wait_for_container_state "$(container_name_for "${service}")" "${expected}" "${timeout_seconds}"
 }
 
 main() {
@@ -413,6 +433,10 @@ main() {
   load_env_file
   bridge_external_stage_stateful
   preflight_stage_external_contract
+  local external_stage_stateful="false"
+  if stage_uses_external_stateful; then
+    external_stage_stateful="true"
+  fi
 
   # --- Vault URI validation and correction ---
   # Canonical internal Vault address: http://vault:8200
@@ -589,21 +613,30 @@ main() {
     export DOCKER_PULL_POLICY="never"
   fi
 
-  # Ensure infrastructure is up (no recreate — prevents Vault seal, Keycloak cold-start).
-  # Only starts containers if not already running.
-  compose_run "${compose_args[@]}" up -d --no-recreate postgres-db openfga-migrate openfga vault keycloak
-  # P1.10: KMS auto-unseal mode skips the vault-unseal Shamir sidecar (Vault
-  # self-unseals via the cloud KMS seal stanza). VAULT_SEAL_MODE=shamir (or
-  # unset) keeps the legacy sidecar loop for local/staging.
-  if [[ "${VAULT_SEAL_MODE:-shamir}" != "shamir" ]]; then
-    echo "[deploy] VAULT_SEAL_MODE=${VAULT_SEAL_MODE} — skipping vault-unseal sidecar (KMS auto-unseal)"
-    compose_run "${compose_args[@]}" up -d --no-recreate vault-audit-init vault-snapshot 2>/dev/null || true
+  if [[ "${external_stage_stateful}" == "true" ]]; then
+    echo "[deploy] external stage stateful contract active — skipping internal postgres-db/vault/keycloak startup"
+    wait_for_container_state platform-pg-test healthy 60
+    wait_for_container_state platform-vault-test healthy 120
+    wait_for_container_state platform-kc-test running 120
+    compose_run "${compose_args[@]}" up -d --force-recreate --no-deps openfga-migrate openfga
+    wait_for_service_state openfga running 60
   else
-    compose_run "${compose_args[@]}" up -d --no-recreate vault-unseal vault-audit-init vault-snapshot 2>/dev/null || true
+    # Ensure infrastructure is up (no recreate — prevents Vault seal, Keycloak cold-start).
+    # Only starts containers if not already running.
+    compose_run "${compose_args[@]}" up -d --no-recreate postgres-db openfga-migrate openfga vault keycloak
+    # P1.10: KMS auto-unseal mode skips the vault-unseal Shamir sidecar (Vault
+    # self-unseals via the cloud KMS seal stanza). VAULT_SEAL_MODE=shamir (or
+    # unset) keeps the legacy sidecar loop for local/staging.
+    if [[ "${VAULT_SEAL_MODE:-shamir}" != "shamir" ]]; then
+      echo "[deploy] VAULT_SEAL_MODE=${VAULT_SEAL_MODE} — skipping vault-unseal sidecar (KMS auto-unseal)"
+      compose_run "${compose_args[@]}" up -d --no-recreate vault-audit-init vault-snapshot 2>/dev/null || true
+    else
+      compose_run "${compose_args[@]}" up -d --no-recreate vault-unseal vault-audit-init vault-snapshot 2>/dev/null || true
+    fi
+    wait_for_service_state postgres-db healthy 60
+    wait_for_service_state vault healthy 120
+    wait_for_service_state openfga running 60
   fi
-  wait_for_service_state postgres-db healthy 60
-  wait_for_service_state vault healthy 120
-  wait_for_service_state openfga running 60
 
   # Vault preflight — verify unsealed and accessible from deploy host
   vault_preflight() {
@@ -638,7 +671,9 @@ main() {
       return 1
     fi
   }
-  vault_preflight
+  if [[ "${external_stage_stateful}" != "true" ]]; then
+    vault_preflight
+  fi
 
   # Recreate backend services with new images (--force-recreate only touches these)
   compose_run "${compose_args[@]}" up -d --force-recreate --no-deps discovery-server
@@ -660,7 +695,11 @@ main() {
   # Ensure supporting services are up (idempotent).
   # Nginx config is generated from template via envsubst at container start —
   # Docker service names (keycloak, api-gateway) are ALWAYS correct.
-  compose_run "${compose_args[@]}" up -d --no-recreate web-nginx service-manager vault-audit-init vault-snapshot loki promtail tempo prometheus grafana 2>/dev/null || true
+  if [[ "${external_stage_stateful}" == "true" ]]; then
+    compose_run "${compose_args[@]}" up -d --no-recreate service-manager loki promtail tempo prometheus grafana 2>/dev/null || true
+  else
+    compose_run "${compose_args[@]}" up -d --no-recreate web-nginx service-manager vault-audit-init vault-snapshot loki promtail tempo prometheus grafana 2>/dev/null || true
+  fi
 
   # Standalone nginx handling — compose-aware:
   # - Prod compose (deploy/docker-compose.prod.yml) manages web-nginx as a service.
@@ -679,7 +718,11 @@ main() {
   # Remove orphan containers (old names, deleted services).
   # NOTE: --remove-orphans only touches orphans of THIS compose project. Standalone
   # nginx (no compose label) is unaffected by this call.
-  compose_run "${compose_args[@]}" up -d --remove-orphans 2>/dev/null || true
+  if [[ "${external_stage_stateful}" == "true" ]]; then
+    echo "[deploy] external stage stateful contract active — skipping blanket compose up --remove-orphans"
+  else
+    compose_run "${compose_args[@]}" up -d --remove-orphans 2>/dev/null || true
+  fi
 
   compose_run "${compose_args[@]}" ps
 
