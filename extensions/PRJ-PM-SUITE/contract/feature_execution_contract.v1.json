@@ -56,6 +56,7 @@
       "backend/api-gateway/src/main/resources/*",
       "backend/permission-service/src/main/java/com/example/permission/dto/*",
       "backend/variant-service/src/main/java/com/example/variant/security/*",
+      "backend/variant-service/src/main/java/com/example/variant/authz/*",
       "backend/scripts/ci/canary/zanzibar-canary-setup.mjs",
       "backend/scripts/doctor-infra.sh",
       "backend/scripts/ops/*",
@@ -121,7 +122,8 @@
         "backend/permission-service/**/*",
         "backend/user-service/**/*",
         "backend/common-auth/**/*",
-        "backend/api-gateway/**/*"
+        "backend/api-gateway/**/*",
+        "backend/variant-service/**/*"
       ],
       "governance": [
         "docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md",
