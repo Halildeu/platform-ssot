@@ -122,6 +122,7 @@ services:
       VAULT_ROLE_ID: ${VAULT_ROLE_ID:-}
       VAULT_SECRET_ID: ${VAULT_SECRET_ID:-}
       VAULT_SECRET_PREFIX: ${VAULT_SECRET_PREFIX:-stage}
+      VAULT_KV_MOUNT: ${VAULT_KV_MOUNT:-secret}
       VAULT_FAIL_FAST: ${VAULT_FAIL_FAST:-false}
       PERMISSION_SERVICE_BASE_URL: ${PERMISSION_SERVICE_BASE_URL:-http://permission-service}
       USER_SERVICE_BASE_URL: ${USER_SERVICE_BASE_URL:-http://user-service}
@@ -520,6 +521,7 @@ services:
       - VAULT_ROLE_ID=${VAULT_ROLE_ID:-}
       - VAULT_SECRET_ID=${VAULT_SECRET_ID:-}
       - VAULT_SECRET_PREFIX=${VAULT_SECRET_PREFIX:-stage}
+      - VAULT_KV_MOUNT=${VAULT_KV_MOUNT:-secret}
       - VAULT_FAIL_FAST=${VAULT_FAIL_FAST:-false}
       # Legacy internal API key doğrulaması kapatıldı (JWT zorunlu)
       - SECURITY_LEGACY_API_KEY_ENABLED=false
