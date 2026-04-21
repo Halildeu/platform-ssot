@@ -72,6 +72,16 @@ print(json.dumps(data))
 PY
 }
 
+pem_private_to_base64_der() {
+  local path="$1"
+  openssl pkcs8 -topk8 -nocrypt -in "${path}" -outform DER 2>/dev/null | base64 | tr -d '\n'
+}
+
+pem_public_to_base64_der() {
+  local path="$1"
+  openssl pkey -pubin -in "${path}" -outform DER 2>/dev/null | base64 | tr -d '\n'
+}
+
 kv_put() {
   local path="$1"
   local json="$2"
@@ -137,9 +147,9 @@ fi
 
 if [[ -n "${SERVICE_JWT_PRIVATE_KEY_PATH}" && -n "${SERVICE_JWT_PUBLIC_KEY_PATH}" ]]; then
   if [[ -f "${SERVICE_JWT_PRIVATE_KEY_PATH}" && -f "${SERVICE_JWT_PUBLIC_KEY_PATH}" ]]; then
-    priv="$(cat "${SERVICE_JWT_PRIVATE_KEY_PATH}")"
-    pub="$(cat "${SERVICE_JWT_PUBLIC_KEY_PATH}")"
-    jwt_payload="$(build_json privateKey "${priv}" publicKey "${pub}")"
+    priv="$(pem_private_to_base64_der "${SERVICE_JWT_PRIVATE_KEY_PATH}")"
+    pub="$(pem_public_to_base64_der "${SERVICE_JWT_PUBLIC_KEY_PATH}")"
+    jwt_payload="$(build_json privateKey "${priv}" publicKey "${pub}" keyId "${SERVICE_JWT_KEY_ID:-}")"
     kv_put "jwt/auth-service" "${jwt_payload}"
   else
     echo "[vault] skip jwt/auth-service (key files not found)"

@@ -154,6 +154,56 @@ write_kv() {
   printf '%s=%s\n' "${key}" "${value}" >> "${file}"
 }
 
+is_placeholder_secret_value() {
+  local value="$1"
+  local normalized
+
+  normalized="$(printf '%s' "${value}" | tr '[:upper:]' '[:lower:]')"
+  [[ "${normalized}" == placeholder* || "${normalized}" == changeme* || "${normalized}" == dummy* ]]
+}
+
+assert_single_line_base64_der() {
+  local key="$1"
+  local value="$2"
+
+  if [[ -z "${value}" ]]; then
+    echo "[error] ${key} is empty." >&2
+    exit 1
+  fi
+
+  if is_placeholder_secret_value "${value}"; then
+    echo "[error] ${key} contains a placeholder value; fix Vault JWT material before deploy." >&2
+    exit 1
+  fi
+
+  if [[ "${value}" == *$'\n'* || "${value}" == *' '* ]]; then
+    echo "[error] ${key} must be single-line base64 DER (no whitespace/newlines)." >&2
+    exit 1
+  fi
+
+  if ! python3 - "$key" "$value" <<'PY'
+import base64
+import binascii
+import sys
+
+key = sys.argv[1]
+value = sys.argv[2]
+
+try:
+    decoded = base64.b64decode(value, validate=True)
+except binascii.Error as exc:
+    print(f"[error] {key} is not valid standard base64 DER: {exc}", file=sys.stderr)
+    raise SystemExit(1)
+
+if not decoded:
+    print(f"[error] {key} decoded to empty payload.", file=sys.stderr)
+    raise SystemExit(1)
+PY
+  then
+    exit 1
+  fi
+}
+
 main() {
   require_cmd curl
   require_cmd python3
@@ -171,6 +221,9 @@ main() {
   local permission_db_payload
   local variant_db_payload
   local auth_jwt_payload
+  local auth_jwt_private
+  local auth_jwt_public
+  local auth_jwt_key_id
   local tmp_file
   local dir
   local missing=()
@@ -537,8 +590,20 @@ main() {
   fi
 
   if [[ -n "${auth_jwt_payload}" ]]; then
-    write_kv_if_present "${tmp_file}" AUTH_SERVICE_JWT_PRIVATE_KEY "$(kv_get_value "${auth_jwt_payload}" privateKey)"
-    write_kv_if_present "${tmp_file}" AUTH_SERVICE_JWT_PUBLIC_KEY "$(kv_get_value "${auth_jwt_payload}" publicKey)"
+    auth_jwt_private="$(kv_get_value "${auth_jwt_payload}" privateKey)"
+    auth_jwt_public="$(kv_get_value "${auth_jwt_payload}" publicKey)"
+    auth_jwt_key_id="$(kv_get_value "${auth_jwt_payload}" keyId)"
+
+    if [[ -n "${auth_jwt_private}" ]]; then
+      assert_single_line_base64_der AUTH_SERVICE_JWT_PRIVATE_KEY "${auth_jwt_private}"
+    fi
+    if [[ -n "${auth_jwt_public}" ]]; then
+      assert_single_line_base64_der AUTH_SERVICE_JWT_PUBLIC_KEY "${auth_jwt_public}"
+    fi
+
+    write_kv_if_present "${tmp_file}" AUTH_SERVICE_JWT_PRIVATE_KEY "${auth_jwt_private}"
+    write_kv_if_present "${tmp_file}" AUTH_SERVICE_JWT_PUBLIC_KEY "${auth_jwt_public}"
+    write_kv_if_present "${tmp_file}" SERVICE_JWT_KEY_ID "${auth_jwt_key_id}"
   fi
 
   # 2026-04-20 QLTY-PROACTIVE-06 Faz 1/2 — audit consolidation env vars.

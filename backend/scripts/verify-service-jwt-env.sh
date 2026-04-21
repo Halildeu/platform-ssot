@@ -17,4 +17,37 @@ if (( ${#MISSING[@]} > 0 )); then
   exit 1
 fi
 
-echo "Servis JWT ortam değişkenleri mevcut."
+for var in AUTH_SERVICE_JWT_PRIVATE_KEY AUTH_SERVICE_JWT_PUBLIC_KEY; do
+  value="${!var}"
+  lower="$(printf '%s' "${value}" | tr '[:upper:]' '[:lower:]')"
+
+  if [[ "${lower}" == placeholder* || "${lower}" == changeme* || "${lower}" == dummy* ]]; then
+    echo "Geçersiz servis JWT değişkeni: ${var} placeholder içeriyor." >&2
+    exit 1
+  fi
+
+  python3 - "$var" "$value" <<'PY'
+import base64
+import binascii
+import sys
+
+name = sys.argv[1]
+value = sys.argv[2]
+
+if any(ch.isspace() for ch in value):
+    print(f"{name} tek satır base64 DER olmalı.", file=sys.stderr)
+    raise SystemExit(1)
+
+try:
+    decoded = base64.b64decode(value, validate=True)
+except binascii.Error as exc:
+    print(f"{name} geçerli standart base64 değil: {exc}", file=sys.stderr)
+    raise SystemExit(1)
+
+if not decoded:
+    print(f"{name} boş içeriğe decode oldu.", file=sys.stderr)
+    raise SystemExit(1)
+PY
+done
+
+echo "Servis JWT ortam değişkenleri mevcut ve formatları geçerli."

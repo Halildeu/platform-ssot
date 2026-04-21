@@ -14,18 +14,24 @@ fi
 ENV="$1"
 KEY_ID="$2"
 OUTPUT_DIR=${OUTPUT_DIR:-/tmp}
+VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-secret}"
 
 PRIVATE_KEY="${OUTPUT_DIR}/service-jwt-${KEY_ID}-private.pem"
 PUBLIC_KEY="${OUTPUT_DIR}/service-jwt-${KEY_ID}-public.pem"
+PRIVATE_KEY_DER_B64="${OUTPUT_DIR}/service-jwt-${KEY_ID}-private.der.b64"
+PUBLIC_KEY_DER_B64="${OUTPUT_DIR}/service-jwt-${KEY_ID}-public.der.b64"
 
 openssl genrsa -out "${PRIVATE_KEY}" 2048 >/dev/null 2>&1
 openssl pkcs8 -topk8 -nocrypt -in "${PRIVATE_KEY}" -out "${PRIVATE_KEY}" >/dev/null 2>&1
 openssl rsa -in "${PRIVATE_KEY}" -pubout -out "${PUBLIC_KEY}" >/dev/null 2>&1
 
-vault kv put "secret/${ENV}/auth-service/service-jwt" \
-  private-key=@"${PRIVATE_KEY}" \
-  public-key=@"${PUBLIC_KEY}" \
-  key-id="${KEY_ID}"
+openssl pkcs8 -topk8 -nocrypt -in "${PRIVATE_KEY}" -outform DER 2>/dev/null | base64 | tr -d '\n' > "${PRIVATE_KEY_DER_B64}"
+openssl pkey -pubin -in "${PUBLIC_KEY}" -outform DER 2>/dev/null | base64 | tr -d '\n' > "${PUBLIC_KEY_DER_B64}"
 
-echo "Yeni anahtar yüklendi: secret/${ENV}/auth-service/service-jwt (kid=${KEY_ID})"
+vault kv put "${VAULT_KV_MOUNT}/${ENV}/jwt/auth-service" \
+  privateKey=@"${PRIVATE_KEY_DER_B64}" \
+  publicKey=@"${PUBLIC_KEY_DER_B64}" \
+  keyId="${KEY_ID}"
+
+echo "Yeni anahtar yüklendi: ${VAULT_KV_MOUNT}/${ENV}/jwt/auth-service (kid=${KEY_ID})"
 echo "JWKS endpointi güncellendiğinde servisleri rolling restart ile yenileyin."

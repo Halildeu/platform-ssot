@@ -1,4 +1,4 @@
-insert into themes (id, name, type, appearance, surface_tone, density, radius, elevation, motion, is_global)
+insert into themes (id, name, type, appearance, surface_tone, density, radius, elevation, motion, is_global, created_at)
 values (
     '00000000-0000-0000-0000-000000000101',
     'Global Light',
@@ -9,11 +9,12 @@ values (
     'rounded',
     'raised',
     'standard',
-    true
+    true,
+    now()
 )
 on conflict (id) do nothing;
 
-insert into themes (id, name, type, appearance, surface_tone, density, radius, elevation, motion, is_global)
+insert into themes (id, name, type, appearance, surface_tone, density, radius, elevation, motion, is_global, created_at)
 values (
     '00000000-0000-0000-0000-000000000102',
     'Global Dark',
@@ -24,7 +25,7 @@ values (
     'rounded',
     'raised',
     'standard',
-    true
+    true,
+    now()
 )
 on conflict (id) do nothing;
-
