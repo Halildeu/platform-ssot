@@ -22,7 +22,7 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 WRITE_BACKEND_DEPLOY_SCRIPT="${REPO_ROOT}/backend/scripts/vault/write-backend-deploy-stage.sh"
 CANONICAL_ENV_FILE="${CANONICAL_ENV_FILE:-/home/halil/platform/env/backend.env}"
 
-VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-secret}"
+VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-kv}"
 VAULT_APPROLE_MOUNT="${VAULT_APPROLE_MOUNT:-auth/approle}"
 ROLE_NAME="${VAULT_APPROLE_ROLE_NAME:-backend-deploy-${ENV_NAME}}"
 POLICY_NAME="${VAULT_POLICY_NAME:-backend-deploy-${ENV_NAME}}"
@@ -122,9 +122,12 @@ write_policy() {
   fi
   tmp_policy="$(mktemp)"
 
-  # Render {{env}} placeholders with ${ENV_NAME} and append role-id/secret-id
-  # paths (self-binding, not in HCL template since template is role-agnostic).
-  sed "s|{{env}}|${ENV_NAME}|g" "${policy_template}" > "${tmp_policy}"
+  # Render env + mount placeholders and append role-id/secret-id paths
+  # (self-binding, not in HCL template since template is role-agnostic).
+  sed \
+    -e "s|{{env}}|${ENV_NAME}|g" \
+    -e "s|{{kv_mount}}|${kv_mount}|g" \
+    "${policy_template}" > "${tmp_policy}"
   cat >> "${tmp_policy}" <<EOF
 
 path "${approle_mount}/role/${ROLE_NAME}/role-id" {

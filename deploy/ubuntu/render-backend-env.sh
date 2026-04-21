@@ -4,7 +4,7 @@ set -euo pipefail
 DEPLOY_ENV="${DEPLOY_ENV:-stage}"
 VAULT_ADDR="${VAULT_ADDR:?VAULT_ADDR required}"
 VAULT_TOKEN="${VAULT_TOKEN:?VAULT_TOKEN required}"
-VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-secret}"
+VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-kv}"
 BACKEND_CONFIG_PATH_TEMPLATE="${BACKEND_CONFIG_PATH_TEMPLATE:-<env>/backend-deploy/config}"
 OUTPUT_FILE="${OUTPUT_FILE:-/home/halil/platform/env/backend.env}"
 
