@@ -272,6 +272,78 @@ compose_run() {
   IMAGE_TAG="${IMAGE_TAG}" docker compose --env-file "${ENV_FILE}" -f "${COMPOSE_FILE}" "$@"
 }
 
+bridge_external_stage_stateful() {
+  local stage_like
+  local network="platform_microservice-network"
+  local mappings=(
+    "platform-pg-test:postgres-db"
+    "platform-vault-test:vault"
+    "platform-kc-test:keycloak"
+  )
+  local entry
+  local container
+  local alias
+  local state
+
+  stage_like="$(printf '%s' "${DEPLOY_ENV}" | tr '[:upper:]' '[:lower:]')"
+  case "${stage_like}" in
+    stage|staging) ;;
+    *) return 0 ;;
+  esac
+
+  for entry in "${mappings[@]}"; do
+    container="${entry%%:*}"
+    alias="${entry##*:}"
+    if ! docker inspect "${container}" >/dev/null 2>&1; then
+      continue
+    fi
+
+    state="$(docker inspect -f '{{.State.Status}}' "${container}" 2>/dev/null || true)"
+    if [[ "${state}" != "running" ]]; then
+      continue
+    fi
+
+    docker network connect --alias "${alias}" "${network}" "${container}" >/dev/null 2>&1 || true
+    echo "[deploy] bridged external stage stateful ${container} -> ${network} alias=${alias}"
+  done
+}
+
+preflight_stage_external_contract() {
+  local stage_like
+  local current_pg_db
+  local current_pg_user
+  local current_core_db
+  local current_report_db
+
+  stage_like="$(printf '%s' "${DEPLOY_ENV}" | tr '[:upper:]' '[:lower:]')"
+  case "${stage_like}" in
+    stage|staging) ;;
+    *) return 0 ;;
+  esac
+
+  if ! docker inspect platform-pg-test >/dev/null 2>&1; then
+    return 0
+  fi
+
+  current_pg_db="$(read_env_value POSTGRES_DB)"
+  current_pg_user="$(read_env_value POSTGRES_USER)"
+  current_core_db="$(read_env_value CORE_DATA_DB_URL)"
+  current_report_db="$(read_env_value REPORT_PG_DB)"
+
+  if [[ "${current_pg_db}" == "users" || "${current_pg_user}" == "postgres" ]]; then
+    echo "[error] external stage PG detected (platform-pg-test) but backend.env still uses legacy monolith DB contract (POSTGRES_USER=${current_pg_user:-<empty>} POSTGRES_DB=${current_pg_db:-<empty>})." >&2
+    echo "[error] expected host-compose split DB topology with role-specific credentials." >&2
+    echo "[error] reseed Vault stage/backend-deploy/config and stage/db/* before deploy." >&2
+    return 1
+  fi
+
+  if [[ "${current_core_db}" == *"/users"* || "${current_report_db}" == "users" ]]; then
+    echo "[error] stage backend.env still points core/report services to legacy users database (CORE_DATA_DB_URL=${current_core_db:-<empty>} REPORT_PG_DB=${current_report_db:-<empty>})." >&2
+    echo "[error] expected external PG split DB names such as core_db and reports_db." >&2
+    return 1
+  fi
+}
+
 container_name_for() {
   printf 'platform-%s-1' "$1"
 }
@@ -339,6 +411,8 @@ main() {
   bootstrap_vault_credentials_from_env_file
   maybe_render_env
   load_env_file
+  bridge_external_stage_stateful
+  preflight_stage_external_contract
 
   # --- Vault URI validation and correction ---
   # Canonical internal Vault address: http://vault:8200
