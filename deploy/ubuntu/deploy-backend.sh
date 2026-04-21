@@ -446,22 +446,28 @@ main() {
   fi
 
   # --- Vault URI validation and correction ---
-  # Canonical internal Vault address: http://vault:8200
-  # Reject stale hostnames (platform-stage-vault, platform-vault, etc.)
+  # When stage/prod host-compose Vault containers share the same docker
+  # network, the generic `vault` alias can resolve to the wrong instance.
+  # For external stage stateful we therefore pin to platform-vault-test.
   validate_and_fix_vault_uri() {
     local canonical_vault_uri="http://vault:8200"
     local current_uri
-    current_uri="$(read_env_value VAULT_URI)"
+    local env_name
 
-    # Fix HTTPS → HTTP (internal Docker network uses HTTP, TLS at edge)
-    if [[ "${current_uri}" == https://vault:* ]]; then
-      current_uri="${current_uri/https:\/\//http:\/\/}"
-      echo "[deploy] fixed VAULT_URI scheme: https→http"
+    env_name="$(printf '%s' "${DEPLOY_ENV}" | tr '[:upper:]' '[:lower:]')"
+    if [[ "${external_stage_stateful}" == "true" ]]; then
+      canonical_vault_uri="http://platform-vault-test:8200"
+    elif [[ "${env_name}" == "prod" || "${env_name}" == "production" ]] && docker inspect platform-vault-prod >/dev/null 2>&1; then
+      canonical_vault_uri="http://platform-vault-prod:8200"
     fi
 
-    # Reject stale/wrong hostnames — only "vault" is valid in compose network
-    if [[ -n "${current_uri}" && "${current_uri}" != http://vault:* && "${current_uri}" != https://vault:* && "${current_uri}" != http://127.0.0.1:* && "${current_uri}" != https://127.0.0.1:* ]]; then
-      echo "[deploy] WARNING: stale VAULT_URI detected: ${current_uri}" >&2
+    current_uri="$(read_env_value VAULT_URI)"
+
+    # Compose-managed services consume backend.env inside containers, so the
+    # URI must be the canonical in-network target, not a host-local loopback or
+    # an ambiguous shared alias.
+    if [[ -n "${current_uri}" && "${current_uri}" != "${canonical_vault_uri}" ]]; then
+      echo "[deploy] WARNING: non-canonical VAULT_URI detected: ${current_uri}" >&2
       echo "[deploy] overriding with canonical: ${canonical_vault_uri}" >&2
       current_uri="${canonical_vault_uri}"
     fi

@@ -8,6 +8,26 @@ VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-secret}"
 
 echo "[vault] target=${VAULT_ADDR} env=${ENV_NAME} mount=${VAULT_KV_MOUNT}"
 
+default_vault_uri() {
+  local env_name
+
+  env_name="$(printf '%s' "${ENV_NAME}" | tr '[:upper:]' '[:lower:]')"
+  case "${env_name}" in
+    stage|staging)
+      # Test/prod host-compose Vault containers share the same docker network.
+      # Using the generic `vault` alias is nondeterministic there, so we pin
+      # the stage contract to the explicit test Vault container.
+      printf 'http://platform-vault-test:8200'
+      ;;
+    prod|production)
+      printf 'http://platform-vault-prod:8200'
+      ;;
+    *)
+      printf ''
+      ;;
+  esac
+}
+
 build_json() {
   python3 - "$@" <<'PY'
 import json
@@ -49,7 +69,7 @@ backend_deploy_payload="$(build_json \
   TZ "${TZ:-}" \
   COMPOSE_PROFILES "${COMPOSE_PROFILES:-}" \
   API_GATEWAY_PORT "${API_GATEWAY_PORT:-}" \
-  VAULT_URI "${VAULT_URI:-}" \
+  VAULT_URI "${VAULT_URI:-$(default_vault_uri)}" \
   VAULT_SCHEME "${VAULT_SCHEME:-}" \
   VAULT_AUTH_METHOD "${VAULT_AUTH_METHOD:-APPROLE}" \
   VAULT_ROLE_ID "${VAULT_ROLE_ID:-}" \
