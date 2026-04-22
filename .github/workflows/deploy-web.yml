@@ -390,8 +390,16 @@ jobs:
             exit 1
           fi
 
-          cert_path="${WEB_TLS_CERT_PATH}"
-          key_path="${WEB_TLS_KEY_PATH}"
+          cert_path="${WEB_TLS_CERT_PATH:-/home/halil/platform/tls/testai.acik.com/fullchain.pem}"
+          key_path="${WEB_TLS_KEY_PATH:-/home/halil/platform/tls/testai.acik.com/privkey.pem}"
+          if [[ "${cert_path}" == "/home/halil/platform/tls/ai.acik.com/fullchain.pem" ]]; then
+            echo "::notice title=deploy-web::Stage TLS cert path drifted to prod path; coercing to /home/halil/platform/tls/testai.acik.com/fullchain.pem."
+            cert_path="/home/halil/platform/tls/testai.acik.com/fullchain.pem"
+          fi
+          if [[ "${key_path}" == "/home/halil/platform/tls/ai.acik.com/privkey.pem" ]]; then
+            echo "::notice title=deploy-web::Stage TLS key path drifted to prod path; coercing to /home/halil/platform/tls/testai.acik.com/privkey.pem."
+            key_path="/home/halil/platform/tls/testai.acik.com/privkey.pem"
+          fi
           cert_dir="$(dirname "${cert_path}")"
           key_dir="$(dirname "${key_path}")"
           server_name="${WEB_EDGE_SERVER_NAME:-testai.acik.com}"
@@ -440,6 +448,10 @@ jobs:
           WEB_HTTPS_PORT: ${{ vars.WEB_HTTPS_PORT }}
           WEB_DEPLOY_REMOTE_RELEASES_DIR: ${{ vars.WEB_DEPLOY_REMOTE_RELEASES_DIR }}
           WEB_DEPLOY_REMOTE_CURRENT_LINK: ${{ vars.WEB_DEPLOY_REMOTE_CURRENT_LINK }}
+          WEB_DEPLOY_REMOTE_RUNTIME_DIR: ${{ vars.WEB_DEPLOY_REMOTE_RUNTIME_DIR }}
+          WEB_DEPLOY_CONTAINER_NAME: ${{ vars.WEB_DEPLOY_CONTAINER_NAME }}
+          WEB_DEPLOY_CURRENT_RELEASE_FILE: ${{ vars.WEB_DEPLOY_CURRENT_RELEASE_FILE }}
+          WEB_DEPLOY_PREVIOUS_RELEASE_FILE: ${{ vars.WEB_DEPLOY_PREVIOUS_RELEASE_FILE }}
           WEB_DEPLOY_REMOTE_BRANCH: ${{ github.ref_name }}
           WEB_DEPLOY_RUNNER_REPO_DIR: ${{ vars.WEB_DEPLOY_RUNNER_REPO_DIR }}
         shell: bash
@@ -474,6 +486,66 @@ jobs:
             edge_server_name="testai.acik.com"
           fi
 
+          stage_tls_cert_path="${WEB_TLS_CERT_PATH:-/home/halil/platform/tls/testai.acik.com/fullchain.pem}"
+          if [[ "${stage_tls_cert_path}" == "/home/halil/platform/tls/ai.acik.com/fullchain.pem" ]]; then
+            echo "::notice title=deploy-web::Stage TLS cert path drift detected; coercing to /home/halil/platform/tls/testai.acik.com/fullchain.pem."
+            stage_tls_cert_path="/home/halil/platform/tls/testai.acik.com/fullchain.pem"
+          fi
+
+          stage_tls_key_path="${WEB_TLS_KEY_PATH:-/home/halil/platform/tls/testai.acik.com/privkey.pem}"
+          if [[ "${stage_tls_key_path}" == "/home/halil/platform/tls/ai.acik.com/privkey.pem" ]]; then
+            echo "::notice title=deploy-web::Stage TLS key path drift detected; coercing to /home/halil/platform/tls/testai.acik.com/privkey.pem."
+            stage_tls_key_path="/home/halil/platform/tls/testai.acik.com/privkey.pem"
+          fi
+
+          stage_http_port="${WEB_HTTP_PORT:-5544}"
+          if [[ "${stage_http_port}" == "80" ]]; then
+            echo "::notice title=deploy-web::Stage HTTP port drift detected; coercing to 5544."
+            stage_http_port="5544"
+          fi
+
+          stage_https_port="${WEB_HTTPS_PORT:-5545}"
+          if [[ "${stage_https_port}" == "443" ]]; then
+            echo "::notice title=deploy-web::Stage HTTPS port drift detected; coercing to 5545."
+            stage_https_port="5545"
+          fi
+
+          stage_releases_dir="${WEB_DEPLOY_REMOTE_RELEASES_DIR:-/home/halil/platform/web-stage/releases}"
+          if [[ "${stage_releases_dir}" == "/home/halil/platform/web/releases" ]]; then
+            echo "::notice title=deploy-web::Stage release dir drift detected; coercing to /home/halil/platform/web-stage/releases."
+            stage_releases_dir="/home/halil/platform/web-stage/releases"
+          fi
+
+          stage_current_link="${WEB_DEPLOY_REMOTE_CURRENT_LINK:-/home/halil/platform/web-stage/current}"
+          if [[ "${stage_current_link}" == "/home/halil/platform/web/current" ]]; then
+            echo "::notice title=deploy-web::Stage current symlink drift detected; coercing to /home/halil/platform/web-stage/current."
+            stage_current_link="/home/halil/platform/web-stage/current"
+          fi
+
+          stage_runtime_dir="${WEB_DEPLOY_REMOTE_RUNTIME_DIR:-/home/halil/platform/web-stage/nginx}"
+          if [[ "${stage_runtime_dir}" == "/home/halil/platform/web/nginx" ]]; then
+            echo "::notice title=deploy-web::Stage nginx runtime dir drift detected; coercing to /home/halil/platform/web-stage/nginx."
+            stage_runtime_dir="/home/halil/platform/web-stage/nginx"
+          fi
+
+          stage_container_name="${WEB_DEPLOY_CONTAINER_NAME:-platform-web-nginx-stage}"
+          if [[ "${stage_container_name}" == "platform-web-nginx" ]]; then
+            echo "::notice title=deploy-web::Stage nginx container drift detected; coercing to platform-web-nginx-stage."
+            stage_container_name="platform-web-nginx-stage"
+          fi
+
+          stage_current_release_file="${WEB_DEPLOY_CURRENT_RELEASE_FILE:-/home/halil/platform/state/web-stage.current-release}"
+          if [[ "${stage_current_release_file}" == "/home/halil/platform/state/web.current-release" ]]; then
+            echo "::notice title=deploy-web::Stage current-release state drift detected; coercing to /home/halil/platform/state/web-stage.current-release."
+            stage_current_release_file="/home/halil/platform/state/web-stage.current-release"
+          fi
+
+          stage_previous_release_file="${WEB_DEPLOY_PREVIOUS_RELEASE_FILE:-/home/halil/platform/state/web-stage.previous-release}"
+          if [[ "${stage_previous_release_file}" == "/home/halil/platform/state/web.previous-release" ]]; then
+            echo "::notice title=deploy-web::Stage previous-release state drift detected; coercing to /home/halil/platform/state/web-stage.previous-release."
+            stage_previous_release_file="/home/halil/platform/state/web-stage.previous-release"
+          fi
+
           chmod +x \
             "${repo_dir}/deploy/ubuntu/deploy-frontend.sh" \
             "${repo_dir}/deploy/ubuntu/rollback-frontend.sh" \
@@ -499,13 +571,17 @@ jobs:
           NGINX_KEYCLOAK_UPSTREAM="${WEB_KEYCLOAK_UPSTREAM:-}" \
           NGINX_SERVER_NAME="${edge_server_name}" \
           NGINX_TLS_ENABLED="${WEB_TLS_ENABLED:-false}" \
-          NGINX_TLS_CERT_PATH="${WEB_TLS_CERT_PATH:-}" \
-          NGINX_TLS_KEY_PATH="${WEB_TLS_KEY_PATH:-}" \
-          NGINX_HTTP_PORT="${WEB_HTTP_PORT:-80}" \
-          NGINX_HTTPS_PORT="${WEB_HTTPS_PORT:-443}" \
+          NGINX_TLS_CERT_PATH="${stage_tls_cert_path}" \
+          NGINX_TLS_KEY_PATH="${stage_tls_key_path}" \
+          NGINX_HTTP_PORT="${stage_http_port}" \
+          NGINX_HTTPS_PORT="${stage_https_port}" \
+          NGINX_RUNTIME_DIR="${stage_runtime_dir}" \
+          NGINX_CONTAINER_NAME="${stage_container_name}" \
           REPO_DIR="${repo_dir}" \
           REPO_BRANCH="${WEB_DEPLOY_REMOTE_BRANCH}" \
-          WEB_RELEASES_DIR="${WEB_DEPLOY_REMOTE_RELEASES_DIR:-/home/halil/platform/web/releases}" \
-          WEB_CURRENT_LINK="${WEB_DEPLOY_REMOTE_CURRENT_LINK:-/home/halil/platform/web/current}" \
+          WEB_RELEASES_DIR="${stage_releases_dir}" \
+          WEB_CURRENT_LINK="${stage_current_link}" \
+          CURRENT_RELEASE_FILE="${stage_current_release_file}" \
+          PREVIOUS_RELEASE_FILE="${stage_previous_release_file}" \
           NGINX_CONTAINER_ENABLED="true" \
           "${repo_dir}/deploy/ubuntu/deploy-frontend.sh"
