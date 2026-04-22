@@ -141,6 +141,29 @@ print(f"{parsed.scheme}://{parsed.netloc}/realms/{realm}", end="")
 PY
 }
 
+derive_openfga_datastore_uri() {
+  local user="$1"
+  local password="$2"
+  local database="$3"
+
+  python3 - "$user" "$password" "$database" <<'PY'
+import sys
+from urllib.parse import quote
+
+user = (sys.argv[1] or "").strip()
+password = sys.argv[2] or ""
+database = (sys.argv[3] or "").strip()
+
+if not user or not database:
+    raise SystemExit(0)
+
+print(
+    f"postgres://{quote(user, safe='')}:{quote(password, safe='')}@postgres-db:5432/{quote(database, safe='')}?sslmode=disable&search_path=openfga",
+    end="",
+)
+PY
+}
+
 write_kv() {
   local file="$1"
   local key="$2"
@@ -183,6 +206,7 @@ main() {
     VAULT_SECRET_ID
     VAULT_AUTH_METHOD
     VAULT_SECRET_PREFIX
+    VAULT_KV_MOUNT
     VAULT_FAIL_FAST
     SPRING_CLOUD_VAULT_ENABLED
     SPRING_CLOUD_VAULT_KV_ENABLED
@@ -268,6 +292,7 @@ main() {
     VAULT_ROLE_ID
     VAULT_SECRET_ID
     VAULT_SECRET_PREFIX
+    VAULT_KV_MOUNT
     VAULT_FAIL_FAST
     SPRING_CLOUD_VAULT_ENABLED
     SPRING_CLOUD_VAULT_KV_ENABLED
@@ -347,6 +372,7 @@ main() {
   local keycloak_issuer_uri
   local keycloak_public_issuer_uri
   local web_origin
+  local openfga_datastore_uri
 
   mount="${VAULT_KV_MOUNT#/}"
   mount="${mount%/}"
@@ -410,6 +436,14 @@ main() {
       write_kv "${tmp_file}" "${key}" "${value}"
     fi
   done
+
+  openfga_datastore_uri="$(derive_openfga_datastore_uri \
+    "$(printf '%s' "${payload}" | json_get POSTGRES_USER)" \
+    "$(printf '%s' "${payload}" | json_get POSTGRES_PASSWORD)" \
+    "$(printf '%s' "${payload}" | json_get POSTGRES_DB)")"
+  if [[ -n "${openfga_datastore_uri}" ]]; then
+    write_kv "${tmp_file}" "OPENFGA_DATASTORE_URI" "${openfga_datastore_uri}"
+  fi
 
   # STORY-0319 — per-service profile override'ları
   # Vault KV payload'undan öncelikli; yoksa DEPLOY_ENV fallback default.

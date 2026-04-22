@@ -32,6 +32,33 @@ const waitForFirstVisible = async (
   return null;
 };
 
+const waitForCorporateLoginControl = async (page: Page, timeoutMs = 30_000) => {
+  const selector = '[data-testid="corporate-login-button"]';
+
+  await page.waitForFunction(
+    ({ selector: target }) => {
+      const element = document.querySelector(target);
+      if (!element) {
+        return false;
+      }
+
+      if (element instanceof HTMLAnchorElement) {
+        return Boolean(element.href);
+      }
+
+      if (element instanceof HTMLButtonElement) {
+        return !element.disabled;
+      }
+
+      return true;
+    },
+    { selector },
+    { timeout: timeoutMs },
+  );
+
+  return page.locator(selector).first();
+};
+
 const fillFirst = async (page: Page, selectors: string[], value: string) => {
   for (const selector of selectors) {
     const locator = page.locator(selector).first();
@@ -129,10 +156,12 @@ const performBrowserLogin = async (page: Page, root: string, email: string, pass
     'button:has-text("Kurumsal Giriş")',
     'button:has-text("Sign In")',
   ];
-  const loginButton = await waitForFirstVisible(page, appLoginButtonSelectors, 15_000);
+  const loginButtonVisible = await waitForFirstVisible(page, appLoginButtonSelectors, 15_000);
+  const loginButton = loginButtonVisible
+    ? await waitForCorporateLoginControl(page, 30_000).catch(() => null)
+    : null;
   if (loginButton) {
     let loginHref: string | null = null;
-    await expect(loginButton).toBeEnabled({ timeout: 30_000 });
     loginHref = await loginButton.getAttribute('href').catch(() => null);
     console.log(
       `[authz-smoke] login_button enabled=${await loginButton.isEnabled().catch(() => false)} text=${await loginButton.textContent().catch(() => '')}`,

@@ -241,10 +241,20 @@ jobs:
             exit 1
           fi
 
-          set -a
-          # shellcheck disable=SC1090
-          . "${REMOTE_ENV_FILE}"
-          set +a
+          while IFS= read -r line || [ -n "${line}" ]; do
+            line="${line%$'\r'}"
+            [ -n "${line}" ] || continue
+            case "${line}" in
+              \#*) continue ;;
+            esac
+            case "${line}" in
+              *=*)
+                key="${line%%=*}"
+                value="${line#*=}"
+                export "${key}=${value}"
+                ;;
+            esac
+          done < "${REMOTE_ENV_FILE}"
 
           if [ ! -d "${REMOTE_REPO_DIR}/.git" ]; then
             if [ -z "${GIT_REMOTE_URL:-}" ]; then
@@ -319,10 +329,32 @@ jobs:
         run: |
           set -euo pipefail
           repo_dir="${GITHUB_WORKSPACE}"
-          if [[ ! -d "${repo_dir}/.git" ]]; then
+          if ! git -C "${repo_dir}" rev-parse --git-dir >/dev/null 2>&1; then
             echo "::error title=deploy-backend::stage workspace repo missing at ${repo_dir}"
             exit 1
           fi
+
+      - name: Prepare pinned stage deploy checkout
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        id: prepare_stage_checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_dir="${RUNNER_TEMP:-/tmp}"
+          repo_dir="${base_dir%/}/platform-ssot-stage-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          rm -rf "${repo_dir}"
+          git clone --quiet "${GITHUB_WORKSPACE}" "${repo_dir}"
+          git -C "${repo_dir}" fetch --depth 1 origin "${GITHUB_SHA}"
+          git -C "${repo_dir}" checkout --detach "${GITHUB_SHA}"
+          git -C "${repo_dir}" reset --hard "${GITHUB_SHA}"
+          git -C "${repo_dir}" clean -ffdx
+          actual_sha="$(git -C "${repo_dir}" rev-parse HEAD)"
+          if [[ "${actual_sha}" != "${GITHUB_SHA}" ]]; then
+            echo "::error title=deploy-backend::pinned stage checkout mismatch expected=${GITHUB_SHA} actual=${actual_sha}"
+            exit 1
+          fi
+          echo "repo_dir=${repo_dir}" >> "${GITHUB_OUTPUT}"
+          echo "::notice title=deploy-backend::stage deploy checkout pinned to ${actual_sha:0:7} at ${repo_dir}"
 
       # STORY-0319 PR #3a: VAULT secret'ları step-level bağlı.
       # PR #3d (soft-fail guard): staging'de AppRole auth method henüz
@@ -335,14 +367,14 @@ jobs:
       - name: Refresh stage backend AppRole materials
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         env:
-          VAULT_ADDR_SECRET: ${{ secrets.VAULT_ADDR }}
+          VAULT_ADDR_STAGE_SECRET: ${{ secrets.VAULT_ADDR_STAGE }}
           VAULT_TOKEN_SECRET: ${{ secrets.VAULT_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
           set +x
 
-          vault_addr="${VAULT_ADDR_SECRET:-http://127.0.0.1:8200}"
+          vault_addr="${VAULT_ADDR_STAGE_SECRET:-http://127.0.0.1:8301}"
           if [ -z "${VAULT_TOKEN_SECRET:-}" ]; then
             echo "::notice title=deploy-backend::VAULT_TOKEN secret missing; stage AppRole refresh skipped, existing backend.env bootstrap will be used."
             exit 0
@@ -413,7 +445,7 @@ jobs:
           # VAULT_ADDR paylaşılır (deploy script render_backend_env çağrısı
           # için gerekli); VAULT_TOKEN KASITLI OLARAK EKLENMEMİŞTİR —
           # AppRole render precedence (deploy-backend.sh:150) korunsun diye.
-          VAULT_ADDR_SECRET: ${{ secrets.VAULT_ADDR }}
+          VAULT_ADDR_STAGE_SECRET: ${{ secrets.VAULT_ADDR_STAGE }}
           # STORY-0319 PR #3a: workflow_dispatch input override path'leri
           RENDER_ENV_BEFORE_DEPLOY_INPUT: ${{ github.event.inputs.render_env_before_deploy }}
           BUILD_LOCAL_INPUT: ${{ github.event.inputs.build_local }}
@@ -436,11 +468,16 @@ jobs:
           short_sha="${GITHUB_SHA:0:7}"
           remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
           remote_profiles="${BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES:-}"
-          repo_dir="${GITHUB_WORKSPACE}"
-          vault_addr="${VAULT_ADDR_SECRET:-http://127.0.0.1:8200}"
+          repo_dir="${{ steps.prepare_stage_checkout.outputs.repo_dir }}"
+          vault_addr="${VAULT_ADDR_STAGE_SECRET:-http://127.0.0.1:8301}"
 
           if [ ! -f "${remote_env_file}" ]; then
             echo "::error title=deploy-backend::backend env file missing: ${remote_env_file}"
+            exit 1
+          fi
+
+          if ! git -C "${repo_dir}" rev-parse --git-dir >/dev/null 2>&1; then
+            echo "::error title=deploy-backend::pinned deploy checkout missing at ${repo_dir}"
             exit 1
           fi
 
@@ -457,15 +494,19 @@ jobs:
           build_local="${BUILD_LOCAL_INPUT:-false}"
           pull_policy="${DOCKER_PULL_POLICY_INPUT:-always}"
 
+          cd "${repo_dir}"
           chmod +x deploy/ubuntu/deploy-backend.sh deploy/ubuntu/rollback-backend.sh
 
           ENV_FILE="${remote_env_file}" \
           REPO_DIR="${repo_dir}" \
           COMPOSE_PROFILES="${remote_profiles}" \
           REPO_BRANCH="${GITHUB_REF_NAME}" \
+          PINNED_REPO_SHA="${GITHUB_SHA}" \
+          SKIP_REPO_SYNC="true" \
           RENDER_ENV_BEFORE_DEPLOY="${render_env}" \
           DEPLOY_ENV="stage" \
           VAULT_ADDR="${vault_addr}" \
+          VAULT_KV_MOUNT="kv" \
           GHCR_USERNAME="${GITHUB_ACTOR}" \
           GHCR_TOKEN="${GITHUB_TOKEN}" \
           TARGET_IMAGE_TAG="sha-${short_sha}" \
@@ -500,7 +541,7 @@ jobs:
           set -euo pipefail
 
           remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
-          remote_repo_dir="${GITHUB_WORKSPACE}"
+          remote_repo_dir="${{ steps.prepare_stage_checkout.outputs.repo_dir }}"
           remote_profiles="${BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES:-}"
           # STORY-0319 PR #3a: deploy-stage-host job yalnız stage path'i için
           # çalışıyor (if: github.event.inputs.env=='stage'), dolayısıyla
@@ -536,6 +577,17 @@ jobs:
             docker logs --tail 100 "platform-${service}-1" 2>&1 || true
             echo "::endgroup::"
           done
+
+      - name: Cleanup pinned stage deploy checkout
+        if: ${{ always() && env.DEPLOY_ENABLED == 'true' && steps.prepare_stage_checkout.outputs.repo_dir != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo_dir="${{ steps.prepare_stage_checkout.outputs.repo_dir }}"
+          if [ -d "${repo_dir}" ]; then
+            rm -rf "${repo_dir}"
+            echo "::notice title=deploy-backend::removed pinned stage checkout ${repo_dir}"
+          fi
 
       - name: Post-deploy health validation
         if: ${{ env.DEPLOY_ENABLED == 'true' }}

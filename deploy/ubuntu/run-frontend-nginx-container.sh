@@ -82,9 +82,30 @@ if [[ -n "${_upstream_port}" && "${_upstream_port}" != "${_expected_port}" ]]; t
 fi
 unset _upstream_port _expected_port
 unset _default_server_name _default_tls_cert_path _default_tls_key_path
-# Default to host port (8081) since nginx runs --network host and can't resolve Docker DNS.
-# Keycloak container maps 8080→8081 on host.
-NGINX_KEYCLOAK_UPSTREAM="${NGINX_KEYCLOAK_UPSTREAM:-http://127.0.0.1:8081}"
+# Host network mode: use host-side Keycloak port because Docker DNS is unavailable.
+#   - staging/test: platform-kc-test maps 8080 -> 8082 on host
+#   - prod:         platform-kc-prod maps 8080 -> 8081 on host
+case "${DEPLOY_ENV:-staging}" in
+  prod|production)
+    NGINX_KEYCLOAK_UPSTREAM="${NGINX_KEYCLOAK_UPSTREAM:-http://127.0.0.1:8081}"
+    _expected_kc_port="8081"
+    ;;
+  *)
+    NGINX_KEYCLOAK_UPSTREAM="${NGINX_KEYCLOAK_UPSTREAM:-http://127.0.0.1:8082}"
+    _expected_kc_port="8082"
+    ;;
+esac
+_keycloak_upstream_host="$(printf '%s' "${NGINX_KEYCLOAK_UPSTREAM}" | sed -E 's#^[a-z]+://([^/:]+).*#\1#')"
+_keycloak_upstream_port="$(printf '%s' "${NGINX_KEYCLOAK_UPSTREAM}" | grep -oE ':[0-9]+' | head -1 | tr -d ':')"
+if [[ "${_keycloak_upstream_host}" == "127.0.0.1" || "${_keycloak_upstream_host}" == "localhost" ]]; then
+  if [[ -n "${_keycloak_upstream_port}" && "${_keycloak_upstream_port}" != "${_expected_kc_port}" ]]; then
+    echo "[error] DEPLOY_ENV=${DEPLOY_ENV:-staging} için NGINX_KEYCLOAK_UPSTREAM port mismatch: got=${_keycloak_upstream_port} expected=${_expected_kc_port}" >&2
+    echo "[error] Stage edge /realms ve /resources yanlış Keycloak upstream'e giderse browser login 404/realm drift üretir." >&2
+    echo "[error] Fix: stage için http://127.0.0.1:8082, prod için http://127.0.0.1:8081 kullan." >&2
+    exit 1
+  fi
+fi
+unset _keycloak_upstream_host _keycloak_upstream_port _expected_kc_port
 NGINX_SERVICE_MANAGER_UPSTREAM="${NGINX_SERVICE_MANAGER_UPSTREAM:-http://127.0.0.1:8795}"
 CONFIG_ONLY="${CONFIG_ONLY:-false}"
 

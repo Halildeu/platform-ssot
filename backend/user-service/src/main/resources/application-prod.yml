@@ -1,6 +1,6 @@
 spring:
   config:
-    import: optional:vault://secret/${VAULT_SECRET_PREFIX:stage}/db/${spring.application.name}
+    import: optional:vault://${VAULT_KV_MOUNT:secret}/${VAULT_SECRET_PREFIX:stage}/db/${spring.application.name}
   cloud:
     vault:
       enabled: true
@@ -12,7 +12,7 @@ spring:
         app-role-path: approle
       kv:
         enabled: true
-        backend: secret
+        backend: ${VAULT_KV_MOUNT:secret}
       uri: ${VAULT_URI:https://vault:8200}
       scheme: ${VAULT_SCHEME:http}
       fail-fast: ${VAULT_FAIL_FAST:true}
