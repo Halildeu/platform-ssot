@@ -62,6 +62,7 @@
       "backend/scripts/ops/*",
       "backend/scripts/perf/run-zanzibar-canary.sh",
       "web/scripts/ops/*",
+      "web/scripts/deploy/*",
       "backend/scripts/vault/*",
       ".github/workflows/staging-audit-compare-sweep.yml",
       ".github/workflows/staging-error-sweep.yml",
@@ -378,6 +379,11 @@
       },
       {
         "path_glob": "web/scripts/ops/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/scripts/deploy/*",
         "ux_theme_id": "consistency_and_pattern_governance",
         "ux_subtheme_id": "single_component_source_of_truth"
       },
