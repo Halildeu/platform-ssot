@@ -35,6 +35,7 @@ BACKEND_DIR="${BACKEND_DIR:-${REPO_DIR}/backend}"
 ENV_FILE="${ENV_FILE:-/home/halil/platform/env/backend.env}"
 REPO_BRANCH="${REPO_BRANCH:-main}"
 PINNED_REPO_BRANCH="${REPO_BRANCH}"
+PINNED_REPO_SHA="${PINNED_REPO_SHA:-}"
 GIT_REMOTE_URL="${GIT_REMOTE_URL:-}"
 COMPOSE_PROFILES="${COMPOSE_PROFILES:-}"
 STATE_DIR="${STATE_DIR:-/home/halil/platform/state}"
@@ -46,6 +47,7 @@ BUILD_COMPOSE_FILE="${BUILD_COMPOSE_FILE:-${BACKEND_DIR}/docker-compose.yml}"
 DOCKER_PULL_POLICY="${DOCKER_PULL_POLICY:-always}"
 RENDER_ENV_BEFORE_DEPLOY="${RENDER_ENV_BEFORE_DEPLOY:-false}"
 DEPLOY_ENV="${DEPLOY_ENV:-stage}"
+SKIP_REPO_SYNC="${SKIP_REPO_SYNC:-false}"
 
 # COMPOSE_FILE default is DEPLOY_ENV-aware.
 # Memory rule (feedback_infra_stability.md): "Staging'de ASLA prod compose kullanma
@@ -77,6 +79,22 @@ require_cmd() {
     echo "[error] required command not found: $1" >&2
     exit 1
   fi
+}
+
+is_truthy() {
+  case "$(printf '%s' "${1:-}" | tr '[:upper:]' '[:lower:]')" in
+    true|1|yes|on)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+is_git_checkout() {
+  local repo_dir="$1"
+  git -C "${repo_dir}" rev-parse --git-dir >/dev/null 2>&1
 }
 
 print_compose_diagnostics() {
@@ -227,7 +245,26 @@ bootstrap_vault_credentials_from_env_file() {
 }
 
 sync_repo() {
-  if [[ -d "${REPO_DIR}/.git" ]]; then
+  if is_truthy "${SKIP_REPO_SYNC}"; then
+    if ! is_git_checkout "${REPO_DIR}"; then
+      echo "[error] repo sync skipped but git checkout missing at ${REPO_DIR}." >&2
+      exit 1
+    fi
+
+    if [[ -n "${PINNED_REPO_SHA}" ]]; then
+      local current_sha
+      current_sha="$(git -C "${REPO_DIR}" rev-parse HEAD)"
+      if [[ "${current_sha}" != "${PINNED_REPO_SHA}" ]]; then
+        echo "[error] pinned repo sha mismatch at ${REPO_DIR}: expected ${PINNED_REPO_SHA}, got ${current_sha}" >&2
+        exit 1
+      fi
+    fi
+
+    echo "[deploy] repo sync skipped; using pinned checkout $(git -C "${REPO_DIR}" rev-parse --short HEAD)"
+    return 0
+  fi
+
+  if is_git_checkout "${REPO_DIR}"; then
     git -C "${REPO_DIR}" fetch origin "${REPO_BRANCH}"
     if git -C "${REPO_DIR}" show-ref --verify --quiet "refs/heads/${REPO_BRANCH}"; then
       git -C "${REPO_DIR}" checkout "${REPO_BRANCH}"
@@ -248,7 +285,11 @@ sync_repo() {
 }
 
 pre_sync_existing_repo() {
-  if [[ -d "${REPO_DIR}/.git" ]]; then
+  if is_truthy "${SKIP_REPO_SYNC}"; then
+    return 0
+  fi
+
+  if is_git_checkout "${REPO_DIR}"; then
     sync_repo
   fi
 }
@@ -515,9 +556,10 @@ main() {
     export DOCKER_PULL_POLICY="never"
   fi
 
-  # Ensure infrastructure is up (no recreate — prevents Vault seal, Keycloak cold-start).
-  # Only starts containers if not already running.
-  compose_run "${compose_args[@]}" up -d --no-recreate postgres-db openfga-migrate openfga vault keycloak
+  # Ensure stateful infrastructure is up (no recreate — prevents Vault seal,
+  # Keycloak cold-start, PostgreSQL restart). Stateless OpenFGA is recreated
+  # later so datastore URI / image drift is actually applied.
+  compose_run "${compose_args[@]}" up -d --no-recreate postgres-db vault keycloak
   # P1.10: KMS auto-unseal mode skips the vault-unseal Shamir sidecar (Vault
   # self-unseals via the cloud KMS seal stanza). VAULT_SEAL_MODE=shamir (or
   # unset) keeps the legacy sidecar loop for local/staging.
@@ -529,7 +571,6 @@ main() {
   fi
   wait_for_service_state postgres-db healthy 60
   wait_for_service_state vault healthy 120
-  wait_for_service_state openfga running 60
 
   # Vault preflight — verify unsealed and accessible from deploy host
   vault_preflight() {
@@ -565,6 +606,11 @@ main() {
     fi
   }
   vault_preflight
+
+  # OpenFGA is stateless but config-sensitive; recreate it on every deploy so
+  # datastore URI / schema drift in canonical env is reflected at runtime.
+  compose_run "${compose_args[@]}" up -d --force-recreate openfga-migrate openfga
+  wait_for_service_state openfga running 60
 
   # Recreate backend services with new images (--force-recreate only touches these)
   compose_run "${compose_args[@]}" up -d --force-recreate --no-deps discovery-server
