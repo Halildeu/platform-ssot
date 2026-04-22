@@ -353,16 +353,17 @@ jobs:
           if [[ -n "${PLAYWRIGHT_TREAT_INSECURE_AS_SECURE_ORIGIN:-}" ]]; then
             echo "[pw-smoke] chromium secure-context override: ${PLAYWRIGHT_TREAT_INSECURE_AS_SECURE_ORIGIN}"
           fi
-          cmd="npx -y pnpm@9.15.9 run pw:ci"
+          cmd="corepack pnpm run pw:ci"
           if [ "${INPUT_SUITE}" = "authz-zanzibar" ]; then
-            cmd="npx -y pnpm@9.15.9 run pw:authz-zanzibar"
+            cmd="corepack pnpm run pw:authz-zanzibar"
           elif [ "${INPUT_MODE}" = "nightly" ]; then
-            cmd="npx -y pnpm@9.15.9 run pw:nightly"
+            cmd="corepack pnpm run pw:nightly"
           fi
 
           if [ -n "${PLAYWRIGHT_EXECUTABLE_PATH:-}" ]; then
             cd web
-            npx -y pnpm@9.15.9 install --frozen-lockfile
+            corepack enable >/dev/null 2>&1 || true
+            corepack pnpm install --frozen-lockfile
             ${cmd}
             exit 0
           fi
@@ -397,7 +398,7 @@ jobs:
             -v "${GITHUB_WORKSPACE}:/work" \
             -w /work/web \
             "${image}" \
-            bash -lc "mkdir -p \"\$HOME\" \"\$XDG_CACHE_HOME\" \"\$NPM_CONFIG_CACHE\" \"\$PNPM_HOME\" && npx -y pnpm@9.15.9 install --frozen-lockfile && ${cmd}"
+            bash -lc "mkdir -p \"\$HOME\" \"\$XDG_CACHE_HOME\" \"\$NPM_CONFIG_CACHE\" \"\$PNPM_HOME\" && (corepack enable >/dev/null 2>&1 || true) && corepack pnpm install --frozen-lockfile && ${cmd}"
         env:
           INPUT_SUITE: ${{ inputs.suite }}
           INPUT_MODE: ${{ inputs.mode }}
