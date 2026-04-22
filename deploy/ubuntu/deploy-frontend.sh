@@ -18,12 +18,38 @@ PREVIOUS_RELEASE_FILE="${PREVIOUS_RELEASE_FILE:-${STATE_DIR}/web.previous-releas
 BUILD_SCRIPT="${BUILD_SCRIPT:-build:ubuntu:single-domain}"
 NGINX_CONTAINER_ENABLED="${NGINX_CONTAINER_ENABLED:-false}"
 NGINX_CONTAINER_SCRIPT="${NGINX_CONTAINER_SCRIPT:-${REPO_DIR}/deploy/ubuntu/run-frontend-nginx-container.sh}"
+PROD_PUBLIC_ORIGIN_DEFAULT="${PROD_PUBLIC_ORIGIN_DEFAULT:-https://ai.acik.com}"
+STAGE_PUBLIC_ORIGIN_DEFAULT="${STAGE_PUBLIC_ORIGIN_DEFAULT:-https://testai.acik.com}"
 
 require_cmd() {
   if ! command -v "$1" >/dev/null 2>&1; then
     echo "[error] required command not found: $1" >&2
     exit 1
   fi
+}
+
+trim_trailing_slashes() {
+  printf '%s' "$1" | sed 's:/*$::'
+}
+
+normalize_stage_public_settings() {
+  local deploy_env
+  deploy_env="$(printf '%s' "${DEPLOY_ENV:-}" | tr '[:upper:]' '[:lower:]')"
+
+  PUBLIC_ORIGIN="$(trim_trailing_slashes "${PUBLIC_ORIGIN}")"
+  KEYCLOAK_PUBLIC_URL="$(trim_trailing_slashes "${KEYCLOAK_PUBLIC_URL}")"
+
+  case "${deploy_env}" in
+    stage|staging|test)
+      if [[ -z "${PUBLIC_ORIGIN}" || "${PUBLIC_ORIGIN}" == "${PROD_PUBLIC_ORIGIN_DEFAULT}" ]]; then
+        echo "[deploy] stage public origin drift detected; using ${STAGE_PUBLIC_ORIGIN_DEFAULT}" >&2
+        PUBLIC_ORIGIN="${STAGE_PUBLIC_ORIGIN_DEFAULT}"
+      fi
+      if [[ -z "${KEYCLOAK_PUBLIC_URL}" || "${KEYCLOAK_PUBLIC_URL}" == "${PROD_PUBLIC_ORIGIN_DEFAULT}" ]]; then
+        KEYCLOAK_PUBLIC_URL="${PUBLIC_ORIGIN}"
+      fi
+      ;;
+  esac
 }
 
 sync_repo() {
@@ -47,6 +73,7 @@ main() {
   require_cmd pnpm
 
   sync_repo
+  normalize_stage_public_settings
   mkdir -p "${STATE_DIR}" "${WEB_RELEASES_DIR}"
 
   if [[ -L "${WEB_CURRENT_LINK}" ]]; then
@@ -59,6 +86,8 @@ main() {
     WEB_PUBLIC_ORIGIN="${PUBLIC_ORIGIN}" \
     VITE_FRONTEND_PUBLIC_ORIGIN="${PUBLIC_ORIGIN}" \
     FRONTEND_PUBLIC_ORIGIN="${PUBLIC_ORIGIN}" \
+    DEPLOY_ENV="${DEPLOY_ENV:-}" \
+    WEB_DEPLOY_ENV="${DEPLOY_ENV:-}" \
     VITE_AUTH_MODE="${AUTH_MODE}" \
     AUTH_MODE="${AUTH_MODE}" \
     VITE_KEYCLOAK_URL="${KEYCLOAK_PUBLIC_URL}" \

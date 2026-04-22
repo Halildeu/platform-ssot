@@ -21,6 +21,17 @@ function trimTrailingSlash(value) {
   return value.replace(/\/+$/, '');
 }
 
+function normalizeOriginValue(value) {
+  if (typeof value !== 'string') {
+    return '';
+  }
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return '';
+  }
+  return trimTrailingSlash(trimmed);
+}
+
 function normalizePathPrefix(value) {
   const trimmed = value.trim();
   if (!trimmed || trimmed === '/') return '/';
@@ -78,16 +89,52 @@ function writeManifest(origin, remotes) {
   );
 }
 
-const publicOrigin = trimTrailingSlash(
+const PROD_PUBLIC_ORIGIN = 'https://ai.acik.com';
+const STAGE_PUBLIC_ORIGIN = 'https://testai.acik.com';
+const deployEnv = (process.env.DEPLOY_ENV || process.env.WEB_DEPLOY_ENV || '').trim().toLowerCase();
+const isStageLikeDeploy = ['stage', 'staging', 'test'].includes(deployEnv);
+
+function resolvePublicOrigin(...candidates) {
+  for (const candidate of candidates) {
+    const normalized = normalizeOriginValue(candidate);
+    if (!normalized) {
+      continue;
+    }
+    if (isStageLikeDeploy && normalized === PROD_PUBLIC_ORIGIN) {
+      continue;
+    }
+    return normalized;
+  }
+
+  return isStageLikeDeploy ? STAGE_PUBLIC_ORIGIN : PROD_PUBLIC_ORIGIN;
+}
+
+function resolveKeycloakPublicUrl(publicOrigin, ...candidates) {
+  for (const candidate of candidates) {
+    const normalized = normalizeOriginValue(candidate);
+    if (!normalized) {
+      continue;
+    }
+    if (isStageLikeDeploy && normalized === PROD_PUBLIC_ORIGIN) {
+      continue;
+    }
+    return normalized;
+  }
+
+  return publicOrigin;
+}
+
+const publicOrigin = resolvePublicOrigin(
   process.env.WEB_PUBLIC_ORIGIN ||
     process.env.VITE_FRONTEND_PUBLIC_ORIGIN ||
     process.env.FRONTEND_PUBLIC_ORIGIN ||
-    'https://ai.acik.com',
+    PROD_PUBLIC_ORIGIN,
 );
 const remoteEntryUrlFor = (slug) => `${publicOrigin}/remotes/${slug}/remoteEntry.js`;
 const authMode =
   process.env.VITE_AUTH_MODE || process.env.AUTH_MODE || process.env.WEB_AUTH_MODE || 'keycloak';
-const keycloakUrl = trimTrailingSlash(
+const keycloakUrl = resolveKeycloakPublicUrl(
+  publicOrigin,
   process.env.VITE_KEYCLOAK_URL ||
     process.env.KEYCLOAK_URL ||
     process.env.KEYCLOAK_PUBLIC_URL ||
