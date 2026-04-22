@@ -124,15 +124,25 @@ print_compose_diagnostics() {
 }
 
 load_env_file() {
+  local line
+  local key
+  local value
+
   if [[ ! -f "${ENV_FILE}" ]]; then
     echo "[error] env file not found: ${ENV_FILE}" >&2
     exit 1
   fi
 
-  set -a
-  # shellcheck disable=SC1090
-  . "${ENV_FILE}"
-  set +a
+  while IFS= read -r line || [[ -n "${line}" ]]; do
+    line="${line%$'\r'}"
+    [[ -n "${line}" ]] || continue
+    [[ "${line}" =~ ^[[:space:]]*# ]] && continue
+    [[ "${line}" == *=* ]] || continue
+
+    key="${line%%=*}"
+    value="${line#*=}"
+    export "${key}=${value}"
+  done < "${ENV_FILE}"
 }
 
 read_env_value() {
