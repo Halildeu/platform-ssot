@@ -151,6 +151,7 @@ async function crawlRoute(page, baseUrl, path) {
   const consoleErrors = [];
   const consoleWarns = [];
   const netFails = [];
+  let runtimeErrors = [];
   let navStatus = null;
 
   const onConsole = (msg) => {
@@ -175,9 +176,18 @@ async function crawlRoute(page, baseUrl, path) {
 
   const started = Date.now();
   try {
+    await page.evaluate(() => {
+      if (Array.isArray(window.__shellRuntimeErrors)) {
+        window.__shellRuntimeErrors = [];
+      }
+    }).catch(() => {});
     const resp = await page.goto(`${baseUrl}${path}`, { waitUntil: 'networkidle', timeout: 20_000 });
     navStatus = resp?.status() ?? null;
     await page.waitForTimeout(2_000);
+    runtimeErrors = await page.evaluate(() => {
+      const buffer = Array.isArray(window.__shellRuntimeErrors) ? window.__shellRuntimeErrors : [];
+      return JSON.parse(JSON.stringify(buffer));
+    }).catch(() => []);
   } catch (err) {
     consoleErrors.push({ text: `navigation_failed: ${err.message}` });
   } finally {
@@ -191,6 +201,7 @@ async function crawlRoute(page, baseUrl, path) {
     consoleErrors,
     consoleWarns,
     netFails,
+    runtimeErrors,
     durationMs: Date.now() - started,
   };
 }
@@ -254,6 +265,7 @@ async function main() {
       consoleErrors: reports.reduce((s, r) => s + r.consoleErrors.length, 0),
       consoleWarnings: reports.reduce((s, r) => s + r.consoleWarns.length, 0),
       netFailures: reports.reduce((s, r) => s + r.netFails.length, 0),
+      runtimeErrors: reports.reduce((s, r) => s + r.runtimeErrors.length, 0),
     },
     reports,
   };
@@ -271,14 +283,16 @@ async function main() {
   console.log(`console errors:     ${summary.totals.consoleErrors}`);
   console.log(`console warnings:   ${summary.totals.consoleWarnings}`);
   console.log(`network failures:   ${summary.totals.netFailures}`);
+  console.log(`runtime errors:     ${summary.totals.runtimeErrors}`);
   console.log(`report:             ${outPath}`);
 
   if (summary.totals.withErrors > 0) {
     console.log('\n--- Routes with errors ---');
     for (const r of reports) {
-      if (r.consoleErrors.length === 0 && r.netFails.every((f) => f.status < 500)) continue;
+      if (r.consoleErrors.length === 0 && r.runtimeErrors.length === 0 && r.netFails.every((f) => f.status < 500)) continue;
       console.log(`\n[${r.path}]`);
       r.consoleErrors.forEach((e) => console.log(`  console.error: ${e.text.slice(0, 200)}`));
+      r.runtimeErrors.forEach((e) => console.log(`  runtime.error: ${e.source} ${String(e.message).slice(0, 200)}`));
       r.netFails.filter((f) => f.status >= 400).forEach((f) => console.log(`  ${f.status} ${f.method} ${f.url}`));
     }
     process.exitCode = 1;

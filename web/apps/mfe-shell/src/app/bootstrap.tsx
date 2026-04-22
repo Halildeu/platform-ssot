@@ -2,6 +2,7 @@
 // AG Grid setup delegated to @mfe/design-system (single owner)
 
 import React from 'react';
+import { initRuntimeErrorMonitor } from './telemetry/runtime-error-monitor';
 
 // Inject build-time env vars into window.__env__ so that
 // design-system (separate chunk) can read them at runtime.
@@ -33,6 +34,11 @@ initOtel();
 // Feature flags: runtime kill switches for safe rollout
 import { initFeatureFlags } from '../lib/feature-flags';
 initFeatureFlags();
+
+// Runtime browser error capture: early window errors + console.error +
+// unhandled promise rejections are collected into a shell buffer and
+// forwarded to shell telemetry when possible.
+initRuntimeErrorMonitor();
 
 // Quiet-green: suppress known non-actionable console noise in development
 if (process.env.NODE_ENV === 'development') {

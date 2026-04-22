@@ -18,6 +18,15 @@
     window.addEventListener('error', function(e) {
       window.__earlyErrors.push({ msg: e.message, file: e.filename, line: e.lineno, col: e.colno });
     });
+    window.addEventListener('unhandledrejection', function(e) {
+      var reason = e.reason || {};
+      window.__earlyErrors.push({
+        msg: reason.message || String(e.reason || 'Unhandled promise rejection'),
+        file: '',
+        line: 0,
+        col: 0,
+      });
+    });
   </script>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
