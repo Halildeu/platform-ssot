@@ -462,6 +462,12 @@ jobs:
             keycloak_public_url="${public_origin}"
           fi
 
+          keycloak_realm="${WEB_KEYCLOAK_REALM:-platform-test}"
+          if [[ -z "${keycloak_realm}" || "${keycloak_realm}" == "serban" ]]; then
+            echo "::notice title=deploy-web::Stage Keycloak realm drift detected; coercing to platform-test."
+            keycloak_realm="platform-test"
+          fi
+
           edge_server_name="${WEB_EDGE_SERVER_NAME:-testai.acik.com}"
           if [[ "${edge_server_name}" == "ai.acik.com" || "${edge_server_name}" == "_" ]]; then
             echo "::notice title=deploy-web::Stage edge server_name drift detected; coercing to testai.acik.com."
@@ -487,7 +493,7 @@ jobs:
           DEPLOY_ENV="${DEPLOY_ENV}" \
           AUTH_MODE="${WEB_AUTH_MODE:-keycloak}" \
           KEYCLOAK_PUBLIC_URL="${keycloak_public_url}" \
-          KEYCLOAK_REALM="${WEB_KEYCLOAK_REALM:-serban}" \
+          KEYCLOAK_REALM="${keycloak_realm}" \
           KEYCLOAK_CLIENT_ID="${WEB_KEYCLOAK_CLIENT_ID:-frontend}" \
           NGINX_GATEWAY_UPSTREAM="${WEB_GATEWAY_UPSTREAM:-}" \
           NGINX_KEYCLOAK_UPSTREAM="${WEB_KEYCLOAK_UPSTREAM:-}" \
