@@ -525,11 +525,14 @@ services:
       - VAULT_FAIL_FAST=${VAULT_FAIL_FAST:-false}
       # Legacy internal API key doğrulaması kapatıldı (JWT zorunlu)
       - SECURITY_LEGACY_API_KEY_ENABLED=false
-      # User JWT'leri için RS256 (JWK) doğrulaması. FE token'ları Keycloak (serban) realm'inden gelir.
-      - SECURITY_JWT_USER_JWK_SET_URI=${SECURITY_JWT_USER_JWK_SET_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}
-      # RS256 için JWKS ayarı (service tokens)
-      - SECURITY_JWT_JWK_SET_URI=${SECURITY_JWT_JWK_SET_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}
-      - SECURITY_JWT_ISSUER=${SECURITY_JWT_ISSUER:-http://keycloak:8080/realms/serban}
+      # Stage/prod Keycloak contract must stay env-driven. Hardcoded `serban` +
+      # shared `keycloak` alias caused stage to hit the wrong Keycloak instance
+      # when prod/test stateful containers coexisted on the same Docker network.
+      - SECURITY_JWT_USER_JWK_SET_URI=${SECURITY_JWT_USER_JWK_SET_URI:-${KEYCLOAK_JWKS_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}}
+      - SECURITY_JWT_JWK_SET_URI=${SECURITY_JWT_JWK_SET_URI:-${KEYCLOAK_JWKS_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}}
+      - SECURITY_JWT_ISSUER=${SECURITY_JWT_ISSUER:-${KEYCLOAK_PUBLIC_ISSUER_URI:-${KEYCLOAK_ISSUER_URI:-http://keycloak:8080/realms/serban}}}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI:-${KEYCLOAK_JWKS_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:-${KEYCLOAK_PUBLIC_ISSUER_URI:-${KEYCLOAK_ISSUER_URI:-http://keycloak:8080/realms/serban}}}
       # Audience doğrulaması; token üretimindeki aud ile eşleşmeli
       - SECURITY_JWT_AUDIENCE=${SECURITY_JWT_AUDIENCE:-permission-service}
       # 2026-04-18 OI-03 Bug B (Codex thread 019da137): canary-restricted
@@ -539,17 +542,19 @@ services:
       # this key but container env chain didn't propagate it → canary-load
       # client tokens rejected at aud-validator fallback.
       - SECURITY_AUTH_ALLOWED_CLIENT_IDS=${SECURITY_AUTH_ALLOWED_CLIENT_IDS:-frontend,admin-cli,serban-web,account,canary-load}
-      # Ek issuer listesi Keycloak serban realm'i işaret eder
-      - SECURITY_JWT_JWK_SET_URIS=http://keycloak:8080/realms/serban/protocol/openid-connect/certs
-      - SECURITY_JWT_ISSUERS=${SECURITY_JWT_ISSUERS:-http://keycloak:8080/realms/serban,http://localhost:8081/realms/serban}
-      # Secondary issuer: frontend tokens come from localhost:8081.
+      # Ek issuer/JWKS listesi primary env contract'ı izler; fallback yalnızca
+      # local dev için serban/localhost zinciridir.
+      - SECURITY_JWT_JWK_SET_URIS=${SECURITY_JWT_JWK_SET_URIS:-${KEYCLOAK_JWKS_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}}
+      - SECURITY_JWT_ISSUERS=${SECURITY_JWT_ISSUERS:-${KEYCLOAK_PUBLIC_ISSUER_URI:-${KEYCLOAK_ISSUER_URI:-http://keycloak:8080/realms/serban}},${KEYCLOAK_ISSUER_URI:-http://localhost:8081/realms/serban}}
+      # Secondary issuer internal Keycloak endpoint'e sabitlenir; public issuer
+      # primary decoder'da kalır.
       # 2026-04-18 OI-03 Bug B deepest layer: SECONDARY_AUDIENCE was hardcoded
       # `permission-service` → canonical env override ignored → canary-load
       # client tokens (aud=account) rejected by secondary decoder. Now supports
       # canonical env multi-audience list via substitution pattern (same as
       # primary AUDIENCE above).
-      - SECURITY_JWT_SECONDARY_JWK_SET_URI=${SECURITY_JWT_SECONDARY_JWK_SET_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}
-      - SECURITY_JWT_SECONDARY_ISSUER=${SECURITY_JWT_SECONDARY_ISSUER:-http://localhost:8081/realms/serban}
+      - SECURITY_JWT_SECONDARY_JWK_SET_URI=${SECURITY_JWT_SECONDARY_JWK_SET_URI:-${KEYCLOAK_JWKS_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}}
+      - SECURITY_JWT_SECONDARY_ISSUER=${SECURITY_JWT_SECONDARY_ISSUER:-${KEYCLOAK_ISSUER_URI:-http://localhost:8081/realms/serban}}
       - SECURITY_JWT_SECONDARY_AUDIENCE=${SECURITY_JWT_SECONDARY_AUDIENCE:-permission-service}
       - ERP_OPENFGA_ENABLED=${ERP_OPENFGA_ENABLED:-true}
       - ERP_OPENFGA_API_URL=${ERP_OPENFGA_API_URL:-http://openfga:8080}
@@ -590,8 +595,8 @@ services:
       - REPORT_MSSQL_PASSWORD=${REPORT_MSSQL_PASSWORD:-}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=${EUREKA_SERVER_URL:-http://discovery-server:8761/eureka}
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
-      - SECURITY_JWT_JWK_SET_URI=http://keycloak:8080/realms/serban/protocol/openid-connect/certs
-      - SECURITY_JWT_ISSUER=${SECURITY_JWT_ISSUER:-http://keycloak:8080/realms/serban}
+      - SECURITY_JWT_JWK_SET_URI=${KEYCLOAK_JWKS_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}
+      - SECURITY_JWT_ISSUER=${SECURITY_JWT_ISSUER:-${KEYCLOAK_PUBLIC_ISSUER_URI:-${KEYCLOAK_ISSUER_URI:-http://keycloak:8080/realms/serban}}}
       - SECURITY_JWT_ISSUERS=${SECURITY_JWT_ISSUERS:-http://keycloak:8080/realms/serban,http://localhost:8081/realms/serban}
       - SECURITY_JWT_AUDIENCE=report-service,account,frontend
       - PERMISSION_SERVICE_INTERNAL_API_KEY=${PERMISSION_SERVICE_INTERNAL_API_KEY:-dev-local-audit-mirror-key}
@@ -607,12 +612,14 @@ services:
       - ERP_OPENFGA_MODEL_ID=${ERP_OPENFGA_MODEL_ID:-}
       - PERMISSION_SERVICE_BASE_URL=${PERMISSION_SERVICE_BASE_URL:-http://permission-service}
       - AUTHZ_USER_TABLE=${AUTHZ_USER_TABLE:-user_service.users}
-      # PostgreSQL — Docker network hostname
-      - REPORT_PG_HOST=postgres-db
-      - REPORT_PG_PORT=5432
-      - REPORT_PG_DB=${POSTGRES_DB:-users}
-      - REPORT_PG_USERNAME=${POSTGRES_USER:-postgres}
-      - REPORT_PG_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      # Report metadata must use the dedicated split-DB contract. Falling back
+      # to POSTGRES_* leaked the OpenFGA database into report-service during the
+      # stage deploy path.
+      - REPORT_PG_HOST=${REPORT_PG_HOST:-postgres-db}
+      - REPORT_PG_PORT=${REPORT_PG_PORT:-5432}
+      - REPORT_PG_DB=${REPORT_PG_DB:-${POSTGRES_DB:-users}}
+      - REPORT_PG_USERNAME=${REPORT_PG_USERNAME:-${POSTGRES_USER:-postgres}}
+      - REPORT_PG_PASSWORD=${REPORT_PG_PASSWORD:-${POSTGRES_PASSWORD:-postgres}}
       # SQL Server baglantisi optional — erisim yoksa servis yine de baslar
       - SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT=-1
       # DB health indicator'u devre disi birak (SQL Server ulasılamaz oldugunda timeout yapar)
