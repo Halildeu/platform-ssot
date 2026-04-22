@@ -10,6 +10,36 @@ sleep 30
 
 FAILURES=0
 
+resolve_container_name() {
+  local service="$1"
+  local candidates=()
+
+  case "$service" in
+    vault)
+      candidates=(platform-vault-test platform-vault-prod platform-vault-1 platform-vault)
+      ;;
+    keycloak)
+      candidates=(platform-kc-test platform-kc-prod platform-keycloak-1 platform-keycloak)
+      ;;
+    postgres-db)
+      candidates=(platform-pg-test platform-pg-prod platform-postgres-db-1 platform-postgres-db)
+      ;;
+    *)
+      candidates=("platform-${service}-1" "platform-${service}")
+      ;;
+  esac
+
+  for candidate in "${candidates[@]}"; do
+    if docker inspect "$candidate" >/dev/null 2>&1; then
+      echo "$candidate"
+      return 0
+    fi
+  done
+
+  echo "${candidates[0]}"
+  return 0
+}
+
 # ---- 1. Vault sealed check (retry loop — vault-unseal watcher may need time) ----
 VAULT_RETRIES=12
 VAULT_SEALED="True"
@@ -18,7 +48,8 @@ for i in $(seq 1 $VAULT_RETRIES); do
   # VAULT_ADDR=http://... required: vault CLI defaults to HTTPS but dev server is HTTP.
   # Without this, status returns "unknown" for the full retry window and FAIL emits.
   # Same bug as vault_preflight in deploy-backend.sh (fixed in PR #374).
-  VAULT_SEALED=$(docker exec -e VAULT_ADDR=http://127.0.0.1:8200 platform-vault-1 vault status -format=json 2>/dev/null | python3 -c "import json,sys; print(json.load(sys.stdin).get('sealed','unknown'))" 2>/dev/null || echo "unknown")
+  vault_container="$(resolve_container_name vault)"
+  VAULT_SEALED=$(docker exec -e VAULT_ADDR=http://127.0.0.1:8200 "$vault_container" vault status -format=json 2>/dev/null | python3 -c "import json,sys; print(json.load(sys.stdin).get('sealed','unknown'))" 2>/dev/null || echo "unknown")
   if [[ "$VAULT_SEALED" == "False" ]]; then
     echo "  OK: vault unsealed (attempt $i)"
     break
@@ -52,7 +83,7 @@ fi
 # not part of docker-compose.yml. Its container name is "platform-web-nginx" (no "-1" suffix).
 # Health for it is a simple running-state check; compose-managed services use healthchecks.
 for svc in postgres-db vault keycloak openfga discovery-server permission-service auth-service user-service variant-service core-data-service report-service api-gateway; do
-  container="platform-${svc}-1"
+  container="$(resolve_container_name "$svc")"
   status=$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}no-healthcheck{{end}}' "$container" 2>/dev/null || echo "missing")
   if [[ "$status" == "healthy" || "$status" == "no-healthcheck" ]]; then
     echo "  OK: $svc ($status)"
