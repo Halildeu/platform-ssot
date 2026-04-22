@@ -114,7 +114,7 @@ jobs:
         if: ${{ inputs.suite == 'authz-zanzibar' }}
         run: |
           set -euo pipefail
-          kc_container="$(docker ps --format '{{.Names}}' | awk '/keycloak/ { print; exit }')"
+          kc_container="$(docker ps --format '{{.Names}}' | awk '/keycloak|platform-kc/ { print; exit }')"
           if [[ -z "${kc_container}" ]]; then
             echo "[pw-smoke] HATA: çalışan keycloak container bulunamadı."
             docker ps --format '{{.Names}}'
@@ -263,7 +263,7 @@ jobs:
         if: ${{ inputs.suite == 'authz-zanzibar' }}
         run: |
           set -euo pipefail
-          kc_container="$(docker ps --format '{{.Names}}' | awk '/keycloak/ { print; exit }')"
+          kc_container="$(docker ps --format '{{.Names}}' | awk '/keycloak|platform-kc/ { print; exit }')"
           if [[ -z "${kc_container}" ]]; then
             echo "[pw-smoke] HATA: çalışan keycloak container bulunamadı."
             docker ps --format '{{.Names}}'
