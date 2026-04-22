@@ -54,9 +54,18 @@ services:
       AUTH_SERVICE_JWT_PRIVATE_KEY: ${AUTH_SERVICE_JWT_PRIVATE_KEY:-}
       AUTH_SERVICE_JWT_PUBLIC_KEY: ${AUTH_SERVICE_JWT_PUBLIC_KEY:-}
       SERVICE_JWT_KEY_ID: ${SERVICE_JWT_KEY_ID:-local-service-jwt}
-      SPRING_CLOUD_VAULT_ENABLED: "false"
-      SPRING_CLOUD_VAULT_FAIL_FAST: "false"
-      SPRING_CLOUD_VAULT_KV_ENABLED: "false"
+      SPRING_CLOUD_VAULT_ENABLED: ${SPRING_CLOUD_VAULT_ENABLED:-false}
+      SPRING_CLOUD_VAULT_FAIL_FAST: ${SPRING_CLOUD_VAULT_FAIL_FAST:-false}
+      SPRING_CLOUD_VAULT_KV_ENABLED: ${SPRING_CLOUD_VAULT_KV_ENABLED:-false}
+      VAULT_URI: ${VAULT_URI:-http://vault:8200}
+      VAULT_SCHEME: ${VAULT_SCHEME:-http}
+      VAULT_AUTH_METHOD: ${VAULT_AUTH_METHOD:-TOKEN}
+      VAULT_TOKEN: ${VAULT_TOKEN:-}
+      VAULT_ROLE_ID: ${VAULT_ROLE_ID:-}
+      VAULT_SECRET_ID: ${VAULT_SECRET_ID:-}
+      VAULT_SECRET_PREFIX: ${VAULT_SECRET_PREFIX:-stage}
+      VAULT_KV_MOUNT: ${VAULT_KV_MOUNT:-secret}
+      VAULT_FAIL_FAST: ${VAULT_FAIL_FAST:-false}
       PERMISSION_SERVICE_BASE_URL: ${PERMISSION_SERVICE_BASE_URL:-http://permission-service}
       SERVICE_TOKEN_MINT_URL: ${SERVICE_TOKEN_MINT_URL:-http://auth-service:8088/oauth2/token}
       USER_DB_SCHEMA: ${USER_DB_SCHEMA:-public}
@@ -120,6 +129,7 @@ services:
       VAULT_ROLE_ID: ${VAULT_ROLE_ID:-}
       VAULT_SECRET_ID: ${VAULT_SECRET_ID:-}
       VAULT_SECRET_PREFIX: ${VAULT_SECRET_PREFIX:-stage}
+      VAULT_KV_MOUNT: ${VAULT_KV_MOUNT:-secret}
       VAULT_FAIL_FAST: ${VAULT_FAIL_FAST:-false}
       PERMISSION_SERVICE_BASE_URL: ${PERMISSION_SERVICE_BASE_URL:-http://permission-service}
       USER_SERVICE_BASE_URL: ${USER_SERVICE_BASE_URL:-http://user-service}
@@ -162,9 +172,18 @@ services:
       - microservice-network
     environment:
       SPRING_PROFILES_ACTIVE: ${VARIANT_SERVICE_PROFILES:-local,docker}
-      SPRING_CLOUD_VAULT_ENABLED: "false"
-      SPRING_CLOUD_VAULT_FAIL_FAST: "false"
-      SPRING_CLOUD_VAULT_KV_ENABLED: "false"
+      SPRING_CLOUD_VAULT_ENABLED: ${SPRING_CLOUD_VAULT_ENABLED:-false}
+      SPRING_CLOUD_VAULT_FAIL_FAST: ${SPRING_CLOUD_VAULT_FAIL_FAST:-false}
+      SPRING_CLOUD_VAULT_KV_ENABLED: ${SPRING_CLOUD_VAULT_KV_ENABLED:-false}
+      VAULT_URI: ${VAULT_URI:-http://vault:8200}
+      VAULT_SCHEME: ${VAULT_SCHEME:-http}
+      VAULT_AUTH_METHOD: ${VAULT_AUTH_METHOD:-TOKEN}
+      VAULT_TOKEN: ${VAULT_TOKEN:-}
+      VAULT_ROLE_ID: ${VAULT_ROLE_ID:-}
+      VAULT_SECRET_ID: ${VAULT_SECRET_ID:-}
+      VAULT_SECRET_PREFIX: ${VAULT_SECRET_PREFIX:-stage}
+      VAULT_KV_MOUNT: ${VAULT_KV_MOUNT:-secret}
+      VAULT_FAIL_FAST: ${VAULT_FAIL_FAST:-false}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       # RS256/JWKS doğrulaması (user JWT).
@@ -448,7 +467,7 @@ services:
     command: migrate
     environment:
       OPENFGA_DATASTORE_ENGINE: postgres
-      OPENFGA_DATASTORE_URI: "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres-db:5432/${POSTGRES_DB:-users}?sslmode=disable&search_path=openfga"
+      OPENFGA_DATASTORE_URI: ${OPENFGA_DATASTORE_URI:-postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres-db:5432/${POSTGRES_DB:-users}?sslmode=disable&search_path=openfga}
     networks:
       - microservice-network
     depends_on:
@@ -460,7 +479,7 @@ services:
     command: run
     environment:
       OPENFGA_DATASTORE_ENGINE: postgres
-      OPENFGA_DATASTORE_URI: "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres-db:5432/${POSTGRES_DB:-users}?sslmode=disable&search_path=openfga"
+      OPENFGA_DATASTORE_URI: ${OPENFGA_DATASTORE_URI:-postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres-db:5432/${POSTGRES_DB:-users}?sslmode=disable&search_path=openfga}
       OPENFGA_PLAYGROUND_ENABLED: "true"
       OPENFGA_METRICS_ENABLED: "true"
       OPENFGA_LOG_LEVEL: info
@@ -509,6 +528,7 @@ services:
       - VAULT_ROLE_ID=${VAULT_ROLE_ID:-}
       - VAULT_SECRET_ID=${VAULT_SECRET_ID:-}
       - VAULT_SECRET_PREFIX=${VAULT_SECRET_PREFIX:-stage}
+      - VAULT_KV_MOUNT=${VAULT_KV_MOUNT:-secret}
       - VAULT_FAIL_FAST=${VAULT_FAIL_FAST:-false}
       # Legacy internal API key doğrulaması kapatıldı (JWT zorunlu)
       - SECURITY_LEGACY_API_KEY_ENABLED=false

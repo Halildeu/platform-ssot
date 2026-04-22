@@ -4,7 +4,7 @@ set -euo pipefail
 ENV_NAME="${ENV:-stage}"
 VAULT_ADDR="${VAULT_ADDR:?VAULT_ADDR required}"
 VAULT_TOKEN="${VAULT_TOKEN:?VAULT_TOKEN required}"
-VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-secret}"
+VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-kv}"
 
 echo "[vault] target=${VAULT_ADDR} env=${ENV_NAME} mount=${VAULT_KV_MOUNT}"
 

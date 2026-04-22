@@ -335,14 +335,14 @@ jobs:
       - name: Refresh stage backend AppRole materials
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         env:
-          VAULT_ADDR_SECRET: ${{ secrets.VAULT_ADDR }}
+          VAULT_ADDR_STAGE_SECRET: ${{ secrets.VAULT_ADDR_STAGE }}
           VAULT_TOKEN_SECRET: ${{ secrets.VAULT_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
           set +x
 
-          vault_addr="${VAULT_ADDR_SECRET:-http://127.0.0.1:8200}"
+          vault_addr="${VAULT_ADDR_STAGE_SECRET:-http://127.0.0.1:8301}"
           if [ -z "${VAULT_TOKEN_SECRET:-}" ]; then
             echo "::notice title=deploy-backend::VAULT_TOKEN secret missing; stage AppRole refresh skipped, existing backend.env bootstrap will be used."
             exit 0
@@ -413,7 +413,7 @@ jobs:
           # VAULT_ADDR paylaşılır (deploy script render_backend_env çağrısı
           # için gerekli); VAULT_TOKEN KASITLI OLARAK EKLENMEMİŞTİR —
           # AppRole render precedence (deploy-backend.sh:150) korunsun diye.
-          VAULT_ADDR_SECRET: ${{ secrets.VAULT_ADDR }}
+          VAULT_ADDR_STAGE_SECRET: ${{ secrets.VAULT_ADDR_STAGE }}
           # STORY-0319 PR #3a: workflow_dispatch input override path'leri
           RENDER_ENV_BEFORE_DEPLOY_INPUT: ${{ github.event.inputs.render_env_before_deploy }}
           BUILD_LOCAL_INPUT: ${{ github.event.inputs.build_local }}
@@ -437,7 +437,7 @@ jobs:
           remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
           remote_profiles="${BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES:-}"
           repo_dir="${GITHUB_WORKSPACE}"
-          vault_addr="${VAULT_ADDR_SECRET:-http://127.0.0.1:8200}"
+          vault_addr="${VAULT_ADDR_STAGE_SECRET:-http://127.0.0.1:8301}"
 
           if [ ! -f "${remote_env_file}" ]; then
             echo "::error title=deploy-backend::backend env file missing: ${remote_env_file}"
@@ -466,6 +466,7 @@ jobs:
           RENDER_ENV_BEFORE_DEPLOY="${render_env}" \
           DEPLOY_ENV="stage" \
           VAULT_ADDR="${vault_addr}" \
+          VAULT_KV_MOUNT="kv" \
           GHCR_USERNAME="${GITHUB_ACTOR}" \
           GHCR_TOKEN="${GITHUB_TOKEN}" \
           TARGET_IMAGE_TAG="sha-${short_sha}" \
