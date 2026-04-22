@@ -41,14 +41,9 @@ fi
 
 NGINX_TLS_CERT_PATH="${NGINX_TLS_CERT_PATH:-${_default_tls_cert_path}}"
 NGINX_TLS_KEY_PATH="${NGINX_TLS_KEY_PATH:-${_default_tls_key_path}}"
-if [[ "${DEPLOY_ENV:-staging}" != "prod" && "${DEPLOY_ENV:-staging}" != "production" ]]; then
-  if [[ "${NGINX_TLS_CERT_PATH}" == "/home/halil/platform/tls/${PROD_SERVER_NAME_DEFAULT}/fullchain.pem" ]]; then
-    NGINX_TLS_CERT_PATH="${_default_tls_cert_path}"
-  fi
-  if [[ "${NGINX_TLS_KEY_PATH}" == "/home/halil/platform/tls/${PROD_SERVER_NAME_DEFAULT}/privkey.pem" ]]; then
-    NGINX_TLS_KEY_PATH="${_default_tls_key_path}"
-  fi
-fi
+# Stage can legitimately reuse an explicit wildcard or self-signed fallback
+# from ai.acik.com. Preserve operator-provided TLS paths; the cert guard below
+# validates SAN/CN coverage for testai.acik.com before nginx starts.
 # Host network mode: use 127.0.0.1 with host-side ports (Docker DNS unavailable)
 # STORY-0319: DEPLOY_ENV-aware gateway upstream port.
 #   - staging: api-gateway host port 8080 (backend/docker-compose.yml default)
