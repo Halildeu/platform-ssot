@@ -1,6 +1,6 @@
 import { GridVariant, GridVariantState } from '@mfe/shared-types';
 import { isAxiosError } from 'axios';
-import { api } from '@mfe/shared-http';
+import { api, getGatewayBaseUrl } from '@mfe/shared-http';
 import { buildAuthHeaders, registerTokenResolver as registerSharedTokenResolver } from '../auth/token-resolver';
 
 type VariantDto = {
@@ -36,8 +36,24 @@ const DEFAULT_VARIANT_NAME = 'Adsız Varyant';
 const LOCAL_CACHE_ENABLED = true;
 const GLOBAL_CACHE_TTL_MS = 5 * 60 * 1000; // 5 dakika — global variant cache süresi
 const GLOBAL_CACHE_TS_KEY = 'grid-variants-global-ts';
-const FETCH_BASE_URL =
-  typeof window !== 'undefined' && window.location?.origin ? window.location.origin : 'http://localhost';
+const FALLBACK_FETCH_ORIGIN = 'http://localhost';
+
+const trimLeadingSlash = (value: string): string => value.replace(/^\/+/, '');
+const trimTrailingSlash = (value: string): string => value.replace(/\/+$/, '');
+
+const resolveVariantsFetchBaseUrl = (): string => {
+  const gatewayBaseUrl = trimTrailingSlash(getGatewayBaseUrl());
+  if (/^https?:\/\//i.test(gatewayBaseUrl)) {
+    return `${gatewayBaseUrl}/`;
+  }
+
+  const origin =
+    typeof window !== 'undefined' && window.location?.origin ? window.location.origin : FALLBACK_FETCH_ORIGIN;
+  return new URL(`${trimLeadingSlash(gatewayBaseUrl)}/`, `${origin}/`).toString();
+};
+
+const buildVariantsFetchUrl = (suffix = ''): string =>
+  new URL(`${trimLeadingSlash(VARIANTS_BASE_URL)}${suffix}`, resolveVariantsFetchBaseUrl()).toString();
 
 const findGridIdByVariant = (variantId: string): string | undefined => {
   if (!hasBrowserEnv()) return undefined;
@@ -589,7 +605,7 @@ export const fetchGridVariants = async (gridId: string): Promise<GridVariant[]> 
 
   if (typeof fetch === 'function') {
     try {
-      const res = await fetchWithTimeout(`${FETCH_BASE_URL}${VARIANTS_BASE_URL}?gridId=${encodeURIComponent(gridId)}`, {
+      const res = await fetchWithTimeout(buildVariantsFetchUrl(`?gridId=${encodeURIComponent(gridId)}`), {
         headers: getAuthHeaders(),
       });
       if (!res.ok) {
@@ -687,7 +703,7 @@ export const fetchGridVariants = async (gridId: string): Promise<GridVariant[]> 
 export const createGridVariant = async (payload: CreateGridVariantPayload): Promise<GridVariant> => {
   if (typeof fetch === 'function') {
     try {
-      const res = await fetchWithTimeout(`${FETCH_BASE_URL}${VARIANTS_BASE_URL}`, {
+      const res = await fetchWithTimeout(buildVariantsFetchUrl(), {
         method: 'POST',
         headers: getJsonHeaders(),
         body: JSON.stringify(payload),
@@ -849,7 +865,7 @@ export const updateVariantPreference = async (payload: UpdateVariantPreferencePa
   };
   if (typeof fetch === 'function') {
     try {
-      const res = await fetchWithTimeout(`${FETCH_BASE_URL}${VARIANTS_BASE_URL}/${encodeURIComponent(variantId)}/preference`, {
+      const res = await fetchWithTimeout(buildVariantsFetchUrl(`/${encodeURIComponent(variantId)}/preference`), {
         method: 'PATCH',
         headers: getJsonHeaders(),
         body: JSON.stringify(body),

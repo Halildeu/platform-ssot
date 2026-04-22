@@ -2,11 +2,11 @@ import { test, beforeEach, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { webcrypto } from 'node:crypto';
 import {
+  registerGridVariantsTokenResolver,
   createGridVariant,
   fetchGridVariants,
   updateVariantPreference,
 } from '../variants.api';
-import { registerTokenResolver } from '../../auth/token-resolver';
 
 class LocalStorageMock {
   private store: Record<string, string> = {};
@@ -47,7 +47,7 @@ beforeEach(() => {
   };
   (globalThis as any).localStorage = localStorage;
   (globalThis as any).fetch = failingFetch;
-  registerTokenResolver();
+  registerGridVariantsTokenResolver();
 });
 
 after(() => {
@@ -56,7 +56,7 @@ after(() => {
   if (originalLocalStorage !== undefined) {
     (globalThis as any).localStorage = originalLocalStorage;
   }
-  registerTokenResolver();
+  registerGridVariantsTokenResolver();
 });
 
 test('sunucu erişilemediğinde varyantlar yerelde saklanır ve okunur', async () => {
@@ -219,6 +219,30 @@ test('metin olarak gelen boolean alanları doğru normalize eder', async () => {
   assert.equal(variants[0].isUserDefault, false);
   assert.equal(variants[0].isUserSelected, false);
   assert.equal(variants[0].isCompatible, true);
+
+  (globalThis as any).fetch = failingFetch;
+});
+
+test('fetchGridVariants browser fetch kolunda public gateway path /api/v1/variants kullanır', async () => {
+  const gridId = 'public-path-grid';
+  const capturedUrls: string[] = [];
+
+  (globalThis as any).window.location = {
+    origin: 'https://testai.acik.com',
+  };
+  (globalThis as any).fetch = async (url: string) => {
+    capturedUrls.push(url);
+    return {
+      ok: true,
+      json: async () => [],
+    } as any;
+  };
+
+  await fetchGridVariants(gridId);
+
+  assert.deepEqual(capturedUrls, [
+    `https://testai.acik.com/api/v1/variants?gridId=${encodeURIComponent(gridId)}`,
+  ]);
 
   (globalThis as any).fetch = failingFetch;
 });
@@ -391,10 +415,10 @@ test('updateVariantPreference istek gövdesi sadece varyant kimliğine göre de�
 });
 
 test('updateVariantPreference token resolver ile Authorization başlığını gönderir', async () => {
-  const capturedHeaders: Record<string, string>[] = [];
-  registerTokenResolver(() => 'resolver-token');
+  const capturedAuthorizationValues: Array<string | null> = [];
+  registerGridVariantsTokenResolver(() => 'resolver-token');
   (globalThis as any).fetch = async (_url: string, init?: RequestInit) => {
-    capturedHeaders.push((init?.headers as Record<string, string>) ?? {});
+    capturedAuthorizationValues.push(new Headers(init?.headers).get('Authorization'));
     return {
       ok: true,
       json: async () => ({
@@ -418,9 +442,9 @@ test('updateVariantPreference token resolver ile Authorization başlığını g�
 
   await updateVariantPreference({ variantId: 'auth-test', isDefault: true });
 
-  assert.equal(capturedHeaders.length, 1);
-  assert.equal(capturedHeaders[0]?.Authorization, 'Bearer resolver-token');
+  assert.equal(capturedAuthorizationValues.length, 1);
+  assert.equal(capturedAuthorizationValues[0], 'Bearer resolver-token');
 
   (globalThis as any).fetch = failingFetch;
-  registerTokenResolver();
+  registerGridVariantsTokenResolver();
 });
