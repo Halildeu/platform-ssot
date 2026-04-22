@@ -9,16 +9,46 @@ NGINX_CONFIG_PATH="${NGINX_CONFIG_PATH:-${NGINX_RUNTIME_DIR}/default.conf}"
 NGINX_PORT="${NGINX_PORT:-80}"
 NGINX_HTTP_PORT="${NGINX_HTTP_PORT:-80}"
 NGINX_HTTPS_PORT="${NGINX_HTTPS_PORT:-443}"
-NGINX_SERVER_NAME="${NGINX_SERVER_NAME:-ai.acik.com}"
 NGINX_TLS_ENABLED="${NGINX_TLS_ENABLED:-true}"
+PROD_SERVER_NAME_DEFAULT="ai.acik.com"
+STAGE_SERVER_NAME_DEFAULT="testai.acik.com"
 # Default TLS paths point to the public cert directory for ${NGINX_SERVER_NAME}.
 # NOTE: Previously defaulted to /state/vault/tls (Vault's dev self-signed cert),
 # which caused NET::ERR_CERT_AUTHORITY_INVALID in production on 2026-04-14.
 # Root cause: nginx mount shared host path with Vault's dev TLS dir; on Vault
 # reinit the tls.crt/tls.key files were overwritten with a CN=vault self-signed
 # cert. Fix: pin to public cert directory + pre-flight guard below.
-NGINX_TLS_CERT_PATH="${NGINX_TLS_CERT_PATH:-/home/halil/platform/tls/ai.acik.com/fullchain.pem}"
-NGINX_TLS_KEY_PATH="${NGINX_TLS_KEY_PATH:-/home/halil/platform/tls/ai.acik.com/privkey.pem}"
+case "${DEPLOY_ENV:-staging}" in
+  prod|production)
+    _default_server_name="${PROD_SERVER_NAME_DEFAULT}"
+    _default_tls_cert_path="/home/halil/platform/tls/${PROD_SERVER_NAME_DEFAULT}/fullchain.pem"
+    _default_tls_key_path="/home/halil/platform/tls/${PROD_SERVER_NAME_DEFAULT}/privkey.pem"
+    ;;
+  *)
+    _default_server_name="${STAGE_SERVER_NAME_DEFAULT}"
+    _default_tls_cert_path="/home/halil/platform/tls/${STAGE_SERVER_NAME_DEFAULT}/fullchain.pem"
+    _default_tls_key_path="/home/halil/platform/tls/${STAGE_SERVER_NAME_DEFAULT}/privkey.pem"
+    ;;
+esac
+
+NGINX_SERVER_NAME="${NGINX_SERVER_NAME:-${_default_server_name}}"
+if [[ "${DEPLOY_ENV:-staging}" != "prod" && "${DEPLOY_ENV:-staging}" != "production" ]]; then
+  if [[ "${NGINX_SERVER_NAME}" == "_" || "${NGINX_SERVER_NAME}" == "${PROD_SERVER_NAME_DEFAULT}" ]]; then
+    echo "[notice] stage nginx server_name drift detected; using ${_default_server_name}" >&2
+    NGINX_SERVER_NAME="${_default_server_name}"
+  fi
+fi
+
+NGINX_TLS_CERT_PATH="${NGINX_TLS_CERT_PATH:-${_default_tls_cert_path}}"
+NGINX_TLS_KEY_PATH="${NGINX_TLS_KEY_PATH:-${_default_tls_key_path}}"
+if [[ "${DEPLOY_ENV:-staging}" != "prod" && "${DEPLOY_ENV:-staging}" != "production" ]]; then
+  if [[ "${NGINX_TLS_CERT_PATH}" == "/home/halil/platform/tls/${PROD_SERVER_NAME_DEFAULT}/fullchain.pem" ]]; then
+    NGINX_TLS_CERT_PATH="${_default_tls_cert_path}"
+  fi
+  if [[ "${NGINX_TLS_KEY_PATH}" == "/home/halil/platform/tls/${PROD_SERVER_NAME_DEFAULT}/privkey.pem" ]]; then
+    NGINX_TLS_KEY_PATH="${_default_tls_key_path}"
+  fi
+fi
 # Host network mode: use 127.0.0.1 with host-side ports (Docker DNS unavailable)
 # STORY-0319: DEPLOY_ENV-aware gateway upstream port.
 #   - staging: api-gateway host port 8080 (backend/docker-compose.yml default)
@@ -56,6 +86,7 @@ if [[ -n "${_upstream_port}" && "${_upstream_port}" != "${_expected_port}" ]]; t
   exit 1
 fi
 unset _upstream_port _expected_port
+unset _default_server_name _default_tls_cert_path _default_tls_key_path
 # Default to host port (8081) since nginx runs --network host and can't resolve Docker DNS.
 # Keycloak container maps 8080→8081 on host.
 NGINX_KEYCLOAK_UPSTREAM="${NGINX_KEYCLOAK_UPSTREAM:-http://127.0.0.1:8081}"

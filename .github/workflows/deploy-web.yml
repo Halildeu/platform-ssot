@@ -112,6 +112,7 @@ jobs:
       - name: Build web (Ubuntu single-domain bundle)
         if: ${{ env.DEPLOY_ENABLED == 'true' && env.WEB_DEPLOY_PROVIDER == 'ubuntu-nginx' }}
         env:
+          DEPLOY_ENV: ${{ github.event.inputs.env || 'stage' }}
           WEB_PUBLIC_ORIGIN: ${{ vars.WEB_PUBLIC_ORIGIN }}
           WEB_AUTH_MODE: ${{ vars.WEB_AUTH_MODE }}
           WEB_KEYCLOAK_PUBLIC_URL: ${{ vars.WEB_KEYCLOAK_PUBLIC_URL }}
@@ -393,7 +394,11 @@ jobs:
           key_path="${WEB_TLS_KEY_PATH}"
           cert_dir="$(dirname "${cert_path}")"
           key_dir="$(dirname "${key_path}")"
-          server_name="${WEB_EDGE_SERVER_NAME:-ai.acik.com}"
+          server_name="${WEB_EDGE_SERVER_NAME:-testai.acik.com}"
+          if [[ "${server_name}" == "ai.acik.com" || "${server_name}" == "_" ]]; then
+            echo "::notice title=deploy-web::Stage certificate CN drifted to ${server_name}; coercing to testai.acik.com."
+            server_name="testai.acik.com"
+          fi
 
           mkdir -p "${cert_dir}" "${key_dir}"
 
@@ -442,12 +447,26 @@ jobs:
           set -euo pipefail
           set +x
 
-          if [ -z "${WEB_PUBLIC_ORIGIN:-}" ]; then
-            echo "::error title=deploy-web::WEB_PUBLIC_ORIGIN missing; refusing stage host deploy."
-            exit 1
+          repo_dir="${GITHUB_WORKSPACE}"
+          public_origin="${WEB_PUBLIC_ORIGIN:-https://testai.acik.com}"
+          public_origin="${public_origin%/}"
+          if [[ "${public_origin}" == "https://ai.acik.com" ]]; then
+            echo "::notice title=deploy-web::Stage public origin drift detected; coercing to https://testai.acik.com."
+            public_origin="https://testai.acik.com"
           fi
 
-          repo_dir="${GITHUB_WORKSPACE}"
+          keycloak_public_url="${WEB_KEYCLOAK_PUBLIC_URL:-${public_origin}}"
+          keycloak_public_url="${keycloak_public_url%/}"
+          if [[ "${keycloak_public_url}" == "https://ai.acik.com" ]]; then
+            echo "::notice title=deploy-web::Stage Keycloak public URL drift detected; coercing to ${public_origin}."
+            keycloak_public_url="${public_origin}"
+          fi
+
+          edge_server_name="${WEB_EDGE_SERVER_NAME:-testai.acik.com}"
+          if [[ "${edge_server_name}" == "ai.acik.com" || "${edge_server_name}" == "_" ]]; then
+            echo "::notice title=deploy-web::Stage edge server_name drift detected; coercing to testai.acik.com."
+            edge_server_name="testai.acik.com"
+          fi
 
           chmod +x \
             "${repo_dir}/deploy/ubuntu/deploy-frontend.sh" \
@@ -464,15 +483,15 @@ jobs:
           # boşsa script fallback devreye girer.
           DEPLOY_ENV="stage"
 
-          PUBLIC_ORIGIN="${WEB_PUBLIC_ORIGIN}" \
+          PUBLIC_ORIGIN="${public_origin}" \
           DEPLOY_ENV="${DEPLOY_ENV}" \
           AUTH_MODE="${WEB_AUTH_MODE:-keycloak}" \
-          KEYCLOAK_PUBLIC_URL="${WEB_KEYCLOAK_PUBLIC_URL:-${WEB_PUBLIC_ORIGIN}}" \
+          KEYCLOAK_PUBLIC_URL="${keycloak_public_url}" \
           KEYCLOAK_REALM="${WEB_KEYCLOAK_REALM:-serban}" \
           KEYCLOAK_CLIENT_ID="${WEB_KEYCLOAK_CLIENT_ID:-frontend}" \
           NGINX_GATEWAY_UPSTREAM="${WEB_GATEWAY_UPSTREAM:-}" \
           NGINX_KEYCLOAK_UPSTREAM="${WEB_KEYCLOAK_UPSTREAM:-}" \
-          NGINX_SERVER_NAME="${WEB_EDGE_SERVER_NAME:-_}" \
+          NGINX_SERVER_NAME="${edge_server_name}" \
           NGINX_TLS_ENABLED="${WEB_TLS_ENABLED:-false}" \
           NGINX_TLS_CERT_PATH="${WEB_TLS_CERT_PATH:-}" \
           NGINX_TLS_KEY_PATH="${WEB_TLS_KEY_PATH:-}" \
