@@ -1,35 +1,76 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-WEB_CURRENT_LINK="${WEB_CURRENT_LINK:-/home/halil/platform/web/current}"
-NGINX_RUNTIME_DIR="${NGINX_RUNTIME_DIR:-/home/halil/platform/web/nginx}"
-NGINX_CONTAINER_NAME="${NGINX_CONTAINER_NAME:-platform-web-nginx}"
 NGINX_IMAGE="${NGINX_IMAGE:-nginx:1.27-alpine}"
-NGINX_CONFIG_PATH="${NGINX_CONFIG_PATH:-${NGINX_RUNTIME_DIR}/default.conf}"
-NGINX_PORT="${NGINX_PORT:-80}"
-NGINX_HTTP_PORT="${NGINX_HTTP_PORT:-80}"
-NGINX_HTTPS_PORT="${NGINX_HTTPS_PORT:-443}"
 NGINX_TLS_ENABLED="${NGINX_TLS_ENABLED:-true}"
+PROD_WEB_ROOT_DEFAULT="/home/halil/platform/web"
+STAGE_WEB_ROOT_DEFAULT="/home/halil/platform/web-stage"
 PROD_SERVER_NAME_DEFAULT="ai.acik.com"
 STAGE_SERVER_NAME_DEFAULT="testai.acik.com"
-# Default TLS paths point to the public cert directory for ${NGINX_SERVER_NAME}.
-# NOTE: Previously defaulted to /state/vault/tls (Vault's dev self-signed cert),
-# which caused NET::ERR_CERT_AUTHORITY_INVALID in production on 2026-04-14.
-# Root cause: nginx mount shared host path with Vault's dev TLS dir; on Vault
-# reinit the tls.crt/tls.key files were overwritten with a CN=vault self-signed
-# cert. Fix: pin to public cert directory + pre-flight guard below.
-case "${DEPLOY_ENV:-staging}" in
+PROD_CONTAINER_NAME_DEFAULT="platform-web-nginx"
+STAGE_CONTAINER_NAME_DEFAULT="platform-web-nginx-stage"
+PROD_HTTP_PORT_DEFAULT="80"
+PROD_HTTPS_PORT_DEFAULT="443"
+STAGE_HTTP_PORT_DEFAULT="5544"
+STAGE_HTTPS_PORT_DEFAULT="5545"
+case "$(printf '%s' "${DEPLOY_ENV:-staging}" | tr '[:upper:]' '[:lower:]')" in
   prod|production)
+    _default_web_current_link="${PROD_WEB_ROOT_DEFAULT}/current"
+    _default_nginx_runtime_dir="${PROD_WEB_ROOT_DEFAULT}/nginx"
+    _default_nginx_container_name="${PROD_CONTAINER_NAME_DEFAULT}"
     _default_server_name="${PROD_SERVER_NAME_DEFAULT}"
     _default_tls_cert_path="/home/halil/platform/tls/${PROD_SERVER_NAME_DEFAULT}/fullchain.pem"
     _default_tls_key_path="/home/halil/platform/tls/${PROD_SERVER_NAME_DEFAULT}/privkey.pem"
+    _default_http_port="${PROD_HTTP_PORT_DEFAULT}"
+    _default_https_port="${PROD_HTTPS_PORT_DEFAULT}"
     ;;
   *)
+    _default_web_current_link="${STAGE_WEB_ROOT_DEFAULT}/current"
+    _default_nginx_runtime_dir="${STAGE_WEB_ROOT_DEFAULT}/nginx"
+    _default_nginx_container_name="${STAGE_CONTAINER_NAME_DEFAULT}"
     _default_server_name="${STAGE_SERVER_NAME_DEFAULT}"
     _default_tls_cert_path="/home/halil/platform/tls/${STAGE_SERVER_NAME_DEFAULT}/fullchain.pem"
     _default_tls_key_path="/home/halil/platform/tls/${STAGE_SERVER_NAME_DEFAULT}/privkey.pem"
+    _default_http_port="${STAGE_HTTP_PORT_DEFAULT}"
+    _default_https_port="${STAGE_HTTPS_PORT_DEFAULT}"
     ;;
 esac
+
+WEB_CURRENT_LINK="${WEB_CURRENT_LINK:-${_default_web_current_link}}"
+NGINX_RUNTIME_DIR="${NGINX_RUNTIME_DIR:-${_default_nginx_runtime_dir}}"
+NGINX_CONTAINER_NAME="${NGINX_CONTAINER_NAME:-${_default_nginx_container_name}}"
+NGINX_CONFIG_PATH="${NGINX_CONFIG_PATH:-${NGINX_RUNTIME_DIR}/default.conf}"
+NGINX_PORT="${NGINX_PORT:-${_default_http_port}}"
+NGINX_HTTP_PORT="${NGINX_HTTP_PORT:-${_default_http_port}}"
+NGINX_HTTPS_PORT="${NGINX_HTTPS_PORT:-${_default_https_port}}"
+
+if [[ "${DEPLOY_ENV:-staging}" != "prod" && "${DEPLOY_ENV:-staging}" != "production" ]]; then
+  if [[ "${WEB_CURRENT_LINK}" == "${PROD_WEB_ROOT_DEFAULT}/current" ]]; then
+    echo "[notice] stage current symlink drift detected; using ${_default_web_current_link}" >&2
+    WEB_CURRENT_LINK="${_default_web_current_link}"
+  fi
+  if [[ "${NGINX_RUNTIME_DIR}" == "${PROD_WEB_ROOT_DEFAULT}/nginx" ]]; then
+    echo "[notice] stage nginx runtime dir drift detected; using ${_default_nginx_runtime_dir}" >&2
+    NGINX_RUNTIME_DIR="${_default_nginx_runtime_dir}"
+    NGINX_CONFIG_PATH="${NGINX_RUNTIME_DIR}/default.conf"
+  fi
+  if [[ "${NGINX_CONTAINER_NAME}" == "${PROD_CONTAINER_NAME_DEFAULT}" ]]; then
+    echo "[notice] stage nginx container drift detected; using ${_default_nginx_container_name}" >&2
+    NGINX_CONTAINER_NAME="${_default_nginx_container_name}"
+  fi
+  if [[ "${NGINX_PORT}" == "${PROD_HTTP_PORT_DEFAULT}" ]]; then
+    echo "[notice] stage nginx port drift detected; using ${_default_http_port}" >&2
+    NGINX_PORT="${_default_http_port}"
+  fi
+  if [[ "${NGINX_HTTP_PORT}" == "${PROD_HTTP_PORT_DEFAULT}" ]]; then
+    echo "[notice] stage nginx HTTP port drift detected; using ${_default_http_port}" >&2
+    NGINX_HTTP_PORT="${_default_http_port}"
+  fi
+  if [[ "${NGINX_HTTPS_PORT}" == "${PROD_HTTPS_PORT_DEFAULT}" ]]; then
+    echo "[notice] stage nginx HTTPS port drift detected; using ${_default_https_port}" >&2
+    NGINX_HTTPS_PORT="${_default_https_port}"
+  fi
+fi
 
 NGINX_SERVER_NAME="${NGINX_SERVER_NAME:-${_default_server_name}}"
 if [[ "${DEPLOY_ENV:-staging}" != "prod" && "${DEPLOY_ENV:-staging}" != "production" ]]; then
@@ -41,6 +82,16 @@ fi
 
 NGINX_TLS_CERT_PATH="${NGINX_TLS_CERT_PATH:-${_default_tls_cert_path}}"
 NGINX_TLS_KEY_PATH="${NGINX_TLS_KEY_PATH:-${_default_tls_key_path}}"
+if [[ "${DEPLOY_ENV:-staging}" != "prod" && "${DEPLOY_ENV:-staging}" != "production" ]]; then
+  if [[ "${NGINX_TLS_CERT_PATH}" == "/home/halil/platform/tls/${PROD_SERVER_NAME_DEFAULT}/fullchain.pem" ]]; then
+    echo "[notice] stage nginx TLS cert drift detected; using ${_default_tls_cert_path}" >&2
+    NGINX_TLS_CERT_PATH="${_default_tls_cert_path}"
+  fi
+  if [[ "${NGINX_TLS_KEY_PATH}" == "/home/halil/platform/tls/${PROD_SERVER_NAME_DEFAULT}/privkey.pem" ]]; then
+    echo "[notice] stage nginx TLS key drift detected; using ${_default_tls_key_path}" >&2
+    NGINX_TLS_KEY_PATH="${_default_tls_key_path}"
+  fi
+fi
 # Stage can legitimately reuse an explicit wildcard or self-signed fallback
 # from ai.acik.com. Preserve operator-provided TLS paths; the cert guard below
 # validates SAN/CN coverage for testai.acik.com before nginx starts.
@@ -82,6 +133,7 @@ if [[ -n "${_upstream_port}" && "${_upstream_port}" != "${_expected_port}" ]]; t
 fi
 unset _upstream_port _expected_port
 unset _default_server_name _default_tls_cert_path _default_tls_key_path
+unset _default_web_current_link _default_nginx_runtime_dir _default_nginx_container_name _default_http_port _default_https_port
 # Default to host port (8081) since nginx runs --network host and can't resolve Docker DNS.
 # Keycloak container maps 8080→8081 on host.
 NGINX_KEYCLOAK_UPSTREAM="${NGINX_KEYCLOAK_UPSTREAM:-http://127.0.0.1:8081}"

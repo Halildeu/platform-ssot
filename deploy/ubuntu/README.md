@@ -175,10 +175,18 @@ Bu repo artık Ubuntu üzerinde tek-domain statik frontend bundle'ı da üretebi
 
 Önerilen host path'leri:
 
-- release klasörü:
+- prod release klasörü:
   - `/home/halil/platform/web/releases/<git-sha>`
-- aktif symlink:
+- prod aktif symlink:
   - `/home/halil/platform/web/current`
+- stage release klasörü:
+  - `/home/halil/platform/web-stage/releases/<git-sha>`
+- stage aktif symlink:
+  - `/home/halil/platform/web-stage/current`
+- prod nginx runtime:
+  - `/home/halil/platform/web/nginx`
+- stage nginx runtime:
+  - `/home/halil/platform/web-stage/nginx`
 
 Build sırasında tek-domain public origin env'i zorunludur:
 
@@ -235,6 +243,9 @@ Bu akış şu anda çekirdek remote setini paketler:
 
 - `stage` için self-hosted runner üstünden host deploy yapılır
 - `prod/non-stage` için `WEB_SSH_DEPLOY_ENABLED=true` ise SSH deploy yolu kullanılır
+- `stage` deploy artık prod web root/container/state dosyalarını paylaşmaz;
+  vars drift ederse script fail-closed olarak stage path'lerine zorlar
+  (`/home/halil/platform/web-stage/*`, `platform-web-nginx-stage`)
 
 Canlı / secure-context için ek GitHub environment var'ları:
 
@@ -252,9 +263,16 @@ Canlı / secure-context için ek GitHub environment var'ları:
 Stage üzerinde gerçek sertifika henüz yoksa geçici self-signed fallback kullanılabilir:
 
 - `WEB_TLS_SELF_SIGNED=true`
-- `WEB_TLS_CERT_PATH=/home/halil/platform/tls/ai.acik.com/fullchain.pem`
-- `WEB_TLS_KEY_PATH=/home/halil/platform/tls/ai.acik.com/privkey.pem`
+- `WEB_TLS_CERT_PATH=/home/halil/platform/tls/testai.acik.com/fullchain.pem`
+- `WEB_TLS_KEY_PATH=/home/halil/platform/tls/testai.acik.com/privkey.pem`
 
 Bu fallback yalnız `deploy-stage-web` self-hosted job'ında, cert dosyaları yoksa `openssl` ile 30 günlük self-signed sertifika üretir. Amaç secure-context açıp stage smoke'u tamamlamaktır; public canlı için yine geçerli CA sertifikası tercih edilmelidir.
 
 `WEB_GATEWAY_UPSTREAM` verilmezse frontend Nginx varsayılan olarak `http://127.0.0.1:8080` kullanır. Stage host'ta gateway farklı host portunda yayınlanıyorsa bu değişken zorunludur.
+
+Stage için güvenli varsayılan edge portları:
+
+- `WEB_HTTP_PORT=5544`
+- `WEB_HTTPS_PORT=5545`
+
+Amaç stage deploy'un prod `80/443` listener'ını devralmasını engellemektir.

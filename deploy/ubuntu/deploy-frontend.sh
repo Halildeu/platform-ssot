@@ -20,6 +20,8 @@ NGINX_CONTAINER_ENABLED="${NGINX_CONTAINER_ENABLED:-false}"
 NGINX_CONTAINER_SCRIPT="${NGINX_CONTAINER_SCRIPT:-${REPO_DIR}/deploy/ubuntu/run-frontend-nginx-container.sh}"
 PROD_PUBLIC_ORIGIN_DEFAULT="${PROD_PUBLIC_ORIGIN_DEFAULT:-https://ai.acik.com}"
 STAGE_PUBLIC_ORIGIN_DEFAULT="${STAGE_PUBLIC_ORIGIN_DEFAULT:-https://testai.acik.com}"
+PROD_WEB_ROOT_DEFAULT="/home/halil/platform/web"
+STAGE_WEB_ROOT_DEFAULT="/home/halil/platform/web-stage"
 
 require_cmd() {
   if ! command -v "$1" >/dev/null 2>&1; then
@@ -56,6 +58,41 @@ normalize_stage_public_settings() {
   esac
 }
 
+normalize_stage_path_settings() {
+  local deploy_env
+  local prod_releases_default="${PROD_WEB_ROOT_DEFAULT}/releases"
+  local prod_current_link_default="${PROD_WEB_ROOT_DEFAULT}/current"
+  local stage_releases_default="${STAGE_WEB_ROOT_DEFAULT}/releases"
+  local stage_current_link_default="${STAGE_WEB_ROOT_DEFAULT}/current"
+  local prod_current_release_default="${STATE_DIR}/web.current-release"
+  local prod_previous_release_default="${STATE_DIR}/web.previous-release"
+  local stage_current_release_default="${STATE_DIR}/web-stage.current-release"
+  local stage_previous_release_default="${STATE_DIR}/web-stage.previous-release"
+
+  deploy_env="$(printf '%s' "${DEPLOY_ENV:-}" | tr '[:upper:]' '[:lower:]')"
+
+  case "${deploy_env}" in
+    stage|staging|test)
+      if [[ "${WEB_RELEASES_DIR}" == "${prod_releases_default}" ]]; then
+        echo "[deploy] stage release dir drift detected; using ${stage_releases_default}" >&2
+        WEB_RELEASES_DIR="${stage_releases_default}"
+      fi
+      if [[ "${WEB_CURRENT_LINK}" == "${prod_current_link_default}" ]]; then
+        echo "[deploy] stage current symlink drift detected; using ${stage_current_link_default}" >&2
+        WEB_CURRENT_LINK="${stage_current_link_default}"
+      fi
+      if [[ "${CURRENT_RELEASE_FILE}" == "${prod_current_release_default}" ]]; then
+        echo "[deploy] stage current-release state drift detected; using ${stage_current_release_default}" >&2
+        CURRENT_RELEASE_FILE="${stage_current_release_default}"
+      fi
+      if [[ "${PREVIOUS_RELEASE_FILE}" == "${prod_previous_release_default}" ]]; then
+        echo "[deploy] stage previous-release state drift detected; using ${stage_previous_release_default}" >&2
+        PREVIOUS_RELEASE_FILE="${stage_previous_release_default}"
+      fi
+      ;;
+  esac
+}
+
 sync_repo() {
   if [[ -d "${REPO_DIR}/.git" ]]; then
     git -C "${REPO_DIR}" fetch origin "${REPO_BRANCH}"
@@ -78,7 +115,8 @@ main() {
 
   sync_repo
   normalize_stage_public_settings
-  mkdir -p "${STATE_DIR}" "${WEB_RELEASES_DIR}"
+  normalize_stage_path_settings
+  mkdir -p "${STATE_DIR}" "${WEB_RELEASES_DIR}" "$(dirname "${WEB_CURRENT_LINK}")"
 
   if [[ -L "${WEB_CURRENT_LINK}" ]]; then
     readlink "${WEB_CURRENT_LINK}" > "${PREVIOUS_RELEASE_FILE}" || true
