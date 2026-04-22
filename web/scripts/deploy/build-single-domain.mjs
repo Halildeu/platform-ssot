@@ -124,6 +124,21 @@ function resolveKeycloakPublicUrl(publicOrigin, ...candidates) {
   return publicOrigin;
 }
 
+function resolveKeycloakRealm(...candidates) {
+  for (const candidate of candidates) {
+    const normalized = String(candidate ?? '').trim();
+    if (!normalized) {
+      continue;
+    }
+    if (isStageLikeDeploy && normalized === 'serban') {
+      continue;
+    }
+    return normalized;
+  }
+
+  return isStageLikeDeploy ? 'platform-test' : 'serban';
+}
+
 const publicOrigin = resolvePublicOrigin(
   process.env.WEB_PUBLIC_ORIGIN ||
     process.env.VITE_FRONTEND_PUBLIC_ORIGIN ||
@@ -141,11 +156,12 @@ const keycloakUrl = resolveKeycloakPublicUrl(
     process.env.WEB_KEYCLOAK_PUBLIC_URL ||
     publicOrigin,
 );
-const keycloakRealm =
+const keycloakRealm = resolveKeycloakRealm(
   process.env.VITE_KEYCLOAK_REALM ||
   process.env.KEYCLOAK_REALM ||
   process.env.WEB_KEYCLOAK_REALM ||
-  'serban';
+  'serban',
+);
 const keycloakClientId =
   process.env.VITE_KEYCLOAK_CLIENT_ID ||
   process.env.KEYCLOAK_CLIENT_ID ||

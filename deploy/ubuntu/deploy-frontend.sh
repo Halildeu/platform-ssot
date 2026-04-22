@@ -48,6 +48,10 @@ normalize_stage_public_settings() {
       if [[ -z "${KEYCLOAK_PUBLIC_URL}" || "${KEYCLOAK_PUBLIC_URL}" == "${PROD_PUBLIC_ORIGIN_DEFAULT}" ]]; then
         KEYCLOAK_PUBLIC_URL="${PUBLIC_ORIGIN}"
       fi
+      if [[ -z "${KEYCLOAK_REALM}" || "${KEYCLOAK_REALM}" == "serban" ]]; then
+        echo "[deploy] stage keycloak realm drift detected; using platform-test" >&2
+        KEYCLOAK_REALM="platform-test"
+      fi
       ;;
   esac
 }
