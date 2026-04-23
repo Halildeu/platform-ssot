@@ -517,7 +517,32 @@ main() {
 
   # Ensure infrastructure is up (no recreate — prevents Vault seal, Keycloak cold-start).
   # Only starts containers if not already running.
-  compose_run "${compose_args[@]}" up -d --no-recreate postgres-db openfga-migrate openfga vault keycloak
+  #
+  # Stage hosts may keep an external postgres compose pair (platform-pg-*) that
+  # already owns host :5432. In that mode `postgres-db` (project service) cannot
+  # bind and the whole deploy aborts before backend recreates. If bind conflict is
+  # explicitly on postgres :5432 and an external pg container exists, continue with
+  # remaining infra services and skip postgres-db bootstrap for this run.
+  local infra_bootstrap_log
+  local infra_bootstrap_rc=0
+  local postgres_bootstrap_skipped="0"
+
+  set +e
+  infra_bootstrap_log="$(compose_run "${compose_args[@]}" up -d --no-recreate postgres-db openfga-migrate openfga vault keycloak 2>&1)"
+  infra_bootstrap_rc=$?
+  set -e
+  printf '%s\n' "${infra_bootstrap_log}"
+
+  if [[ "${infra_bootstrap_rc}" -ne 0 ]]; then
+    if printf '%s' "${infra_bootstrap_log}" | grep -q 'failed to bind host port for 0.0.0.0:5432' && \
+       docker ps --format '{{.Names}}' | grep -Eq '^platform-pg-(test|prod)$'; then
+      echo "[deploy] postgres-db bootstrap skipped (host :5432 already owned by external platform-pg-* container)."
+      postgres_bootstrap_skipped="1"
+      compose_run "${compose_args[@]}" up -d --no-recreate openfga-migrate openfga vault keycloak
+    else
+      return "${infra_bootstrap_rc}"
+    fi
+  fi
   # P1.10: KMS auto-unseal mode skips the vault-unseal Shamir sidecar (Vault
   # self-unseals via the cloud KMS seal stanza). VAULT_SEAL_MODE=shamir (or
   # unset) keeps the legacy sidecar loop for local/staging.
@@ -527,7 +552,11 @@ main() {
   else
     compose_run "${compose_args[@]}" up -d --no-recreate vault-unseal vault-audit-init vault-snapshot 2>/dev/null || true
   fi
-  wait_for_service_state postgres-db healthy 60
+  if [[ "${postgres_bootstrap_skipped}" != "1" ]]; then
+    wait_for_service_state postgres-db healthy 60
+  else
+    echo "[deploy] postgres-db health wait skipped (external pg bridge mode)."
+  fi
   wait_for_service_state vault healthy 120
   wait_for_service_state openfga running 60
 
