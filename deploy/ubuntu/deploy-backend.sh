@@ -517,7 +517,46 @@ main() {
 
   # Ensure infrastructure is up (no recreate — prevents Vault seal, Keycloak cold-start).
   # Only starts containers if not already running.
-  compose_run "${compose_args[@]}" up -d --no-recreate postgres-db openfga-migrate openfga vault keycloak
+  #
+  # Stage hosts may keep an external postgres compose pair (platform-pg-*) that
+  # already owns host :5432. In that mode `postgres-db` (project service) cannot
+  # bind and the whole deploy aborts before backend recreates. If bind conflict is
+  # explicitly on postgres :5432 and an external pg container exists, continue with
+  # remaining infra services and skip postgres-db bootstrap for this run.
+  local infra_bootstrap_log
+  local infra_bootstrap_rc=0
+  local infra_bootstrap_log_file
+  local external_stateful_mode="0"
+  local postgres_bootstrap_skipped="0"
+
+  infra_bootstrap_log_file="$(mktemp)"
+  if compose_run "${compose_args[@]}" up -d --no-recreate postgres-db openfga-migrate openfga vault keycloak >"${infra_bootstrap_log_file}" 2>&1; then
+    infra_bootstrap_rc=0
+  else
+    infra_bootstrap_rc=$?
+  fi
+  infra_bootstrap_log="$(cat "${infra_bootstrap_log_file}")"
+  rm -f "${infra_bootstrap_log_file}"
+  printf '%s\n' "${infra_bootstrap_log}"
+
+  if [[ "${infra_bootstrap_rc}" -ne 0 ]]; then
+    if printf '%s' "${infra_bootstrap_log}" | grep -q 'failed to bind host port for 0.0.0.0:5432' && \
+       docker ps --format '{{.Names}}' | grep -Eq '^platform-pg-(test|prod)$'; then
+      echo "[deploy] postgres-db bootstrap skipped (host :5432 already owned by external platform-pg-* container)."
+      echo "[deploy] external stateful mode enabled (postgres)."
+      external_stateful_mode="1"
+      postgres_bootstrap_skipped="1"
+      compose_run "${compose_args[@]}" up -d --no-recreate --no-deps openfga-migrate openfga
+    elif printf '%s' "${infra_bootstrap_log}" | grep -q 'failed to bind host port for 0.0.0.0:8200' && \
+         docker ps --format '{{.Names}}' | grep -Eq '^platform-vault-(test|prod)$'; then
+      echo "[deploy] vault bootstrap skipped (host :8200 already owned by external platform-vault-* container)."
+      echo "[deploy] external stateful mode enabled (vault)."
+      external_stateful_mode="1"
+      compose_run "${compose_args[@]}" up -d --no-recreate --no-deps openfga-migrate openfga
+    else
+      return "${infra_bootstrap_rc}"
+    fi
+  fi
   # P1.10: KMS auto-unseal mode skips the vault-unseal Shamir sidecar (Vault
   # self-unseals via the cloud KMS seal stanza). VAULT_SEAL_MODE=shamir (or
   # unset) keeps the legacy sidecar loop for local/staging.
@@ -527,8 +566,16 @@ main() {
   else
     compose_run "${compose_args[@]}" up -d --no-recreate vault-unseal vault-audit-init vault-snapshot 2>/dev/null || true
   fi
-  wait_for_service_state postgres-db healthy 60
-  wait_for_service_state vault healthy 120
+  if [[ "${postgres_bootstrap_skipped}" != "1" && "${external_stateful_mode}" != "1" ]]; then
+    wait_for_service_state postgres-db healthy 60
+  else
+    echo "[deploy] postgres-db health wait skipped (external stateful mode)."
+  fi
+  if [[ "${external_stateful_mode}" != "1" ]]; then
+    wait_for_service_state vault healthy 120
+  else
+    echo "[deploy] vault health wait skipped (external stateful mode)."
+  fi
   wait_for_service_state openfga running 60
 
   # Vault preflight — verify unsealed and accessible from deploy host
@@ -564,7 +611,11 @@ main() {
       return 1
     fi
   }
-  vault_preflight
+  if [[ "${external_stateful_mode}" != "1" ]]; then
+    vault_preflight
+  else
+    echo "[deploy] vault preflight skipped (external stateful mode)."
+  fi
 
   # Recreate backend services with new images (--force-recreate only touches these)
   compose_run "${compose_args[@]}" up -d --force-recreate --no-deps discovery-server

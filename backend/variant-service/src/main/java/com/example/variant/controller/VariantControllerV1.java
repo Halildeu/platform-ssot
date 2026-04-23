@@ -184,7 +184,16 @@ public class VariantControllerV1 {
                     authz.getRoles(),
                     authz.getPermissions() == null ? 0 : authz.getPermissions().size(),
                     authz.isAdmin());
-            if (authz.getUserId() == null || authz.getEmail() == null) {
+            Long resolvedUserId = authz.getUserId();
+            if (resolvedUserId == null) {
+                resolvedUserId = extractLongClaim(jwt, "uid");
+            }
+            if (resolvedUserId == null && authz.isAdmin()) {
+                resolvedUserId = fallbackUserId(jwt.getSubject());
+                log.warn("JWT numeric userId yok; admin fallback userId atandı. subject={} fallbackUserId={}",
+                        jwt.getSubject(), resolvedUserId);
+            }
+            if (resolvedUserId == null || authz.getEmail() == null) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Kimlik bilgisi eksik");
             }
             if (!authz.isAdmin() && authz.getPermissions().isEmpty()) {
@@ -194,7 +203,7 @@ public class VariantControllerV1 {
             // /authz/me yalnız permissions set’i için kullanılıyor.
             String role = authz.isAdmin() ? "ADMIN" : null;
             AuthenticatedUser user = new AuthenticatedUser(
-                    authz.getUserId(),
+                    resolvedUserId,
                     authz.getEmail(),
                     role,
                     authz.getPermissions().stream().toList(),
@@ -234,6 +243,37 @@ public class VariantControllerV1 {
         }
         String normalized = role.startsWith("ROLE_") ? role.substring(5) : role;
         return Set.of(normalized);
+    }
+
+    private Long extractLongClaim(Jwt jwt, String claimName) {
+        Object claim = jwt.getClaims().get(claimName);
+        if (claim instanceof Number number) {
+            return number.longValue();
+        }
+        if (claim instanceof String text) {
+            try {
+                return Long.parseLong(text);
+            } catch (NumberFormatException ignored) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private Long fallbackUserId(String subject) {
+        if (subject == null || subject.isBlank()) {
+            return 1204L;
+        }
+        try {
+            long bits = UUID.fromString(subject).getMostSignificantBits();
+            if (bits == Long.MIN_VALUE) {
+                return Long.MAX_VALUE;
+            }
+            return Math.abs(bits);
+        } catch (IllegalArgumentException ignored) {
+            long hash = subject.hashCode();
+            return hash == Integer.MIN_VALUE ? (long) Integer.MAX_VALUE : Math.abs(hash);
+        }
     }
 
     private record ResolvedUser(AuthenticatedUser user, AuthorizationContext authz) {
