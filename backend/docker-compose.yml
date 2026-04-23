@@ -60,6 +60,9 @@ services:
       PERMISSION_SERVICE_BASE_URL: ${PERMISSION_SERVICE_BASE_URL:-http://permission-service}
       SERVICE_TOKEN_MINT_URL: ${SERVICE_TOKEN_MINT_URL:-http://auth-service:8088/oauth2/token}
       USER_DB_SCHEMA: ${USER_DB_SCHEMA:-public}
+      SPRING_DATASOURCE_URL: ${USER_SERVICE_DB_URL:-jdbc:postgresql://postgres-db:5432/users}
+      SPRING_DATASOURCE_USERNAME: ${USER_SERVICE_DB_USERNAME:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${USER_SERVICE_DB_PASSWORD:-postgres}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       # RS256/JWKS doğrulaması
@@ -75,8 +78,8 @@ services:
       SERVICE_AUTH_ISSUER: ${SERVICE_AUTH_ISSUER:-auth-service}
       ERP_OPENFGA_ENABLED: ${ERP_OPENFGA_ENABLED:-true}
       ERP_OPENFGA_API_URL: ${ERP_OPENFGA_API_URL:-http://openfga:8080}
-      ERP_OPENFGA_STORE_ID: ${ERP_OPENFGA_STORE_ID:-}
-      ERP_OPENFGA_MODEL_ID: ${ERP_OPENFGA_MODEL_ID:-}
+      ERP_OPENFGA_STORE_ID: ${OPENFGA_STORE_ID:-}
+      ERP_OPENFGA_MODEL_ID: ${OPENFGA_MODEL_ID:-}
       # Ek issuer/JWKS listesi Keycloak serban realm'ini işaret eder
       SECURITY_JWT_JWK_SET_URIS: http://keycloak:8080/realms/serban/protocol/openid-connect/certs
       SECURITY_JWT_ISSUERS: ${SECURITY_JWT_ISSUERS:-http://keycloak:8080/realms/serban,http://localhost:8081/realms/serban}
@@ -126,6 +129,9 @@ services:
       USER_SERVICE_BASE_URL: ${USER_SERVICE_BASE_URL:-http://user-service}
       AUTH_DB_SCHEMA: ${AUTH_DB_SCHEMA:-public}
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL:-http://discovery-server:8761/eureka}
+      SPRING_DATASOURCE_URL: ${AUTH_SERVICE_DB_URL:-jdbc:postgresql://postgres-db:5432/users}
+      SPRING_DATASOURCE_USERNAME: ${AUTH_SERVICE_DB_USERNAME:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${AUTH_SERVICE_DB_PASSWORD:-postgres}
       AUTH_DB_NAME: ${AUTH_DB_NAME:-users}
       AUTH_DB_USERNAME: ${AUTH_DB_USERNAME:-postgres}
       AUTH_DB_PASSWORD: ${AUTH_DB_PASSWORD:-postgres}
@@ -186,6 +192,9 @@ services:
       # B5 (Rev 19): AuthzVersion polling needs permission-service base URL
       PERMISSION_SERVICE_BASE_URL: ${PERMISSION_SERVICE_BASE_URL:-http://permission-service:8084}
       # Opsiyonel diğer ayarlar
+      SPRING_DATASOURCE_URL: ${VARIANT_SERVICE_DB_URL:-jdbc:postgresql://postgres-db:5432/users}
+      SPRING_DATASOURCE_USERNAME: ${VARIANT_SERVICE_DB_USERNAME:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${VARIANT_SERVICE_DB_PASSWORD:-postgres}
       VARIANT_DB_URL: ${VARIANT_DB_URL:-jdbc:postgresql://postgres-db:5432/users}
       VARIANT_DB_USERNAME: ${VARIANT_DB_USERNAME:-postgres}
       VARIANT_DB_PASSWORD: ${VARIANT_DB_PASSWORD:-postgres}
@@ -223,10 +232,10 @@ services:
       - SECURITY_JWT_AUDIENCE=${CORE_DATA_SECURITY_JWT_AUDIENCE:-frontend,user-service,core-data-service}
       - ERP_OPENFGA_ENABLED=${ERP_OPENFGA_ENABLED:-true}
       - ERP_OPENFGA_API_URL=${ERP_OPENFGA_API_URL:-http://openfga:8080}
-      - ERP_OPENFGA_STORE_ID=${ERP_OPENFGA_STORE_ID:-}
+      - ERP_OPENFGA_STORE_ID=${OPENFGA_STORE_ID:-}
       # B5 (Rev 19): AuthzVersion polling needs permission-service base URL
       - PERMISSION_SERVICE_BASE_URL=${PERMISSION_SERVICE_BASE_URL:-http://permission-service}
-      - ERP_OPENFGA_MODEL_ID=${ERP_OPENFGA_MODEL_ID:-}
+      - ERP_OPENFGA_MODEL_ID=${OPENFGA_MODEL_ID:-}
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -545,10 +554,10 @@ services:
       - SECURITY_JWT_SECONDARY_AUDIENCE=${SECURITY_JWT_SECONDARY_AUDIENCE:-permission-service}
       - ERP_OPENFGA_ENABLED=${ERP_OPENFGA_ENABLED:-true}
       - ERP_OPENFGA_API_URL=${ERP_OPENFGA_API_URL:-http://openfga:8080}
-      - ERP_OPENFGA_STORE_ID=${ERP_OPENFGA_STORE_ID:-}
+      - ERP_OPENFGA_STORE_ID=${OPENFGA_STORE_ID:-}
       # B5 (Rev 19): AuthzVersion polling needs permission-service base URL
       - PERMISSION_SERVICE_BASE_URL=${PERMISSION_SERVICE_BASE_URL:-http://permission-service}
-      - ERP_OPENFGA_MODEL_ID=${ERP_OPENFGA_MODEL_ID:-}
+      - ERP_OPENFGA_MODEL_ID=${OPENFGA_MODEL_ID:-}
       - PERMISSION_BOOTSTRAP_DEFAULT_ADMIN_ASSIGNMENTS_USER_TABLE=${PERMISSION_BOOTSTRAP_DEFAULT_ADMIN_ASSIGNMENTS_USER_TABLE:-user_service.users}
       - PERMISSION_AUTHZ_USER_TABLE=${PERMISSION_AUTHZ_USER_TABLE:-user_service.users}
     depends_on:
@@ -595,8 +604,8 @@ services:
       # caller — including super-admins.
       - ERP_OPENFGA_ENABLED=${ERP_OPENFGA_ENABLED:-true}
       - ERP_OPENFGA_API_URL=${ERP_OPENFGA_API_URL:-http://openfga:8080}
-      - ERP_OPENFGA_STORE_ID=${ERP_OPENFGA_STORE_ID:-}
-      - ERP_OPENFGA_MODEL_ID=${ERP_OPENFGA_MODEL_ID:-}
+      - ERP_OPENFGA_STORE_ID=${OPENFGA_STORE_ID:-}
+      - ERP_OPENFGA_MODEL_ID=${OPENFGA_MODEL_ID:-}
       - PERMISSION_SERVICE_BASE_URL=${PERMISSION_SERVICE_BASE_URL:-http://permission-service}
       - AUTHZ_USER_TABLE=${AUTHZ_USER_TABLE:-user_service.users}
       # PostgreSQL — Docker network hostname
