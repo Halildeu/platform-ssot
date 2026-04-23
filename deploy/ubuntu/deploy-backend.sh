@@ -525,12 +525,17 @@ main() {
   # remaining infra services and skip postgres-db bootstrap for this run.
   local infra_bootstrap_log
   local infra_bootstrap_rc=0
+  local infra_bootstrap_log_file
   local postgres_bootstrap_skipped="0"
 
-  set +e
-  infra_bootstrap_log="$(compose_run "${compose_args[@]}" up -d --no-recreate postgres-db openfga-migrate openfga vault keycloak 2>&1)"
-  infra_bootstrap_rc=$?
-  set -e
+  infra_bootstrap_log_file="$(mktemp)"
+  if compose_run "${compose_args[@]}" up -d --no-recreate postgres-db openfga-migrate openfga vault keycloak >"${infra_bootstrap_log_file}" 2>&1; then
+    infra_bootstrap_rc=0
+  else
+    infra_bootstrap_rc=$?
+  fi
+  infra_bootstrap_log="$(cat "${infra_bootstrap_log_file}")"
+  rm -f "${infra_bootstrap_log_file}"
   printf '%s\n' "${infra_bootstrap_log}"
 
   if [[ "${infra_bootstrap_rc}" -ne 0 ]]; then
