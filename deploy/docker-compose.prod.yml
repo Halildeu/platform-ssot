@@ -236,12 +236,19 @@ services:
       VARIANT_DB_SCHEMA: ${VARIANT_DB_SCHEMA:-variant_service}
       SECURITY_JWT_ISSUER: ${KEYCLOAK_PUBLIC_ISSUER_URI:-${KEYCLOAK_ISSUER_URI}}
       SECURITY_JWT_JWK_SET_URI: ${KEYCLOAK_JWKS_URI}
-      SECURITY_JWT_AUDIENCE: variant-service
+      SECURITY_JWT_AUDIENCE: ${VARIANT_SERVICE_SECURITY_JWT_AUDIENCE:-account}
+      ERP_OPENFGA_ENABLED: "true"
+      ERP_OPENFGA_API_URL: http://openfga:8080
+      ERP_OPENFGA_STORE_ID: ${OPENFGA_STORE_ID}
+      ERP_OPENFGA_MODEL_ID: ${OPENFGA_MODEL_ID}
+      PERMISSION_SERVICE_BASE_URL: http://permission-service:8084
     depends_on:
       discovery-server:
         condition: service_healthy
       postgres-db:
         condition: service_healthy
+      openfga:
+        condition: service_started
     mem_limit: 384m
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8091/actuator/health"]
