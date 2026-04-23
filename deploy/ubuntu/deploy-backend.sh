@@ -526,6 +526,7 @@ main() {
   local infra_bootstrap_log
   local infra_bootstrap_rc=0
   local infra_bootstrap_log_file
+  local external_stateful_mode="0"
   local postgres_bootstrap_skipped="0"
 
   infra_bootstrap_log_file="$(mktemp)"
@@ -542,8 +543,16 @@ main() {
     if printf '%s' "${infra_bootstrap_log}" | grep -q 'failed to bind host port for 0.0.0.0:5432' && \
        docker ps --format '{{.Names}}' | grep -Eq '^platform-pg-(test|prod)$'; then
       echo "[deploy] postgres-db bootstrap skipped (host :5432 already owned by external platform-pg-* container)."
+      echo "[deploy] external stateful mode enabled (postgres)."
+      external_stateful_mode="1"
       postgres_bootstrap_skipped="1"
-      compose_run "${compose_args[@]}" up -d --no-recreate openfga-migrate openfga vault keycloak
+      compose_run "${compose_args[@]}" up -d --no-recreate openfga-migrate openfga
+    elif printf '%s' "${infra_bootstrap_log}" | grep -q 'failed to bind host port for 0.0.0.0:8200' && \
+         docker ps --format '{{.Names}}' | grep -Eq '^platform-vault-(test|prod)$'; then
+      echo "[deploy] vault bootstrap skipped (host :8200 already owned by external platform-vault-* container)."
+      echo "[deploy] external stateful mode enabled (vault)."
+      external_stateful_mode="1"
+      compose_run "${compose_args[@]}" up -d --no-recreate openfga-migrate openfga
     else
       return "${infra_bootstrap_rc}"
     fi
@@ -562,7 +571,11 @@ main() {
   else
     echo "[deploy] postgres-db health wait skipped (external pg bridge mode)."
   fi
-  wait_for_service_state vault healthy 120
+  if [[ "${external_stateful_mode}" != "1" ]]; then
+    wait_for_service_state vault healthy 120
+  else
+    echo "[deploy] vault health wait skipped (external stateful mode)."
+  fi
   wait_for_service_state openfga running 60
 
   # Vault preflight — verify unsealed and accessible from deploy host
@@ -598,7 +611,11 @@ main() {
       return 1
     fi
   }
-  vault_preflight
+  if [[ "${external_stateful_mode}" != "1" ]]; then
+    vault_preflight
+  else
+    echo "[deploy] vault preflight skipped (external stateful mode)."
+  fi
 
   # Recreate backend services with new images (--force-recreate only touches these)
   compose_run "${compose_args[@]}" up -d --force-recreate --no-deps discovery-server
