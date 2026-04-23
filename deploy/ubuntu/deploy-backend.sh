@@ -546,13 +546,13 @@ main() {
       echo "[deploy] external stateful mode enabled (postgres)."
       external_stateful_mode="1"
       postgres_bootstrap_skipped="1"
-      compose_run "${compose_args[@]}" up -d --no-recreate openfga-migrate openfga
+      compose_run "${compose_args[@]}" up -d --no-recreate --no-deps openfga-migrate openfga
     elif printf '%s' "${infra_bootstrap_log}" | grep -q 'failed to bind host port for 0.0.0.0:8200' && \
          docker ps --format '{{.Names}}' | grep -Eq '^platform-vault-(test|prod)$'; then
       echo "[deploy] vault bootstrap skipped (host :8200 already owned by external platform-vault-* container)."
       echo "[deploy] external stateful mode enabled (vault)."
       external_stateful_mode="1"
-      compose_run "${compose_args[@]}" up -d --no-recreate openfga-migrate openfga
+      compose_run "${compose_args[@]}" up -d --no-recreate --no-deps openfga-migrate openfga
     else
       return "${infra_bootstrap_rc}"
     fi
