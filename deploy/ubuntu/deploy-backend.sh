@@ -566,10 +566,10 @@ main() {
   else
     compose_run "${compose_args[@]}" up -d --no-recreate vault-unseal vault-audit-init vault-snapshot 2>/dev/null || true
   fi
-  if [[ "${postgres_bootstrap_skipped}" != "1" ]]; then
+  if [[ "${postgres_bootstrap_skipped}" != "1" && "${external_stateful_mode}" != "1" ]]; then
     wait_for_service_state postgres-db healthy 60
   else
-    echo "[deploy] postgres-db health wait skipped (external pg bridge mode)."
+    echo "[deploy] postgres-db health wait skipped (external stateful mode)."
   fi
   if [[ "${external_stateful_mode}" != "1" ]]; then
     wait_for_service_state vault healthy 120
