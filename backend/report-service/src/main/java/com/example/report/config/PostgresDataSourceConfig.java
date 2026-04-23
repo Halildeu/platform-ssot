@@ -31,9 +31,6 @@ public class PostgresDataSourceConfig {
     public DataSource pgDataSource() {
         HikariDataSource ds = new HikariDataSource();
         ds.setJdbcUrl(url);
-        // K8s/runtime'da primary MSSQL driver override'ından etkilenmemesi için
-        // PostgreSQL driver'ı açıkça pinliyoruz.
-        ds.setDriverClassName("org.postgresql.Driver");
         ds.setUsername(username);
         ds.setPassword(password);
         ds.setPoolName("report-pg-pool");

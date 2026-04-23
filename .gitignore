@@ -72,6 +72,3 @@ web/.eslintcache
 #   - feature_execution_contract_ci.v1.json
 #   - observability_coverage_matrix.v1.{json,md}
 reports/
-# report-service canonical static definitions must stay versioned
-!backend/report-service/src/main/resources/reports/
-!backend/report-service/src/main/resources/reports/*.json
