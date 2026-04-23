@@ -180,7 +180,7 @@ services:
       # canonical env'den aldığımız public issuer'a hizalanmalı. Local dev
       # fallback `http://localhost:8081/...` olarak korunur.
       SECURITY_JWT_JWK_SET_URI: http://keycloak:8080/realms/serban/protocol/openid-connect/certs
-      SECURITY_JWT_ISSUER: ${SECURITY_JWT_ISSUER:-http://localhost:8081/realms/serban}
+      SECURITY_JWT_ISSUER: ${SECURITY_JWT_ISSUER:-${KEYCLOAK_PUBLIC_ISSUER_URI:-http://localhost:8081/realms/serban}}
       SECURITY_JWT_ISSUERS: ${SECURITY_JWT_ISSUERS:-https://ai.acik.com/realms/serban,http://keycloak:8080/realms/serban,http://localhost:8081/realms/serban}
       SERVICE_AUTH_JWK_SET_URI: http://auth-service:8088/oauth2/jwks
       SERVICE_AUTH_ISSUER: auth-service
@@ -228,7 +228,7 @@ services:
       - CORE_DATA_DB_SCHEMA=${CORE_DATA_DB_SCHEMA:-core_data_service}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=${EUREKA_SERVER_URL:-http://discovery-server:8761/eureka}
       - SECURITY_JWT_JWK_SET_URI=${SECURITY_JWT_JWK_SET_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}
-      - SECURITY_JWT_ISSUER=${SECURITY_JWT_ISSUER:-http://keycloak:8080/realms/serban}
+      - SECURITY_JWT_ISSUER=${SECURITY_JWT_ISSUER:-${KEYCLOAK_PUBLIC_ISSUER_URI:-http://keycloak:8080/realms/serban}}
       - SECURITY_JWT_AUDIENCE=${CORE_DATA_SECURITY_JWT_AUDIENCE:-frontend,user-service,core-data-service}
       - ERP_OPENFGA_ENABLED=${ERP_OPENFGA_ENABLED:-true}
       - ERP_OPENFGA_API_URL=${ERP_OPENFGA_API_URL:-http://openfga:8080}
@@ -264,7 +264,7 @@ services:
       - SPRING_PROFILES_ACTIVE=${API_GATEWAY_PROFILES:-local,docker}
       # RS256/JWKS doğrulaması gateway tarafında Keycloak JWKS üzerinden yapılır
       - SECURITY_JWT_JWK_SET_URI=http://keycloak:8080/realms/serban/protocol/openid-connect/certs
-      - SECURITY_JWT_ISSUER=${SECURITY_JWT_ISSUER:-http://keycloak:8080/realms/serban}
+      - SECURITY_JWT_ISSUER=${SECURITY_JWT_ISSUER:-${KEYCLOAK_PUBLIC_ISSUER_URI:-http://keycloak:8080/realms/serban}}
       # PR F (Codex CNS thread 019d99ba Tur 12): hardcoded audience staging'de
       # browser PKCE `frontend` token (aud=[user-service,...,realm-management,broker,account])
       # için "No suitable decoder accepted the token" 500 üretiyordu. Canonical+repo env
@@ -272,7 +272,7 @@ services:
       - SECURITY_JWT_AUDIENCE=${SECURITY_JWT_AUDIENCE:-user-service,permission-service,variant-service,core-data-service}
       # Ek issuer: Keycloak (lokal dev)
       - SECURITY_JWT_JWK_SET_URIS=http://keycloak:8080/realms/serban/protocol/openid-connect/certs,http://keycloak:8080/realms/serban/protocol/openid-connect/certs
-      - SECURITY_JWT_ISSUERS=${SECURITY_JWT_ISSUERS:-http://keycloak:8080/realms/serban,http://localhost:8081/realms/serban}
+      - SECURITY_JWT_ISSUERS=${SECURITY_JWT_ISSUERS:-https://ai.acik.com/realms/serban,http://keycloak:8080/realms/serban,http://localhost:8081/realms/serban}
       - SECURITY_JWT_SECONDARY_ISSUER=http://localhost:8081/realms/serban
       - SECURITY_JWT_SECONDARY_JWK_SET_URI=http://keycloak:8080/realms/serban/protocol/openid-connect/certs
       # PR #426 (CNS-20260416-003 gateway 500 root cause fix).
@@ -542,7 +542,7 @@ services:
       - SECURITY_AUTH_ALLOWED_CLIENT_IDS=${SECURITY_AUTH_ALLOWED_CLIENT_IDS:-frontend,admin-cli,serban-web,account,canary-load}
       # Ek issuer listesi Keycloak serban realm'i işaret eder
       - SECURITY_JWT_JWK_SET_URIS=http://keycloak:8080/realms/serban/protocol/openid-connect/certs
-      - SECURITY_JWT_ISSUERS=${SECURITY_JWT_ISSUERS:-http://keycloak:8080/realms/serban,http://localhost:8081/realms/serban}
+      - SECURITY_JWT_ISSUERS=${SECURITY_JWT_ISSUERS:-https://ai.acik.com/realms/serban,http://keycloak:8080/realms/serban,http://localhost:8081/realms/serban}
       # Secondary issuer: frontend tokens come from localhost:8081.
       # 2026-04-18 OI-03 Bug B deepest layer: SECONDARY_AUDIENCE was hardcoded
       # `permission-service` → canonical env override ignored → canary-load
