@@ -18,6 +18,7 @@ set -euo pipefail
 ENV_NAME="${ENV:-stage}"
 VAULT_ADDR="${VAULT_ADDR:?VAULT_ADDR required}"
 VAULT_TOKEN="${VAULT_TOKEN:?VAULT_TOKEN required}"
+VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-secret}"
 
 # Shared DB defaults — individual services can override via env
 POSTGRES_HOST="${POSTGRES_HOST:-postgres-db}"
@@ -34,7 +35,7 @@ AUTH_DB_PASSWORD="${AUTH_DB_PASSWORD:-${POSTGRES_PASSWORD}}"
 
 USER_DB_HOST="${USER_DB_HOST:-${POSTGRES_HOST}}"
 USER_DB_PORT="${USER_DB_PORT:-${POSTGRES_PORT}}"
-USER_DB_NAME="${USER_DB_NAME:-user_db}"
+USER_DB_NAME="${USER_DB_NAME:-users_db}"
 USER_DB_USER="${USER_DB_USER:-${POSTGRES_USER}}"
 USER_DB_PASSWORD="${USER_DB_PASSWORD:-${POSTGRES_PASSWORD}}"
 
@@ -46,7 +47,7 @@ PERMISSION_DB_PASSWORD="${PERMISSION_DB_PASSWORD:-${POSTGRES_PASSWORD}}"
 
 VARIANT_DB_HOST="${VARIANT_DB_HOST:-${POSTGRES_HOST}}"
 VARIANT_DB_PORT="${VARIANT_DB_PORT:-${POSTGRES_PORT}}"
-VARIANT_DB_NAME="${VARIANT_DB_NAME:-variant_db}"
+VARIANT_DB_NAME="${VARIANT_DB_NAME:-variants_db}"
 VARIANT_DB_USER="${VARIANT_DB_USER:-${POSTGRES_USER}}"
 VARIANT_DB_PASSWORD="${VARIANT_DB_PASSWORD:-${POSTGRES_PASSWORD}}"
 
@@ -54,7 +55,7 @@ VARIANT_DB_PASSWORD="${VARIANT_DB_PASSWORD:-${POSTGRES_PASSWORD}}"
 SERVICE_JWT_PRIVATE_KEY_PATH="${SERVICE_JWT_PRIVATE_KEY_PATH:-}"
 SERVICE_JWT_PUBLIC_KEY_PATH="${SERVICE_JWT_PUBLIC_KEY_PATH:-}"
 
-echo "[vault] target=${VAULT_ADDR} env=${ENV_NAME}"
+echo "[vault] target=${VAULT_ADDR} env=${ENV_NAME} mount=${VAULT_KV_MOUNT}"
 
 build_json() {
   python3 - "$@" <<'PY'
@@ -71,16 +72,28 @@ print(json.dumps(data))
 PY
 }
 
+pem_private_to_base64_der() {
+  local path="$1"
+  openssl pkcs8 -topk8 -nocrypt -in "${path}" -outform DER 2>/dev/null | base64 | tr -d '\n'
+}
+
+pem_public_to_base64_der() {
+  local path="$1"
+  openssl pkey -pubin -in "${path}" -outform DER 2>/dev/null | base64 | tr -d '\n'
+}
+
 kv_put() {
   local path="$1"
   local json="$2"
+  local mount="${VAULT_KV_MOUNT#/}"
+  mount="${mount%/}"
 
   curl -sSf \
     -H "X-Vault-Token: ${VAULT_TOKEN}" \
     -H 'Content-Type: application/json' \
-    -X POST "${VAULT_ADDR}/v1/secret/data/${ENV_NAME}/${path}" \
+    -X POST "${VAULT_ADDR}/v1/${mount}/data/${ENV_NAME}/${path}" \
     -d "{\"data\": ${json} }" >/dev/null
-  echo "[vault] wrote secret/${ENV_NAME}/${path}"
+  echo "[vault] wrote ${mount}/${ENV_NAME}/${path}"
 }
 
 make_db_url() {
@@ -134,9 +147,9 @@ fi
 
 if [[ -n "${SERVICE_JWT_PRIVATE_KEY_PATH}" && -n "${SERVICE_JWT_PUBLIC_KEY_PATH}" ]]; then
   if [[ -f "${SERVICE_JWT_PRIVATE_KEY_PATH}" && -f "${SERVICE_JWT_PUBLIC_KEY_PATH}" ]]; then
-    priv="$(cat "${SERVICE_JWT_PRIVATE_KEY_PATH}")"
-    pub="$(cat "${SERVICE_JWT_PUBLIC_KEY_PATH}")"
-    jwt_payload="$(build_json privateKey "${priv}" publicKey "${pub}")"
+    priv="$(pem_private_to_base64_der "${SERVICE_JWT_PRIVATE_KEY_PATH}")"
+    pub="$(pem_public_to_base64_der "${SERVICE_JWT_PUBLIC_KEY_PATH}")"
+    jwt_payload="$(build_json privateKey "${priv}" publicKey "${pub}" keyId "${SERVICE_JWT_KEY_ID:-}")"
     kv_put "jwt/auth-service" "${jwt_payload}"
   else
     echo "[vault] skip jwt/auth-service (key files not found)"

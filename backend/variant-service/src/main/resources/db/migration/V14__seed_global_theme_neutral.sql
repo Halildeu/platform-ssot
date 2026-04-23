@@ -1,4 +1,4 @@
-insert into themes (id, name, type, appearance, surface_tone, density, radius, elevation, motion, is_global, accent)
+insert into themes (id, name, type, appearance, surface_tone, density, radius, elevation, motion, is_global, accent, created_at)
 values (
     '00000000-0000-0000-0000-000000000108',
     'Global Neutral',
@@ -10,7 +10,7 @@ values (
     'raised',
     'standard',
     true,
-    'neutral'
+    'neutral',
+    now()
 )
 on conflict (id) do nothing;
-

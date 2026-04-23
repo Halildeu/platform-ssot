@@ -13,8 +13,16 @@ x-common-env: &common-env
 x-vault-env: &vault-env
   VAULT_URI: ${VAULT_URI:-http://vault:8200}
   VAULT_SCHEME: ${VAULT_SCHEME:-http}
+  VAULT_AUTH_METHOD: ${VAULT_AUTH_METHOD:-TOKEN}
+  VAULT_ROLE_ID: ${VAULT_ROLE_ID:-}
+  VAULT_SECRET_ID: ${VAULT_SECRET_ID:-}
+  VAULT_SECRET_PREFIX: ${VAULT_SECRET_PREFIX:-stage}
+  VAULT_KV_MOUNT: ${VAULT_KV_MOUNT:-secret}
   VAULT_TOKEN: ${VAULT_TOKEN}
   VAULT_FAIL_FAST: ${VAULT_FAIL_FAST:-true}
+  SPRING_CLOUD_VAULT_ENABLED: ${SPRING_CLOUD_VAULT_ENABLED:-false}
+  SPRING_CLOUD_VAULT_KV_ENABLED: ${SPRING_CLOUD_VAULT_KV_ENABLED:-false}
+  SPRING_CLOUD_VAULT_FAIL_FAST: ${SPRING_CLOUD_VAULT_FAIL_FAST:-false}
 
 services:
   discovery-server:
@@ -62,7 +70,9 @@ services:
     environment:
       <<: *common-env
       OPENFGA_DATASTORE_ENGINE: postgres
-      OPENFGA_DATASTORE_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:5432/${POSTGRES_DB:-users}?sslmode=disable&search_path=openfga
+      OPENFGA_DATASTORE_URI: postgres://postgres-db:5432/${POSTGRES_DB:-users}?sslmode=disable&search_path=openfga
+      OPENFGA_DATASTORE_USERNAME: ${POSTGRES_USER}
+      OPENFGA_DATASTORE_PASSWORD: ${POSTGRES_PASSWORD}
     depends_on:
       postgres-db:
         condition: service_healthy
@@ -77,7 +87,9 @@ services:
     environment:
       <<: *common-env
       OPENFGA_DATASTORE_ENGINE: postgres
-      OPENFGA_DATASTORE_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:5432/${POSTGRES_DB:-users}?sslmode=disable&search_path=openfga
+      OPENFGA_DATASTORE_URI: postgres://postgres-db:5432/${POSTGRES_DB:-users}?sslmode=disable&search_path=openfga
+      OPENFGA_DATASTORE_USERNAME: ${POSTGRES_USER}
+      OPENFGA_DATASTORE_PASSWORD: ${POSTGRES_PASSWORD}
       OPENFGA_PLAYGROUND_ENABLED: "false"
       OPENFGA_METRICS_ENABLED: "true"
       OPENFGA_LOG_LEVEL: ${OPENFGA_LOG_LEVEL:-info}

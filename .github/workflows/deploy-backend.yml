@@ -333,10 +333,12 @@ jobs:
       # deploy yoluna düşer. AppRole kalıcı setup ayrı follow-up
       # (PR #3e veya ops runbook).
       - name: Refresh stage backend AppRole materials
+        id: refresh_stage_backend_approle
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         env:
           VAULT_ADDR_SECRET: ${{ secrets.VAULT_ADDR }}
           VAULT_TOKEN_SECRET: ${{ secrets.VAULT_TOKEN }}
+          VAULT_KV_MOUNT: kv
         shell: bash
         run: |
           set -euo pipefail
@@ -344,7 +346,8 @@ jobs:
 
           vault_addr="${VAULT_ADDR_SECRET:-http://127.0.0.1:8200}"
           if [ -z "${VAULT_TOKEN_SECRET:-}" ]; then
-            echo "::notice title=deploy-backend::VAULT_TOKEN secret missing; stage AppRole refresh skipped, existing backend.env bootstrap will be used."
+            echo "approle_refresh_status=skipped" >> "${GITHUB_OUTPUT}"
+            echo "::notice title=deploy-backend::VAULT_TOKEN secret missing; AppRole refresh skipped, deploy mevcut AppRole materyaliyle devam edecek."
             exit 0
           fi
 
@@ -361,13 +364,14 @@ jobs:
               VAULT_ADDR="${vault_addr}" \
               VAULT_TOKEN="${VAULT_TOKEN_SECRET}" \
               bash backend/scripts/vault/materialize-backend-deploy-approle.sh
+              echo "approle_refresh_status=rotated" >> "${GITHUB_OUTPUT}"
               ;;
             403|404)
               # STORY-0319 PR #3d soft-fail: Vault'ta AppRole henüz setup
-              # edilmemiş veya token yetkisiz. Deploy token-path ile geçsin;
-              # canonical env existing VAULT_TOKEN kullanılır. AppRole setup
-              # ayrı follow-up — runbook RB-staging-prod-profile §5.x.
-              echo "::notice title=deploy-backend::AppRole endpoint responded ${probe_status} (role not configured or token unauthorized); skipping rotation. Canonical env token path active."
+              # edilmemiş veya token yetkisiz. Deploy, mevcut AppRole state
+              # dosyalarıyla devam eder; rotation ayrı follow-up olarak kalır.
+              echo "approle_refresh_status=skipped" >> "${GITHUB_OUTPUT}"
+              echo "::notice title=deploy-backend::AppRole endpoint responded ${probe_status} (role not configured or token unauthorized); rotation skipped. Deploy mevcut AppRole materyaliyle devam edecek."
               exit 0
               ;;
             *)
@@ -410,10 +414,11 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           BACKEND_DEPLOY_REMOTE_ENV_FILE: ${{ secrets.BACKEND_DEPLOY_REMOTE_ENV_FILE }}
           BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES: ${{ secrets.BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES }}
-          # VAULT_ADDR paylaşılır (deploy script render_backend_env çağrısı
-          # için gerekli); VAULT_TOKEN KASITLI OLARAK EKLENMEMİŞTİR —
-          # AppRole render precedence (deploy-backend.sh:150) korunsun diye.
+          # VAULT_ADDR her iki render yolu için gerekli. VAULT_TOKEN yalnızca
+          # AppRole refresh best-effort'tur; deploy auth yolu AppRole-first
+          # kalır. Mount truth ise current stage Vault topolojisindeki `kv`.
           VAULT_ADDR_SECRET: ${{ secrets.VAULT_ADDR }}
+          VAULT_KV_MOUNT: kv
           # STORY-0319 PR #3a: workflow_dispatch input override path'leri
           RENDER_ENV_BEFORE_DEPLOY_INPUT: ${{ github.event.inputs.render_env_before_deploy }}
           BUILD_LOCAL_INPUT: ${{ github.event.inputs.build_local }}

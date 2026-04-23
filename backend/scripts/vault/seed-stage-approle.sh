@@ -122,9 +122,12 @@ write_policy() {
   fi
   tmp_policy="$(mktemp)"
 
-  # Render {{env}} placeholders with ${ENV_NAME} and append role-id/secret-id
-  # paths (self-binding, not in HCL template since template is role-agnostic).
-  sed "s|{{env}}|${ENV_NAME}|g" "${policy_template}" > "${tmp_policy}"
+  # Render env + KV mount placeholders and append role-id/secret-id paths
+  # (self-binding, not in HCL template since template is role-agnostic).
+  sed \
+    -e "s|{{env}}|${ENV_NAME}|g" \
+    -e "s|{{kv_mount}}|${kv_mount}|g" \
+    "${policy_template}" > "${tmp_policy}"
   cat >> "${tmp_policy}" <<EOF
 
 path "${approle_mount}/role/${ROLE_NAME}/role-id" {
