@@ -66,7 +66,10 @@ export const ShellHeader: React.FC = () => {
     if (canReport) items.push({ key: "/admin/reports", path: "/admin/reports", label: t("shell.nav.reports") });
     if (canManageUsers) items.push({ key: "/admin/users", path: "/admin/users", label: t("shell.nav.users") });
     if (canThemeAdmin) items.push({ key: "/admin/themes", path: "/admin/themes", label: t("shell.nav.themes") });
-    items.push({ key: "/admin/services", path: "/admin/services", label: t("shell.nav.services") });
+    // Faz 18.3: /admin/services permission check (Codex hidden risk P0, unconditional link drift)
+    // ServicControlPage artik statik Ops Links compat page (Docker state YOK).
+    // Sidebar.tsx:60 ile simetrik canThemeAdmin permission kullanilir.
+    if (canThemeAdmin) items.push({ key: "/admin/services", path: "/admin/services", label: t("shell.nav.services") });
     items.push({ key: "/admin/schema-explorer", path: "/admin/schema-explorer", label: t("shell.nav.schemaExplorer") });
     return items;
   }, [canAccess, canAudit, canManageUsers, canReport, canThemeAdmin, ethicEnabled, suggestionsEnabled, t]);
