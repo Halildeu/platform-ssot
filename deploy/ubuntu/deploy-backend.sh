@@ -521,11 +521,12 @@ main() {
   # P1.10: KMS auto-unseal mode skips the vault-unseal Shamir sidecar (Vault
   # self-unseals via the cloud KMS seal stanza). VAULT_SEAL_MODE=shamir (or
   # unset) keeps the legacy sidecar loop for local/staging.
+  # Faz 18.4: vault-audit-init + vault-snapshot retired (host cron authoritative)
+  # Refs: platform-k8s-gitops PR #104+#105, docs/RB-vault-ops-host-cron.md
   if [[ "${VAULT_SEAL_MODE:-shamir}" != "shamir" ]]; then
     echo "[deploy] VAULT_SEAL_MODE=${VAULT_SEAL_MODE} — skipping vault-unseal sidecar (KMS auto-unseal)"
-    compose_run "${compose_args[@]}" up -d --no-recreate vault-audit-init vault-snapshot 2>/dev/null || true
   else
-    compose_run "${compose_args[@]}" up -d --no-recreate vault-unseal vault-audit-init vault-snapshot 2>/dev/null || true
+    compose_run "${compose_args[@]}" up -d --no-recreate vault-unseal 2>/dev/null || true
   fi
   wait_for_service_state postgres-db healthy 60
   wait_for_service_state vault healthy 120
@@ -586,8 +587,9 @@ main() {
   # Ensure supporting services are up (idempotent).
   # Nginx config is generated from template via envsubst at container start —
   # Docker service names (keycloak, api-gateway) are ALWAYS correct.
-  # Faz 18.3 PR-B — service-manager removed from up list (retired, Docker socket cross-realm)
-  compose_run "${compose_args[@]}" up -d --no-recreate web-nginx vault-audit-init vault-snapshot loki promtail tempo prometheus grafana 2>/dev/null || true
+  # Faz 18.3 PR-B — service-manager removed (retired, Docker socket cross-realm)
+  # Faz 18.4 — vault-audit-init + vault-snapshot removed (host cron authoritative)
+  compose_run "${compose_args[@]}" up -d --no-recreate web-nginx loki promtail tempo prometheus grafana 2>/dev/null || true
 
   # Standalone nginx handling — compose-aware:
   # - Prod compose (deploy/docker-compose.prod.yml) manages web-nginx as a service.

@@ -39,7 +39,8 @@ $COMPOSE up -d api-gateway 2>&1 | tail -2
 # Phase 3: Supporting
 echo "[phase-3] Supporting..."
 # Faz 18.3 PR-B — service-manager removed (retired, /api/services/ 410 Gone)
-$COMPOSE up -d web-nginx grafana promtail vault-unseal vault-snapshot vault-audit-init 2>&1 | tail -2
+# Faz 18.4 — vault-snapshot + vault-audit-init removed (host cron authoritative, crontab @ 02:00/02:15)
+$COMPOSE up -d web-nginx grafana promtail vault-unseal 2>&1 | tail -2
 docker rm -f platform-web-nginx 2>/dev/null || true
 
 echo ""
