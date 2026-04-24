@@ -82,7 +82,10 @@
       "web/packages/shared-http/src/*",
       "web/Dockerfile",
       ".github/workflows/frontend-image.yml",
-      "web/.dockerignore"
+      "web/.dockerignore",
+      "web/apps/mfe-shell/src/pages/admin/service-control/*",
+      "web/apps/mfe-shell/src/pages/home/widgets/*.tsx",
+      "web/packages/i18n-dicts/src/locales/*/common.ts"
     ],
     "repo_root": ".",
     "service_scopes": [
@@ -359,6 +362,11 @@
       },
       {
         "path_glob": "web/apps/mfe-shell/src/pages/home/*.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/pages/admin/service-control/*",
         "ux_theme_id": "consistency_and_pattern_governance",
         "ux_subtheme_id": "single_component_source_of_truth"
       },
