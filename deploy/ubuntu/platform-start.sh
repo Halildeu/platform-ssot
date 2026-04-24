@@ -1,5 +1,6 @@
 #!/bin/bash
-# Platform cold-start script — starts all services in correct order.
+# Platform cold-start script — starts compose stateful tier (D6) + observability.
+# Backend app tier is K8s-native (platform-k8s-gitops); compose only runs stateful + observability.
 # Usage: /home/halil/platform/scripts/platform-start.sh
 
 REPO_DIR="/home/halil/platform/repo/backend"
@@ -10,12 +11,13 @@ UNSEAL_SCRIPT="/home/halil/platform/scripts/vault-auto-unseal.sh"
 export DOCKER_PULL_POLICY=never
 
 echo "========================================="
-echo "  PLATFORM START"
+echo "  PLATFORM START (compose stateful + observability)"
 echo "========================================="
 
-# Phase 1: Infrastructure (no vault dependency)
-echo "[phase-1] Infrastructure..."
-$COMPOSE up -d postgres-db vault keycloak openfga-migrate openfga discovery-server loki tempo prometheus 2>&1 | tail -3
+# Phase 1: Stateful infrastructure (ADR-0002 D6: PG + KC + Vault permanent)
+# Faz 18.5-18.7: openfga + discovery-server retired (K8s StatefulSet/Deployment authoritative)
+echo "[phase-1] Stateful (PG + KC + Vault)..."
+$COMPOSE up -d postgres-db vault keycloak loki tempo prometheus 2>&1 | tail -3
 sleep 5
 
 # Phase 1b: Vault unseal
@@ -28,18 +30,11 @@ for i in $(seq 1 15); do
   sleep 2
 done
 
-# Phase 2: Backend services (need vault + discovery)
-echo "[phase-2] Backend services..."
-$COMPOSE up -d permission-service 2>&1 | tail -2
-sleep 20
-$COMPOSE up -d auth-service user-service variant-service core-data-service report-service schema-service 2>&1 | tail -2
-sleep 15
-$COMPOSE up -d api-gateway 2>&1 | tail -2
-
-# Phase 3: Supporting
-echo "[phase-3] Supporting..."
-# Faz 18.3 PR-B — service-manager removed (retired, /api/services/ 410 Gone)
-# Faz 18.4 — vault-snapshot + vault-audit-init removed (host cron authoritative, crontab @ 02:00/02:15)
+# Phase 2: Supporting (web-nginx edge + observability)
+# Faz 18.3 PR-B — service-manager retired (410 tombstone)
+# Faz 18.4 — vault-snapshot + vault-audit-init retired (host cron @ 02:00/02:15)
+# Faz 18.5-18.7 — 9 app stateless compose retired (K8s authoritative)
+echo "[phase-2] Supporting..."
 $COMPOSE up -d web-nginx grafana promtail vault-unseal 2>&1 | tail -2
 docker rm -f platform-web-nginx 2>/dev/null || true
 
@@ -48,4 +43,5 @@ HEALTHY=$(docker ps --filter "name=platform-" --filter "health=healthy" -q | wc 
 TOTAL=$(docker ps --filter "name=platform-" -q | wc -l)
 echo "========================================="
 echo "  Running: $TOTAL, Healthy: $HEALTHY"
+echo "  K8s app tier separate: kubectl --context k3d-prod get pods -n platform-prod"
 echo "========================================="
