@@ -137,7 +137,7 @@ unset _default_web_current_link _default_nginx_runtime_dir _default_nginx_contai
 # Default to host port (8081) since nginx runs --network host and can't resolve Docker DNS.
 # Keycloak container maps 8080→8081 on host.
 NGINX_KEYCLOAK_UPSTREAM="${NGINX_KEYCLOAK_UPSTREAM:-http://127.0.0.1:8081}"
-NGINX_SERVICE_MANAGER_UPSTREAM="${NGINX_SERVICE_MANAGER_UPSTREAM:-http://127.0.0.1:8795}"
+# Faz 18.3 PR-B — NGINX_SERVICE_MANAGER_UPSTREAM removed (service-manager retired, /api/services/ 410 Gone)
 CONFIG_ONLY="${CONFIG_ONLY:-false}"
 
 require_cmd() {
@@ -362,14 +362,9 @@ server {
     return 503 "{\"status\":\"offline\",\"error\":\"Cockpit API not available in this environment\"}";
   }
 
-  location /api/services/ {
-    proxy_http_version 1.1;
-    proxy_set_header Host \$host;
-    proxy_set_header X-Real-IP \$remote_addr;
-    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto \$scheme;
-    proxy_pass ${NGINX_SERVICE_MANAGER_UPSTREAM};
-  }
+  # Faz 18.3 PR-B — /api/services/ route RETIRED (service-manager decommissioned)
+  # Edge tombstone: platform-k8s-gitops host-compose/web-nginx/default.conf 410 Gone.
+  # Bu script template yeniden üretirse /api/services/ drift geri sızmasın.
 
   location /api/ {
     proxy_http_version 1.1;

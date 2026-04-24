@@ -586,7 +586,8 @@ main() {
   # Ensure supporting services are up (idempotent).
   # Nginx config is generated from template via envsubst at container start —
   # Docker service names (keycloak, api-gateway) are ALWAYS correct.
-  compose_run "${compose_args[@]}" up -d --no-recreate web-nginx service-manager vault-audit-init vault-snapshot loki promtail tempo prometheus grafana 2>/dev/null || true
+  # Faz 18.3 PR-B — service-manager removed from up list (retired, Docker socket cross-realm)
+  compose_run "${compose_args[@]}" up -d --no-recreate web-nginx vault-audit-init vault-snapshot loki promtail tempo prometheus grafana 2>/dev/null || true
 
   # Standalone nginx handling — compose-aware:
   # - Prod compose (deploy/docker-compose.prod.yml) manages web-nginx as a service.

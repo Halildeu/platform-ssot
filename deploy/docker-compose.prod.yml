@@ -547,24 +547,10 @@ services:
     entrypoint: ["/bin/sh", "/scripts/vault-raft-snapshot.sh"]
     mem_limit: 64m
 
-  # ── Infrastructure: Service Manager API ────────────────────
-  service-manager:
-    <<: *runtime-defaults
-    image: node:22-alpine
-    working_dir: /app
-    command: sh -c "npm install --production && node service-manager-api.js --port 8795"
-    ports:
-      - "127.0.0.1:8795:8795"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./scripts:/app
-    mem_limit: 128m
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8795/health"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 45s
+  # ── Infrastructure: Service Manager API — RETIRED (Faz 18.3 PR-B) ───
+  # Reason: Docker socket cross-realm control plane, /api/services/ 410 Gone.
+  # Replacement: MFE admin/services statik Ops Links (platform-ssot PR #550).
+  # Refs: platform-k8s-gitops PR #100/101 tombstone, ADR D34 independence.
 
   # ── Infrastructure: Nginx (frontend) ───────────────────────
   # Config generated at startup via envsubst from template.
@@ -579,7 +565,7 @@ services:
       NGINX_SERVER_NAME: ${NGINX_SERVER_NAME:-ai.acik.com}
       NGINX_GATEWAY_UPSTREAM: ${NGINX_GATEWAY_UPSTREAM:-http://api-gateway:8080}
       NGINX_KEYCLOAK_UPSTREAM: ${NGINX_KEYCLOAK_UPSTREAM:-http://keycloak:8080}
-      NGINX_SERVICE_MANAGER_UPSTREAM: ${NGINX_SERVICE_MANAGER_UPSTREAM:-http://service-manager:8795}
+      # NGINX_SERVICE_MANAGER_UPSTREAM removed — Faz 18.3 PR-B (service-manager retired, /api/services/ 410 Gone)
     volumes:
       - ${WEB_CURRENT_LINK:-/home/halil/platform/web/current}:/usr/share/nginx/html:ro
       - ../deploy/nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
