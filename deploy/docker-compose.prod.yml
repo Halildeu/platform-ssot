@@ -658,8 +658,8 @@ volumes:
     name: platform_vault_data
   vault_logs:
     name: platform_vault_logs
-  vault_snapshots:
-    name: platform_vault_snapshots
+  # Faz 18.4 — vault_snapshots volume removed with vault-snapshot sidecar retirement
+  # Replacement: host path /home/halil/platform/backup/vault/{prod,test}/
   loki_data:
     name: platform_loki_data
   tempo_data:
