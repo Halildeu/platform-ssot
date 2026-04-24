@@ -1,6 +1,6 @@
 #!/bin/bash
-# Platform cold-start script — starts compose stateful tier (D6) + observability.
-# Backend app tier is K8s-native (platform-k8s-gitops); compose only runs stateful + observability.
+# Platform cold-start script — starts compose stateful tier (D6) + edge only.
+# All app + observability tier is K8s-native (platform-k8s-gitops).
 # Usage: /home/halil/platform/scripts/platform-start.sh
 
 REPO_DIR="/home/halil/platform/repo/backend"
@@ -11,13 +11,15 @@ UNSEAL_SCRIPT="/home/halil/platform/scripts/vault-auto-unseal.sh"
 export DOCKER_PULL_POLICY=never
 
 echo "========================================="
-echo "  PLATFORM START (compose stateful + observability)"
+echo "  PLATFORM START (compose stateful + edge)"
 echo "========================================="
 
 # Phase 1: Stateful infrastructure (ADR-0002 D6: PG + KC + Vault permanent)
-# Faz 18.5-18.7: openfga + discovery-server retired (K8s StatefulSet/Deployment authoritative)
+# Faz 18.4: vault-snapshot + vault-audit-init retired (host cron authoritative)
+# Faz 18.5-18.7: 9 app stateless retired (K8s Deployment authoritative)
+# Faz 18.9: observability retired (K8s kube-prometheus-stack authoritative)
 echo "[phase-1] Stateful (PG + KC + Vault)..."
-$COMPOSE up -d postgres-db vault keycloak loki tempo prometheus 2>&1 | tail -3
+$COMPOSE up -d postgres-db vault keycloak 2>&1 | tail -3
 sleep 5
 
 # Phase 1b: Vault unseal
@@ -30,12 +32,10 @@ for i in $(seq 1 15); do
   sleep 2
 done
 
-# Phase 2: Supporting (web-nginx edge + observability)
+# Phase 2: Edge
 # Faz 18.3 PR-B — service-manager retired (410 tombstone)
-# Faz 18.4 — vault-snapshot + vault-audit-init retired (host cron @ 02:00/02:15)
-# Faz 18.5-18.7 — 9 app stateless compose retired (K8s authoritative)
-echo "[phase-2] Supporting..."
-$COMPOSE up -d web-nginx grafana promtail vault-unseal 2>&1 | tail -2
+echo "[phase-2] Edge..."
+$COMPOSE up -d web-nginx vault-unseal 2>&1 | tail -2
 docker rm -f platform-web-nginx 2>/dev/null || true
 
 echo ""
@@ -43,5 +43,7 @@ HEALTHY=$(docker ps --filter "name=platform-" --filter "health=healthy" -q | wc 
 TOTAL=$(docker ps --filter "name=platform-" -q | wc -l)
 echo "========================================="
 echo "  Running: $TOTAL, Healthy: $HEALTHY"
-echo "  K8s app tier separate: kubectl --context k3d-prod get pods -n platform-prod"
+echo "  K8s app + observability tier separate:"
+echo "    kubectl --context k3d-prod get pods -n platform-prod"
+echo "    kubectl --context k3d-prod get pods -n monitoring"
 echo "========================================="

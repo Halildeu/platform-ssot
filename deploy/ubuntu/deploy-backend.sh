@@ -565,7 +565,8 @@ main() {
   # Docker service names (keycloak, api-gateway) are ALWAYS correct.
   # Faz 18.3 PR-B — service-manager removed (retired, Docker socket cross-realm)
   # Faz 18.4 — vault-audit-init + vault-snapshot removed (host cron authoritative)
-  compose_run "${compose_args[@]}" up -d --no-recreate web-nginx loki promtail tempo prometheus grafana 2>/dev/null || true
+  # Faz 18.9 — loki + promtail + tempo + prometheus + grafana retired (K8s kube-prometheus-stack authoritative)
+  compose_run "${compose_args[@]}" up -d --no-recreate web-nginx 2>/dev/null || true
 
   # Standalone nginx handling — compose-aware:
   # - Prod compose (deploy/docker-compose.prod.yml) manages web-nginx as a service.
