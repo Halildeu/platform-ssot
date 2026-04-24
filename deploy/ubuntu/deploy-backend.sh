@@ -81,17 +81,11 @@ require_cmd() {
 
 print_compose_diagnostics() {
   local compose_flags="$1"
+  # Faz 18.5-18.7: 9 stateless app services retired (K8s authoritative)
   local services=(
-    discovery-server
     postgres-db
-    openfga-migrate
-    openfga
-    permission-service
-    auth-service
-    user-service
-    variant-service
-    core-data-service
-    api-gateway
+    keycloak
+    vault
   )
 
   echo "[diag] docker compose ps --all" >&2
@@ -431,15 +425,9 @@ main() {
   #
   # If infra config changed, run: docker compose up -d --force-recreate <service>
 
+  # Faz 18.5-18.7: 8 backend services retired (K8s Deployment authoritative)
+  # Retained: empty (backend app tier retired entirely; K8s image build via ssot CI)
   local backend_services=(
-    discovery-server
-    permission-service
-    auth-service
-    user-service
-    variant-service
-    core-data-service
-    report-service
-    api-gateway
   )
 
   local build_flag
@@ -517,10 +505,9 @@ main() {
 
   # Ensure infrastructure is up (no recreate — prevents Vault seal, Keycloak cold-start).
   # Only starts containers if not already running.
-  compose_run "${compose_args[@]}" up -d --no-recreate postgres-db openfga-migrate openfga vault keycloak
-  # P1.10: KMS auto-unseal mode skips the vault-unseal Shamir sidecar (Vault
-  # self-unseals via the cloud KMS seal stanza). VAULT_SEAL_MODE=shamir (or
-  # unset) keeps the legacy sidecar loop for local/staging.
+  # Faz 18.5-18.7: openfga compose retired (K8s StatefulSet authoritative)
+  compose_run "${compose_args[@]}" up -d --no-recreate postgres-db vault keycloak
+  # P1.10: KMS auto-unseal mode skips the vault-unseal Shamir sidecar.
   # Faz 18.4: vault-audit-init + vault-snapshot retired (host cron authoritative)
   # Refs: platform-k8s-gitops PR #104+#105, docs/RB-vault-ops-host-cron.md
   if [[ "${VAULT_SEAL_MODE:-shamir}" != "shamir" ]]; then
@@ -530,7 +517,6 @@ main() {
   fi
   wait_for_service_state postgres-db healthy 60
   wait_for_service_state vault healthy 120
-  wait_for_service_state openfga running 60
 
   # Vault preflight — verify unsealed and accessible from deploy host
   vault_preflight() {
@@ -567,22 +553,12 @@ main() {
   }
   vault_preflight
 
-  # Recreate backend services with new images (--force-recreate only touches these)
-  compose_run "${compose_args[@]}" up -d --force-recreate --no-deps discovery-server
-  wait_for_service_state discovery-server healthy 90
-
-  compose_run "${compose_args[@]}" up -d --force-recreate --no-deps permission-service
-  wait_for_service_state permission-service healthy 120
-
-  compose_run "${compose_args[@]}" up -d --force-recreate --no-deps auth-service user-service variant-service core-data-service report-service
-  wait_for_service_state auth-service healthy 120
-  wait_for_service_state user-service healthy 120
-  wait_for_service_state variant-service healthy 120
-  wait_for_service_state core-data-service healthy 120
-  wait_for_service_state report-service healthy 120
-
-  compose_run "${compose_args[@]}" up -d --force-recreate --no-deps api-gateway
-  wait_for_service_state api-gateway healthy 90
+  # Faz 18.5-18.7: 8 backend services retired (K8s Deployment authoritative)
+  # Previously: discovery-server + permission-service + auth-service + user-service +
+  #             variant-service + core-data-service + report-service + api-gateway
+  # K8s cutover evidence: platform-k8s-gitops PR #107 + Faz 18.5-18.7 evidence doc
+  # Edge routing K8s NodePort only (ai.acik.com→30443, testai.acik.com→31080/5545)
+  echo "[deploy] backend services retired (Faz 18.5-18.7) — K8s authoritative"
 
   # Ensure supporting services are up (idempotent).
   # Nginx config is generated from template via envsubst at container start —
