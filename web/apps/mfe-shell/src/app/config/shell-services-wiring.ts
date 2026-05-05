@@ -131,14 +131,28 @@ export const wireRemoteShellServices = () => {
           return stored;
         }
       }
-      const authz = store.getState().auth.authz as
-        | { allowedScopes?: Array<{ scopeType?: string; refId?: string | number }> }
+      // Auth slice stores AuthzMe response under `authzSnapshot`.
+      // Permission-service ScopeSummaryDto exposes `scopeType` + `scopeRefId`
+      // (some legacy code paths used `refId`; both are tolerated defensively).
+      const authzSnapshot = store.getState().auth.authzSnapshot as
+        | {
+            allowedScopes?: Array<{
+              scopeType?: string;
+              scopeRefId?: string | number | null;
+              refId?: string | number | null;
+            }>;
+          }
+        | null
         | undefined;
-      const companyScopes = authz?.allowedScopes?.filter(
-        (s) => s?.scopeType === "COMPANY" && s?.refId !== undefined,
+      const companyScopes = (authzSnapshot?.allowedScopes ?? []).filter(
+        (s) => s?.scopeType === "COMPANY",
       );
-      if (companyScopes && companyScopes.length === 1) {
-        return String(companyScopes[0].refId);
+      if (companyScopes.length === 1) {
+        const scope = companyScopes[0];
+        const id = scope.scopeRefId ?? scope.refId;
+        if (id !== undefined && id !== null && String(id).trim() !== "") {
+          return String(id);
+        }
       }
       return undefined;
     },
