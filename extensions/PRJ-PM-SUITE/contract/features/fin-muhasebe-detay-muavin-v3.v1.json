@@ -37,14 +37,20 @@
   },
   "delivery_scope": {
     "affected_modules": [
-      "backend/report-service"
+      "backend/report-service",
+      "web/apps/mfe-reporting",
+      "web/apps/mfe-shell"
     ],
     "change_path_globs": [
-      "backend/report-service/**"
+      "backend/report-service/**",
+      "web/apps/mfe-reporting/**",
+      "web/apps/mfe-shell/**",
+      "extensions/PRJ-PM-SUITE/contract/**"
     ],
     "repo_root": ".",
     "service_scopes": [
-      "backend"
+      "backend",
+      "frontend"
     ]
   },
   "feature_id": "fin-muhasebe-detay-muavin-v3",
