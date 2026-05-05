@@ -100,13 +100,41 @@ const buildSortParam = (request: GridRequest, defaultSort?: string, defaultDirec
   if (Array.isArray(request.sortModel) && request.sortModel.length > 0) {
     const entry = request.sortModel[0];
     if (entry?.colId && entry.sort) {
-      return `${entry.colId},${entry.sort}`;
+      return JSON.stringify([{ colId: entry.colId, sort: entry.sort }]);
     }
   }
   if (defaultSort) {
-    return `${defaultSort},${defaultDirection ?? 'desc'}`;
+    return JSON.stringify([{ colId: defaultSort, sort: defaultDirection ?? 'desc' }]);
   }
   return '';
+};
+
+/**
+ * Merge AG Grid column filterModel + sidebar search into a single advancedFilter
+ * payload that the backend ReportController + FilterTranslator understand.
+ *
+ * Shape (mirrors hr-compensation-report/api.ts):
+ *   {
+ *     account_name: { filterType: 'text', type: 'contains', filter: 'serban' },
+ *     paper_no:     { filterType: 'text', type: 'contains', filter: '20260505' },
+ *     ...
+ *   }
+ *
+ * Backend FilterTranslator whitelists each key against the report's
+ * filterableColumns set, so unknown columns are silently skipped (no SQL
+ * injection risk).
+ *
+ * Sidebar "search" is a free-text quickFilter; we do not know which column it
+ * targets, so we leave the legacy `search` query param in place and let the
+ * backend handle it (currently a no-op for muavin until a defaultSearchColumn
+ * is wired in metadata — V2 follow-up).
+ */
+const buildAdvancedFilter = (
+  filters: DynamicReportFilters,
+  gridFilterModel?: Record<string, unknown> | null,
+): Record<string, unknown> => {
+  const merged: Record<string, unknown> = { ...(gridFilterModel ?? {}) };
+  return merged;
 };
 
 export const fetchReportData = async (
@@ -131,8 +159,16 @@ export const fetchReportData = async (
     params.set('sort', sort);
   }
 
+  // Merge AG Grid column-level filterModel + sidebar filters into one
+  // advancedFilter payload. If the caller already provided an explicit
+  // advancedFilter (e.g. dashboard drill-through), prefer that.
   if (request.advancedFilter) {
     params.set('advancedFilter', JSON.stringify(request.advancedFilter));
+  } else {
+    const advFilter = buildAdvancedFilter(filters, request.filterModel);
+    if (Object.keys(advFilter).length > 0) {
+      params.set('advancedFilter', JSON.stringify(advFilter));
+    }
   }
 
   try {

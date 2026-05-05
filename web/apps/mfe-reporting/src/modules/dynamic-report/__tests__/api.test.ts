@@ -130,3 +130,92 @@ describe('dynamic-report api X-Company-Id header propagation', () => {
     });
   });
 });
+
+describe('dynamic-report api filterModel pushdown', () => {
+  beforeEach(() => {
+    mockGet.mockReset();
+    mockGetShellServices.mockReset();
+    mockGetShellServices.mockReturnValue({ http: hoistedMocks.mockHttpClient });
+    if (typeof window !== 'undefined') {
+      window.localStorage.clear();
+    }
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('forwards AG Grid column filterModel as advancedFilter JSON', async () => {
+    mockGet.mockResolvedValue({ data: { items: [], total: 0 } });
+
+    await fetchReportData(
+      'fin-muhasebe-detay',
+      {},
+      {
+        page: 1,
+        pageSize: 50,
+        filterModel: {
+          account_name: { filterType: 'text', type: 'contains', filter: 'serban' },
+        },
+      },
+    );
+
+    expect(mockGet).toHaveBeenCalledTimes(1);
+    const [url] = mockGet.mock.calls[0];
+    expect(url).toContain('advancedFilter=');
+    const advancedFilterParam = new URL(`http://x${url.replace(/^[^?]*/, '')}`).searchParams.get('advancedFilter');
+    expect(advancedFilterParam).not.toBeNull();
+    expect(JSON.parse(advancedFilterParam!)).toEqual({
+      account_name: { filterType: 'text', type: 'contains', filter: 'serban' },
+    });
+  });
+
+  it('omits advancedFilter when filterModel is empty', async () => {
+    mockGet.mockResolvedValue({ data: { items: [], total: 0 } });
+
+    await fetchReportData('fin-muhasebe-detay', {}, { page: 1, pageSize: 50 });
+
+    const [url] = mockGet.mock.calls[0];
+    expect(url).not.toContain('advancedFilter=');
+  });
+
+  it('prefers explicit request.advancedFilter over filterModel', async () => {
+    mockGet.mockResolvedValue({ data: { items: [], total: 0 } });
+
+    await fetchReportData(
+      'fin-muhasebe-detay',
+      {},
+      {
+        page: 1,
+        pageSize: 50,
+        filterModel: { account_name: { filterType: 'text', type: 'contains', filter: 'X' } },
+        advancedFilter: { paper_no: { filterType: 'text', type: 'equals', filter: '123' } } as unknown as string,
+      },
+    );
+
+    const [url] = mockGet.mock.calls[0];
+    const advancedFilterParam = new URL(`http://x${url.replace(/^[^?]*/, '')}`).searchParams.get('advancedFilter');
+    expect(JSON.parse(advancedFilterParam!)).toEqual({
+      paper_no: { filterType: 'text', type: 'equals', filter: '123' },
+    });
+  });
+
+  it('emits sort as JSON array (not legacy CSV) for backend parseJson', async () => {
+    mockGet.mockResolvedValue({ data: { items: [], total: 0 } });
+
+    await fetchReportData(
+      'fin-muhasebe-detay',
+      {},
+      {
+        page: 1,
+        pageSize: 50,
+        sortModel: [{ colId: 'action_date', sort: 'desc' }],
+      },
+    );
+
+    const [url] = mockGet.mock.calls[0];
+    const sortParam = new URL(`http://x${url.replace(/^[^?]*/, '')}`).searchParams.get('sort');
+    expect(sortParam).not.toBeNull();
+    expect(JSON.parse(sortParam!)).toEqual([{ colId: 'action_date', sort: 'desc' }]);
+  });
+});
