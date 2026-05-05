@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 /**
@@ -143,6 +144,7 @@ public class SqlBuilder {
         params.addValue("_offset", offset);
         params.addValue("_pageSize", pageSize);
 
+        validateNoKnownTemplates(sql.toString());
         return new BuiltQuery(sql.toString(), params);
     }
 
@@ -166,6 +168,7 @@ public class SqlBuilder {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT COUNT(*) FROM ").append(fromClause);
 
+        validateNoKnownTemplates(sql.toString());
         return new BuiltQuery(sql.toString(), params);
     }
 
@@ -201,6 +204,7 @@ public class SqlBuilder {
             sql.append(" ORDER BY ").append(orderBy);
         }
 
+        validateNoKnownTemplates(sql.toString());
         return new BuiltQuery(sql.toString(), params);
     }
 
@@ -222,19 +226,68 @@ public class SqlBuilder {
      * placeholders in the raw SQL.
      * <ul>
      *   <li>{@code {schema}} → yearly schema (workcube_mikrolink_{YYYY}_{companyId})</li>
-     *   <li>{@code {companySchema}} → company-only schema (workcube_mikrolink_{companyId})
-     *       or empty string if unresolved (multi-company scope or missing).</li>
-     *   <li>{@code {companyId}} → numeric company id parsed from companySchema, or
-     *       "0" if unresolved (queries should treat 0 as no-match, not all-match).</li>
+     *   <li>{@code {companySchema}} → company-only schema (workcube_mikrolink_{companyId})</li>
+     *   <li>{@code {companyId}} → numeric company id parsed from companySchema</li>
      * </ul>
-     * Caller is responsible for ensuring the SQL handles missing values gracefully.
+     * Missing template inputs are schema-resolution failures, not SQL fallbacks.
      */
     private String applyTemplates(String rawSql, String schema, String companySchema) {
-        String result = rawSql.replace("{schema}", schema);
+        if (rawSql == null) {
+            throw new ReportSchemaResolutionException(
+                    HttpStatus.BAD_REQUEST, "SQL template is missing");
+        }
+        if (rawSql.contains("{schema}") && !hasText(schema)) {
+            throw new ReportSchemaResolutionException(
+                    HttpStatus.BAD_REQUEST, "{schema} placeholder requires a resolved yearly schema");
+        }
+
+        boolean needsCompanySchema = rawSql.contains("{companySchema}");
+        boolean needsCompanyId = rawSql.contains("{companyId}");
+        if ((needsCompanySchema || needsCompanyId) && !hasText(companySchema)) {
+            throw new ReportSchemaResolutionException(
+                    HttpStatus.BAD_REQUEST,
+                    "companySchema is required for {companySchema}/{companyId} placeholders");
+        }
+
+        String result = rawSql.replace("{schema}", schema != null ? schema : "");
         result = result.replace("{companySchema}", companySchema != null ? companySchema : "");
-        String companyId = extractCompanyIdFromCompanySchema(companySchema);
-        result = result.replace("{companyId}", companyId != null ? companyId : "0");
+
+        if (needsCompanyId) {
+            String companyId = extractCompanyIdFromCompanySchema(companySchema);
+            if (!hasText(companyId)) {
+                throw new ReportSchemaResolutionException(
+                        HttpStatus.BAD_REQUEST,
+                        "companySchema does not contain a numeric company id: " + companySchema);
+            }
+            result = result.replace("{companyId}", companyId);
+        }
+
+        if (containsKnownTemplate(result)) {
+            throwUnresolvedTemplate();
+        }
         return result;
+    }
+
+    private void validateNoKnownTemplates(String sql) {
+        if (containsKnownTemplate(sql)) {
+            throwUnresolvedTemplate();
+        }
+    }
+
+    private boolean containsKnownTemplate(String sql) {
+        return sql.contains("{schema}")
+                || sql.contains("{companySchema}")
+                || sql.contains("{companyId}");
+    }
+
+    private void throwUnresolvedTemplate() {
+        throw new ReportSchemaResolutionException(
+                HttpStatus.BAD_REQUEST,
+                "Unresolved SQL template placeholder remains in generated SQL");
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 
     /**

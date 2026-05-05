@@ -175,6 +175,8 @@ public class ReportController {
 
     @GetMapping("/{key}/metadata")
     public ResponseEntity<ReportMetadataDto> getMetadata(@PathVariable String key,
+                                                          @RequestHeader(name = "X-Company-Id", required = false)
+                                                          Long requestedCompanyId,
                                                           @AuthenticationPrincipal Jwt jwt) {
         ReportDefinition def = findReportOrThrow(key);
         AuthzMeResponse authz = resolveAndCheckAccess(def, jwt);
@@ -193,6 +195,7 @@ public class ReportController {
             @RequestParam(defaultValue = "50") int pageSize,
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) String advancedFilter,
+            @RequestHeader(name = "X-Company-Id", required = false) Long requestedCompanyId,
             @AuthenticationPrincipal Jwt jwt) {
 
         ReportDefinition def = findReportOrThrow(key);
@@ -203,7 +206,8 @@ public class ReportController {
 
         pageSize = Math.min(Math.max(pageSize, 1), 500);
 
-        QueryEngine.PagedData result = queryEngine.executeQuery(def, authz, agGridFilter, sortModel, page, pageSize);
+        QueryEngine.PagedData result = queryEngine.executeQuery(
+                def, authz, agGridFilter, sortModel, page, pageSize, requestedCompanyId);
 
         auditClient.logReportAccess(key, authz.getUserId(), extractEmail(jwt));
 

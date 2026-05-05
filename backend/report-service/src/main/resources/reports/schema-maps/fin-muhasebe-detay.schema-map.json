@@ -1,0 +1,29 @@
+{
+  "report": "fin-muhasebe-detay",
+  "requiresSingleCompany": true,
+  "tables": [
+    { "name": "ACCOUNT_CARD_ROWS", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "ACCOUNT_CARD", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "ACCOUNT_PLAN", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "ACCOUNT_CARD_DOCUMENT_TYPES", "schemaRole": "canonical", "literalSchema": "workcube_mikrolink" },
+    { "name": "SETUP_PROCESS_CAT", "schemaRole": "company-only", "placeholder": "{companySchema}", "evidence": "live-crawl-2026-05-05:43-instances" },
+    { "name": "PRO_PROJECTS", "schemaRole": "canonical", "literalSchema": "workcube_mikrolink" },
+    { "name": "COMPANY", "schemaRole": "canonical", "literalSchema": "workcube_mikrolink" },
+    { "name": "ACCOUNT_CARD_MONEY", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "INVOICE_MONEY", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "EXPENSE_ITEM_PLANS_MONEY", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "STOCK_FIS_MONEY", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "CARI_ACTION_MONEY", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "CARI_ACTION_MULTI_MONEY", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "CREDIT_CONTRACT_PAYMENT_INCOME_MONEY", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "PAYROLL_MONEY", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "BANK_ACTION_MULTI_MONEY", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "BANK_ACTION_MONEY", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "BANK_ORDER_MONEY", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "CASH_ACTION_MONEY", "schemaRole": "yearly", "placeholder": "{schema}" },
+    { "name": "CREDIT_CARD_BANK_EXPENSE_MONEY", "schemaRole": "company-only", "placeholder": "{companySchema}", "evidence": "live-crawl-2026-05-05:43-instances" },
+    { "name": "TAHAKKUK_PLAN_MONEY", "schemaRole": "company-only", "placeholder": "{companySchema}", "evidence": "live-crawl-2026-05-05:42-instances" },
+    { "name": "MONEY_TABLES", "schemaRole": "canonical", "literalSchema": "workcube_mikrolink" },
+    { "name": "MONEY_HISTORY", "schemaRole": "canonical", "literalSchema": "workcube_mikrolink" }
+  ]
+}

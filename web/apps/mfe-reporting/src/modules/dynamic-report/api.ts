@@ -24,6 +24,13 @@ type ErrorResponse = {
 };
 
 const REPORTS_BASE = '/v1/reports';
+const DEFAULT_COMPANY_ID = '1';
+
+const companyHeaderConfig = () => ({
+  headers: {
+    'X-Company-Id': DEFAULT_COMPANY_ID,
+  },
+});
 
 const resolveHttpClient = (): ApiInstance => {
   try {
@@ -47,7 +54,10 @@ export const fetchReportCategories = async (): Promise<ReportCategory[]> => {
 
 export const fetchReportMetadata = async (reportKey: string): Promise<ReportMetadata> => {
   const client = resolveHttpClient();
-  const { data } = await client.get<ReportMetadata>(`${REPORTS_BASE}/${reportKey}/metadata`);
+  const { data } = await client.get<ReportMetadata>(
+    `${REPORTS_BASE}/${reportKey}/metadata`,
+    companyHeaderConfig(),
+  );
   return data;
 };
 
@@ -94,6 +104,7 @@ export const fetchReportData = async (
     const client = resolveHttpClient();
     const { data } = await client.get<PagedResultDto>(
       `${REPORTS_BASE}/${reportKey}/data?${params.toString()}`,
+      companyHeaderConfig(),
     );
     const items = Array.isArray(data?.items) ? data.items : [];
     return {
@@ -132,7 +143,7 @@ export const exportReportData = async (
 
   const { data } = await client.get<Blob>(
     `${REPORTS_BASE}/${reportKey}/export?${params.toString()}`,
-    { responseType: 'blob' },
+    { responseType: 'blob', ...companyHeaderConfig() },
   );
   const extension = format === 'csv' ? 'csv' : 'xlsx';
   return { blob: data, filename: `${reportKey}.${extension}` };

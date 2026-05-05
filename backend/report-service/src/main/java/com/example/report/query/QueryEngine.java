@@ -48,11 +48,21 @@ public class QueryEngine {
                                    List<Map<String, String>> sortModel,
                                    int page,
                                    int pageSize) {
+        return executeQuery(def, authz, agGridFilter, sortModel, page, pageSize, null);
+    }
+
+    public PagedData executeQuery(ReportDefinition def,
+                                   AuthzMeResponse authz,
+                                   Map<String, Object> agGridFilter,
+                                   List<Map<String, String>> sortModel,
+                                   int page,
+                                   int pageSize,
+                                   Long requestedCompanyId) {
         List<String> visibleColumns = columnFilter.getVisibleColumns(def, authz);
         RowFilterInjector.RlsResult rls = rowFilterInjector.buildRlsClause(def, authz);
 
         // Resolve year schemas for yearly reports
-        YearlySchemaResolver.ResolvedSchemas schemas = resolveSchemas(def, authz, agGridFilter);
+        YearlySchemaResolver.ResolvedSchemas schemas = resolveSchemas(def, authz, agGridFilter, requestedCompanyId);
 
         // Resolve hydrated (file-based) source/outer SQL via registry; nulls fall back to def.sourceQuery() inside builder.
         String effectiveSourceQuery = reportRegistry.getEffectiveSourceQuery(def);
@@ -76,10 +86,18 @@ public class QueryEngine {
                                                     AuthzMeResponse authz,
                                                     Map<String, Object> agGridFilter,
                                                     List<Map<String, String>> sortModel) {
+        return buildExportQuery(def, authz, agGridFilter, sortModel, null);
+    }
+
+    public SqlBuilder.BuiltQuery buildExportQuery(ReportDefinition def,
+                                                    AuthzMeResponse authz,
+                                                    Map<String, Object> agGridFilter,
+                                                    List<Map<String, String>> sortModel,
+                                                    Long requestedCompanyId) {
         List<String> visibleColumns = columnFilter.getExportColumns(def, authz);
         RowFilterInjector.RlsResult rls = rowFilterInjector.buildRlsClause(def, authz);
 
-        YearlySchemaResolver.ResolvedSchemas schemas = resolveSchemas(def, authz, agGridFilter);
+        YearlySchemaResolver.ResolvedSchemas schemas = resolveSchemas(def, authz, agGridFilter, requestedCompanyId);
 
         String effectiveSourceQuery = reportRegistry.getEffectiveSourceQuery(def);
         String effectiveOuterQuery = reportRegistry.getEffectiveOuterQuery(def);
@@ -104,11 +122,12 @@ public class QueryEngine {
 
     private YearlySchemaResolver.ResolvedSchemas resolveSchemas(ReportDefinition def,
                                                                   AuthzMeResponse authz,
-                                                                  Map<String, Object> agGridFilter) {
+                                                                  Map<String, Object> agGridFilter,
+                                                                  Long requestedCompanyId) {
         if (!def.isYearlySchema()) {
             return null; // SqlBuilder will use def.sourceSchema() directly
         }
-        return yearlySchemaResolver.resolve(def, authz, agGridFilter);
+        return yearlySchemaResolver.resolve(def, authz, agGridFilter, requestedCompanyId);
     }
 
     private long getCount(ReportDefinition def,

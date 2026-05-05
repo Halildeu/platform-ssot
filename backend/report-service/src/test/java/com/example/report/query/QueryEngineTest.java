@@ -118,7 +118,7 @@ class QueryEngineTest {
             when(columnFilter.getVisibleColumns(any(), any())).thenReturn(List.of("TxDate"));
             when(rowFilterInjector.buildRlsClause(any(), any()))
                     .thenReturn(new RowFilterInjector.RlsResult(null, null));
-            when(yearlySchemaResolver.resolve(any(), any(), any()))
+            when(yearlySchemaResolver.resolve(any(), any(), any(), nullable(Long.class)))
                     .thenReturn(new YearlySchemaResolver.ResolvedSchemas(List.of("db_2024")));
             when(jdbc.queryForList(anyString(), any(MapSqlParameterSource.class)))
                     .thenReturn(List.of());
@@ -127,7 +127,7 @@ class QueryEngineTest {
 
             engine.executeQuery(yearlyDef(), authz(), Map.of(), List.of(), 1, 10);
 
-            verify(yearlySchemaResolver).resolve(any(), any(), any());
+            verify(yearlySchemaResolver).resolve(any(), any(), any(), nullable(Long.class));
         }
 
         @Test
@@ -157,7 +157,7 @@ class QueryEngineTest {
             when(columnFilter.getVisibleColumns(any(), any())).thenReturn(List.of("account_code"));
             when(rowFilterInjector.buildRlsClause(any(), any()))
                     .thenReturn(new RowFilterInjector.RlsResult(null, null));
-            when(yearlySchemaResolver.resolve(any(), any(), any()))
+            when(yearlySchemaResolver.resolve(any(), any(), any(), nullable(Long.class)))
                     .thenReturn(new YearlySchemaResolver.ResolvedSchemas(
                             List.of("workcube_mikrolink_2026_35"), "workcube_mikrolink_35"));
             // Hydrated SQL strings come from the registry (Issue #1).

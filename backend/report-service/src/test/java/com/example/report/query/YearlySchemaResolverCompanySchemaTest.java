@@ -1,48 +1,41 @@
 package com.example.report.query;
 
 import com.example.report.authz.AuthzMeResponse;
+import com.example.report.authz.ScopeSummaryDto;
 import com.example.report.registry.ColumnDefinition;
 import com.example.report.registry.ReportDefinition;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
- * Tests for {@link YearlySchemaResolver} companySchema resolution
- * (Codex 019df4ed iter-4 absorb).
- *
- * <p>The base resolver's {@link YearlySchemaResolver#getAvailableSchemas()} is
- * a {@link org.springframework.cache.annotation.Cacheable Cacheable} method
- * backed by sys.schemas; we override it via subclass to bypass jdbc entirely.
+ * Tests for {@link YearlySchemaResolver} company selection and companySchema resolution.
  */
 class YearlySchemaResolverCompanySchemaTest {
 
-    private NamedParameterJdbcTemplate jdbc;
     private YearlySchemaResolver resolver;
 
     @BeforeEach
     void setUp() {
-        jdbc = mock(NamedParameterJdbcTemplate.class);
-        // No jdbc stubbing needed — getAvailableSchemas() is overridden below.
+        NamedParameterJdbcTemplate jdbc = mock(NamedParameterJdbcTemplate.class);
         resolver = new YearlySchemaResolver(jdbc) {
             @Override
             public Set<String> getAvailableSchemas() {
-                // Bypass @Cacheable for tests
                 return Set.of(
-                        "workcube_mikrolink_2024_35",
-                        "workcube_mikrolink_2025_35",
-                        "workcube_mikrolink_2026_35",
-                        "workcube_mikrolink_35",
                         "workcube_mikrolink_2026_1",
-                        "workcube_mikrolink_1"
+                        "workcube_mikrolink_1",
+                        "workcube_mikrolink_2026_35",
+                        "workcube_mikrolink_35"
                 );
             }
         };
@@ -61,46 +54,98 @@ class YearlySchemaResolverCompanySchemaTest {
                 null);
     }
 
+    private Map<String, Object> year2026Filter() {
+        return Map.of("action_date", Map.of("type", "equals", "filter", "2026-01-01"));
+    }
+
     @Test
-    @DisplayName("Single COMPANY scope: companySchema resolved as workcube_mikrolink_{companyId}")
-    void singleCompanyScope_companySchemaResolved() {
-        AuthzMeResponse authz = mock(AuthzMeResponse.class);
-        when(authz.getScopeRefIds("COMPANY")).thenReturn(Set.of("35"));
-
+    @DisplayName("X-Company-Id present and in COMPANY scope: header company is used")
+    void headerInScope_resolvesRequestedCompany() {
         YearlySchemaResolver.ResolvedSchemas resolved = resolver.resolve(
-                yearlyReport(), authz, Map.of());
+                yearlyReport(),
+                userWithCompanyScopes("35", "1"),
+                year2026Filter(),
+                35L);
 
-        assertNotNull(resolved.companySchema());
+        assertEquals(List.of("workcube_mikrolink_2026_35"), resolved.schemas());
         assertEquals("workcube_mikrolink_35", resolved.companySchema());
         assertTrue(resolved.hasCompanySchema());
     }
 
     @Test
-    @DisplayName("Multiple COMPANY scope: companySchema null (ambiguous)")
-    void multipleCompanyScope_companySchemaNull() {
-        AuthzMeResponse authz = mock(AuthzMeResponse.class);
-        when(authz.getScopeRefIds("COMPANY")).thenReturn(Set.of("35", "1"));
+    @DisplayName("X-Company-Id present and outside COMPANY scope: 403")
+    void headerOutsideScope_throws403() {
+        var ex = assertThrows(
+                ReportSchemaResolutionException.UnauthorizedCompanyException.class,
+                () -> resolver.resolve(yearlyReport(), userWithCompanyScopes("1"), year2026Filter(), 35L));
 
-        YearlySchemaResolver.ResolvedSchemas resolved = resolver.resolve(
-                yearlyReport(), authz, Map.of());
-
-        assertNull(resolved.companySchema(),
-                "companySchema must be null when multiple companies are in scope");
-        assertFalse(resolved.hasCompanySchema());
+        assertEquals(403, ex.getStatusCode().value());
     }
 
     @Test
-    @DisplayName("No COMPANY scope: companySchema null, falls back to base sourceSchema")
-    void noCompanyScope_fallback() {
-        AuthzMeResponse authz = mock(AuthzMeResponse.class);
-        when(authz.getScopeRefIds("COMPANY")).thenReturn(Set.of());
-
+    @DisplayName("X-Company-Id present for superAdmin with empty allowedScopes: requested company is used")
+    void superAdminWithHeader_resolvesRequestedCompany() {
         YearlySchemaResolver.ResolvedSchemas resolved = resolver.resolve(
-                yearlyReport(), authz, Map.of());
+                yearlyReport(),
+                superAdmin(),
+                year2026Filter(),
+                1L);
 
-        // sourceSchema "workcube_mikrolink_2026_35" → 2-part pattern fails extractCompanyFromSchema
-        // So no company inferred, falls back to base schema list
-        assertEquals(List.of("workcube_mikrolink_2026_35"), resolved.schemas());
+        assertEquals(List.of("workcube_mikrolink_2026_1"), resolved.schemas());
+        assertEquals("workcube_mikrolink_1", resolved.companySchema());
+    }
+
+    @Test
+    @DisplayName("X-Company-Id present but company schema missing: 400")
+    void headerSchemaMissing_throws400() {
+        var ex = assertThrows(
+                ReportSchemaResolutionException.CompanySchemaNotFoundException.class,
+                () -> resolver.resolve(yearlyReport(), superAdmin(), year2026Filter(), 99L));
+
+        assertEquals(400, ex.getStatusCode().value());
+    }
+
+    @Test
+    @DisplayName("No X-Company-Id and single allowed COMPANY scope: auto-select that company")
+    void noHeaderSingleCompanyScope_autoSelects() {
+        YearlySchemaResolver.ResolvedSchemas resolved = resolver.resolve(
+                yearlyReport(),
+                userWithCompanyScopes("1"),
+                year2026Filter(),
+                null);
+
+        assertEquals(List.of("workcube_mikrolink_2026_1"), resolved.schemas());
+        assertEquals("workcube_mikrolink_1", resolved.companySchema());
+    }
+
+    @Test
+    @DisplayName("No X-Company-Id and multiple allowed COMPANY scopes: 400 selection required")
+    void noHeaderMultipleCompanyScopes_throws400() {
+        var ex = assertThrows(
+                ReportSchemaResolutionException.MissingCompanyHeaderException.class,
+                () -> resolver.resolve(yearlyReport(), userWithCompanyScopes("1", "35"), year2026Filter(), null));
+
+        assertEquals(400, ex.getStatusCode().value());
+    }
+
+    @Test
+    @DisplayName("No X-Company-Id and superAdmin: 400 explicit company required")
+    void noHeaderSuperAdmin_throws400() {
+        var ex = assertThrows(
+                ReportSchemaResolutionException.MissingCompanyHeaderException.class,
+                () -> resolver.resolve(yearlyReport(), superAdmin(), year2026Filter(), null));
+
+        assertEquals(400, ex.getStatusCode().value());
+    }
+
+    @Test
+    @DisplayName("No X-Company-Id and no COMPANY scope: 400 explicit company required")
+    void noHeaderNoCompanyScope_throws400() {
+        var ex = assertThrows(
+                ReportSchemaResolutionException.MissingCompanyHeaderException.class,
+                () -> resolver.resolve(yearlyReport(), userWithCompanyScopes(), year2026Filter(), null));
+
+        assertEquals(400, ex.getStatusCode().value());
     }
 
     @Test
@@ -108,35 +153,27 @@ class YearlySchemaResolverCompanySchemaTest {
     void backwardCompatConstructor() {
         YearlySchemaResolver.ResolvedSchemas r = new YearlySchemaResolver.ResolvedSchemas(
                 List.of("schema1", "schema2"));
-        assertNull(r.companySchema());
         assertFalse(r.hasCompanySchema());
         assertFalse(r.isSingle());
     }
 
-    @Test
-    @DisplayName("isSingle and hasCompanySchema work together")
-    void recordHelpers() {
-        YearlySchemaResolver.ResolvedSchemas single = new YearlySchemaResolver.ResolvedSchemas(
-                List.of("schema1"), "workcube_mikrolink_35");
-        assertTrue(single.isSingle());
-        assertTrue(single.hasCompanySchema());
-
-        YearlySchemaResolver.ResolvedSchemas multi = new YearlySchemaResolver.ResolvedSchemas(
-                List.of("s1", "s2"), null);
-        assertFalse(multi.isSingle());
-        assertFalse(multi.hasCompanySchema());
+    private static AuthzMeResponse superAdmin() {
+        var authz = new AuthzMeResponse();
+        authz.setSuperAdmin(true);
+        authz.setUserId("admin");
+        authz.setAllowedScopes(List.of());
+        return authz;
     }
 
-    @Test
-    @DisplayName("Single company, company-only schema missing in DB: companySchema null")
-    void companyOnlySchemaMissing() {
-        AuthzMeResponse authz = mock(AuthzMeResponse.class);
-        when(authz.getScopeRefIds("COMPANY")).thenReturn(Set.of("99")); // no _99 in available set
-
-        YearlySchemaResolver.ResolvedSchemas resolved = resolver.resolve(
-                yearlyReport(), authz, Map.of());
-
-        // _99 yearly schemas missing too — falls back, but companySchema explicitly null
-        assertNull(resolved.companySchema());
+    private static AuthzMeResponse userWithCompanyScopes(String... companyIds) {
+        var authz = new AuthzMeResponse();
+        authz.setSuperAdmin(false);
+        authz.setPermissions(List.of("REPORT_VIEW"));
+        authz.setUserId("user");
+        authz.setAllowedScopes(
+                java.util.Arrays.stream(companyIds)
+                        .map(id -> new ScopeSummaryDto("COMPANY", id))
+                        .toList());
+        return authz;
     }
 }

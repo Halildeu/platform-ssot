@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -65,6 +66,7 @@ public class ReportExportController {
             @RequestParam(defaultValue = "csv") String format,
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) String advancedFilter,
+            @RequestHeader(name = "X-Company-Id", required = false) Long requestedCompanyId,
             @AuthenticationPrincipal Jwt jwt) {
 
         ReportDefinition def = registry.get(key)
@@ -82,7 +84,8 @@ public class ReportExportController {
         Map<String, Object> agGridFilter = parseJson(advancedFilter, new TypeReference<>() {});
         List<Map<String, String>> sortModel = parseJson(sort, new TypeReference<>() {});
 
-        SqlBuilder.BuiltQuery exportQuery = queryEngine.buildExportQuery(def, authz, agGridFilter, sortModel);
+        SqlBuilder.BuiltQuery exportQuery = queryEngine.buildExportQuery(
+                def, authz, agGridFilter, sortModel, requestedCompanyId);
         // Export uses the same projection as the query (hidden+exportOnly are included for export only).
         List<String> visibleColumns = queryEngine.getExportColumns(def, authz);
 

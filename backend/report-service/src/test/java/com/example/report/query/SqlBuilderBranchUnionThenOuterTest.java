@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Tests for {@link SqlBuilder} BRANCH_UNION_THEN_OUTER queryShape and
@@ -122,6 +123,7 @@ class SqlBuilderBranchUnionThenOuterTest {
         String sql = built.sql();
         assertThat(sql).contains("[workcube_mikrolink_35].[Z]");
         assertThat(sql).doesNotContain("{companySchema}");
+        assertThat(sql).doesNotContain("[].[");
     }
 
     @Test
@@ -144,23 +146,54 @@ class SqlBuilderBranchUnionThenOuterTest {
     }
 
     @Test
-    @DisplayName("Missing companySchema (multi-company scope): {companyId} replaced with '0'")
-    void companyIdFallbackToZero() {
+    @DisplayName("Missing companySchema with {companyId}: fail-closed")
+    void missingCompanySchemaForCompanyIdThrows() {
         String branchSql = "SELECT 1 FROM T WHERE COMPANY_ID = {companyId}";
         String outerSql = "SELECT * FROM (\n{inner}\n) q";
         YearlySchemaResolver.ResolvedSchemas resolved = new YearlySchemaResolver.ResolvedSchemas(
                 List.of("y_2026"),
                 null); // companySchema null
 
-        SqlBuilder.BuiltQuery built = builder.buildDataQuery(
+        assertThatThrownBy(() -> builder.buildDataQuery(
                 muavinDef(), branchSql, outerSql, resolved,
                 List.of("account_code"), Map.of(), List.of(),
-                "", new MapSqlParameterSource(), 1, 10);
+                "", new MapSqlParameterSource(), 1, 10))
+                .isInstanceOf(ReportSchemaResolutionException.class)
+                .hasMessageContaining("companySchema is required");
+    }
 
-        String sql = built.sql();
-        // Falls back to "0" — no spurious all-match (numeric COMPANY_ID never equals 0 in real data)
-        assertThat(sql).contains("COMPANY_ID = 0");
-        assertThat(sql).doesNotContain("{companyId}");
+    @Test
+    @DisplayName("Missing companySchema with {companySchema}: fail-closed instead of producing [].[TABLE]")
+    void missingCompanySchemaForCompanySchemaThrows() {
+        String branchSql = "SELECT 1 FROM [{companySchema}].[SETUP_PROCESS_CAT]";
+        String outerSql = "SELECT * FROM (\n{inner}\n) q";
+        YearlySchemaResolver.ResolvedSchemas resolved = new YearlySchemaResolver.ResolvedSchemas(
+                List.of("y_2026"),
+                null);
+
+        assertThatThrownBy(() -> builder.buildDataQuery(
+                muavinDef(), branchSql, outerSql, resolved,
+                List.of("account_code"), Map.of(), List.of(),
+                "", new MapSqlParameterSource(), 1, 10))
+                .isInstanceOf(ReportSchemaResolutionException.class)
+                .hasMessageContaining("companySchema is required");
+    }
+
+    @Test
+    @DisplayName("Unresolved known placeholders in generated SQL are rejected")
+    void unresolvedPlaceholderThrows() {
+        String branchSql = "SELECT 1 AS account_code";
+        String outerSql = "SELECT * FROM (\n{inner}\n) q WHERE q.company_id = {companyId}";
+        YearlySchemaResolver.ResolvedSchemas resolved = new YearlySchemaResolver.ResolvedSchemas(
+                List.of("y_2026"),
+                "workcube_mikrolink_35");
+
+        assertThatThrownBy(() -> builder.buildDataQuery(
+                muavinDef(), branchSql, outerSql, resolved,
+                List.of("account_code"), Map.of(), List.of(),
+                "", new MapSqlParameterSource(), 1, 10))
+                .isInstanceOf(ReportSchemaResolutionException.class)
+                .hasMessageContaining("Unresolved SQL template placeholder");
     }
 
     @Test

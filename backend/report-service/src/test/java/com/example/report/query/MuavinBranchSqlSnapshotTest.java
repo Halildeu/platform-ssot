@@ -1,12 +1,17 @@
 package com.example.report.query;
 
+import com.example.report.registry.ColumnDefinition;
+import com.example.report.registry.ReportDefinition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,6 +29,37 @@ class MuavinBranchSqlSnapshotTest {
         try (var in = res.getInputStream()) {
             return StreamUtils.copyToString(in, StandardCharsets.UTF_8);
         }
+    }
+
+    private String outerSql() throws IOException {
+        ClassPathResource res = new ClassPathResource("reports/sql/fin-muhasebe-detay.outer.sql");
+        try (var in = res.getInputStream()) {
+            return StreamUtils.copyToString(in, StandardCharsets.UTF_8);
+        }
+    }
+
+    private ReportDefinition muavinDef() {
+        return new ReportDefinition(
+                "fin-muhasebe-detay",
+                "3.0",
+                "Muavin",
+                "Test",
+                "Finans",
+                "ACCOUNT_CARD_ROWS",
+                "workcube_mikrolink_2026_1",
+                "yearly",
+                "action_date",
+                null,
+                "sql/fin-muhasebe-detay.branch.sql",
+                "sql/fin-muhasebe-detay.outer.sql",
+                "BRANCH_UNION_THEN_OUTER",
+                List.of(
+                        new ColumnDefinition("account_code", "Hesap Kodu", "text", 140, false, false, false),
+                        new ColumnDefinition("bakiye_tl", "Bakiye TL", "number", 140, false, false, false)
+                ),
+                "account_code",
+                "ASC",
+                null);
     }
 
     @Test
@@ -162,5 +198,35 @@ class MuavinBranchSqlSnapshotTest {
         long nullOccurrences = mhBlock.lines().filter(l -> l.contains("NULL, 50")
                 || l.contains("NULL, 60") || l.contains("NULL, 70") || l.contains("NULL, 80")).count();
         assertThat(nullOccurrences).as("Each MH layer uses NULL is_selected placeholder").isGreaterThanOrEqualTo(4);
+    }
+
+    @Test
+    @DisplayName("Generated muavin SQL resolves yearly and company-only placeholders")
+    void generatedSqlSubstitutesAllPlaceholders() throws IOException {
+        SqlBuilder builder = new SqlBuilder();
+        YearlySchemaResolver.ResolvedSchemas resolved = new YearlySchemaResolver.ResolvedSchemas(
+                List.of("workcube_mikrolink_2026_1"),
+                "workcube_mikrolink_1");
+
+        SqlBuilder.BuiltQuery built = builder.buildDataQuery(
+                muavinDef(),
+                branchSql(),
+                outerSql(),
+                resolved,
+                List.of("account_code", "bakiye_tl"),
+                Map.of(),
+                List.of(),
+                "",
+                new MapSqlParameterSource(),
+                1,
+                25);
+
+        assertThat(built.sql()).doesNotContain("{schema}");
+        assertThat(built.sql()).doesNotContain("{companySchema}");
+        assertThat(built.sql()).doesNotContain("{companyId}");
+        assertThat(built.sql()).doesNotContain("[].[");
+        assertThat(built.sql()).contains("[workcube_mikrolink_2026_1].[ACCOUNT_CARD_ROWS]");
+        assertThat(built.sql()).contains("[workcube_mikrolink_1].[SETUP_PROCESS_CAT]");
+        assertThat(built.sql()).contains("mh.COMPANY_ID = 1");
     }
 }
