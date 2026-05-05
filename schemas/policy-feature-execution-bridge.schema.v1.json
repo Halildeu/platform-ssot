@@ -48,7 +48,34 @@
     },
     "contract_path": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "description": "Legacy single-file feature execution contract path. Preserved for backward-compat audit; new features should land under contract_glob (see C-prime multi-file pattern, Codex 019df4ed iter-5)."
+    },
+    "contract_paths": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Optional explicit list of feature execution contract files. Highest priority in resolution chain (contract_paths > contract_glob > contract_path)."
+    },
+    "contract_glob": {
+      "type": "string",
+      "minLength": 0,
+      "description": "Optional glob pattern resolved relative to repo_root that expands to per-feature contract files. Second priority in resolution chain."
+    },
+    "active_features_path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional path to the active_features.v1.json index that lists ACTIVE per-feature contracts."
+    },
+    "contract_resolution_notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Free-form documentation of the contract resolution behaviour for human readers."
     },
     "contract_schema_path": {
       "type": "string",
