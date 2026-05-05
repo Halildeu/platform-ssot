@@ -54,6 +54,10 @@ jobs:
           python3 ci/check_module_delivery_lanes.py --strict
 
       - name: Feature execution bridge gate
+        env:
+          # ADR-0014: org-level variable controls active lane env.
+          # Pre-prod default; cutover (D30) sets DELIVERY_LANE_ENV=prod.
+          DELIVERY_LANE_ENV: ${{ vars.DELIVERY_LANE_ENV || 'pre-prod' }}
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE_PARENT="$(git rev-parse HEAD^1)"
@@ -63,12 +67,14 @@ jobs:
               --repo-root . \
               --base "${MERGE_BASE}" \
               --head "${PR_HEAD_PARENT}" \
+              --env "${DELIVERY_LANE_ENV}" \
               --out .cache/reports/feature_execution_contract_ci.v1.json
           else
             python3 extensions/PRJ-PM-SUITE/contract/check_feature_execution_contract.py \
               --repo-root . \
               --base "HEAD~1" \
               --head "HEAD" \
+              --env "${DELIVERY_LANE_ENV}" \
               --out .cache/reports/feature_execution_contract_ci.v1.json
           fi
 
