@@ -1,6 +1,9 @@
 -- Muavin Raporu (fin-muhasebe-detay) — outer wrapper
--- BRANCH_UNION_THEN_OUTER queryShape: {inner} placeholder is replaced by SqlBuilder
--- with the multi-year branch UNION ALL.
+-- BRANCH_UNION_THEN_OUTER queryShape: the inner-SQL marker (curly-brace
+-- inner) is replaced by SqlBuilder with the multi-year branch UNION ALL.
+-- NOTE: Do not write the literal placeholder token anywhere except the single
+-- substitution site below — applyTemplates does a global string replace
+-- and would inject inner SQL into multi-line comments, breaking them.
 --
 -- Window functions compute global running balance (bakiye) across all yearly
 -- partitions, ordered by (action_date, card_id, card_row_id).
