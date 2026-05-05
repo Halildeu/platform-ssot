@@ -21,6 +21,7 @@ on:
     branches: [main]
     paths:
       - "backend/report-service/**"
+      - "backend/api-gateway/**"
       - "backend/common-auth/**"
       - ".github/workflows/deploy-backend.yml"
   workflow_dispatch:
@@ -47,9 +48,11 @@ jobs:
       matrix:
         service:
           - report-service
-          # V2: auth-service, permission-service, schema-service, user-service,
-          # variant-service, core-data-service, api-gateway. Bu PR sadece
-          # report-service (muavin v3 critical path); diğerleri ayrı sprint.
+          - api-gateway
+          # 2026-05-06: api-gateway eklendi (PR #571 cookie /refresh path matcher
+          #   fix; AuthBootstrapper silent-refresh contract).
+          # V2 backlog: auth-service, permission-service, schema-service,
+          #   user-service, variant-service, core-data-service.
     env:
       DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
 
