@@ -26,6 +26,20 @@ export type RemoteShellServices = {
     getToken: () => string | null;
     getUser: () => unknown;
   };
+  /**
+   * Optional accessor for the active company id (Workcube tenant scope).
+   *
+   * Reporting MFE injects {@code X-Company-Id} into report API calls when
+   * this resolver returns a non-blank value. Source priority is enforced
+   * by the host shell — typically: explicit WorkspaceSwitcher selection
+   * (persisted to localStorage) → first allowed COMPANY scope from
+   * AuthzMe → undefined.
+   *
+   * Backend contract: header is OPTIONAL when the user has exactly one
+   * COMPANY scope (auto-selected server-side). Required for super-admin
+   * and multi-company users; missing header → 400.
+   */
+  getCurrentCompanyId?: () => string | number | null | undefined;
 };
 
 const createNoopServices = (): RemoteShellServices => ({
@@ -59,6 +73,10 @@ export const configureShellServices = (services: Partial<RemoteShellServices>): 
     telemetry: services.telemetry ?? fallbackServices.telemetry,
     http: services.http ?? fallbackServices.http,
     auth: services.auth ?? fallbackServices.auth,
+    // Optional fields preserved as-is (no fallback) so the absence of a
+    // host implementation degrades to the api.ts localStorage fallback
+    // instead of being silently overridden.
+    getCurrentCompanyId: services.getCurrentCompanyId,
   };
   if (process.env.NODE_ENV !== 'production') {
     console.debug('[mfe-reporting] shell services configured');

@@ -112,6 +112,36 @@ export const wireRemoteShellServices = () => {
       getToken: () => store.getState().auth.token ?? null,
       getUser: () => store.getState().auth.user ?? null,
     },
+    /**
+     * Active company id for the report API X-Company-Id header.
+     *
+     * Resolution order:
+     *   1. localStorage['reporting:currentCompanyId'] — written by
+     *      WorkspaceSwitcher when the user picks a company.
+     *   2. First COMPANY scope from AuthzMe (single-company users).
+     *   3. undefined — header omitted; backend returns 400 for super-
+     *      admin / multi-company callers.
+     */
+    getCurrentCompanyId: (): string | undefined => {
+      if (typeof window !== "undefined" && window.localStorage) {
+        const stored = window.localStorage.getItem(
+          "reporting:currentCompanyId",
+        );
+        if (stored && stored.trim() !== "") {
+          return stored;
+        }
+      }
+      const authz = store.getState().auth.authz as
+        | { allowedScopes?: Array<{ scopeType?: string; refId?: string | number }> }
+        | undefined;
+      const companyScopes = authz?.allowedScopes?.filter(
+        (s) => s?.scopeType === "COMPANY" && s?.refId !== undefined,
+      );
+      if (companyScopes && companyScopes.length === 1) {
+        return String(companyScopes[0].refId);
+      }
+      return undefined;
+    },
   };
   const remotes = [
     { name: "mfe_access", loader: () => import("mfe_access/shell-services") },
