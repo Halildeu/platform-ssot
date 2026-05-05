@@ -1,0 +1,118 @@
+{
+  "context_contract": {
+    "codex_read_sequence": [
+      "standards.lock",
+      "docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md",
+      "docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md",
+      "docs/OPERATIONS/MANAGED-REPO-CONTEXT-CONSUMPTION.v1.md",
+      "tenant/TENANT-DEFAULT/context.v1.md",
+      "tenant/TENANT-DEFAULT/decision-bundle.v1.json",
+      "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json"
+    ],
+    "context_refs": [
+      "tenant/TENANT-DEFAULT/context.v1.md"
+    ],
+    "decision_bundle_path": "tenant/TENANT-DEFAULT/decision-bundle.v1.json"
+  },
+  "definition_of_done": {
+    "acceptance_criteria": [
+      "POST /api/auth/cookie/refresh returns 200 + Set-Cookie when bearer header present.",
+      "Existing POST /api/auth/cookie root path remains backward-compat (regression check)."
+    ],
+    "evidence_paths": [
+      ".cache/reports/feature_execution_contract_check.v1.json"
+    ]
+  },
+  "delivery_scope": {
+    "affected_modules": [
+      "backend/api-gateway"
+    ],
+    "change_path_globs": [
+      "backend/api-gateway/**",
+      "extensions/PRJ-PM-SUITE/contract/**"
+    ],
+    "repo_root": ".",
+    "service_scopes": [
+      "backend"
+    ]
+  },
+  "feature_id": "auth-cookie-refresh-fix",
+  "kind": "feature-execution-contract",
+  "lane_plan": {
+    "execution_sequence": [
+      "backend",
+      "database",
+      "api",
+      "frontend",
+      "integration",
+      "e2e"
+    ],
+    "notes": [
+      "Hotfix: frontend AuthBootstrapper silent-refresh contract."
+    ],
+    "required_lanes": [
+      "unit",
+      "contract"
+    ]
+  },
+  "multi_plane_contract": {
+    "mode": "multi-plane",
+    "plane_path_globs": {
+      "backend": [
+        "backend/api-gateway/**/*"
+      ],
+      "governance": [
+        "extensions/PRJ-PM-SUITE/contract/**/*"
+      ]
+    },
+    "planes": [
+      "backend",
+      "governance"
+    ],
+    "primary_plane": "backend"
+  },
+  "notes": [
+    "Live evidence: gateway logs from platform-test cluster show frontend POST /api/auth/cookie/refresh -> 404 NoResourceFoundException, followed by a flood of /api/v1/authz/me 401 responses. User reported repeated re-login loop (10+ logins in one session). The path matcher gap is the only delta; SecurityConfig already permits /api/auth/cookie/**.",
+    "Live hotfix in place at platform-test: ingress rewrite muavin-auth-cookie-refresh-rewrite. Cleanup after image deploy."
+  ],
+  "shared_contracts": {
+    "audit_actions": [],
+    "capability_ids": [
+      "platform.auth.cookie-refresh"
+    ],
+    "event_names": [],
+    "job_names": [],
+    "permission_codes": [],
+    "resource_scopes": []
+  },
+  "source_context": {
+    "business_goal": "Restore working SSO session continuity for testai users so the application stops bouncing them back to the Keycloak login form every few minutes.",
+    "requested_outcome": "AuthCookieEndpoint accepts both POST /api/auth/cookie and POST /api/auth/cookie/refresh; the silent-refresh path stops 404'ing.",
+    "source_refs": [
+      "platform-ssot#571"
+    ],
+    "source_type": "incident"
+  },
+  "status": "ACTIVE",
+  "summary": "Add /api/auth/cookie/refresh path matcher to AuthCookieEndpoint so frontend AuthBootstrapper silent-refresh stops 404'ing.",
+  "technical_contract": {
+    "api_version_prefix": "/api/v1",
+    "baseline_profile_id": "erp-fullstack-java21-react18",
+    "db_migration_required": false,
+    "design_system_policy": "policies/policy_ui_design_system.v1.json"
+  },
+  "title": "Auth cookie refresh path matcher",
+  "ux_contract": {
+    "artifacts": [
+      {
+        "path_glob": "backend/api-gateway/src/main/java/com/example/apigateway/filter/AuthCookieEndpoint.java",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      }
+    ],
+    "mode": "REQUIRED",
+    "rationale": "Auth cookie write is a security boundary — the endpoint mints an httpOnly cookie carrying the bearer token. Trust/privacy/security theme covers least-privilege interaction design (cookie httpOnly + Secure + SameSite=Strict on https). UX surface is invisible to end users but the silent-refresh failure is what bounces them back to the login form.",
+    "uri": "https://github.com/Halildeu/platform-ssot/pull/571"
+  },
+  "version": "v1"
+}

@@ -9,6 +9,11 @@
       "contract_path": "extensions/PRJ-PM-SUITE/contract/features/fin-muhasebe-detay-muavin-v3.v1.json",
       "feature_id": "fin-muhasebe-detay-muavin-v3",
       "status": "ACTIVE"
+    },
+    {
+      "contract_path": "extensions/PRJ-PM-SUITE/contract/features/auth-cookie-refresh-fix.v1.json",
+      "feature_id": "auth-cookie-refresh-fix",
+      "status": "ACTIVE"
     }
   ],
   "kind": "active-features-index",

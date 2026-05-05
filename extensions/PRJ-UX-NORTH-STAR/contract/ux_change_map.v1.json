@@ -687,6 +687,11 @@
       "path": "web/apps/mfe-reporting/src/components/CompanyPicker.tsx",
       "ux_theme_id": "trust_privacy_security_ux",
       "ux_subtheme_id": "least_privilege_interaction_design"
+    },
+    {
+      "path": "backend/api-gateway/src/main/java/com/example/apigateway/filter/AuthCookieEndpoint.java",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "least_privilege_interaction_design"
     }
   ]
 }
