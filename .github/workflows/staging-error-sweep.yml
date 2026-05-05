@@ -85,7 +85,7 @@ jobs:
 
       - name: Upload sweep report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: staging-error-sweep-${{ github.run_id }}
           path: .cache/reports/staging-error-sweep-*.json
