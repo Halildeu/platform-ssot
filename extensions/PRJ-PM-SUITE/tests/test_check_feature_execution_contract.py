@@ -132,6 +132,11 @@ def _bootstrap_repo(tmpdir: Path, *, contracts_by_path: dict, policy_overrides=N
         _write_json(repo / rel, contract)
 
     # Default policy. Tests can override.
+    # Note: `active_features_path` is intentionally OMITTED from this default
+    # so the existing glob-fallback / single-contract tests keep their
+    # historical resolution path. Tests that exercise the active-features
+    # index pass `active_features_path` explicitly via `policy_overrides` and
+    # write the corresponding index file in the tmp repo.
     policy = {
         "version": "v1",
         "kind": "policy-feature-execution-bridge",
@@ -140,7 +145,6 @@ def _bootstrap_repo(tmpdir: Path, *, contracts_by_path: dict, policy_overrides=N
         "contract_path": "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
         "contract_paths": [],
         "contract_glob": "extensions/PRJ-PM-SUITE/contract/features/*.v1.json",
-        "active_features_path": "extensions/PRJ-PM-SUITE/contract/active_features.v1.json",
         "contract_schema_path": "schemas/feature-execution-contract.schema.v1.json",
         "technical_baseline_path": "registry/technical_baseline.aistd.v1.json",
         "ux_lock_path": "extensions/PRJ-UX-NORTH-STAR/contract/ux_katalogu.final_lock.v1.json",

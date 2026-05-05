@@ -3,12 +3,22 @@ from __future__ import annotations
 
 import argparse
 import fnmatch
-import glob
 import json
 import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+# Allow `python check_feature_execution_contract.py ...` to import the shared
+# resolver without forcing callers to set PYTHONPATH. The shared module lives
+# right next to this script.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from contract_resolution import (  # noqa: E402  (intentional sys.path tweak above)
+    GovernanceError,
+    resolve_active_contracts,
+)
 
 DEFAULT_POLICY_PATH = "policies/policy_feature_execution_bridge.v1.json"
 DEFAULT_OUT_PATH = ".cache/reports/feature_execution_contract_check.v1.json"
@@ -144,47 +154,9 @@ def _append_missing(errors: list[str], prefix: str, payload: dict[str, Any], req
             errors.append(f"{prefix}:missing_key:{key}")
 
 
-def _resolve_contract_paths(policy: dict[str, Any], repo_root: Path) -> tuple[list[str], str]:
-    """
-    Resolve contract path candidates with explicit priority:
-
-      1. policy.contract_paths (non-empty list of explicit paths)
-      2. policy.contract_glob (single glob expanded relative to repo_root)
-      3. policy.contract_path (single legacy backward-compat path)
-
-    Returns (relative_paths_sorted, source_label).
-    """
-    explicit_paths = policy.get("contract_paths")
-    if isinstance(explicit_paths, list) and any(str(p).strip() for p in explicit_paths):
-        rels = sorted(
-            {
-                _normalize_rel(str(p))
-                for p in explicit_paths
-                if isinstance(p, str) and str(p).strip()
-            }
-        )
-        if rels:
-            return rels, "contract_paths"
-
-    glob_pattern = str(policy.get("contract_glob") or "").strip()
-    if glob_pattern:
-        matches = sorted(glob.glob(str(repo_root / glob_pattern)))
-        if matches:
-            rels = sorted(
-                {
-                    _normalize_rel(str(Path(m).resolve().relative_to(repo_root)))
-                    for m in matches
-                    if Path(m).is_file()
-                }
-            )
-            if rels:
-                return rels, "contract_glob"
-
-    single = str(policy.get("contract_path") or "").strip()
-    if single:
-        return [_normalize_rel(single)], "contract_path"
-
-    return [], "none"
+# NOTE: contract resolution lives in contract_resolution.resolve_active_contracts
+# so the checker and the delivery-session packet builder cannot drift. Codex
+# iter-6 REVISE flagged the previous in-file copy as a dead-letterbox risk.
 
 
 def _validate_contract(
@@ -426,7 +398,14 @@ def main(argv: list[str] | None = None) -> int:
 
     policy = _load_json(policy_path)
     enforcement_mode = str(policy.get("enforcement_mode") or "blocking").strip().lower()
-    contract_paths_rel, contract_source = _resolve_contract_paths(policy, repo_root)
+    try:
+        contract_paths_rel, contract_source = resolve_active_contracts(repo_root, policy)
+    except GovernanceError as exc:
+        # Fail-closed: a missing or malformed active_features index becomes
+        # a top-level error so downstream gates surface the violation. The
+        # error token format is `active_features:<reason>:...`.
+        contract_paths_rel, contract_source = [], "active_features_path"
+        errors.append(str(exc))
     contract_schema_path_rel = str(policy.get("contract_schema_path") or "").strip()
     baseline_path_rel = str(policy.get("technical_baseline_path") or "").strip()
     ux_lock_path_rel = str(policy.get("ux_lock_path") or "").strip()

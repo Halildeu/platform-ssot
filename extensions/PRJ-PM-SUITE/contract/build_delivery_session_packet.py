@@ -2,11 +2,20 @@
 from __future__ import annotations
 
 import argparse
-import glob
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+# Reuse the shared contract resolver so the checker and the packet builder
+# cannot disagree on which contracts are active. (Codex iter-6 REVISE.)
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from contract_resolution import (  # noqa: E402  (intentional sys.path tweak above)
+    GovernanceError,
+    resolve_active_contracts,
+)
 
 
 def _now_iso() -> str:
@@ -76,43 +85,6 @@ def _phase_related_globs(phase: str, contract_globs: list[str]) -> list[str]:
     prefixes = phase_prefixes.get(phase, tuple())
     matched = [item for item in contract_globs if item.startswith(prefixes)]
     return matched or _phase_default_globs(phase)
-
-
-def _resolve_contract_paths_from_bridge(
-    bridge_policy: dict[str, Any], repo_root: Path
-) -> tuple[list[str], str]:
-    """Mirror check_feature_execution_contract._resolve_contract_paths()."""
-    explicit_paths = bridge_policy.get("contract_paths")
-    if isinstance(explicit_paths, list) and any(str(p).strip() for p in explicit_paths):
-        rels = sorted(
-            {
-                _normalize_rel(str(p))
-                for p in explicit_paths
-                if isinstance(p, str) and str(p).strip()
-            }
-        )
-        if rels:
-            return rels, "contract_paths"
-
-    glob_pattern = str(bridge_policy.get("contract_glob") or "").strip()
-    if glob_pattern:
-        matches = sorted(glob.glob(str(repo_root / glob_pattern)))
-        if matches:
-            rels = sorted(
-                {
-                    _normalize_rel(str(Path(m).resolve().relative_to(repo_root)))
-                    for m in matches
-                    if Path(m).is_file()
-                }
-            )
-            if rels:
-                return rels, "contract_glob"
-
-    single = str(bridge_policy.get("contract_path") or "").strip()
-    if single:
-        return [_normalize_rel(single)], "contract_path"
-
-    return [], "none"
 
 
 def _build_per_contract_packet(
@@ -262,7 +234,13 @@ def main(argv: list[str] | None = None) -> int:
         resolution_source = "cli_contract_path"
 
     if not contract_paths_rel and bridge_policy:
-        contract_paths_rel, resolution_source = _resolve_contract_paths_from_bridge(bridge_policy, repo_root)
+        try:
+            contract_paths_rel, resolution_source = resolve_active_contracts(repo_root, bridge_policy)
+        except GovernanceError as exc:
+            # Same fail-closed semantics as the checker: a malformed
+            # active_features index must abort the packet build instead of
+            # silently falling through to the glob.
+            raise SystemExit(f"delivery_session_build failed: {exc}") from exc
 
     # Final fallback: legacy pm_suite.execution_bridge.contract_path
     if not contract_paths_rel:
