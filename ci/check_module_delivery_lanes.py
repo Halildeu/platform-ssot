@@ -33,10 +33,12 @@ WORKFLOW_SENTINELS = (
     "python3 ci/run_module_delivery_lane.py --lane e2e",
 )
 WORKFLOW_SEQUENCE_SENTINELS = (
+    # ADR-0014: pre-prod required lanes (unit + contract) database/api fail/skip
+    # durumundan bağımsız çalışmalı; DAG paralel scoreboard yapısına geçti.
     "module-lane-database:\n    runs-on: ubuntu-latest\n    needs: [module-lane-unit]",
-    "module-lane-api:\n    runs-on: ubuntu-latest\n    needs: [module-lane-database]",
-    "module-lane-contract:\n    runs-on: ubuntu-latest\n    needs: [module-lane-api]",
-    "module-lane-integration:\n    runs-on: ubuntu-latest\n    needs: [module-lane-contract]",
+    "module-lane-api:\n    runs-on: ubuntu-latest\n    # ADR-0014: paralel scoreboard. Database fail/skip pre-prod gate'i\n    # bloklamasın diye api lane'i sadece unit'e bağlı.\n    needs: [module-lane-unit]",
+    "module-lane-contract:\n    runs-on: ubuntu-latest\n    # ADR-0014: pre-prod required lane; database/api fail/skip durumundan\n    # bağımsız olarak çalışmalı. Sadece unit'e bağlı.\n    needs: [module-lane-unit]",
+    "module-lane-integration:\n    runs-on: ubuntu-latest\n    # ADR-0014: integration prod-only required; tüm pre-cursor lanes\n    # (database + api + contract) tamamlandıktan sonra koşar.\n    needs: [module-lane-database, module-lane-api, module-lane-contract]",
     "module-lane-e2e:\n    runs-on: ubuntu-latest\n    needs: [module-lane-integration]",
 )
 PLACEHOLDER_TOKENS = (

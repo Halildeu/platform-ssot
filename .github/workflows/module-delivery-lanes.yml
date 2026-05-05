@@ -152,7 +152,9 @@ jobs:
 
   module-lane-api:
     runs-on: ubuntu-latest
-    needs: [module-lane-database]
+    # ADR-0014: paralel scoreboard. Database fail/skip pre-prod gate'i
+    # bloklamasın diye api lane'i sadece unit'e bağlı.
+    needs: [module-lane-unit]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -178,7 +180,9 @@ jobs:
 
   module-lane-contract:
     runs-on: ubuntu-latest
-    needs: [module-lane-api]
+    # ADR-0014: pre-prod required lane; database/api fail/skip durumundan
+    # bağımsız olarak çalışmalı. Sadece unit'e bağlı.
+    needs: [module-lane-unit]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -203,7 +207,9 @@ jobs:
 
   module-lane-integration:
     runs-on: ubuntu-latest
-    needs: [module-lane-contract]
+    # ADR-0014: integration prod-only required; tüm pre-cursor lanes
+    # (database + api + contract) tamamlandıktan sonra koşar.
+    needs: [module-lane-database, module-lane-api, module-lane-contract]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Java

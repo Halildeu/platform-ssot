@@ -385,6 +385,154 @@ class CutoverSentinelTests(unittest.TestCase):
             f"pre-prod lanes {sorted(pre)} not subset of prod {sorted(prod)}",
         )
 
+    def test_baseline_prod_full_set_locked(self) -> None:
+        """Cutover'da prod full set'i lock'ta. Six-lane plan koruma sentineli.
+
+        ADR-0014 §Migration Plan: prod cutover'da
+        ['unit', 'database', 'api', 'contract', 'integration', 'e2e']
+        full set'i required olur. Sprint 16.X module-lane pipeline
+        tamamlanmadan prod set küçültülemez.
+        """
+        baseline_path = REPO_ROOT / "registry/technical_baseline.aistd.v1.json"
+        if not baseline_path.exists():
+            self.skipTest("baseline file not present")
+        baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
+        prod = set(
+            baseline.get("ci_contract", {})
+            .get("required_lanes_by_env", {})
+            .get("prod", [])
+        )
+        expected = {"unit", "database", "api", "contract", "integration", "e2e"}
+        self.assertEqual(prod, expected, f"prod required_lanes drift: {prod} != {expected}")
+
+
+class UnknownEnvFallbackTests(unittest.TestCase):
+    """ADR-0014: unknown env strings (e.g. 'staging') fall back to legacy
+    required_lanes when present. This is intentional fail-closed behavior:
+    typos in DELIVERY_LANE_ENV don't silently relax the gate; they widen
+    to the full plan instead.
+    """
+
+    def setUp(self) -> None:
+        self.tmp = Path(tempfile.mkdtemp(prefix="check-unknown-env-"))
+
+    def tearDown(self) -> None:
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_unknown_env_falls_back_to_legacy_full_set(self) -> None:
+        _bootstrap(
+            self.tmp,
+            baseline_lanes_by_env={
+                "pre-prod": ["unit", "contract"],
+                "prod": ["unit", "database", "api", "contract", "integration", "e2e"],
+            },
+            baseline_legacy_lanes=["unit", "database", "api", "contract", "integration", "e2e"],
+            contract_lanes=["unit", "database", "api", "contract", "integration", "e2e"],
+        )
+        result = _run_checker(self.tmp, env_flag="staging")
+        self.assertEqual(result["summary"]["effective_lane_env"], "staging")
+        self.assertEqual(result["summary"]["lane_resolution_source"], "legacy")
+        self.assertEqual(
+            result["summary"]["expected_required_lanes"],
+            ["unit", "database", "api", "contract", "integration", "e2e"],
+        )
+
+    def test_unknown_env_with_no_legacy_falls_back_to_missing(self) -> None:
+        """When neither required_lanes_by_env[unknown] nor legacy required_lanes
+        are present, lane_resolution_source = 'missing'. Validation should still
+        not crash, but expected_lanes is empty (no enforcement).
+        """
+        _bootstrap(
+            self.tmp,
+            baseline_lanes_by_env={"pre-prod": ["unit", "contract"]},
+            baseline_legacy_lanes=None,
+            contract_lanes=["unit", "contract"],
+        )
+        result = _run_checker(self.tmp, env_flag="experimental")
+        self.assertEqual(result["summary"]["lane_resolution_source"], "missing")
+        self.assertEqual(result["summary"]["expected_required_lanes"], [])
+
+
+class WorkflowGateSimulationTests(unittest.TestCase):
+    """ADR-0014: simulate the env-aware module-delivery-gate inline Python
+    that reads baseline by env and asserts only the env's required subset.
+    """
+
+    def _gate(
+        self,
+        baseline_obj: dict,
+        env: str,
+        lane_results: dict[str, str],
+    ) -> tuple[int, list[str]]:
+        """Mirror the workflow Bash + inline Python locally."""
+        ci = baseline_obj.get("ci_contract", {})
+        by_env = ci.get("required_lanes_by_env") or {}
+        required = by_env.get(env) or ci.get("required_lanes") or []
+        fails: list[str] = []
+        for lane in required:
+            result = lane_results.get(lane, "missing")
+            if result != "success":
+                fails.append(f"{lane}={result}")
+        return len(fails), fails
+
+    def _baseline(self) -> dict:
+        return {
+            "ci_contract": {
+                "required_lanes_by_env": {
+                    "pre-prod": ["unit", "contract"],
+                    "prod": ["unit", "database", "api", "contract", "integration", "e2e"],
+                },
+                "required_lanes": ["unit", "database", "api", "contract", "integration", "e2e"],
+            }
+        }
+
+    def test_pre_prod_gate_passes_when_unit_and_contract_green(self) -> None:
+        # Real-world scenario: integration/e2e/database skipped, contract+unit pass.
+        results = {
+            "unit": "success",
+            "database": "skipped",
+            "api": "skipped",
+            "contract": "success",
+            "integration": "skipped",
+            "e2e": "skipped",
+        }
+        fail_count, _ = self._gate(self._baseline(), "pre-prod", results)
+        self.assertEqual(fail_count, 0)
+
+    def test_pre_prod_gate_fails_when_contract_skipped(self) -> None:
+        # If contract is somehow blocked (e.g. depended on api fail), gate must fail.
+        results = {
+            "unit": "success",
+            "contract": "skipped",
+            "database": "failure",
+            "api": "skipped",
+            "integration": "skipped",
+            "e2e": "skipped",
+        }
+        fail_count, fails = self._gate(self._baseline(), "pre-prod", results)
+        self.assertEqual(fail_count, 1)
+        self.assertIn("contract=skipped", fails)
+
+    def test_prod_gate_fails_when_any_lane_skipped(self) -> None:
+        results = {
+            "unit": "success",
+            "database": "success",
+            "api": "success",
+            "contract": "success",
+            "integration": "skipped",  # Sprint 16.X harness henüz yok
+            "e2e": "skipped",
+        }
+        fail_count, fails = self._gate(self._baseline(), "prod", results)
+        self.assertEqual(fail_count, 2)
+        self.assertIn("integration=skipped", fails)
+        self.assertIn("e2e=skipped", fails)
+
+    def test_prod_gate_passes_when_all_six_lanes_green(self) -> None:
+        results = {lane: "success" for lane in
+                   ["unit", "database", "api", "contract", "integration", "e2e"]}
+        fail_count, _ = self._gate(self._baseline(), "prod", results)
+        self.assertEqual(fail_count, 0)
+
 
 if __name__ == "__main__":
     unittest.main()

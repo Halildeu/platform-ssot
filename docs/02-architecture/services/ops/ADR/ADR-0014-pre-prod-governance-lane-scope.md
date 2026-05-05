@@ -103,16 +103,28 @@ window 72h boyunca kullanılabilir).
    - GitHub repo'da org-level variable `DELIVERY_LANE_ENV=pre-prod`
      (cutover'da `prod`'a çevrilir tek tıkla).
 
-5. **Unit tests**:
-   - `test_check_feature_execution_contract_env_resolution.py`:
-     - CLI flag override
-     - Env var fallback
-     - Policy default fallback
-     - Baseline default_env fallback
-     - Backward-compat: yalnız `required_lanes` (legacy) → eşleşme
-       kontrolü çalışır
-   - Sentinel: `pre-prod` map'i `prod`'tan strict subset olmalı
-     (cutover'da set genişler, daralmaz).
+5. **Unit tests** (`test_check_feature_execution_contract_env_aware.py`,
+   17 tests):
+   - **EnvResolutionPriority** (4): CLI flag > env var > policy default >
+     baseline default fallback chain.
+   - **LegacyBackwardCompat** (2): `required_lanes` (legacy) only path
+     resolves; `by_env` priority over legacy when both present.
+   - **ContractSupersetValidation** (3): contract plan ⊇ env required
+     subset passes; missing lane fails; prod full set passes.
+   - **CutoverSentinel** (2): `pre-prod` ⊆ `prod`; prod full set
+     `[unit, database, api, contract, integration, e2e]` lock'ta.
+   - **UnknownEnvFallback** (2): typo'd env (`staging`) → legacy full set
+     fail-closed; no legacy + unknown env → `lane_resolution_source =
+     missing`, no enforcement.
+   - **WorkflowGateSimulation** (4): gate inline-Python equivalent;
+     pre-prod passes when unit+contract green, fails when contract
+     skipped; prod fails on any skipped lane, passes on all six green.
+
+6. **Output JSON enrichment** (`check_feature_execution_contract.py`
+   stdout summary + report file):
+   - `effective_lane_env`: resolved env value
+   - `lane_resolution_source`: `by_env` | `legacy` | `missing`
+   - `expected_required_lanes`: ACTIVE gate's required subset
 
 ## Cross-Plane Impact
 
@@ -120,17 +132,21 @@ Plane | Etki
 ---|---
 backend | Yok (test'ler `unit` lane'inde kalır; mevcut mvn akışı pass).
 frontend | Yok (vitest unit + parity contract halen geçerli).
-governance | **Pozitif**: HER PR için organic green; admin bypass YOK; audit trail temiz.
+governance | **Pozitif (this PR'dan sonra)**: pre-prod gate aktif required subset (`unit + contract`) ile organic pass'lenebilir. Admin bypass alıştırması kapanır; audit trail temiz. **Önce-koşul**: bu ADR PR'ının kendisi merge'lenmiş olmalı (kendi gate'i pre-prod scope ile zaten organic geçer çünkü governance-only kapsamda).
 mobile | Yok bu sprint için (mobile lane scope'u D32'de açılır).
 database | **Negatif (geçici)**: pre-prod döneminde DDL diff guard kapalı; cutover'da otomatik açılır. Sprint 16.X module-lane pipeline ile harness kurulduğunda erken aktive edilebilir.
 
 ## Consequences
 
-**Olumlu**:
+**Olumlu** (bu ADR + workflow DAG fix sonrası, beraber):
 
 - HARD RULE Governance "sistemik bug = governance migration" tetiklenmiş
   ve **gerçek kalıcı fix** uygulanmış (admin bypass alıştırmasından çıkış).
-- Owner "fail merge yasak" beyanına %100 uyum (gate organic green olur).
+- Owner "fail merge yasak" beyanına %100 uyum yolu açıldı.
+  Pre-prod gate aktif required subset (`unit + contract`) ile organic
+  pass'lenir. **Önce-koşul**: bu ADR PR'ı + workflow DAG paralelizasyonu
+  + standards.lock alignment merge'lenmiş olmalı; aksi halde mevcut
+  PR'lar (örn. PR #564) hâlâ DAG zincirinde takılır.
 - Cutover'da tek satır env değişikliği ile strict mode aktif (rollback
   window'lu).
 - Yeni governance debt birikmez; eski admin bypass exception'ları artık

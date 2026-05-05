@@ -239,6 +239,19 @@
         "log"
       ],
       "description": "Action to take when this policy check fails. block=hard stop, warn=log+continue, log=record only."
+    },
+    "default_lane_env": {
+      "type": "string",
+      "minLength": 1,
+      "description": "ADR-0014: default lane environment when --env CLI flag and DELIVERY_LANE_ENV env var are unset. Pre-prod default; cutover (D30) flips to prod."
+    },
+    "lane_env_resolution_notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "ADR-0014: human-readable audit notes documenting the lane env resolution priority."
     }
   }
 }
