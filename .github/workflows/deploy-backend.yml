@@ -1,41 +1,34 @@
 name: deploy-backend
 
+# Faz 18 retirement migration (Codex thread 019df4ed iter-10):
+# - Compose-based build path retired (services removed from backend/docker-compose.yml).
+# - Per-service Dockerfile + docker/build-push-action@v5 (Maven build → JRE runtime).
+# - Image namespace migrated to platform-backend-* (gitops kustomize/overlays/{test,prod}
+#   tracks ghcr.io/halildeu/platform-backend-${svc}@sha256:<digest>; iter-11 verification).
+# - SSH host deploy lane removed (compose retirement makes host deploy meaningless;
+#   ArgoCD/k8s authoritative).
+# - Matrix scope: report-service only this PR; other services V2 (Codex iter-10 scope).
+#
+# Pipeline downstream:
+# 1. push to main matching backend/** → workflow trigger
+# 2. Maven build (multi-module: common-auth + report-service)
+# 3. Buildx build + GHCR push (sha-<7> tag + latest)
+# 4. Digest output → manual gitops PR (V2 = repository_dispatch automation)
+# 5. ArgoCD sync → platform-{test,prod} cluster
+
 on:
   push:
     branches: [main]
     paths:
-      - "backend/**"
-      - "deploy/ubuntu/**"
+      - "backend/report-service/**"
+      - "backend/common-auth/**"
       - ".github/workflows/deploy-backend.yml"
   workflow_dispatch:
     inputs:
       env:
-        description: "Deployment environment (informational)"
+        description: "Deployment environment (informational; gitops authoritative)"
         required: true
-        default: "stage"
-      # STORY-0319 PR #3a: stage deploy orchestration inputs.
-      # Push event'te input'lar boş — stage step-level fallback default'u
-      # mevcut davranışı korur. workflow_dispatch operatöre rehearsal/rollback
-      # override yolu açar. Prod SSH path bu input'lara bakmaz (stage-specific).
-      render_env_before_deploy:
-        description: "Stage only — render canonical backend.env from Vault before deploy. Default 'true' post-OI-02 Option B closure (2026-04-18). Set 'false' for emergency rollback (skip render, use existing canonical env)."
-        required: false
-        type: boolean
-        default: true
-      build_local:
-        description: "Stage only — build service images locally. Default 'false' post-PR #3c (GHCR retag path)."
-        required: false
-        type: boolean
-        default: false
-      docker_pull_policy:
-        description: "Stage only — docker compose pull policy. Default 'always' post-PR #3c; set 'never' for emergency rollback."
-        required: false
-        type: choice
-        options:
-          - never
-          - missing
-          - always
-        default: "always"
+        default: "test"
 
 permissions:
   contents: read
@@ -46,498 +39,116 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy-backend:
+  build-and-push:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' }}
-    environment: ${{ github.event.inputs.env || 'stage' }}
-    env:
-      DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
-      VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
-      VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-      BACKEND_SSH_DEPLOY_ENABLED: ${{ secrets.BACKEND_SSH_DEPLOY_ENABLED }}
-
-    steps:
-      - name: Skip if deploy disabled
-        if: ${{ env.DEPLOY_ENABLED != 'true' }}
-        run: echo "::notice title=deploy-backend::DEPLOY_ENABLED!=true; skipping."
-
-      - uses: actions/checkout@v6
-        if: ${{ env.DEPLOY_ENABLED == 'true' }}
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-python@v6
-        if: ${{ env.DEPLOY_ENABLED == 'true' }}
-        with:
-          python-version: "3.11"
-
-      - name: Deploy gate (technical baseline + release contract)
-        if: ${{ env.DEPLOY_ENABLED == 'true' }}
-        env:
-          DEPLOY_SCOPE: ${{ github.event.inputs.env || 'stage' }}
-          AUTONOMOUS_PIPELINE_SIGNING_PUBLIC_KEY_PEM: ${{ secrets.AUTONOMOUS_PIPELINE_SIGNING_PUBLIC_KEY_PEM }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          set +x
-
-          scope="${DEPLOY_SCOPE}"
-          echo "::notice title=deploy-backend::deploy_gate scope=${scope}"
-
-          key_path=""
-          if [ "${scope}" = "prod" ]; then
-            if [ -z "${AUTONOMOUS_PIPELINE_SIGNING_PUBLIC_KEY_PEM:-}" ]; then
-              echo "::error title=deploy-backend::AUTONOMOUS_PIPELINE_SIGNING_PUBLIC_KEY_PEM missing; refusing prod deploy."
-              exit 1
-            fi
-            key_path="${RUNNER_TEMP}/autonomous_pipeline_signing_public.pem"
-            printf "%s" "${AUTONOMOUS_PIPELINE_SIGNING_PUBLIC_KEY_PEM}" > "${key_path}"
-            chmod 600 "${key_path}"
-          fi
-
-          if [ -n "${key_path}" ]; then
-            python3 scripts/ops/deploy_scope_gate.py \
-              --target backend \
-              --scope "${scope}" \
-              --public-key "${key_path}" \
-              --out .cache/reports/deploy_scope_gate_backend.v1.json
-          else
-            python3 scripts/ops/deploy_scope_gate.py \
-              --target backend \
-              --scope "${scope}" \
-              --out .cache/reports/deploy_scope_gate_backend.v1.json
-          fi
-
-      - name: Build & push images (required)
-        if: ${{ env.DEPLOY_ENABLED == 'true' }}
-        env:
-          GHCR_OWNER: ${{ github.repository_owner }}
-          GH_TOKEN: ${{ github.token }}
-          SHA: ${{ github.sha }}
-          REF_NAME: ${{ github.ref_name }}
-          GITHUB_REF: ${{ github.ref }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          set +x
-
-          echo "::add-mask::${GH_TOKEN}"
-          echo "${GH_TOKEN}" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
-
-          ghcr_owner="$(printf '%s' "${GHCR_OWNER}" | tr '[:upper:]' '[:lower:]')"
-          if [ -z "${ghcr_owner}" ]; then
-            echo "::error title=deploy-backend::Unable to resolve lowercase GHCR owner."
-            exit 1
-          fi
-
-          echo "::group::docker compose build (backend/docker-compose.yml)"
-          docker compose -f backend/docker-compose.yml build
-          echo "::endgroup::"
-
-          short_sha="${SHA:0:7}"
-          stable_tag=""
-          if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
-            stable_tag="main-stable"
-          fi
-
-          echo "::group::tag + push (platform-* -> ghcr.io/${ghcr_owner}/...)"
-          # Compose project name is 'platform' (enforced by docker-compose.yml + doctor-infra.sh).
-          # Previous 'serban-*' prefix was legacy; deploy stopped finding images when project
-          # name was standardized on 2026-04-13. See: docs/OPERATIONS/CACHE-BOUNDARY-RULES.v1.md
-          images="$(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^platform-' || true)"
-          if [ -z "${images}" ]; then
-            echo "::error title=deploy-backend::No platform-* images found; failing deploy-backend."
-            exit 1
-          fi
-
-          while IFS= read -r img; do
-            name="${img%%:*}"
-            svc="${name#platform-}"
-            target="ghcr.io/${ghcr_owner}/platform-ssot-${svc}"
-
-            docker tag "${img}" "${target}:sha-${short_sha}"
-            docker push "${target}:sha-${short_sha}"
-            if [ -n "${stable_tag}" ]; then
-              docker tag "${img}" "${target}:${stable_tag}"
-              docker push "${target}:${stable_tag}"
-            fi
-          done <<< "${images}"
-          echo "::endgroup::"
-
-      - name: Deploy to Ubuntu via SSH (required)
-        if: ${{ env.DEPLOY_ENABLED == 'true' && env.BACKEND_SSH_DEPLOY_ENABLED == 'true' && (github.event.inputs.env || 'stage') != 'stage' }}
-        env:
-          SHA: ${{ github.sha }}
-          GITHUB_TOKEN: ${{ github.token }}
-          GITHUB_ACTOR: ${{ github.actor }}
-          BACKEND_DEPLOY_SSH_HOST: ${{ secrets.BACKEND_DEPLOY_SSH_HOST }}
-          BACKEND_DEPLOY_SSH_PORT: ${{ secrets.BACKEND_DEPLOY_SSH_PORT }}
-          BACKEND_DEPLOY_SSH_USER: ${{ secrets.BACKEND_DEPLOY_SSH_USER }}
-          BACKEND_DEPLOY_SSH_KEY: ${{ secrets.BACKEND_DEPLOY_SSH_KEY }}
-          BACKEND_DEPLOY_SSH_KNOWN_HOSTS: ${{ secrets.BACKEND_DEPLOY_SSH_KNOWN_HOSTS }}
-          BACKEND_DEPLOY_REMOTE_ENV_FILE: ${{ secrets.BACKEND_DEPLOY_REMOTE_ENV_FILE }}
-          BACKEND_DEPLOY_REMOTE_REPO_DIR: ${{ secrets.BACKEND_DEPLOY_REMOTE_REPO_DIR }}
-          BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES: ${{ secrets.BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          set +x
-
-          required_vars=(
-            BACKEND_DEPLOY_SSH_HOST
-            BACKEND_DEPLOY_SSH_USER
-            BACKEND_DEPLOY_SSH_KEY
-            BACKEND_DEPLOY_SSH_KNOWN_HOSTS
-          )
-
-          missing=0
-          for name in "${required_vars[@]}"; do
-            if [ -z "${!name:-}" ]; then
-              echo "::error title=deploy-backend::${name} missing; refusing SSH deploy."
-              missing=1
-            fi
-          done
-
-          if [ "${missing}" = "1" ]; then
-            exit 1
-          fi
-
-          short_sha="${SHA:0:7}"
-          remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
-          remote_repo_dir="${BACKEND_DEPLOY_REMOTE_REPO_DIR:-/home/halil/platform/repo}"
-          remote_profiles="${BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES:-}"
-          ssh_port="${BACKEND_DEPLOY_SSH_PORT:-22}"
-
-          key_path="${RUNNER_TEMP}/backend_deploy_ssh_key"
-          known_hosts_path="${RUNNER_TEMP}/backend_known_hosts"
-
-          printf '%s' "${BACKEND_DEPLOY_SSH_KEY}" > "${key_path}"
-          chmod 600 "${key_path}"
-          printf '%s\n' "${BACKEND_DEPLOY_SSH_KNOWN_HOSTS}" > "${known_hosts_path}"
-          chmod 600 "${known_hosts_path}"
-
-          ssh_opts=(
-            -i "${key_path}"
-            -p "${ssh_port}"
-            -o BatchMode=yes
-            -o StrictHostKeyChecking=yes
-            -o UserKnownHostsFile="${known_hosts_path}"
-          )
-
-          echo "::notice title=deploy-backend::Deploying sha-${short_sha} to ${BACKEND_DEPLOY_SSH_HOST}."
-          ssh "${ssh_opts[@]}" "${BACKEND_DEPLOY_SSH_USER}@${BACKEND_DEPLOY_SSH_HOST}" \
-            REMOTE_ENV_FILE="${remote_env_file}" \
-            REMOTE_REPO_DIR="${remote_repo_dir}" \
-            REMOTE_COMPOSE_PROFILES="${remote_profiles}" \
-            REPO_BRANCH="${GITHUB_REF_NAME}" \
-            GITHUB_ACTOR="${GITHUB_ACTOR}" \
-            GITHUB_TOKEN="${GITHUB_TOKEN}" \
-            TARGET_IMAGE_TAG="sha-${short_sha}" \
-            'bash -se' <<'EOF'
-          set -euo pipefail
-
-          if [ ! -f "${REMOTE_ENV_FILE}" ]; then
-            echo "[error] backend env file missing: ${REMOTE_ENV_FILE}" >&2
-            exit 1
-          fi
-
-          set -a
-          # shellcheck disable=SC1090
-          . "${REMOTE_ENV_FILE}"
-          set +a
-
-          if [ ! -d "${REMOTE_REPO_DIR}/.git" ]; then
-            if [ -z "${GIT_REMOTE_URL:-}" ]; then
-              echo "[error] GIT_REMOTE_URL missing in ${REMOTE_ENV_FILE}" >&2
-              exit 1
-            fi
-            mkdir -p "$(dirname "${REMOTE_REPO_DIR}")"
-            git clone --branch "${REPO_BRANCH:-main}" --depth 1 "${GIT_REMOTE_URL}" "${REMOTE_REPO_DIR}"
-          fi
-
-          cd "${REMOTE_REPO_DIR}"
-          chmod +x deploy/ubuntu/deploy-backend.sh deploy/ubuntu/rollback-backend.sh
-
-          ENV_FILE="${REMOTE_ENV_FILE}" \
-          REPO_DIR="${REMOTE_REPO_DIR}" \
-          COMPOSE_PROFILES="${REMOTE_COMPOSE_PROFILES}" \
-          GHCR_USERNAME="${GITHUB_ACTOR}" \
-          GHCR_TOKEN="${GITHUB_TOKEN}" \
-          TARGET_IMAGE_TAG="${TARGET_IMAGE_TAG}" \
-          deploy/ubuntu/deploy-backend.sh
-          EOF
-
-      - name: Backend host deploy skipped
-        if: ${{ env.DEPLOY_ENABLED == 'true' && env.BACKEND_SSH_DEPLOY_ENABLED != 'true' && (github.event.inputs.env || 'stage') != 'stage' }}
-        run: echo "::notice title=deploy-backend::Images pushed to GHCR; SSH host deploy skipped because BACKEND_SSH_DEPLOY_ENABLED!=true."
-
-  deploy-stage-host:
-    runs-on:
-      - self-hosted
-      - linux
-      - x64
-      - stage-backend
-    # STORY-0319 PR #3f: `deploy-backend` job (GHCR build+push) tamamlanmadan
-    # bu job'ın `docker pull ghcr.io/...` istemesi race condition yaratıyordu
-    # (PR #3e deploy log: "docker pull ... failed — deploy aborted").
-    # `needs` ile sıralı çalışmayı zorla — stage-host yalnızca GHCR push
-    # PASS olunca çalışır.
-    needs: deploy-backend
-    if: ${{ (github.event.inputs.env || 'stage') == 'stage' }}
-    environment: stage
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - report-service
+          # V2: auth-service, permission-service, schema-service, user-service,
+          # variant-service, core-data-service, api-gateway. Bu PR sadece
+          # report-service (muavin v3 critical path); diğerleri ayrı sprint.
     env:
       DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
 
     steps:
       - name: Skip if deploy disabled
         if: ${{ env.DEPLOY_ENABLED != 'true' }}
-        run: echo "::notice title=deploy-backend::DEPLOY_ENABLED!=true; skipping stage host deploy."
+        run: echo "::notice title=deploy-backend::DEPLOY_ENABLED!=true; skipping ${{ matrix.service }}."
 
-      - name: Repair stage workspace ownership
+      - name: Checkout
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          image="platform-playwright-smoke:chromium-bookworm"
-          if docker image inspect "${image}" >/dev/null 2>&1; then
-            docker run --rm \
-              -v "${GITHUB_WORKSPACE}:/work" \
-              "${image}" \
-              bash -lc 'find /work -mindepth 1 -maxdepth 1 -exec rm -rf {} +'
-          else
-            echo "::notice title=deploy-backend::cleanup image bulunamadi; stage workspace cleanup atlandi."
-          fi
-
-      - uses: actions/checkout@v6
-        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Validate stage workspace checkout
+      - name: Setup Java 21
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Maven build (${{ matrix.service }})
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
-          repo_dir="${GITHUB_WORKSPACE}"
-          if [[ ! -d "${repo_dir}/.git" ]]; then
-            echo "::error title=deploy-backend::stage workspace repo missing at ${repo_dir}"
-            exit 1
-          fi
+          # Multi-module build: common-auth dependency önce install edilir,
+          # sonra service module package'lanır. Dockerfile aynı sırayı uygular
+          # (multi-stage build kendi içinde mvn çağırıyor) — bu adım fast-fail
+          # için pre-validate; CI'da test+jar üretimini doğrular.
+          cd backend
+          mvn -B -f common-auth/pom.xml clean install -DskipTests
+          mvn -B -f ${{ matrix.service }}/pom.xml clean package -DskipTests
 
-      # STORY-0319 PR #3a: VAULT secret'ları step-level bağlı.
-      # PR #3d (soft-fail guard): staging'de AppRole auth method henüz
-      # enable edilmemiş (sadece token/ auth mount mevcut; canonical env'deki
-      # ROLE_ID/SECRET_ID stale UUID). `materialize-backend-deploy-approle.sh`
-      # auth/approle/role/backend-deploy-stage 404 alır → step fail → deploy
-      # pipeline bloke. Guard: 404/403 durumunda notice + exit 0, token-path
-      # deploy yoluna düşer. AppRole kalıcı setup ayrı follow-up
-      # (PR #3e veya ops runbook).
-      - name: Refresh stage backend AppRole materials
+      - name: Login to GHCR
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
-        env:
-          VAULT_ADDR_SECRET: ${{ secrets.VAULT_ADDR }}
-          VAULT_TOKEN_SECRET: ${{ secrets.VAULT_TOKEN }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        uses: docker/setup-buildx-action@v3
+
+      - name: Compute image metadata
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        id: meta
         shell: bash
         run: |
           set -euo pipefail
-          set +x
-
-          vault_addr="${VAULT_ADDR_SECRET:-http://127.0.0.1:8200}"
-          if [ -z "${VAULT_TOKEN_SECRET:-}" ]; then
-            echo "::notice title=deploy-backend::VAULT_TOKEN secret missing; stage AppRole refresh skipped, existing backend.env bootstrap will be used."
-            exit 0
-          fi
-
-          # Preflight: AppRole role endpoint erişilebilir mi?
-          probe_status="$(curl -sS -o /dev/null -w '%{http_code}' \
-            -H "X-Vault-Token: ${VAULT_TOKEN_SECRET}" \
-            "${vault_addr%/}/v1/auth/approle/role/backend-deploy-stage/role-id" \
-            || echo "000")"
-
-          case "${probe_status}" in
-            200)
-              # AppRole configured + token yetkili → normal rotation
-              ENV=stage \
-              VAULT_ADDR="${vault_addr}" \
-              VAULT_TOKEN="${VAULT_TOKEN_SECRET}" \
-              bash backend/scripts/vault/materialize-backend-deploy-approle.sh
-              ;;
-            403|404)
-              # STORY-0319 PR #3d soft-fail: Vault'ta AppRole henüz setup
-              # edilmemiş veya token yetkisiz. Deploy token-path ile geçsin;
-              # canonical env existing VAULT_TOKEN kullanılır. AppRole setup
-              # ayrı follow-up — runbook RB-staging-prod-profile §5.x.
-              echo "::notice title=deploy-backend::AppRole endpoint responded ${probe_status} (role not configured or token unauthorized); skipping rotation. Canonical env token path active."
-              exit 0
-              ;;
-            *)
-              # Ağ / Vault unreachable → fail-close
-              echo "::error title=deploy-backend::Vault unreachable at ${vault_addr} (probe_status=${probe_status}); aborting." >&2
-              exit 1
-              ;;
-          esac
-
-      # STORY-0319 PR #3a: pre-deploy backend.env snapshot.
-      # render-backend-env.sh atomic yazıyor ama "payload tam ama semantik
-      # yanlış" senaryosunda graceful-degradation korumuyor. Backup, RENDER
-      # hatalarında elle restore imkânı sağlar. Backup lifecycle 7 gün —
-      # operatör gerekirse cron ile rotate eder.
-      - name: Snapshot stage backend.env before deploy
-        if: ${{ env.DEPLOY_ENABLED == 'true' }}
-        env:
-          BACKEND_DEPLOY_REMOTE_ENV_FILE: ${{ secrets.BACKEND_DEPLOY_REMOTE_ENV_FILE }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
-          if [ ! -f "${remote_env_file}" ]; then
-            echo "::notice title=deploy-backend::backend.env missing at ${remote_env_file}; skipping snapshot."
-            exit 0
-          fi
-          snapshot_dir="$(dirname "${remote_env_file}")/backup"
-          mkdir -p "${snapshot_dir}"
-          snapshot_file="${snapshot_dir}/backend.env.$(date -u +%Y%m%dT%H%M%SZ).bak"
-          cp -a "${remote_env_file}" "${snapshot_file}"
-          chmod 600 "${snapshot_file}"
-          echo "::notice title=deploy-backend::snapshot saved to ${snapshot_file}"
-          # 7 gün sonrası backup'ları temizle (operasyonel housekeeping)
-          find "${snapshot_dir}" -name 'backend.env.*.bak' -mtime +7 -delete 2>/dev/null || true
-
-      - name: Deploy on stage host (self-hosted)
-        if: ${{ env.DEPLOY_ENABLED == 'true' }}
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          GITHUB_ACTOR: ${{ github.actor }}
-          BACKEND_DEPLOY_REMOTE_ENV_FILE: ${{ secrets.BACKEND_DEPLOY_REMOTE_ENV_FILE }}
-          BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES: ${{ secrets.BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES }}
-          # VAULT_ADDR paylaşılır (deploy script render_backend_env çağrısı
-          # için gerekli); VAULT_TOKEN KASITLI OLARAK EKLENMEMİŞTİR —
-          # AppRole render precedence (deploy-backend.sh:150) korunsun diye.
-          VAULT_ADDR_SECRET: ${{ secrets.VAULT_ADDR }}
-          # STORY-0319 PR #3a: workflow_dispatch input override path'leri
-          RENDER_ENV_BEFORE_DEPLOY_INPUT: ${{ github.event.inputs.render_env_before_deploy }}
-          BUILD_LOCAL_INPUT: ${{ github.event.inputs.build_local }}
-          DOCKER_PULL_POLICY_INPUT: ${{ github.event.inputs.docker_pull_policy }}
-          # 2026-04-20 QLTY-PROACTIVE-06 Faz 1/2 — audit consolidation env.
-          # render-backend-env.sh picks these up (write_kv_if_present) and
-          # persists them to canonical backend.env across deploys. Previously
-          # manual additions were wiped on every deploy (canonical env drift).
-          # AUDIT_BACKEND_URI: stage default = consolidation target.
-          #                    Override via vars if operator needs rollback.
-          # STAGING_SWEEPER_CLIENT_SECRET: confidential secret from staging-
-          #                    sweeper KC client (kc-provision-staging-sweeper.sh).
-          AUDIT_BACKEND_URI: ${{ vars.AUDIT_BACKEND_URI || 'lb://PERMISSION-SERVICE' }}
-          STAGING_SWEEPER_CLIENT_SECRET: ${{ secrets.STAGING_SWEEPER_CLIENT_SECRET }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          set +x
-
+          ghcr_owner="$(printf '%s' "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')"
           short_sha="${GITHUB_SHA:0:7}"
-          remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
-          remote_profiles="${BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES:-}"
-          repo_dir="${GITHUB_WORKSPACE}"
-          vault_addr="${VAULT_ADDR_SECRET:-http://127.0.0.1:8200}"
+          image_base="ghcr.io/${ghcr_owner}/platform-backend-${{ matrix.service }}"
+          {
+            echo "image_base=${image_base}"
+            echo "short_sha=${short_sha}"
+            echo "tag_sha=${image_base}:sha-${short_sha}"
+            echo "tag_latest=${image_base}:latest"
+          } >> "${GITHUB_OUTPUT}"
+          echo "::notice title=deploy-backend::Building ${image_base}:sha-${short_sha}"
 
-          if [ ! -f "${remote_env_file}" ]; then
-            echo "::error title=deploy-backend::backend env file missing: ${remote_env_file}"
-            exit 1
-          fi
+      - name: Build and push image (${{ matrix.service }})
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          # Build context = backend/ (Dockerfile multi-module: common-auth + service)
+          context: backend
+          file: backend/${{ matrix.service }}/Dockerfile
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.tag_sha }}
+            ${{ steps.meta.outputs.tag_latest }}
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+          provenance: false
 
-          # STORY-0319 PR #3c flip + PR #3e rollback:
-          # - GHCR retag path aktif (build_local=false, pull=always).
-          # - Render flip YAPILDI (2026-04-18 OI-02 Option B closure sonrası):
-          #   AppRole auth method enabled + policy jwt/auth-service + db/* dahil
-          #   + auth-service/permission-service Spring Cloud Vault client UP.
-          #   `RENDER_ENV_BEFORE_DEPLOY=true` default → her deploy Vault KV'dan
-          #   canonical env re-generate eder. Stale env + manuel drift riski
-          #   ortadan kalkar. Emergency rollback: workflow_dispatch ile `false`
-          #   opt-out (mevcut canonical env korunur, render skip).
-          render_env="${RENDER_ENV_BEFORE_DEPLOY_INPUT:-true}"
-          build_local="${BUILD_LOCAL_INPUT:-false}"
-          pull_policy="${DOCKER_PULL_POLICY_INPUT:-always}"
-
-          chmod +x deploy/ubuntu/deploy-backend.sh deploy/ubuntu/rollback-backend.sh
-
-          ENV_FILE="${remote_env_file}" \
-          REPO_DIR="${repo_dir}" \
-          COMPOSE_PROFILES="${remote_profiles}" \
-          REPO_BRANCH="${GITHUB_REF_NAME}" \
-          RENDER_ENV_BEFORE_DEPLOY="${render_env}" \
-          DEPLOY_ENV="stage" \
-          VAULT_ADDR="${vault_addr}" \
-          GHCR_USERNAME="${GITHUB_ACTOR}" \
-          GHCR_TOKEN="${GITHUB_TOKEN}" \
-          TARGET_IMAGE_TAG="sha-${short_sha}" \
-          BUILD_LOCAL="${build_local}" \
-          DOCKER_PULL_POLICY="${pull_policy}" \
-          deploy/ubuntu/deploy-backend.sh
-
-      # STORY-0319 PR #4: Post-deploy doctor-infra guard.
-      # Full A-L check (doctor-infra.sh usage'ına göre L-only mod yok).
-      # FAIL path'leri (L1 profile local, L2 authz 200 unauth, L3-L8 env drift
-      # container-runtime blank) step RED → deploy workflow RED.
-      # WARN path'leri (container missing, 000/unexpected HTTP) step GREEN —
-      # "fail-closed ideal" değil, "deterministic drift sensor".
-      - name: Post-deploy doctor-infra guard
+      - name: Output digest
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
-          cd "${GITHUB_WORKSPACE}"
-          chmod +x backend/scripts/doctor-infra.sh
-          echo "::group::doctor-infra.sh (A-L check, full)"
-          bash backend/scripts/doctor-infra.sh
-          echo "::endgroup::"
-
-      - name: Collect stage backend diagnostics on failure
-        if: ${{ failure() && env.DEPLOY_ENABLED == 'true' }}
-        env:
-          BACKEND_DEPLOY_REMOTE_ENV_FILE: ${{ secrets.BACKEND_DEPLOY_REMOTE_ENV_FILE }}
-          BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES: ${{ secrets.BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES }}
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          remote_env_file="${BACKEND_DEPLOY_REMOTE_ENV_FILE:-/home/halil/platform/env/backend.env}"
-          remote_repo_dir="${GITHUB_WORKSPACE}"
-          remote_profiles="${BACKEND_DEPLOY_REMOTE_COMPOSE_PROFILES:-}"
-          # STORY-0319 PR #3a: deploy-stage-host job yalnız stage path'i için
-          # çalışıyor (if: github.event.inputs.env=='stage'), dolayısıyla
-          # diagnostics doğrudan backend/docker-compose.yml'e bakmalı.
-          # Eski kod docker-compose.prod.yml okuyordu ve stage debug
-          # yanıltıcı oluyordu.
-          compose_file="${remote_repo_dir}/backend/docker-compose.yml"
-
-          compose_flags=()
-          if [ -n "${remote_profiles}" ]; then
-            IFS=',' read -r -a raw_profiles <<< "${remote_profiles}"
-            for profile in "${raw_profiles[@]}"; do
-              profile="$(echo "${profile}" | xargs)"
-              [ -n "${profile}" ] || continue
-              compose_flags+=(--profile "${profile}")
-            done
-          fi
-
-          echo "::group::docker ps -a"
-          docker ps -a || true
-          echo "::endgroup::"
-
-          echo "::group::docker compose ps --all"
-          docker compose --env-file "${remote_env_file}" -f "${compose_file}" "${compose_flags[@]}" ps --all || true
-          echo "::endgroup::"
-
-          for service in discovery-server permission-service auth-service user-service variant-service core-data-service api-gateway openfga postgres-db vault vault-unseal; do
-            echo "::group::${service} status"
-            docker inspect --format '{{.Name}} state={{.State.Status}} health={{if .State.Health}}{{.State.Health.Status}}{{else}}n/a{{end}} started={{.State.StartedAt}}' "platform-${service}-1" 2>/dev/null || echo "${service}: not found"
-            echo "::endgroup::"
-
-            echo "::group::${service} logs (last 100)"
-            docker logs --tail 100 "platform-${service}-1" 2>&1 || true
-            echo "::endgroup::"
-          done
-
-      - name: Post-deploy health validation
-        if: ${{ env.DEPLOY_ENABLED == 'true' }}
-        shell: bash
-        run: bash deploy/ubuntu/post-deploy-health-check.sh
+          digest="${{ steps.build.outputs.digest }}"
+          image_pin="${{ steps.meta.outputs.image_base }}@${digest}"
+          echo "::notice title=Image Pin (gitops digest)::${image_pin}"
+          # GitHub step summary — runs sonrasi UI'da görünür
+          {
+            echo "## ${{ matrix.service }} build PASS"
+            echo ""
+            echo "- Tag: \`${{ steps.meta.outputs.tag_sha }}\`"
+            echo "- Digest pin: \`${image_pin}\`"
+            echo ""
+            echo "Manual gitops bump (until V2 automation):"
+            echo "\`\`\`yaml"
+            echo "- name: ${{ matrix.service }}"
+            echo "  newName: ${{ steps.meta.outputs.image_base }}"
+            echo "  digest: ${digest}"
+            echo "\`\`\`"
+          } >> "${GITHUB_STEP_SUMMARY}"
