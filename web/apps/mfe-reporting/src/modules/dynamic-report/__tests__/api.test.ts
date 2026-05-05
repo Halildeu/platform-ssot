@@ -130,3 +130,128 @@ describe('dynamic-report api X-Company-Id header propagation', () => {
     });
   });
 });
+
+describe('dynamic-report api filterModel pushdown', () => {
+  beforeEach(() => {
+    mockGet.mockReset();
+    mockGetShellServices.mockReset();
+    mockGetShellServices.mockReturnValue({ http: hoistedMocks.mockHttpClient });
+    if (typeof window !== 'undefined') {
+      window.localStorage.clear();
+    }
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('forwards AG Grid column filterModel as advancedFilter JSON', async () => {
+    mockGet.mockResolvedValue({ data: { items: [], total: 0 } });
+
+    await fetchReportData(
+      'fin-muhasebe-detay',
+      {},
+      {
+        page: 1,
+        pageSize: 50,
+        filterModel: {
+          account_name: { filterType: 'text', type: 'contains', filter: 'serban' },
+        },
+      },
+    );
+
+    expect(mockGet).toHaveBeenCalledTimes(1);
+    const [url] = mockGet.mock.calls[0];
+    expect(url).toContain('advancedFilter=');
+    const advancedFilterParam = new URL(`http://x${url.replace(/^[^?]*/, '')}`).searchParams.get('advancedFilter');
+    expect(advancedFilterParam).not.toBeNull();
+    expect(JSON.parse(advancedFilterParam!)).toEqual({
+      account_name: { filterType: 'text', type: 'contains', filter: 'serban' },
+    });
+  });
+
+  it('omits advancedFilter when filterModel is empty', async () => {
+    mockGet.mockResolvedValue({ data: { items: [], total: 0 } });
+
+    await fetchReportData('fin-muhasebe-detay', {}, { page: 1, pageSize: 50 });
+
+    const [url] = mockGet.mock.calls[0];
+    expect(url).not.toContain('advancedFilter=');
+  });
+
+  it('passes through stringified request.advancedFilter (DashboardPage drill-through pattern)', async () => {
+    mockGet.mockResolvedValue({ data: { items: [], total: 0 } });
+
+    // GridRequest.advancedFilter is typed as string. DashboardPage already
+    // calls JSON.stringify(filter) before handing it to us — we must NOT
+    // re-stringify (would double-encode and break backend parseJson).
+    const explicitFilter = JSON.stringify({
+      paper_no: { filterType: 'text', type: 'equals', filter: '123' },
+    });
+
+    await fetchReportData(
+      'fin-muhasebe-detay',
+      {},
+      {
+        page: 1,
+        pageSize: 50,
+        filterModel: { account_name: { filterType: 'text', type: 'contains', filter: 'X' } },
+        advancedFilter: explicitFilter,
+      },
+    );
+
+    const [url] = mockGet.mock.calls[0];
+    const advancedFilterParam = new URL(`http://x${url.replace(/^[^?]*/, '')}`).searchParams.get(
+      'advancedFilter',
+    );
+    // Must be the exact string the caller handed us (single-encoded), not
+    // JSON.stringify(string) which would yield "\"{...}\"".
+    expect(advancedFilterParam).toBe(explicitFilter);
+    expect(JSON.parse(advancedFilterParam!)).toEqual({
+      paper_no: { filterType: 'text', type: 'equals', filter: '123' },
+    });
+  });
+
+  it('defensively stringifies a raw-object advancedFilter (legacy callers)', async () => {
+    mockGet.mockResolvedValue({ data: { items: [], total: 0 } });
+
+    // Defensive path: should a caller mistakenly hand us a raw object instead
+    // of a string, we still stringify rather than emit "[object Object]".
+    await fetchReportData(
+      'fin-muhasebe-detay',
+      {},
+      {
+        page: 1,
+        pageSize: 50,
+        advancedFilter: { paper_no: { filterType: 'text', type: 'equals', filter: '999' } } as unknown as string,
+      },
+    );
+
+    const [url] = mockGet.mock.calls[0];
+    const advancedFilterParam = new URL(`http://x${url.replace(/^[^?]*/, '')}`).searchParams.get(
+      'advancedFilter',
+    );
+    expect(JSON.parse(advancedFilterParam!)).toEqual({
+      paper_no: { filterType: 'text', type: 'equals', filter: '999' },
+    });
+  });
+
+  it('emits sort as JSON array (not legacy CSV) for backend parseJson', async () => {
+    mockGet.mockResolvedValue({ data: { items: [], total: 0 } });
+
+    await fetchReportData(
+      'fin-muhasebe-detay',
+      {},
+      {
+        page: 1,
+        pageSize: 50,
+        sortModel: [{ colId: 'action_date', sort: 'desc' }],
+      },
+    );
+
+    const [url] = mockGet.mock.calls[0];
+    const sortParam = new URL(`http://x${url.replace(/^[^?]*/, '')}`).searchParams.get('sort');
+    expect(sortParam).not.toBeNull();
+    expect(JSON.parse(sortParam!)).toEqual([{ colId: 'action_date', sort: 'desc' }]);
+  });
+});

@@ -208,6 +208,16 @@
         "ux_subtheme_id": "least_privilege_interaction_design"
       },
       {
+        "path_glob": "web/apps/mfe-reporting/src/modules/dynamic-report/create-dynamic-module.tsx",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/apps/mfe-reporting/src/components/CompanyPicker.tsx",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
         "path_glob": "web/apps/mfe-reporting/src/app/services/shell-services.ts",
         "ux_theme_id": "trust_privacy_security_ux",
         "ux_subtheme_id": "least_privilege_interaction_design"

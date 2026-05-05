@@ -3,6 +3,7 @@ import type { ReportModule } from '../types';
 import type { ColumnMeta } from '@mfe/design-system/advanced/data-grid';
 import type { DynamicReportFilters, DynamicReportRow, ReportListItem, ReportColumnMeta } from './types';
 import { fetchReportData, fetchReportMetadata, exportReportData } from './api';
+import { CompanyPicker } from '../../components/CompanyPicker';
 
 /* ------------------------------------------------------------------ */
 /*  Backend ReportColumnMeta → Universal ColumnMeta mapper             */
@@ -98,16 +99,22 @@ export const createDynamicReportModule = (
       search: context?.searchParams?.get('search')?.trim() ?? '',
     }),
     renderFilters: ({ values, setFieldValue, t }) => (
-      <label className="flex flex-col gap-1 text-xs font-medium text-text-secondary min-w-[200px]">
-        <span>{t('reports.filters.search.placeholder') || 'Ara'}</span>
-        <input
-          data-testid="report-filter-search"
-          className="w-full rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
-          value={values.search ?? ''}
-          placeholder={t('shared.grid.searchPlaceholder') || 'Arama...'}
-          onChange={(event) => setFieldValue('search', event.target.value)}
-        />
-      </label>
+      <>
+        {/* CompanyPicker: backend single-tenant rapor (örn. muavin v3) için
+            X-Company-Id header'ını seçilen şirkete bağlar.
+            V1: hardcoded 1-43; V2 dynamic list (/api/v1/users/me/companies) */}
+        <CompanyPicker label={t('reports.filters.company.label') || 'Şirket'} />
+        <label className="flex flex-col gap-1 text-xs font-medium text-text-secondary min-w-[200px]">
+          <span>{t('reports.filters.search.placeholder') || 'Ara'}</span>
+          <input
+            data-testid="report-filter-search"
+            className="w-full rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+            value={values.search ?? ''}
+            placeholder={t('shared.grid.searchPlaceholder') || 'Arama...'}
+            onChange={(event) => setFieldValue('search', event.target.value)}
+          />
+        </label>
+      </>
     ),
     getColumnMeta: () => cachedColumnMeta ?? [],
     getColumns: () => [],
