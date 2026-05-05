@@ -37,14 +37,20 @@
   },
   "delivery_scope": {
     "affected_modules": [
-      "backend/report-service"
+      "backend/report-service",
+      "web/apps/mfe-reporting",
+      "web/apps/mfe-shell"
     ],
     "change_path_globs": [
-      "backend/report-service/**"
+      "backend/report-service/**",
+      "web/apps/mfe-reporting/**",
+      "web/apps/mfe-shell/**",
+      "extensions/PRJ-PM-SUITE/contract/**"
     ],
     "repo_root": ".",
     "service_scopes": [
-      "backend"
+      "backend",
+      "frontend"
     ]
   },
   "feature_id": "fin-muhasebe-detay-muavin-v3",
@@ -195,9 +201,25 @@
   },
   "title": "Fin Muhasebe Detay Muavin v3",
   "ux_contract": {
-    "artifacts": [],
-    "mode": "NOT_APPLICABLE",
-    "rationale": "Backend report-service ve report template degisikligi; bu PR icinde frontend UX yuzeyi yok."
+    "artifacts": [
+      {
+        "path_glob": "web/apps/mfe-reporting/src/modules/dynamic-report/api.ts",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/apps/mfe-reporting/src/app/services/shell-services.ts",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/config/shell-services-wiring.ts",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      }
+    ],
+    "mode": "REQUIRED",
+    "rationale": "Frontend X-Company-Id header propagation (data-plane only) muavin v3 backend kontratina baglidir. UX yuzeyi: report API client + shell host service wiring. Trust/privacy/security tema (least-privilege interaction design) -- kullanici kendi COMPANY scope'u disindaki sirketlerin verisine erisemez (header backend'de fail-closed dogrulanir). Visible UX yuzeyi (WorkspaceSwitcher company picker UI) ayri V2 PR'inda."
   },
   "version": "v1"
 }

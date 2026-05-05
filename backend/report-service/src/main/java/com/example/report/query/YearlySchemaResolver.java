@@ -70,26 +70,32 @@ public class YearlySchemaResolver {
      * @param agGridFilter  AG Grid filter model (may contain date range on yearColumn)
      * @return resolved schema names that actually exist in the database
      */
+    @Deprecated(forRemoval = false)
     public ResolvedSchemas resolve(ReportDefinition def, AuthzMeResponse authz,
                                    Map<String, Object> agGridFilter) {
+        return resolve(def, authz, agGridFilter, null);
+    }
+
+    /**
+     * Resolve yearly and company-only Workcube schemas for a single selected company.
+     *
+     * <p>Company selection is fail-closed:
+     * <ul>
+     *   <li>{@code X-Company-Id} present: super-admin may select it, normal users
+     *       must also have that COMPANY scope.</li>
+     *   <li>{@code X-Company-Id} absent: a normal user with exactly one COMPANY scope
+     *       is auto-selected; multi-company and super-admin users must be explicit.</li>
+     * </ul>
+     */
+    public ResolvedSchemas resolve(ReportDefinition def,
+                                   AuthzMeResponse authz,
+                                   Map<String, Object> agGridFilter,
+                                   Long requestedCompanyId) {
         if (!def.isYearlySchema()) {
             return new ResolvedSchemas(List.of(def.sourceSchema()), null);
         }
 
-        // Extract company IDs from RLS scope
-        Set<String> companyIds = authz != null ? authz.getScopeRefIds("COMPANY") : Set.of();
-        if (companyIds.isEmpty()) {
-            // No COMPANY scope — try to extract company ID from sourceSchema pattern
-            // e.g. "workcube_mikrolink_1" → company 1
-            String companyFromSchema = extractCompanyFromSchema(def.sourceSchema());
-            if (companyFromSchema != null) {
-                companyIds = Set.of(companyFromSchema);
-                log.debug("Inferred company {} from sourceSchema for report {}", companyFromSchema, def.key());
-            } else {
-                log.warn("No COMPANY scope for yearly report {}, using base schema", def.key());
-                return new ResolvedSchemas(List.of(def.sourceSchema()), null);
-            }
-        }
+        long companyId = resolveCompanyId(def, authz, requestedCompanyId);
 
         // Extract year range from date filters
         int[] yearRange = extractYearRange(def.yearColumn(), agGridFilter);
@@ -99,44 +105,78 @@ public class YearlySchemaResolver {
         // Get all available schemas from cache
         Set<String> available = getAvailableSchemas();
 
-        // Build schema list: for each company x each year, check if schema exists
-        List<String> resolved = new ArrayList<>();
-        for (String companyId : companyIds) {
-            for (int year = startYear; year <= endYear; year++) {
-                String schema = "workcube_mikrolink_" + year + "_" + companyId;
-                if (available.contains(schema.toLowerCase(Locale.ROOT))) {
-                    resolved.add(schema);
-                } else {
-                    log.debug("Schema not found: {}", schema);
-                }
-            }
+        String companySchema = "workcube_mikrolink_" + companyId;
+        if (!available.contains(companySchema.toLowerCase(Locale.ROOT))) {
+            throw new ReportSchemaResolutionException.CompanySchemaNotFoundException(
+                    def.key(), companyId, companySchema);
         }
 
-        // Resolve company-only schema (workcube_mikrolink_{companyId}) when single company in scope.
-        // Multiple companies → companySchema null (ambiguous; reports needing it must restrict scope).
-        String companySchema = null;
-        if (companyIds.size() == 1) {
-            String onlyCompany = companyIds.iterator().next();
-            String candidate = "workcube_mikrolink_" + onlyCompany;
-            if (available.contains(candidate.toLowerCase(Locale.ROOT))) {
-                companySchema = candidate;
+        // Build schema list for the selected company and requested year range.
+        List<String> resolved = new ArrayList<>();
+        for (int year = startYear; year <= endYear; year++) {
+            String schema = "workcube_mikrolink_" + year + "_" + companyId;
+            if (available.contains(schema.toLowerCase(Locale.ROOT))) {
+                resolved.add(schema);
             } else {
-                log.debug("Company-only schema not found: {} (report {})", candidate, def.key());
+                log.debug("Schema not found: {}", schema);
             }
-        } else if (companyIds.size() > 1) {
-            log.debug("Multiple companies in scope ({}), companySchema is ambiguous for report {}",
-                    companyIds, def.key());
         }
 
         if (resolved.isEmpty()) {
-            log.warn("No year schemas found for report {} (years {}-{}, companies {}), falling back to base",
-                    def.key(), startYear, endYear, companyIds);
-            return new ResolvedSchemas(List.of(def.sourceSchema()), companySchema);
+            String expected = "workcube_mikrolink_" + startYear + "_" + companyId
+                    + (startYear == endYear ? "" : "..workcube_mikrolink_" + endYear + "_" + companyId);
+            throw new ReportSchemaResolutionException.CompanySchemaNotFoundException(
+                    def.key(), companyId, expected);
         }
 
         log.debug("Resolved {} schemas for report {}: {} (companySchema={})",
                 resolved.size(), def.key(), resolved, companySchema);
         return new ResolvedSchemas(resolved, companySchema);
+    }
+
+    private long resolveCompanyId(ReportDefinition def, AuthzMeResponse authz, Long requestedCompanyId) {
+        boolean superAdmin = authz != null && authz.isSuperAdmin();
+        Set<String> allowedCompanyIds = authz != null ? authz.getScopeRefIds("COMPANY") : Set.of();
+
+        if (requestedCompanyId != null) {
+            if (requestedCompanyId <= 0) {
+                throw new ReportSchemaResolutionException.CompanySchemaNotFoundException(
+                        def.key(), requestedCompanyId, "workcube_mikrolink_" + requestedCompanyId);
+            }
+            String requested = String.valueOf(requestedCompanyId);
+            if (!superAdmin && !allowedCompanyIds.contains(requested)) {
+                throw new ReportSchemaResolutionException.UnauthorizedCompanyException(
+                        def.key(), requestedCompanyId);
+            }
+            return requestedCompanyId;
+        }
+
+        if (superAdmin) {
+            throw new ReportSchemaResolutionException.MissingCompanyHeaderException(
+                    def.key(), "superAdmin users must select a company explicitly");
+        }
+
+        if (allowedCompanyIds.size() == 1) {
+            String onlyCompany = allowedCompanyIds.iterator().next();
+            try {
+                long parsed = Long.parseLong(onlyCompany);
+                if (parsed > 0) {
+                    return parsed;
+                }
+            } catch (NumberFormatException ignored) {
+                // handled by fail-closed error below
+            }
+            throw new ReportSchemaResolutionException.MissingCompanyHeaderException(
+                    def.key(), "single COMPANY scope is not a numeric company id: " + onlyCompany);
+        }
+
+        if (allowedCompanyIds.size() > 1) {
+            throw new ReportSchemaResolutionException.MissingCompanyHeaderException(
+                    def.key(), "multiple COMPANY scopes are available, company selection is required");
+        }
+
+        throw new ReportSchemaResolutionException.MissingCompanyHeaderException(
+                def.key(), "no COMPANY scope is available");
     }
 
     /**
@@ -229,24 +269,6 @@ public class YearlySchemaResolver {
             }
         }
         return fallback;
-    }
-
-    /**
-     * Extract company ID from sourceSchema pattern.
-     * "workcube_mikrolink_1" → "1", "workcube_mikrolink_2" → "2"
-     * Returns null if pattern doesn't match.
-     */
-    private String extractCompanyFromSchema(String sourceSchema) {
-        if (sourceSchema == null) return null;
-        // Pattern: workcube_mikrolink_{companyId} (no year part)
-        String prefix = "workcube_mikrolink_";
-        if (!sourceSchema.startsWith(prefix)) return null;
-        String suffix = sourceSchema.substring(prefix.length());
-        // Should be just a number (company ID), not year_company pattern
-        if (suffix.matches("\\d+")) {
-            return suffix;
-        }
-        return null;
     }
 
     /**

@@ -112,6 +112,50 @@ export const wireRemoteShellServices = () => {
       getToken: () => store.getState().auth.token ?? null,
       getUser: () => store.getState().auth.user ?? null,
     },
+    /**
+     * Active company id for the report API X-Company-Id header.
+     *
+     * Resolution order:
+     *   1. localStorage['reporting:currentCompanyId'] — written by
+     *      WorkspaceSwitcher when the user picks a company.
+     *   2. First COMPANY scope from AuthzMe (single-company users).
+     *   3. undefined — header omitted; backend returns 400 for super-
+     *      admin / multi-company callers.
+     */
+    getCurrentCompanyId: (): string | undefined => {
+      if (typeof window !== "undefined" && window.localStorage) {
+        const stored = window.localStorage.getItem(
+          "reporting:currentCompanyId",
+        );
+        if (stored && stored.trim() !== "") {
+          return stored;
+        }
+      }
+      // Auth slice stores AuthzMe response under `authzSnapshot`.
+      // Permission-service ScopeSummaryDto exposes `scopeType` + `scopeRefId`
+      // (some legacy code paths used `refId`; both are tolerated defensively).
+      const authzSnapshot = store.getState().auth.authzSnapshot as
+        | {
+            allowedScopes?: Array<{
+              scopeType?: string;
+              scopeRefId?: string | number | null;
+              refId?: string | number | null;
+            }>;
+          }
+        | null
+        | undefined;
+      const companyScopes = (authzSnapshot?.allowedScopes ?? []).filter(
+        (s) => s?.scopeType === "COMPANY",
+      );
+      if (companyScopes.length === 1) {
+        const scope = companyScopes[0];
+        const id = scope.scopeRefId ?? scope.refId;
+        if (id !== undefined && id !== null && String(id).trim() !== "") {
+          return String(id);
+        }
+      }
+      return undefined;
+    },
   };
   const remotes = [
     { name: "mfe_access", loader: () => import("mfe_access/shell-services") },

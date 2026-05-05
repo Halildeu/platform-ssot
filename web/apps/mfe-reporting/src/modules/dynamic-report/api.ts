@@ -24,6 +24,8 @@ type ErrorResponse = {
 };
 
 const REPORTS_BASE = '/v1/reports';
+const COMPANY_ID_STORAGE_KEY = 'reporting:currentCompanyId';
+const COMPANY_HEADER = 'X-Company-Id';
 
 const resolveHttpClient = (): ApiInstance => {
   try {
@@ -31,6 +33,47 @@ const resolveHttpClient = (): ApiInstance => {
   } catch {
     return api;
   }
+};
+
+/**
+ * Resolves the active company id for report API calls.
+ *
+ * Source priority:
+ *   1. shellServices.getCurrentCompanyId() if exposed by the host shell
+ *   2. localStorage[COMPANY_ID_STORAGE_KEY] (persisted by WorkspaceSwitcher)
+ *   3. undefined → header is omitted; backend will reject for super-admin /
+ *      multi-company users with 400 MissingCompanyHeaderException
+ *
+ * Backend contract (YearlySchemaResolver): {@code X-Company-Id} is the
+ * authoritative selector for the active company schema. Single-company users
+ * are auto-selected server-side, so the header is optional in that case.
+ */
+const resolveCompanyId = (): string | undefined => {
+  try {
+    const services = getShellServices();
+    const fromShell = (
+      services as { getCurrentCompanyId?: () => string | number | null | undefined }
+    ).getCurrentCompanyId?.();
+    if (fromShell !== undefined && fromShell !== null && String(fromShell).trim() !== '') {
+      return String(fromShell);
+    }
+  } catch {
+    // shell-services not registered yet (e.g. unit tests); fall through to storage
+  }
+
+  if (typeof window !== 'undefined' && window.localStorage) {
+    const stored = window.localStorage.getItem(COMPANY_ID_STORAGE_KEY);
+    if (stored && stored.trim() !== '') {
+      return stored;
+    }
+  }
+
+  return undefined;
+};
+
+const buildCompanyHeaders = (): Record<string, string> => {
+  const companyId = resolveCompanyId();
+  return companyId ? { [COMPANY_HEADER]: companyId } : {};
 };
 
 export const fetchReportList = async (): Promise<ReportListItem[]> => {
@@ -47,7 +90,9 @@ export const fetchReportCategories = async (): Promise<ReportCategory[]> => {
 
 export const fetchReportMetadata = async (reportKey: string): Promise<ReportMetadata> => {
   const client = resolveHttpClient();
-  const { data } = await client.get<ReportMetadata>(`${REPORTS_BASE}/${reportKey}/metadata`);
+  const { data } = await client.get<ReportMetadata>(`${REPORTS_BASE}/${reportKey}/metadata`, {
+    headers: buildCompanyHeaders(),
+  });
   return data;
 };
 
@@ -94,6 +139,7 @@ export const fetchReportData = async (
     const client = resolveHttpClient();
     const { data } = await client.get<PagedResultDto>(
       `${REPORTS_BASE}/${reportKey}/data?${params.toString()}`,
+      { headers: buildCompanyHeaders() },
     );
     const items = Array.isArray(data?.items) ? data.items : [];
     return {
@@ -132,7 +178,7 @@ export const exportReportData = async (
 
   const { data } = await client.get<Blob>(
     `${REPORTS_BASE}/${reportKey}/export?${params.toString()}`,
-    { responseType: 'blob' },
+    { responseType: 'blob', headers: buildCompanyHeaders() },
   );
   const extension = format === 'csv' ? 'csv' : 'xlsx';
   return { blob: data, filename: `${reportKey}.${extension}` };

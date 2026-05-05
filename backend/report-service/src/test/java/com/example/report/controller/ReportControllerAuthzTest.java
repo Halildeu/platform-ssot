@@ -1,14 +1,27 @@
 package com.example.report.controller;
 
 import com.example.report.access.ReportAccessEvaluator;
+import com.example.report.access.ColumnFilter;
+import com.example.report.access.RowFilterInjector;
+import com.example.report.audit.ReportAuditClient;
 import com.example.report.authz.AuthzMeResponse;
 import com.example.report.authz.PermissionResolver;
+import com.example.report.authz.ScopeSummaryDto;
+import com.example.report.query.QueryEngine;
+import com.example.report.query.ReportSchemaResolutionException;
+import com.example.report.query.YearlySchemaResolver;
+import com.example.report.registry.AccessConfig;
+import com.example.report.registry.ColumnDefinition;
+import com.example.report.registry.ReportDefinition;
+import com.example.report.registry.ReportRegistry;
 import com.example.report.repository.CustomReportRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -30,7 +43,7 @@ class ReportControllerAuthzTest {
 
     @Mock private PermissionResolver permissionResolver;
     @Mock private CustomReportRepository customReportRepository;
-    @Mock private com.example.report.registry.ReportRegistry reportRegistry;
+    @Mock private ReportRegistry reportRegistry;
     private ReportController controller;
 
     @BeforeEach
@@ -185,6 +198,54 @@ class ReportControllerAuthzTest {
         assertTrue(reports.stream().anyMatch(r -> "custom-open".equals(r.key())));
     }
 
+    // ---- Muavin v3 company selection contract ----
+
+    @Test
+    void getData_superAdminWithoutCompanyHeader_400() {
+        ReportController dataController = dataControllerFor(authzWithScopes(true, List.of(), List.of()),
+                Set.of("workcube_mikrolink_2026_1", "workcube_mikrolink_1"),
+                mock(NamedParameterJdbcTemplate.class));
+
+        var ex = assertThrows(ReportSchemaResolutionException.MissingCompanyHeaderException.class, () ->
+                dataController.getData("yearly", 1, 50, null, null, null, testJwt("admin")));
+
+        assertEquals(400, ex.getStatusCode().value());
+    }
+
+    @Test
+    void getData_companyHeaderOutsideScope_403() {
+        ReportController dataController = dataControllerFor(authzWithScopes(false, List.of("REPORT_VIEW"), List.of("1")),
+                Set.of("workcube_mikrolink_2026_35", "workcube_mikrolink_35"),
+                mock(NamedParameterJdbcTemplate.class));
+
+        var ex = assertThrows(ReportSchemaResolutionException.UnauthorizedCompanyException.class, () ->
+                dataController.getData("yearly", 1, 50, null, null, 35L, testJwt("user1")));
+
+        assertEquals(403, ex.getStatusCode().value());
+    }
+
+    @Test
+    void getData_superAdminWithCompanyHeader_successAndSubstitutesCompanyId() {
+        NamedParameterJdbcTemplate jdbc = mock(NamedParameterJdbcTemplate.class);
+        when(jdbc.queryForList(anyString(), any(MapSqlParameterSource.class)))
+                .thenReturn(List.of(Map.of("id", 1)));
+        when(jdbc.queryForObject(anyString(), any(MapSqlParameterSource.class), eq(Long.class)))
+                .thenReturn(1L);
+
+        ReportController dataController = dataControllerFor(authzWithScopes(true, List.of(), List.of()),
+                Set.of("workcube_mikrolink_2026_1", "workcube_mikrolink_1"),
+                jdbc);
+
+        String filter2026 = "{\"action_date\":{\"type\":\"equals\",\"filter\":\"2026-01-01\"}}";
+        var response = dataController.getData("yearly", 1, 50, null, filter2026, 1L, testJwt("admin"));
+
+        assertEquals(200, response.getStatusCode().value());
+        org.mockito.ArgumentCaptor<String> sqlCaptor = org.mockito.ArgumentCaptor.forClass(String.class);
+        verify(jdbc).queryForList(sqlCaptor.capture(), any(MapSqlParameterSource.class));
+        assertTrue(sqlCaptor.getValue().contains("COMPANY_ID = 1"));
+        assertFalse(sqlCaptor.getValue().contains("{companyId}"));
+    }
+
     // ---- Helpers ----
 
     private static AuthzMeResponse authzWith(boolean superAdmin,
@@ -196,6 +257,74 @@ class ReportControllerAuthzTest {
         authz.setReports(reports);
         authz.setUserId("test-user");
         return authz;
+    }
+
+    private static AuthzMeResponse authzWithScopes(boolean superAdmin,
+                                                    List<String> permissions,
+                                                    List<String> companyIds) {
+        var authz = authzWith(superAdmin, permissions, Map.of());
+        authz.setAllowedScopes(companyIds.stream()
+                .map(id -> new ScopeSummaryDto("COMPANY", id))
+                .toList());
+        return authz;
+    }
+
+    private ReportController dataControllerFor(AuthzMeResponse authz,
+                                               Set<String> availableSchemas,
+                                               NamedParameterJdbcTemplate jdbc) {
+        PermissionResolver resolverClient = mock(PermissionResolver.class);
+        when(resolverClient.getAuthzMe(any())).thenReturn(authz);
+
+        ReportRegistry registry = mock(ReportRegistry.class);
+        when(registry.get("yearly")).thenReturn(Optional.of(yearlyReport()));
+        when(registry.getEffectiveSourceQuery(any()))
+                .thenReturn("SELECT 1 AS id FROM [{schema}].[ACCOUNT_CARD_ROWS] WHERE COMPANY_ID = {companyId}");
+        when(registry.getEffectiveOuterQuery(any())).thenReturn(null);
+
+        ColumnFilter columnFilter = mock(ColumnFilter.class);
+        when(columnFilter.getVisibleColumns(any(), any())).thenReturn(List.of("id"));
+
+        RowFilterInjector rowFilterInjector = mock(RowFilterInjector.class);
+        when(rowFilterInjector.buildRlsClause(any(), any()))
+                .thenReturn(new RowFilterInjector.RlsResult(null, null));
+
+        YearlySchemaResolver schemaResolver = new YearlySchemaResolver(jdbc) {
+            @Override
+            public Set<String> getAvailableSchemas() {
+                return availableSchemas;
+            }
+        };
+
+        QueryEngine queryEngine = new QueryEngine(jdbc, columnFilter, rowFilterInjector, schemaResolver, registry);
+
+        return new ReportController(
+                registry,
+                mock(CustomReportRepository.class),
+                resolverClient,
+                new ReportAccessEvaluator(),
+                columnFilter,
+                queryEngine,
+                mock(ReportAuditClient.class),
+                new com.fasterxml.jackson.databind.ObjectMapper()
+        );
+    }
+
+    private static ReportDefinition yearlyReport() {
+        return new ReportDefinition(
+                "yearly",
+                "1",
+                "Yearly Report",
+                "desc",
+                "category",
+                "ACCOUNT_CARD_ROWS",
+                "workcube_mikrolink_2026_1",
+                "yearly",
+                "action_date",
+                null,
+                List.of(new ColumnDefinition("id", "ID", "number", 100, false)),
+                "id",
+                "ASC",
+                new AccessConfig(null, null, null, null));
     }
 
     private static Jwt testJwt(String username) {
