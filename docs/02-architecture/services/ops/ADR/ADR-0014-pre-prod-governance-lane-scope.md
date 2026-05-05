@@ -94,8 +94,8 @@ window 72h boyunca kullanılabilir).
      `default_lane_env` → baseline `default_env`
    - `expected_lanes` artık `ci_contract.required_lanes_by_env[env]`
      (fallback: legacy `required_lanes`)
-   - Output JSON'a `effective_env` + `effective_required_lanes` field
-     eklenir (audit)
+   - Output JSON'a `effective_lane_env` + `lane_resolution_source` +
+     `expected_required_lanes` field'ları eklenir (audit)
 
 4. **CI workflow'lar** (`.github/workflows/module-delivery-*`):
    - Step env: `DELIVERY_LANE_ENV: ${{ vars.DELIVERY_LANE_ENV || 'pre-prod' }}`
@@ -161,8 +161,8 @@ database | **Negatif (geçici)**: pre-prod döneminde DDL diff guard kapalı; cu
   edilirse). Mitigasyon: ADR-0014 + audit log + cutover D30 runbook'ta
   explicit hatırlatma.
 - Cutover'a kadar lane evidence eksikliği kullanıcıya gösterilmez.
-  Mitigasyon: Output JSON `effective_env` + `effective_required_lanes`
-  PR comment'ine yansıtılır (transparency).
+  Mitigasyon: Output JSON `effective_lane_env` + `lane_resolution_source` +
+  `expected_required_lanes` PR comment'ine yansıtılır (transparency).
 
 ## Migration Plan
 
