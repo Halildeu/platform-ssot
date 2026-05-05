@@ -71,4 +71,6 @@ web/.eslintcache
 #   - coverage_visibility.v1.{json,md}
 #   - feature_execution_contract_ci.v1.json
 #   - observability_coverage_matrix.v1.{json,md}
-reports/
+# Anchored to repo root so nested checked-in reports/ dirs (e.g. backend
+# report-service report definitions) are not affected.
+/reports/
