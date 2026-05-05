@@ -218,14 +218,41 @@ public class SqlBuilder {
     }
 
     /**
-     * Replaces both {@code {schema}} and {@code {companySchema}} placeholders in the
-     * raw SQL. Empty-string companySchema is used when not resolved (caller responsibility
-     * to ensure the SQL handles missing company schema gracefully).
+     * Replaces {@code {schema}}, {@code {companySchema}}, and {@code {companyId}}
+     * placeholders in the raw SQL.
+     * <ul>
+     *   <li>{@code {schema}} → yearly schema (workcube_mikrolink_{YYYY}_{companyId})</li>
+     *   <li>{@code {companySchema}} → company-only schema (workcube_mikrolink_{companyId})
+     *       or empty string if unresolved (multi-company scope or missing).</li>
+     *   <li>{@code {companyId}} → numeric company id parsed from companySchema, or
+     *       "0" if unresolved (queries should treat 0 as no-match, not all-match).</li>
+     * </ul>
+     * Caller is responsible for ensuring the SQL handles missing values gracefully.
      */
     private String applyTemplates(String rawSql, String schema, String companySchema) {
         String result = rawSql.replace("{schema}", schema);
         result = result.replace("{companySchema}", companySchema != null ? companySchema : "");
+        String companyId = extractCompanyIdFromCompanySchema(companySchema);
+        result = result.replace("{companyId}", companyId != null ? companyId : "0");
         return result;
+    }
+
+    /**
+     * Extracts the numeric company id from a company-only schema name.
+     * "workcube_mikrolink_35" → "35"; null or non-matching pattern → null.
+     */
+    private String extractCompanyIdFromCompanySchema(String companySchema) {
+        if (companySchema == null) {
+            return null;
+        }
+        String prefix = "workcube_mikrolink_";
+        if (companySchema.startsWith(prefix)) {
+            String suffix = companySchema.substring(prefix.length());
+            if (suffix.matches("\\d+")) {
+                return suffix;
+            }
+        }
+        return null;
     }
 
     /**
