@@ -290,16 +290,7 @@ jobs:
           )
 
           # Read effective required lanes from baseline (env-aware).
-          REQUIRED_LANES=$(python3 - <<PY
-import json, os, sys
-baseline = json.loads(open("registry/technical_baseline.aistd.v1.json").read())
-ci = baseline.get("ci_contract", {})
-env = os.environ.get("DELIVERY_LANE_ENV", "pre-prod")
-by_env = ci.get("required_lanes_by_env") or {}
-lanes = by_env.get(env) or ci.get("required_lanes") or []
-print(",".join(lanes))
-PY
-)
+          REQUIRED_LANES=$(python3 -c 'import json,os; b=json.loads(open("registry/technical_baseline.aistd.v1.json").read()); ci=b.get("ci_contract",{}); env=os.environ.get("DELIVERY_LANE_ENV","pre-prod"); be=ci.get("required_lanes_by_env") or {}; lanes=be.get(env) or ci.get("required_lanes") or []; print(",".join(lanes))')
 
           echo "DELIVERY_LANE_ENV=${DELIVERY_LANE_ENV}"
           echo "REQUIRED_LANES=${REQUIRED_LANES}"
