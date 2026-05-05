@@ -7,6 +7,23 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
+/**
+ * Builds SQL queries for report definitions, supporting:
+ * <ul>
+ *   <li>Single-schema flat queries</li>
+ *   <li>Multi-year UNION ALL queries (per-branch filter pushdown)</li>
+ *   <li>BRANCH_UNION_THEN_OUTER queryShape — multi-year UNION ALL wrapped in
+ *       outer projection/window query (used by muavin for global running balance).
+ *       Filter pushdown is intentionally <strong>disabled</strong> in this mode so
+ *       the window function sees the full row set; AG Grid filters are applied
+ *       in the outer wrapper's WHERE clause instead.</li>
+ * </ul>
+ *
+ * <p>The {@code effectiveSourceQuery} and {@code effectiveOuterQuery} parameters
+ * are resolved by the caller (typically {@code ReportRegistry#getEffectiveSourceQuery}
+ * and {@code ReportRegistry#getEffectiveOuterQuery}) so that file-based SQL refs
+ * are hydrated before reaching the builder.
+ */
 public class SqlBuilder {
 
     public record BuiltQuery(String sql, MapSqlParameterSource params) {}
@@ -24,7 +41,7 @@ public class SqlBuilder {
                                       MapSqlParameterSource rlsParams,
                                       int page,
                                       int pageSize) {
-        return buildDataQuery(def, null, visibleColumns, agGridFilter, sortModel,
+        return buildDataQuery(def, null, null, null, visibleColumns, agGridFilter, sortModel,
                 rlsWhereClause, rlsParams, page, pageSize);
     }
 
@@ -33,7 +50,7 @@ public class SqlBuilder {
                                        List<String> visibleColumns,
                                        String rlsWhereClause,
                                        MapSqlParameterSource rlsParams) {
-        return buildCountQuery(def, null, agGridFilter, visibleColumns,
+        return buildCountQuery(def, null, null, null, agGridFilter, visibleColumns,
                 rlsWhereClause, rlsParams);
     }
 
@@ -44,13 +61,52 @@ public class SqlBuilder {
                                         String rlsWhereClause,
                                         MapSqlParameterSource rlsParams,
                                         int maxRows) {
-        return buildExportQuery(def, null, visibleColumns, agGridFilter, sortModel,
+        return buildExportQuery(def, null, null, null, visibleColumns, agGridFilter, sortModel,
                 rlsWhereClause, rlsParams, maxRows);
     }
 
-    // ── Multi-schema (UNION ALL) queries ───────────────────────────────
+    // ── Multi-schema queries (no hydration; legacy callers) ───────────
 
     public BuiltQuery buildDataQuery(ReportDefinition def,
+                                      YearlySchemaResolver.ResolvedSchemas resolvedSchemas,
+                                      List<String> visibleColumns,
+                                      Map<String, Object> agGridFilter,
+                                      List<Map<String, String>> sortModel,
+                                      String rlsWhereClause,
+                                      MapSqlParameterSource rlsParams,
+                                      int page,
+                                      int pageSize) {
+        return buildDataQuery(def, null, null, resolvedSchemas, visibleColumns, agGridFilter,
+                sortModel, rlsWhereClause, rlsParams, page, pageSize);
+    }
+
+    public BuiltQuery buildCountQuery(ReportDefinition def,
+                                       YearlySchemaResolver.ResolvedSchemas resolvedSchemas,
+                                       Map<String, Object> agGridFilter,
+                                       List<String> visibleColumns,
+                                       String rlsWhereClause,
+                                       MapSqlParameterSource rlsParams) {
+        return buildCountQuery(def, null, null, resolvedSchemas, agGridFilter, visibleColumns,
+                rlsWhereClause, rlsParams);
+    }
+
+    public BuiltQuery buildExportQuery(ReportDefinition def,
+                                        YearlySchemaResolver.ResolvedSchemas resolvedSchemas,
+                                        List<String> visibleColumns,
+                                        Map<String, Object> agGridFilter,
+                                        List<Map<String, String>> sortModel,
+                                        String rlsWhereClause,
+                                        MapSqlParameterSource rlsParams,
+                                        int maxRows) {
+        return buildExportQuery(def, null, null, resolvedSchemas, visibleColumns, agGridFilter,
+                sortModel, rlsWhereClause, rlsParams, maxRows);
+    }
+
+    // ── Hydrated queries (file-based SQL + outer wrapper support) ─────
+
+    public BuiltQuery buildDataQuery(ReportDefinition def,
+                                      String effectiveSourceQuery,
+                                      String effectiveOuterQuery,
                                       YearlySchemaResolver.ResolvedSchemas resolvedSchemas,
                                       List<String> visibleColumns,
                                       Map<String, Object> agGridFilter,
@@ -67,7 +123,8 @@ public class SqlBuilder {
         MapSqlParameterSource params = new MapSqlParameterSource();
         FilterTranslator.FilterResult filterResult = filterTranslator.translate(agGridFilter, allowedCols);
 
-        String fromClause = buildFromClause(def, resolvedSchemas, selectCols,
+        String fromClause = buildFromClause(def, effectiveSourceQuery, effectiveOuterQuery,
+                resolvedSchemas, selectCols,
                 rlsWhereClause, rlsParams, filterResult, params);
 
         StringBuilder sql = new StringBuilder();
@@ -90,6 +147,8 @@ public class SqlBuilder {
     }
 
     public BuiltQuery buildCountQuery(ReportDefinition def,
+                                       String effectiveSourceQuery,
+                                       String effectiveOuterQuery,
                                        YearlySchemaResolver.ResolvedSchemas resolvedSchemas,
                                        Map<String, Object> agGridFilter,
                                        List<String> visibleColumns,
@@ -100,7 +159,8 @@ public class SqlBuilder {
         FilterTranslator.FilterResult filterResult = filterTranslator.translate(agGridFilter, allowedCols);
 
         // For count, we just need * from the union
-        String fromClause = buildFromClause(def, resolvedSchemas, "*",
+        String fromClause = buildFromClause(def, effectiveSourceQuery, effectiveOuterQuery,
+                resolvedSchemas, "*",
                 rlsWhereClause, rlsParams, filterResult, params);
 
         StringBuilder sql = new StringBuilder();
@@ -110,6 +170,8 @@ public class SqlBuilder {
     }
 
     public BuiltQuery buildExportQuery(ReportDefinition def,
+                                        String effectiveSourceQuery,
+                                        String effectiveOuterQuery,
                                         YearlySchemaResolver.ResolvedSchemas resolvedSchemas,
                                         List<String> visibleColumns,
                                         Map<String, Object> agGridFilter,
@@ -125,7 +187,8 @@ public class SqlBuilder {
         MapSqlParameterSource params = new MapSqlParameterSource();
         FilterTranslator.FilterResult filterResult = filterTranslator.translate(agGridFilter, allowedCols);
 
-        String fromClause = buildFromClause(def, resolvedSchemas, selectCols,
+        String fromClause = buildFromClause(def, effectiveSourceQuery, effectiveOuterQuery,
+                resolvedSchemas, selectCols,
                 rlsWhereClause, rlsParams, filterResult, params);
 
         StringBuilder sql = new StringBuilder();
@@ -144,18 +207,40 @@ public class SqlBuilder {
     // ── Internal helpers ───────────────────────────────────────────────
 
     /**
-     * Builds the FROM clause. For single-schema or non-yearly reports, returns:
-     *   [schema].[table] WITH (NOLOCK) WHERE 1=1 AND {rls} AND {filters}
-     *
-     * For multi-year schemas, returns a subquery with UNION ALL:
-     *   (SELECT cols FROM [schema1].[table] WITH (NOLOCK) WHERE 1=1 AND {rls} AND {filters}
-     *    UNION ALL
-     *    SELECT cols FROM [schema2].[table] WITH (NOLOCK) WHERE 1=1 AND {rls} AND {filters}
-     *   ) AS _u
-     *
-     * WHERE push-down: filters and RLS are applied inside each UNION branch for performance.
+     * Returns the source query to use, falling back to {@link ReportDefinition#sourceQuery()}
+     * if no hydrated string was provided.
+     */
+    private String resolveSourceQuery(ReportDefinition def, String effectiveSourceQuery) {
+        if (effectiveSourceQuery != null && !effectiveSourceQuery.isBlank()) {
+            return effectiveSourceQuery;
+        }
+        return def.sourceQuery();
+    }
+
+    /**
+     * Replaces both {@code {schema}} and {@code {companySchema}} placeholders in the
+     * raw SQL. Empty-string companySchema is used when not resolved (caller responsibility
+     * to ensure the SQL handles missing company schema gracefully).
+     */
+    private String applyTemplates(String rawSql, String schema, String companySchema) {
+        String result = rawSql.replace("{schema}", schema);
+        result = result.replace("{companySchema}", companySchema != null ? companySchema : "");
+        return result;
+    }
+
+    /**
+     * Builds the FROM clause. Three modes:
+     * <ol>
+     *   <li>Single-schema or non-yearly: flat {@code [schema].[table]} or
+     *       {@code (sourceQuery) AS _src}.</li>
+     *   <li>Multi-year, no outer wrapper: per-branch UNION ALL with filter pushdown.</li>
+     *   <li>BRANCH_UNION_THEN_OUTER: raw multi-year UNION ALL inside outer wrapper,
+     *       no filter pushdown (filters applied at outer wrapper's WHERE).</li>
+     * </ol>
      */
     private String buildFromClause(ReportDefinition def,
+                                   String effectiveSourceQuery,
+                                   String effectiveOuterQuery,
                                    YearlySchemaResolver.ResolvedSchemas resolvedSchemas,
                                    String selectCols,
                                    String rlsWhereClause,
@@ -164,17 +249,42 @@ public class SqlBuilder {
                                    MapSqlParameterSource params) {
 
         boolean isMultiSchema = resolvedSchemas != null && !resolvedSchemas.isSingle();
+        boolean useOuterWrapper = def.isBranchUnionThenOuter()
+                && effectiveOuterQuery != null
+                && !effectiveOuterQuery.isBlank();
+        String companySchema = (resolvedSchemas != null) ? resolvedSchemas.companySchema() : null;
 
+        // ── Mode 3: BRANCH_UNION_THEN_OUTER ──
+        if (useOuterWrapper && isMultiSchema) {
+            return buildBranchUnionThenOuter(def, effectiveSourceQuery, effectiveOuterQuery,
+                    resolvedSchemas, companySchema,
+                    rlsWhereClause, rlsParams, filterResult, params);
+        }
+        if (useOuterWrapper && !isMultiSchema) {
+            // Single-year outer wrapper: still apply outer transform but no UNION
+            String singleSchema = (resolvedSchemas != null && !resolvedSchemas.schemas().isEmpty())
+                    ? resolvedSchemas.schemas().get(0)
+                    : def.sourceSchema();
+            String resolvedQuery = applyTemplates(resolveSourceQuery(def, effectiveSourceQuery),
+                    singleSchema, companySchema);
+            String inner = "        SELECT * FROM (" + resolvedQuery + ") AS y0";
+            String outerWrapped = effectiveOuterQuery.replace("{inner}", inner);
+            StringBuilder sb = new StringBuilder();
+            sb.append("(").append(outerWrapped).append(") AS _src WHERE 1=1");
+            appendWhereFilters(sb, rlsWhereClause, rlsParams, filterResult, params);
+            return sb.toString();
+        }
+
+        // ── Mode 1: Single schema (no outer wrapper) ──
         if (!isMultiSchema) {
-            // Single schema — original flat query (no subquery overhead)
             String schema = (resolvedSchemas != null && !resolvedSchemas.schemas().isEmpty())
                     ? resolvedSchemas.schemas().get(0)
                     : def.sourceSchema();
 
             StringBuilder sb = new StringBuilder();
-            if (def.hasSourceQuery()) {
-                // Custom SQL query — wrap as subquery
-                String resolvedQuery = def.sourceQuery().replace("{schema}", schema);
+            if (def.hasSourceQuery() || (effectiveSourceQuery != null && !effectiveSourceQuery.isBlank())) {
+                String resolvedQuery = applyTemplates(resolveSourceQuery(def, effectiveSourceQuery),
+                        schema, companySchema);
                 sb.append("(").append(resolvedQuery).append(") AS _src");
             } else {
                 sb.append("[").append(schema).append("].[").append(def.source()).append("] WITH (NOLOCK)");
@@ -184,7 +294,7 @@ public class SqlBuilder {
             return sb.toString();
         }
 
-        // Multi-schema UNION ALL — wrap in subquery
+        // ── Mode 2: Multi-schema UNION ALL with per-branch filter pushdown ──
         StringBuilder union = new StringBuilder();
         union.append("(\n");
 
@@ -194,8 +304,9 @@ public class SqlBuilder {
                 union.append("\n  UNION ALL\n");
             }
             union.append("  SELECT ").append(selectCols);
-            if (def.hasSourceQuery()) {
-                String resolvedQuery = def.sourceQuery().replace("{schema}", schemas.get(i));
+            if (def.hasSourceQuery() || (effectiveSourceQuery != null && !effectiveSourceQuery.isBlank())) {
+                String resolvedQuery = applyTemplates(resolveSourceQuery(def, effectiveSourceQuery),
+                        schemas.get(i), companySchema);
                 union.append(" FROM (").append(resolvedQuery).append(") AS _src");
             } else {
                 union.append(" FROM [").append(schemas.get(i)).append("].[").append(def.source()).append("] WITH (NOLOCK)");
@@ -218,7 +329,51 @@ public class SqlBuilder {
         return union.toString();
     }
 
-    /** Append WHERE fragments and merge params (for single-schema path). */
+    /**
+     * Builds the BRANCH_UNION_THEN_OUTER FROM clause:
+     *
+     * <pre>
+     * (&lt;outerTemplate with {inner} replaced by:
+     *   SELECT * FROM (&lt;branch_2024 sql&gt;) AS y0
+     *   UNION ALL
+     *   SELECT * FROM (&lt;branch_2025 sql&gt;) AS y1
+     *   ...
+     * &gt;) AS _src WHERE 1=1 AND &lt;rls&gt; AND &lt;filters&gt;
+     * </pre>
+     *
+     * <p>Filters are NOT pushed into branches (window function needs full row set).
+     */
+    private String buildBranchUnionThenOuter(ReportDefinition def,
+                                             String effectiveSourceQuery,
+                                             String effectiveOuterQuery,
+                                             YearlySchemaResolver.ResolvedSchemas resolvedSchemas,
+                                             String companySchema,
+                                             String rlsWhereClause,
+                                             MapSqlParameterSource rlsParams,
+                                             FilterTranslator.FilterResult filterResult,
+                                             MapSqlParameterSource params) {
+
+        List<String> schemas = resolvedSchemas.schemas();
+        String rawBranchSql = resolveSourceQuery(def, effectiveSourceQuery);
+
+        StringBuilder inner = new StringBuilder();
+        for (int i = 0; i < schemas.size(); i++) {
+            if (i > 0) {
+                inner.append("\n        UNION ALL\n");
+            }
+            String resolvedBranch = applyTemplates(rawBranchSql, schemas.get(i), companySchema);
+            inner.append("        SELECT * FROM (").append(resolvedBranch).append(") AS y").append(i);
+        }
+
+        String outerWrapped = effectiveOuterQuery.replace("{inner}", inner.toString());
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("(").append(outerWrapped).append(") AS _src WHERE 1=1");
+        appendWhereFilters(sb, rlsWhereClause, rlsParams, filterResult, params);
+        return sb.toString();
+    }
+
+    /** Append WHERE fragments and merge params (for single-schema and outer-wrapped paths). */
     private void appendWhereFilters(StringBuilder sql,
                                     String rlsWhereClause,
                                     MapSqlParameterSource rlsParams,

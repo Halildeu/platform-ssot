@@ -88,4 +88,30 @@ public record ReportDefinition(
     public boolean isBranchUnionThenOuter() {
         return "BRANCH_UNION_THEN_OUTER".equals(queryShape);
     }
+
+    /**
+     * Backward-compat constructor (14 args) for callers that build ReportDefinition
+     * programmatically without the new file-based-SQL fields. Defaults
+     * {@code sourceQueryFile}, {@code outerQueryFile}, {@code queryShape} to null.
+     * Jackson uses the canonical 17-arg constructor when JSON has the new fields.
+     */
+    public ReportDefinition(
+            String key,
+            String version,
+            String title,
+            String description,
+            String category,
+            String source,
+            String sourceSchema,
+            String schemaMode,
+            String yearColumn,
+            String sourceQuery,
+            List<ColumnDefinition> columns,
+            String defaultSort,
+            String defaultSortDirection,
+            AccessConfig access) {
+        this(key, version, title, description, category, source, sourceSchema, schemaMode,
+                yearColumn, sourceQuery, null, null, null,
+                columns, defaultSort, defaultSortDirection, access);
+    }
 }

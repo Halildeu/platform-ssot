@@ -15,9 +15,16 @@ import org.springframework.stereotype.Component;
 
 /**
  * Resolves year-based schema names for Workcube multi-tenant structure.
- * Pattern: workcube_mikrolink_{YYYY}_{companyId}
  *
- * Caches available schema names from sys.schemas to avoid repeated lookups.
+ * <p>Two schema namespaces are supported:
+ * <ol>
+ *   <li>Yearly per-company: {@code workcube_mikrolink_{YYYY}_{companyId}}</li>
+ *   <li>Company-only (no year): {@code workcube_mikrolink_{companyId}} —
+ *       used by tables that aren't partitioned annually (e.g. SETUP_PROCESS_CAT,
+ *       CREDIT_CARD_BANK_EXPENSE, TAHAKKUK_PLAN).</li>
+ * </ol>
+ *
+ * <p>Caches available schema names from sys.schemas to avoid repeated lookups.
  * Extracts date ranges from AG Grid filters to determine which year schemas to query.
  */
 @Component
@@ -31,10 +38,27 @@ public class YearlySchemaResolver {
         this.jdbc = jdbc;
     }
 
-    /** All resolved schemas for a yearly report, given the filter context. */
-    public record ResolvedSchemas(List<String> schemas) {
+    /**
+     * Resolved schemas for a yearly report.
+     *
+     * @param schemas       list of yearly schemas to query, e.g.
+     *                      {@code [workcube_mikrolink_2024_35, workcube_mikrolink_2025_35]}
+     * @param companySchema the company-only schema name, e.g.
+     *                      {@code workcube_mikrolink_35}, or null when multiple
+     *                      companies are in scope (ambiguous).
+     */
+    public record ResolvedSchemas(List<String> schemas, String companySchema) {
+        /** Backward-compat constructor (no companySchema). */
+        public ResolvedSchemas(List<String> schemas) {
+            this(schemas, null);
+        }
+
         public boolean isSingle() {
             return schemas.size() == 1;
+        }
+
+        public boolean hasCompanySchema() {
+            return companySchema != null && !companySchema.isBlank();
         }
     }
 
@@ -49,7 +73,7 @@ public class YearlySchemaResolver {
     public ResolvedSchemas resolve(ReportDefinition def, AuthzMeResponse authz,
                                    Map<String, Object> agGridFilter) {
         if (!def.isYearlySchema()) {
-            return new ResolvedSchemas(List.of(def.sourceSchema()));
+            return new ResolvedSchemas(List.of(def.sourceSchema()), null);
         }
 
         // Extract company IDs from RLS scope
@@ -63,7 +87,7 @@ public class YearlySchemaResolver {
                 log.debug("Inferred company {} from sourceSchema for report {}", companyFromSchema, def.key());
             } else {
                 log.warn("No COMPANY scope for yearly report {}, using base schema", def.key());
-                return new ResolvedSchemas(List.of(def.sourceSchema()));
+                return new ResolvedSchemas(List.of(def.sourceSchema()), null);
             }
         }
 
@@ -88,14 +112,31 @@ public class YearlySchemaResolver {
             }
         }
 
+        // Resolve company-only schema (workcube_mikrolink_{companyId}) when single company in scope.
+        // Multiple companies → companySchema null (ambiguous; reports needing it must restrict scope).
+        String companySchema = null;
+        if (companyIds.size() == 1) {
+            String onlyCompany = companyIds.iterator().next();
+            String candidate = "workcube_mikrolink_" + onlyCompany;
+            if (available.contains(candidate.toLowerCase(Locale.ROOT))) {
+                companySchema = candidate;
+            } else {
+                log.debug("Company-only schema not found: {} (report {})", candidate, def.key());
+            }
+        } else if (companyIds.size() > 1) {
+            log.debug("Multiple companies in scope ({}), companySchema is ambiguous for report {}",
+                    companyIds, def.key());
+        }
+
         if (resolved.isEmpty()) {
             log.warn("No year schemas found for report {} (years {}-{}, companies {}), falling back to base",
                     def.key(), startYear, endYear, companyIds);
-            return new ResolvedSchemas(List.of(def.sourceSchema()));
+            return new ResolvedSchemas(List.of(def.sourceSchema()), companySchema);
         }
 
-        log.debug("Resolved {} schemas for report {}: {}", resolved.size(), def.key(), resolved);
-        return new ResolvedSchemas(resolved);
+        log.debug("Resolved {} schemas for report {}: {} (companySchema={})",
+                resolved.size(), def.key(), resolved, companySchema);
+        return new ResolvedSchemas(resolved, companySchema);
     }
 
     /**
@@ -191,10 +232,6 @@ public class YearlySchemaResolver {
     }
 
     /**
-     * Cached: returns all schema names in the database (lowercase).
-     * Queried from sys.schemas which is very fast on SQL Server.
-     */
-    /**
      * Extract company ID from sourceSchema pattern.
      * "workcube_mikrolink_1" → "1", "workcube_mikrolink_2" → "2"
      * Returns null if pattern doesn't match.
@@ -212,6 +249,10 @@ public class YearlySchemaResolver {
         return null;
     }
 
+    /**
+     * Cached: returns all schema names in the database (lowercase).
+     * Queried from sys.schemas which is very fast on SQL Server.
+     */
     @Cacheable(value = "yearlySchemas", key = "'all'")
     public Set<String> getAvailableSchemas() {
         log.info("Loading available schemas from sys.schemas...");
