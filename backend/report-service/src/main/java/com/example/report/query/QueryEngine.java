@@ -4,6 +4,7 @@ import com.example.report.access.ColumnFilter;
 import com.example.report.access.RowFilterInjector;
 import com.example.report.authz.AuthzMeResponse;
 import com.example.report.registry.ReportDefinition;
+import com.example.report.registry.ReportRegistry;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ public class QueryEngine {
     private final ColumnFilter columnFilter;
     private final RowFilterInjector rowFilterInjector;
     private final YearlySchemaResolver yearlySchemaResolver;
+    private final ReportRegistry reportRegistry;
     private final SqlBuilder sqlBuilder = new SqlBuilder();
 
     @Value("${report.query.max-export-rows:500000}")
@@ -29,11 +31,13 @@ public class QueryEngine {
     public QueryEngine(NamedParameterJdbcTemplate jdbc,
                        ColumnFilter columnFilter,
                        RowFilterInjector rowFilterInjector,
-                       YearlySchemaResolver yearlySchemaResolver) {
+                       YearlySchemaResolver yearlySchemaResolver,
+                       ReportRegistry reportRegistry) {
         this.jdbc = jdbc;
         this.columnFilter = columnFilter;
         this.rowFilterInjector = rowFilterInjector;
         this.yearlySchemaResolver = yearlySchemaResolver;
+        this.reportRegistry = reportRegistry;
     }
 
     public record PagedData(List<Map<String, Object>> items, long total, int page, int pageSize) {}
@@ -50,15 +54,20 @@ public class QueryEngine {
         // Resolve year schemas for yearly reports
         YearlySchemaResolver.ResolvedSchemas schemas = resolveSchemas(def, authz, agGridFilter);
 
+        // Resolve hydrated (file-based) source/outer SQL via registry; nulls fall back to def.sourceQuery() inside builder.
+        String effectiveSourceQuery = reportRegistry.getEffectiveSourceQuery(def);
+        String effectiveOuterQuery = reportRegistry.getEffectiveOuterQuery(def);
+
         SqlBuilder.BuiltQuery dataQuery = sqlBuilder.buildDataQuery(
-                def, schemas, visibleColumns, agGridFilter, sortModel,
-                rls.whereClause(), rls.params(), page, pageSize);
+                def, effectiveSourceQuery, effectiveOuterQuery, schemas, visibleColumns,
+                agGridFilter, sortModel, rls.whereClause(), rls.params(), page, pageSize);
 
         log.debug("Report query [{}]: {}", def.key(), dataQuery.sql());
 
         List<Map<String, Object>> items = jdbc.queryForList(dataQuery.sql(), dataQuery.params());
 
-        long total = getCount(def, schemas, agGridFilter, visibleColumns, rls);
+        long total = getCount(def, schemas, agGridFilter, visibleColumns, rls,
+                effectiveSourceQuery, effectiveOuterQuery);
 
         return new PagedData(items, total, page, pageSize);
     }
@@ -67,18 +76,30 @@ public class QueryEngine {
                                                     AuthzMeResponse authz,
                                                     Map<String, Object> agGridFilter,
                                                     List<Map<String, String>> sortModel) {
-        List<String> visibleColumns = columnFilter.getVisibleColumns(def, authz);
+        List<String> visibleColumns = columnFilter.getExportColumns(def, authz);
         RowFilterInjector.RlsResult rls = rowFilterInjector.buildRlsClause(def, authz);
 
         YearlySchemaResolver.ResolvedSchemas schemas = resolveSchemas(def, authz, agGridFilter);
 
+        String effectiveSourceQuery = reportRegistry.getEffectiveSourceQuery(def);
+        String effectiveOuterQuery = reportRegistry.getEffectiveOuterQuery(def);
+
         return sqlBuilder.buildExportQuery(
-                def, schemas, visibleColumns, agGridFilter, sortModel,
-                rls.whereClause(), rls.params(), maxExportRows);
+                def, effectiveSourceQuery, effectiveOuterQuery, schemas, visibleColumns,
+                agGridFilter, sortModel, rls.whereClause(), rls.params(), maxExportRows);
     }
 
     public List<String> getVisibleColumns(ReportDefinition def, AuthzMeResponse authz) {
         return columnFilter.getVisibleColumns(def, authz);
+    }
+
+    /**
+     * Returns the columns destined for export output (includes hidden + exportOnly columns,
+     * excludes hidden + non-exportOnly debug columns). Used by the export controller so that
+     * audit-only fields (e.g. kur_tarihi, kur_id, kur_yas_gun) reach the CSV/XLSX file.
+     */
+    public List<String> getExportColumns(ReportDefinition def, AuthzMeResponse authz) {
+        return columnFilter.getExportColumns(def, authz);
     }
 
     private YearlySchemaResolver.ResolvedSchemas resolveSchemas(ReportDefinition def,
@@ -94,10 +115,13 @@ public class QueryEngine {
                           YearlySchemaResolver.ResolvedSchemas schemas,
                           Map<String, Object> agGridFilter,
                           List<String> visibleColumns,
-                          RowFilterInjector.RlsResult rls) {
+                          RowFilterInjector.RlsResult rls,
+                          String effectiveSourceQuery,
+                          String effectiveOuterQuery) {
         try {
             SqlBuilder.BuiltQuery countQuery = sqlBuilder.buildCountQuery(
-                    def, schemas, agGridFilter, visibleColumns, rls.whereClause(), rls.params());
+                    def, effectiveSourceQuery, effectiveOuterQuery, schemas,
+                    agGridFilter, visibleColumns, rls.whereClause(), rls.params());
             Long count = jdbc.queryForObject(countQuery.sql(), countQuery.params(), Long.class);
             return count != null ? count : -1;
         } catch (Exception e) {

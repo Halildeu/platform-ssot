@@ -1,6 +1,6 @@
 -- Muavin Raporu (fin-muhasebe-detay) — yearly branch SQL
 -- Spec: docs/reports/muavin-grid-spec.md (gitops PR #360, e5efda3)
--- Codex thread 019df4ed-615c-73d1-b67a-7d0b61cc94df (AGREE)
+-- Codex thread 019df4ed-615c-73d1-b67a-7d0b61cc94df (iter-8 REVISE absorb: L3 direct ACTION_TABLE + IS_SELECTED tie-break)
 --
 -- Placeholders (replaced by SqlBuilder.applyTemplates):
 --   {schema}         workcube_mikrolink_{YEAR}_{companyId}  yearly per-company
@@ -9,6 +9,17 @@
 --
 -- Output is a raw row set (one row per ACCOUNT_CARD_ROWS row, enriched with
 -- EUR rate from 8-layer waterfall). Window-based bakiye computed in outer wrapper.
+--
+-- Fallback layers (matches spec §5):
+--   L1 (priority 10) — ACM by CARD_ID
+--   L2 (priority 20) — ACM by source ACTION_ID (cascade)
+--   L3 (priority 30) — POOL direct AC.ACTION_TABLE match (no MONEY_TABLES join)
+--   L4 (priority 40) — POOL via MONEY_TABLES dispatch (ACTION_TYPE → ACTION_TABLE)
+--   L5 (priority 50) — MONEY_HISTORY same-day, COMPANY_ID matched
+--   L6 (priority 60) — MONEY_HISTORY same-day GLOBAL (COMPANY_ID NULL)
+--   L7 (priority 70) — MONEY_HISTORY ≤7d previous, COMPANY_ID matched
+--   L8 (priority 80) — MONEY_HISTORY ≤7d previous, GLOBAL
+-- Tie-break: priority ASC, IS_SELECTED DESC (NULLS LAST), rate_date DESC, rate_id DESC.
 
 SELECT
   ap.ACCOUNT_CODE                                                    AS account_code,
@@ -117,6 +128,7 @@ OUTER APPLY (
       CONCAT('ACM|CARD_ID|RATE2|MID:', acm.ACTION_MONEY_ID) AS kur_kaynagi,
       CAST(NULL AS datetime) AS rate_date,
       acm.ACTION_MONEY_ID AS rate_id,
+      acm.IS_SELECTED AS is_selected,
       10 AS priority
     FROM [{schema}].[ACCOUNT_CARD_MONEY] acm WITH (NOLOCK)
     WHERE acm.ACTION_ID = ac.CARD_ID AND acm.MONEY_TYPE = 'EUR'
@@ -127,18 +139,19 @@ OUTER APPLY (
     SELECT
       acm2.RATE2,
       CONCAT('ACM|ACTION_ID|RATE2|MID:', acm2.ACTION_MONEY_ID),
-      NULL, acm2.ACTION_MONEY_ID, 20
+      NULL, acm2.ACTION_MONEY_ID, acm2.IS_SELECTED, 20
     FROM [{schema}].[ACCOUNT_CARD_MONEY] acm2 WITH (NOLOCK)
     WHERE acm2.ACTION_ID = ac.ACTION_ID AND acm2.MONEY_TYPE = 'EUR'
 
     UNION ALL
 
-    -- L3: POOL exact ACTION_TABLE match (ACCOUNT_CARD.ACTION_TABLE = pool.action_table)
-    -- 13 *_MONEY tables UNION ALL inline; MONEY_TABLES validates dispatch
+    -- L3: POOL direct AC.ACTION_TABLE match (ACCOUNT_CARD.ACTION_TABLE = pool.action_table)
+    --     Spec §5 L3: pool.action_table = AC.ACTION_TABLE (no MONEY_TABLES dispatch)
+    --     %1 of rows have populated AC.ACTION_TABLE; this layer wins for them.
     SELECT
       pool.RATE2,
-      CONCAT('POOL|', pool.action_table, '|RATE2|MID:', pool.action_money_id),
-      NULL, pool.action_money_id, 30
+      CONCAT('POOL|DIRECT|', pool.action_table, '|RATE2|MID:', pool.action_money_id),
+      NULL, pool.action_money_id, pool.IS_SELECTED, 30
     FROM (
       SELECT 'INVOICE_MONEY' AS action_table, ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID AS action_money_id
         FROM [{schema}].[INVOICE_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
@@ -179,9 +192,62 @@ OUTER APPLY (
       SELECT 'TAHAKKUK_PLAN_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
         FROM [{companySchema}].[TAHAKKUK_PLAN_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
     ) pool
-    INNER JOIN [workcube_mikrolink].[MONEY_TABLES] mt WITH (NOLOCK)
-      ON mt.ACTION_TYPE = ac.ACTION_TYPE AND mt.ACTION_TABLE = pool.action_table
     WHERE pool.ACTION_ID = ac.ACTION_ID
+      AND pool.action_table = ac.ACTION_TABLE
+      AND ac.ACTION_TABLE IS NOT NULL
+      AND LEN(LTRIM(RTRIM(ac.ACTION_TABLE))) > 0
+
+    UNION ALL
+
+    -- L4: POOL via MONEY_TABLES.ACTION_TYPE → ACTION_TABLE dispatch (deterministic 60-row mapping)
+    --     Spec §5 L4: AC.ACTION_TABLE NULL or empty (vast majority); MONEY_TABLES drives.
+    SELECT
+      pool2.RATE2,
+      CONCAT('POOL|', pool2.action_table, '|RATE2|MID:', pool2.action_money_id),
+      NULL, pool2.action_money_id, pool2.IS_SELECTED, 40
+    FROM (
+      SELECT 'INVOICE_MONEY' AS action_table, ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID AS action_money_id
+        FROM [{schema}].[INVOICE_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+      UNION ALL
+      SELECT 'EXPENSE_ITEM_PLANS_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
+        FROM [{schema}].[EXPENSE_ITEM_PLANS_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+      UNION ALL
+      SELECT 'STOCK_FIS_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
+        FROM [{schema}].[STOCK_FIS_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+      UNION ALL
+      SELECT 'CARI_ACTION_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
+        FROM [{schema}].[CARI_ACTION_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+      UNION ALL
+      SELECT 'CARI_ACTION_MULTI_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
+        FROM [{schema}].[CARI_ACTION_MULTI_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+      UNION ALL
+      SELECT 'CREDIT_CONTRACT_PAYMENT_INCOME_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
+        FROM [{schema}].[CREDIT_CONTRACT_PAYMENT_INCOME_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+      UNION ALL
+      SELECT 'PAYROLL_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
+        FROM [{schema}].[PAYROLL_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+      UNION ALL
+      SELECT 'BANK_ACTION_MULTI_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
+        FROM [{schema}].[BANK_ACTION_MULTI_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+      UNION ALL
+      SELECT 'BANK_ACTION_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
+        FROM [{schema}].[BANK_ACTION_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+      UNION ALL
+      SELECT 'BANK_ORDER_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
+        FROM [{schema}].[BANK_ORDER_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+      UNION ALL
+      SELECT 'CASH_ACTION_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
+        FROM [{schema}].[CASH_ACTION_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+      UNION ALL
+      SELECT 'CREDIT_CARD_BANK_EXPENSE_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
+        FROM [{companySchema}].[CREDIT_CARD_BANK_EXPENSE_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+      UNION ALL
+      SELECT 'TAHAKKUK_PLAN_MONEY', ACTION_ID, MONEY_TYPE, RATE2, IS_SELECTED, ACTION_MONEY_ID
+        FROM [{companySchema}].[TAHAKKUK_PLAN_MONEY] WITH (NOLOCK) WHERE MONEY_TYPE = 'EUR'
+    ) pool2
+    INNER JOIN [workcube_mikrolink].[MONEY_TABLES] mt WITH (NOLOCK)
+      ON mt.ACTION_TYPE = ac.ACTION_TYPE AND mt.ACTION_TABLE = pool2.action_table
+    WHERE pool2.ACTION_ID = ac.ACTION_ID
 
     UNION ALL
 
@@ -190,7 +256,7 @@ OUTER APPLY (
       mh.RATE2,
       CONCAT('MH|COMPANY|SAME_DAY|RATE2|DATE:', CONVERT(varchar(10), mh.VALIDATE_DATE, 23),
              '|MID:', mh.MONEY_HISTORY_ID),
-      mh.VALIDATE_DATE, mh.MONEY_HISTORY_ID, 50
+      mh.VALIDATE_DATE, mh.MONEY_HISTORY_ID, NULL, 50
     FROM [workcube_mikrolink].[MONEY_HISTORY] mh WITH (NOLOCK)
     WHERE mh.MONEY = 'EUR'
       AND mh.COMPANY_ID = {companyId}
@@ -203,7 +269,7 @@ OUTER APPLY (
       mh2.RATE2,
       CONCAT('MH|GLOBAL|SAME_DAY|RATE2|DATE:', CONVERT(varchar(10), mh2.VALIDATE_DATE, 23),
              '|MID:', mh2.MONEY_HISTORY_ID),
-      mh2.VALIDATE_DATE, mh2.MONEY_HISTORY_ID, 60
+      mh2.VALIDATE_DATE, mh2.MONEY_HISTORY_ID, NULL, 60
     FROM [workcube_mikrolink].[MONEY_HISTORY] mh2 WITH (NOLOCK)
     WHERE mh2.MONEY = 'EUR'
       AND mh2.COMPANY_ID IS NULL
@@ -217,7 +283,7 @@ OUTER APPLY (
       CONCAT('MH|COMPANY|PREV_DAY|RATE2|DATE:', CONVERT(varchar(10), mh3.VALIDATE_DATE, 23),
              '|AGE:', DATEDIFF(day, mh3.VALIDATE_DATE, ac.ACTION_DATE),
              '|MID:', mh3.MONEY_HISTORY_ID),
-      mh3.VALIDATE_DATE, mh3.MONEY_HISTORY_ID, 70
+      mh3.VALIDATE_DATE, mh3.MONEY_HISTORY_ID, NULL, 70
     FROM [workcube_mikrolink].[MONEY_HISTORY] mh3 WITH (NOLOCK)
     WHERE mh3.MONEY = 'EUR'
       AND mh3.COMPANY_ID = {companyId}
@@ -232,7 +298,7 @@ OUTER APPLY (
       CONCAT('MH|GLOBAL|PREV_DAY|RATE2|DATE:', CONVERT(varchar(10), mh4.VALIDATE_DATE, 23),
              '|AGE:', DATEDIFF(day, mh4.VALIDATE_DATE, ac.ACTION_DATE),
              '|MID:', mh4.MONEY_HISTORY_ID),
-      mh4.VALIDATE_DATE, mh4.MONEY_HISTORY_ID, 80
+      mh4.VALIDATE_DATE, mh4.MONEY_HISTORY_ID, NULL, 80
     FROM [workcube_mikrolink].[MONEY_HISTORY] mh4 WITH (NOLOCK)
     WHERE mh4.MONEY = 'EUR'
       AND mh4.COMPANY_ID IS NULL
@@ -241,7 +307,12 @@ OUTER APPLY (
 
   ) x
   WHERE x.eur_rate IS NOT NULL
-  ORDER BY x.priority ASC, x.rate_date DESC, x.rate_id DESC
+  -- IS_SELECTED tie-break (Codex iter-8): when multiple ACM/POOL rows match same priority,
+  -- prefer manually-selected one. NULL (e.g. MONEY_HISTORY layers) sorts last via CASE.
+  ORDER BY x.priority ASC,
+           CASE WHEN x.is_selected = 1 THEN 0 ELSE 1 END ASC,
+           x.rate_date DESC,
+           x.rate_id DESC
 ) rate_pick
 
 WHERE ISNULL(ac.IS_CANCEL, 0) = 0

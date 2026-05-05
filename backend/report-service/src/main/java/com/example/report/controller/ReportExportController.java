@@ -83,7 +83,8 @@ public class ReportExportController {
         List<Map<String, String>> sortModel = parseJson(sort, new TypeReference<>() {});
 
         SqlBuilder.BuiltQuery exportQuery = queryEngine.buildExportQuery(def, authz, agGridFilter, sortModel);
-        List<String> visibleColumns = queryEngine.getVisibleColumns(def, authz);
+        // Export uses the same projection as the query (hidden+exportOnly are included for export only).
+        List<String> visibleColumns = queryEngine.getExportColumns(def, authz);
 
         String email = jwt != null ? jwt.getClaimAsString("email") : null;
         String userId = jwt != null ? (email != null ? email : jwt.getSubject()) : authz.getUserId();

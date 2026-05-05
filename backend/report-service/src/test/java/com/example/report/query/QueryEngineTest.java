@@ -6,6 +6,7 @@ import com.example.report.authz.AuthzMeResponse;
 import com.example.report.registry.AccessConfig;
 import com.example.report.registry.ColumnDefinition;
 import com.example.report.registry.ReportDefinition;
+import com.example.report.registry.ReportRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -34,12 +35,13 @@ class QueryEngineTest {
     @Mock ColumnFilter columnFilter;
     @Mock RowFilterInjector rowFilterInjector;
     @Mock YearlySchemaResolver yearlySchemaResolver;
+    @Mock ReportRegistry reportRegistry;
 
     private QueryEngine engine;
 
     @BeforeEach
     void setUp() {
-        engine = new QueryEngine(jdbc, columnFilter, rowFilterInjector, yearlySchemaResolver);
+        engine = new QueryEngine(jdbc, columnFilter, rowFilterInjector, yearlySchemaResolver, reportRegistry);
     }
 
     private static ReportDefinition staticDef() {
@@ -67,8 +69,12 @@ class QueryEngineTest {
 
     private void mockDefaults() {
         when(columnFilter.getVisibleColumns(any(), any())).thenReturn(List.of("id", "name"));
+        when(columnFilter.getExportColumns(any(), any())).thenReturn(List.of("id", "name"));
         when(rowFilterInjector.buildRlsClause(any(), any()))
                 .thenReturn(new RowFilterInjector.RlsResult(null, null));
+        // Default: legacy reports without file-based SQL — registry returns null for both.
+        when(reportRegistry.getEffectiveSourceQuery(any())).thenReturn(null);
+        when(reportRegistry.getEffectiveOuterQuery(any())).thenReturn(null);
     }
 
     @Nested
@@ -136,6 +142,52 @@ class QueryEngineTest {
             engine.executeQuery(staticDef(), authz(), Map.of(), List.of(), 1, 10);
 
             verifyNoInteractions(yearlySchemaResolver);
+        }
+
+        @Test
+        @DisplayName("registry-hydrated source/outer SQL flows into builder (file-based path)")
+        void hydratedSqlPassedThroughBuilder() {
+            ReportDefinition fileBasedDef = new ReportDefinition(
+                    "file-report", "v1", "FB", "desc", "cat",
+                    "ACCOUNT_CARD_ROWS", "workcube_mikrolink_2026_35", "yearly", "action_date",
+                    null, "sql/x.branch.sql", "sql/x.outer.sql", "BRANCH_UNION_THEN_OUTER",
+                    List.of(new ColumnDefinition("account_code", "AC", "text", 100, false, false, false)),
+                    "account_code", "ASC", null);
+
+            when(columnFilter.getVisibleColumns(any(), any())).thenReturn(List.of("account_code"));
+            when(rowFilterInjector.buildRlsClause(any(), any()))
+                    .thenReturn(new RowFilterInjector.RlsResult(null, null));
+            when(yearlySchemaResolver.resolve(any(), any(), any()))
+                    .thenReturn(new YearlySchemaResolver.ResolvedSchemas(
+                            List.of("workcube_mikrolink_2026_35"), "workcube_mikrolink_35"));
+            // Hydrated SQL strings come from the registry (Issue #1).
+            when(reportRegistry.getEffectiveSourceQuery(any()))
+                    .thenReturn("SELECT 1 AS account_code FROM [{schema}].[ACCOUNT_CARD_ROWS]");
+            when(reportRegistry.getEffectiveOuterQuery(any()))
+                    .thenReturn("SELECT q.account_code FROM (\n{inner}\n) AS q");
+            when(jdbc.queryForList(anyString(), any(MapSqlParameterSource.class)))
+                    .thenReturn(List.of());
+            when(jdbc.queryForObject(anyString(), any(MapSqlParameterSource.class), eq(Long.class)))
+                    .thenReturn(0L);
+
+            engine.executeQuery(fileBasedDef, authz(), Map.of(), List.of(), 1, 10);
+
+            // Registry consulted for both source and outer
+            verify(reportRegistry, atLeastOnce()).getEffectiveSourceQuery(any());
+            verify(reportRegistry, atLeastOnce()).getEffectiveOuterQuery(any());
+
+            // SQL contains the hydrated branch + outer wrapper, NOT a null literal
+            org.mockito.ArgumentCaptor<String> sqlCaptor = org.mockito.ArgumentCaptor.forClass(String.class);
+            verify(jdbc).queryForList(sqlCaptor.capture(), any(MapSqlParameterSource.class));
+            String sql = sqlCaptor.getValue();
+            assertTrue(sql.contains("[workcube_mikrolink_2026_35].[ACCOUNT_CARD_ROWS]"),
+                    "Hydrated branch SQL with resolved schema must reach JDBC");
+            assertTrue(sql.contains("AS q"),
+                    "Outer wrapper alias must reach JDBC");
+            // No bare "(null)" fragment — would indicate def.sourceQuery() (null) was passed
+            // through without registry hydration.
+            assertFalse(sql.contains("(null)"),
+                    "SQL must not contain (null) fragment from un-hydrated sourceQuery");
         }
     }
 
