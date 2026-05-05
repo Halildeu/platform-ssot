@@ -111,6 +111,21 @@
       "integration",
       "e2e"
     ],
+    "required_lanes_by_env": {
+      "pre-prod": [
+        "unit",
+        "contract"
+      ],
+      "prod": [
+        "unit",
+        "database",
+        "api",
+        "contract",
+        "integration",
+        "e2e"
+      ]
+    },
+    "default_env": "pre-prod",
     "required_lanes": [
       "unit",
       "database",
@@ -118,6 +133,11 @@
       "contract",
       "integration",
       "e2e"
+    ],
+    "lane_env_notes": [
+      "ADR-0014: pre-prod döneminde required lanes minimum set; cutover (D30) ile prod'a switch.",
+      "required_lanes (suffix-less) legacy backward-compat field; yeni kod required_lanes_by_env[env] öncelikli okur.",
+      "default_env runtime'da CI workflow DELIVERY_LANE_ENV env var ile veya CLI --env flag ile override edilebilir."
     ],
     "gate_name": "module-delivery-gate",
     "merge_requires_all_green": true

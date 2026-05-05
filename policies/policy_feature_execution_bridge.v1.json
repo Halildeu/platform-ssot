@@ -101,6 +101,12 @@
     "required_execution_sequence_from_lock": true,
     "required_lanes_from_lock": true
   },
+  "default_lane_env": "pre-prod",
+  "lane_env_resolution_notes": [
+    "ADR-0014: lane environment resolution priority (highest first): CLI --env flag -> DELIVERY_LANE_ENV env var -> policy default_lane_env -> baseline ci_contract.default_env.",
+    "Pre-prod döneminde lane subset (unit + contract) zorunludur. Cutover (D30) sonrası org-level variable DELIVERY_LANE_ENV=prod ile full set otomatik aktive olur.",
+    "Bu policy field cutover'a kadar pre-prod default'ını korur. Cutover PR'ında default_lane_env=prod set edilir + 72h rollback window."
+  ],
   "reporting": {
     "out_path": ".cache/reports/feature_execution_contract_check.v1.json"
   },
