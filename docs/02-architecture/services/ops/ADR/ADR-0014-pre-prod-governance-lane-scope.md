@@ -174,12 +174,13 @@ database | **Negatif (geçici)**: pre-prod döneminde DDL diff guard kapalı; cu
 | **D30** Cutover: org variable `DELIVERY_LANE_ENV=prod` set; `default_env="prod"` PR | atomic | D30 cutover runbook |
 | **D30+72h** Rollback window: gerekirse `pre-prod` env'e geri dön | atomic | D30 rollback runbook |
 
-## References
+## Links
 
 - HARD RULE Governance/Sistemik Bug: Admin Bypass Yasak (~/.claude/CLAUDE.md, 2026-05-05)
 - HARD RULE No Fake Work / No Cosmetic Operations (~/.claude/CLAUDE.md, 2026-04-25)
 - HARD RULE Pre-Production Full Authority (~/.claude/CLAUDE.md, 2026-04-29)
 - platform-ssot PR #564 muavin v3 X-Company-Id selector (Codex iter-21 AGREE; gate fail trigger for this ADR)
 - ADR-0001 Workflow model split (PR + deploy lifecycles)
-- Codex thread `019df8d8-0b18-74b1-bf6c-0fda47b97827` (iter-18→21 review)
-- Codex thread `019df7c1-d2e1-7bc2-93c7-66e696aedfac` (iter-15→17 plan)
+- Codex thread `019df8d8-0b18-74b1-bf6c-0fda47b97827` (iter-18→21 muavin code review)
+- Codex thread `019df7c1-d2e1-7bc2-93c7-66e696aedfac` (iter-15→17 muavin plan)
+- Codex thread `019df8fb-10c9-75f1-957e-721e21c9488f` (iter-22→24 this ADR review)
