@@ -4,6 +4,13 @@
   "status": "ACTIVE",
   "enforcement_mode": "blocking",
   "contract_path": "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
+  "contract_paths": [],
+  "contract_glob": "extensions/PRJ-PM-SUITE/contract/features/*.v1.json",
+  "active_features_path": "extensions/PRJ-PM-SUITE/contract/active_features.v1.json",
+  "contract_resolution_notes": [
+    "Resolution priority: contract_paths (explicit list, non-empty) -> contract_glob (expand) -> contract_path (single, backward-compat).",
+    "active_features_path indexes ACTIVE feature contracts under contract/features/; legacy contract_path is preserved for backward-compat audit."
+  ],
   "contract_schema_path": "schemas/feature-execution-contract.schema.v1.json",
   "pm_policy_path": "policies/policy_pm_suite.v1.json",
   "technical_baseline_path": "registry/technical_baseline.aistd.v1.json",

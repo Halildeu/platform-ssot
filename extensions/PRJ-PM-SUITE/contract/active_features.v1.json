@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "kind": "active-features-index",
+  "active_features": [
+    {
+      "feature_id": "staging-prod-profile-migration",
+      "contract_path": "extensions/PRJ-PM-SUITE/contract/features/staging-prod-profile-migration.v1.json",
+      "status": "ACTIVE"
+    }
+  ],
+  "legacy_contract_path": "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
+  "notes": [
+    "C-prime multi-file feature execution contract pattern (Codex 019df4ed iter-5).",
+    "active_features[] entries are the source-of-truth for governance gates; legacy_contract_path preserved for backward-compat audit only."
+  ]
+}

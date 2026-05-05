@@ -1,0 +1,413 @@
+{
+  "context_contract": {
+    "codex_read_sequence": [
+      "standards.lock",
+      "docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md",
+      "docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md",
+      "docs/OPERATIONS/MANAGED-REPO-CONTEXT-CONSUMPTION.v1.md",
+      "tenant/TENANT-DEFAULT/context.v1.md",
+      "tenant/TENANT-DEFAULT/decision-bundle.v1.json",
+      "docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/ACCEPTANCE/AC-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/TEST-PLANS/TP-0319-staging-prod-profile-migration.md",
+      "docs/04-operations/RUNBOOKS/RB-staging-prod-profile.md",
+      "docs/03-delivery/STORIES/STORY-0320-zanzibar-prod-cutover-prep.md",
+      "docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md",
+      "docs/03-delivery/INTERFACE-CONTRACTS/INTERFACE-CONTRACT-cross-plane-auth-session-audit-foundation.md",
+      "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
+      "docs/04-operations/RUNBOOKS/RB-vault-kms-autounseal.md"
+    ],
+    "context_refs": [
+      "tenant/TENANT-DEFAULT/context.v1.md",
+      "tenant/TENANT-DEFAULT/stakeholders.v1.md",
+      "tenant/TENANT-DEFAULT/scope.v1.md",
+      "tenant/TENANT-DEFAULT/criteria.v1.md"
+    ],
+    "decision_bundle_path": "tenant/TENANT-DEFAULT/decision-bundle.v1.json"
+  },
+  "definition_of_done": {
+    "acceptance_criteria": [
+      "docs/03-delivery/ACCEPTANCE/AC-0319-staging-prod-profile-migration.md"
+    ],
+    "evidence_paths": [
+      ".cache/reports/feature_execution_contract_check.v1.json"
+    ]
+  },
+  "delivery_scope": {
+    "affected_modules": [],
+    "change_path_globs": [
+      ".github/workflows/deploy-backend.yml",
+      ".github/workflows/deploy-web.yml",
+      "backend/.env.example",
+      "backend/.env.prod.example",
+      "backend/auth-service/src/main/resources/*",
+      "backend/docker-compose.prod.yml",
+      "backend/docker-compose.yml",
+      "backend/common-auth/src/main/java/com/example/commonauth/openfga/*",
+      "backend/openfga/init.sh",
+      "backend/common-auth/src/main/java/com/example/commonauth/openfga/*",
+      "backend/permission-service/src/main/java/com/example/permission/controller/*",
+      "backend/permission-service/src/main/java/com/example/permission/event/*",
+      "backend/permission-service/src/main/java/com/example/permission/repository/*",
+      "backend/permission-service/src/main/java/com/example/permission/service/*",
+      "backend/permission-service/src/main/resources/*",
+      "backend/permission-service/src/test/java/com/example/permission/service/*",
+      "backend/api-gateway/src/main/java/com/example/apigateway/security/*",
+      "backend/api-gateway/src/main/resources/*",
+      "backend/permission-service/src/main/java/com/example/permission/dto/*",
+      "backend/variant-service/src/main/java/com/example/variant/security/*",
+      "backend/variant-service/src/main/java/com/example/variant/authz/*",
+      "backend/scripts/ci/canary/zanzibar-canary-setup.mjs",
+      "backend/scripts/doctor-infra.sh",
+      "backend/scripts/ops/*",
+      "backend/scripts/perf/run-zanzibar-canary.sh",
+      "web/scripts/ops/*",
+      "web/scripts/deploy/*",
+      "backend/scripts/vault/*",
+      ".github/workflows/staging-audit-compare-sweep.yml",
+      ".github/workflows/staging-error-sweep.yml",
+      "backend/scripts/verify-service-jwt-env.sh",
+      "backend/user-service/src/main/java/com/example/user/config/*",
+      "backend/user-service/src/main/java/com/example/user/service/*",
+      "deploy/ubuntu/*",
+      "docs/03-delivery/ACCEPTANCE/AC-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/TEST-PLANS/TP-0319-staging-prod-profile-migration.md",
+      "docs/04-operations/RUNBOOKS/RB-staging-prod-profile.md",
+      "docs/04-operations/RUNBOOKS/RB-ubuntu-backend-github-vault-deploy.md",
+      "docs/04-operations/RUNBOOKS/RB-vault-dev-path-migration.md",
+      "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
+      "web/apps/mfe-shell/src/app/layout/*",
+      "web/apps/mfe-shell/src/app/theme/*",
+      "web/packages/shared-http/src/*",
+      "web/Dockerfile",
+      ".github/workflows/frontend-image.yml",
+      "web/.dockerignore",
+      "web/apps/mfe-shell/src/pages/admin/service-control/*",
+      "web/apps/mfe-shell/src/pages/home/widgets/*.tsx",
+      "web/packages/i18n-dicts/src/locales/*/common.ts"
+    ],
+    "repo_root": ".",
+    "service_scopes": [
+      "backend",
+      "database",
+      "api",
+      "frontend"
+    ]
+  },
+  "feature_id": "staging-prod-profile-migration",
+  "kind": "feature-execution-contract",
+  "lane_plan": {
+    "execution_sequence": [
+      "backend",
+      "database",
+      "api",
+      "frontend",
+      "integration",
+      "e2e"
+    ],
+    "notes": [
+      "Generated by seed_feature_execution_contract.py"
+    ],
+    "required_lanes": [
+      "unit",
+      "database",
+      "api",
+      "contract",
+      "integration",
+      "e2e"
+    ]
+  },
+  "multi_plane_contract": {
+    "mode": "multi-plane",
+    "plane_path_globs": {
+      "backend": [
+        "backend/auth-service/**/*",
+        "backend/permission-service/**/*",
+        "backend/user-service/**/*",
+        "backend/common-auth/**/*",
+        "backend/api-gateway/**/*",
+        "backend/variant-service/**/*"
+      ],
+      "governance": [
+        "docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md",
+        "docs/03-delivery/ACCEPTANCE/AC-0316-cross-plane-auth-session-audit-foundation.md",
+        "docs/03-delivery/TEST-PLANS/TP-0316-cross-plane-auth-session-audit-foundation.md",
+        "docs/03-delivery/INTERFACE-CONTRACTS/INTERFACE-CONTRACT-cross-plane-auth-session-audit-foundation.md",
+        "docs/03-delivery/api/auth.api.md",
+        "docs/03-delivery/api/permission.api.md",
+        "docs/03-delivery/api/audit-events.api.md",
+        "docs/03-delivery/api/notification-preferences.api.md",
+        "docs/03-delivery/api/common-headers.md",
+        "docs/OPERATIONS/MANAGED-REPO-CONTEXT-CONSUMPTION.v1.md",
+        "docs/OPERATIONS/MULTI-PLANE-EXECUTION-MODEL.v1.md",
+        "tenant/TENANT-DEFAULT/**/*",
+        "extensions/PRJ-PM-SUITE/contract/**/*",
+        "docs/03-delivery/STORIES/STORY-0320-zanzibar-prod-cutover-prep.md",
+        "docs/03-delivery/ACCEPTANCE/AC-0320-zanzibar-prod-cutover-prep.md",
+        "docs/03-delivery/TEST-PLANS/TP-0320-zanzibar-prod-cutover-prep.md",
+        "docs/04-operations/RUNBOOKS/RB-vault-kms-autounseal.md"
+      ],
+      "mobile": [
+        "mobile/App.tsx",
+        "mobile/ARCHITECTURE.md",
+        "mobile/package.json",
+        "mobile/package-lock.json",
+        "mobile/app/**/*",
+        "mobile/screens/HomeScreen.tsx",
+        "mobile/screens/**/*",
+        "mobile/features/**/*",
+        "mobile/services/**/*",
+        "mobile/packages/**/*"
+      ],
+      "web": [
+        "web/apps/mfe-shell/src/app/auth/**/*",
+        "web/apps/mfe-shell/src/app/providers/**",
+        "web/apps/mfe-shell/src/features/auth/**/*",
+        "web/apps/mfe-shell/src/pages/unauthorized/**",
+        "web/apps/mfe-shell/src/widgets/app-shell/**/*",
+        "web/apps/mfe-audit/src/**/*",
+        "web/packages/shared-http/**/*",
+        "web/packages/auth/**/*",
+        "web/packages/design-system/src/lib/auth/**/*"
+      ]
+    },
+    "planes": [
+      "web",
+      "mobile",
+      "backend",
+      "governance"
+    ],
+    "primary_plane": "backend"
+  },
+  "notes": [],
+  "shared_contracts": {
+    "audit_actions": [
+      "SESSION_CREATED",
+      "USER_SESSION_TIMEOUT_SYNCED",
+      "USER_SESSION_TIMEOUT_SYNC_CONFLICT",
+      "ASSIGN_ROLE",
+      "UPDATE_ROLE",
+      "REVOKE_ROLE",
+      "ROLE_PERMISSIONS_UPDATED"
+    ],
+    "capability_ids": [
+      "platform.identity.session-bootstrap",
+      "platform.auth.permission-scope",
+      "platform.audit.security-events"
+    ],
+    "event_names": [
+      "auth.session.created",
+      "auth.session.expired",
+      "authz.snapshot.resolved",
+      "permission.assignment.changed",
+      "user.session-timeout.synced",
+      "user.session-timeout.conflict"
+    ],
+    "job_names": [
+      "mobile-offline-queue-drain",
+      "delivery-session-packet-build",
+      "feature-execution-contract-check"
+    ],
+    "permission_codes": [
+      "access-read",
+      "role-manage",
+      "permission-manage",
+      "permission-scope-manage",
+      "audit-read",
+      "audit-create",
+      "user-update"
+    ],
+    "resource_scopes": [
+      "tenant",
+      "company",
+      "project",
+      "warehouse"
+    ]
+  },
+  "source_context": {
+    "source_type": "story",
+    "source_refs": [
+      "docs/03-delivery/STORIES/STORY-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/ACCEPTANCE/AC-0319-staging-prod-profile-migration.md",
+      "docs/03-delivery/TEST-PLANS/TP-0319-staging-prod-profile-migration.md",
+      "docs/04-operations/RUNBOOKS/RB-staging-prod-profile.md",
+      "docs/03-delivery/STORIES/STORY-0320-zanzibar-prod-cutover-prep.md",
+      "docs/03-delivery/STORIES/STORY-0316-cross-plane-auth-session-audit-foundation.md",
+      ".claude/plans/zanzibar-master-plan.md"
+    ],
+    "business_goal": "Staging'i prod-like profile'a ge\u00e7irmek \u2014 canary sinyal anlaml\u0131l\u0131\u011f\u0131 + prod cutover risk azaltma. 7 backend servis staging'de prod,docker profile'\u0131nda \u00e7al\u0131\u015f\u0131r, canonical env render contract {SERVICE}_PROFILES ta\u015f\u0131r, nginx+gateway upstream DEPLOY_ENV-aware, doctor-infra post-deploy CI guard ile fail-closed drift protection.",
+    "requested_outcome": "4 PR (docs+truth align / render contract / Vault+GHCR / post-deploy guard) ile STORY-0319 acceptance kriteri kar\u015f\u0131lan\u0131r; Dalga 1 Stage 2 synthetic canary run prereq a\u00e7\u0131l\u0131r; STORY-0320 umbrella closure (3/3 P1.x merged) izlenebilirlik kanal\u0131 korunur."
+  },
+  "status": "ACTIVE",
+  "summary": "STORY-0319 staging prod-profile migration \u2014 4 PR iskeleti (docs + render contract + Vault AppRole + post-deploy CI guard). Umbrella STORY-0320 closed (2026-04-17, 3/3 merged), izlenebilirlik source_refs \u00fczerinden korunur. Compose default D-105 + C-103 gere\u011fi `local,docker` de\u011fi\u015fmez \u2014 hardening canonical env + render contract + runtime doctor-infra guard \u00fczerinden.",
+  "technical_contract": {
+    "api_version_prefix": "/api/v1",
+    "baseline_profile_id": "erp-fullstack-java21-react18",
+    "db_migration_required": false,
+    "design_system_policy": "policies/policy_ui_design_system.v1.json"
+  },
+  "title": "Staging Prod-Profile Migration (STORY-0319, PR #1-4)",
+  "ux_contract": {
+    "artifacts": [
+      {
+        "path_glob": "web/vitest.config.ts",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/packages/auth/src/*.ts",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/packages/auth/src/*.tsx",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/apps/mfe-access/src/widgets/*.tsx",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/apps/mfe-users/src/widgets/**/*.tsx",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/packages/i18n-dicts/src/locales/**/*.ts",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/packages/shared-types/src/*.ts",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/apps/mfe-reporting/src/app/*.tsx",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/stories/*Zanzibar*.tsx",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/stories/*zanzibar*.tsx",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/packages/platform-capabilities/src/*.ts",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "secure_session_step_up_authentication"
+      },
+      {
+        "path_glob": "web/packages/design-system/src/advanced/data-grid/GridShell.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/packages/design-system/src/components/app-sidebar/*.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/packages/design-system/src/components/carousel/Carousel.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/packages/design-system/src/components/tree-table/TreeTable.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/packages/design-system/src/primitives/button/Button.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/scripts/*.py",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/*/vite.config.ts",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/vite.config.ts",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/layout/**/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/features/auth/**/*",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/pages/unauthorized/**",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/pages/home/*.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/pages/admin/service-control/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/layout/*.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/app/theme/*.tsx",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/packages/shared-http/src/*.ts",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/scripts/ops/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/scripts/deploy/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/Dockerfile",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      },
+      {
+        "path_glob": "web/.dockerignore",
+        "ux_theme_id": "trust_privacy_security_ux",
+        "ux_subtheme_id": "least_privilege_interaction_design"
+      }
+    ],
+    "mode": "REQUIRED",
+    "rationale": "Frontend auth SDK: useZanzibarAccess hook, ZanzibarGate component, batch check API \u2014 object-level Zanzibar permission gates. Also covers: theme-registry public endpoint anonymous-call fix (QLTY-PROACTIVE-02) via shared-http __skipAuth flag + theme-context.provider + ThemeRuntimePanelButton consumers."
+  },
+  "version": "v1"
+}
