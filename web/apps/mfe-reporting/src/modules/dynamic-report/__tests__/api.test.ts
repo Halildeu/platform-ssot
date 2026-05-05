@@ -179,8 +179,15 @@ describe('dynamic-report api filterModel pushdown', () => {
     expect(url).not.toContain('advancedFilter=');
   });
 
-  it('prefers explicit request.advancedFilter over filterModel', async () => {
+  it('passes through stringified request.advancedFilter (DashboardPage drill-through pattern)', async () => {
     mockGet.mockResolvedValue({ data: { items: [], total: 0 } });
+
+    // GridRequest.advancedFilter is typed as string. DashboardPage already
+    // calls JSON.stringify(filter) before handing it to us — we must NOT
+    // re-stringify (would double-encode and break backend parseJson).
+    const explicitFilter = JSON.stringify({
+      paper_no: { filterType: 'text', type: 'equals', filter: '123' },
+    });
 
     await fetchReportData(
       'fin-muhasebe-detay',
@@ -189,14 +196,43 @@ describe('dynamic-report api filterModel pushdown', () => {
         page: 1,
         pageSize: 50,
         filterModel: { account_name: { filterType: 'text', type: 'contains', filter: 'X' } },
-        advancedFilter: { paper_no: { filterType: 'text', type: 'equals', filter: '123' } } as unknown as string,
+        advancedFilter: explicitFilter,
       },
     );
 
     const [url] = mockGet.mock.calls[0];
-    const advancedFilterParam = new URL(`http://x${url.replace(/^[^?]*/, '')}`).searchParams.get('advancedFilter');
+    const advancedFilterParam = new URL(`http://x${url.replace(/^[^?]*/, '')}`).searchParams.get(
+      'advancedFilter',
+    );
+    // Must be the exact string the caller handed us (single-encoded), not
+    // JSON.stringify(string) which would yield "\"{...}\"".
+    expect(advancedFilterParam).toBe(explicitFilter);
     expect(JSON.parse(advancedFilterParam!)).toEqual({
       paper_no: { filterType: 'text', type: 'equals', filter: '123' },
+    });
+  });
+
+  it('defensively stringifies a raw-object advancedFilter (legacy callers)', async () => {
+    mockGet.mockResolvedValue({ data: { items: [], total: 0 } });
+
+    // Defensive path: should a caller mistakenly hand us a raw object instead
+    // of a string, we still stringify rather than emit "[object Object]".
+    await fetchReportData(
+      'fin-muhasebe-detay',
+      {},
+      {
+        page: 1,
+        pageSize: 50,
+        advancedFilter: { paper_no: { filterType: 'text', type: 'equals', filter: '999' } } as unknown as string,
+      },
+    );
+
+    const [url] = mockGet.mock.calls[0];
+    const advancedFilterParam = new URL(`http://x${url.replace(/^[^?]*/, '')}`).searchParams.get(
+      'advancedFilter',
+    );
+    expect(JSON.parse(advancedFilterParam!)).toEqual({
+      paper_no: { filterType: 'text', type: 'equals', filter: '999' },
     });
   });
 

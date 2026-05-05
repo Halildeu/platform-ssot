@@ -162,8 +162,16 @@ export const fetchReportData = async (
   // Merge AG Grid column-level filterModel + sidebar filters into one
   // advancedFilter payload. If the caller already provided an explicit
   // advancedFilter (e.g. dashboard drill-through), prefer that.
+  //
+  // GridRequest.advancedFilter is typed as `string` and DashboardPage hands us
+  // an already-JSON-stringified payload. Pass-through if it's a string; only
+  // stringify when a caller mistakenly hands us a raw object (defensive).
   if (request.advancedFilter) {
-    params.set('advancedFilter', JSON.stringify(request.advancedFilter));
+    const advFilterStr =
+      typeof request.advancedFilter === 'string'
+        ? request.advancedFilter
+        : JSON.stringify(request.advancedFilter);
+    params.set('advancedFilter', advFilterStr);
   } else {
     const advFilter = buildAdvancedFilter(filters, request.filterModel);
     if (Object.keys(advFilter).length > 0) {
