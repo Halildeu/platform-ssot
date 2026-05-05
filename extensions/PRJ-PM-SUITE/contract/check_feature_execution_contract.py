@@ -125,7 +125,68 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--head", default="")
     parser.add_argument("--changed-files", default="", help="Comma separated file list.")
     parser.add_argument("--out", default=DEFAULT_OUT_PATH)
+    parser.add_argument(
+        "--env",
+        default=None,
+        help=(
+            "Lane environment override (pre-prod | prod). "
+            "ADR-0014 resolution priority: --env flag > DELIVERY_LANE_ENV env var > "
+            "policy default_lane_env > baseline ci_contract.default_env. "
+            "Affects which lane subset becomes the gate's required set."
+        ),
+    )
     return parser.parse_args(argv)
+
+
+def _resolve_lane_env(
+    args: argparse.Namespace,
+    policy: dict[str, Any],
+    baseline_ci: dict[str, Any],
+) -> str:
+    """ADR-0014: resolve effective lane environment.
+
+    Priority chain (highest first):
+      1. CLI --env flag
+      2. DELIVERY_LANE_ENV environment variable (set by CI workflow)
+      3. policy.default_lane_env
+      4. baseline ci_contract.default_env
+      5. fallback "pre-prod"
+    """
+    import os
+    cli_env = (getattr(args, "env", None) or "").strip()
+    if cli_env:
+        return cli_env
+    env_var = (os.environ.get("DELIVERY_LANE_ENV") or "").strip()
+    if env_var:
+        return env_var
+    policy_default = str(policy.get("default_lane_env") or "").strip()
+    if policy_default:
+        return policy_default
+    baseline_default = str(baseline_ci.get("default_env") or "").strip()
+    if baseline_default:
+        return baseline_default
+    return "pre-prod"
+
+
+def _resolve_expected_lanes(
+    baseline_ci: dict[str, Any],
+    lane_env: str,
+) -> tuple[list[str], str]:
+    """ADR-0014: pick required_lanes_by_env[env] when present, fall back to
+    legacy required_lanes for backward-compat.
+
+    Returns (lanes, source) where source is "by_env" | "legacy" | "missing"
+    so the report can audit which set governed the run.
+    """
+    by_env = baseline_ci.get("required_lanes_by_env")
+    if isinstance(by_env, dict) and lane_env in by_env:
+        env_lanes = by_env[lane_env]
+        if isinstance(env_lanes, list) and env_lanes:
+            return [str(x) for x in env_lanes if str(x).strip()], "by_env"
+    legacy = baseline_ci.get("required_lanes")
+    if isinstance(legacy, list) and legacy:
+        return [str(x) for x in legacy if str(x).strip()], "legacy"
+    return [], "missing"
 
 
 def _load_ux_index(lock_obj: dict[str, Any]) -> tuple[set[str], dict[str, set[str]]]:
@@ -335,8 +396,19 @@ def _validate_contract(
     ]
     if require_sequence_from_lock and expected_sequence and actual_sequence != expected_sequence:
         errors.append(f"{prefix}:lane_plan:execution_sequence_mismatch")
-    if require_lanes_from_lock and expected_lanes and actual_lanes != expected_lanes:
-        errors.append(f"{prefix}:lane_plan:required_lanes_mismatch")
+    # ADR-0014: feature contract required_lanes carries the FULL plan
+    # (production-grade), while env-aware expected_lanes is the active
+    # gate's REQUIRED SUBSET. Validation passes when contract plan is a
+    # superset of the env's required set (i.e. every required lane is
+    # part of the contract's plan). This keeps feature contracts stable
+    # across env transitions while letting the gate accept the correct
+    # subset per environment.
+    if require_lanes_from_lock and expected_lanes:
+        missing_lanes = [lane for lane in expected_lanes if lane not in actual_lanes]
+        if missing_lanes:
+            errors.append(
+                f"{prefix}:lane_plan:required_lanes_missing:{','.join(missing_lanes)}"
+            )
 
     definition_of_done = (
         contract.get("definition_of_done") if isinstance(contract.get("definition_of_done"), dict) else {}
@@ -486,15 +558,24 @@ def main(argv: list[str] | None = None) -> int:
     expected_profile_id = ""
     expected_sequence: list[str] = []
     expected_lanes: list[str] = []
+    lane_env = "pre-prod"
+    lane_source = "missing"
+    ci_contract: dict[str, Any] = {}
     if baseline_path_rel and baseline_path.exists():
         try:
             baseline = _load_json(baseline_path)
             expected_profile_id = str(baseline.get("profile_id") or "").strip()
             ci_contract = baseline.get("ci_contract") if isinstance(baseline.get("ci_contract"), dict) else {}
             expected_sequence = [str(x) for x in (ci_contract.get("delivery_sequence") or []) if str(x).strip()]
-            expected_lanes = [str(x) for x in (ci_contract.get("required_lanes") or []) if str(x).strip()]
         except Exception as exc:
             errors.append(f"technical_baseline_invalid_json:{exc}")
+            ci_contract = {}
+
+    # ADR-0014: env-aware required lanes resolution.
+    # Priority: --env flag > DELIVERY_LANE_ENV env var > policy.default_lane_env
+    # > baseline ci_contract.default_env > "pre-prod" fallback.
+    lane_env = _resolve_lane_env(args, policy, ci_contract)
+    expected_lanes, lane_source = _resolve_expected_lanes(ci_contract, lane_env)
 
     ux_theme_ids: set[str] = set()
     ux_subthemes_by_theme: dict[str, set[str]] = {}
@@ -635,6 +716,8 @@ def main(argv: list[str] | None = None) -> int:
             "expected_profile_id": expected_profile_id,
             "expected_execution_sequence": expected_sequence,
             "expected_required_lanes": expected_lanes,
+            "effective_lane_env": lane_env,
+            "lane_resolution_source": lane_source,
         },
         "active_contracts": contract_summaries,
         "errors": errors,
@@ -652,6 +735,9 @@ def main(argv: list[str] | None = None) -> int:
                 "detected_scopes": sorted(detected_scopes),
                 "active_contracts": len(contract_summaries),
                 "contract_resolution_source": contract_source,
+                "effective_lane_env": lane_env,
+                "lane_resolution_source": lane_source,
+                "expected_required_lanes": expected_lanes,
                 "errors": len(errors),
                 "warnings": len(warnings),
                 "out": str(out_path),

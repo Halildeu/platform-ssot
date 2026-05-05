@@ -190,6 +190,26 @@
       "integration",
       "e2e"
     ],
+    "required_test_lanes_by_env": {
+      "pre-prod": [
+        "unit",
+        "contract"
+      ],
+      "prod": [
+        "unit",
+        "database",
+        "api",
+        "contract",
+        "integration",
+        "e2e"
+      ]
+    },
+    "default_env": "pre-prod",
+    "lane_env_notes": [
+      "ADR-0014: required_test_lanes (above) is the FULL prod-grade plan and remains the canonical lock.",
+      "required_test_lanes_by_env is the ACTIVE gate scope per environment. Runtime gate (module-delivery-gate workflow) reads the env subset, while merge_requires_all_green stays true for whichever lane subset the env requires.",
+      "Cutover (D30) flips DELIVERY_LANE_ENV to 'prod' and the active gate scope auto-widens to the full lock. Pre-prod entry preserved 72h for rollback."
+    ],
     "merge_requires_all_green": true
   },
   "branch_protection": {
