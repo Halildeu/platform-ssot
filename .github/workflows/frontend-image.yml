@@ -78,8 +78,8 @@ jobs:
           tags: |
             ${{ steps.meta.outputs.image }}
             ghcr.io/${{ steps.meta.outputs.owner }}/${{ steps.meta.outputs.image_name }}:main-stable
-          cache-from: type=gha,scope=frontend-${{ matrix.env }}
-          cache-to: type=gha,mode=max,scope=frontend-${{ matrix.env }}
+          cache-from: type=gha,scope=frontend-${{ matrix.env }}-v2
+          cache-to: type=gha,mode=max,scope=frontend-${{ matrix.env }}-v2
           provenance: false
 
       - name: Summary
