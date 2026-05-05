@@ -160,6 +160,9 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"status": "FAIL", "errors": 1, "out": str(out_path)}, ensure_ascii=False))
         return 2
 
+    # Multi-active-contracts: packet.active_scopes is the union of all active
+    # contracts' service_scopes; allowed_write_paths is also a union; ux_context
+    # mode is REQUIRED if any active contract requires it.
     allowed_write_paths = [
         str(item).strip()
         for item in (packet.get("allowed_write_paths") or [])
@@ -173,6 +176,12 @@ def main(argv: list[str] | None = None) -> int:
     packet_ux = packet.get("ux_context") if isinstance(packet.get("ux_context"), dict) else {}
     ux_artifacts = packet_ux.get("artifacts") if isinstance(packet_ux.get("artifacts"), list) else []
     ux_globs = [str(item.get("path_glob") or "").strip() for item in ux_artifacts if isinstance(item, dict)]
+
+    # active_contracts[] is the new C-prime field (multi-feature). When present,
+    # we use it for richer per-contract diagnostics in the guard report. The
+    # union-level enforcement below works either way because allowed_write_paths,
+    # active_scopes and ux artefacts are already unioned by the builder.
+    active_contracts = packet.get("active_contracts") if isinstance(packet.get("active_contracts"), list) else []
 
     relevant_changed_files = [
         path
@@ -239,6 +248,12 @@ def main(argv: list[str] | None = None) -> int:
         },
         "active_scopes": sorted(active_scopes),
         "detected_scopes": sorted(detected_scopes),
+        "active_contract_count": len(active_contracts) if active_contracts else 0,
+        "active_contract_feature_ids": [
+            str(item.get("feature_id") or "").strip()
+            for item in active_contracts
+            if isinstance(item, dict)
+        ],
         "errors": errors,
         "warnings": warnings,
     }
@@ -251,6 +266,7 @@ def main(argv: list[str] | None = None) -> int:
                 "errors": len(errors),
                 "warnings": len(warnings),
                 "detected_scopes": sorted(detected_scopes),
+                "active_contract_count": len(active_contracts) if active_contracts else 0,
                 "out": str(out_path),
             },
             ensure_ascii=False,

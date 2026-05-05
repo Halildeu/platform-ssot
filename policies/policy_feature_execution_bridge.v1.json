@@ -4,6 +4,15 @@
   "status": "ACTIVE",
   "enforcement_mode": "blocking",
   "contract_path": "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
+  "contract_paths": [],
+  "contract_glob": "extensions/PRJ-PM-SUITE/contract/features/*.v1.json",
+  "active_features_path": "extensions/PRJ-PM-SUITE/contract/active_features.v1.json",
+  "contract_resolution_notes": [
+    "Contract resolution priority (highest first): contract_paths (CLI / policy explicit list) -> active_features_path (governance source-of-truth index) -> contract_glob (migration fallback only) -> contract_path (legacy single-feature backward-compat).",
+    "active_features.v1.json is the SOURCE-OF-TRUTH for governance gates. Only entries with status=ACTIVE are enforced; DRAFT / INACTIVE / ARCHIVED entries plus extra files matched by contract_glob are NOT brought into the gate scope.",
+    "contract_glob is migration / legacy fallback only. Production setups must keep active_features_path populated so DRAFT contracts that still live under contract/features/ cannot leak through and trip unrelated PRs.",
+    "active_features.v1.json is validated fail-closed: a missing index file, malformed JSON, duplicate feature_id, unknown status, contract_path traversal, or an ACTIVE entry pointing at a missing contract all become hard errors instead of silent fallbacks."
+  ],
   "contract_schema_path": "schemas/feature-execution-contract.schema.v1.json",
   "pm_policy_path": "policies/policy_pm_suite.v1.json",
   "technical_baseline_path": "registry/technical_baseline.aistd.v1.json",
