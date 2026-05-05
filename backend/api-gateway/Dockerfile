@@ -3,20 +3,21 @@
 # Bu imaj hem Intel (amd64) hem de Apple Silicon (arm64) üzerinde doğal (native) çalışır.
 FROM maven:3.9-eclipse-temurin-21 AS build
 
-# Proje kodunu kopyalamak için bir çalışma dizini oluşturuyoruz.
+# Build context = backend/ (deploy-backend.yml workflow ile uyumlu).
+# api-gateway standalone Spring Boot modülü; common-auth bağımlılığı YOK.
+# Path'ler context'e göre relatif: backend/api-gateway/...
 WORKDIR /app
 
-# Önce sadece pom.xml'i kopyalayıp bağımlılıkları indiriyoruz.
-# Bu, kod değişikliği olmadığında her seferinde bağımlılıkları tekrar indirmemizi önler (Docker cache).
-COPY pom.xml .
-RUN mvn dependency:go-offline
+# Önce sadece pom.xml'i kopyalayıp bağımlılıkları indiriyoruz (Docker cache).
+COPY api-gateway/pom.xml ./api-gateway/pom.xml
+RUN mvn -f api-gateway/pom.xml dependency:go-offline
 
 # Şimdi tüm proje kaynak kodunu kopyalıyoruz.
-COPY src ./src
+COPY api-gateway/src ./api-gateway/src
 
 # Maven ile projeyi derleyip çalıştırılabilir JAR dosyasını oluşturuyoruz.
 # Testleri atlayarak süreci hızlandırıyoruz.
-RUN mvn clean package -DskipTests
+RUN mvn -f api-gateway/pom.xml clean package -DskipTests
 
 
 # --- Aşama 2: Çalıştırma İmajı (Runtime Stage) ---
@@ -30,7 +31,7 @@ RUN groupadd --gid 1000 --system app \
 
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/api-gateway/target/*.jar app.jar
 RUN chown app:app app.jar
 
 EXPOSE 8080 8081
