@@ -1,6 +1,15 @@
-# CLAUDE.md — autonomous-orchestrator (control-plane)
+# CLAUDE.md — STOP. THIS REPO IS DEPRECATED.
+
+> **Halildeu/platform-ssot is DEPRECATED, audit-only, and scheduled for archive.**
+> Faz 19 split-repo authority transfer completed **2026-04-25**. Active development moved to **`platform-backend`** + **`platform-web`** + **`platform-k8s-gitops`**. **Do not commit code to this repo. Do not open PRs. Read-only audit is fine.**
+
+See `AGENTS.md` for the full deprecation rationale, GHCR 403 evidence, the canonical-repo mapping table, and the in-flight ssot → canonical PR migration list.
 
 @AGENTS.md
+
+---
+
+> Below: legacy guidance preserved for read-only context. **Do not act on it** — it describes a build/deploy pipeline that no longer ships images for this repo.
 
 ## Claude Code-Specific (AGENTS.md'de olmayan)
 
