@@ -1236,6 +1236,152 @@
       "notes": [
         "Zanzibar OpenFGA health check smoke workflow. Manual trigger only."
       ]
+    },
+    {
+      "id": "ROB-0132",
+      "name": "frontend-image",
+      "kind": "workflow",
+      "path": ".github/workflows/frontend-image.yml",
+      "default_mode": "plan",
+      "allowed_modes": [
+        "plan",
+        "apply"
+      ],
+      "side_effects": [
+        "push(main) triggers frontend-image",
+        "workflow_dispatch(frontend-image)",
+        "docker_build_push(ghcr.io) via GitHub Actions runner"
+      ],
+      "required_auth_refs": [
+        "TOK-0001"
+      ],
+      "required_env": [
+        "GITHUB_TOKEN",
+        "packages:write permission"
+      ],
+      "required_confirm": "FRONTEND_IMAGE_BUILD_PUSH",
+      "inputs": [
+        "none"
+      ],
+      "outputs": [
+        "ghcr.io/<owner>/platform-ssot-frontend:sha-<sha7>",
+        "ghcr.io/<owner>/platform-ssot-frontend-testai:sha-<sha7>",
+        "GitHub Actions summary"
+      ],
+      "notes": [
+        "Frontend image build/push workflow for prod and testai tags. Manual dispatch is treated as apply and requires ops confirmation before invocation."
+      ]
+    },
+    {
+      "id": "ROB-0133",
+      "name": "board-pr-merge-evidence",
+      "kind": "workflow",
+      "path": ".github/workflows/board-pr-merge-evidence.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan",
+        "apply"
+      ],
+      "side_effects": [
+        "pull_request.closed(merged) triggers board evidence write",
+        "workflow_dispatch(board-pr-merge-evidence)",
+        "issues_write(board evidence comment/update)"
+      ],
+      "required_auth_refs": [
+        "TOK-0001"
+      ],
+      "required_env": [
+        "GITHUB_TOKEN",
+        "BOARD_APPLY_CONFIRM=APPLY_BOARD_GOVERNANCE_BOG_3C"
+      ],
+      "required_confirm": "APPLY_BOARD_GOVERNANCE_BOG_3C",
+      "inputs": [
+        "none"
+      ],
+      "outputs": [
+        ".cache/ws_customer_default/.cache/reports/board_pr_merge_evidence.v1.json",
+        "board-pr-merge-evidence artifact"
+      ],
+      "notes": [
+        "Merged PR board evidence workflow from governance board standards package."
+      ]
+    },
+    {
+      "id": "ROB-0134",
+      "name": "staging-audit-compare-sweep",
+      "kind": "workflow",
+      "path": ".github/workflows/staging-audit-compare-sweep.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "schedule(staging-audit-compare-sweep)",
+        "workflow_dispatch(staging-audit-compare-sweep)",
+        "runs_self_hosted(stage-backend)",
+        "issues_write(best_effort)"
+      ],
+      "required_auth_refs": [
+        "TOK-0001"
+      ],
+      "required_env": [
+        "GITHUB_TOKEN",
+        "STAGING_ADMIN_PASS",
+        "STAGING_SWEEPER_CLIENT_SECRET"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "page(optional)",
+        "page_size(optional)"
+      ],
+      "outputs": [
+        ".cache/reports/audit-compare-sweep-*.json",
+        "staging-audit-compare-sweep artifact"
+      ],
+      "notes": [
+        "Staging audit parity monitoring workflow; drift is warning, hard endpoint errors fail."
+      ]
+    },
+    {
+      "id": "ROB-0135",
+      "name": "staging-error-sweep",
+      "kind": "workflow",
+      "path": ".github/workflows/staging-error-sweep.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "schedule(staging-error-sweep)",
+        "workflow_run(deploy-backend/deploy-web)",
+        "workflow_dispatch(staging-error-sweep)",
+        "runs_self_hosted(stage-backend)",
+        "issues_write(best_effort)"
+      ],
+      "required_auth_refs": [
+        "TOK-0001"
+      ],
+      "required_env": [
+        "GITHUB_TOKEN",
+        "docker access on self-hosted stage runner"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "window_minutes(optional)",
+        "warn_threshold(optional)",
+        "fail_threshold(optional)",
+        "services(optional)"
+      ],
+      "outputs": [
+        ".cache/reports/staging-error-sweep-*.json",
+        "staging-error-sweep artifact"
+      ],
+      "notes": [
+        "Staging container log monitoring workflow; WARN exits green, fail threshold exits red."
+      ]
     }
   ]
 }
