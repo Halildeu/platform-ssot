@@ -48,34 +48,7 @@
     },
     "contract_path": {
       "type": "string",
-      "minLength": 1,
-      "description": "Legacy single-file feature execution contract path. Preserved for backward-compat audit; new features should land under contract_glob (see C-prime multi-file pattern, Codex 019df4ed iter-5)."
-    },
-    "contract_paths": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
-      "description": "Optional explicit list of feature execution contract files. Highest priority in resolution chain (contract_paths > contract_glob > contract_path)."
-    },
-    "contract_glob": {
-      "type": "string",
-      "minLength": 0,
-      "description": "Optional glob pattern resolved relative to repo_root that expands to per-feature contract files. Second priority in resolution chain."
-    },
-    "active_features_path": {
-      "type": "string",
-      "minLength": 1,
-      "description": "Optional path to the active_features.v1.json index that lists ACTIVE per-feature contracts."
-    },
-    "contract_resolution_notes": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
-      "description": "Free-form documentation of the contract resolution behaviour for human readers."
+      "minLength": 1
     },
     "contract_schema_path": {
       "type": "string",
@@ -239,19 +212,6 @@
         "log"
       ],
       "description": "Action to take when this policy check fails. block=hard stop, warn=log+continue, log=record only."
-    },
-    "default_lane_env": {
-      "type": "string",
-      "minLength": 1,
-      "description": "ADR-0014: default lane environment when --env CLI flag and DELIVERY_LANE_ENV env var are unset. Pre-prod default; cutover (D30) flips to prod."
-    },
-    "lane_env_resolution_notes": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
-      "description": "ADR-0014: human-readable audit notes documenting the lane env resolution priority."
     }
   }
 }

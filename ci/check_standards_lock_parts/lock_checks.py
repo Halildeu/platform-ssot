@@ -551,36 +551,13 @@ def _check_module_delivery_workflow(root: Path) -> tuple[bool, dict[str, Any]]:
     for marker in required_markers:
         if marker not in text:
             details["issues"].append(f"missing:{marker}")
-    # ADR-0014: paralel scoreboard DAG. Pre-prod required lanes
-    # (unit + contract) database/api fail/skip durumundan bağımsız
-    # çalışmalı; bu yüzden api ve contract sadece unit'e bağlı.
-    # Integration tüm pre-cursor lanes (database + api + contract)
-    # sonrası koşar; e2e integration sonrası.
     required_sequence_markers = (
         "module-lane-database:\n    runs-on: ubuntu-latest\n    needs: [module-lane-unit]",
-        "module-lane-api:",
-        "module-lane-contract:",
-        "module-lane-integration:",
-        "module-lane-e2e:",
+        "module-lane-api:\n    runs-on: ubuntu-latest\n    needs: [module-lane-database]",
+        "module-lane-contract:\n    runs-on: ubuntu-latest\n    needs: [module-lane-api]",
+        "module-lane-integration:\n    runs-on: ubuntu-latest\n    needs: [module-lane-contract]",
+        "module-lane-e2e:\n    runs-on: ubuntu-latest\n    needs: [module-lane-integration]",
     )
-    required_dependency_markers = (
-        # Each lane's needs[] (parallel scoreboard, ADR-0014).
-        ("module-lane-api", "needs: [module-lane-unit]"),
-        ("module-lane-contract", "needs: [module-lane-unit]"),
-        ("module-lane-integration", "needs: [module-lane-database, module-lane-api, module-lane-contract]"),
-        ("module-lane-e2e", "needs: [module-lane-integration]"),
-    )
-    for job_name, expected_needs in required_dependency_markers:
-        # Find the job block; verify its needs[] line matches the ADR-0014 DAG.
-        idx = text.find(f"{job_name}:")
-        if idx < 0:
-            details["issues"].append(f"missing_job:{job_name}")
-            continue
-        block = text[idx : idx + 1000]
-        if expected_needs not in block:
-            details["issues"].append(
-                f"adr_0014_dag_mismatch:{job_name}:expected:{expected_needs}"
-            )
     for marker in required_sequence_markers:
         if marker not in text:
             details["issues"].append(f"missing_sequence:{marker}")

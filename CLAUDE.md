@@ -10,9 +10,7 @@
 - Cockpit API: `python3 -m src.ops.manage cockpit-serve --workspace-root .cache/ws_customer_default --port 8790`
 
 ### Worktree Conventions
-- Branch naming: `claude/<worktree-name>` (default via `EnterWorktree`); `feat/claude-<task>` / `fix/claude-<task>` for task-scoped work
-- Single entry point: `scripts/ops/wt` (`init`, `new`, `list`, `status`, `sync`, `close`, `gc`)
-- Daily flow + 6 recovery scenarios: `docs/OPERATIONS/MULTI-AGENT-WORKFLOW.v1.md`
+- Branch naming: `claude/<worktree-name>`
 - Always work in worktree for non-trivial changes
 - Run validation before commit (schema + standards + tests)
 

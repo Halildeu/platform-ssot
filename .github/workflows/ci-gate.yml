@@ -89,7 +89,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-      - run: corepack enable && corepack prepare pnpm@latest --activate
+      - run: corepack enable && corepack prepare pnpm@10.12.4 --activate
       - uses: actions/cache@v4
         with:
           path: ~/.local/share/pnpm/store/v3
@@ -115,7 +115,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-      - run: corepack enable && corepack prepare pnpm@latest --activate
+      - run: corepack enable && corepack prepare pnpm@10.12.4 --activate
       - uses: actions/cache@v4
         with:
           path: ~/.local/share/pnpm/store/v3
@@ -138,7 +138,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-      - run: corepack enable && corepack prepare pnpm@latest --activate
+      - run: corepack enable && corepack prepare pnpm@10.12.4 --activate
       - uses: actions/cache@v4
         with:
           path: ~/.local/share/pnpm/store/v3

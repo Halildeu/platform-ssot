@@ -4,15 +4,6 @@
   "status": "ACTIVE",
   "enforcement_mode": "blocking",
   "contract_path": "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
-  "contract_paths": [],
-  "contract_glob": "extensions/PRJ-PM-SUITE/contract/features/*.v1.json",
-  "active_features_path": "extensions/PRJ-PM-SUITE/contract/active_features.v1.json",
-  "contract_resolution_notes": [
-    "Contract resolution priority (highest first): contract_paths (CLI / policy explicit list) -> active_features_path (governance source-of-truth index) -> contract_glob (migration fallback only) -> contract_path (legacy single-feature backward-compat).",
-    "active_features.v1.json is the SOURCE-OF-TRUTH for governance gates. Only entries with status=ACTIVE are enforced; DRAFT / INACTIVE / ARCHIVED entries plus extra files matched by contract_glob are NOT brought into the gate scope.",
-    "contract_glob is migration / legacy fallback only. Production setups must keep active_features_path populated so DRAFT contracts that still live under contract/features/ cannot leak through and trip unrelated PRs.",
-    "active_features.v1.json is validated fail-closed: a missing index file, malformed JSON, duplicate feature_id, unknown status, contract_path traversal, or an ACTIVE entry pointing at a missing contract all become hard errors instead of silent fallbacks."
-  ],
   "contract_schema_path": "schemas/feature-execution-contract.schema.v1.json",
   "pm_policy_path": "policies/policy_pm_suite.v1.json",
   "technical_baseline_path": "registry/technical_baseline.aistd.v1.json",
@@ -101,12 +92,6 @@
     "required_execution_sequence_from_lock": true,
     "required_lanes_from_lock": true
   },
-  "default_lane_env": "pre-prod",
-  "lane_env_resolution_notes": [
-    "ADR-0014: lane environment resolution priority (highest first): CLI --env flag -> DELIVERY_LANE_ENV env var -> policy default_lane_env -> baseline ci_contract.default_env.",
-    "Pre-prod döneminde lane subset (unit + contract) zorunludur. Cutover (D30) sonrası org-level variable DELIVERY_LANE_ENV=prod ile full set otomatik aktive olur.",
-    "Bu policy field cutover'a kadar pre-prod default'ını korur. Cutover PR'ında default_lane_env=prod set edilir + 72h rollback window."
-  ],
   "reporting": {
     "out_path": ".cache/reports/feature_execution_contract_check.v1.json"
   },

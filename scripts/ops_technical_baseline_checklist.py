@@ -21,9 +21,9 @@ EXPECTED_STANDARD_SOURCE_KEYS = {
     "ui_design_system_policy",
     "security_policy",
     "secrets_policy",
+    "test_quality_policy",
     "ux_catalog_enforcement_policy",
     "ux_catalog_lock",
-    "test_quality_policy",
 }
 
 
@@ -546,42 +546,37 @@ def main(argv: list[str] | None = None) -> int:
         )
     )
 
-    # Check both webpack (legacy) and vite (current) module federation patterns
     mfe_configs = sorted((repo_root / "web" / "apps").glob("*/webpack*.js"))
-    mfe_vite_configs = sorted((repo_root / "web" / "apps").glob("*/vite.config.*"))
+    mfe_configs.extend(sorted((repo_root / "web" / "apps").glob("*/vite.config.*")))
     mfe_hits = 0
-    mfe_evidence = []
     for cfg in mfe_configs:
-        if "ModuleFederationPlugin" in _read_text(cfg):
+        cfg_text = _read_text(cfg)
+        if (
+            "ModuleFederationPlugin" in cfg_text
+            or "@module-federation/vite" in cfg_text
+            or "federation(" in cfg_text
+        ):
             mfe_hits += 1
-            mfe_evidence.append(cfg)
-    for cfg in mfe_vite_configs:
-        content = _read_text(cfg)
-        if "@module-federation" in content or "federation(" in content:
-            mfe_hits += 1
-            mfe_evidence.append(cfg)
     frontend_checks.append(
         _check(
             "frontend.mfe.module_federation",
             "OK" if mfe_hits > 0 else "FAIL",
-            "ModuleFederationPlugin or @module-federation/vite present",
+            "Module federation present",
             f"hits={mfe_hits}",
-            [p.relative_to(repo_root).as_posix() for p in mfe_evidence[:10]],
+            [p.relative_to(repo_root).as_posix() for p in mfe_configs[:10]],
         )
     )
 
-    ui_kit_exists = (
-        (repo_root / "web" / "packages" / "ui-kit" / "package.json").exists()
-        or (repo_root / "web" / "packages" / "design-system" / "package.json").exists()
-    )
+    ui_manifest_rel = str(frontend_design_contract.get("ui_package_manifest_path") or "web/packages/ui-kit/package.json")
+    ui_manifest_exists = (repo_root / ui_manifest_rel).exists()
     tokens_exists = (repo_root / "web" / "design-tokens").exists()
     frontend_checks.append(
         _check(
             "frontend.style.system",
-            "OK" if ui_kit_exists and tokens_exists else "WARN",
-            "ui-kit + design-tokens",
-            f"ui-kit={ui_kit_exists} design-tokens={tokens_exists}",
-            ["web/packages/ui-kit/package.json", "web/design-tokens"],
+            "OK" if ui_manifest_exists and tokens_exists else "WARN",
+            f"{ui_manifest_rel} + design-tokens",
+            f"ui_manifest={ui_manifest_exists} design-tokens={tokens_exists}",
+            [ui_manifest_rel, "web/design-tokens"],
         )
     )
 
@@ -616,15 +611,33 @@ def main(argv: list[str] | None = None) -> int:
     )
     catalog_path = (repo_root / catalog_rel).resolve()
     catalog_obj: dict[str, Any] = _load_json(catalog_path) if catalog_path.exists() else {}
-    # Support both "items" array and "version" (release contract format)
     catalog_items = catalog_obj.get("items") if isinstance(catalog_obj.get("items"), list) else []
-    catalog_has_content = len(catalog_items) > 0 or catalog_obj.get("version") is not None
+    catalog_metrics = (
+        catalog_obj.get("release", {})
+        .get("latestRelease", {})
+        .get("catalogMetrics", {})
+        if isinstance(catalog_obj.get("release"), dict)
+        else {}
+    )
+    catalog_metric_count = 0
+    if isinstance(catalog_metrics, dict):
+        for key in ("apiCatalogItems", "stable", "exported"):
+            try:
+                catalog_metric_count = max(catalog_metric_count, int(catalog_metrics.get(key) or 0))
+            except Exception:
+                pass
+    registry_summary = catalog_obj.get("registrySummary") if isinstance(catalog_obj.get("registrySummary"), dict) else {}
+    try:
+        catalog_metric_count = max(catalog_metric_count, int(registry_summary.get("stable") or 0))
+    except Exception:
+        pass
+    catalog_count = len(catalog_items) if catalog_items else catalog_metric_count
     frontend_checks.append(
         _check(
             "frontend.design.catalog.index",
-            "OK" if catalog_path.exists() and catalog_has_content else "FAIL",
-            "design-lab index exists and has content",
-            f"exists={catalog_path.exists()} items={len(catalog_items)} has_content={catalog_has_content}",
+            "OK" if catalog_path.exists() and catalog_count > 0 else "FAIL",
+            "design-lab index exists and catalog_count>0",
+            f"exists={catalog_path.exists()} catalog_count={catalog_count}",
             [catalog_rel],
         )
     )
@@ -723,26 +736,32 @@ def main(argv: list[str] | None = None) -> int:
         if isinstance(frontend_page_composition.get("required_layout_exports"), list)
         else ["PageLayout", "DetailDrawer", "FormDrawer"]
     )
-    # Check both ui-kit (legacy) and design-system (current) for layout exports
-    ui_index_candidates = [
-        repo_root / "web" / "packages" / "ui-kit" / "src" / "index.ts",
-        repo_root / "web" / "packages" / "design-system" / "src" / "index.ts",
+    ui_index_path = ui_pkg_path.parent / "src" / "index.ts"
+    ui_index_text = _read_text(ui_index_path)
+    ui_src_root = ui_pkg_path.parent / "src"
+
+    def layout_export_present(name: str) -> bool:
+        if name in ui_index_text:
+            return True
+        if not ui_src_root.exists():
+            return False
+        for path in ui_src_root.rglob("*"):
+            if not path.is_file() or path.suffix not in {".ts", ".tsx"}:
+                continue
+            if name in _read_text(path):
+                return True
+        return False
+
+    missing_layout_exports = [
+        name for name in required_layout_exports if str(name) and not layout_export_present(str(name))
     ]
-    ui_index_text = ""
-    ui_index_used = ""
-    for candidate in ui_index_candidates:
-        if candidate.exists():
-            ui_index_text = _read_text(candidate)
-            ui_index_used = candidate.relative_to(repo_root).as_posix()
-            break
-    missing_layout_exports = [name for name in required_layout_exports if str(name) and str(name) not in ui_index_text]
     frontend_checks.append(
         _check(
             "frontend.page.modular_layout_exports",
-            "OK" if ui_index_text and not missing_layout_exports else "WARN",
-            "ui-kit/design-system index exports required page layout modules",
+            "OK" if ui_index_path.exists() and not missing_layout_exports else "FAIL",
+            "UI package index exports required page layout modules",
             f"missing={missing_layout_exports}",
-            [ui_index_used] if ui_index_used else [],
+            [ui_index_path.relative_to(repo_root).as_posix()] if ui_index_path.exists() else [ui_pkg_rel],
         )
     )
 
