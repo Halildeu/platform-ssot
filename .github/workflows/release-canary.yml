@@ -96,7 +96,7 @@ jobs:
 
       - name: Upload canary artifacts
         if: ${{ always() && (steps.resolve.outputs.mode == 'sample' || env.CANARY_ENABLED == 'true') }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-canary-${{ steps.resolve.outputs.mode }}-${{ steps.resolve.outputs.env_name }}
           path: backend/test-results/canary/**
