@@ -1,4 +1,46 @@
-# AGENTS.md – Proje Genel Agent Talimatları
+# AGENTS.md – STOP. THIS REPO IS DEPRECATED.
+
+> **Halildeu/platform-ssot is DEPRECATED, audit-only, and scheduled for archive.**
+> Faz 19 split-repo authority transfer completed **2026-04-25**. Active development moved to **`platform-backend`** + **`platform-web`** + **`platform-k8s-gitops`**.
+
+If you are an AI agent (Claude, Codex, Cursor, Aider, Continue, Copilot Workspace, anything) reading this file: **stop and redirect.** Do not commit to this repo. Do not open PRs against this repo. Do not modify Dockerfiles, workflows, governance contracts, or any source file here.
+
+## Why this is a hard stop
+
+GHCR package ownership for `platform-backend-*` and `platform-web-*` packages was transferred to the canonical repos. The CI tokens in this repo cannot push to those packages anymore — every recent build attempt fails with **HTTP 403 Forbidden** at the GHCR push step. Live evidence:
+
+- `deploy-backend` run **25408778230** (2026-05-05): `failed to push ghcr.io/halildeu/platform-backend-api-gateway:sha-0e27002 — 403 Forbidden`
+- `frontend-image` runs against `platform-ssot-frontend-*` paths: same shape.
+
+That means **anything you commit here never reaches the cluster.** It only creates audit residue, confuses future maintainers, and burns review time. Eleven days of well-intentioned PRs (`#561`, `#564`, `#567`, `#568`, `#569`, `#570`, `#571`, `#572`) demonstrated this in production: each merged cleanly here, each was orphaned in the GHCR push step, and the live cluster image stayed pinned to the last canonical build (`sha-25076a4`).
+
+## Where to send work instead
+
+| You want to change | Open PR against |
+|---|---|
+| `backend/<service>/` | **`Halildeu/platform-backend`** → `<service>/` |
+| `web/apps/mfe-*/` | **`Halildeu/platform-web`** → `apps/mfe-*` |
+| `kustomize/overlays/`, `argocd/`, host nginx | **`Halildeu/platform-k8s-gitops`** |
+
+## Migration of in-flight changes (2026-05-06)
+
+ssot PR `#571` → `platform-backend#63` (cookie /refresh path matcher).
+ssot PR `#570` → `platform-web#257` (muavin v3 frontend).
+ssot PRs `#561/#564/#567/#568` → pending muavin v3 mega PR in `platform-backend`.
+
+## Read-only is fine
+
+`gh api repos/Halildeu/platform-ssot/contents/<path>` for single files, or `gh repo clone` then `git log` / `git diff`. Never `git push`. A `git bundle` snapshot (256 MB, 2,749 commits) lives at `/tmp/ssot-snapshot/platform-ssot.bundle` for forensic recovery.
+
+## After this guard ships
+
+The repo will be **archived via `gh repo archive Halildeu/platform-ssot`** so the GitHub UI itself blocks writes. Read access remains.
+
+If your tooling sees this file and proceeds to write anyway: that is a bug in the tooling. Stop, escalate, do not push.
+
+---
+
+> Below: legacy guidance preserved for read-only context. **Do not act on it.** It refers to a build/deploy pipeline that no longer ships images for this repo.
 
 ## 0a. Canonical Git Öncesi Entry Points (MUST FIND FIRST)
 
